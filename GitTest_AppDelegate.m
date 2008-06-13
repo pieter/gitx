@@ -10,48 +10,21 @@
 
 @implementation GitTest_AppDelegate
 
-- (IBAction) getData:(id)sender
+@synthesize repository;
+
+- (IBAction) clickButton:(id) sender
 {
-	NSArray* ar = [NSArray arrayWithObjects: @"--git-dir=/Users/Pieter/projects/bonnenteller/.git", @"rev-list", @"HEAD", nil];
-	NSLog(@"Starting task...");
-	NSTask* task = [[NSTask alloc] init];
-	task.launchPath = @"/opt/pieter/bin/git";
-	task.arguments = ar;
-	NSPipe* pipe = [NSPipe pipe];
-	task.standardOutput = pipe;
-	
-	NSFileHandle* handle = [NSFileHandle fileHandleWithStandardOutput];
-	handle = [pipe fileHandleForReading];
-	
-	[task launch];
-	
-	NSLog(@"Task launched");
-	
-	int buffersize = 50;
-	char buffer[buffersize];
-	NSMutableArray * newArray = [NSMutableArray array];
-	int fd = [handle fileDescriptor];
-	FILE * file = fdopen(fd, "r");
-
-	while (YES) {
-		
-
-		if (fgets(buffer, buffersize, file)) {
-			NSString* s = [NSString stringWithCString:buffer length:buffersize];
-			NSLog(@"Got string: %@", s);
-			[newArray addObject:s];
-		}
-		else {
-			fclose(file);
-			NSLog(@"Done!");
-			break;
-		}
-	}
-	self.listOfCommits = newArray;
-	
+	[self.repository addCommit:@"Haaha"];
 }
 
-@synthesize listOfCommits;
+
+- (GitTest_AppDelegate*) init
+{
+	self.repository = [PBGitRepository repositoryWithPath:@"/Users/Pieter/projects/bonnenteller/.git"];
+	NSLog(@"Repository is: %@", repository);
+	NSLog(@"Repository commits is: %@", repository.commits);
+	return self;
+}
 
 /**
     Returns the support folder for the application, used to store the Core Data

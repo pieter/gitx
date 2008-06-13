@@ -5,8 +5,18 @@
 	<key>IBClasses</key>
 	<array>
 		<dict>
+			<key>CLASS</key>
+			<string>PBGitRepository</string>
+			<key>LANGUAGE</key>
+			<string>ObjC</string>
+			<key>SUPERCLASS</key>
+			<string>NSObject</string>
+		</dict>
+		<dict>
 			<key>ACTIONS</key>
 			<dict>
+				<key>clickButton</key>
+				<string>id</string>
 				<key>getData</key>
 				<string>id</string>
 				<key>saveAction</key>
@@ -20,6 +30,8 @@
 			<dict>
 				<key>listOfCommits</key>
 				<string>NSArray</string>
+				<key>repository</key>
+				<string>PBGitRepository</string>
 				<key>window</key>
 				<string>NSWindow</string>
 			</dict>

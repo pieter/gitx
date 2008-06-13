@@ -7,11 +7,12 @@
 //
 
 #import <Cocoa/Cocoa.h>
+#import "PBGitRepository.h"
 
 @interface GitTest_AppDelegate : NSObject 
 {
     IBOutlet NSWindow *window;
-	IBOutlet NSArray* listOfCommits;
+	IBOutlet PBGitRepository* repository;
 	
     NSPersistentStoreCoordinator *persistentStoreCoordinator;
     NSManagedObjectModel *managedObjectModel;
@@ -22,8 +23,8 @@
 - (NSManagedObjectModel *)managedObjectModel;
 - (NSManagedObjectContext *)managedObjectContext;
 
-@property (retain) NSArray* listOfCommits;
-
 - (IBAction)saveAction:sender;
-- (IBAction)getData:sender;
+- (IBAction) clickButton:(id)sender;
+
+@property (retain) PBGitRepository* repository;
 @end
