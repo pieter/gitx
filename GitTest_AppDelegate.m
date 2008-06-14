@@ -20,7 +20,15 @@
 
 - (GitTest_AppDelegate*) init
 {
-	self.repository = [PBGitRepository repositoryWithPath:@"/Users/Pieter/projects/bonnenteller/.git"];
+	char* a = getenv("PWD");
+	NSString* path;
+	if (a == nil)
+		// TODO: Add a check here to see if the directory exists.
+		path = @"/Users/Pieter/projects/bonnenteller/.git";
+	else
+		path = [[NSString stringWithCString:a] stringByAppendingString:@"/.git"];
+
+	self.repository = [PBGitRepository repositoryWithPath:path];
 	NSLog(@"Repository is: %@", repository);
 	return self;
 }
