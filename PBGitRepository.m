@@ -57,7 +57,7 @@ static NSString* gitPath = @"/opt/pieter/bin/git";
 - (NSFileHandle*) handleForCommand:(NSString *)cmd
 {
 	NSString* gitDirArg = [@"--git-dir=" stringByAppendingString:path];
-	NSArray* arguments =  [NSArray arrayWithObject:gitDirArg];
+	NSArray* arguments =  [NSArray arrayWithObjects: gitDirArg, nil];
 	arguments = [arguments arrayByAddingObjectsFromArray: [cmd componentsSeparatedByString:@" "]];
 	
 	NSTask* task = [[NSTask alloc] init];
