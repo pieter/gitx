@@ -44,7 +44,7 @@ var doeHet = function() {
 	});
 
 	$("message").innerHTML = commit.message.replace(/\n/g,"<br>");
-	if (commit.diff.length < 1000) {
+	if (commit.diff.length < 10000) {
 		$("details").innerHTML = commit.diff;
 	} else {
 		$("details").innerHTML = "This diff is currently too large to watch in detailed mode";
