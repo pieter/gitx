@@ -33,7 +33,8 @@
 - (void) observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
 {
     if (context == @"ChangedCommit") {
-		[self changeContentTo: [[commitsController selectedObjects] objectAtIndex:0]];
+		if ([[commitsController selectedObjects] count] != 0)
+			[self changeContentTo: [[commitsController selectedObjects] objectAtIndex:0]];
 	}
 	else {
 		[super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
