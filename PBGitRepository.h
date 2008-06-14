@@ -14,6 +14,7 @@
 }
 
 + (PBGitRepository*) repositoryWithPath:(NSString*) path;
++ (void) setGitPath;
 - (NSFileHandle*) handleForCommand:(NSString*) cmd;
 - (void) addCommit: (id)obj;
 

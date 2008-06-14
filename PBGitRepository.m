@@ -13,13 +13,41 @@
 
 @implementation PBGitRepository
 
-static NSString* gitPath = @"/opt/pieter/bin/git";
+static NSString* gitPath = @"/usr/bin/env";
 
 + (PBGitRepository*) repositoryWithPath:(NSString*) path
 {
+	[self setGitPath];
 	PBGitRepository* repo = [[PBGitRepository alloc] init];
 	repo.path = path;
 	return repo;
+}
+
++ (void) setGitPath
+{
+	char* path = getenv("GIT_PATH");
+	if (path != nil) {
+		gitPath = [NSString stringWithCString:path];
+		NSLog(@"Git path is now '%@'", gitPath);
+		return;
+	}
+	
+	// No explicit path. Try it with "which"
+	NSTask* task = [[NSTask alloc] init];
+	task.launchPath = @"/usr/bin/which";
+	task.arguments = [NSArray arrayWithObject:@"git"];
+	NSPipe* pipe = [NSPipe pipe];
+	NSFileHandle* handle = [pipe fileHandleForReading];
+	task.standardOutput = pipe;
+	[task launch];
+	NSString* a = [handle readLine];
+	gitPath = a;
+	NSLog(@"Git path is now '%@'", gitPath);
+
+	if (a.length == 0) {
+		NSLog(@"Git path not found. Defaulting to /opt/pieter/bin/git");
+		gitPath = @"/opt/pieter/bin/git";
+	}
 }
 
 - (void) addCommit: (id) obj
