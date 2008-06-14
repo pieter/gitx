@@ -65,7 +65,7 @@ static NSString* gitPath = @"/usr/bin/env";
 	if (commits != nil)
 		return commits;
 	
-	NSFileHandle* handle = [self handleForCommand:@"log --pretty=format:%H%x01%s%x01%an HEAD"];
+	NSFileHandle* handle = [self handleForCommand:@"log --pretty=format:%H\01%s\01%an HEAD"];
 	NSMutableArray * newArray = [NSMutableArray array];
 	NSString* currentLine = [handle readLine];
 
