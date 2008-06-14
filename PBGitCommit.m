@@ -22,7 +22,7 @@
 
 - (NSString*) details
 {
-	NSFileHandle* handle = [self.repository handleForCommand:[@"show " stringByAppendingString:self.sha]];
+	NSFileHandle* handle = [self.repository handleForCommand:[@"show --pretty=raw " stringByAppendingString:self.sha]];
 	NSString* details = [[NSString alloc] initWithData:[handle readDataToEndOfFile] encoding: NSASCIIStringEncoding];
 	return  details;
 }

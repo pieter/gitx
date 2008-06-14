@@ -1,45 +1,53 @@
 <html>
 <header>
 	<title>Details for commit</title>
+	<link rel="stylesheet" href="commits.css" type="text/css" media="screen" title="no title" charset="utf-8">
 	<script type="text/JavaScript">
 		var doeHet = function() {
 			document.getElementById("commitID").innerHTML = CommitObject.sha;
 			document.getElementById("authorID").innerHTML = CommitObject.author;
 			document.getElementById("subjectID").innerHTML = CommitObject.subject;
+			
 			details = CommitObject.details();
-			date = details.match(/Date:(.*)/)[1];
-			document.getElementById("date").innerHTML = date;
-			diffStart = details.indexOf("diff");
 			messageStart = details.indexOf("\n\n") + 2;
-			message = details.substring(messageStart,diffStart);
+			diffStart = details.indexOf("diff");
+
+			header  = details.substring(0, messageStart);
+			message = details.substring(messageStart, diffStart);
 			details = details.substring(diffStart);
-			document.getElementById("details").innerHTML = details;
+			
+			date = header.match(/author .* ([0-9]+) .*/)[1];
+			date = new Date(parseInt(date) * 1000);
+			//date = "ha";
+			document.getElementById("date").innerHTML = date;
+
 			document.getElementById("message").innerHTML = message.replace(/\n/g,"<br>");
+			document.getElementById("details").innerHTML = details;
 		}
 	</script>
 	
 </header>
 
 <body style="padding: 0px; border: 0px">
-	<table style="width: 100%; font-size: 1.2em;">
+	<table id="commit_header">
 	<tr>
-		<td style="width: 100px; color:#999; text-align: right; text-weight: bold;">SHA:</td>
+		<td class="property_name">SHA:</td>
 		<td id="commitID"></td>
 	</tr>
 	<tr>
-		<td style="width: 100px; color:#999; text-align: right; text-weight: bold;">Author:</td>
+		<td class="property_name">Author:</td>
 		<td id="authorID">Pieter de Bie</td>
 	</tr>
 	<tr>
-		<td style="width: 100px; color:#999; text-align: right; text-weight: bold;">Date:</td>
+		<td class="property_name">Date:</td>
 		<td id="date">Pieter de Bie</td>
 	</tr>
 	<tr>
-		<td style="width: 100px; color:#999; text-align: right; text-weight: bold;">Subject:</td>
+		<td class="property_name">Subject:</td>
 		<td id="subjectID">Pieter de Bie</td>
 	</tr>
 	</table>
 	<hr>
 	<div id="message"></div>
-	<code><pre id="details"></pre></code>
+	<pre><div id="details"></div></pre>
 </body>

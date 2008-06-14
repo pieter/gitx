@@ -33,7 +33,6 @@
 - (void) observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
 {
     if (context == @"ChangedCommit") {
-		NSLog(@"SomethingChanged");
 		[self changeContentTo: [[commitsController selectedObjects] objectAtIndex:0]];
 	}
 	else {
@@ -43,8 +42,11 @@
 
 - (void) changeContentTo: (id) content
 {
+	NSLog(@"Starting Change");
 	id script = [view windowScriptObject];
 	[script setValue: content forKey:@"CommitObject"];
+	NSLog(@"Done 1");
 	[script callWebScriptMethod:@"doeHet" withArguments: nil];
+	NSLog(@"Change done");
 }
 @end
