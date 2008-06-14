@@ -1,0 +1,45 @@
+<html>
+<header>
+	<title>Details for commit</title>
+	<script type="text/JavaScript">
+		var doeHet = function() {
+			document.getElementById("commitID").innerHTML = CommitObject.sha;
+			document.getElementById("authorID").innerHTML = CommitObject.author;
+			document.getElementById("subjectID").innerHTML = CommitObject.subject;
+			details = CommitObject.details();
+			date = details.match(/Date:(.*)/)[1];
+			document.getElementById("date").innerHTML = date;
+			diffStart = details.indexOf("diff");
+			messageStart = details.indexOf("\n\n") + 2;
+			message = details.substring(messageStart,diffStart);
+			details = details.substring(diffStart);
+			document.getElementById("details").innerHTML = details;
+			document.getElementById("message").innerHTML = message.replace(/\n/g,"<br>");
+		}
+	</script>
+	
+</header>
+
+<body style="padding: 0px; border: 0px">
+	<table style="width: 100%; font-size: 1.2em;">
+	<tr>
+		<td style="width: 100px; color:#999; text-align: right; text-weight: bold;">SHA:</td>
+		<td id="commitID"></td>
+	</tr>
+	<tr>
+		<td style="width: 100px; color:#999; text-align: right; text-weight: bold;">Author:</td>
+		<td id="authorID">Pieter de Bie</td>
+	</tr>
+	<tr>
+		<td style="width: 100px; color:#999; text-align: right; text-weight: bold;">Date:</td>
+		<td id="date">Pieter de Bie</td>
+	</tr>
+	<tr>
+		<td style="width: 100px; color:#999; text-align: right; text-weight: bold;">Subject:</td>
+		<td id="subjectID">Pieter de Bie</td>
+	</tr>
+	</table>
+	<hr>
+	<div id="message"></div>
+	<code><pre id="details"></pre></code>
+</body>

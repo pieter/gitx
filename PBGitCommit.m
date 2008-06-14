@@ -26,4 +26,13 @@
 	NSString* details = [[NSString alloc] initWithData:[handle readDataToEndOfFile] encoding: NSASCIIStringEncoding];
 	return  details;
 }
+
++ (BOOL)isSelectorExcludedFromWebScript:(SEL)aSelector
+{
+	return NO;
+}
+
++ (BOOL)isKeyExcludedFromWebScript:(const char *)name {
+	return NO;
+}
 @end
