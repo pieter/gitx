@@ -5,7 +5,7 @@
 }
 .property_name {
 	width: 50px;
-	color:#999;
+	color:#7F7F7F;
 	text-align: right;
 	font-weight: bold;
 }
@@ -17,7 +17,7 @@
 #details {
 	font-family: Monaco;
 	font-size: 10px;
-	overflow: none;
+	overflow: hidden;
 	width: 600px;
 }
 hr {
@@ -25,4 +25,13 @@ hr {
 	height: 1px;
 	width: 80%;
 	background-color: #999;
+}
+
+pre {
+  overflow-y: auto;
+}
+
+pre code {
+  display: table-cell;
+  width: 100%;
 }
