@@ -22,7 +22,6 @@
 {
 	self.repository = [PBGitRepository repositoryWithPath:@"/Users/Pieter/projects/bonnenteller/.git"];
 	NSLog(@"Repository is: %@", repository);
-	NSLog(@"Repository commits is: %@", repository.commits);
 	return self;
 }
 

@@ -7,7 +7,9 @@
 //
 
 #import "PBGitRepository.h"
+#import "PBGitCommit.h"
 
+#import "NSFileHandleExt.h"
 
 @implementation PBGitRepository
 
@@ -32,33 +34,21 @@ static NSString* gitPath = @"/opt/pieter/bin/git";
 
 - (NSArray*) commits
 {
-	NSLog(@"Hey");
 	if (commits != nil)
 		return commits;
 	
-	NSFileHandle* handle = [self handleForCommand:@"rev-list HEAD"];
-	
-	int buffersize = 50;
-	char buffer[buffersize];
+	NSFileHandle* handle = [self handleForCommand:@"log --pretty=format:%H%x01%s HEAD"];
 	NSMutableArray * newArray = [NSMutableArray array];
-	int fd = [handle fileDescriptor];
-	FILE * file = fdopen(fd, "r");
-	
-	while (YES) {
-		
-		
-		if (fgets(buffer, buffersize, file)) {
-			NSString* s = [NSString stringWithCString:buffer length:buffersize];
-			NSLog(@"Got string: %@", s);
-			[newArray addObject:s];
-		}
-		else {
-			fclose(file);
-			NSLog(@"Done!");
-			break;
-		}
+	NSString* currentLine = [handle readLine];
+
+	while (currentLine.length > 0) {
+		NSArray* components = [currentLine componentsSeparatedByString:@"\01"];
+		PBGitCommit* newCommit = [[PBGitCommit alloc] initWithRepository: self andSha: [components objectAtIndex:0]];
+		newCommit.subject = [components objectAtIndex:1];
+		[newArray addObject: newCommit];
+		currentLine = [handle readLine];
 	}
-	
+
 	commits = newArray;
 	return commits;
 }
