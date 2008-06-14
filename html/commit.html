@@ -2,30 +2,8 @@
 <header>
 	<title>Details for commit</title>
 	<link rel="stylesheet" href="commits.css" type="text/css" media="screen" title="no title" charset="utf-8">
-	<script type="text/JavaScript">
-		var doeHet = function() {
-			document.getElementById("commitID").innerHTML = CommitObject.sha;
-			document.getElementById("authorID").innerHTML = CommitObject.author;
-			document.getElementById("subjectID").innerHTML = CommitObject.subject;
-			
-			details = CommitObject.details();
-			messageStart = details.indexOf("\n\n") + 2;
-			diffStart = details.indexOf("diff");
-
-			header  = details.substring(0, messageStart);
-			message = details.substring(messageStart, diffStart);
-			details = details.substring(diffStart);
-			
-			date = header.match(/author .* ([0-9]+) .*/)[1];
-			date = new Date(parseInt(date) * 1000);
-			//date = "ha";
-			document.getElementById("date").innerHTML = date;
-
-			document.getElementById("message").innerHTML = message.replace(/\n/g,"<br>");
-			document.getElementById("details").innerHTML = details;
-		}
-	</script>
-	
+	<script src="prototype.js" type="text/javascript" charset="utf-8"></script>
+	<script src="commit.js" type="text/javascript" charset="utf-8"></script>
 </header>
 
 <body style="padding: 0px; border: 0px">
@@ -44,7 +22,7 @@
 	</tr>
 	<tr>
 		<td class="property_name">Subject:</td>
-		<td id="subjectID">Pieter de Bie</td>
+		<td id="subjectID" style="font-weight:bold">Pieter de Bie</td>
 	</tr>
 	</table>
 	<hr>
