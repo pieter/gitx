@@ -11,7 +11,7 @@
 
 @implementation PBGitCommit
 
-@synthesize sha, repository, subject;
+@synthesize sha, repository, subject, author;
 
 - initWithRepository:(PBGitRepository*) repo andSha:(NSString*) newSha
 {

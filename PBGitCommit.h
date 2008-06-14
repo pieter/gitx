@@ -12,6 +12,7 @@
 @interface PBGitCommit : NSObject {
 	NSString* sha;
 	NSString* subject;
+	NSString* author;
 	PBGitRepository* repository;
 }
 
@@ -19,6 +20,8 @@
 
 @property (copy) NSString* sha;
 @property (copy) NSString* subject;
+@property (copy) NSString* author;
+
 @property (readonly) NSString* details;
 
 @property (retain) PBGitRepository* repository;

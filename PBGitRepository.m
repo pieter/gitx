@@ -37,7 +37,7 @@ static NSString* gitPath = @"/opt/pieter/bin/git";
 	if (commits != nil)
 		return commits;
 	
-	NSFileHandle* handle = [self handleForCommand:@"log --pretty=format:%H%x01%s HEAD"];
+	NSFileHandle* handle = [self handleForCommand:@"log --pretty=format:%H%x01%s%x01%an HEAD"];
 	NSMutableArray * newArray = [NSMutableArray array];
 	NSString* currentLine = [handle readLine];
 
@@ -45,6 +45,7 @@ static NSString* gitPath = @"/opt/pieter/bin/git";
 		NSArray* components = [currentLine componentsSeparatedByString:@"\01"];
 		PBGitCommit* newCommit = [[PBGitCommit alloc] initWithRepository: self andSha: [components objectAtIndex:0]];
 		newCommit.subject = [components objectAtIndex:1];
+		newCommit.author = [components objectAtIndex:2];
 		[newArray addObject: newCommit];
 		currentLine = [handle readLine];
 	}
