@@ -8,6 +8,7 @@
 
 #import <Cocoa/Cocoa.h>
 #import "PBGitRepository.h"
+#import "PBGitTree.h"
 
 @interface PBGitCommit : NSObject {
 	NSString* sha;
@@ -23,6 +24,6 @@
 @property (copy) NSString* author;
 
 @property (readonly) NSString* details;
-
+@property (readonly) PBGitTree* tree;
 @property (retain) PBGitRepository* repository;
 @end

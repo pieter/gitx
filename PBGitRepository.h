@@ -19,6 +19,7 @@
 - (PBGitRepository*) initWithPath:(NSString*) path;
 
 - (NSFileHandle*) handleForCommand:(NSString*) cmd;
+- (NSFileHandle*) handleForArguments:(NSArray*) args;
 - (void) initializeCommits;
 - (void) addCommit: (id)obj;
 

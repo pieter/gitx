@@ -96,11 +96,11 @@ static NSString* gitPath = @"/usr/bin/env";
 	[NSThread exit];
 }
 
-- (NSFileHandle*) handleForCommand:(NSString *)cmd
+- (NSFileHandle*) handleForArguments:(NSArray *)args
 {
 	NSString* gitDirArg = [@"--git-dir=" stringByAppendingString:path];
-	NSArray* arguments =  [NSArray arrayWithObjects: gitDirArg, nil];
-	arguments = [arguments arrayByAddingObjectsFromArray: [cmd componentsSeparatedByString:@" "]];
+	NSArray* arguments =  [NSArray arrayWithObject: gitDirArg];
+	arguments = [arguments arrayByAddingObjectsFromArray: args];
 	
 	NSTask* task = [[NSTask alloc] init];
 	task.launchPath = gitPath;
@@ -115,6 +115,12 @@ static NSString* gitPath = @"/usr/bin/env";
 	[task launch];
 	
 	return handle;
+}
+
+- (NSFileHandle*) handleForCommand:(NSString *)cmd
+{
+	NSArray* arguments = [cmd componentsSeparatedByString:@" "];
+	return [self handleForArguments:arguments];
 }
 
 @end

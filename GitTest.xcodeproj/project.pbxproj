@@ -15,6 +15,7 @@
 		8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
 		F561727F0E056A11001DCD79 /* diff_style.css in Resources */ = {isa = PBXBuildFile; fileRef = F561727C0E056A11001DCD79 /* diff_style.css */; };
 		F56173280E056ED2001DCD79 /* diffHighlighter.js in Resources */ = {isa = PBXBuildFile; fileRef = F56173270E056ED2001DCD79 /* diffHighlighter.js */; };
+		F56174570E058893001DCD79 /* PBGitTree.m in Sources */ = {isa = PBXBuildFile; fileRef = F56174560E058893001DCD79 /* PBGitTree.m */; };
 		F56524BB0E02D22D00F03B52 /* NSFileHandleExt.m in Sources */ = {isa = PBXBuildFile; fileRef = F56524B90E02D22D00F03B52 /* NSFileHandleExt.m */; };
 		F56524F00E02D45200F03B52 /* PBGitCommit.m in Sources */ = {isa = PBXBuildFile; fileRef = F56524EF0E02D45200F03B52 /* PBGitCommit.m */; };
 		F56526240E03D85900F03B52 /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F56526230E03D85900F03B52 /* WebKit.framework */; };
@@ -42,6 +43,8 @@
 		8D1107320486CEB800E47090 /* GitTest.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GitTest.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F561727C0E056A11001DCD79 /* diff_style.css */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.css; name = diff_style.css; path = html/diff_style.css; sourceTree = "<group>"; };
 		F56173270E056ED2001DCD79 /* diffHighlighter.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; name = diffHighlighter.js; path = html/diffHighlighter.js; sourceTree = "<group>"; };
+		F56174550E058893001DCD79 /* PBGitTree.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PBGitTree.h; sourceTree = "<group>"; };
+		F56174560E058893001DCD79 /* PBGitTree.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PBGitTree.m; sourceTree = "<group>"; };
 		F56524B90E02D22D00F03B52 /* NSFileHandleExt.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSFileHandleExt.m; sourceTree = "<group>"; };
 		F56524BA0E02D22D00F03B52 /* NSFileHandleExt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSFileHandleExt.h; sourceTree = "<group>"; };
 		F56524EE0E02D45200F03B52 /* PBGitCommit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PBGitCommit.h; sourceTree = "<group>"; };
@@ -79,10 +82,6 @@
 				F56524BA0E02D22D00F03B52 /* NSFileHandleExt.h */,
 				77C8280B06725ACE000B614F /* GitTest_AppDelegate.h */,
 				77C8280C06725ACE000B614F /* GitTest_AppDelegate.m */,
-				F5945E150E02B0C200706420 /* PBGitRepository.h */,
-				F5945E160E02B0C200706420 /* PBGitRepository.m */,
-				F56524EE0E02D45200F03B52 /* PBGitCommit.h */,
-				F56524EF0E02D45200F03B52 /* PBGitCommit.m */,
 			);
 			name = Classes;
 			sourceTree = "<group>";
@@ -117,6 +116,7 @@
 		29B97314FDCFA39411CA2CEA /* GitTest */ = {
 			isa = PBXGroup;
 			children = (
+				F56174540E05887E001DCD79 /* Git */,
 				F58A8F250E04368A007E3FC0 /* HTML */,
 				7756732906782D8800D1FEB8 /* Models */,
 				080E96DDFE201D6D7F000001 /* Classes */,
@@ -162,6 +162,19 @@
 				770B37EC0679A11B001EADE2 /* GitTest_DataModel.xcdatamodel */,
 			);
 			name = Models;
+			sourceTree = "<group>";
+		};
+		F56174540E05887E001DCD79 /* Git */ = {
+			isa = PBXGroup;
+			children = (
+				F5945E150E02B0C200706420 /* PBGitRepository.h */,
+				F5945E160E02B0C200706420 /* PBGitRepository.m */,
+				F56524EE0E02D45200F03B52 /* PBGitCommit.h */,
+				F56524EF0E02D45200F03B52 /* PBGitCommit.m */,
+				F56174550E058893001DCD79 /* PBGitTree.h */,
+				F56174560E058893001DCD79 /* PBGitTree.m */,
+			);
+			name = Git;
 			sourceTree = "<group>";
 		};
 		F58A8F250E04368A007E3FC0 /* HTML */ = {
@@ -245,6 +258,7 @@
 				F56524BB0E02D22D00F03B52 /* NSFileHandleExt.m in Sources */,
 				F56524F00E02D45200F03B52 /* PBGitCommit.m in Sources */,
 				F565262B0E03D89B00F03B52 /* PBWebGitController.m in Sources */,
+				F56174570E058893001DCD79 /* PBGitTree.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

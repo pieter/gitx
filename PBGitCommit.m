@@ -27,6 +27,18 @@
 	return  details;
 }
 
+- (PBGitTree*) tree
+{
+	NSLog(@"Tree called!");
+	return [PBGitTree rootForCommit: self];
+}
+
+- (NSArray *) children
+{
+	NSLog(@"Children aangeroepen");
+	return [NSArray arrayWithObjects:self, self, nil];
+}
+
 + (BOOL)isSelectorExcludedFromWebScript:(SEL)aSelector
 {
 	return NO;
