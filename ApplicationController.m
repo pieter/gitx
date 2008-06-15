@@ -14,14 +14,16 @@
 
 - (ApplicationController*) init
 {
-	char* a = getenv("PWD");
 	self.selectedTab = [NSNumber numberWithInt:0];
+
+	// Find the current repository
+	char* a = getenv("PWD");
 	NSString* path;
 	if (a == nil)
 		// TODO: Add a check here to see if the directory exists.
-		path = @"/Users/Pieter/projects/bonnenteller/.git";
+		path = @"/Users/Pieter/projects/Cocoa/GitTest/.git";
 	else
-		path = [[NSString stringWithCString:a] stringByAppendingString:@"/.git"];
+		path = [NSString stringWithCString:a];
 
 	self.repository = [PBGitRepository repositoryWithPath:path];
 	return self;

@@ -10,6 +10,7 @@
 #import "PBGitCommit.h"
 
 #import "NSFileHandleExt.h"
+#import "PBEasyPipe.h"
 
 @implementation PBGitRepository
 
@@ -25,7 +26,18 @@ static NSString* gitPath = @"/usr/bin/env";
 
 - (PBGitRepository*) initWithPath: (NSString*) p
 {
-	self.path = p;
+	if ([p hasSuffix:@".git"])
+		self.path = p;
+	else {
+		NSString* newPath = [PBEasyPipe outputForCommand:gitPath withArgs:[NSArray arrayWithObjects:@"rev-parse", @"--git-dir", nil] inDir:p];
+		if ([newPath isEqualToString:@".git"])
+			self.path = [p stringByAppendingPathComponent:@".git"];
+		else
+			self.path = newPath;
+	}
+
+	NSLog(@"Git path is: %@", self.path);
+
 	NSThread * commitThread = [[NSThread alloc] initWithTarget: self selector: @selector(initializeCommits) object:nil];
 	[commitThread start];
 	return self;
@@ -41,17 +53,9 @@ static NSString* gitPath = @"/usr/bin/env";
 	}
 	
 	// No explicit path. Try it with "which"
-	NSTask* task = [[NSTask alloc] init];
-	task.launchPath = @"/usr/bin/which";
-	task.arguments = [NSArray arrayWithObject:@"git"];
-	NSPipe* pipe = [NSPipe pipe];
-	NSFileHandle* handle = [pipe fileHandleForReading];
-	task.standardOutput = pipe;
-	[task launch];
-	NSString* a = [handle readLine];
-	gitPath = a;
+	gitPath = [PBEasyPipe outputForCommand:@"/usr/bin/which" withArgs:[NSArray arrayWithObject:@"git"]];
 
-	if (a.length == 0) {
+	if (gitPath.length == 0) {
 		NSLog(@"Git path not found. Defaulting to /opt/pieter/bin/git");
 		gitPath = @"/opt/pieter/bin/git";
 	}
@@ -99,22 +103,9 @@ static NSString* gitPath = @"/usr/bin/env";
 - (NSFileHandle*) handleForArguments:(NSArray *)args
 {
 	NSString* gitDirArg = [@"--git-dir=" stringByAppendingString:path];
-	NSArray* arguments =  [NSArray arrayWithObject: gitDirArg];
-	arguments = [arguments arrayByAddingObjectsFromArray: args];
-	
-	NSTask* task = [[NSTask alloc] init];
-	task.launchPath = gitPath;
-	task.arguments = arguments;
-	
-	NSPipe* pipe = [NSPipe pipe];
-	task.standardOutput = pipe;
-	
-	NSFileHandle* handle = [NSFileHandle fileHandleWithStandardOutput];
-	handle = [pipe fileHandleForReading];
-	
-	[task launch];
-	
-	return handle;
+	NSMutableArray* arguments =  [NSMutableArray arrayWithObject: gitDirArg];
+	[arguments addObjectsFromArray: args];
+	return [PBEasyPipe handleForCommand:gitPath withArgs:arguments];
 }
 
 - (NSFileHandle*) handleForCommand:(NSString *)cmd
