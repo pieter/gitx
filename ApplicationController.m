@@ -6,13 +6,13 @@
 //  Copyright __MyCompanyName__ 2008 . All rights reserved.
 //
 
-#import "GitTest_AppDelegate.h"
+#import "ApplicationController.h"
 
-@implementation GitTest_AppDelegate
+@implementation ApplicationController
 
 @synthesize repository, selectedTab;
 
-- (GitTest_AppDelegate*) init
+- (ApplicationController*) init
 {
 	char* a = getenv("PWD");
 	self.selectedTab = [NSNumber numberWithInt:0];

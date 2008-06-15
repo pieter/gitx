@@ -7,12 +7,12 @@
 //
 
 #import <Cocoa/Cocoa.h>
-#import "GitTest_AppDelegate.h"
+#import "ApplicationController.h"
 #import "PBGitCommit.h"
 #import <WebKit/WebKit.h>
 
 @interface PBWebGitController : NSObject {
-	IBOutlet GitTest_AppDelegate* controller;
+	IBOutlet ApplicationController* controller;
 	IBOutlet WebView* view;
 	IBOutlet NSArrayController* commitsController;
 	NSString* currentSha;

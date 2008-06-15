@@ -9,7 +9,7 @@
 #import <Cocoa/Cocoa.h>
 #import "PBGitRepository.h"
 
-@interface GitTest_AppDelegate : NSObject 
+@interface ApplicationController : NSObject 
 {
     IBOutlet NSWindow *window;
 	IBOutlet PBGitRepository* repository;
