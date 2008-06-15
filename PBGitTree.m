@@ -16,7 +16,6 @@
 
 + (PBGitTree*) rootForCommit:(id) commit
 {
-	NSLog(@"Making root");
 	PBGitCommit* c = commit;
 	PBGitTree* tree = [[self alloc] init];
 	tree.parent = nil;
@@ -44,12 +43,28 @@
 	return self;
 }
 
+- (NSString*) refSpec
+{
+	return [NSString stringWithFormat:@"%@:%@", self.sha, self.fullPath];
+}
+
+- (NSString*) contents
+{
+	if (!leaf)
+		return [NSString stringWithFormat:@"This is a tree with path %@", self];
+
+	NSFileHandle* handle = [repository handleForArguments:[NSArray arrayWithObjects:@"show", [self refSpec], nil]];
+	NSData* data = [handle readDataToEndOfFile];
+	NSString* string = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+	return string;
+}
+
 - (NSArray*) children
 {
-	if (children)
+	if (children != nil)
 		return children;
 	
-	NSString* ref = [NSString stringWithFormat:@"%@:%@", self.sha, self.fullPath];
+	NSString* ref = [self refSpec];
 	NSLog(@"Starting get for %@", ref);
 
 	NSFileHandle* handle = [repository handleForArguments:[NSArray arrayWithObjects:@"show", ref, nil]];
@@ -60,7 +75,6 @@
 	
 	NSString* p = [handle readLine];
 	while (p.length > 0) {
-		NSLog(@"Read line: %@", p);
 		BOOL isLeaf = ([p characterAtIndex:p.length - 1] != '/');
 		if (!isLeaf)
 			p = [p substringToIndex:p.length -1];

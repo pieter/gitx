@@ -25,5 +25,6 @@
 
 @property (readonly) NSString* details;
 @property (readonly) PBGitTree* tree;
+@property (readonly) NSArray* treeContents;
 @property (retain) PBGitRepository* repository;
 @end

@@ -26,5 +26,9 @@
 @property(assign) BOOL leaf;
 @property(retain) PBGitRepository* repository;
 @property(assign) PBGitTree* parent;
+
+@property(readonly) NSArray* children;
 @property(readonly) NSString* fullPath;
+@property(readonly) NSString* contents;
+
 @end

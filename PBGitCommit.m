@@ -13,6 +13,11 @@
 
 @synthesize sha, repository, subject, author;
 
+- (NSArray*) treeContents
+{
+	return self.tree.children;
+}
+
 - initWithRepository:(PBGitRepository*) repo andSha:(NSString*) newSha
 {
 	self.repository = repo;
@@ -29,14 +34,7 @@
 
 - (PBGitTree*) tree
 {
-	NSLog(@"Tree called!");
 	return [PBGitTree rootForCommit: self];
-}
-
-- (NSArray *) children
-{
-	NSLog(@"Children aangeroepen");
-	return [NSArray arrayWithObjects:self, self, nil];
 }
 
 + (BOOL)isSelectorExcludedFromWebScript:(SEL)aSelector

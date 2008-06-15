@@ -10,11 +10,12 @@
 
 @implementation GitTest_AppDelegate
 
-@synthesize repository;
+@synthesize repository, selectedTab;
 
 - (GitTest_AppDelegate*) init
 {
 	char* a = getenv("PWD");
+	self.selectedTab = [NSNumber numberWithInt:0];
 	NSString* path;
 	if (a == nil)
 		// TODO: Add a check here to see if the directory exists.

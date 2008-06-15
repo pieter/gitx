@@ -13,6 +13,7 @@
 {
     IBOutlet NSWindow *window;
 	IBOutlet PBGitRepository* repository;
+	IBOutlet NSNumber* selectedTab;
 	
     NSPersistentStoreCoordinator *persistentStoreCoordinator;
     NSManagedObjectModel *managedObjectModel;
@@ -24,7 +25,7 @@
 - (NSManagedObjectContext *)managedObjectContext;
 
 - (IBAction)saveAction:sender;
-- (IBAction) clickButton:(id)sender;
 
 @property (retain) PBGitRepository* repository;
+@property (copy) NSNumber* selectedTab;
 @end
