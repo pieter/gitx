@@ -12,12 +12,6 @@
 
 @synthesize repository;
 
-- (IBAction) clickButton:(id) sender
-{
-	[self.repository addCommit:@"Haaha"];
-}
-
-
 - (GitTest_AppDelegate*) init
 {
 	char* a = getenv("PWD");
@@ -29,7 +23,6 @@
 		path = [[NSString stringWithCString:a] stringByAppendingString:@"/.git"];
 
 	self.repository = [PBGitRepository repositoryWithPath:path];
-	NSLog(@"Repository is: %@", repository);
 	return self;
 }
 

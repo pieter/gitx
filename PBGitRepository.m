@@ -13,7 +13,7 @@
 
 @implementation PBGitRepository
 
-@synthesize commits;
+@synthesize path, commits;
 static NSString* gitPath = @"/usr/bin/env";
 
 + (PBGitRepository*) repositoryWithPath:(NSString*) path
@@ -37,7 +37,6 @@ static NSString* gitPath = @"/usr/bin/env";
 	char* path = getenv("GIT_PATH");
 	if (path != nil) {
 		gitPath = [NSString stringWithCString:path];
-		NSLog(@"Git path is now '%@'", gitPath);
 		return;
 	}
 	
@@ -51,7 +50,6 @@ static NSString* gitPath = @"/usr/bin/env";
 	[task launch];
 	NSString* a = [handle readLine];
 	gitPath = a;
-	NSLog(@"Git path is now '%@'", gitPath);
 
 	if (a.length == 0) {
 		NSLog(@"Git path not found. Defaulting to /opt/pieter/bin/git");
@@ -118,7 +116,5 @@ static NSString* gitPath = @"/usr/bin/env";
 	
 	return handle;
 }
-
-@synthesize path;
 
 @end
