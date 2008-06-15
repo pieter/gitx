@@ -27,6 +27,10 @@ var Commit = Class.create({
 	},	
 });
 
+var selectCommit = function(a) {
+	Controller.selectCommit_(a);
+}
+
 var doeHet = function() {
 	var commit = new Commit(CommitObject);
 	$("commitID").innerHTML = commit.sha;
@@ -40,7 +44,7 @@ var doeHet = function() {
 	});
 	commit.parents.each(function(parent) {
 		var new_row = $("commit_header").insertRow(-1);
-		new_row.innerHTML = "<td class='property_name'>Parent:</td><td><a href=''>" + parent + "</a></td>";
+		new_row.innerHTML = "<td class='property_name'>Parent:</td><td><a href='' onclick=\"selectCommit(this.innerHTML); return false;\">" + parent + "</a></td>";
 	});
 
 	$("message").innerHTML = commit.message.replace(/\n/g,"<br>");

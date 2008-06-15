@@ -16,17 +16,22 @@
 - (void) awakeFromNib
 {
 	[commitsController addObserver:self forKeyPath:@"selection" options:0 context:@"ChangedCommit"];
-	NSLog(@"WebGitController activated");
+	
 	NSLog([[NSBundle mainBundle] resourcePath]);
 	NSString* file = [[NSBundle mainBundle] pathForResource:@"commit" ofType:@"html"];
 	NSURLRequest * request = [NSURLRequest requestWithURL:[NSURL fileURLWithPath:file]];
-	NSLog(@"Request: %@", request);
+	currentSha = @"Not Loaded";
 	[[view mainFrame] loadRequest:request];	
 }
 
-- (void) webView:(id) view didFinishLoadForFrame:(id) frame
+- (void) webView:(id) v didFinishLoadForFrame:(id) frame
 {
-	NSLog(@"Loading done");
+	id script = [view windowScriptObject];
+	[script setValue: self forKey:@"Controller"];
+	currentSha = @"";
+	if ([[commitsController selectedObjects] count] == 0)
+		return;
+
 	[self changeContentTo: [[commitsController selectedObjects] objectAtIndex:0]];
 }
 
@@ -43,11 +48,29 @@
 
 - (void) changeContentTo: (PBGitCommit *) content
 {
-	if ([currentSha isEqualToString: content.sha])
+	if ([currentSha isEqualToString: content.sha] || [currentSha isEqualToString:@"Not Loaded"])
 		return;
+	
 	currentSha = content.sha;
 	id script = [view windowScriptObject];
 	[script setValue: content forKey:@"CommitObject"];
 	[script callWebScriptMethod:@"doeHet" withArguments: nil];
 }
+
+- (void) selectCommit: (NSString*) sha
+{
+	NSPredicate* selection = [NSPredicate predicateWithFormat:@"sha == %@", sha];
+	NSArray* selectedCommits = [[commitsController arrangedObjects] filteredArrayUsingPredicate:selection];
+	[commitsController setSelectedObjects:selectedCommits];
+}
+
++ (BOOL)isSelectorExcludedFromWebScript:(SEL)aSelector
+{
+	return NO;
+}
+
++ (BOOL)isKeyExcludedFromWebScript:(const char *)name {
+	return NO;
+}
+
 @end
