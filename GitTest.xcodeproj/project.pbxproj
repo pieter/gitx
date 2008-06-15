@@ -13,6 +13,8 @@
 		8D11072B0486CEB800E47090 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C165CFE840E0CC02AAC07 /* InfoPlist.strings */; };
 		8D11072D0486CEB800E47090 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 29B97316FDCFA39411CA2CEA /* main.m */; settings = {ATTRIBUTES = (); }; };
 		8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
+		F561727F0E056A11001DCD79 /* diff_style.css in Resources */ = {isa = PBXBuildFile; fileRef = F561727C0E056A11001DCD79 /* diff_style.css */; };
+		F56173280E056ED2001DCD79 /* diffHighlighter.js in Resources */ = {isa = PBXBuildFile; fileRef = F56173270E056ED2001DCD79 /* diffHighlighter.js */; };
 		F56524BB0E02D22D00F03B52 /* NSFileHandleExt.m in Sources */ = {isa = PBXBuildFile; fileRef = F56524B90E02D22D00F03B52 /* NSFileHandleExt.m */; };
 		F56524F00E02D45200F03B52 /* PBGitCommit.m in Sources */ = {isa = PBXBuildFile; fileRef = F56524EF0E02D45200F03B52 /* PBGitCommit.m */; };
 		F56526240E03D85900F03B52 /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F56526230E03D85900F03B52 /* WebKit.framework */; };
@@ -38,6 +40,8 @@
 		77C8280C06725ACE000B614F /* GitTest_AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GitTest_AppDelegate.m; sourceTree = "<group>"; };
 		8D1107310486CEB800E47090 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		8D1107320486CEB800E47090 /* GitTest.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GitTest.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		F561727C0E056A11001DCD79 /* diff_style.css */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.css; name = diff_style.css; path = html/diff_style.css; sourceTree = "<group>"; };
+		F56173270E056ED2001DCD79 /* diffHighlighter.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; name = diffHighlighter.js; path = html/diffHighlighter.js; sourceTree = "<group>"; };
 		F56524B90E02D22D00F03B52 /* NSFileHandleExt.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSFileHandleExt.m; sourceTree = "<group>"; };
 		F56524BA0E02D22D00F03B52 /* NSFileHandleExt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSFileHandleExt.h; sourceTree = "<group>"; };
 		F56524EE0E02D45200F03B52 /* PBGitCommit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PBGitCommit.h; sourceTree = "<group>"; };
@@ -163,10 +167,12 @@
 		F58A8F250E04368A007E3FC0 /* HTML */ = {
 			isa = PBXGroup;
 			children = (
+				F561727C0E056A11001DCD79 /* diff_style.css */,
 				F56526590E03E71B00F03B52 /* commit.html */,
 				F58A8F270E043698007E3FC0 /* commits.css */,
 				F57ABDDE0E0441DE00A088B8 /* commit.js */,
 				F57ABE180E04431D00A088B8 /* prototype.js */,
+				F56173270E056ED2001DCD79 /* diffHighlighter.js */,
 			);
 			name = HTML;
 			sourceTree = "<group>";
@@ -217,6 +223,8 @@
 				8D11072A0486CEB800E47090 /* MainMenu.nib in Resources */,
 				8D11072B0486CEB800E47090 /* InfoPlist.strings in Resources */,
 				F565265A0E03E71B00F03B52 /* commit.html in Resources */,
+				F56173280E056ED2001DCD79 /* diffHighlighter.js in Resources */,
+				F561727F0E056A11001DCD79 /* diff_style.css in Resources */,
 				F57ABE0B0E0442DD00A088B8 /* commit.js in Resources */,
 				F57ABE2B0E04435100A088B8 /* prototype.js in Resources */,
 				F58A8F280E043698007E3FC0 /* commits.css in Resources */,

@@ -2,8 +2,10 @@
 <header>
 	<title>Details for commit</title>
 	<link rel="stylesheet" href="commits.css" type="text/css" media="screen" title="no title" charset="utf-8">
+	<link rel="stylesheet" href="diff_style.css" type="text/css" media="screen" title="no title" charset="utf-8">
 	<script src="prototype.js" type="text/javascript" charset="utf-8"></script>
 	<script src="commit.js" type="text/javascript" charset="utf-8"></script>
+	<script src="diffHighlighter.js" type="text/javascript" charset="utf-8"></script>
 </header>
 
 <body style="padding: 0px; border: 0px">
@@ -27,5 +29,5 @@
 	</table>
 	<hr>
 	<div id="message"></div>
-	<pre><code id="details"></code></pre>
+	<pre><code class="diffcode" id='details'></code></pre>
 </body>

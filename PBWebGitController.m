@@ -57,6 +57,11 @@
 	[script callWebScriptMethod:@"doeHet" withArguments: nil];
 }
 
+- (void) log: (NSString*) logMessage
+{
+	NSLog(logMessage);
+}
+
 - (void) selectCommit: (NSString*) sha
 {
 	NSPredicate* selection = [NSPredicate predicateWithFormat:@"sha == %@", sha];
