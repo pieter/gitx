@@ -13,9 +13,13 @@
 	NSArray* commits;
 }
 
-+ (PBGitRepository*) repositoryWithPath:(NSString*) path;
 + (void) setGitPath;
+
++ (PBGitRepository*) repositoryWithPath:(NSString*) path;
+- (PBGitRepository*) initWithPath:(NSString*) path;
+
 - (NSFileHandle*) handleForCommand:(NSString*) cmd;
+- (void) initializeCommits;
 - (void) addCommit: (id)obj;
 
 @property (copy) NSString* path;

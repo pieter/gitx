@@ -41,13 +41,13 @@
 	}
 }
 
-- (void) changeContentTo: (id) content
+- (void) changeContentTo: (PBGitCommit *) content
 {
-	NSLog(@"Starting Change");
+	if ([currentSha isEqualToString: content.sha])
+		return;
+	currentSha = content.sha;
 	id script = [view windowScriptObject];
 	[script setValue: content forKey:@"CommitObject"];
-	NSLog(@"Done 1");
 	[script callWebScriptMethod:@"doeHet" withArguments: nil];
-	NSLog(@"Change done");
 }
 @end

@@ -18,9 +18,7 @@
 		F56526240E03D85900F03B52 /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F56526230E03D85900F03B52 /* WebKit.framework */; };
 		F565262B0E03D89B00F03B52 /* PBWebGitController.m in Sources */ = {isa = PBXBuildFile; fileRef = F565262A0E03D89B00F03B52 /* PBWebGitController.m */; };
 		F565265A0E03E71B00F03B52 /* commit.html in Resources */ = {isa = PBXBuildFile; fileRef = F56526590E03E71B00F03B52 /* commit.html */; };
-		F57ABDDF0E0441DE00A088B8 /* commit.js in Sources */ = {isa = PBXBuildFile; fileRef = F57ABDDE0E0441DE00A088B8 /* commit.js */; };
 		F57ABE0B0E0442DD00A088B8 /* commit.js in Resources */ = {isa = PBXBuildFile; fileRef = F57ABDDE0E0441DE00A088B8 /* commit.js */; };
-		F57ABE190E04431D00A088B8 /* prototype.js in Sources */ = {isa = PBXBuildFile; fileRef = F57ABE180E04431D00A088B8 /* prototype.js */; };
 		F57ABE2B0E04435100A088B8 /* prototype.js in Resources */ = {isa = PBXBuildFile; fileRef = F57ABE180E04431D00A088B8 /* prototype.js */; };
 		F58A8F280E043698007E3FC0 /* commits.css in Resources */ = {isa = PBXBuildFile; fileRef = F58A8F270E043698007E3FC0 /* commits.css */; };
 		F5945E170E02B0C200706420 /* PBGitRepository.m in Sources */ = {isa = PBXBuildFile; fileRef = F5945E160E02B0C200706420 /* PBGitRepository.m */; };
@@ -48,7 +46,7 @@
 		F56526290E03D89B00F03B52 /* PBWebGitController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PBWebGitController.h; sourceTree = "<group>"; };
 		F565262A0E03D89B00F03B52 /* PBWebGitController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PBWebGitController.m; sourceTree = "<group>"; };
 		F56526590E03E71B00F03B52 /* commit.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = commit.html; path = html/commit.html; sourceTree = "<group>"; };
-		F57ABDDE0E0441DE00A088B8 /* commit.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; name = commit.js; path = html/commit.js; sourceTree = "<group>"; };
+		F57ABDDE0E0441DE00A088B8 /* commit.js */ = {isa = PBXFileReference; explicitFileType = sourcecode.javascript; fileEncoding = 4; name = commit.js; path = html/commit.js; sourceTree = "<group>"; };
 		F57ABE180E04431D00A088B8 /* prototype.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; name = prototype.js; path = html/prototype.js; sourceTree = "<group>"; };
 		F58A8F270E043698007E3FC0 /* commits.css */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.css; name = commits.css; path = html/commits.css; sourceTree = "<group>"; };
 		F5945E150E02B0C200706420 /* PBGitRepository.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PBGitRepository.h; sourceTree = "<group>"; };
@@ -239,8 +237,6 @@
 				F56524BB0E02D22D00F03B52 /* NSFileHandleExt.m in Sources */,
 				F56524F00E02D45200F03B52 /* PBGitCommit.m in Sources */,
 				F565262B0E03D89B00F03B52 /* PBWebGitController.m in Sources */,
-				F57ABDDF0E0441DE00A088B8 /* commit.js in Sources */,
-				F57ABE190E04431D00A088B8 /* prototype.js in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
