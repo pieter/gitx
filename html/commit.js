@@ -1,3 +1,4 @@
+var commit;
 var Commit = Class.create({
 	initialize: function(obj) {
 		this.raw = obj.details;
@@ -31,8 +32,16 @@ var selectCommit = function(a) {
 	Controller.selectCommit_(a);
 }
 
+var showDiffs = function() {
+	$("details").hide();
+	$("details").innerHTML = commit.diff;
+	highlightDiffs();
+	$("details").show();
+}
+
 var doeHet = function() {
-	var commit = new Commit(CommitObject);
+	commit = new Commit(CommitObject);
+
 	$("commitID").innerHTML = commit.sha;
 	$("authorID").innerHTML = commit.author_name + " &lt;<a href='mailto:" + commit.author_email + "'>" + commit.author_email + "</a>&gt;";
 	$("date").innerHTML = commit.author_date;
@@ -48,12 +57,9 @@ var doeHet = function() {
 	});
 
 	$("message").innerHTML = commit.message.replace(/\n/g,"<br>");
-	if (commit.diff.length < 1000000) {
-		$("details").hide();
-		$("details").innerHTML = commit.diff;
-		highlightDiffs();
-		$("details").show();
+	if (commit.diff.length < 10000) {
+		showDiffs();
 	} else {
-		$("details").innerHTML = "This diff is currently too large to watch in detailed mode";
+		$("details").innerHTML = "<a class='showdiff' href='' onclick='showDiffs(); return false;'>This is a large commit. Click here to show the diff.</a>";
 	}
 }
