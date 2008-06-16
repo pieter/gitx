@@ -10,12 +10,10 @@
 
 @implementation ApplicationController
 
-@synthesize repository, selectedTab;
+@synthesize repository;
 
 - (ApplicationController*) init
 {
-	self.selectedTab = [NSNumber numberWithInt:0];
-
 	// Find the current repository
 	char* a = getenv("PWD");
 	NSString* path;
