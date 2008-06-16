@@ -23,7 +23,7 @@
 	task.arguments = args;
 	if (dir)
 		task.currentDirectoryPath = dir;
-	NSLog(@"Starting cmd %@ in dir %@", cmd, dir);
+	NSLog(@"Starting `cmd %@ %@` in dir %@", cmd, [args componentsJoinedByString:@" "], dir);
 	NSPipe* pipe = [NSPipe pipe];
 	task.standardOutput = pipe;
 	
