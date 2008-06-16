@@ -17,12 +17,19 @@
 	// Find the current repository
 	char* a = getenv("PWD");
 	NSString* path;
-	if (a == nil)
-		// TODO: Add a check here to see if the directory exists.
-		path = @"/Users/Pieter/projects/Cocoa/GitTest/.git";
-	else
+	if (a != nil) 
 		path = [NSString stringWithCString:a];
-
+	else {
+		// Show an open dialog
+		NSOpenPanel* openDlg = [NSOpenPanel openPanel];
+		[openDlg setCanChooseFiles:NO];
+		[openDlg setCanChooseDirectories:YES];
+		if ( [openDlg runModalForDirectory:nil file:nil] == NSOKButton )
+			path = [openDlg filename];
+		else
+			exit(1);
+	}
+	
 	self.repository = [PBGitRepository repositoryWithPath:path];
 	return self;
 }
