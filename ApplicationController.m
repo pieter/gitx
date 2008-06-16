@@ -34,6 +34,16 @@
 	return self;
 }
 
+- (void) windowWillClose: sender
+{
+	[firstResponder terminate: sender];
+}
+
+- (IBAction) switchBranch: sender
+{
+	[[NSAlert alertWithMessageText:@"Not Supported" defaultButton:nil alternateButton:nil otherButton:nil informativeTextWithFormat:@"Sorry, switching branches is not supported yet"] runModal];
+}
+
 /**
     Returns the support folder for the application, used to store the Core Data
     store file.  This code uses a folder named "GitTest" for

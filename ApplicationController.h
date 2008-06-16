@@ -13,7 +13,7 @@
 {
     IBOutlet NSWindow *window;
 	IBOutlet PBGitRepository* repository;
-	
+	IBOutlet id firstResponder;
     NSPersistentStoreCoordinator *persistentStoreCoordinator;
     NSManagedObjectModel *managedObjectModel;
     NSManagedObjectContext *managedObjectContext;
@@ -24,6 +24,7 @@
 - (NSManagedObjectContext *)managedObjectContext;
 
 - (IBAction)saveAction:sender;
+- (IBAction)switchBranch:sender;
 
 @property (retain) PBGitRepository* repository;
 @end
