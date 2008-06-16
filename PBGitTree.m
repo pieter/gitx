@@ -64,6 +64,7 @@
 {
 	if (!leaf)
 		return nil;
+	NSLog(@"Getting tmp file");
 	NSFileHandle* handle = [repository handleForArguments:[NSArray arrayWithObjects:@"show", [self refSpec], nil]];
 	NSData* data = [handle readDataToEndOfFile];
 	return [PBEasyPipe writeData:data toTempFileWithName:path];

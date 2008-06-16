@@ -14,6 +14,9 @@
 
 - (ApplicationController*) init
 {
+	if([[NSBundle bundleWithPath:@"/System/Library/PrivateFrameworks/QuickLookUI.framework"] load])
+		NSLog(@"Quick Look loaded!");
+
 	// Find the current repository
 	char* a = getenv("PWD");
 	NSString* path;

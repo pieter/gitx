@@ -7,6 +7,9 @@
 //
 
 #import "PBDetailController.h"
+#import "CWQuickLook.h"
+
+#define QLPreviewPanel NSClassFromString(@"QLPreviewPanel")
 
 
 @implementation PBDetailController
@@ -19,7 +22,7 @@
 	[fileBrowser setDoubleAction:@selector(openSelectedFile:)];
 	self.selectedTab = [NSNumber numberWithInt:0];
 	[commitController addObserver:self forKeyPath:@"selection" options:(NSKeyValueObservingOptionNew,NSKeyValueObservingOptionOld) context:@"commitChange"];
-
+	[treeController addObserver:self forKeyPath:@"selection" options:0 context:@"treeChange"];
 	return self;
 }
 
@@ -58,6 +61,10 @@
 		[self updateKeys];
 		return;
 	}
+	else if ([(NSString *)context isEqualToString: @"treeChange"]) {
+			[self updateQuicklook];
+	}
+
 	else {
 		[super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
 	}
@@ -83,5 +90,37 @@
 	self.selectedTab = [NSNumber numberWithInt:2];
 }
 
+- (IBAction) toggleQuickView: sender
+{
+	id panel = [QLPreviewPanel sharedPreviewPanel];
+	if ([panel isOpen]) {
+		[panel closePanel];
+	} else {
+		[[QLPreviewPanel sharedPreviewPanel] makeKeyAndOrderFrontWithEffect:1];
+		[self updateQuicklook];
+	}
+}
+
+- (void) updateQuicklook
+{
+	NSLog(@"Updating quicklook");
+	if (![[QLPreviewPanel sharedPreviewPanel] isOpen])
+		return;
+	
+	NSArray* selectedFiles = [treeController selectedObjects];
+
+	if ([selectedFiles count] == 0)
+		return;
+	
+	NSMutableArray* fileNames = [NSMutableArray array];
+	for (PBGitTree* tree in selectedFiles) {
+		NSString* s = [tree tmpFileNameForContents];
+		if (s)
+			[fileNames addObject:[NSURL fileURLWithPath: s]];
+	}
+
+	[[QLPreviewPanel sharedPreviewPanel] setURLs:fileNames currentIndex:0 preservingDisplayState:YES];
+
+}
 
 @end

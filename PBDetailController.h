@@ -31,6 +31,8 @@
 - (IBAction) setRawView: sender;
 - (IBAction) setTreeView: sender;
 
+- (IBAction) toggleQuickView: sender;
 - (IBAction) openSelectedFile: sender;
+- (void) updateQuicklook;
 
 @end
