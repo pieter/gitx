@@ -32,7 +32,7 @@
 		return details;
 
 	NSFileHandle* handle = [self.repository handleForCommand:[@"show --pretty=raw " stringByAppendingString:self.sha]];
-	details = [[NSString alloc] initWithData:[handle readDataToEndOfFile] encoding: NSASCIIStringEncoding];
+	details = [[NSString alloc] initWithData:[handle readDataToEndOfFile] encoding: NSUTF8StringEncoding];
 
 	return details;
 }

@@ -40,7 +40,7 @@
 {
 	NSFileHandle* handle = [self handleForCommand:cmd withArgs: args inDir: dir];
 	NSData* data = [handle readDataToEndOfFile];
-	NSString* string = [[NSString alloc] initWithData:data encoding:NSASCIIStringEncoding];
+	NSString* string = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
 	if ([string hasSuffix:@"\n"])
 		string = [string substringToIndex:[string length]-1];
 	
