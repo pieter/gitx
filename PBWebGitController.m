@@ -15,7 +15,7 @@
 
 - (void) awakeFromNib
 {
-	[commitsController addObserver:self forKeyPath:@"selection" options:0 context:@"ChangedCommit"];
+	[detailController addObserver:self forKeyPath:@"webCommit" options:0 context:@"ChangedCommit"];
 	
 	NSLog([[NSBundle mainBundle] resourcePath]);
 	NSString* file = [[NSBundle mainBundle] pathForResource:@"commit" ofType:@"html"];
@@ -29,17 +29,14 @@
 	id script = [view windowScriptObject];
 	[script setValue: self forKey:@"Controller"];
 	currentSha = @"";
-	if ([[commitsController selectedObjects] count] == 0)
-		return;
 
-	[self changeContentTo: [[commitsController selectedObjects] objectAtIndex:0]];
+	[self changeContentTo: detailController.webCommit];
 }
 
 - (void) observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
 {
     if (context == @"ChangedCommit") {
-		if ([[commitsController selectedObjects] count] != 0)
-			[self changeContentTo: [[commitsController selectedObjects] objectAtIndex:0]];
+		[self changeContentTo: detailController.webCommit];
 	}
 	else {
 		[super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
@@ -48,6 +45,9 @@
 
 - (void) changeContentTo: (PBGitCommit *) content
 {
+	if (content == nil)
+		return;
+
 	if ([currentSha isEqualToString: content.sha] || [currentSha isEqualToString:@"Not Loaded"])
 		return;
 	
@@ -65,8 +65,8 @@
 - (void) selectCommit: (NSString*) sha
 {
 	NSPredicate* selection = [NSPredicate predicateWithFormat:@"sha == %@", sha];
-	NSArray* selectedCommits = [[commitsController arrangedObjects] filteredArrayUsingPredicate:selection];
-	[commitsController setSelectedObjects:selectedCommits];
+	NSArray* selectedCommits = [controller.repository.commits filteredArrayUsingPredicate:selection];
+	// TODO: reimplement this. How can we set the new commit? Our detailscontroller is read-only
 }
 
 + (BOOL)isSelectorExcludedFromWebScript:(SEL)aSelector

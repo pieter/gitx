@@ -1,9 +1,9 @@
 var Commit = Class.create({
 	initialize: function(obj) {
-		this.raw = obj.details();
+		this.raw = obj.details;
+
 		var messageStart = this.raw.indexOf("\n\n") + 2;
 		var diffStart = this.raw.indexOf("\ndiff ");
-
 		this.header = this.raw.substring(0, messageStart);
 
 		this.sha = this.header.match(/^commit ([0-9a-f]{40,40})/)[1];

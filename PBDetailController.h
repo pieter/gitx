@@ -23,7 +23,6 @@
 @property (copy) NSNumber* selectedTab;
 @property (retain) PBGitCommit* webCommit;
 @property (retain) PBGitCommit* rawCommit;
-@property (retain) PBGitCommit* realCommit;
 @property (retain) PBGitTree* gitTree;
 
 @end

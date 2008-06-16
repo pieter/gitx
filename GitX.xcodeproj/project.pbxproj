@@ -24,6 +24,7 @@
 		F57ABE0B0E0442DD00A088B8 /* commit.js in Resources */ = {isa = PBXBuildFile; fileRef = F57ABDDE0E0441DE00A088B8 /* commit.js */; };
 		F57ABE2B0E04435100A088B8 /* prototype.js in Resources */ = {isa = PBXBuildFile; fileRef = F57ABE180E04431D00A088B8 /* prototype.js */; };
 		F57CC3910E05DDF2000472E2 /* PBEasyPipe.m in Sources */ = {isa = PBXBuildFile; fileRef = F57CC3900E05DDF2000472E2 /* PBEasyPipe.m */; };
+		F57CC4410E05E496000472E2 /* PBDetailController.m in Sources */ = {isa = PBXBuildFile; fileRef = F57CC4400E05E496000472E2 /* PBDetailController.m */; };
 		F58A8F280E043698007E3FC0 /* commits.css in Resources */ = {isa = PBXBuildFile; fileRef = F58A8F270E043698007E3FC0 /* commits.css */; };
 		F5945E170E02B0C200706420 /* PBGitRepository.m in Sources */ = {isa = PBXBuildFile; fileRef = F5945E160E02B0C200706420 /* PBGitRepository.m */; };
 		F5B721C40E05CF7E00AF29DC /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = F5B721C20E05CF7E00AF29DC /* MainMenu.xib */; };
@@ -59,6 +60,8 @@
 		F57ABE180E04431D00A088B8 /* prototype.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; name = prototype.js; path = html/prototype.js; sourceTree = "<group>"; };
 		F57CC38F0E05DDF2000472E2 /* PBEasyPipe.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PBEasyPipe.h; sourceTree = "<group>"; };
 		F57CC3900E05DDF2000472E2 /* PBEasyPipe.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PBEasyPipe.m; sourceTree = "<group>"; };
+		F57CC43F0E05E496000472E2 /* PBDetailController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PBDetailController.h; sourceTree = "<group>"; };
+		F57CC4400E05E496000472E2 /* PBDetailController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PBDetailController.m; sourceTree = "<group>"; };
 		F58A8F270E043698007E3FC0 /* commits.css */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.css; name = commits.css; path = html/commits.css; sourceTree = "<group>"; };
 		F5945E150E02B0C200706420 /* PBGitRepository.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PBGitRepository.h; sourceTree = "<group>"; };
 		F5945E160E02B0C200706420 /* PBGitRepository.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PBGitRepository.m; sourceTree = "<group>"; };
@@ -81,8 +84,6 @@
 		080E96DDFE201D6D7F000001 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
-				F56524B90E02D22D00F03B52 /* NSFileHandleExt.m */,
-				F56524BA0E02D22D00F03B52 /* NSFileHandleExt.h */,
 			);
 			name = Classes;
 			sourceTree = "<group>";
@@ -117,6 +118,7 @@
 		29B97314FDCFA39411CA2CEA /* GitTest */ = {
 			isa = PBXGroup;
 			children = (
+				F57CC43E0E05E472000472E2 /* Aux */,
 				F57CC3850E05DDC1000472E2 /* Controllers */,
 				F561777C0E05C88E001DCD79 /* DetailView.png */,
 				F56174540E05887E001DCD79 /* Git */,
@@ -187,10 +189,21 @@
 				F565262A0E03D89B00F03B52 /* PBWebGitController.m */,
 				77C8280B06725ACE000B614F /* ApplicationController.h */,
 				77C8280C06725ACE000B614F /* ApplicationController.m */,
+				F57CC43F0E05E496000472E2 /* PBDetailController.h */,
+				F57CC4400E05E496000472E2 /* PBDetailController.m */,
+			);
+			name = Controllers;
+			sourceTree = "<group>";
+		};
+		F57CC43E0E05E472000472E2 /* Aux */ = {
+			isa = PBXGroup;
+			children = (
+				F56524B90E02D22D00F03B52 /* NSFileHandleExt.m */,
+				F56524BA0E02D22D00F03B52 /* NSFileHandleExt.h */,
 				F57CC38F0E05DDF2000472E2 /* PBEasyPipe.h */,
 				F57CC3900E05DDF2000472E2 /* PBEasyPipe.m */,
 			);
-			name = Controllers;
+			name = Aux;
 			sourceTree = "<group>";
 		};
 		F58A8F250E04368A007E3FC0 /* HTML */ = {
@@ -277,6 +290,7 @@
 				F565262B0E03D89B00F03B52 /* PBWebGitController.m in Sources */,
 				F56174570E058893001DCD79 /* PBGitTree.m in Sources */,
 				F57CC3910E05DDF2000472E2 /* PBEasyPipe.m in Sources */,
+				F57CC4410E05E496000472E2 /* PBDetailController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
