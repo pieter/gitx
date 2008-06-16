@@ -33,7 +33,8 @@
 
 	NSFileHandle* handle = [self.repository handleForCommand:[@"show --pretty=raw " stringByAppendingString:self.sha]];
 	details = [[NSString alloc] initWithData:[handle readDataToEndOfFile] encoding: NSASCIIStringEncoding];
-	return  details;
+
+	return details;
 }
 
 - (PBGitTree*) tree

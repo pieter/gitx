@@ -61,4 +61,15 @@
 	}
 }
 
+- (IBAction) setDetailedView: sender {
+	self.selectedTab = [NSNumber numberWithInt:0];
+}
+- (IBAction) setRawView: sender {
+	self.selectedTab = [NSNumber numberWithInt:1];
+}
+- (IBAction) setTreeView: sender {
+	self.selectedTab = [NSNumber numberWithInt:2];
+}
+
+
 @end

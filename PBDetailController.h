@@ -25,4 +25,8 @@
 @property (retain) PBGitCommit* rawCommit;
 @property (retain) PBGitTree* gitTree;
 
+- (IBAction) setDetailedView: sender;
+- (IBAction) setRawView: sender;
+- (IBAction) setTreeView: sender;
+
 @end
