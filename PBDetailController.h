@@ -13,6 +13,8 @@
 @interface PBDetailController : NSObject {
 	IBOutlet NSNumber* selectedTab;
 	IBOutlet NSArrayController* commitController;
+	IBOutlet NSTreeController* treeController;
+	IBOutlet NSOutlineView* fileBrowser;
 
 	PBGitTree* gitTree;
 	PBGitCommit* webCommit;
@@ -28,5 +30,7 @@
 - (IBAction) setDetailedView: sender;
 - (IBAction) setRawView: sender;
 - (IBAction) setTreeView: sender;
+
+- (IBAction) openSelectedFile: sender;
 
 @end

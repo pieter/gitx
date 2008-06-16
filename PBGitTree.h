@@ -21,6 +21,8 @@
 + (PBGitTree*) rootForCommit: (id) commit;
 + (PBGitTree*) treeForTree: (PBGitTree*) tree andPath: (NSString*) path;
 
+- (NSString*) tmpFileNameForContents;
+
 @property(copy) NSString* sha;
 @property(copy) NSString* path;
 @property(assign) BOOL leaf;

@@ -9,6 +9,7 @@
 #import "PBGitTree.h"
 #import "PBGitCommit.h"
 #import "NSFileHandleExt.h"
+#import "PBEasyPipe.h"
 
 @implementation PBGitTree
 
@@ -57,6 +58,15 @@
 	NSData* data = [handle readDataToEndOfFile];
 	NSString* string = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
 	return string;
+}
+
+- (NSString*) tmpFileNameForContents
+{
+	if (!leaf)
+		return nil;
+	NSFileHandle* handle = [repository handleForArguments:[NSArray arrayWithObjects:@"show", [self refSpec], nil]];
+	NSData* data = [handle readDataToEndOfFile];
+	return [PBEasyPipe writeData:data toTempFileWithName:path];
 }
 
 - (NSArray*) children

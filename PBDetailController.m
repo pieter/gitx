@@ -15,6 +15,8 @@
 
 - awakeFromNib
 {
+	[fileBrowser setTarget:self];
+	[fileBrowser setDoubleAction:@selector(openSelectedFile:)];
 	self.selectedTab = [NSNumber numberWithInt:0];
 	[commitController addObserver:self forKeyPath:@"selection" options:(NSKeyValueObservingOptionNew,NSKeyValueObservingOptionOld) context:@"commitChange"];
 
@@ -59,6 +61,16 @@
 	else {
 		[super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
 	}
+}
+
+- (IBAction) openSelectedFile: sender
+{
+	NSArray* selectedFiles = [treeController selectedObjects];
+	if ([selectedFiles count] == 0)
+		return;
+	PBGitTree* tree = [selectedFiles objectAtIndex:0];
+	NSString* name = [tree tmpFileNameForContents];
+	[[NSWorkspace sharedWorkspace] openTempFile:name];
 }
 
 - (IBAction) setDetailedView: sender {
