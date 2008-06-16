@@ -14,6 +14,7 @@
 	NSString* sha;
 	NSString* subject;
 	NSString* author;
+	NSString* details;
 	PBGitRepository* repository;
 }
 

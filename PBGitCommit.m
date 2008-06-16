@@ -20,6 +20,7 @@
 
 - initWithRepository:(PBGitRepository*) repo andSha:(NSString*) newSha
 {
+	details = nil;
 	self.repository = repo;
 	self.sha = newSha;
 	return self;
@@ -27,8 +28,11 @@
 
 - (NSString*) details
 {
+	if (details != nil)
+		return details;
+
 	NSFileHandle* handle = [self.repository handleForCommand:[@"show --pretty=raw " stringByAppendingString:self.sha]];
-	NSString* details = [[NSString alloc] initWithData:[handle readDataToEndOfFile] encoding: NSASCIIStringEncoding];
+	details = [[NSString alloc] initWithData:[handle readDataToEndOfFile] encoding: NSASCIIStringEncoding];
 	return  details;
 }
 
