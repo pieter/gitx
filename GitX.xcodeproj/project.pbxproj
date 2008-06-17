@@ -32,6 +32,7 @@
 		F5B721C40E05CF7E00AF29DC /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = F5B721C20E05CF7E00AF29DC /* MainMenu.xib */; };
 		F5DFFA6C0E075D8800617813 /* PBEasyFS.m in Sources */ = {isa = PBXBuildFile; fileRef = F5DFFA6B0E075D8800617813 /* PBEasyFS.m */; };
 		F5FF4E180E0829C20006317A /* PBGitRevList.m in Sources */ = {isa = PBXBuildFile; fileRef = F5FF4E170E0829C20006317A /* PBGitRevList.m */; };
+		F5FF4E7A0E082E440006317A /* PBGitGrapher.m in Sources */ = {isa = PBXBuildFile; fileRef = F5FF4E790E082E440006317A /* PBGitGrapher.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -79,6 +80,8 @@
 		F5DFFA6B0E075D8800617813 /* PBEasyFS.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PBEasyFS.m; sourceTree = "<group>"; };
 		F5FF4E160E0829C20006317A /* PBGitRevList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PBGitRevList.h; sourceTree = "<group>"; };
 		F5FF4E170E0829C20006317A /* PBGitRevList.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PBGitRevList.m; sourceTree = "<group>"; };
+		F5FF4E780E082E440006317A /* PBGitGrapher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PBGitGrapher.h; sourceTree = "<group>"; };
+		F5FF4E790E082E440006317A /* PBGitGrapher.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PBGitGrapher.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -185,6 +188,8 @@
 		F56174540E05887E001DCD79 /* Git */ = {
 			isa = PBXGroup;
 			children = (
+				F5FF4E780E082E440006317A /* PBGitGrapher.h */,
+				F5FF4E790E082E440006317A /* PBGitGrapher.m */,
 				F5945E150E02B0C200706420 /* PBGitRepository.h */,
 				F5945E160E02B0C200706420 /* PBGitRepository.m */,
 				F56524EE0E02D45200F03B52 /* PBGitCommit.h */,
@@ -317,6 +322,7 @@
 				F5DFFA6C0E075D8800617813 /* PBEasyFS.m in Sources */,
 				F50FE0E30E07BE9600854FCD /* PBGitRevisionCell.m in Sources */,
 				F5FF4E180E0829C20006317A /* PBGitRevList.m in Sources */,
+				F5FF4E7A0E082E440006317A /* PBGitGrapher.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -352,10 +358,10 @@
 				GCC_MODEL_TUNING = G5;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = GitTest_Prefix.pch;
+				GCC_PREFIX_HEADER = GitX_Prefix.pch;
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(HOME)/Applications";
-				PRODUCT_NAME = GitTest;
+				PRODUCT_NAME = GitX;
 				WRAPPER_EXTENSION = app;
 				ZERO_LINK = YES;
 			};

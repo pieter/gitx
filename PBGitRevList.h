@@ -12,10 +12,13 @@
 @interface PBGitRevList : NSObject {
 	NSArray* commits;
 	NSArray* parameters;
+	id grapher;
 	id repository;
 }
 
 - initWithRepository:(id)repo andRevListParameters:(NSArray*) params;
 
 @property(retain) NSArray* commits;
+@property(retain) id grapher;
+
 @end
