@@ -23,6 +23,7 @@
 
 + (PBGitTree*) rootForCommit: (id) commit;
 + (PBGitTree*) treeForTree: (PBGitTree*) tree andPath: (NSString*) path;
+- (void) saveToFolder: (NSString *) directory;
 
 - (NSString*) tmpFileNameForContents;
 
