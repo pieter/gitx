@@ -7,6 +7,7 @@
 //
 
 #import "ApplicationController.h"
+#import "PBGitRevisionCell.h"
 
 @implementation ApplicationController
 
@@ -219,5 +220,15 @@
     [super dealloc];
 }
 
-
+- (void)tableView:(NSTableView *)aTableView willDisplayCell:(id)aCell forTableColumn:(NSTableColumn *)aTableColumn row:(int)rowIndex
+{
+	if (![[aTableColumn identifier] isEqualToString:@"subject"])
+		return;
+	
+	NSLog(@"Doing cell at index: %i", rowIndex);
+	
+	NSNumber* n = [NSNumber numberWithInt:(rowIndex % 2)];
+	[aCell setCommit:n];
+	
+}
 @end
