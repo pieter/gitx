@@ -63,7 +63,7 @@
 		newCommit.parents = parents;
 		newCommit.subject = [components objectAtIndex:2];
 		newCommit.author = [components objectAtIndex:1];
-		newCommit.date = [NSDate dateWithTimeIntervalSince1970:[[components objectAtIndex:3] intValue]];
+		newCommit.date = [NSDate dateWithTimeIntervalSince1970:[[components objectAtIndex:4] intValue]];
 		
 		[newArray addObject: newCommit];
 		num++;
