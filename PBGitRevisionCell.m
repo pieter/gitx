@@ -14,6 +14,10 @@
 
 - (void) drawWithFrame: (NSRect) rect inView:(NSView *)view
 {
+	
+	// Don't do all this drawing for now.
+	[super drawWithFrame:rect inView:view];
+	return;
 	float pathWidth = 20;
 
 	NSRect ownRect;
