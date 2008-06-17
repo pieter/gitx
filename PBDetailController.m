@@ -62,7 +62,7 @@
 		return;
 	}
 	else if ([(NSString *)context isEqualToString: @"treeChange"]) {
-			[self updateQuicklook];
+			[self updateQuicklookForce: NO];
 	}
 
 	else {
@@ -97,14 +97,13 @@
 		[panel closePanel];
 	} else {
 		[[QLPreviewPanel sharedPreviewPanel] makeKeyAndOrderFrontWithEffect:1];
-		[self updateQuicklook];
+		[self updateQuicklookForce: YES];
 	}
 }
 
-- (void) updateQuicklook
+- (void) updateQuicklookForce: (BOOL) force
 {
-	NSLog(@"Updating quicklook");
-	if (![[QLPreviewPanel sharedPreviewPanel] isOpen])
+	if (!force && ![[QLPreviewPanel sharedPreviewPanel] isOpen])
 		return;
 	
 	NSArray* selectedFiles = [treeController selectedObjects];

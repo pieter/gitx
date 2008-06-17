@@ -33,6 +33,6 @@
 
 - (IBAction) toggleQuickView: sender;
 - (IBAction) openSelectedFile: sender;
-- (void) updateQuicklook;
+- (void) updateQuicklookForce: (BOOL) force;
 
 @end
