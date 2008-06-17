@@ -80,17 +80,32 @@ static NSString* gitPath = @"/usr/bin/env";
 
 	int fd = [handle fileDescriptor];
 	FILE* f = fdopen(fd, "r");
-	char buffer[2050];
-	buffer[2049] = 0;
+	int BUFFERSIZE = 2048;
+	char buffer[BUFFERSIZE];
+	buffer[BUFFERSIZE - 2] = 0;
 	
 	char* l;
 	int num = 0;
-	while (l = fgets(buffer, 2048, f)) {
-		NSString* currentLine = [NSString stringWithCString:(const char *)l encoding:NSUTF8StringEncoding];
-		if ([currentLine length] == 0)
-			currentLine = [NSString stringWithCString:(const char *)l encoding:NSASCIIStringEncoding];
+	NSMutableString* currentLine = [NSMutableString string];
+	while (l = fgets(buffer, BUFFERSIZE, f)) {
+		NSString *s = [NSString stringWithCString:(const char *)l encoding:NSUTF8StringEncoding];
+		if ([s length] == 0)
+			s = [NSString stringWithCString:(const char *)l encoding:NSASCIIStringEncoding];
+		[currentLine appendString: s];
+		 
+		// If buffer is full, we go for another round
+		if (buffer[BUFFERSIZE - 2] != 0) {
+			//NSLog(@"Line too long!");
+			buffer[BUFFERSIZE - 2] = 0;
+			continue;
+		}
+		
+		// If we are here, we currentLine is a full line.
 		NSArray* components = [currentLine componentsSeparatedByString:@"\01"];
-
+		if ([components count] < 4) {
+			NSLog(@"Can't split string: %@", currentLine);
+			continue;
+		}
 		PBGitCommit* newCommit = [[PBGitCommit alloc] initWithRepository: self andSha: [components objectAtIndex:0]];
 		newCommit.subject = [components objectAtIndex:2];
 		newCommit.author = [components objectAtIndex:1];
@@ -100,6 +115,7 @@ static NSString* gitPath = @"/usr/bin/env";
 		num++;
 		if (num % 10000 == 0)
 			[self performSelectorOnMainThread:@selector(setCommits:) withObject:newArray waitUntilDone:NO];
+		currentLine = [NSMutableString string];
 	}
 
 	[self performSelectorOnMainThread:@selector(setCommits:) withObject:newArray waitUntilDone:YES];
