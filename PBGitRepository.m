@@ -76,7 +76,7 @@ static NSString* gitPath = @"/usr/bin/env";
 	
 	NSMutableArray * newArray = [NSMutableArray array];
 	NSDate* start = [NSDate date];
-	NSFileHandle* handle = [self handleForCommand:@"log --pretty=format:%H\01%an\01%s\01%at HEAD"];
+	NSFileHandle* handle = [self handleForCommand:@"log --pretty=format:%H\01%an\01%s\01%P\01%at HEAD"];
 
 	int fd = [handle fileDescriptor];
 	FILE* f = fdopen(fd, "r");
@@ -102,11 +102,13 @@ static NSString* gitPath = @"/usr/bin/env";
 		
 		// If we are here, we currentLine is a full line.
 		NSArray* components = [currentLine componentsSeparatedByString:@"\01"];
-		if ([components count] < 4) {
+		if ([components count] < 5) {
 			NSLog(@"Can't split string: %@", currentLine);
 			continue;
 		}
 		PBGitCommit* newCommit = [[PBGitCommit alloc] initWithRepository: self andSha: [components objectAtIndex:0]];
+		NSArray* parents = [[components objectAtIndex:3] componentsSeparatedByString:@" "];
+		newCommit.parents = parents;
 		newCommit.subject = [components objectAtIndex:2];
 		newCommit.author = [components objectAtIndex:1];
 		newCommit.date = [NSDate dateWithTimeIntervalSince1970:[[components objectAtIndex:3] intValue]];

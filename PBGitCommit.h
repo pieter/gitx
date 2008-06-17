@@ -15,6 +15,7 @@
 	NSString* subject;
 	NSString* author;
 	NSString* details;
+	NSArray* parents;
 	NSDate* date;
 	PBGitRepository* repository;
 }
@@ -24,6 +25,7 @@
 @property (copy) NSString* sha;
 @property (copy) NSString* subject;
 @property (copy) NSString* author;
+@property (retain) NSArray* parents;
 @property (copy) NSDate* date;
 @property (readonly) NSString* dateString;
 

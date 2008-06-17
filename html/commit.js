@@ -27,10 +27,7 @@ var Commit = Class.create({
 		this.committer_email = match[2];
 		this.committer_date = new Date(parseInt(match[3]) * 1000);
 
-		this.parents = $A(this.header.match(/\nparent ([0-9a-f]{40,40})/g)).map(function(x) {
-			return x.replace("\nparent ",""); 
-		});
-
+		this.parents = obj.parents;
 	},	
 });
 
