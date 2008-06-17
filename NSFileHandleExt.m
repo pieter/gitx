@@ -47,7 +47,10 @@
 		switch (*(buffer + bytesReceived - 1)) {
 			case '\n':
 				buffer[bytesReceived-1] = '\0';
-				return [NSString stringWithCString: buffer encoding: NSUTF8StringEncoding];
+				NSString* s = [NSString stringWithCString: buffer encoding: NSUTF8StringEncoding];
+				if ([s length] == 0)
+					s = [NSString stringWithCString: buffer encoding: NSASCIIStringEncoding];
+				return s;
 			case '\r':
 				bytesReceived--;
 		}
@@ -55,6 +58,9 @@
 	
 	buffer[bytesReceived-1] = '\0';
 	NSString *retVal = [NSString stringWithCString: buffer  encoding: NSUTF8StringEncoding];
+	if ([retVal length] == 0)
+		retVal = [NSString stringWithCString: buffer encoding: NSASCIIStringEncoding];
+	
 	free(buffer);
 	return retVal;
 }
