@@ -73,7 +73,7 @@ static NSString* gitPath = @"/usr/bin/env";
 
 - (void) initializeCommits
 {
-	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+	//NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 	
 	NSMutableArray * newArray = [NSMutableArray array];
 	NSDate* start = [NSDate date];
@@ -96,7 +96,7 @@ static NSString* gitPath = @"/usr/bin/env";
 	NSTimeInterval duration = [[NSDate date] timeIntervalSinceDate:start];
 	NSLog(@"Loaded %i commits in %f seconds", num, duration);
 
-	[pool release];
+	//[pool release];
 	[NSThread exit];
 }
 

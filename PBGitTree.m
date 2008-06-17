@@ -10,6 +10,7 @@
 #import "PBGitCommit.h"
 #import "NSFileHandleExt.h"
 #import "PBEasyPipe.h"
+#import "PBEasyFS.h"
 
 @implementation PBGitTree
 
@@ -40,6 +41,7 @@
 - init
 {
 	children = nil;
+	localFileName = nil;
 	leaf = YES;
 	return self;
 }
@@ -49,25 +51,89 @@
 	return [NSString stringWithFormat:@"%@:%@", self.sha, self.fullPath];
 }
 
+- (BOOL) isLocallyCached
+{
+	NSFileManager* fs = [NSFileManager defaultManager];
+	if (localFileName && [fs fileExistsAtPath:localFileName])
+	{
+		NSDate* mtime = [[fs attributesOfItemAtPath:localFileName error: nil] objectForKey:NSFileModificationDate];
+		if ([mtime compare:localMtime] == 0)
+			return YES;
+	}
+	return NO;
+}
+
 - (NSString*) contents
 {
 	if (!leaf)
 		return [NSString stringWithFormat:@"This is a tree with path %@", self];
 
-	NSFileHandle* handle = [repository handleForArguments:[NSArray arrayWithObjects:@"show", [self refSpec], nil]];
-	NSData* data = [handle readDataToEndOfFile];
-	NSString* string = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-	return string;
+	NSData* data = nil;
+	
+	if ([self isLocallyCached])
+		data = [NSData dataWithContentsOfFile: localFileName];
+	else {
+		NSFileHandle* handle = [repository handleForArguments:[NSArray arrayWithObjects:@"show", [self refSpec], nil]];
+		data = [handle readDataToEndOfFile];
+	}
+	
+	return [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
 }
+
+- (void) saveToFolder: (NSString *) dir
+{
+	NSString* newName = [dir stringByAppendingPathComponent:path];
+
+	if (leaf) {
+		NSFileHandle* handle = [repository handleForArguments:[NSArray arrayWithObjects:@"show", [self refSpec], nil]];
+		NSData* data = [handle readDataToEndOfFile];
+		[data writeToFile:newName atomically:YES];
+	} else { // Directory
+		[[NSFileManager defaultManager] createDirectoryAtPath:newName attributes:nil];
+		for (PBGitTree* child in children)
+			[child saveToFolder: newName];
+	}
+}
+
+- (NSString*) tmpDirWithContents
+{
+	if (leaf)
+		return nil;
+
+	if (!localFileName)
+		localFileName = [PBEasyFS tmpDirWithPrefix: path];
+
+	NSLog(@"Exporting children..");
+
+	for (PBGitTree* child in [self children]) {
+		NSLog(@"Telling %@ to save to %@!", [child fullPath], localFileName);
+		[child saveToFolder: localFileName];
+	}
+	
+	return localFileName;
+}
+
+	
 
 - (NSString*) tmpFileNameForContents
 {
 	if (!leaf)
-		return nil;
-	NSLog(@"Getting tmp file");
+		return [self tmpDirWithContents];
+	
+	if ([self isLocallyCached])
+		return localFileName;
+	
+	if (!localFileName)
+		localFileName = [PBEasyFS tmpNameWithSuffix: path];
+	
 	NSFileHandle* handle = [repository handleForArguments:[NSArray arrayWithObjects:@"show", [self refSpec], nil]];
 	NSData* data = [handle readDataToEndOfFile];
-	return [PBEasyPipe writeData:data toTempFileWithName:path];
+	[data writeToFile:localFileName atomically:YES];
+	
+	NSFileManager* fs = [NSFileManager defaultManager];
+	localMtime = [[fs attributesOfItemAtPath:localFileName error: nil] objectForKey:NSFileModificationDate];
+
+	return localFileName;
 }
 
 - (NSArray*) children
@@ -111,4 +177,10 @@
 	return [parent.fullPath stringByAppendingPathComponent: self.path];
 }
 
+- (void) finalize
+{
+	if (localFileName)
+		[[NSFileManager defaultManager] removeFileAtPath:localFileName handler:nil];
+	[super finalize];
+}
 @end

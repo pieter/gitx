@@ -13,9 +13,12 @@
 	NSString* sha;
 	NSString* path;
 	PBGitRepository* repository;
-	PBGitTree* parent;
+	__weak PBGitTree* parent;
 	NSArray* children;
 	BOOL leaf;
+	
+	NSString* localFileName;
+	NSDate* localMtime;
 }
 
 + (PBGitTree*) rootForCommit: (id) commit;
@@ -27,7 +30,7 @@
 @property(copy) NSString* path;
 @property(assign) BOOL leaf;
 @property(retain) PBGitRepository* repository;
-@property(assign) PBGitTree* parent;
+@property(assign) __weak PBGitTree* parent;
 
 @property(readonly) NSArray* children;
 @property(readonly) NSString* fullPath;

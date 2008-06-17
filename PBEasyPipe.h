@@ -18,6 +18,4 @@
 
 + (NSString*) outputForCommand: (NSString*) cmd withArgs: (NSArray*) args;
 + (NSString*) outputForCommand: (NSString*) cmd withArgs: (NSArray*) args inDir: (NSString*) dir;
-
-+ (NSString*) writeData:(NSData*) data toTempFileWithName: (NSString *) fileName;
 @end

@@ -29,6 +29,12 @@
 - (void) updateKeys
 {
 	NSArray* selection = [commitController selectedObjects];
+
+	// Remove any references in the QLPanel
+	[[QLPreviewPanel sharedPreviewPanel] setURLs:[NSArray array] currentIndex:0 preservingDisplayState:YES];
+	// We have to do this manually, as NSTreeController leaks memory?
+	[treeController setSelectionIndexPaths:[NSArray array]];
+
 	if ([selection count] > 0)
 		realCommit = [selection objectAtIndex:0];
 	else
@@ -38,6 +44,7 @@
 	self.rawCommit = nil;
 	self.gitTree = nil;
 	
+
 	int num = [self.selectedTab intValue];
 
 	if (num == 0) // Detailed view

@@ -51,15 +51,4 @@
 	return [self outputForCommand:cmd withArgs:args inDir:nil];
 }
 
-+ (NSString*) writeData:(NSData*) data toTempFileWithName: (NSString *) fileName
-{
-	NSString* newName = [NSString stringWithFormat: @"%@/XXXXXX%@", NSTemporaryDirectory(), fileName];
-	char *template = (char*) [newName fileSystemRepresentation];
-	int fd = mkstemps(template, [fileName length]);
-	NSFileHandle* handle = [[NSFileHandle alloc] initWithFileDescriptor:fd];
-	[handle writeData: data];
-	[handle closeFile];
-	return [NSString stringWithUTF8String:template];
-}
-
 @end
