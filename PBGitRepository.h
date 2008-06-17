@@ -7,10 +7,11 @@
 //
 
 #import <Cocoa/Cocoa.h>
+#import "PBGitRevList.h"
 
 @interface PBGitRepository : NSObject {
 	NSString* path;
-	NSArray* commits;
+	PBGitRevList* revisionList;
 }
 
 + (void) setGitPath;
@@ -24,6 +25,6 @@
 - (void) addCommit: (id)obj;
 
 @property (copy) NSString* path;
-@property (retain) NSArray* commits;
+@property (readonly) PBGitRevList* revisionList;
 
 @end
