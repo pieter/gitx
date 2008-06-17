@@ -34,7 +34,9 @@ var selectCommit = function(a) {
 
 var showDiffs = function() {
 	$("details").hide();
-	$("details").innerHTML = commit.diff;
+
+	$("details").innerHTML = commit.diff.escapeHTML();
+
 	highlightDiffs();
 	$("details").show();
 }

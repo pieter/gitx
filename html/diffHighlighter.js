@@ -12,7 +12,7 @@ var highlightDiffs = function() {
 			if (l.length > 100)
 			l = l.substring(0, 100);
 
-			l = l.escapeHTML().gsub("\t", "  ");
+			l = l.gsub("\t", "  ");
 
 			if (l.startsWith("+"))
 				newContent += "<div class='addline'>" + l + "</div>";
