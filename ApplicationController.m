@@ -224,9 +224,7 @@
 {
 	if (![[aTableColumn identifier] isEqualToString:@"subject"])
 		return;
-	
-	NSLog(@"Doing cell at index: %i", rowIndex);
-	
+
 	NSNumber* n = [NSNumber numberWithInt:(rowIndex % 2)];
 	[aCell setCommit:n];
 	

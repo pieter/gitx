@@ -15,6 +15,7 @@
 	NSString* subject;
 	NSString* author;
 	NSString* details;
+	NSDate* date;
 	PBGitRepository* repository;
 }
 
@@ -23,6 +24,8 @@
 @property (copy) NSString* sha;
 @property (copy) NSString* subject;
 @property (copy) NSString* author;
+@property (copy) NSDate* date;
+@property (readonly) NSString* dateString;
 
 @property (readonly) NSString* details;
 @property (readonly) PBGitTree* tree;

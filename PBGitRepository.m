@@ -73,30 +73,39 @@ static NSString* gitPath = @"/usr/bin/env";
 
 - (void) initializeCommits
 {
-	//NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 	
 	NSMutableArray * newArray = [NSMutableArray array];
 	NSDate* start = [NSDate date];
-	NSFileHandle* handle = [self handleForCommand:@"log --pretty=format:%H\01%s\01%an HEAD"];
-	NSString* currentLine = [handle readLine];
+	NSFileHandle* handle = [self handleForCommand:@"log --pretty=format:%H\01%an\01%s\01%at HEAD"];
+
+	int fd = [handle fileDescriptor];
+	FILE* f = fdopen(fd, "r");
+	char buffer[2050];
+	buffer[2049] = 0;
+	
+	char* l;
 	int num = 0;
-	while (currentLine.length > 0) {
+	while (l = fgets(buffer, 2048, f)) {
+		NSString* currentLine = [NSString stringWithCString:(const char *)l encoding:NSUTF8StringEncoding];
+		if ([currentLine length] == 0)
+			currentLine = [NSString stringWithCString:(const char *)l encoding:NSASCIIStringEncoding];
 		NSArray* components = [currentLine componentsSeparatedByString:@"\01"];
+
 		PBGitCommit* newCommit = [[PBGitCommit alloc] initWithRepository: self andSha: [components objectAtIndex:0]];
-		newCommit.subject = [components objectAtIndex:1];
-		newCommit.author = [components objectAtIndex:2];
+		newCommit.subject = [components objectAtIndex:2];
+		newCommit.author = [components objectAtIndex:1];
+		newCommit.date = [NSDate dateWithTimeIntervalSince1970:[[components objectAtIndex:3] intValue]];
+
 		[newArray addObject: newCommit];
 		num++;
-		if (num % 1000 == 0)
+		if (num % 10000 == 0)
 			[self performSelectorOnMainThread:@selector(setCommits:) withObject:newArray waitUntilDone:NO];
-		currentLine = [handle readLine];
 	}
 
 	[self performSelectorOnMainThread:@selector(setCommits:) withObject:newArray waitUntilDone:YES];
 	NSTimeInterval duration = [[NSDate date] timeIntervalSinceDate:start];
 	NSLog(@"Loaded %i commits in %f seconds", num, duration);
 
-	//[pool release];
 	[NSThread exit];
 }
 

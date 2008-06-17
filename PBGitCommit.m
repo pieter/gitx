@@ -11,7 +11,14 @@
 
 @implementation PBGitCommit
 
-@synthesize sha, repository, subject, author;
+@synthesize sha, repository, subject, author, date;
+
+
+- (NSString *) dateString
+{
+	NSDateFormatter* formatter = [[NSDateFormatter alloc] initWithDateFormat:@"%Y-%m-%d %H:%M:%S" allowNaturalLanguage:NO];
+	return [formatter stringFromDate: self.date];
+}
 
 - (NSArray*) treeContents
 {
