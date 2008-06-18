@@ -69,8 +69,13 @@
 					}
 					// We need a new column for this.
 					if (!found) {
+						
+						if (previous->columns[i].color == 10)
+							continue;
+						
 						newPos = info->numColumns++;
 						info->columns[newPos] = previous->columns[i];
+						info->columns[newPos].color++;
 						info->upperMapping[newPos] = newPos;
 					}
 				}
