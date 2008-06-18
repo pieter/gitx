@@ -16,7 +16,7 @@ struct PBGitGraphColumn {
 };
 
 
-#define PBGitMaxColumns 10
+#define PBGitMaxColumns 100
 
 struct PBGitGraphCellInfo {
 	struct PBGitGraphColumn columns[PBGitMaxColumns];

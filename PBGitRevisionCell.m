@@ -27,41 +27,30 @@
 	return self;
 }
 
-- (void) drawLineForColumn: (int)c inRect: (NSRect) r
+- (NSArray*) colors
 {
-	NSArray* col  = [NSArray arrayWithObjects:[NSColor redColor], [NSColor blueColor],
+	return 	[NSArray arrayWithObjects:[NSColor redColor], [NSColor blueColor],
 			[NSColor orangeColor], [NSColor blackColor], [NSColor greenColor], nil];
+}
+
+- (void) drawLineFromColumn: (int) from toColumn: (int) to inRect: (NSRect) r offset: (int) offset
+{
 
 	int columnWidth = 10;
 	NSPoint origin = r.origin;
 	
-	NSPoint source;
-	NSPoint center;
-	NSPoint destination;
-	
-	center = NSMakePoint( origin.x + columnWidth * c, origin.y + r.size.height * 0.5);
+	NSPoint source = NSMakePoint(origin.x + columnWidth* from, origin.y + offset);
+	NSPoint center = NSMakePoint( origin.x + columnWidth * to, origin.y + r.size.height * 0.5);
 
-	if (cellInfo.upperMapping[c] == cellInfo.position && c != cellInfo.upperMapping[c]) {
-		source = NSMakePoint(origin.x + columnWidth * cellInfo.upperMapping[c], origin.y + r.size.height * 0.5);
-		destination = NSMakePoint( origin.x + columnWidth * cellInfo.lowerMapping[c], origin.y + r.size.height);
-	} else if (cellInfo.lowerMapping[c] == cellInfo.position && c != cellInfo.lowerMapping[c]) {
-		source = NSMakePoint( origin.x + columnWidth * cellInfo.upperMapping[c], origin.y);
-		destination = NSMakePoint( origin.x + columnWidth * c, origin.y + r.size.height);
-	} else {
-		source = NSMakePoint( origin.x + columnWidth * cellInfo.upperMapping[c], origin.y);
-		destination = NSMakePoint( origin.x + columnWidth * cellInfo.lowerMapping[c], origin.y + r.size.height);
-	}
+	// Just use red for now.
+	[[[self colors] objectAtIndex:0] set];
 	
-	[[col objectAtIndex:cellInfo.columns[c].color] set];
-
 	NSBezierPath * path = [NSBezierPath bezierPath];
 	[path setLineWidth:2];
 	
-	[path moveToPoint:source];
+	[path moveToPoint: source];
 	[path lineToPoint: center];
-	[path lineToPoint: destination];
 	[path stroke];
-	
 	
 }
 
@@ -104,12 +93,17 @@
 	ownRect.origin.x += 10;
 	
 	int column = 0;
-	for (column = 0; column < cellInfo.numColumns; column++) {
-		if (cellInfo.columns[column].color >= 0)
-			[self drawLineForColumn: column inRect: ownRect];
+
+	// We can't iterate over numColumns here, as there may be connections to be drawn outside our columns.
+	for (column = 0; column < PBGitMaxColumns; column++) {
+		if (cellInfo.upperMapping[column] !=-1)
+			[self drawLineFromColumn:column toColumn: cellInfo.upperMapping[column] inRect:ownRect offset: 0];
+		if (cellInfo.lowerMapping[column] !=-1)
+			[self drawLineFromColumn: column toColumn: cellInfo.lowerMapping[column] inRect:ownRect offset: ownRect.size.height];
 	}
+
 	[self drawCircleForColumn: cellInfo.position inRect: ownRect];
-	
+
 	
 	[super drawWithFrame:rect inView:view];
 	isReady = NO;
