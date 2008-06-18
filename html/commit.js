@@ -68,4 +68,6 @@ var doeHet = function() {
 	} else {
 		$("details").innerHTML = "<a class='showdiff' href='' onclick='showDiffs(); return false;'>This is a large commit. Click here to show the diff.</a>";
 	}
+
+	scroll(0, 0);
 }
