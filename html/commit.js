@@ -44,7 +44,7 @@ var showDiffs = function() {
 	$("details").show();
 }
 
-var doeHet = function() {
+var loadCommit = function() {
 	commit = new Commit(CommitObject);
 
 	$("commitID").innerHTML = commit.sha;
