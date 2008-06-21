@@ -14,15 +14,11 @@
 	PBGitRevList* revisionList;
 }
 
-+ (void) setGitPath;
-
 + (PBGitRepository*) repositoryWithPath:(NSString*) path;
 - (PBGitRepository*) initWithPath:(NSString*) path;
 
 - (NSFileHandle*) handleForCommand:(NSString*) cmd;
 - (NSFileHandle*) handleForArguments:(NSArray*) args;
-- (void) initializeCommits;
-- (void) addCommit: (id)obj;
 
 @property (copy) NSString* path;
 @property (readonly) PBGitRevList* revisionList;

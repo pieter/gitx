@@ -14,7 +14,7 @@
 
 @implementation PBGitRepository
 
-@synthesize path;
+@synthesize path, revisionList;
 static NSString* gitPath;
 
 + (void) initialize
