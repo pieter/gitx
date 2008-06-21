@@ -28,11 +28,19 @@ static NSString* gitPath;
 	
 	// No explicit path. Try it with "which"
 	gitPath = [PBEasyPipe outputForCommand:@"/usr/bin/which" withArgs:[NSArray arrayWithObject:@"git"]];
+	if (gitPath.length > 0)
+		return;
 	
-	if (gitPath.length == 0) {
-		NSLog(@"Git path not found. Defaulting to /opt/pieter/bin/git");
-		gitPath = @"/opt/pieter/bin/git";
+	// Still no path. Let's try some default locations.
+	NSArray* locations = [NSArray arrayWithObjects:@"/opt/local/bin/git", @"/sw/bin/git", @"/opt/git/bin/git", nil];
+	for (NSString* location in locations) {
+		if ([[NSFileManager defaultManager] fileExistsAtPath:location]) {
+			gitPath = location;
+			return;
+		}
 	}
+	
+	NSLog(@"Could not find a git binary!");
 }
 
 + (PBGitRepository*) repositoryWithPath:(NSString*) path
