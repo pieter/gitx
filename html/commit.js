@@ -44,7 +44,7 @@ var showDiffs = function() {
 	$("details").show();
 }
 
-var doeHet = function() {
+var loadCommit = function() {
 	commit = new Commit(CommitObject);
 
 	$("commitID").innerHTML = commit.sha;
@@ -68,4 +68,6 @@ var doeHet = function() {
 	} else {
 		$("details").innerHTML = "<a class='showdiff' href='' onclick='showDiffs(); return false;'>This is a large commit. Click here to show the diff.</a>";
 	}
+
+	scroll(0, 0);
 }

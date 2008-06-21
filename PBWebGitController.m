@@ -54,7 +54,7 @@
 	currentSha = content.sha;
 	id script = [view windowScriptObject];
 	[script setValue: content forKey:@"CommitObject"];
-	[script callWebScriptMethod:@"doeHet" withArguments: nil];
+	[script callWebScriptMethod:@"loadCommit" withArguments: nil];
 }
 
 - (void) log: (NSString*) logMessage
