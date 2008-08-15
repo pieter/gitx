@@ -15,6 +15,10 @@
 
 - (ApplicationController*) init
 {
+#ifndef NDEBUG
+	[NSApp activateIgnoringOtherApps:YES];
+#endif
+
 	if([[NSBundle bundleWithPath:@"/System/Library/PrivateFrameworks/QuickLookUI.framework"] load])
 		NSLog(@"Quick Look loaded!");
 
