@@ -9,7 +9,7 @@
 #import <Cocoa/Cocoa.h>
 #import "PBGitRevList.h"
 
-@interface PBGitRepository : NSObject {
+@interface PBGitRepository : NSDocument {
 	NSString* path;
 	PBGitRevList* revisionList;
 }
