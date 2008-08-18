@@ -57,14 +57,40 @@
 
 - (IBAction)installCliTool:(id)sender;
 {
-	NSString* command = [NSString stringWithFormat:@"sudo ln -s '%@' /usr/bin/gitx", [[NSBundle mainBundle] pathForResource:@"gitx" ofType:@""]];
-	[[NSPasteboard generalPasteboard] declareTypes:[NSArray arrayWithObject:NSStringPboardType] owner:nil];
-	[[NSPasteboard generalPasteboard] setString:command forType:NSStringPboardType];
-	[[NSAlert alertWithMessageText:@"Not Implemented"
-                    defaultButton:nil
-                  alternateButton:nil
-                      otherButton:nil
-        informativeTextWithFormat:@"Sorry, automatic installation is not implemented yet. You can run the command\n\t%@\nto install it (I’ve copied this command to your clipboard).", command] runModal];
+	BOOL success               = NO;
+	NSString* installationPath = @"/usr/bin/gitx";
+	NSString* toolPath         = [[NSBundle mainBundle] pathForResource:@"gitx" ofType:@""];
+	if (toolPath) {
+		AuthorizationRef auth;
+		if (AuthorizationCreate(NULL, kAuthorizationEmptyEnvironment, kAuthorizationFlagDefaults, &auth) == errAuthorizationSuccess) {
+			char const* arguments[] = { "-s", [toolPath UTF8String], [installationPath UTF8String], NULL };
+			char const* helperTool  = "/bin/ln";
+			if (AuthorizationExecuteWithPrivileges(auth, helperTool, kAuthorizationFlagDefaults, (char**)arguments, NULL) == errAuthorizationSuccess) {
+				int status;
+				int pid = wait(&status);
+				if (pid != -1 && WIFEXITED(status) && WEXITSTATUS(status) == 0)
+					success = true;
+				else
+					errno = WEXITSTATUS(status);
+			}
+
+			AuthorizationFree(auth, kAuthorizationFlagDefaults);
+		}
+	}
+
+	if (success) {
+		[[NSAlert alertWithMessageText:@"Installation Complete"
+	                    defaultButton:nil
+	                  alternateButton:nil
+	                      otherButton:nil
+	        informativeTextWithFormat:@"The gitx tool has been installed to %@", installationPath] runModal];
+	} else {
+		[[NSAlert alertWithMessageText:@"Installation Failed"
+	                    defaultButton:nil
+	                  alternateButton:nil
+	                      otherButton:nil
+	        informativeTextWithFormat:@"Installation to %@ failed", installationPath] runModal];
+	}
 }
 
 - (IBAction) switchBranch: sender
