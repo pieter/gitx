@@ -145,7 +145,7 @@ static NSString* gitPath;
 - (void) readCurrentBranch
 {
 	NSString* branch = [self parseSymbolicReference: @"HEAD"];
-	if (branch && [branch hasPrefix:@"refs/heads/"]);
+	if (branch && [branch hasPrefix:@"refs/heads/"])
 		self.currentBranch = [branch substringFromIndex:11];
 }
 
