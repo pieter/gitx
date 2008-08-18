@@ -34,7 +34,9 @@
 	// or by dragging a folder to the app icon
 	if ([[[PBRepositoryDocumentController sharedDocumentController] documents] count] == 0) {
 		// Try to open the current directory as a git repository
-		NSURL *url     = [NSURL fileURLWithPath:[[NSFileManager defaultManager] currentDirectoryPath]];
+		NSURL *url = nil;
+		if([[[NSProcessInfo processInfo] environment] objectForKey:@"PWD"])
+			url = [NSURL fileURLWithPath:[[[NSProcessInfo processInfo] environment] objectForKey:@"PWD"]];
 		NSError *error = nil;
 		if (!url || [[PBRepositoryDocumentController sharedDocumentController] openDocumentWithContentsOfURL:url display:YES error:&error] == NO) {
 			// The current directory could not be opened (most likely it’s not a git repository)
