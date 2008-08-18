@@ -107,6 +107,14 @@
 	self.selectedTab = [NSNumber numberWithInt:2];
 }
 
+- (void)keyDown:(NSEvent*)event
+{
+	if ([[event charactersIgnoringModifiers] isEqualToString: @"f"] && [event modifierFlags] & NSAlternateKeyMask && [event modifierFlags] & NSCommandKeyMask)
+		[[self window] makeFirstResponder:searchField];
+	else
+		[super keyDown: event];
+}
+
 - (IBAction) toggleQuickView: sender
 {
 	id panel = [QLPreviewPanel sharedPreviewPanel];

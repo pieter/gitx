@@ -16,6 +16,7 @@
 	IBOutlet NSArrayController* commitController;
 	IBOutlet NSTreeController* treeController;
 	IBOutlet NSOutlineView* fileBrowser;
+	IBOutlet NSSearchField* searchField;
 
 	PBGitRepository* repository;
 	PBGitTree* gitTree;
