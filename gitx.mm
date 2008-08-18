@@ -36,4 +36,16 @@ int main(int argc, const char* argv)
 		fprintf(stderr, "Couldn't connect to app server!\n");
 		exit(1);
 	}
+
+	if ([[[NSProcessInfo processInfo] environment] objectForKey:@"PWD"]) {
+		NSURL* url     = [NSURL fileURLWithPath:[[[NSProcessInfo processInfo] environment] objectForKey:@"PWD"]];
+		NSError* error = nil;
+		if (![proxy openRepository:url error:&error]) {
+			fprintf(stderr, "Error opening repository at %s", [[url path] UTF8String]);
+			if (error) {
+				fprintf(stderr, ": %s", [[error localizedFailureReason] UTF8String]);
+			}
+			fprintf(stderr, "\n");
+		}
+	}
 }

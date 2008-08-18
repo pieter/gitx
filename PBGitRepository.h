@@ -21,7 +21,6 @@ extern NSString* PBGitRepositoryErrorDomain;
 - (NSFileHandle*) handleForCommand:(NSString*) cmd;
 - (NSFileHandle*) handleForArguments:(NSArray*) args;
 
-@property (copy) NSString* path;
 @property (readonly) PBGitRevList* revisionList;
 
 @end

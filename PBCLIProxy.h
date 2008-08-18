@@ -17,6 +17,8 @@
 @end
 
 #define ConnectionName @"GitX DO Connection"
+#define PBCLIProxyErrorDomain @"PBCLIProxyErrorDomain"
 
 @protocol GitXCliToolProtocol
+- (BOOL)openRepository:(NSURL*)repositoryPath error:(NSError**)error;
 @end
