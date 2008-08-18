@@ -8,9 +8,12 @@
 
 #import "PBGitRepository.h"
 #import "PBGitCommit.h"
+#import "PBDetailController.h"
 
 #import "NSFileHandleExt.h"
 #import "PBEasyPipe.h"
+
+NSString* PBGitRepositoryErrorDomain = @"GitXErrorDomain";
 
 @implementation PBGitRepository
 
@@ -43,9 +46,63 @@ static NSString* gitPath;
 	NSLog(@"Could not find a git binary!");
 }
 
+- (BOOL)readFromData:(NSData *)data ofType:(NSString *)typeName error:(NSError **)outError
+{
+	if (outError) {
+		*outError = [NSError errorWithDomain:PBGitRepositoryErrorDomain
+                                      code:0
+                                  userInfo:[NSDictionary dictionaryWithObject:@"Reading files is not supported." forKey:NSLocalizedFailureReasonErrorKey]];
+	}
+	return NO;
+}
+
+- (BOOL)readFromFileWrapper:(NSFileWrapper *)fileWrapper ofType:(NSString *)typeName error:(NSError **)outError
+{
+	self.path = nil;
+
+	if (![fileWrapper isDirectory]) {
+		if (outError) {
+			NSDictionary* userInfo = [NSDictionary dictionaryWithObject:[NSString stringWithFormat:@"Reading files is not supported.", [fileWrapper filename]]
+                                                              forKey:NSLocalizedRecoverySuggestionErrorKey];
+			*outError = [NSError errorWithDomain:PBGitRepositoryErrorDomain code:0 userInfo:userInfo];
+		}
+	} else {
+		NSString* repositoryPath = [[self fileURL] path];
+
+		if ([repositoryPath hasSuffix:@".git"]) {
+			self.path = repositoryPath;
+		} else {
+			// Use rev-parse to find the .git dir for the repository being opened
+			NSString* newPath = [PBEasyPipe outputForCommand:gitPath withArgs:[NSArray arrayWithObjects:@"rev-parse", @"--git-dir", nil] inDir:repositoryPath];
+			if ([newPath isEqualToString:@".git"]) {
+				self.path = [repositoryPath stringByAppendingPathComponent:@".git"];
+			} else if ([newPath length] > 0) {
+				self.path = newPath;
+			} else if (outError) {
+				NSDictionary* userInfo = [NSDictionary dictionaryWithObject:[NSString stringWithFormat:@"%@ does not appear to be a git repository.", [fileWrapper filename]]
+                                                                 forKey:NSLocalizedRecoverySuggestionErrorKey];
+				*outError = [NSError errorWithDomain:PBGitRepositoryErrorDomain code:0 userInfo:userInfo];
+			}
+		}
+
+		if (self.path) {
+			revisionList = [[PBGitRevList alloc] initWithRepository:self andRevListParameters:[NSArray array]];
+		}
+	}
+
+	return self.path != nil;
+}
+
+// Overridden to create our custom window controller
+- (void)makeWindowControllers
+{
+	PBDetailController* controller = [[PBDetailController alloc] initWithRepository:self];
+	[self addWindowController:controller];
+	[controller release];
+}
+
 + (PBGitRepository*) repositoryWithPath:(NSString*) path
 {
-
 	PBGitRepository* repo = [[PBGitRepository alloc] initWithPath: path];
 	return repo;
 }

@@ -11,12 +11,11 @@
 
 @interface ApplicationController : NSObject 
 {
-    IBOutlet NSWindow *window;
-	IBOutlet PBGitRepository* repository;
+	IBOutlet NSWindow *window;
 	IBOutlet id firstResponder;
-    NSPersistentStoreCoordinator *persistentStoreCoordinator;
-    NSManagedObjectModel *managedObjectModel;
-    NSManagedObjectContext *managedObjectContext;
+	NSPersistentStoreCoordinator *persistentStoreCoordinator;
+	NSManagedObjectModel *managedObjectModel;
+	NSManagedObjectContext *managedObjectContext;
 }
 
 - (NSPersistentStoreCoordinator *)persistentStoreCoordinator;

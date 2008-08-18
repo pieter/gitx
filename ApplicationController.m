@@ -9,39 +9,39 @@
 #import "ApplicationController.h"
 #import "PBGitRevisionCell.h"
 #import "PBDetailController.h"
+#import "PBRepositoryDocumentController.h"
 
 @implementation ApplicationController
 
-@synthesize repository;
-
-- (ApplicationController*) init
+- (ApplicationController*)init
 {
 #ifndef NDEBUG
 	[NSApp activateIgnoringOtherApps:YES];
 #endif
 
-	if([[NSBundle bundleWithPath:@"/System/Library/PrivateFrameworks/QuickLookUI.framework"] load])
-		NSLog(@"Quick Look loaded!");
-
-	// Find the current repository
-	char* a = getenv("PWD");
-	NSString* path;
-	if (a != nil) 
-		path = [NSString stringWithCString:a];
-	else {
-		// Show an open dialog
-		NSOpenPanel* openDlg = [NSOpenPanel openPanel];
-		[openDlg setCanChooseFiles:NO];
-		[openDlg setCanChooseDirectories:YES];
-		if ( [openDlg runModalForDirectory:nil file:nil] == NSOKButton )
-			path = [openDlg filename];
-		else
-			exit(1);
+	if(self = [super init]) {
+		if([[NSBundle bundleWithPath:@"/System/Library/PrivateFrameworks/QuickLookUI.framework"] load])
+			NSLog(@"Quick Look loaded!");
 	}
-	
-	self.repository = [PBGitRepository repositoryWithPath:path];
-	[[PBDetailController alloc] initWithRepository:self.repository];
+
 	return self;
+}
+
+- (void)applicationDidFinishLaunching:(NSNotification*)notification
+{
+	// Only try to open a default document if there are no documents open already.
+	// For example, the application might have been launched by double-clicking a .git repository,
+	// or by dragging a folder to the app icon
+	if ([[[PBRepositoryDocumentController sharedDocumentController] documents] count] == 0) {
+		// Try to open the current directory as a git repository
+		NSURL *url     = [NSURL fileURLWithPath:[[NSFileManager defaultManager] currentDirectoryPath]];
+		NSError *error = nil;
+		if (!url || [[PBRepositoryDocumentController sharedDocumentController] openDocumentWithContentsOfURL:url display:YES error:&error] == NO) {
+			// The current directory could not be opened (most likely it’s not a git repository)
+			// so show an open panel for the user to select a repository to view
+			[[PBRepositoryDocumentController sharedDocumentController] openDocument:self];
+		}
+	}
 }
 
 - (void) windowWillClose: sender
