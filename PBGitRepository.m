@@ -56,6 +56,26 @@ static NSString* gitPath;
 	return NO;
 }
 
++ (NSURL*)gitDirForURL:(NSURL*)repositoryURL;
+{
+	NSString* repositoryPath = [repositoryURL path];
+	NSURL* gitDirURL         = nil;
+
+	if ([repositoryPath hasSuffix:@".git"]) {
+		gitDirURL = [NSURL fileURLWithPath:repositoryPath];
+	} else {
+		// Use rev-parse to find the .git dir for the repository being opened
+		NSString* newPath = [PBEasyPipe outputForCommand:gitPath withArgs:[NSArray arrayWithObjects:@"rev-parse", @"--git-dir", nil] inDir:repositoryPath];
+		if ([newPath isEqualToString:@".git"]) {
+			gitDirURL = [NSURL fileURLWithPath:[repositoryPath stringByAppendingPathComponent:@".git"]];
+		} else if ([newPath length] > 0) {
+			gitDirURL = [NSURL fileURLWithPath:newPath];
+		}
+	}
+
+	return gitDirURL;
+}
+
 - (BOOL)readFromFileWrapper:(NSFileWrapper *)fileWrapper ofType:(NSString *)typeName error:(NSError **)outError
 {
 	BOOL success = NO;
@@ -67,25 +87,14 @@ static NSString* gitPath;
 			*outError = [NSError errorWithDomain:PBGitRepositoryErrorDomain code:0 userInfo:userInfo];
 		}
 	} else {
-		NSString* repositoryPath = [[self fileURL] path];
-
-		if ([repositoryPath hasSuffix:@".git"]) {
-			[self setFileURL:[NSURL fileURLWithPath:repositoryPath]];
+		NSURL* gitDirURL = [PBGitRepository gitDirForURL:[self fileURL]];
+		if (gitDirURL) {
+			[self setFileURL:gitDirURL];
 			success = YES;
-		} else {
-			// Use rev-parse to find the .git dir for the repository being opened
-			NSString* newPath = [PBEasyPipe outputForCommand:gitPath withArgs:[NSArray arrayWithObjects:@"rev-parse", @"--git-dir", nil] inDir:repositoryPath];
-			if ([newPath isEqualToString:@".git"]) {
-				[self setFileURL:[NSURL fileURLWithPath:[repositoryPath stringByAppendingPathComponent:@".git"]]];
-				success = YES;
-			} else if ([newPath length] > 0) {
-				[self setFileURL:[NSURL fileURLWithPath:newPath]];
-				success = YES;
-			} else if (outError) {
-				NSDictionary* userInfo = [NSDictionary dictionaryWithObject:[NSString stringWithFormat:@"%@ does not appear to be a git repository.", [fileWrapper filename]]
-                                                                 forKey:NSLocalizedRecoverySuggestionErrorKey];
-				*outError = [NSError errorWithDomain:PBGitRepositoryErrorDomain code:0 userInfo:userInfo];
-			}
+		} else if (outError) {
+			NSDictionary* userInfo = [NSDictionary dictionaryWithObject:[NSString stringWithFormat:@"%@ does not appear to be a git repository.", [fileWrapper filename]]
+                                                              forKey:NSLocalizedRecoverySuggestionErrorKey];
+			*outError = [NSError errorWithDomain:PBGitRepositoryErrorDomain code:0 userInfo:userInfo];
 		}
 
 		if (success) {
