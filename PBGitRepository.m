@@ -99,6 +99,7 @@ static NSString* gitPath;
 
 		if (success) {
 			revisionList = [[PBGitRevList alloc] initWithRepository:self andRevListParameters:[NSArray array]];
+			[self readBranches];
 		}
 	}
 
@@ -121,30 +122,6 @@ static NSString* gitPath;
 	PBDetailController* controller = [[PBDetailController alloc] initWithRepository:self];
 	[self addWindowController:controller];
 	[controller release];
-}
-
-+ (PBGitRepository*) repositoryWithPath:(NSString*) path
-{
-	PBGitRepository* repo = [[PBGitRepository alloc] initWithPath: path];
-	return repo;
-}
-
-- (PBGitRepository*) initWithPath: (NSString*) p
-{
-	if ([p hasSuffix:@".git"])
-		[self setFileURL:[NSURL fileURLWithPath:p]];
-	else {
-		NSString* newPath = [PBEasyPipe outputForCommand:gitPath withArgs:[NSArray arrayWithObjects:@"rev-parse", @"--git-dir", nil] inDir:p];
-		if ([newPath isEqualToString:@".git"])
-			[self setFileURL:[NSURL fileURLWithPath:[p stringByAppendingPathComponent:@".git"]]];
-		else
-			[self setFileURL:[NSURL fileURLWithPath:newPath]];
-	}
-
-	NSLog(@"Git path is: %@", self.fileURL);
-	revisionList = [[PBGitRevList alloc] initWithRepository:self andRevListParameters:[NSArray array]];
-	[self readBranches];
-	return self;
 }
 
 - (void) readBranches

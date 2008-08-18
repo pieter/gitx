@@ -16,9 +16,6 @@ extern NSString* PBGitRepositoryErrorDomain;
 	NSArray* branches;
 }
 
-+ (PBGitRepository*) repositoryWithPath:(NSString*) path;
-- (PBGitRepository*) initWithPath:(NSString*) path;
-
 - (NSFileHandle*) handleForCommand:(NSString*) cmd;
 - (NSFileHandle*) handleForArguments:(NSArray*) args;
 
