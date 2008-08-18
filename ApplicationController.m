@@ -55,6 +55,11 @@
 	[firstResponder terminate: sender];
 }
 
+- (IBAction)installCliTool:(id)sender;
+{
+	NSLog(@"[%@ installCliTool:%@]", [self class], sender);
+}
+
 - (IBAction) switchBranch: sender
 {
 	[[NSAlert alertWithMessageText:@"Not Supported" defaultButton:nil alternateButton:nil otherButton:nil informativeTextWithFormat:@"Sorry, switching branches is not supported yet"] runModal];
