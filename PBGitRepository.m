@@ -76,6 +76,20 @@ static NSString* gitPath;
 	return gitDirURL;
 }
 
+// For a given path inside a repository, return either the .git dir
+// (for a bare repo) or the directory above the .git dir otherwise
++ (NSURL*)baseDirForURL:(NSURL*)repositoryURL;
+{
+	NSURL* gitDirURL         = [self gitDirForURL:repositoryURL];
+	NSString* repositoryPath = [gitDirURL path];
+
+	if (![[PBEasyPipe outputForCommand:gitPath withArgs:[NSArray arrayWithObjects:@"rev-parse", @"--is-bare-repository", nil] inDir:repositoryPath] isEqualToString:@"true"]) {
+		repositoryURL = [NSURL fileURLWithPath:[[repositoryURL path] stringByDeletingLastPathComponent]];
+	}
+
+	return repositoryURL;
+}
+
 - (BOOL)readFromFileWrapper:(NSFileWrapper *)fileWrapper ofType:(NSString *)typeName error:(NSError **)outError
 {
 	BOOL success = NO;

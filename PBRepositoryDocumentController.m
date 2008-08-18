@@ -24,4 +24,9 @@
 {
 	return [super documentForURL:[PBGitRepository gitDirForURL:URL]];
 }
+
+- (void)noteNewRecentDocumentURL:(NSURL*)url
+{
+	[super noteNewRecentDocumentURL:[PBGitRepository baseDirForURL:url]];
+}
 @end

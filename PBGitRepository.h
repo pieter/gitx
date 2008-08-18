@@ -29,6 +29,8 @@ extern NSString* PBGitRepositoryErrorDomain;
 - (NSString*) parseReference:(NSString*) ref;
 
 + (NSURL*)gitDirForURL:(NSURL*)repositoryURL;
++ (NSURL*)baseDirForURL:(NSURL*)repositoryURL;
+
 @property (readonly) PBGitRevList* revisionList;
 @property (assign) NSArray* branches;
 @property (assign) NSString* currentBranch;
