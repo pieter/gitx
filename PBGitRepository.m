@@ -17,7 +17,7 @@ NSString* PBGitRepositoryErrorDomain = @"GitXErrorDomain";
 
 @implementation PBGitRepository
 
-@synthesize revisionList;
+@synthesize revisionList, branches;
 static NSString* gitPath;
 
 + (void) initialize
@@ -143,9 +143,26 @@ static NSString* gitPath;
 
 	NSLog(@"Git path is: %@", self.fileURL);
 	revisionList = [[PBGitRevList alloc] initWithRepository:self andRevListParameters:[NSArray array]];
+	[self readBranches];
 	return self;
 }
 
+- (void) readBranches
+{
+	NSString* output = [PBEasyPipe outputForCommand:gitPath withArgs:[NSArray arrayWithObjects:@"for-each-ref", @"refs/heads", nil] inDir: self.fileURL.path];
+	NSArray* lines = [output componentsSeparatedByString:@"\n"];
+	NSMutableArray* newBranches = [NSMutableArray array];
+	for (NSString* line in lines) {
+		NSString* substr = [line substringWithRange: NSMakeRange(40,19)];
+		if (![substr isEqualToString:@" commit\trefs/heads/"]) {
+			NSLog(@"Cannot parse branch %@. (%@)", line, substr);
+			continue;
+		}
+		NSString* branch = [line substringFromIndex:59];
+		[newBranches addObject: branch];
+	}
+	self.branches = newBranches;
+}
 
 - (NSFileHandle*) handleForArguments:(NSArray *)args
 {
