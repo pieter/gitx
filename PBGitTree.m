@@ -124,7 +124,7 @@
 		return localFileName;
 	
 	if (!localFileName)
-		localFileName = [PBEasyFS tmpNameWithSuffix: path];
+		localFileName = [[PBEasyFS tmpDirWithPrefix: sha] stringByAppendingPathComponent:path];
 	
 	NSFileHandle* handle = [repository handleForArguments:[NSArray arrayWithObjects:@"show", [self refSpec], nil]];
 	NSData* data = [handle readDataToEndOfFile];
