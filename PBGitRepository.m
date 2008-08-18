@@ -144,11 +144,11 @@ static NSString* gitPath;
 
 - (void) readCurrentBranch
 {
-	NSData* data = [[self handleForCommand:@"symbolic-ref HEAD"] readDataToEndOfFile];
-	NSString* branch = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-	if ([branch hasPrefix:@"refs/heads/"])
+	NSString* branch = [self parseSymbolicReference: @"HEAD"];
+	if (branch && [branch hasPrefix:@"refs/heads/"]);
 		self.currentBranch = [branch substringFromIndex:11];
 }
+
 
 - (NSFileHandle*) handleForArguments:(NSArray *)args
 {
@@ -164,4 +164,28 @@ static NSString* gitPath;
 	return [self handleForArguments:arguments];
 }
 
+- (NSString*) outputForCommand:(NSString *)cmd
+{
+	NSArray* arguments = [cmd componentsSeparatedByString:@" "];
+	return [self outputForArguments: arguments];
+}
+
+- (NSString*) outputForArguments:(NSArray*) arguments
+{
+	return [PBEasyPipe outputForCommand:gitPath withArgs:arguments inDir: self.fileURL.path];
+}
+
+- (NSString*) parseReference:(NSString *)reference
+{
+	return [self outputForArguments:[NSArray arrayWithObjects: @"rev-parse", reference, nil]];
+}
+
+- (NSString*) parseSymbolicReference:(NSString*) reference
+{
+	NSString* ref = [self outputForArguments:[NSArray arrayWithObjects: @"symbolic-ref", reference, nil]];
+	if ([ref hasPrefix:@"refs/"])
+		return ref;
+
+	return nil;
+}
 @end

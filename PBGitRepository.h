@@ -19,8 +19,14 @@ extern NSString* PBGitRepositoryErrorDomain;
 
 - (NSFileHandle*) handleForCommand:(NSString*) cmd;
 - (NSFileHandle*) handleForArguments:(NSArray*) args;
+- (NSString*) outputForCommand:(NSString*) cmd;
+- (NSString*) outputForArguments:(NSArray*) args;
 
 - (void) readBranches;
+- (void) readCurrentBranch;
+
+- (NSString*) parseSymbolicReference:(NSString*) ref;
+- (NSString*) parseReference:(NSString*) ref;
 
 + (NSURL*)gitDirForURL:(NSURL*)repositoryURL;
 @property (readonly) PBGitRevList* revisionList;
