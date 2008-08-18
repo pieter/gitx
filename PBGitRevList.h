@@ -17,6 +17,7 @@
 }
 
 - initWithRepository:(id)repo andRevListParameters:(NSArray*) params;
+- readCommits;
 
 @property(retain) NSArray* commits;
 @end
