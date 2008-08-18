@@ -29,6 +29,4 @@
 
 - (IBAction)saveAction:sender;
 - (IBAction)switchBranch:sender;
-
-@property (retain) PBGitRepository* repository;
 @end
