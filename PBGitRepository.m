@@ -17,7 +17,7 @@ NSString* PBGitRepositoryErrorDomain = @"GitXErrorDomain";
 
 @implementation PBGitRepository
 
-@synthesize path, revisionList;
+@synthesize revisionList;
 static NSString* gitPath;
 
 + (void) initialize
@@ -58,7 +58,7 @@ static NSString* gitPath;
 
 - (BOOL)readFromFileWrapper:(NSFileWrapper *)fileWrapper ofType:(NSString *)typeName error:(NSError **)outError
 {
-	self.path = nil;
+	BOOL success = NO;
 
 	if (![fileWrapper isDirectory]) {
 		if (outError) {
@@ -70,14 +70,17 @@ static NSString* gitPath;
 		NSString* repositoryPath = [[self fileURL] path];
 
 		if ([repositoryPath hasSuffix:@".git"]) {
-			self.path = repositoryPath;
+			[self setFileURL:[NSURL fileURLWithPath:repositoryPath]];
+			success = YES;
 		} else {
 			// Use rev-parse to find the .git dir for the repository being opened
 			NSString* newPath = [PBEasyPipe outputForCommand:gitPath withArgs:[NSArray arrayWithObjects:@"rev-parse", @"--git-dir", nil] inDir:repositoryPath];
 			if ([newPath isEqualToString:@".git"]) {
-				self.path = [repositoryPath stringByAppendingPathComponent:@".git"];
+				[self setFileURL:[NSURL fileURLWithPath:[repositoryPath stringByAppendingPathComponent:@".git"]]];
+				success = YES;
 			} else if ([newPath length] > 0) {
-				self.path = newPath;
+				[self setFileURL:[NSURL fileURLWithPath:newPath]];
+				success = YES;
 			} else if (outError) {
 				NSDictionary* userInfo = [NSDictionary dictionaryWithObject:[NSString stringWithFormat:@"%@ does not appear to be a git repository.", [fileWrapper filename]]
                                                                  forKey:NSLocalizedRecoverySuggestionErrorKey];
@@ -85,12 +88,22 @@ static NSString* gitPath;
 			}
 		}
 
-		if (self.path) {
+		if (success) {
 			revisionList = [[PBGitRevList alloc] initWithRepository:self andRevListParameters:[NSArray array]];
 		}
 	}
 
-	return self.path != nil;
+	return success;
+}
+
+// The fileURL the document keeps is to the .git dir, but that’s pretty
+// useless for display in the window title bar, so we show the directory above
+- (NSString*)displayName
+{
+	NSString* displayName = self.fileURL.path.lastPathComponent;
+	if ([displayName isEqualToString:@".git"])
+		displayName = [self.fileURL.path stringByDeletingLastPathComponent].lastPathComponent;
+	return displayName;
 }
 
 // Overridden to create our custom window controller
@@ -110,16 +123,16 @@ static NSString* gitPath;
 - (PBGitRepository*) initWithPath: (NSString*) p
 {
 	if ([p hasSuffix:@".git"])
-		self.path = p;
+		[self setFileURL:[NSURL fileURLWithPath:p]];
 	else {
 		NSString* newPath = [PBEasyPipe outputForCommand:gitPath withArgs:[NSArray arrayWithObjects:@"rev-parse", @"--git-dir", nil] inDir:p];
 		if ([newPath isEqualToString:@".git"])
-			self.path = [p stringByAppendingPathComponent:@".git"];
+			[self setFileURL:[NSURL fileURLWithPath:[p stringByAppendingPathComponent:@".git"]]];
 		else
-			self.path = newPath;
+			[self setFileURL:[NSURL fileURLWithPath:newPath]];
 	}
 
-	NSLog(@"Git path is: %@", self.path);
+	NSLog(@"Git path is: %@", self.fileURL);
 	revisionList = [[PBGitRevList alloc] initWithRepository:self andRevListParameters:[NSArray array]];
 	return self;
 }
@@ -127,7 +140,7 @@ static NSString* gitPath;
 
 - (NSFileHandle*) handleForArguments:(NSArray *)args
 {
-	NSString* gitDirArg = [@"--git-dir=" stringByAppendingString:path];
+	NSString* gitDirArg = [@"--git-dir=" stringByAppendingString:self.fileURL.path];
 	NSMutableArray* arguments =  [NSMutableArray arrayWithObject: gitDirArg];
 	[arguments addObjectsFromArray: args];
 	return [PBEasyPipe handleForCommand:gitPath withArgs:arguments];

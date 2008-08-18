@@ -12,7 +12,6 @@
 extern NSString* PBGitRepositoryErrorDomain;
 
 @interface PBGitRepository : NSDocument {
-	NSString* path;
 	PBGitRevList* revisionList;
 }
 
