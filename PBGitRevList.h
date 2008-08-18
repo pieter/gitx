@@ -13,6 +13,7 @@
 	NSArray* commits;
 	NSArray* parameters;
 	id repository;
+	NSString* currentRef;
 }
 
 - initWithRepository:(id)repo andRevListParameters:(NSArray*) params;

@@ -98,9 +98,9 @@ static NSString* gitPath;
 		}
 
 		if (success) {
-			revisionList = [[PBGitRevList alloc] initWithRepository:self andRevListParameters:[NSArray array]];
 			[self readBranches];
 			[self readCurrentBranch];
+			revisionList = [[PBGitRevList alloc] initWithRepository:self andRevListParameters:[NSArray array]];
 		}
 	}
 
