@@ -7,7 +7,7 @@
 //
 
 #import "PBRepositoryDocumentController.h"
-
+#import "PBGitRepository.h"
 
 @implementation PBRepositoryDocumentController
 // This method is overridden to configure the open panel to only allow
@@ -17,5 +17,11 @@
 	[openPanel setCanChooseFiles:NO];
 	[openPanel setCanChooseDirectories:YES];
 	return [openPanel runModalForDirectory:nil file:nil types:nil];
+}
+
+// Convert paths to the .git dir before searching for an already open document
+- (id)documentForURL:(NSURL *)URL
+{
+	return [super documentForURL:[PBGitRepository gitDirForURL:URL]];
 }
 @end

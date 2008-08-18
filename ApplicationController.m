@@ -10,8 +10,10 @@
 #import "PBGitRevisionCell.h"
 #import "PBDetailController.h"
 #import "PBRepositoryDocumentController.h"
+#import "PBCLIProxy.h"
 
 @implementation ApplicationController
+@synthesize cliProxy;
 
 - (ApplicationController*)init
 {
@@ -22,6 +24,8 @@
 	if(self = [super init]) {
 		if([[NSBundle bundleWithPath:@"/System/Library/PrivateFrameworks/QuickLookUI.framework"] load])
 			NSLog(@"Quick Look loaded!");
+
+		self.cliProxy = [PBCLIProxy new];
 	}
 
 	return self;
@@ -49,6 +53,11 @@
 - (void) windowWillClose: sender
 {
 	[firstResponder terminate: sender];
+}
+
+- (IBAction)installCliTool:(id)sender;
+{
+	NSLog(@"[%@ installCliTool:%@]", [self class], sender);
 }
 
 - (IBAction) switchBranch: sender
