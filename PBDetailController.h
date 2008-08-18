@@ -7,15 +7,17 @@
 //
 
 #import <Cocoa/Cocoa.h>
+#import "PBGitRepository.h"
 #import "PBGitCommit.h"
 #import "PBGitTree.h"
 
-@interface PBDetailController : NSObject {
+@interface PBDetailController : NSWindowController {
 	IBOutlet NSNumber* selectedTab;
 	IBOutlet NSArrayController* commitController;
 	IBOutlet NSTreeController* treeController;
 	IBOutlet NSOutlineView* fileBrowser;
 
+	PBGitRepository* repository;
 	PBGitTree* gitTree;
 	PBGitCommit* webCommit;
 	PBGitCommit* rawCommit;
@@ -23,9 +25,12 @@
 }
 
 @property (copy) NSNumber* selectedTab;
+@property (retain) PBGitRepository* repository;
 @property (retain) PBGitCommit* webCommit;
 @property (retain) PBGitCommit* rawCommit;
 @property (retain) PBGitTree* gitTree;
+
+- (id)initWithRepository:(PBGitRepository*)theRepository;
 
 - (IBAction) setDetailedView: sender;
 - (IBAction) setRawView: sender;

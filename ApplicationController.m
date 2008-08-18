@@ -8,6 +8,7 @@
 
 #import "ApplicationController.h"
 #import "PBGitRevisionCell.h"
+#import "PBDetailController.h"
 
 @implementation ApplicationController
 
@@ -39,6 +40,7 @@
 	}
 	
 	self.repository = [PBGitRepository repositoryWithPath:path];
+	[[PBDetailController alloc] initWithRepository:self.repository];
 	return self;
 }
 
@@ -222,15 +224,5 @@
     [persistentStoreCoordinator release], persistentStoreCoordinator = nil;
     [managedObjectModel release], managedObjectModel = nil;
     [super dealloc];
-}
-
-- (void)tableView:(NSTableView *)aTableView willDisplayCell:(id)aCell forTableColumn:(NSTableColumn *)aTableColumn row:(int)rowIndex
-{
-	if (![[aTableColumn identifier] isEqualToString:@"subject"])
-		return;
-
-	NSNumber* n = [NSNumber numberWithInt:(rowIndex % 2)];
-	[aCell setCommit:n];
-	
 }
 @end

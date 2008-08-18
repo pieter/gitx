@@ -14,7 +14,17 @@
 
 @implementation PBDetailController
 
-@synthesize selectedTab, webCommit, rawCommit, gitTree;
+@synthesize repository, selectedTab, webCommit, rawCommit, gitTree;
+
+- (id)initWithRepository:(PBGitRepository*)theRepository;
+{
+	if(self = [self initWithWindowNibName:@"RepositoryWindow"])
+	{
+		self.repository = theRepository;
+		[self showWindow:nil];
+	}
+	return self;
+}
 
 - awakeFromNib
 {
@@ -129,4 +139,12 @@
 
 }
 
+- (void)tableView:(NSTableView *)aTableView willDisplayCell:(id)aCell forTableColumn:(NSTableColumn *)aTableColumn row:(int)rowIndex
+{
+	if (![[aTableColumn identifier] isEqualToString:@"subject"])
+		return;
+
+	NSNumber* n = [NSNumber numberWithInt:(rowIndex % 2)];
+	[aCell setCommit:n];
+}
 @end
