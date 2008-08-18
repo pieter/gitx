@@ -29,7 +29,13 @@
 	// We use refparse to get the commit sha that we will parse. That way,
 	// we can check if the current branch is the same as the previous one
 	// and in that case we don't have to reload the revision list.
-	NSString* newRef = [repository parseReference:[repository currentBranch]];
+
+	// If no branch was selected, use the current HEAD
+	NSString* newRef = [repository currentBranch];
+	if (!newRef || [newRef isEqualToString:@""])
+		newRef = @"HEAD";
+	newRef = [repository parseReference:newRef];
+
 	if ([newRef isEqualToString:currentRef])
 		return;
 
