@@ -14,6 +14,7 @@ extern NSString* PBGitRepositoryErrorDomain;
 @interface PBGitRepository : NSDocument {
 	PBGitRevList* revisionList;
 	NSArray* branches;
+	NSString* currentBranch;
 }
 
 - (NSFileHandle*) handleForCommand:(NSString*) cmd;
@@ -24,5 +25,6 @@ extern NSString* PBGitRepositoryErrorDomain;
 + (NSURL*)gitDirForURL:(NSURL*)repositoryURL;
 @property (readonly) PBGitRevList* revisionList;
 @property (assign) NSArray* branches;
+@property (assign) NSString* currentBranch;
 
 @end

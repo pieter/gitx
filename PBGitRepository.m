@@ -17,7 +17,7 @@ NSString* PBGitRepositoryErrorDomain = @"GitXErrorDomain";
 
 @implementation PBGitRepository
 
-@synthesize revisionList, branches;
+@synthesize revisionList, branches, currentBranch;
 static NSString* gitPath;
 
 + (void) initialize
@@ -100,6 +100,7 @@ static NSString* gitPath;
 		if (success) {
 			revisionList = [[PBGitRevList alloc] initWithRepository:self andRevListParameters:[NSArray array]];
 			[self readBranches];
+			[self readCurrentBranch];
 		}
 	}
 
@@ -139,6 +140,14 @@ static NSString* gitPath;
 		[newBranches addObject: branch];
 	}
 	self.branches = newBranches;
+}
+
+- (void) readCurrentBranch
+{
+	NSData* data = [[self handleForCommand:@"symbolic-ref HEAD"] readDataToEndOfFile];
+	NSString* branch = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+	if ([branch hasPrefix:@"refs/heads/"])
+		self.currentBranch = [branch substringFromIndex:11];
 }
 
 - (NSFileHandle*) handleForArguments:(NSArray *)args
