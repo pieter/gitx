@@ -57,7 +57,14 @@
 
 - (IBAction)installCliTool:(id)sender;
 {
-	NSLog(@"[%@ installCliTool:%@]", [self class], sender);
+	NSString* command = [NSString stringWithFormat:@"sudo ln -s '%@' /usr/bin/gitx", [[NSBundle mainBundle] pathForResource:@"gitx" ofType:@""]];
+	[[NSPasteboard generalPasteboard] declareTypes:[NSArray arrayWithObject:NSStringPboardType] owner:nil];
+	[[NSPasteboard generalPasteboard] setString:command forType:NSStringPboardType];
+	[[NSAlert alertWithMessageText:@"Not Implemented"
+                    defaultButton:nil
+                  alternateButton:nil
+                      otherButton:nil
+        informativeTextWithFormat:@"Sorry, automatic installation is not implemented yet. You can run the command\n\t%@\nto install it (I’ve copied this command to your clipboard).", command] runModal];
 }
 
 - (IBAction) switchBranch: sender
