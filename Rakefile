@@ -47,3 +47,13 @@ task :uninstall_app do
   end
   puts "Couldn't find installed GitX.app" unless found
 end
+
+desc "Creates a zip file with current GitX"
+task :create_zip do
+  delete = File.directory?("build/Release")
+  system("xcodebuild")
+  system("cd build/Release && zip -r GitX.app.zip GitX.app")
+  system("mv build/Release/GitX.app.zip .")
+  system("rm -rf build/Release") if delete
+  system("upload GitX.app.zip") # This is a local script -- Pieter
+end
