@@ -19,7 +19,10 @@ var Commit = Class.create({
 
 		var match = this.header.match(/\nauthor (.*) <(.*@.*)> ([0-9].*)/);
 		this.author_name = match[1];
-		this.author_email = match[2];
+		if (this.author_email =~ (/@[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}\z/))
+			this.author_email = null;
+		else
+			this.author_email = match[2];
 		this.author_date = new Date(parseInt(match[3]) * 1000);
 
 		match = this.header.match(/\ncommitter (.*) <(.*@.*)> ([0-9].*)/);
@@ -48,7 +51,10 @@ var loadCommit = function() {
 	commit = new Commit(CommitObject);
 
 	$("commitID").innerHTML = commit.sha;
-	$("authorID").innerHTML = commit.author_name + " &lt;<a href='mailto:" + commit.author_email + "'>" + commit.author_email + "</a>&gt;";
+	if (commit.author_email)
+		$("authorID").innerHTML = commit.author_name + " &lt;<a href='mailto:" + commit.author_email + "'>" + commit.author_email + "</a>&gt;";
+	else
+		$("authorID").innerHTML = commit.author_name;
 	$("date").innerHTML = commit.author_date;
 	$("subjectID").innerHTML =CommitObject.subject;
 	
