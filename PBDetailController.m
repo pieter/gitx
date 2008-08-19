@@ -26,14 +26,13 @@
 	return self;
 }
 
-- awakeFromNib
+- (void)awakeFromNib
 {
 	[fileBrowser setTarget:self];
 	[fileBrowser setDoubleAction:@selector(openSelectedFile:)];
 	self.selectedTab = [NSNumber numberWithInt:0];
 	[commitController addObserver:self forKeyPath:@"selection" options:(NSKeyValueObservingOptionNew,NSKeyValueObservingOptionOld) context:@"commitChange"];
 	[treeController addObserver:self forKeyPath:@"selection" options:0 context:@"treeChange"];
-	return self;
 }
 
 - (void) updateKeys
