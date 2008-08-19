@@ -8,39 +8,89 @@
 
 #import "ApplicationController.h"
 #import "PBGitRevisionCell.h"
+#import "PBDetailController.h"
+#import "PBRepositoryDocumentController.h"
+#import "PBCLIProxy.h"
 
 @implementation ApplicationController
+@synthesize cliProxy;
 
-@synthesize repository;
-
-- (ApplicationController*) init
+- (ApplicationController*)init
 {
-	if([[NSBundle bundleWithPath:@"/System/Library/PrivateFrameworks/QuickLookUI.framework"] load])
-		NSLog(@"Quick Look loaded!");
+#ifndef NDEBUG
+	[NSApp activateIgnoringOtherApps:YES];
+#endif
 
-	// Find the current repository
-	char* a = getenv("PWD");
-	NSString* path;
-	if (a != nil) 
-		path = [NSString stringWithCString:a];
-	else {
-		// Show an open dialog
-		NSOpenPanel* openDlg = [NSOpenPanel openPanel];
-		[openDlg setCanChooseFiles:NO];
-		[openDlg setCanChooseDirectories:YES];
-		if ( [openDlg runModalForDirectory:nil file:nil] == NSOKButton )
-			path = [openDlg filename];
-		else
-			exit(1);
+	if(self = [super init]) {
+		if([[NSBundle bundleWithPath:@"/System/Library/PrivateFrameworks/QuickLookUI.framework"] load])
+			NSLog(@"Quick Look loaded!");
+
+		self.cliProxy = [PBCLIProxy new];
 	}
-	
-	self.repository = [PBGitRepository repositoryWithPath:path];
+
 	return self;
+}
+
+- (void)applicationDidFinishLaunching:(NSNotification*)notification
+{
+	// Only try to open a default document if there are no documents open already.
+	// For example, the application might have been launched by double-clicking a .git repository,
+	// or by dragging a folder to the app icon
+	if ([[[PBRepositoryDocumentController sharedDocumentController] documents] count] == 0) {
+		// Try to open the current directory as a git repository
+		NSURL *url = nil;
+		if([[[NSProcessInfo processInfo] environment] objectForKey:@"PWD"])
+			url = [NSURL fileURLWithPath:[[[NSProcessInfo processInfo] environment] objectForKey:@"PWD"]];
+		NSError *error = nil;
+		if (!url || [[PBRepositoryDocumentController sharedDocumentController] openDocumentWithContentsOfURL:url display:YES error:&error] == NO) {
+			// The current directory could not be opened (most likely it’s not a git repository)
+			// so show an open panel for the user to select a repository to view
+			[[PBRepositoryDocumentController sharedDocumentController] openDocument:self];
+		}
+	}
 }
 
 - (void) windowWillClose: sender
 {
 	[firstResponder terminate: sender];
+}
+
+- (IBAction)installCliTool:(id)sender;
+{
+	BOOL success               = NO;
+	NSString* installationPath = @"/usr/bin/gitx";
+	NSString* toolPath         = [[NSBundle mainBundle] pathForResource:@"gitx" ofType:@""];
+	if (toolPath) {
+		AuthorizationRef auth;
+		if (AuthorizationCreate(NULL, kAuthorizationEmptyEnvironment, kAuthorizationFlagDefaults, &auth) == errAuthorizationSuccess) {
+			char const* arguments[] = { "-s", [toolPath UTF8String], [installationPath UTF8String], NULL };
+			char const* helperTool  = "/bin/ln";
+			if (AuthorizationExecuteWithPrivileges(auth, helperTool, kAuthorizationFlagDefaults, (char**)arguments, NULL) == errAuthorizationSuccess) {
+				int status;
+				int pid = wait(&status);
+				if (pid != -1 && WIFEXITED(status) && WEXITSTATUS(status) == 0)
+					success = true;
+				else
+					errno = WEXITSTATUS(status);
+			}
+
+			AuthorizationFree(auth, kAuthorizationFlagDefaults);
+		}
+	}
+
+	if (success) {
+		[[NSAlert alertWithMessageText:@"Installation Complete"
+	                    defaultButton:nil
+	                  alternateButton:nil
+	                      otherButton:nil
+	        informativeTextWithFormat:@"The gitx tool has been installed to %@", installationPath] runModal];
+	} else {
+		[[NSAlert alertWithMessageText:@"Installation Failed"
+	                    defaultButton:nil
+	                  alternateButton:nil
+	                      otherButton:nil
+	        informativeTextWithFormat:@"Installation to %@ failed", installationPath] runModal];
+	}
 }
 
 - (IBAction) switchBranch: sender
@@ -218,16 +268,5 @@
     [persistentStoreCoordinator release], persistentStoreCoordinator = nil;
     [managedObjectModel release], managedObjectModel = nil;
     [super dealloc];
-}
-
-- (void)tableView:(NSTableView *)aTableView willDisplayCell:(id)aCell forTableColumn:(NSTableColumn *)aTableColumn row:(int)rowIndex
-{
-	if (![[aTableColumn identifier] isEqualToString:@"subject"])
-		return;
-
-	if (self.repository.revisionList.grapher) {
-		PBGitGrapher* g = self.repository.revisionList.grapher;
-		[aCell setCellInfo: [g cellInfoForRow:rowIndex]];
-	}
 }
 @end

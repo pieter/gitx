@@ -65,7 +65,7 @@
 - (void) selectCommit: (NSString*) sha
 {
 	NSPredicate* selection = [NSPredicate predicateWithFormat:@"sha == %@", sha];
-	NSArray* selectedCommits = [controller.repository.revisionList.commits filteredArrayUsingPredicate:selection];
+	NSArray* selectedCommits = [detailController.repository.revisionList.commits filteredArrayUsingPredicate:selection];
 	// TODO: reimplement this. How can we set the new commit? Our detailscontroller is read-only
 }
 

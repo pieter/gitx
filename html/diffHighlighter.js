@@ -9,8 +9,8 @@ var highlightDiffs = function() {
 
 		var start = new Date();
 		lines.each(function(l) {
-			if (l.length > 100)
-			l = l.substring(0, 100);
+			if (l.length > 250)
+			l = l.substring(0, 250);
 
 			l = l.gsub("\t", "  ");
 

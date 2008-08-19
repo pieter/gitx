@@ -13,7 +13,6 @@
 #import <WebKit/WebKit.h>
 
 @interface PBWebGitController : NSObject {
-	IBOutlet ApplicationController* controller;
 	IBOutlet WebView* view;
 	IBOutlet PBDetailController* detailController;
 	NSString* currentSha;

@@ -9,22 +9,30 @@
 #import <Cocoa/Cocoa.h>
 #import "PBGitRevList.h"
 
-@interface PBGitRepository : NSObject {
-	NSString* path;
+extern NSString* PBGitRepositoryErrorDomain;
+
+@interface PBGitRepository : NSDocument {
 	PBGitRevList* revisionList;
+	NSArray* branches;
+	NSString* currentBranch;
 }
-
-+ (void) setGitPath;
-
-+ (PBGitRepository*) repositoryWithPath:(NSString*) path;
-- (PBGitRepository*) initWithPath:(NSString*) path;
 
 - (NSFileHandle*) handleForCommand:(NSString*) cmd;
 - (NSFileHandle*) handleForArguments:(NSArray*) args;
-- (void) initializeCommits;
-- (void) addCommit: (id)obj;
+- (NSString*) outputForCommand:(NSString*) cmd;
+- (NSString*) outputForArguments:(NSArray*) args;
 
-@property (copy) NSString* path;
+- (void) readBranches;
+- (void) readCurrentBranch;
+
+- (NSString*) parseSymbolicReference:(NSString*) ref;
+- (NSString*) parseReference:(NSString*) ref;
+
++ (NSURL*)gitDirForURL:(NSURL*)repositoryURL;
++ (NSURL*)baseDirForURL:(NSURL*)repositoryURL;
+
 @property (readonly) PBGitRevList* revisionList;
+@property (assign) NSArray* branches;
+@property (assign) NSString* currentBranch;
 
 @end

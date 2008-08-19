@@ -18,9 +18,38 @@
 {
 	parameters = params;
 	repository = repo;
+
+	[self readCommits];
+	[repository addObserver:self forKeyPath:@"currentBranch" options:0 context:nil];
+
+	return self;
+}
+
+- (void) readCommits
+{
+	// We use refparse to get the commit sha that we will parse. That way,
+	// we can check if the current branch is the same as the previous one
+	// and in that case we don't have to reload the revision list.
+
+	// If no branch was selected, use the current HEAD
+	NSString* newRef = [repository currentBranch];
+	if (!newRef || [newRef isEqualToString:@""])
+		newRef = @"HEAD";
+	newRef = [repository parseReference:newRef];
+
+	if ([newRef isEqualToString:currentRef])
+		return;
+
+	currentRef = newRef;
 	NSThread * commitThread = [[NSThread alloc] initWithTarget: self selector: @selector(walkRevisionList) object:nil];
 	[commitThread start];
-	return self;
+}
+
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object
+	change:(NSDictionary *)change context:(void *)context
+{
+	if (object == repository)
+		[self readCommits];
 }
 
 - (void) walkRevisionList
@@ -28,7 +57,7 @@
 	
 	NSMutableArray * newArray = [NSMutableArray array];
 	NSDate* start = [NSDate date];
-	NSFileHandle* handle = [repository handleForCommand:@"log --topo-order --pretty=format:%H\01%an\01%s\01%P\01%at HEAD"];
+	NSFileHandle* handle = [repository handleForArguments:[NSArray arrayWithObjects:@"log", @"--pretty=format:%H\01%an\01%s\01%P\01%at", currentRef, nil]];
 	
 	int fd = [handle fileDescriptor];
 	FILE* f = fdopen(fd, "r");

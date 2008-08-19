@@ -9,22 +9,26 @@
 #import <Cocoa/Cocoa.h>
 #import "PBGitRepository.h"
 
+@class PBCLIProxy;
+
 @interface ApplicationController : NSObject 
 {
-    IBOutlet NSWindow *window;
-	IBOutlet PBGitRepository* repository;
+	IBOutlet NSWindow *window;
 	IBOutlet id firstResponder;
-    NSPersistentStoreCoordinator *persistentStoreCoordinator;
-    NSManagedObjectModel *managedObjectModel;
-    NSManagedObjectContext *managedObjectContext;
+	NSPersistentStoreCoordinator *persistentStoreCoordinator;
+	NSManagedObjectModel *managedObjectModel;
+	NSManagedObjectContext *managedObjectContext;
+
+	PBCLIProxy *cliProxy;
 }
+@property (retain) PBCLIProxy* cliProxy;
 
 - (NSPersistentStoreCoordinator *)persistentStoreCoordinator;
 - (NSManagedObjectModel *)managedObjectModel;
 - (NSManagedObjectContext *)managedObjectContext;
 
+- (IBAction)installCliTool:(id)sender;
+
 - (IBAction)saveAction:sender;
 - (IBAction)switchBranch:sender;
-
-@property (retain) PBGitRepository* repository;
 @end

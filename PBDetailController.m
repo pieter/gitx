@@ -8,13 +8,24 @@
 
 #import "PBDetailController.h"
 #import "CWQuickLook.h"
+#import "PBGitGrapher.h"
 
 #define QLPreviewPanel NSClassFromString(@"QLPreviewPanel")
 
 
 @implementation PBDetailController
 
-@synthesize selectedTab, webCommit, rawCommit, gitTree;
+@synthesize repository, selectedTab, webCommit, rawCommit, gitTree;
+
+- (id)initWithRepository:(PBGitRepository*)theRepository;
+{
+	if(self = [self initWithWindowNibName:@"RepositoryWindow"])
+	{
+		self.repository = theRepository;
+		[self showWindow:nil];
+	}
+	return self;
+}
 
 - awakeFromNib
 {
@@ -129,4 +140,14 @@
 
 }
 
+- (void)tableView:(NSTableView *)aTableView willDisplayCell:(id)aCell forTableColumn:(NSTableColumn *)aTableColumn row:(int)rowIndex
+{
+	if (![[aTableColumn identifier] isEqualToString:@"subject"])
+		return;
+
+	if (self.repository.revisionList.grapher) {
+		PBGitGrapher* g = self.repository.revisionList.grapher;
+		[aCell setCellInfo: [g cellInfoForRow:rowIndex]];
+	}
+}
 @end

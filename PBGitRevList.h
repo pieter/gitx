@@ -14,9 +14,11 @@
 	NSArray* parameters;
 	id grapher;
 	id repository;
+	NSString* currentRef;
 }
 
 - initWithRepository:(id)repo andRevListParameters:(NSArray*) params;
+- readCommits;
 
 @property(retain) NSArray* commits;
 @property(retain) id grapher;
