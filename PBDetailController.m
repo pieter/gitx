@@ -30,7 +30,7 @@
 {
 	[fileBrowser setTarget:self];
 	[fileBrowser setDoubleAction:@selector(openSelectedFile:)];
-	self.selectedTab = 0;
+	self.selectedTab = [[NSUserDefaults standardUserDefaults] integerForKey:@"Repository Window Selected Tab Index"];;
 	[commitController addObserver:self forKeyPath:@"selection" options:(NSKeyValueObservingOptionNew,NSKeyValueObservingOptionOld) context:@"commitChange"];
 	[treeController addObserver:self forKeyPath:@"selection" options:0 context:@"treeChange"];
 }
@@ -64,6 +64,7 @@
 - (void) setSelectedTab: (int) number
 {
 	selectedTab = number;
+	[[NSUserDefaults standardUserDefaults] setInteger:selectedTab forKey:@"Repository Window Selected Tab Index"];
 	[self updateKeys];
 }
 
