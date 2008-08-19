@@ -12,11 +12,12 @@
 #import "PBGitTree.h"
 
 @interface PBDetailController : NSWindowController {
-	IBOutlet NSNumber* selectedTab;
 	IBOutlet NSArrayController* commitController;
 	IBOutlet NSTreeController* treeController;
 	IBOutlet NSOutlineView* fileBrowser;
 	IBOutlet NSSearchField* searchField;
+
+	int selectedTab;
 
 	PBGitRepository* repository;
 	PBGitTree* gitTree;
@@ -25,7 +26,7 @@
 	PBGitCommit* realCommit;
 }
 
-@property (copy) NSNumber* selectedTab;
+@property (assign) int selectedTab;
 @property (retain) PBGitRepository* repository;
 @property (retain) PBGitCommit* webCommit;
 @property (retain) PBGitCommit* rawCommit;

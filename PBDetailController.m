@@ -30,7 +30,7 @@
 {
 	[fileBrowser setTarget:self];
 	[fileBrowser setDoubleAction:@selector(openSelectedFile:)];
-	self.selectedTab = [NSNumber numberWithInt:0];
+	self.selectedTab = 0;
 	[commitController addObserver:self forKeyPath:@"selection" options:(NSKeyValueObservingOptionNew,NSKeyValueObservingOptionOld) context:@"commitChange"];
 	[treeController addObserver:self forKeyPath:@"selection" options:0 context:@"treeChange"];
 }
@@ -52,20 +52,16 @@
 	self.webCommit = nil;
 	self.rawCommit = nil;
 	self.gitTree = nil;
-	
 
-	int num = [self.selectedTab intValue];
-
-	if (num == 0) // Detailed view
-		self.webCommit = realCommit;
-	else if (num == 1)
-		self.rawCommit = realCommit;
-	else if (num == 2)
-		self.gitTree = realCommit.tree;
+	switch (self.selectedTab) {
+		case 0:	self.webCommit = realCommit;			break;
+		case 1:	self.rawCommit = realCommit;			break;
+		case 2:	self.gitTree   = realCommit.tree;	break;
+	}
 }	
 
 
-- (void) setSelectedTab: (NSNumber*) number
+- (void) setSelectedTab: (int) number
 {
 	selectedTab = number;
 	[self updateKeys];
@@ -97,13 +93,13 @@
 }
 
 - (IBAction) setDetailedView: sender {
-	self.selectedTab = [NSNumber numberWithInt:0];
+	self.selectedTab = 0;
 }
 - (IBAction) setRawView: sender {
-	self.selectedTab = [NSNumber numberWithInt:1];
+	self.selectedTab = 1;
 }
 - (IBAction) setTreeView: sender {
-	self.selectedTab = [NSNumber numberWithInt:2];
+	self.selectedTab = 2;
 }
 
 - (void)keyDown:(NSEvent*)event
