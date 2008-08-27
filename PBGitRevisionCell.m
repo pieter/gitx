@@ -87,7 +87,7 @@
 	NSRect ownRect;
 	NSDivideRect(rect, &ownRect, &rect, pathWidth, NSMinXEdge);
 
-	for (PBLine* line in cellInfo.lines) {
+	for (PBGitGraphLine* line in cellInfo.lines) {
 		if (line.upper == 0)
 			[self drawLineFromColumn: line.from toColumn: line.to inRect:ownRect offset: ownRect.size.height];
 		else

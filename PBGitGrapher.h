@@ -8,7 +8,7 @@
 
 #import <Cocoa/Cocoa.h>
 #import "PBGitCommit.h"
-#import "PBLine.h"
+#import "PBGitGraphLine.h"
 #import "PBGraphCellInfo.h"
 
 struct PBGitGraphColumn {

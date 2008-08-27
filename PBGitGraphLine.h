@@ -9,7 +9,7 @@
 #import <Cocoa/Cocoa.h>
 
 
-@interface PBLine : NSObject
+@interface PBGitGraphLine : NSObject
 {
 	int upper;
 	int from;
@@ -17,7 +17,7 @@
 }
 @property(readonly) int upper, from, to;
 - (id)initWithUpper: (int) u From: (int) f to: (int) t;
-+ (PBLine*) lowerLineFrom:(int) f to: (int) t;
-+ (PBLine*) upperLineFrom:(int) f to: (int) t;
++ (PBGitGraphLine*) lowerLineFrom:(int) f to: (int) t;
++ (PBGitGraphLine*) upperLineFrom:(int) f to: (int) t;
 
 @end

@@ -40,7 +40,7 @@
 						[currentLanes addObject: [commit.parents objectAtIndex:0]];
 						newPos = [currentLanes count];
 					}
-					[lines addObject: [PBLine upperLineFrom: i to: newPos]];
+					[lines addObject: [PBGitGraphLine upperLineFrom: i to: newPos]];
 				}
 				else { 
 					// We are not this commit.
@@ -54,7 +54,7 @@
 							continue;
 						if ([column isEqualToString: lane]) {
 							// We already have a column for this commit. use it instead
-							[lines addObject: [PBLine upperLineFrom: i to: j]];
+							[lines addObject: [PBGitGraphLine upperLineFrom: i to: j]];
 							found = YES;
 							break;
 						}
@@ -68,13 +68,13 @@
 						//	continue;
 						
 						[currentLanes addObject: lane];
-						[lines addObject: [PBLine upperLineFrom: [currentLanes count] to: [currentLanes count]]];
-						[lines addObject: [PBLine lowerLineFrom: [currentLanes count] to: [currentLanes count]]];
+						[lines addObject: [PBGitGraphLine upperLineFrom: [currentLanes count] to: [currentLanes count]]];
+						[lines addObject: [PBGitGraphLine lowerLineFrom: [currentLanes count] to: [currentLanes count]]];
 					}
 				}
 				// For existing columns, we always just continue straight down
 				// ^^ I don't know what that means anymore :(
-				[lines addObject:[PBLine lowerLineFrom:newPos to:newPos]];
+				[lines addObject:[PBGitGraphLine lowerLineFrom:newPos to:newPos]];
 			}
 		}
 		
@@ -84,7 +84,7 @@
 		if (!didFirst) {
 			[currentLanes addObject: [commit.parents objectAtIndex:0]];
 			newPos = [currentLanes count];
-			[lines addObject:[PBLine lowerLineFrom: newPos to: newPos]];
+			[lines addObject:[PBGitGraphLine lowerLineFrom: newPos to: newPos]];
 		}
 		
 		// Add all other parents
@@ -99,7 +99,7 @@
 			for (NSString* column in currentLanes) {
 				i++;
 				if ([column isEqualToString: parent]) {
-					[lines addObject:[PBLine lowerLineFrom: i to: newPos]];
+					[lines addObject:[PBGitGraphLine lowerLineFrom: i to: newPos]];
 					was_displayed = YES;
 					break;
 				}
@@ -110,7 +110,7 @@
 			// Really add this parent
 			addedParent = YES;
 			[currentLanes addObject:parent];
-			[lines addObject:[PBLine lowerLineFrom: [currentLanes count] to: newPos]];
+			[lines addObject:[PBGitGraphLine lowerLineFrom: [currentLanes count] to: newPos]];
 		}
 		
 		++row;
