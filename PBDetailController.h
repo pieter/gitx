@@ -16,6 +16,7 @@
 	IBOutlet NSTreeController* treeController;
 	IBOutlet NSOutlineView* fileBrowser;
 	IBOutlet NSSearchField* searchField;
+	IBOutlet NSTableView* commitList;
 
 	int selectedTab;
 
