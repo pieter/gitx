@@ -54,7 +54,7 @@
 							continue;
 						if ([column isEqualToString: lane]) {
 							// We already have a column for this commit. use it instead
-							[lines addObject: [PBLine lowerLineFrom: i to: j]];
+							[lines addObject: [PBLine upperLineFrom: i to: j]];
 							found = YES;
 							break;
 						}
