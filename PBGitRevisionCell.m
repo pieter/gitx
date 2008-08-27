@@ -87,11 +87,6 @@
 	NSRect ownRect;
 	NSDivideRect(rect, &ownRect, &rect, pathWidth, NSMinXEdge);
 
-	// Adjust by removing the border
-	ownRect.size.height += 2;
-	ownRect.origin.y -= 1;
-	ownRect.origin.x += 0;
-
 	for (PBLine* line in cellInfo.lines) {
 		if (line.upper == 0)
 			[self drawLineFromColumn: line.from toColumn: line.to inRect:ownRect offset: ownRect.size.height];
