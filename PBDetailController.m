@@ -9,7 +9,7 @@
 #import "PBDetailController.h"
 #import "CWQuickLook.h"
 #import "PBGitGrapher.h"
-
+#import "PBGitRevisionCell.h"
 #define QLPreviewPanel NSClassFromString(@"QLPreviewPanel")
 
 
@@ -149,9 +149,12 @@
 	if (![[aTableColumn identifier] isEqualToString:@"subject"])
 		return;
 
-	if (self.repository.revisionList.grapher) {
+	PBGitRevisionCell* cell = aCell;
+	if (self.repository.revisionList.grapher &&
+		![commitController filterPredicate] &&
+		[[commitController sortDescriptors] count] == 0) {
 		PBGitGrapher* g = self.repository.revisionList.grapher;
-		[aCell setCellInfo: [g cellInfoForRow:rowIndex]];
+		[cell setCellInfo: [g cellInfoForRow:rowIndex]];
 	}
 }
 @end
