@@ -50,10 +50,16 @@ end
 
 desc "Creates a zip file with current GitX"
 task :create_zip do
+  if ENV["STABLE"]
+    name = "GitXStable"
+  else
+    name = "GitX"
+  end
+
   delete = File.directory?("build/Release")
   system("xcodebuild")
-  system("cd build/Release && zip -r GitX.app.zip GitX.app")
-  system("mv build/Release/GitX.app.zip .")
+  system("cd build/Release && zip -r #{name}.app.zip GitX.app")
+  system("mv build/Release/#{name}.app.zip .")
   system("rm -rf build/Release") if delete
-  system("upload GitX.app.zip") # This is a local script -- Pieter
+  system("upload #{name}.app.zip") # This is a local script -- Pieter
 end
