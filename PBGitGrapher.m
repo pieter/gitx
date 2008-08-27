@@ -22,9 +22,10 @@
 	NSMutableArray* previousLanes = [NSMutableArray array];
 
 	for (PBGitCommit* commit in commits) {
-		int i = 0, newPos = -1, newColor = PBGITLANE_CURRENT_INDEX;
+		int i = 0, newPos = -1;
 		NSMutableArray* currentLanes = [NSMutableArray array];
 		NSMutableArray* lines = [NSMutableArray array];
+		PBGitLane* currentLane = NULL;
 		BOOL didFirst = NO;
 
 		// First, iterate over earlier columns and pass through any that don't want this commit
@@ -38,10 +39,9 @@
 				if ([lane isCommit:commit.sha]) {
 					if (!didFirst) {
 						didFirst = YES;
-						lane.sha = [commit.parents objectAtIndex:0];
+						currentLane = lane;
 						[currentLanes addObject: lane];
 						newPos = [currentLanes count];
-						newColor = [lane index];
 					}
 					[lines addObject: [PBGitGraphLine upperLineFrom: i to: newPos color: [lane index]]];
 				}
@@ -53,8 +53,8 @@
 					for (PBGitLane* column in currentLanes) {
 						j++;
 						// ??? what is this?
-						if (j == newPos)
-							continue;
+//						if (j == newPos)
+//							continue;
 						if ([lane isCommit: commit.sha]) {
 							// We already have a column for this commit. use it instead
 							[lines addObject: [PBGitGraphLine upperLineFrom: i to: j color: [lane index]]];
@@ -71,13 +71,13 @@
 						//	continue;
 						
 						[currentLanes addObject: lane];
-						[lines addObject: [PBGitGraphLine upperLineFrom: [currentLanes count] to: [currentLanes count] color: [lane index]]];
+						[lines addObject: [PBGitGraphLine upperLineFrom: i to: [currentLanes count] color: [lane index]]];
 						[lines addObject: [PBGitGraphLine lowerLineFrom: [currentLanes count] to: [currentLanes count] color: [lane index]]];
 					}
 				}
 				// For existing columns, we always just continue straight down
 				// ^^ I don't know what that means anymore :(
-				[lines addObject:[PBGitGraphLine lowerLineFrom:newPos to:newPos color: newColor]];
+				[lines addObject:[PBGitGraphLine lowerLineFrom:newPos to:newPos color: [currentLane index]]];
 			}
 		}
 		
@@ -126,6 +126,8 @@
 			previous.numColumns = [currentLanes count] - 1;
 		else
 			previous.numColumns = [currentLanes count];
+		currentLane.sha = [commit.parents objectAtIndex:0];
+
 		previousLanes = currentLanes;
 		[cellsInfo addObject: previous];
 	}
