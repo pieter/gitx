@@ -34,6 +34,9 @@
 	self.selectedTab = [[NSUserDefaults standardUserDefaults] integerForKey:@"Repository Window Selected Tab Index"];;
 	[commitController addObserver:self forKeyPath:@"selection" options:(NSKeyValueObservingOptionNew,NSKeyValueObservingOptionOld) context:@"commitChange"];
 	[treeController addObserver:self forKeyPath:@"selection" options:0 context:@"treeChange"];
+	NSSize cellSpacing = [commitList intercellSpacing];
+	cellSpacing.height = 0;
+	[commitList setIntercellSpacing:cellSpacing];
 }
 
 - (void) updateKeys
