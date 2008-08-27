@@ -29,8 +29,14 @@
 
 - (NSArray*) colors
 {
-	return 	[NSArray arrayWithObjects:[NSColor redColor], [NSColor blueColor],
-			[NSColor orangeColor], [NSColor blackColor], [NSColor greenColor], nil];
+	return 	[NSArray arrayWithObjects:
+				[NSColor colorWithCalibratedRed: 0X4e/256.0 green:0X9A/256.0 blue: 0X06/256.0 alpha: 1.0],
+				[NSColor colorWithCalibratedRed: 0X20/256.0 green:0X4A/256.0 blue: 0X87/256.0 alpha: 1.0],
+				[NSColor colorWithCalibratedRed: 0XC4/256.0 green:0XA0/256.0 blue: 0 alpha: 1.0],
+				[NSColor colorWithCalibratedRed: 0X5C/256.0 green:0X35/256.0 blue: 0X66/256.0 alpha: 1.0],
+				[NSColor colorWithCalibratedRed: 0XA4/256.0 green:0X00/256.0 blue: 0X00/256.0 alpha: 1.0],
+				[NSColor colorWithCalibratedRed: 0XCE/256.0 green:0X5C/256.0 blue: 0 alpha: 1.0],
+				nil];
 }
 
 - (void) drawLineFromColumn: (int) from toColumn: (int) to inRect: (NSRect) r offset: (int) offset color: (int) c
@@ -43,7 +49,8 @@
 	NSPoint center = NSMakePoint( origin.x + columnWidth * to, origin.y + r.size.height * 0.5);
 
 	// Just use red for now.
-	[[[self colors] objectAtIndex: c % 5] set];
+	NSArray* colors = [self colors];
+	[[colors objectAtIndex: c % [colors count]] set];
 	
 	NSBezierPath * path = [NSBezierPath bezierPath];
 	[path setLineWidth:2];
