@@ -7,10 +7,12 @@
 //
 
 #import <Cocoa/Cocoa.h>
+#import "PBGitGrapher.h"
 
 @interface PBGitRevisionCell : NSTextFieldCell {
-	NSNumber* commit;
+	PBGitCellInfo cellInfo;
+	BOOL isReady;
 }
 
-@property(retain) NSNumber* commit;
+@property(assign)  PBGitCellInfo cellInfo;
 @end

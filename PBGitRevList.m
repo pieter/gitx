@@ -9,10 +9,11 @@
 #import "PBGitRevList.h"
 #import "PBGitRepository.h"
 #import "PBGitCommit.h"
+#import "PBGitGrapher.h"
 
 @implementation PBGitRevList
 
-@synthesize commits;
+@synthesize commits, grapher;
 - initWithRepository: (id) repo andRevListParameters: (NSArray*) params
 {
 	parameters = params;
@@ -101,10 +102,16 @@
 	}
 	
 	[self performSelectorOnMainThread:@selector(setCommits:) withObject:newArray waitUntilDone:YES];
+	
+	PBGitGrapher* g = [[PBGitGrapher alloc] init];
+	[g parseCommits: self.commits];
+	[self performSelectorOnMainThread:@selector(setGrapher:) withObject:g waitUntilDone:YES];
+	[self performSelectorOnMainThread:@selector(setCommits:) withObject:newArray waitUntilDone:YES];
+	
 	NSTimeInterval duration = [[NSDate date] timeIntervalSinceDate:start];
 	NSLog(@"Loaded %i commits in %f seconds", num, duration);
-	
 	[NSThread exit];
 }
+
 
 @end
