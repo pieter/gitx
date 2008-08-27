@@ -10,23 +10,23 @@
 
 
 @implementation PBGitGraphLine
-@synthesize upper, from, to;
-- (id)initWithUpper: (int) u From: (int) f to: (int) t;
+@synthesize upper, from, to, colorIndex;
+- (id)initWithUpper: (int) u From: (int) f to: (int) t  color: (int) c;
 {
 	upper = u;
 	from = f;
 	to = t;
-	
+	colorIndex = c;
 	return self;
 }
 
-+ (PBGitGraphLine*) lowerLineFrom:(int) f to: (int) t
++ (PBGitGraphLine*) lowerLineFrom:(int) f to: (int) t color: (int) c
 {
-	return [[PBGitGraphLine alloc] initWithUpper:0 From:f to:t];
+	return [[PBGitGraphLine alloc] initWithUpper:0 From:f to:t color:c];
 }
 
-+ (PBGitGraphLine*) upperLineFrom:(int) f to: (int) t
++ (PBGitGraphLine*) upperLineFrom:(int) f to: (int) t color: (int) c
 {
-	return [[PBGitGraphLine alloc] initWithUpper:1 From:f to:t];
+	return [[PBGitGraphLine alloc] initWithUpper:1 From:f to:t color: c];
 }
 @end

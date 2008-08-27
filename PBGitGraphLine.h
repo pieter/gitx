@@ -14,10 +14,11 @@
 	int upper;
 	int from;
 	int to;
+	int colorIndex;
 }
-@property(readonly) int upper, from, to;
-- (id)initWithUpper: (int) u From: (int) f to: (int) t;
-+ (PBGitGraphLine*) lowerLineFrom:(int) f to: (int) t;
-+ (PBGitGraphLine*) upperLineFrom:(int) f to: (int) t;
+@property(readonly) int upper, from, to, colorIndex;
+- (id)initWithUpper: (int) u From: (int) f to: (int) t color: (int) c;
++ (PBGitGraphLine*) lowerLineFrom:(int) f to: (int) t color: (int) c;
++ (PBGitGraphLine*) upperLineFrom:(int) f to: (int) t color: (int) c;
 
 @end

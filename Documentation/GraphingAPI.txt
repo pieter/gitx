@@ -7,10 +7,11 @@ The PBGraphCellInfo has only basic information -- The column the commit
 associated with this commit should be drawn in, and other lines that should be
 drawn.
 
-These lines are in an array of PBLines. A PBLine has three pieces of
+These lines are in an array of PBLines. A PBLine has a few pieces of
 information -- a start column, an end column and whether the line should be
-drawn on the top or bottom part of the row. This should later be extended to
-add color information for the lines.
+drawn on the top or bottom part of the row. Furthermore, it has a colorIndex
+to indicate the color the line should be given. Note that this number
+increases forever, so you can modulo it with the number of colors you have.
 
 In the PBDetailController, the -
 (void)tableView:willDisplayCell:forTableColumn:row: is implemented which sets

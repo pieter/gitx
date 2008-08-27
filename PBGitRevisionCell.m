@@ -33,7 +33,7 @@
 			[NSColor orangeColor], [NSColor blackColor], [NSColor greenColor], nil];
 }
 
-- (void) drawLineFromColumn: (int) from toColumn: (int) to inRect: (NSRect) r offset: (int) offset
+- (void) drawLineFromColumn: (int) from toColumn: (int) to inRect: (NSRect) r offset: (int) offset color: (int) c
 {
 
 	int columnWidth = 10;
@@ -43,7 +43,7 @@
 	NSPoint center = NSMakePoint( origin.x + columnWidth * to, origin.y + r.size.height * 0.5);
 
 	// Just use red for now.
-	[[[self colors] objectAtIndex:0] set];
+	[[[self colors] objectAtIndex: c % 5] set];
 	
 	NSBezierPath * path = [NSBezierPath bezierPath];
 	[path setLineWidth:2];
@@ -56,9 +56,7 @@
 
 - (void) drawCircleForColumn: (int) c inRect: (NSRect) r
 {
-	NSArray* col = [NSArray arrayWithObjects:[NSColor redColor], [NSColor blueColor],
-	[NSColor orangeColor], [NSColor blackColor], [NSColor greenColor], nil];
-
+	[[NSColor blackColor] set];
 	int columnWidth = 10;
 	NSPoint origin = r.origin;
 	NSPoint columnOrigin = { origin.x + columnWidth * c, origin.y};
@@ -89,9 +87,9 @@
 
 	for (PBGitGraphLine* line in cellInfo.lines) {
 		if (line.upper == 0)
-			[self drawLineFromColumn: line.from toColumn: line.to inRect:ownRect offset: ownRect.size.height];
+			[self drawLineFromColumn: line.from toColumn: line.to inRect:ownRect offset: ownRect.size.height color: line.colorIndex];
 		else
-			[self drawLineFromColumn:line.from toColumn: line.to inRect:ownRect offset: 0];
+			[self drawLineFromColumn: line.from toColumn: line.to inRect:ownRect offset: 0 color:line.colorIndex];
 	}
 
 	[self drawCircleForColumn: cellInfo.position inRect: ownRect];

@@ -8,6 +8,7 @@
 
 #import "PBGitGrapher.h"
 #import "PBGitCommit.h"
+#import "PBGitLane.h"
 
 @implementation PBGitGrapher
 
@@ -21,7 +22,7 @@
 	NSMutableArray* previousLanes = [NSMutableArray array];
 
 	for (PBGitCommit* commit in commits) {
-		int i = 0, newPos = -1; 
+		int i = 0, newPos = -1, newColor = PBGITLANE_CURRENT_INDEX;
 		NSMutableArray* currentLanes = [NSMutableArray array];
 		NSMutableArray* lines = [NSMutableArray array];
 		BOOL didFirst = NO;
@@ -30,31 +31,33 @@
 		if (previous != nil) {
 			
 			// We can't count until numColumns here, as it's only used for the width of the cell.
-			for (NSString* lane in previousLanes) {
+			for (PBGitLane* lane in previousLanes) {
 				i++;
 				// This is our commit! We should do a "merge": move the line from
 				// our upperMapping to their lowerMapping
-				if ([lane isEqualToString:commit.sha]) {
+				if ([lane isCommit:commit.sha]) {
 					if (!didFirst) {
 						didFirst = YES;
-						[currentLanes addObject: [commit.parents objectAtIndex:0]];
+						lane.sha = [commit.parents objectAtIndex:0];
+						[currentLanes addObject: lane];
 						newPos = [currentLanes count];
+						newColor = [lane index];
 					}
-					[lines addObject: [PBGitGraphLine upperLineFrom: i to: newPos]];
+					[lines addObject: [PBGitGraphLine upperLineFrom: i to: newPos color: [lane index]]];
 				}
 				else { 
 					// We are not this commit.
 					// Try to find an earlier column for this commit.
 					int j = 0;
 					BOOL found = NO;
-					for (NSString* column in currentLanes) {
+					for (PBGitLane* column in currentLanes) {
 						j++;
 						// ??? what is this?
 						if (j == newPos)
 							continue;
-						if ([column isEqualToString: lane]) {
+						if ([lane isCommit: commit.sha]) {
 							// We already have a column for this commit. use it instead
-							[lines addObject: [PBGitGraphLine upperLineFrom: i to: j]];
+							[lines addObject: [PBGitGraphLine upperLineFrom: i to: j color: [lane index]]];
 							found = YES;
 							break;
 						}
@@ -68,13 +71,13 @@
 						//	continue;
 						
 						[currentLanes addObject: lane];
-						[lines addObject: [PBGitGraphLine upperLineFrom: [currentLanes count] to: [currentLanes count]]];
-						[lines addObject: [PBGitGraphLine lowerLineFrom: [currentLanes count] to: [currentLanes count]]];
+						[lines addObject: [PBGitGraphLine upperLineFrom: [currentLanes count] to: [currentLanes count] color: [lane index]]];
+						[lines addObject: [PBGitGraphLine lowerLineFrom: [currentLanes count] to: [currentLanes count] color: [lane index]]];
 					}
 				}
 				// For existing columns, we always just continue straight down
 				// ^^ I don't know what that means anymore :(
-				[lines addObject:[PBGitGraphLine lowerLineFrom:newPos to:newPos]];
+				[lines addObject:[PBGitGraphLine lowerLineFrom:newPos to:newPos color: newColor]];
 			}
 		}
 		
@@ -82,9 +85,10 @@
 		
 		// If we already did the first parent, don't do so again
 		if (!didFirst) {
-			[currentLanes addObject: [commit.parents objectAtIndex:0]];
+			PBGitLane* newLane = [[PBGitLane alloc] initWithCommit:[commit.parents objectAtIndex:0]];
+			[currentLanes addObject: newLane];
 			newPos = [currentLanes count];
-			[lines addObject:[PBGitGraphLine lowerLineFrom: newPos to: newPos]];
+			[lines addObject:[PBGitGraphLine lowerLineFrom: newPos to: newPos color: [newLane index]]];
 		}
 		
 		// Add all other parents
@@ -96,10 +100,10 @@
 		for (NSString* parent in [commit.parents subarrayWithRange:NSMakeRange(1, [commit.parents count] -1)]) {
 			int i = 0;
 			BOOL was_displayed = NO;
-			for (NSString* column in currentLanes) {
+			for (PBGitLane* column in currentLanes) {
 				i++;
-				if ([column isEqualToString: parent]) {
-					[lines addObject:[PBGitGraphLine lowerLineFrom: i to: newPos]];
+				if ([column isCommit: parent]) {
+					[lines addObject:[PBGitGraphLine lowerLineFrom: i to: newPos color: [column index]]];
 					was_displayed = YES;
 					break;
 				}
@@ -109,8 +113,9 @@
 			
 			// Really add this parent
 			addedParent = YES;
-			[currentLanes addObject:parent];
-			[lines addObject:[PBGitGraphLine lowerLineFrom: [currentLanes count] to: newPos]];
+			PBGitLane* newLane = [[PBGitLane alloc] initWithCommit:parent];
+			[currentLanes addObject: newLane];
+			[lines addObject:[PBGitGraphLine lowerLineFrom: [currentLanes count] to: newPos color: [newLane index]]];
 		}
 		
 		++row;
