@@ -10,9 +10,9 @@
 #import "PBGitGrapher.h"
 
 @interface PBGitRevisionCell : NSTextFieldCell {
-	PBGitCellInfo cellInfo;
+	PBGraphCellInfo* cellInfo;
 	BOOL isReady;
 }
 
-@property(assign)  PBGitCellInfo cellInfo;
+@property(assign)  PBGraphCellInfo* cellInfo;
 @end

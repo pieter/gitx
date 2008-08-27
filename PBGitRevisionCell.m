@@ -12,7 +12,7 @@
 @implementation PBGitRevisionCell
 
 @synthesize cellInfo;
--(void) setCellInfo: (PBGitCellInfo) info
+-(void) setCellInfo: (PBGraphCellInfo*) info
 {
 	isReady = YES;
 	cellInfo = info;
@@ -68,7 +68,7 @@
 	
 	NSBezierPath * path = [NSBezierPath bezierPath];
 	path = [NSBezierPath bezierPathWithOvalInRect:oval];
-	[[col objectAtIndex:cellInfo.columns[c].color] set];
+	//[[col objectAtIndex:cellInfo.columns[c].color] set];
 	[path fill];
 	
 	NSRect smallOval = { columnOrigin.x - 3, columnOrigin.y + r.size.height * 0.5 - 3, 6, 6};
@@ -90,16 +90,13 @@
 	// Adjust by removing the border
 	ownRect.size.height += 2;
 	ownRect.origin.y -= 1;
-	ownRect.origin.x += 10;
-	
-	int column = 0;
+	ownRect.origin.x += 0;
 
-	// We can't iterate over numColumns here, as there may be connections to be drawn outside our columns.
-	for (column = 0; column < PBGitMaxColumns; column++) {
-		if (cellInfo.upperMapping[column] !=-1)
-			[self drawLineFromColumn:column toColumn: cellInfo.upperMapping[column] inRect:ownRect offset: 0];
-		if (cellInfo.lowerMapping[column] !=-1)
-			[self drawLineFromColumn: column toColumn: cellInfo.lowerMapping[column] inRect:ownRect offset: ownRect.size.height];
+	for (PBLine* line in cellInfo.lines) {
+		if (line.upper == 0)
+			[self drawLineFromColumn: line.from toColumn: line.to inRect:ownRect offset: ownRect.size.height];
+		else
+			[self drawLineFromColumn:line.from toColumn: line.to inRect:ownRect offset: 0];
 	}
 
 	[self drawCircleForColumn: cellInfo.position inRect: ownRect];

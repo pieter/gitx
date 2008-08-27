@@ -8,7 +8,8 @@
 
 #import <Cocoa/Cocoa.h>
 #import "PBGitCommit.h"
-
+#import "PBLine.h"
+#import "PBGraphCellInfo.h"
 
 struct PBGitGraphColumn {
 	NSString* commit; // Commit that we're looking for
@@ -18,25 +19,10 @@ struct PBGitGraphColumn {
 
 #define PBGitMaxColumns 100
 
-struct PBGitGraphCellInfo {
-	struct PBGitGraphColumn columns[PBGitMaxColumns];
-	int upperMapping[PBGitMaxColumns]; //How are the offsets compared to previous cell?
-	int lowerMapping[PBGitMaxColumns]; //How are the offsets compared to this cell?
-	int position;
-	NSString* commit; // Commit in cell
-	int numColumns;
-	int numNewColumns;
-};
-
-void add_commit_to_graph(struct PBGitGraphCellInfo* info, NSString* parent, int* mapping_index);
-
-typedef struct PBGitGraphCellInfo PBGitCellInfo;
-
-
 @interface PBGitGrapher : NSObject {
-	PBGitCellInfo* cellsInfo;
+	NSMutableArray* cellsInfo;
 }
 
 - (void) parseCommits: (NSArray *) array;
-- (struct PBGitGraphCellInfo) cellInfoForRow: (int) row;
+- (PBGraphCellInfo*) cellInfoForRow: (int) row;
 @end
