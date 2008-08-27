@@ -1,0 +1,33 @@
+The core of the graphing functionality is in the PBGitGrapher class. This
+class has one function - parseCommits() that takes an NSArray of commits and
+creates a PBGraphCellInfo for each commit. These PBGraphCellInfo are stored in
+an array that can later be accessed using the cellInfoForRow: function.
+
+The PBGraphCellInfo has only basic information -- The column the commit
+associated with this commit should be drawn in, and other lines that should be
+drawn.
+
+These lines are in an array of PBLines. A PBLine has three pieces of
+information -- a start column, an end column and whether the line should be
+drawn on the top or bottom part of the row. This should later be extended to
+add color information for the lines.
+
+In the PBDetailController, the -
+(void)tableView:willDisplayCell:forTableColumn:row: is implemented which sets
+the correct PBGraphCellInfo for the cell to be drawn. This cell is of the
+class PBGitRevisionCell, which has the actual drawing implementation.
+
+The basic algorithm for the graphing is like this:
+
+For each commit
+	For each previous column
+		If this commit should be in this column
+			mark this position and set this commits first parent
+ 			as the next commit for this lane
+		Else if this commit should be in a previous column
+			add a line to that column and discard the previous
+			column
+		Else
+			Keep this column for the current row
+	For each parent of this commit
+		If it has not been displayed, add it as a column
