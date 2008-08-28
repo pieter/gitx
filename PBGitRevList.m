@@ -57,7 +57,7 @@
 	
 	NSMutableArray * newArray = [NSMutableArray array];
 	NSDate* start = [NSDate date];
-	NSFileHandle* handle = [repository handleForArguments:[NSArray arrayWithObjects:@"log", @"--pretty=format:%H\01%an\01%s\01%P\01%at", currentRef, nil]];
+	NSFileHandle* handle = [repository handleForArguments:[NSArray arrayWithObjects:@"log", @"--topo-order", @"--pretty=format:%H\01%an\01%s\01%P\01%at", currentRef, nil]];
 	
 	int fd = [handle fileDescriptor];
 	FILE* f = fdopen(fd, "r");
