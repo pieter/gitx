@@ -63,7 +63,7 @@
 
 - (void) drawCircleForColumn: (int) c inRect: (NSRect) r
 {
-	if (!cellInfo.hasRef)
+	if (!cellInfo.refs)
 		[[NSColor blackColor] set];
 	else
 		[[NSColor redColor] set];
@@ -86,6 +86,17 @@
 	[path fill];	
 }
 
+- (void) drawRefsInRect: (NSRect*) rect
+{
+	int pathWidth = 40 * [cellInfo.refs count];
+	NSRect ownRect;
+	NSDivideRect(*rect, &ownRect, rect, pathWidth, NSMinXEdge);	
+	for (NSString* ref in cellInfo.refs) {
+		NSString* newRef = [[ref componentsSeparatedByString:@"/"] lastObject];
+		[newRef drawInRect: ownRect withAttributes:nil];
+	}
+}
+
 - (void) drawWithFrame: (NSRect) rect inView:(NSView *)view
 {
 	if (!isReady)
@@ -105,6 +116,8 @@
 
 	[self drawCircleForColumn: cellInfo.position inRect: ownRect];
 
+	if (cellInfo.refs)
+		[self drawRefsInRect:&rect];
 	
 	[super drawWithFrame:rect inView:view];
 	isReady = NO;

@@ -131,7 +131,7 @@
 		previous = [[PBGraphCellInfo alloc] initWithPosition:newPos andLines:lines];
 
 		if (refs && [refs objectForKey:commit.sha])
-			previous.hasRef = TRUE;
+			previous.refs = [refs objectForKey:commit.sha];
 
 		// If a parent was added, we have room to not indent.
 		if (addedParent)

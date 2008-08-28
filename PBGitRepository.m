@@ -160,7 +160,11 @@ static NSString* gitPath;
 			[newBranches addObject: branch];
 		}
 
-		[newRefs setObject:ref forKey:sha];
+		NSMutableArray* curRefs;
+		if (curRefs = [newRefs objectForKey:sha])
+			[curRefs addObject:ref];
+		else
+			[newRefs setObject:[NSMutableArray arrayWithObject:ref] forKey:sha];
 	}
 	self.branches = newBranches;
 	self.refs = newRefs;
