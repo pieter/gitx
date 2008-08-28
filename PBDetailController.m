@@ -147,6 +147,12 @@
 
 }
 
+- (IBAction) refresh: sender
+{
+	repository.currentBranch = repository.currentBranch;
+}
+
+
 - (void)tableView:(NSTableView *)aTableView willDisplayCell:(id)aCell forTableColumn:(NSTableColumn *)aTableColumn row:(int)rowIndex
 {
 	if (![[aTableColumn identifier] isEqualToString:@"subject"])
