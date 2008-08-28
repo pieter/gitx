@@ -16,7 +16,7 @@ NSDistantObject* connect()
 }
 
 
-int main(int argc, const char* argv)
+int main(int argc, const char** argv)
 {
 	// Attempt to connect to the app
 	id proxy = connect();
@@ -38,9 +38,16 @@ int main(int argc, const char* argv)
 	}
 
 	if ([[[NSProcessInfo processInfo] environment] objectForKey:@"PWD"]) {
+		int i;
+		argv++; argc--;
 		NSURL* url     = [NSURL fileURLWithPath:[[[NSProcessInfo processInfo] environment] objectForKey:@"PWD"]];
+
+		NSMutableArray* arguments = [NSMutableArray arrayWithCapacity:argc];
+		for (i = 0; i < argc; i++)
+			[arguments addObject: [NSString stringWithCString:argv[i]]];
+
 		NSError* error = nil;
-		if (![proxy openRepository:url error:&error]) {
+		if (![proxy openRepository:url arguments: arguments error:&error]) {
 			fprintf(stderr, "Error opening repository at %s", [[url path] UTF8String]);
 			if (error) {
 				fprintf(stderr, ": %s", [[error localizedFailureReason] UTF8String]);

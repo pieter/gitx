@@ -20,5 +20,5 @@
 #define PBCLIProxyErrorDomain @"PBCLIProxyErrorDomain"
 
 @protocol GitXCliToolProtocol
-- (BOOL)openRepository:(NSURL*)repositoryPath error:(NSError**)error;
+- (BOOL)openRepository:(NSURL*)repositoryPath arguments: (NSArray*) args error:(NSError**)error;
 @end

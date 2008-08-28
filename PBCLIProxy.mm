@@ -25,7 +25,7 @@
 	return self;
 }
 
-- (BOOL)openRepository:(NSURL*)repositoryPath error:(NSError**)error;
+- (BOOL)openRepository:(NSURL*)repositoryPath arguments: (NSArray*) args error:(NSError**)error;
 {
 	// FIXME I found that creating this redundant NSURL reference was necessary to
 	// work around an apparent bug with GC and Distributed Objects
