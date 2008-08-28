@@ -126,7 +126,11 @@
 			previous.numColumns = [currentLanes count] - 1;
 		else
 			previous.numColumns = [currentLanes count];
-		currentLane.sha = [commit.parents objectAtIndex:0];
+
+		if ([commit.parents count] > 0 && ![[commit.parents objectAtIndex:0] isEqualToString:@""])
+			currentLane.sha = [commit.parents objectAtIndex:0];
+		else
+			[currentLanes removeObject:currentLane];
 
 		previousLanes = currentLanes;
 		[cellsInfo addObject: previous];
