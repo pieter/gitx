@@ -17,7 +17,7 @@ NSString* PBGitRepositoryErrorDomain = @"GitXErrorDomain";
 
 @implementation PBGitRepository
 
-@synthesize revisionList, branches, currentBranch;
+@synthesize revisionList, branches, currentBranch, refs;
 static NSString* gitPath;
 
 + (void) initialize
@@ -112,7 +112,7 @@ static NSString* gitPath;
 		}
 
 		if (success) {
-			[self readBranches];
+			[self readRefs];
 			[self readCurrentBranch];
 			revisionList = [[PBGitRevList alloc] initWithRepository:self andRevListParameters:[NSArray array]];
 		}
@@ -139,21 +139,23 @@ static NSString* gitPath;
 	[controller release];
 }
 
-- (void) readBranches
+- (void) readRefs
 {
-	NSString* output = [PBEasyPipe outputForCommand:gitPath withArgs:[NSArray arrayWithObjects:@"for-each-ref", @"refs/heads", nil] inDir: self.fileURL.path];
+	NSString* output = [PBEasyPipe outputForCommand:gitPath withArgs:[NSArray arrayWithObjects:@"for-each-ref", @"refs", nil] inDir: self.fileURL.path];
 	NSArray* lines = [output componentsSeparatedByString:@"\n"];
+	NSMutableDictionary* newRefs = [NSMutableDictionary dictionary];
 	NSMutableArray* newBranches = [NSMutableArray array];
 	for (NSString* line in lines) {
 		NSString* substr = [line substringWithRange: NSMakeRange(40,19)];
-		if (![substr isEqualToString:@" commit\trefs/heads/"]) {
-			NSLog(@"Cannot parse branch %@. (%@)", line, substr);
-			continue;
+		if ([substr isEqualToString:@" commit\trefs/heads/"]) {
+			NSString* branch = [line substringFromIndex:59];
+			[newBranches addObject: branch];
 		}
-		NSString* branch = [line substringFromIndex:59];
-		[newBranches addObject: branch];
+		NSArray* components = [line componentsSeparatedByCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@" \t"]];
+		[newRefs setObject:[components objectAtIndex:2] forKey:[components objectAtIndex:0]];
 	}
 	self.branches = newBranches;
+	self.refs = newRefs;
 }
 
 - (void) readCurrentBranch

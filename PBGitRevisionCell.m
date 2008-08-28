@@ -63,7 +63,11 @@
 
 - (void) drawCircleForColumn: (int) c inRect: (NSRect) r
 {
-	[[NSColor blackColor] set];
+	if (!cellInfo.hasRef)
+		[[NSColor blackColor] set];
+	else
+		[[NSColor redColor] set];
+
 	int columnWidth = 10;
 	NSPoint origin = r.origin;
 	NSPoint columnOrigin = { origin.x + columnWidth * c, origin.y};

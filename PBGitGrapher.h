@@ -21,8 +21,10 @@ struct PBGitGraphColumn {
 
 @interface PBGitGrapher : NSObject {
 	NSMutableArray* cellsInfo;
+	PBGitRepository* repository;
 }
 
+- (id) initWithRepository: (PBGitRepository*) repo;
 - (void) parseCommits: (NSArray *) array;
 - (PBGraphCellInfo*) cellInfoForRow: (int) row;
 @end
