@@ -141,18 +141,26 @@ static NSString* gitPath;
 
 - (void) readRefs
 {
-	NSString* output = [PBEasyPipe outputForCommand:gitPath withArgs:[NSArray arrayWithObjects:@"for-each-ref", @"refs", nil] inDir: self.fileURL.path];
+	NSString* output = [PBEasyPipe outputForCommand:gitPath withArgs:[NSArray arrayWithObjects:@"for-each-ref", @"--format=%(refname) %(objecttype) %(objectname) %(*objectname)", @"refs", nil] inDir: self.fileURL.path];
 	NSArray* lines = [output componentsSeparatedByString:@"\n"];
 	NSMutableDictionary* newRefs = [NSMutableDictionary dictionary];
 	NSMutableArray* newBranches = [NSMutableArray array];
 	for (NSString* line in lines) {
-		NSString* substr = [line substringWithRange: NSMakeRange(40,19)];
-		if ([substr isEqualToString:@" commit\trefs/heads/"]) {
-			NSString* branch = [line substringFromIndex:59];
+		NSArray* components = [line componentsSeparatedByString:@" "];
+		NSString* ref = [components objectAtIndex:0];
+		NSString* type = [components objectAtIndex:1];
+		NSString* sha;
+		if ([type isEqualToString:@"tag"] && [components count] == 4)
+			sha = [components objectAtIndex:3];
+		else
+			sha = [components objectAtIndex:2];
+
+		if ([[ref substringToIndex:11] isEqualToString:@"refs/heads/"]) {
+			NSString* branch = [ref substringFromIndex:11];
 			[newBranches addObject: branch];
 		}
-		NSArray* components = [line componentsSeparatedByCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@" \t"]];
-		[newRefs setObject:[components objectAtIndex:2] forKey:[components objectAtIndex:0]];
+
+		[newRefs setObject:ref forKey:sha];
 	}
 	self.branches = newBranches;
 	self.refs = newRefs;
