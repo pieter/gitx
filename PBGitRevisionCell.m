@@ -9,6 +9,53 @@
 #import "PBGitRevisionCell.h"
 
 
+@implementation NSBezierPath (RoundedRectangle)
++ (NSBezierPath *)bezierPathWithRoundedRect: (NSRect) aRect cornerRadius: (double) cRadius
+{
+	double left = aRect.origin.x, bottom = aRect.origin.y, width = aRect.size.width, height = aRect.size.height;
+
+	//now, crop the radius so we don't get weird effects
+	double lesserDim = width < height ? width : height;
+	if ( cRadius > lesserDim / 2 )
+	{
+		cRadius = lesserDim / 2;
+	}
+
+	//these points describe the rectangle as start and stop points of the
+	//arcs making up its corners --points c, e, & g are implicit endpoints of arcs
+	//and are unnecessary
+	NSPoint a = NSMakePoint( 0, cRadius ), b = NSMakePoint( 0, height - cRadius ),
+		d = NSMakePoint( width - cRadius, height ), f = NSMakePoint( width, cRadius ),
+		h = NSMakePoint( cRadius, 0 );
+
+	//these points describe the center points of the corner arcs
+	NSPoint cA = NSMakePoint( cRadius, height - cRadius ),
+		cB = NSMakePoint( width - cRadius, height - cRadius ),
+		cC = NSMakePoint( width - cRadius, cRadius ),
+		cD = NSMakePoint( cRadius, cRadius );
+
+	//start
+	NSBezierPath *bp = [NSBezierPath bezierPath];
+	[bp moveToPoint: a ];
+	[bp lineToPoint: b ];
+	[bp appendBezierPathWithArcWithCenter: cA radius: cRadius startAngle:180 endAngle:90 clockwise: YES];
+	[bp lineToPoint: d ];
+	[bp appendBezierPathWithArcWithCenter: cB radius: cRadius startAngle:90 endAngle:0 clockwise: YES];
+	[bp lineToPoint: f ];
+	[bp appendBezierPathWithArcWithCenter: cC radius: cRadius startAngle:0 endAngle:270 clockwise: YES];
+	[bp lineToPoint: h ];
+	[bp appendBezierPathWithArcWithCenter: cD radius: cRadius startAngle:270 endAngle:180 clockwise: YES];	
+	[bp closePath];
+
+	//Transform path to rectangle's origin
+	NSAffineTransform *transform = [NSAffineTransform transform];
+	[transform translateXBy: left yBy: bottom];
+	[bp transformUsingAffineTransform: transform];
+
+	return bp; //it's already been autoreleased
+}
+@end
+
 @implementation PBGitRevisionCell
 
 @synthesize cellInfo;
@@ -88,13 +135,40 @@
 
 - (void) drawRefsInRect: (NSRect*) rect
 {
-	int pathWidth = 40 * [cellInfo.refs count];
-	NSRect ownRect;
-	NSDivideRect(*rect, &ownRect, rect, pathWidth, NSMinXEdge);	
-	for (NSString* ref in cellInfo.refs) {
+	static const float ref_padding = 10.0f;
+	static const float ref_spacing = 2.0f;
+
+	NSRect refRect = (NSRect){rect->origin, rect->size};
+
+	if([self isHighlighted])
+		[[NSColor whiteColor] setStroke];
+	else
+		[[NSColor blackColor] setStroke];
+
+	int index;
+	for (index = 0; index < [cellInfo.refs count]; ++index) {
+		NSString* ref    = [cellInfo.refs objectAtIndex:index];
 		NSString* newRef = [[ref componentsSeparatedByString:@"/"] lastObject];
-		[newRef drawInRect: ownRect withAttributes:nil];
+
+		NSSize refSize = [newRef sizeWithAttributes:nil];
+
+		refRect.size.width = refSize.width + ref_padding;
+
+		NSMutableDictionary *attributes = [[[NSMutableDictionary alloc] initWithCapacity:2] autorelease];
+		NSMutableParagraphStyle* style = [[[NSParagraphStyle defaultParagraphStyle] mutableCopy] autorelease];
+		[style setAlignment:NSCenterTextAlignment];
+		[attributes setObject:style forKey:NSParagraphStyleAttributeName];
+		if([self isHighlighted])
+			[attributes setObject:[NSColor alternateSelectedControlTextColor] forKey:NSForegroundColorAttributeName];
+		[newRef drawInRect:refRect withAttributes:attributes];
+
+		[[NSBezierPath bezierPathWithRoundedRect:refRect cornerRadius:2.0f] stroke];
+
+		refRect.origin.x += refRect.size.width + ref_spacing;
 	}
+
+	rect->size.width -= refRect.origin.x - rect->origin.x;
+	rect->origin.x    = refRect.origin.x;
 }
 
 - (void) drawWithFrame: (NSRect) rect inView:(NSView *)view
