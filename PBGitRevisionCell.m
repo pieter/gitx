@@ -110,10 +110,7 @@
 
 - (void) drawCircleForColumn: (int) c inRect: (NSRect) r
 {
-	if (!cellInfo.refs)
-		[[NSColor blackColor] set];
-	else
-		[[NSColor redColor] set];
+	[[NSColor blackColor] set];
 
 	int columnWidth = 10;
 	NSPoint origin = r.origin;
@@ -152,11 +149,11 @@
 {
 	NSString* type = [ref type];
 	if ([type isEqualToString:@"head"])
-		return [NSColor yellowColor];
+		return [NSColor colorWithCalibratedRed: 0Xaa/256.0 green:0Xf2/256.0 blue: 0X54/256.0 alpha: 1.0];
 	else if ([type isEqualToString:@"remote"])
-		return [NSColor greenColor];
+		return [NSColor colorWithCalibratedRed: 0xb2/256.0 green:0Xdf/256.0 blue: 0Xff/256.0 alpha: 1.0];
 	else if ([type isEqualToString:@"tag"])
-		return [NSColor cyanColor];
+		return [NSColor colorWithCalibratedRed: 0Xfc/256.0 green:0Xed/256.0 blue: 0X4f/256.0 alpha: 1.0];
 	
 	return [NSColor yellowColor];
 }
@@ -168,10 +165,7 @@
 
 	NSRect refRect = (NSRect){rect->origin, rect->size};
 
-	if([self isHighlighted])
-		[[NSColor whiteColor] setStroke];
-	else
-		[[NSColor blackColor] setStroke];
+	[[NSColor blackColor] setStroke];
 
 	int index;
 	for (index = 0; index < [cellInfo.refs count]; ++index) {
