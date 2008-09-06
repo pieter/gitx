@@ -182,7 +182,7 @@
 		
 		refRect.size.width = refSize.width + ref_padding;
 		refRect.size.height = refSize.height;
-		refRect.origin.y += (rect->size.height - refRect.size.height) / 2; 
+		refRect.origin.y = rect->origin.y + (rect->size.height - refRect.size.height) / 2; 
 		
 		// Round rects to 0.5 pixels in order to draw only a single pixel
 		refRect.origin.x = round(refRect.origin.x) - 0.5;
