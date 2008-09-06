@@ -7,7 +7,7 @@
 //
 
 #import "PBGitRevisionCell.h"
-
+#import "PBGitRef.h"
 
 @implementation NSBezierPath (RoundedRectangle)
 + (NSBezierPath *)bezierPathWithRoundedRect: (NSRect) aRect cornerRadius: (double) cRadius
@@ -133,6 +133,34 @@
 	[path fill];	
 }
 
+- (NSMutableDictionary*) attributesForRefLabelSelected: (BOOL) selected
+{
+	NSMutableDictionary *attributes = [[[NSMutableDictionary alloc] initWithCapacity:2] autorelease];
+	NSMutableParagraphStyle* style = [[[NSParagraphStyle defaultParagraphStyle] mutableCopy] autorelease];
+	
+	[style setAlignment:NSCenterTextAlignment];
+	[attributes setObject:style forKey:NSParagraphStyleAttributeName];
+	[attributes setObject:[NSFont fontWithName:@"Helvetica"	size:9] forKey:NSFontAttributeName];
+
+	//if (selected)
+	//	[attributes setObject:[NSColor alternateSelectedControlTextColor] forKey:NSForegroundColorAttributeName];
+
+	return attributes;
+}
+
+- (NSColor*) colorForRef: (PBGitRef*) ref
+{
+	NSString* type = [ref type];
+	if ([type isEqualToString:@"head"])
+		return [NSColor yellowColor];
+	else if ([type isEqualToString:@"remote"])
+		return [NSColor greenColor];
+	else if ([type isEqualToString:@"tag"])
+		return [NSColor cyanColor];
+	
+	return [NSColor yellowColor];
+}
+
 - (void) drawRefsInRect: (NSRect*) rect
 {
 	static const float ref_padding = 10.0f;
@@ -147,24 +175,27 @@
 
 	int index;
 	for (index = 0; index < [cellInfo.refs count]; ++index) {
-		NSString* ref    = [cellInfo.refs objectAtIndex:index];
-		NSString* newRef = [[ref componentsSeparatedByString:@"/"] lastObject];
+		PBGitRef* ref    = [PBGitRef refFromString:[cellInfo.refs objectAtIndex:index]];
 
-		NSSize refSize = [newRef sizeWithAttributes:nil];
-
+		NSMutableDictionary* attributes = [self attributesForRefLabelSelected:[self isHighlighted]];
+		NSSize refSize = [[ref shortName] sizeWithAttributes:attributes];
+		
 		refRect.size.width = refSize.width + ref_padding;
+		refRect.size.height = refSize.height;
+		refRect.origin.y += (rect->size.height - refRect.size.height) / 2; 
+		
+		// Round rects to 0.5 pixels in order to draw only a single pixel
+		refRect.origin.x = round(refRect.origin.x) - 0.5;
+		refRect.origin.y = round(refRect.origin.y) - 0.5;
 
-		NSMutableDictionary *attributes = [[[NSMutableDictionary alloc] initWithCapacity:2] autorelease];
-		NSMutableParagraphStyle* style = [[[NSParagraphStyle defaultParagraphStyle] mutableCopy] autorelease];
-		[style setAlignment:NSCenterTextAlignment];
-		[attributes setObject:style forKey:NSParagraphStyleAttributeName];
-		if([self isHighlighted])
-			[attributes setObject:[NSColor alternateSelectedControlTextColor] forKey:NSForegroundColorAttributeName];
-		[newRef drawInRect:refRect withAttributes:attributes];
+		NSBezierPath *border = [NSBezierPath bezierPathWithRoundedRect:refRect cornerRadius: 2.0];
+		[[self colorForRef: ref] set];
+		[border fill];
 
-		[[NSBezierPath bezierPathWithRoundedRect:refRect cornerRadius:2.0f] stroke];
+		[[ref shortName] drawInRect:refRect withAttributes:attributes];
+		[border stroke];
 
-		refRect.origin.x += refRect.size.width + ref_spacing;
+		refRect.origin.x += (int)refRect.size.width + ref_spacing;
 	}
 
 	rect->size.width -= refRect.origin.x - rect->origin.x;
