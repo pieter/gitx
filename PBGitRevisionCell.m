@@ -7,7 +7,54 @@
 //
 
 #import "PBGitRevisionCell.h"
+#import "PBGitRef.h"
 
+@implementation NSBezierPath (RoundedRectangle)
++ (NSBezierPath *)bezierPathWithRoundedRect: (NSRect) aRect cornerRadius: (double) cRadius
+{
+	double left = aRect.origin.x, bottom = aRect.origin.y, width = aRect.size.width, height = aRect.size.height;
+
+	//now, crop the radius so we don't get weird effects
+	double lesserDim = width < height ? width : height;
+	if ( cRadius > lesserDim / 2 )
+	{
+		cRadius = lesserDim / 2;
+	}
+
+	//these points describe the rectangle as start and stop points of the
+	//arcs making up its corners --points c, e, & g are implicit endpoints of arcs
+	//and are unnecessary
+	NSPoint a = NSMakePoint( 0, cRadius ), b = NSMakePoint( 0, height - cRadius ),
+		d = NSMakePoint( width - cRadius, height ), f = NSMakePoint( width, cRadius ),
+		h = NSMakePoint( cRadius, 0 );
+
+	//these points describe the center points of the corner arcs
+	NSPoint cA = NSMakePoint( cRadius, height - cRadius ),
+		cB = NSMakePoint( width - cRadius, height - cRadius ),
+		cC = NSMakePoint( width - cRadius, cRadius ),
+		cD = NSMakePoint( cRadius, cRadius );
+
+	//start
+	NSBezierPath *bp = [NSBezierPath bezierPath];
+	[bp moveToPoint: a ];
+	[bp lineToPoint: b ];
+	[bp appendBezierPathWithArcWithCenter: cA radius: cRadius startAngle:180 endAngle:90 clockwise: YES];
+	[bp lineToPoint: d ];
+	[bp appendBezierPathWithArcWithCenter: cB radius: cRadius startAngle:90 endAngle:0 clockwise: YES];
+	[bp lineToPoint: f ];
+	[bp appendBezierPathWithArcWithCenter: cC radius: cRadius startAngle:0 endAngle:270 clockwise: YES];
+	[bp lineToPoint: h ];
+	[bp appendBezierPathWithArcWithCenter: cD radius: cRadius startAngle:270 endAngle:180 clockwise: YES];	
+	[bp closePath];
+
+	//Transform path to rectangle's origin
+	NSAffineTransform *transform = [NSAffineTransform transform];
+	[transform translateXBy: left yBy: bottom];
+	[bp transformUsingAffineTransform: transform];
+
+	return bp; //it's already been autoreleased
+}
+@end
 
 @implementation PBGitRevisionCell
 
@@ -63,7 +110,11 @@
 
 - (void) drawCircleForColumn: (int) c inRect: (NSRect) r
 {
-	[[NSColor blackColor] set];
+	if (!cellInfo.refs)
+		[[NSColor blackColor] set];
+	else
+		[[NSColor redColor] set];
+
 	int columnWidth = 10;
 	NSPoint origin = r.origin;
 	NSPoint columnOrigin = { origin.x + columnWidth * c, origin.y};
@@ -80,6 +131,75 @@
 	[[NSColor whiteColor] set];
 	path = [NSBezierPath bezierPathWithOvalInRect:smallOval];
 	[path fill];	
+}
+
+- (NSMutableDictionary*) attributesForRefLabelSelected: (BOOL) selected
+{
+	NSMutableDictionary *attributes = [[[NSMutableDictionary alloc] initWithCapacity:2] autorelease];
+	NSMutableParagraphStyle* style = [[[NSParagraphStyle defaultParagraphStyle] mutableCopy] autorelease];
+	
+	[style setAlignment:NSCenterTextAlignment];
+	[attributes setObject:style forKey:NSParagraphStyleAttributeName];
+	[attributes setObject:[NSFont fontWithName:@"Helvetica"	size:9] forKey:NSFontAttributeName];
+
+	//if (selected)
+	//	[attributes setObject:[NSColor alternateSelectedControlTextColor] forKey:NSForegroundColorAttributeName];
+
+	return attributes;
+}
+
+- (NSColor*) colorForRef: (PBGitRef*) ref
+{
+	NSString* type = [ref type];
+	if ([type isEqualToString:@"head"])
+		return [NSColor yellowColor];
+	else if ([type isEqualToString:@"remote"])
+		return [NSColor greenColor];
+	else if ([type isEqualToString:@"tag"])
+		return [NSColor cyanColor];
+	
+	return [NSColor yellowColor];
+}
+
+- (void) drawRefsInRect: (NSRect*) rect
+{
+	static const float ref_padding = 10.0f;
+	static const float ref_spacing = 2.0f;
+
+	NSRect refRect = (NSRect){rect->origin, rect->size};
+
+	if([self isHighlighted])
+		[[NSColor whiteColor] setStroke];
+	else
+		[[NSColor blackColor] setStroke];
+
+	int index;
+	for (index = 0; index < [cellInfo.refs count]; ++index) {
+		PBGitRef* ref    = [PBGitRef refFromString:[cellInfo.refs objectAtIndex:index]];
+
+		NSMutableDictionary* attributes = [self attributesForRefLabelSelected:[self isHighlighted]];
+		NSSize refSize = [[ref shortName] sizeWithAttributes:attributes];
+		
+		refRect.size.width = refSize.width + ref_padding;
+		refRect.size.height = refSize.height;
+		refRect.origin.y += (rect->size.height - refRect.size.height) / 2; 
+		
+		// Round rects to 0.5 pixels in order to draw only a single pixel
+		refRect.origin.x = round(refRect.origin.x) - 0.5;
+		refRect.origin.y = round(refRect.origin.y) - 0.5;
+
+		NSBezierPath *border = [NSBezierPath bezierPathWithRoundedRect:refRect cornerRadius: 2.0];
+		[[self colorForRef: ref] set];
+		[border fill];
+
+		[[ref shortName] drawInRect:refRect withAttributes:attributes];
+		[border stroke];
+
+		refRect.origin.x += (int)refRect.size.width + ref_spacing;
+	}
+
+	rect->size.width -= refRect.origin.x - rect->origin.x;
+	rect->origin.x    = refRect.origin.x;
 }
 
 - (void) drawWithFrame: (NSRect) rect inView:(NSView *)view
@@ -101,6 +221,8 @@
 
 	[self drawCircleForColumn: cellInfo.position inRect: ownRect];
 
+	if (cellInfo.refs)
+		[self drawRefsInRect:&rect];
 	
 	[super drawWithFrame:rect inView:view];
 	isReady = NO;

@@ -12,11 +12,20 @@
 
 @implementation PBGitGrapher
 
+- (id) initWithRepository: (PBGitRepository*) repo
+{
+	repository = repo;
+	return self;
+}
 
 - (void) parseCommits: (NSArray *) commits
 {
 	cellsInfo = [NSMutableArray arrayWithCapacity: [commits count]];
 	int row = 0;
+
+	NSDictionary* refs = nil;
+	if (repository)
+		refs = repository.refs;
 
 	PBGraphCellInfo* previous;
 	NSMutableArray* previousLanes = [NSMutableArray array];
@@ -120,7 +129,10 @@
 		
 		++row;
 		previous = [[PBGraphCellInfo alloc] initWithPosition:newPos andLines:lines];
-		
+
+		if (refs && [refs objectForKey:commit.sha])
+			previous.refs = [refs objectForKey:commit.sha];
+
 		// If a parent was added, we have room to not indent.
 		if (addedParent)
 			previous.numColumns = [currentLanes count] - 1;

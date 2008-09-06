@@ -103,7 +103,7 @@
 	
 	[self performSelectorOnMainThread:@selector(setCommits:) withObject:newArray waitUntilDone:YES];
 	
-	PBGitGrapher* g = [[PBGitGrapher alloc] init];
+	PBGitGrapher* g = [[PBGitGrapher alloc] initWithRepository: repository];
 	[g parseCommits: self.commits];
 	[self performSelectorOnMainThread:@selector(setGrapher:) withObject:g waitUntilDone:YES];
 	[self performSelectorOnMainThread:@selector(setCommits:) withObject:newArray waitUntilDone:YES];

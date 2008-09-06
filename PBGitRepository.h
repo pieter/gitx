@@ -15,6 +15,7 @@ extern NSString* PBGitRepositoryErrorDomain;
 	PBGitRevList* revisionList;
 	NSArray* branches;
 	NSString* currentBranch;
+	NSDictionary* refs;
 }
 
 - (NSFileHandle*) handleForCommand:(NSString*) cmd;
@@ -22,7 +23,7 @@ extern NSString* PBGitRepositoryErrorDomain;
 - (NSString*) outputForCommand:(NSString*) cmd;
 - (NSString*) outputForArguments:(NSArray*) args;
 
-- (void) readBranches;
+- (void) readRefs;
 - (void) readCurrentBranch;
 
 - (NSString*) parseSymbolicReference:(NSString*) ref;
@@ -34,5 +35,5 @@ extern NSString* PBGitRepositoryErrorDomain;
 @property (readonly) PBGitRevList* revisionList;
 @property (assign) NSArray* branches;
 @property (assign) NSString* currentBranch;
-
+@property (assign) NSDictionary* refs;
 @end

@@ -14,8 +14,10 @@
 	int position;
 	NSArray* lines;
 	int numColumns;
+	NSArray* refs;
 }
 @property(readonly)  NSArray* lines;
+@property(retain) NSArray* refs;
 @property(assign)  int position, numColumns;
 
 - (id)initWithPosition: (int) p andLines: (NSArray*) l;
