@@ -175,7 +175,7 @@
 
 	int index;
 	for (index = 0; index < [cellInfo.refs count]; ++index) {
-		PBGitRef* ref    = [PBGitRef refFromString:[cellInfo.refs objectAtIndex:index]];
+		PBGitRef* ref    = [cellInfo.refs objectAtIndex:index];
 
 		NSMutableDictionary* attributes = [self attributesForRefLabelSelected:[self isHighlighted]];
 		NSSize refSize = [[ref shortName] sizeWithAttributes:attributes];

@@ -12,6 +12,7 @@
 
 #import "NSFileHandleExt.h"
 #import "PBEasyPipe.h"
+#import "PBGitRef.h"
 
 NSString* PBGitRepositoryErrorDomain = @"GitXErrorDomain";
 
@@ -147,7 +148,7 @@ static NSString* gitPath;
 	NSMutableArray* newBranches = [NSMutableArray array];
 	for (NSString* line in lines) {
 		NSArray* components = [line componentsSeparatedByString:@" "];
-		NSString* ref = [components objectAtIndex:0];
+		PBGitRef* ref = [PBGitRef refFromString:[components objectAtIndex:0]];
 		NSString* type = [components objectAtIndex:1];
 		NSString* sha;
 		if ([type isEqualToString:@"tag"] && [components count] == 4)
@@ -155,10 +156,8 @@ static NSString* gitPath;
 		else
 			sha = [components objectAtIndex:2];
 
-		if ([ref length] > 11 && [[ref substringToIndex:11] isEqualToString:@"refs/heads/"]) {
-			NSString* branch = [ref substringFromIndex:11];
-			[newBranches addObject: branch];
-		}
+		if ([[ref type] isEqualToString:@"head"])
+			[newBranches addObject: ref];
 
 		NSMutableArray* curRefs;
 		if (curRefs = [newRefs objectForKey:sha])
