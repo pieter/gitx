@@ -155,7 +155,7 @@ static NSString* gitPath;
 		else
 			sha = [components objectAtIndex:2];
 
-		if ([[ref substringToIndex:11] isEqualToString:@"refs/heads/"]) {
+		if ([ref length] > 11 && [[ref substringToIndex:11] isEqualToString:@"refs/heads/"]) {
 			NSString* branch = [ref substringFromIndex:11];
 			[newBranches addObject: branch];
 		}
