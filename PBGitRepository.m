@@ -125,6 +125,16 @@ static NSString* gitPath;
 	return success;
 }
 
+- (id) initWithURL: (NSURL*) path andArguments:(NSArray*) array
+{
+	self = [self init];
+	NSURL* gitDirURL = [PBGitRepository gitDirForURL:path];
+	[self setFileURL: gitDirURL];
+	[self readRefs];
+	[self readCurrentBranch];
+	revisionList = [[PBGitRevList alloc] initWithRepository:self andRevListParameters:array];
+	return self;
+}
 // The fileURL the document keeps is to the .git dir, but that’s pretty
 // useless for display in the window title bar, so we show the directory above
 - (NSString*)displayName

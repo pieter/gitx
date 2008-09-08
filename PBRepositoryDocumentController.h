@@ -14,4 +14,5 @@
 
 }
 
+- (id) openRepositoryAtLocation:(NSURL*) url RevParseArgs:(NSArray*)args;
 @end

@@ -29,4 +29,18 @@
 {
 	[super noteNewRecentDocumentURL:[PBGitRepository baseDirForURL:url]];
 }
+
+- (id) openRepositoryAtLocation:(NSURL*) url RevParseArgs:(NSArray*)args
+{
+	id document = [self documentForURL:url];
+	if (!document) {
+		document = [[PBGitRepository alloc] initWithURL:url	andArguments:args];
+		[self addDocument:document];
+		[document makeWindowControllers];
+	} else {
+		// TODO: Add another revwalk specifier and show that.
+	}
+	[document showWindows];
+	return document;
+}
 @end

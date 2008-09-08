@@ -31,7 +31,8 @@
 	// work around an apparent bug with GC and Distributed Objects
 	// I am not familiar with GC though, so perhaps I was doing something wrong.
 	NSURL* url = [NSURL fileURLWithPath:[repositoryPath path]];
-	if (id document = [[PBRepositoryDocumentController sharedDocumentController] openDocumentWithContentsOfURL:url display:YES error:nil]) {
+	NSArray* arguments = [NSArray arrayWithArray:args];
+	if (id document = [[PBRepositoryDocumentController sharedDocumentController] openRepositoryAtLocation: url RevParseArgs: arguments]) {
 		[NSApp activateIgnoringOtherApps:YES];
 		return YES;
 	}
