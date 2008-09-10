@@ -18,6 +18,7 @@
 		913D5E4D0E55644E00CECEA2 /* gitx.mm in Sources */ = {isa = PBXBuildFile; fileRef = 913D5E440E55640C00CECEA2 /* gitx.mm */; };
 		913D5E500E55645900CECEA2 /* gitx in Resources */ = {isa = PBXBuildFile; fileRef = 913D5E490E55644600CECEA2 /* gitx */; };
 		913D5E5F0E556A9300CECEA2 /* PBCLIProxy.mm in Sources */ = {isa = PBXBuildFile; fileRef = 913D5E5E0E556A9300CECEA2 /* PBCLIProxy.mm */; };
+		D26DC6450E782C9000C777B2 /* gitx.icns in Resources */ = {isa = PBXBuildFile; fileRef = D26DC6440E782C9000C777B2 /* gitx.icns */; };
 		F50FE0E30E07BE9600854FCD /* PBGitRevisionCell.m in Sources */ = {isa = PBXBuildFile; fileRef = F50FE0E20E07BE9600854FCD /* PBGitRevisionCell.m */; };
 		F513085B0E0740F2000C8BCD /* PBQLOutlineView.m in Sources */ = {isa = PBXBuildFile; fileRef = F513085A0E0740F2000C8BCD /* PBQLOutlineView.m */; };
 		F561727F0E056A11001DCD79 /* diff_style.css in Resources */ = {isa = PBXBuildFile; fileRef = F561727C0E056A11001DCD79 /* diff_style.css */; };
@@ -91,6 +92,7 @@
 		913D5E490E55644600CECEA2 /* gitx */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = gitx; sourceTree = BUILT_PRODUCTS_DIR; };
 		913D5E5D0E556A9300CECEA2 /* PBCLIProxy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PBCLIProxy.h; sourceTree = "<group>"; };
 		913D5E5E0E556A9300CECEA2 /* PBCLIProxy.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PBCLIProxy.mm; sourceTree = "<group>"; };
+		D26DC6440E782C9000C777B2 /* gitx.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = gitx.icns; sourceTree = "<group>"; };
 		F50FE0E10E07BE9600854FCD /* PBGitRevisionCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PBGitRevisionCell.h; sourceTree = "<group>"; };
 		F50FE0E20E07BE9600854FCD /* PBGitRevisionCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PBGitRevisionCell.m; sourceTree = "<group>"; };
 		F51308590E0740F2000C8BCD /* PBQLOutlineView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PBQLOutlineView.h; sourceTree = "<group>"; };
@@ -226,6 +228,7 @@
 		29B97317FDCFA39411CA2CEA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				D26DC6440E782C9000C777B2 /* gitx.icns */,
 				8D1107310486CEB800E47090 /* Info.plist */,
 				089C165CFE840E0CC02AAC07 /* InfoPlist.strings */,
 				F5B721C20E05CF7E00AF29DC /* MainMenu.xib */,
@@ -413,6 +416,7 @@
 				F561777D0E05C88E001DCD79 /* DetailView.png in Resources */,
 				F5B721C40E05CF7E00AF29DC /* MainMenu.xib in Resources */,
 				911111E20E58BD5A00BF76B4 /* RepositoryWindow.xib in Resources */,
+				D26DC6450E782C9000C777B2 /* gitx.icns in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
