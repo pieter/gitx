@@ -156,7 +156,7 @@ static NSString* gitPath;
 		else
 			sha = [components objectAtIndex:2];
 
-		if ([[ref type] isEqualToString:@"head"])
+		if ([[ref type] isEqualToString:@"head"] || [[ref type] isEqualToString:@"remote"])
 			[newBranches addObject: ref];
 
 		NSMutableArray* curRefs;
