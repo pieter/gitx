@@ -10,6 +10,7 @@
 #import "PBGitRepository.h"
 #import "PBGitCommit.h"
 #import "PBGitGrapher.h"
+#import "PBGitRevSpecifier.h"
 
 @implementation PBGitRevList
 
@@ -32,16 +33,17 @@
 	// and in that case we don't have to reload the revision list.
 
 	// If no branch was selected, use the current HEAD
-	NSString* newRef = [repository currentBranch];
-	if (!newRef || [newRef isEqualToString:@""])
-		newRef = @"HEAD";
-	newRef = [repository parseReference:newRef];
+	PBGitRevSpecifier* newRev = [[[repository branches] objectsAtIndexes: [repository currentBranch]] objectAtIndex:0];
+	NSString* newSha = nil;
 
-	if ([newRef isEqualToString:currentRef])
+	if (newRev && [newRev isSimpleRef])
+		newSha = [repository parseReference:[newRev simpleRef]];
+
+	if ([newSha isEqualToString:currentRef])
 		return;
 
-	currentRef = newRef;
-	NSThread * commitThread = [[NSThread alloc] initWithTarget: self selector: @selector(walkRevisionList) object:nil];
+	currentRef = newSha;
+	NSThread * commitThread = [[NSThread alloc] initWithTarget: self selector: @selector(walkRevisionListWithSpecifier:) object:newRev];
 	[commitThread start];
 }
 
@@ -52,16 +54,16 @@
 		[self readCommits];
 }
 
-- (void) walkRevisionList
+- (void) walkRevisionListWithSpecifier: (PBGitRevSpecifier*) rev
 {
 	
 	NSMutableArray * newArray = [NSMutableArray array];
 	NSDate* start = [NSDate date];
 	NSMutableArray* arguments = [NSMutableArray arrayWithObjects:@"log", @"--topo-order", @"--pretty=format:%H\01%an\01%s\01%P\01%at", nil];
-	if ([parameters count] == 0)
-		[arguments addObject:currentRef];
+	if (!rev)
+		[arguments addObject:@"HEAD"];
 	else
-		[arguments addObjectsFromArray:parameters];
+		[arguments addObjectsFromArray:[rev parameters]];
 
 	NSFileHandle* handle = [repository handleForArguments: arguments];
 	

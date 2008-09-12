@@ -13,6 +13,7 @@
 #import "NSFileHandleExt.h"
 #import "PBEasyPipe.h"
 #import "PBGitRef.h"
+#import "PBGitRevSpecifier.h"
 
 NSString* PBGitRepositoryErrorDomain = @"GitXErrorDomain";
 
@@ -170,7 +171,7 @@ static NSString* gitPath;
 			sha = [components objectAtIndex:2];
 
 		if ([[ref type] isEqualToString:@"head"] || [[ref type] isEqualToString:@"remote"])
-			[newBranches addObject: ref];
+			[newBranches addObject: [[PBGitRevSpecifier alloc] initWithRef:ref]];
 
 		NSMutableArray* curRefs;
 		if (curRefs = [newRefs objectForKey:sha])
@@ -185,8 +186,16 @@ static NSString* gitPath;
 - (void) readCurrentBranch
 {
 	NSString* branch = [self parseSymbolicReference: @"HEAD"];
-	if (branch && [branch hasPrefix:@"refs/heads/"])
-		self.currentBranch = [branch substringFromIndex:11];
+	if (branch && [branch hasPrefix:@"refs/heads/"]) {
+		int i;
+		for (i = 0; i < [branches count]; i++) {
+			PBGitRevSpecifier* rev = [branches objectAtIndex:i];
+			if ([rev isSimpleRef] && [[rev simpleRef] isEqualToString: branch]) {
+				self.currentBranch = [NSIndexSet indexSetWithIndex:i];
+				return;
+			}
+		}
+	}
 }
 
 

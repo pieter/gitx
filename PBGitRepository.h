@@ -14,7 +14,7 @@ extern NSString* PBGitRepositoryErrorDomain;
 @interface PBGitRepository : NSDocument {
 	PBGitRevList* revisionList;
 	NSArray* branches;
-	NSString* currentBranch;
+	NSIndexSet* currentBranch;
 	NSDictionary* refs;
 }
 
@@ -36,6 +36,6 @@ extern NSString* PBGitRepositoryErrorDomain;
 
 @property (retain) PBGitRevList* revisionList;
 @property (assign) NSArray* branches;
-@property (assign) NSString* currentBranch;
+@property (assign) NSIndexSet* currentBranch;
 @property (assign) NSDictionary* refs;
 @end
