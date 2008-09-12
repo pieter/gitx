@@ -20,7 +20,7 @@ hopefully more features will be added. Currently GitX supports the following:
   * Look at the complete tree of any revision
     * Preview any file in the tree in a text view or with QuickLook
     * Drag and drop files out of the tree view to copy them to your system
-  
+   * Support for all parameters git rev-list has
 # License
 
 GitX is licensed under the GPL version 2. For more information, see the attached COPYING file.
@@ -44,6 +44,16 @@ GitX makes use of features available only on Leopard (such as garbage
 collection), you will not be able to compile it on previous versions of OS X.
 
 To compile GitX, open the GitX.xcodeproj file and hit "Build".
+
+# Usage
+
+GitX itself is fairly simple. Most of its power is in the 'gitx' binary, which
+you should install through the menu. the 'gitx' binary supports most of git
+rev-list's arguments. For example, you can run `gitx --all' to display all
+branches in the repository, or `gitx -- Documentation' to only show commits
+relating to the 'Documentation' subdirectory. With `gitx -Shaha', gitx will
+only show commits that contain the word 'haha'. Similarly, with 'gitx
+v0.2.1..', you will get a list of all commits since version 0.2.1.
 
 # Helping out
 
