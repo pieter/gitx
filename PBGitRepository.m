@@ -188,7 +188,8 @@ static NSString* gitPath;
 	NSString* branch = [self parseSymbolicReference: @"HEAD"];
 	if (branch && [branch hasPrefix:@"refs/heads/"])
 		return [[PBGitRevSpecifier alloc] initWithRef:[PBGitRef refFromString:branch]];
-	return nil;
+
+	return [[PBGitRevSpecifier alloc] initWithRef:[PBGitRef refFromString:@"HEAD"]];
 }
 		
 // Returns either this object, or an existing, equal object
