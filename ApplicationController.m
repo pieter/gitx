@@ -63,7 +63,7 @@
 	if (toolPath) {
 		AuthorizationRef auth;
 		if (AuthorizationCreate(NULL, kAuthorizationEmptyEnvironment, kAuthorizationFlagDefaults, &auth) == errAuthorizationSuccess) {
-			char const* arguments[] = { "-s", [toolPath UTF8String], [installationPath UTF8String], NULL };
+			char const* arguments[] = { "-f", "-s", [toolPath UTF8String], [installationPath UTF8String], NULL };
 			char const* helperTool  = "/bin/ln";
 			if (AuthorizationExecuteWithPrivileges(auth, helperTool, kAuthorizationFlagDefaults, (char**)arguments, NULL) == errAuthorizationSuccess) {
 				int status;
