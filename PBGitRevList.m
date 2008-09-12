@@ -110,11 +110,15 @@
 	
 	[self performSelectorOnMainThread:@selector(setCommits:) withObject:newArray waitUntilDone:YES];
 	
-	PBGitGrapher* g = [[PBGitGrapher alloc] initWithRepository: repository];
-	[g parseCommits: self.commits];
-	[self performSelectorOnMainThread:@selector(setGrapher:) withObject:g waitUntilDone:YES];
-	[self performSelectorOnMainThread:@selector(setCommits:) withObject:newArray waitUntilDone:YES];
-	
+	if (![rev hasPathLimiter]) {
+		PBGitGrapher* g = [[PBGitGrapher alloc] initWithRepository: repository];
+		[g parseCommits: self.commits];
+		[self performSelectorOnMainThread:@selector(setGrapher:) withObject:g waitUntilDone:YES];
+		[self performSelectorOnMainThread:@selector(setCommits:) withObject:newArray waitUntilDone:YES];
+	}
+	else
+		grapher = nil;
+
 	NSTimeInterval duration = [[NSDate date] timeIntervalSinceDate:start];
 	NSLog(@"Loaded %i commits in %f seconds", num, duration);
 	[NSThread exit];
