@@ -152,6 +152,14 @@
 	repository.currentBranch = repository.currentBranch;
 }
 
+- (void) selectCommit: (NSString*) commit
+{
+	NSPredicate* selection = [NSPredicate predicateWithFormat:@"sha == %@", commit];
+	NSArray* selectedCommits = [repository.revisionList.commits filteredArrayUsingPredicate:selection];
+	[commitController setSelectedObjects: selectedCommits];
+	int index = [[commitController selectionIndexes] firstIndex];
+	[commitList scrollRowToVisible: index];
+}
 
 - (void)tableView:(NSTableView *)aTableView willDisplayCell:(id)aCell forTableColumn:(NSTableColumn *)aTableColumn row:(int)rowIndex
 {

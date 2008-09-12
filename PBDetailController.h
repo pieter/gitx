@@ -39,6 +39,7 @@
 - (IBAction) setRawView: sender;
 - (IBAction) setTreeView: sender;
 
+- (void) selectCommit: (NSString*) commit;
 - (IBAction) refresh: sender;
 - (IBAction) toggleQuickView: sender;
 - (IBAction) openSelectedFile: sender;
