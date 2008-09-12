@@ -183,14 +183,26 @@ static NSString* gitPath;
 	self.refs = newRefs;
 }
 
+- (PBGitRevSpecifier*) headRef
+{
+	NSString* branch = [self parseSymbolicReference: @"HEAD"];
+	if (branch && [branch hasPrefix:@"refs/heads/"])
+		return [[PBGitRevSpecifier alloc] initWithRef:[PBGitRef refFromString:branch]];
+	return nil;
+}
+		
 // Returns either this object, or an existing, equal object
 - (PBGitRevSpecifier*) addBranch: (PBGitRevSpecifier*) rev
 {
+	if ([[rev parameters] count] == 0)
+		rev = [self headRef];
+
 	// First check if the branch doesn't exist already
 	for (PBGitRevSpecifier* r in branches)
 		if ([rev isEqualTo: r])
 			return r;
 
+	NSLog(@"Adding new branch");
 	[branches addObject: rev];
 	return rev;
 }
@@ -209,11 +221,7 @@ static NSString* gitPath;
 
 - (void) readCurrentBranch
 {
-	NSString* branch = [self parseSymbolicReference: @"HEAD"];
-	if (branch && [branch hasPrefix:@"refs/heads/"]) {
-		PBGitRevSpecifier* currentRev = [[PBGitRevSpecifier alloc] initWithRef:[PBGitRef refFromString:branch]];
-		[self selectBranch: [self addBranch:currentRev]];
-	}
+		[self selectBranch: [self addBranch: [self headRef]]];
 }
 
 
