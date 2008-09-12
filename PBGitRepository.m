@@ -183,6 +183,23 @@ static NSString* gitPath;
 	self.refs = newRefs;
 }
 
+- (void) addBranch: (PBGitRevSpecifier*) rev
+{
+	[branches addObject: rev];
+}
+
+- (void) selectBranch: (PBGitRevSpecifier*) rev
+{
+	int i;
+	for (i = 0; i < [branches count]; i++) {
+		PBGitRevSpecifier* aRev = [branches objectAtIndex:i];
+		if (rev == aRev) {
+			self.currentBranch = [NSIndexSet indexSetWithIndex:i];
+			return;
+		}
+	}
+}
+
 - (void) readCurrentBranch
 {
 	NSString* branch = [self parseSymbolicReference: @"HEAD"];

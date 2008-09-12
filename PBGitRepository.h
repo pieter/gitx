@@ -8,12 +8,13 @@
 
 #import <Cocoa/Cocoa.h>
 #import "PBGitRevList.h"
+#import "PBGitRevSpecifier.h"
 
 extern NSString* PBGitRepositoryErrorDomain;
 
 @interface PBGitRepository : NSDocument {
 	PBGitRevList* revisionList;
-	NSArray* branches;
+	NSMutableArray* branches;
 	NSIndexSet* currentBranch;
 	NSDictionary* refs;
 }
@@ -25,6 +26,8 @@ extern NSString* PBGitRepositoryErrorDomain;
 
 - (void) readRefs;
 - (void) readCurrentBranch;
+- (void) addBranch: (PBGitRevSpecifier*) rev;
+- (void) selectBranch: (PBGitRevSpecifier*) rev;
 
 - (NSString*) parseSymbolicReference:(NSString*) ref;
 - (NSString*) parseReference:(NSString*) ref;
@@ -35,7 +38,7 @@ extern NSString* PBGitRepositoryErrorDomain;
 - (id) initWithURL: (NSURL*) path andArguments:(NSArray*) array;
 
 @property (retain) PBGitRevList* revisionList;
-@property (assign) NSArray* branches;
+@property (assign) NSMutableArray* branches;
 @property (assign) NSIndexSet* currentBranch;
 @property (assign) NSDictionary* refs;
 @end
