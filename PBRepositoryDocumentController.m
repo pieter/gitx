@@ -8,6 +8,7 @@
 
 #import "PBRepositoryDocumentController.h"
 #import "PBGitRepository.h"
+#import "PBGitRevList.h"
 
 @implementation PBRepositoryDocumentController
 // This method is overridden to configure the open panel to only allow
@@ -38,7 +39,8 @@
 		[self addDocument:document];
 		[document makeWindowControllers];
 	} else {
-		// TODO: Add another revwalk specifier and show that.
+		// TODO: Use a more decent approach for this
+		[document setValue: [[PBGitRevList alloc] initWithRepository:document andRevListParameters: args] forKey:@"revisionList"];
 	}
 	[document showWindows];
 	return document;
