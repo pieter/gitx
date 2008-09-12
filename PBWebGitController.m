@@ -67,6 +67,12 @@
 	[detailController selectCommit:sha];
 }
 
+- (void) sendKey: (NSString*) key
+{
+	id script = [view windowScriptObject];
+	[script callWebScriptMethod:@"handleKeyFromCocoa" withArguments: [NSArray arrayWithObject:key]];
+}
+
 + (BOOL)isSelectorExcludedFromWebScript:(SEL)aSelector
 {
 	return NO;

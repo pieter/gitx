@@ -1,14 +1,21 @@
-code .delline {
+code .delline, code .oldfile {
   background-color: #FEE;
   color: #B00;
 }
 
-code .addline {
+code .addline, code .newfile {
   background-color: #DFD;
   color: #080;
 }
+code .fileline {
+  font-weight: bold;
+}
 
-code .meta {
+code .fileheader {
+  margin-top: 20px;
+}
+
+code .hunkheader {
   background-color: #f7f7f7;
   color: #bbb;
 }
@@ -22,4 +29,8 @@ pre code {
   display: table-cell;
   padding: 9px;
   width: 100%;
+}
+
+#CurrentHunk {
+	border-left: 5px solid black;
 }

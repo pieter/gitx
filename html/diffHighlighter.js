@@ -14,12 +14,26 @@ var highlightDiffs = function() {
 
 			l = l.gsub("\t", "  ");
 
+			if (l.startsWith("diff")) {
+				newContent += "<div class='fileHeader'><div class='fileline'>" + l + "</div></div>";
+				return;
+			}
+			if (l.startsWith("---")) {
+				newContent += "<div class='oldfile'>" + l + "</div></div>";
+				return;
+			}
+
+			if (l.startsWith("+++")) {
+				newContent += "<div class='newfile'>" + l + "</div></div>";
+				return;
+			}
+
 			if (l.startsWith("+"))
 				newContent += "<div class='addline'>" + l + "</div>";
 			else if (l.startsWith("-"))
 				newContent += "<div class='delline'>" + l + "</div>";
 			else if (l.startsWith("@"))
-				newContent += "<div class='meta'>" + l + "</div>";
+				newContent += "<div class='hunkheader'>" + l + "</div>";
 			else
 				newContent += l + "\n";
 		});

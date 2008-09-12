@@ -26,6 +26,8 @@
 		F56173280E056ED2001DCD79 /* diffHighlighter.js in Resources */ = {isa = PBXBuildFile; fileRef = F56173270E056ED2001DCD79 /* diffHighlighter.js */; };
 		F56174570E058893001DCD79 /* PBGitTree.m in Sources */ = {isa = PBXBuildFile; fileRef = F56174560E058893001DCD79 /* PBGitTree.m */; };
 		F561777D0E05C88E001DCD79 /* DetailView.png in Resources */ = {isa = PBXBuildFile; fileRef = F561777C0E05C88E001DCD79 /* DetailView.png */; };
+		F561E6CC0E7AFDD000521636 /* keyboardNavigation.js in Sources */ = {isa = PBXBuildFile; fileRef = F561E6CB0E7AFDD000521636 /* keyboardNavigation.js */; };
+		F561E6CD0E7AFDDF00521636 /* keyboardNavigation.js in Resources */ = {isa = PBXBuildFile; fileRef = F561E6CB0E7AFDD000521636 /* keyboardNavigation.js */; };
 		F56524BB0E02D22D00F03B52 /* NSFileHandleExt.m in Sources */ = {isa = PBXBuildFile; fileRef = F56524B90E02D22D00F03B52 /* NSFileHandleExt.m */; };
 		F56524F00E02D45200F03B52 /* PBGitCommit.m in Sources */ = {isa = PBXBuildFile; fileRef = F56524EF0E02D45200F03B52 /* PBGitCommit.m */; };
 		F56526240E03D85900F03B52 /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F56526230E03D85900F03B52 /* WebKit.framework */; };
@@ -107,6 +109,7 @@
 		F56174550E058893001DCD79 /* PBGitTree.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PBGitTree.h; sourceTree = "<group>"; };
 		F56174560E058893001DCD79 /* PBGitTree.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PBGitTree.m; sourceTree = "<group>"; };
 		F561777C0E05C88E001DCD79 /* DetailView.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = DetailView.png; sourceTree = "<group>"; };
+		F561E6CB0E7AFDD000521636 /* keyboardNavigation.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; name = keyboardNavigation.js; path = html/keyboardNavigation.js; sourceTree = "<group>"; };
 		F56524B90E02D22D00F03B52 /* NSFileHandleExt.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSFileHandleExt.m; sourceTree = "<group>"; };
 		F56524BA0E02D22D00F03B52 /* NSFileHandleExt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSFileHandleExt.h; sourceTree = "<group>"; };
 		F56524EE0E02D45200F03B52 /* PBGitCommit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PBGitCommit.h; sourceTree = "<group>"; };
@@ -328,6 +331,7 @@
 			children = (
 				F561727C0E056A11001DCD79 /* diff_style.css */,
 				F56526590E03E71B00F03B52 /* commit.html */,
+				F561E6CB0E7AFDD000521636 /* keyboardNavigation.js */,
 				F58A8F270E043698007E3FC0 /* commits.css */,
 				F57ABDDE0E0441DE00A088B8 /* commit.js */,
 				F57ABE180E04431D00A088B8 /* prototype.js */,
@@ -415,6 +419,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F561E6CD0E7AFDDF00521636 /* keyboardNavigation.js in Resources */,
 				913D5E500E55645900CECEA2 /* gitx in Resources */,
 				8D11072B0486CEB800E47090 /* InfoPlist.strings in Resources */,
 				F565265A0E03E71B00F03B52 /* commit.html in Resources */,
@@ -460,6 +465,7 @@
 				F5C007750E731B48007B84B2 /* PBGitRef.m in Sources */,
 				F5AD56790E79B78100EDAAFE /* PBCommitList.m in Sources */,
 				F53FF2050E7ABB5300389171 /* PBGitRevSpecifier.m in Sources */,
+				F561E6CC0E7AFDD000521636 /* keyboardNavigation.js in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
