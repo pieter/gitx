@@ -7,16 +7,23 @@
     <item>
       <title>Version 0.2.1</title>
       <pubDate>Sun, 06 Sep 2008 11:24:54 +0900</pubDate>
-      <enclosure url="http://frim.frim.nl/GitXStable.app.zip" length="139009" type="application/oc
-tet-stream" sparkle:version="0.2.1"/>
+      <enclosure url="http://frim.frim.nl/GitXStable.app.zip" length="1355659" type="application/oc
+tet-stream" sparkle:version="0.3"/>
       <description>
         <![CDATA[
-        <h1>GitX Version 0.2.1</h1>
-
-        <p>Changes since last version:</p>
+        <h1>GitX Version 0.3</h1>
+        <div style='font-size: 70%'>
+        <p><b>NOTE, you will NEED to reinstall the terminal tool after this update</b></p>
+        <p>Changes since Version 0.2.1:</p>
         <ul>
-          <li>Automatic updates through Sparkle</li>
-        </ul>
+          <li>You can now pass on command-line arguments just like you can with 'git log'</li>
+          <li>The program has an icon</li>
+          <li>Also displays remote branches in the branch list</li>
+          <li>Is better in determining if a directory is a bare git repository</li>
+          <li>Support for --left-right: use 'gitx --left-right HEAD..origin/master' to see which commits are only on your branch or on their branch</li>
+          <li>Navigate through changed hunks by using j/k keys</li>
+          <li>Scroll down in webview by using space / shift-space</li>
+        </ul></div>
         ]]>
       </description>
     </item>
