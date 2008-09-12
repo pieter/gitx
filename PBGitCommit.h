@@ -17,6 +17,7 @@
 	NSString* details;
 	NSArray* parents;
 	NSDate* date;
+	char sign;
 	PBGitRepository* repository;
 }
 
@@ -28,6 +29,7 @@
 @property (retain) NSArray* parents;
 @property (copy) NSDate* date;
 @property (readonly) NSString* dateString;
+@property (assign) char sign;
 
 @property (readonly) NSString* details;
 @property (readonly) PBGitTree* tree;

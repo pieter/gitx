@@ -20,6 +20,7 @@
 - (BOOL) isSimpleRef;
 - (NSString*) simpleRef;
 - (BOOL) hasPathLimiter;
+- (BOOL) hasLeftRight;
 
 - (BOOL) isEqualTo: (PBGitRevSpecifier*) other;
 @property(readonly) NSString* description;

@@ -108,26 +108,59 @@
 	
 }
 
-- (void) drawCircleForColumn: (int) c inRect: (NSRect) r
+- (void) drawCircleInRect: (NSRect) r
 {
-	[[NSColor blackColor] set];
 
+	int c = cellInfo.position;
 	int columnWidth = 10;
 	NSPoint origin = r.origin;
 	NSPoint columnOrigin = { origin.x + columnWidth * c, origin.y};
-	
+
 	NSRect oval = { columnOrigin.x - 5, columnOrigin.y + r.size.height * 0.5 - 5, 10, 10};
 
 	
 	NSBezierPath * path = [NSBezierPath bezierPath];
 	path = [NSBezierPath bezierPathWithOvalInRect:oval];
-	//[[col objectAtIndex:cellInfo.columns[c].color] set];
+
+	[[NSColor blackColor] set];
 	[path fill];
 	
 	NSRect smallOval = { columnOrigin.x - 3, columnOrigin.y + r.size.height * 0.5 - 3, 6, 6};
 	[[NSColor whiteColor] set];
 	path = [NSBezierPath bezierPathWithOvalInRect:smallOval];
 	[path fill];	
+}
+
+- (void) drawTriangleInRect: (NSRect) r sign: (char) sign
+{
+	int c = cellInfo.position;
+	int columnHeight = 10;
+	int columnWidth = 8;
+
+	NSPoint top;
+	if (sign == '<')
+		top.x = round(r.origin.x) + 10 * c + 4;
+	else {
+		top.x = round(r.origin.x) + 10 * c - 4;
+		columnWidth *= -1;
+	}
+	top.y = r.origin.y + (r.size.height - columnHeight) / 2;
+
+	NSBezierPath * path = [NSBezierPath bezierPath];
+	// Start at top
+	[path moveToPoint: NSMakePoint(top.x, top.y)];
+	// Go down
+	[path lineToPoint: NSMakePoint(top.x, top.y + columnHeight)];
+	// Go left top
+	[path lineToPoint: NSMakePoint(top.x - columnWidth, top.y + columnHeight / 2)];
+	// Go to top again
+	[path closePath];
+
+	[[NSColor whiteColor] set];
+	[path fill];
+	[[NSColor blackColor] set];
+	[path setLineWidth: 2];
+	[path stroke];
 }
 
 - (NSMutableDictionary*) attributesForRefLabelSelected: (BOOL) selected
@@ -213,7 +246,10 @@
 			[self drawLineFromColumn: line.from toColumn: line.to inRect:ownRect offset: 0 color:line.colorIndex];
 	}
 
-	[self drawCircleForColumn: cellInfo.position inRect: ownRect];
+	if (cellInfo.sign == '<' || cellInfo.sign == '>')
+		[self drawTriangleInRect: ownRect sign: cellInfo.sign];
+	else
+		[self drawCircleInRect: ownRect];
 
 	if (cellInfo.refs)
 		[self drawRefsInRect:&rect];

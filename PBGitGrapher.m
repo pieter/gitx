@@ -129,7 +129,7 @@
 		
 		++row;
 		previous = [[PBGraphCellInfo alloc] initWithPosition:newPos andLines:lines];
-
+		previous.sign = commit.sign;
 		if (refs && [refs objectForKey:commit.sha])
 			previous.refs = [refs objectForKey:commit.sha];
 

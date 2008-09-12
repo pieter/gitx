@@ -55,6 +55,14 @@
 	return NO;
 }
 
+- (BOOL) hasLeftRight
+{
+	for (NSString* param in parameters)
+		if ([param isEqualToString:@"--left-right"])
+			return YES;
+	return NO;
+}
+	
 - (BOOL) isEqualTo: (PBGitRevSpecifier*) other
 {
 	if ([self isSimpleRef] ^ [other isSimpleRef])

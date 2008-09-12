@@ -11,7 +11,7 @@
 
 @implementation PBGitCommit
 
-@synthesize sha, repository, subject, author, date, parents;
+@synthesize sha, repository, subject, author, date, parents, sign;
 
 
 - (NSString *) dateString

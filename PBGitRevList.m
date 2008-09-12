@@ -56,9 +56,16 @@
 - (void) walkRevisionListWithSpecifier: (PBGitRevSpecifier*) rev
 {
 	
-	NSMutableArray * newArray = [NSMutableArray array];
+	NSMutableArray* newArray = [NSMutableArray array];
+	NSMutableArray* arguments;
 	NSDate* start = [NSDate date];
-	NSMutableArray* arguments = [NSMutableArray arrayWithObjects:@"log", @"--topo-order", @"--pretty=format:%H\01%an\01%s\01%P\01%at", nil];
+	BOOL showSign = [rev hasLeftRight];
+
+	if (showSign)
+		arguments = [NSMutableArray arrayWithObjects:@"log", @"--topo-order", @"--pretty=format:%H\01%an\01%s\01%P\01%at\01%m", nil];
+	else
+		arguments = [NSMutableArray arrayWithObjects:@"log", @"--topo-order", @"--pretty=format:%H\01%an\01%s\01%P\01%at", nil];
+
 	if (!rev)
 		[arguments addObject:@"HEAD"];
 	else
@@ -100,7 +107,9 @@
 		newCommit.subject = [components objectAtIndex:2];
 		newCommit.author = [components objectAtIndex:1];
 		newCommit.date = [NSDate dateWithTimeIntervalSince1970:[[components objectAtIndex:4] intValue]];
-		
+		if (showSign)
+			newCommit.sign = [[components objectAtIndex:5] characterAtIndex:0];
+
 		[newArray addObject: newCommit];
 		num++;
 		if (num % 10000 == 0)
