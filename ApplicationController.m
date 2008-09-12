@@ -36,7 +36,7 @@
 	// Only try to open a default document if there are no documents open already.
 	// For example, the application might have been launched by double-clicking a .git repository,
 	// or by dragging a folder to the app icon
-	if ([[[PBRepositoryDocumentController sharedDocumentController] documents] count] == 0) {
+	if ([[[PBRepositoryDocumentController sharedDocumentController] documents] count] == 0 && [[NSApplication sharedApplication] isActive]) {
 		// Try to open the current directory as a git repository
 		NSURL *url = nil;
 		if([[[NSProcessInfo processInfo] environment] objectForKey:@"PWD"])

@@ -23,7 +23,10 @@ int main(int argc, const char** argv)
 
 	if (!proxy) {
 		// If the connection failed, try to launch the app
-		[[NSWorkspace sharedWorkspace] launchApplication:@"GitX"];
+		[[NSWorkspace sharedWorkspace] launchAppWithBundleIdentifier: @"nl.frim.GitX"
+															 options: NSWorkspaceLaunchWithoutActivation
+									  additionalEventParamDescriptor: nil
+													launchIdentifier: nil];
 
 		// Now attempt to connect, allowing the app time to startup
 		for (int attempt = 0; proxy == nil && attempt < 50; ++attempt){
