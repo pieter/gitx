@@ -22,7 +22,7 @@
 		else
 			[webView scrollPageDown: self];
 	}
-	else if ([character rangeOfCharacterFromSet:[NSCharacterSet characterSetWithCharactersInString:@"jk"]].location == 0)
+	else if ([character rangeOfCharacterFromSet:[NSCharacterSet characterSetWithCharactersInString:@"jkv"]].location == 0)
 		[webController sendKey: character];
 	else
 		[super keyDown: event];

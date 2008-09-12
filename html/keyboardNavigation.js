@@ -10,7 +10,10 @@ var handleKeys = function(event) {
 		return changeHunk(true);
 	else if (event.keyCode == 75)
 		return changeHunk(false);
-
+	else if (event.keyCode == 86) {// 'v'
+		showDiffs();
+		return false;
+	}
 	return true;
 }
 
@@ -19,6 +22,8 @@ var handleKeyFromCocoa = function(key) {
 		changeHunk(true);
 	else if (key == 'k')
 		changeHunk(false);
+	else if (key == 'v')
+		showDiffs();
 }
 
 var changeHunk = function(next) {

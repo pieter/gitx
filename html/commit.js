@@ -72,7 +72,7 @@ var loadCommit = function() {
 	if (commit.diff.length < 10000) {
 		showDiffs();
 	} else {
-		$("details").innerHTML = "<a class='showdiff' href='' onclick='showDiffs(); return false;'>This is a large commit. Click here to show the diff.</a>";
+		$("details").innerHTML = "<a class='showdiff' href='' onclick='showDiffs(); return false;'>This is a large commit. Click here or press 'v' to view.</a>";
 	}
 
 	scroll(0, 0);
