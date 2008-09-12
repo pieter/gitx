@@ -126,14 +126,15 @@ static NSString* gitPath;
 	return success;
 }
 
-- (id) initWithURL: (NSURL*) path andArguments:(NSArray*) array
+- (id) initWithURL: (NSURL*) path andRevSpecifier:(PBGitRevSpecifier*) rev
 {
 	self = [self init];
 	NSURL* gitDirURL = [PBGitRepository gitDirForURL:path];
 	[self setFileURL: gitDirURL];
 	[self readRefs];
-	[self readCurrentBranch];
-	revisionList = [[PBGitRevList alloc] initWithRepository:self andRevListParameters:array];
+	[self addBranch: rev];
+	[self selectBranch: rev];
+	revisionList = [[PBGitRevList alloc] initWithRepository:self andRevListParameters: rev];
 	return self;
 }
 // The fileURL the document keeps is to the .git dir, but that’s pretty

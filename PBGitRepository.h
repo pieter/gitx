@@ -35,7 +35,7 @@ extern NSString* PBGitRepositoryErrorDomain;
 + (NSURL*)gitDirForURL:(NSURL*)repositoryURL;
 + (NSURL*)baseDirForURL:(NSURL*)repositoryURL;
 
-- (id) initWithURL: (NSURL*) path andArguments:(NSArray*) array;
+- (id) initWithURL: (NSURL*) path andRevSpecifier:(PBGitRevSpecifier*) rev;
 
 @property (retain) PBGitRevList* revisionList;
 @property (assign) NSMutableArray* branches;

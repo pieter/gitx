@@ -31,16 +31,16 @@
 	[super noteNewRecentDocumentURL:[PBGitRepository baseDirForURL:url]];
 }
 
-- (id) openRepositoryAtLocation:(NSURL*) url RevParseArgs:(NSArray*)args
+- (id) openRepositoryAtLocation:(NSURL*) url RevSpecifier:(PBGitRevSpecifier*) rev
 {
 	id document = [self documentForURL:url];
 	if (!document) {
-		document = [[PBGitRepository alloc] initWithURL:url	andArguments:args];
+		document = [[PBGitRepository alloc] initWithURL:url	andRevSpecifier:rev];
 		[self addDocument:document];
 		[document makeWindowControllers];
 	} else {
-		// TODO: Use a more decent approach for this
-		[document setValue: [[PBGitRevList alloc] initWithRepository:document andRevListParameters: args] forKey:@"revisionList"];
+		[document addBranch: rev];
+		[document selectBranch: rev];
 	}
 	[document showWindows];
 	return document;

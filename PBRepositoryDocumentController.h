@@ -7,6 +7,7 @@
 //
 
 #import <Cocoa/Cocoa.h>
+#import "PBGitRevSpecifier.h"
 
 
 @interface PBRepositoryDocumentController : NSDocumentController
@@ -14,5 +15,5 @@
 
 }
 
-- (id) openRepositoryAtLocation:(NSURL*) url RevParseArgs:(NSArray*)args;
+- (id) openRepositoryAtLocation:(NSURL*) url RevSpecifier:(PBGitRevSpecifier*) rev;
 @end

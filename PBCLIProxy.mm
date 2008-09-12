@@ -8,6 +8,7 @@
 
 #import "PBCLIProxy.h"
 #import "PBRepositoryDocumentController.h"
+#import "PBGitRevSpecifier.h"
 
 @implementation PBCLIProxy
 @synthesize connection;
@@ -32,7 +33,8 @@
 	// I am not familiar with GC though, so perhaps I was doing something wrong.
 	NSURL* url = [NSURL fileURLWithPath:[repositoryPath path]];
 	NSArray* arguments = [NSArray arrayWithArray:args];
-	if (id document = [[PBRepositoryDocumentController sharedDocumentController] openRepositoryAtLocation: url RevParseArgs: arguments]) {
+	PBGitRevSpecifier* rev = [[PBGitRevSpecifier alloc] initWithParameters:arguments];
+	if (id document = [[PBRepositoryDocumentController sharedDocumentController] openRepositoryAtLocation: url RevSpecifier: rev]) {
 		[NSApp activateIgnoringOtherApps:YES];
 		return YES;
 	}
