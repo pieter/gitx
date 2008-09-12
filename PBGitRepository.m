@@ -132,8 +132,7 @@ static NSString* gitPath;
 	NSURL* gitDirURL = [PBGitRepository gitDirForURL:path];
 	[self setFileURL: gitDirURL];
 	[self readRefs];
-	[self addBranch: rev];
-	[self selectBranch: rev];
+	[self selectBranch: [self addBranch: rev]];
 	revisionList = [[PBGitRevList alloc] initWithRepository:self];
 	return self;
 }
@@ -184,9 +183,16 @@ static NSString* gitPath;
 	self.refs = newRefs;
 }
 
-- (void) addBranch: (PBGitRevSpecifier*) rev
+// Returns either this object, or an existing, equal object
+- (PBGitRevSpecifier*) addBranch: (PBGitRevSpecifier*) rev
 {
+	// First check if the branch doesn't exist already
+	for (PBGitRevSpecifier* r in branches)
+		if ([rev isEqualTo: r])
+			return r;
+
 	[branches addObject: rev];
+	return rev;
 }
 
 - (void) selectBranch: (PBGitRevSpecifier*) rev
@@ -205,14 +211,8 @@ static NSString* gitPath;
 {
 	NSString* branch = [self parseSymbolicReference: @"HEAD"];
 	if (branch && [branch hasPrefix:@"refs/heads/"]) {
-		int i;
-		for (i = 0; i < [branches count]; i++) {
-			PBGitRevSpecifier* rev = [branches objectAtIndex:i];
-			if ([rev isSimpleRef] && [[rev simpleRef] isEqualToString: branch]) {
-				self.currentBranch = [NSIndexSet indexSetWithIndex:i];
-				return;
-			}
-		}
+		PBGitRevSpecifier* currentRev = [[PBGitRevSpecifier alloc] initWithRef:[PBGitRef refFromString:branch]];
+		[self selectBranch: [self addBranch:currentRev]];
 	}
 }
 

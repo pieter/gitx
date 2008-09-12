@@ -39,8 +39,7 @@
 		[self addDocument:document];
 		[document makeWindowControllers];
 	} else {
-		[document addBranch: rev];
-		[document selectBranch: rev];
+		[document selectBranch: [document addBranch: rev]];
 	}
 	[document showWindows];
 	return document;

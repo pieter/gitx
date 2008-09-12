@@ -54,4 +54,16 @@
 			return YES;
 	return NO;
 }
+
+- (BOOL) isEqualTo: (PBGitRevSpecifier*) other
+{
+	if ([self isSimpleRef] ^ [other isSimpleRef])
+		return NO;
+	
+	if ([self isSimpleRef])
+		return [[self description] isEqualToString: [other description]];
+
+	return ([[parameters componentsJoinedByString:@" "] isEqualToString: [other.parameters componentsJoinedByString:@" "]] &&
+			 (!description  || [description isEqualToString:other.description]));
+}
 @end

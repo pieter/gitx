@@ -21,6 +21,7 @@
 - (NSString*) simpleRef;
 - (BOOL) hasPathLimiter;
 
+- (BOOL) isEqualTo: (PBGitRevSpecifier*) other;
 @property(readonly) NSString* description;
 @property(readonly) NSArray* parameters;
 @end
