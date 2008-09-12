@@ -131,6 +131,7 @@ static NSString* gitPath;
 	self = [self init];
 	NSURL* gitDirURL = [PBGitRepository gitDirForURL:path];
 	[self setFileURL: gitDirURL];
+
 	[self readRefs];
 	[self selectBranch: [self addBranch: rev]];
 	revisionList = [[PBGitRevList alloc] initWithRepository:self];
@@ -179,8 +180,8 @@ static NSString* gitPath;
 		else
 			[newRefs setObject:[NSMutableArray arrayWithObject:ref] forKey:sha];
 	}
-	self.branches = newBranches;
 	self.refs = newRefs;
+	self.branches = newBranches;
 }
 
 - (PBGitRevSpecifier*) headRef

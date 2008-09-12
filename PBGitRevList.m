@@ -32,7 +32,13 @@
 	// and in that case we don't have to reload the revision list.
 
 	// If no branch was selected, use the current HEAD
-	PBGitRevSpecifier* newRev = [[[repository branches] objectsAtIndexes: [repository currentBranch]] objectAtIndex:0];
+	NSArray* selectedBranches = [[repository branches] objectsAtIndexes: [repository currentBranch]];
+
+	// Apparently, we don't have a current branch yet. Let's skip it.
+	if ([selectedBranches count] == 0)
+		return;
+
+	PBGitRevSpecifier* newRev = [selectedBranches objectAtIndex:0];
 	NSString* newSha = nil;
 
 	if (newRev && [newRev isSimpleRef]) {
