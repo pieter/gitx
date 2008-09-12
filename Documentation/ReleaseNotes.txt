@@ -6,7 +6,10 @@ V0.3: Changes since v0.2.1
 * The program has an icon
 * Also displays remote branches in the branch list
 * Is better in determining if a directory is a bare git repository
-
+* Support for --left-right: use 'gitx --left-right HEAD..origin/master'
+  to see which commits are only on your branch or on their branch
+* Navigate through changed hunks by using j/k keys
+* Scroll down in webview by using space / shift-space
 
 V0.2.1
 ===
