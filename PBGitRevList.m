@@ -39,7 +39,7 @@
 	if (newRev && [newRev isSimpleRef])
 		newSha = [repository parseReference:[newRev simpleRef]];
 
-	if ([newSha isEqualToString:currentRef])
+	if (newSha && [newSha isEqualToString:currentRef])
 		return;
 
 	currentRef = newSha;
