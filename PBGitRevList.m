@@ -15,9 +15,8 @@
 @implementation PBGitRevList
 
 @synthesize commits, grapher;
-- initWithRepository: (id) repo andRevListParameters: (NSArray*) params
+- initWithRepository: (id) repo
 {
-	parameters = params;
 	repository = repo;
 
 	[self readCommits];
@@ -36,13 +35,13 @@
 	PBGitRevSpecifier* newRev = [[[repository branches] objectsAtIndexes: [repository currentBranch]] objectAtIndex:0];
 	NSString* newSha = nil;
 
-	if (newRev && [newRev isSimpleRef])
+	if (newRev && [newRev isSimpleRef]) {
 		newSha = [repository parseReference:[newRev simpleRef]];
+		if ([newSha isEqualToString:lastSha])
+			return;
+	}
+	lastSha = newSha;
 
-	if (newSha && [newSha isEqualToString:currentRef])
-		return;
-
-	currentRef = newSha;
 	NSThread * commitThread = [[NSThread alloc] initWithTarget: self selector: @selector(walkRevisionListWithSpecifier:) object:newRev];
 	[commitThread start];
 }
