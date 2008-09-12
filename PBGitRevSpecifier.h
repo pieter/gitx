@@ -19,6 +19,7 @@
 
 - (BOOL) isSimpleRef;
 - (NSString*) simpleRef;
+- (BOOL) hasPathLimiter;
 
 @property(readonly) NSString* description;
 @property(readonly) NSArray* parameters;

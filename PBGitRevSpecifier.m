@@ -11,7 +11,7 @@
 
 @implementation PBGitRevSpecifier
 
-@synthesize description, parameters;
+@synthesize parameters;
 
 - (id) initWithParameters:(NSArray*) params
 {
@@ -39,4 +39,19 @@
 	return [parameters objectAtIndex:0];
 }
 
+- (NSString*) description
+{
+	if (description)
+		return description;
+	
+	return [parameters componentsJoinedByString:@" "];
+}
+
+- (BOOL) hasPathLimiter;
+{
+	for (NSString* param in parameters)
+		if ([param isEqualToString:@"--"])
+			return YES;
+	return NO;
+}
 @end
