@@ -57,24 +57,27 @@ static NSString* gitPath;
 	return NO;
 }
 
++ (BOOL) isBareRepository: (NSString*) path
+{
+	return [[PBEasyPipe outputForCommand:gitPath withArgs:[NSArray arrayWithObjects:@"rev-parse", @"--is-bare-repository", nil] inDir:path] isEqualToString:@"true"];
+}
+
 + (NSURL*)gitDirForURL:(NSURL*)repositoryURL;
 {
 	NSString* repositoryPath = [repositoryURL path];
-	NSURL* gitDirURL         = nil;
 
-	if ([repositoryPath hasSuffix:@".git"]) {
-		gitDirURL = [NSURL fileURLWithPath:repositoryPath];
-	} else {
-		// Use rev-parse to find the .git dir for the repository being opened
-		NSString* newPath = [PBEasyPipe outputForCommand:gitPath withArgs:[NSArray arrayWithObjects:@"rev-parse", @"--git-dir", nil] inDir:repositoryPath];
-		if ([newPath isEqualToString:@".git"]) {
-			gitDirURL = [NSURL fileURLWithPath:[repositoryPath stringByAppendingPathComponent:@".git"]];
-		} else if ([newPath length] > 0) {
-			gitDirURL = [NSURL fileURLWithPath:newPath];
-		}
-	}
+	if ([self isBareRepository:repositoryPath])
+		return repositoryURL;
 
-	return gitDirURL;
+
+	// Use rev-parse to find the .git dir for the repository being opened
+	NSString* newPath = [PBEasyPipe outputForCommand:gitPath withArgs:[NSArray arrayWithObjects:@"rev-parse", @"--git-dir", nil] inDir:repositoryPath];
+	if ([newPath isEqualToString:@".git"])
+		return [NSURL fileURLWithPath:[repositoryPath stringByAppendingPathComponent:@".git"]];
+	if ([newPath length] > 0)
+		return [NSURL fileURLWithPath:newPath];
+
+	return nil;
 }
 
 // For a given path inside a repository, return either the .git dir
@@ -84,7 +87,7 @@ static NSString* gitPath;
 	NSURL* gitDirURL         = [self gitDirForURL:repositoryURL];
 	NSString* repositoryPath = [gitDirURL path];
 
-	if (![[PBEasyPipe outputForCommand:gitPath withArgs:[NSArray arrayWithObjects:@"rev-parse", @"--is-bare-repository", nil] inDir:repositoryPath] isEqualToString:@"true"]) {
+	if (![self isBareRepository:repositoryPath]) {
 		repositoryURL = [NSURL fileURLWithPath:[[repositoryURL path] stringByDeletingLastPathComponent]];
 	}
 
