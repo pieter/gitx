@@ -118,8 +118,8 @@ static NSString* gitPath;
 
 		if (success) {
 			[self readRefs];
-			[self readCurrentBranch];
 			revisionList = [[PBGitRevList alloc] initWithRepository:self];
+			[self readCurrentBranch];
 		}
 	}
 
@@ -133,8 +133,10 @@ static NSString* gitPath;
 	[self setFileURL: gitDirURL];
 
 	[self readRefs];
-	[self selectBranch: [self addBranch: rev]];
+
 	revisionList = [[PBGitRevList alloc] initWithRepository:self];
+	[self selectBranch: [self addBranch: rev]];
+
 	return self;
 }
 // The fileURL the document keeps is to the .git dir, but that’s pretty

@@ -18,8 +18,6 @@
 - initWithRepository: (id) repo
 {
 	repository = repo;
-
-	[self readCommits];
 	[repository addObserver:self forKeyPath:@"currentBranch" options:0 context:nil];
 
 	return self;
@@ -31,10 +29,13 @@
 	// we can check if the current branch is the same as the previous one
 	// and in that case we don't have to reload the revision list.
 
-	// If no branch was selected, use the current HEAD
+	// If no branch is selected, don't do anything
+	if (![repository currentBranch] || [[repository currentBranch] count] == 0)
+		return;
+
 	NSArray* selectedBranches = [[repository branches] objectsAtIndexes: [repository currentBranch]];
 
-	// Apparently, we don't have a current branch yet. Let's skip it.
+	// Apparently, The selected index does not exist.. don't do anything
 	if ([selectedBranches count] == 0)
 		return;
 
