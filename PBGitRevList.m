@@ -60,6 +60,11 @@
 		[self readCommits];
 }
 
+struct decorateParameters {
+	NSMutableArray* revisions;
+	PBGitRevSpecifier* rev;
+};
+
 - (void) walkRevisionListWithSpecifier: (PBGitRevSpecifier*) rev
 {
 	
@@ -80,7 +85,8 @@
 	NSFileHandle* handle = [repository handleForArguments: arguments];
 	
 	// We decorate the commits in a separate thread.
-	NSThread * decorationThread = [[NSThread alloc] initWithTarget: self selector: @selector(decorateRevisions:) object:newArray];
+	struct decorateParameters params = { newArray, rev };
+	NSThread * decorationThread = [[NSThread alloc] initWithTarget: self selector: @selector(decorateRevisions:) object:&params];
 	[decorationThread start];
 
 	int fd = [handle fileDescriptor];
@@ -131,18 +137,25 @@
 	[NSThread exit];
 }
 
-- (void) decorateRevisions: (NSMutableArray*) revisions
+// We're not supposed to pass on structs, only objects, but this is much easier
+- (void) decorateRevisions: (struct decorateParameters*) params
 {
+	NSMutableArray* revisions = params->revisions;
+	PBGitRevSpecifier* rev = params->rev;
+
+	BOOL decorateCommits = ![rev hasPathLimiter];
 	NSDate* start = [NSDate date];
 
 	NSMutableArray* allRevisions = [NSMutableArray arrayWithCapacity:1000];
 	int num = 0;
+
 	PBGitGrapher* g = [[PBGitGrapher alloc] initWithRepository: repository];
-	[self performSelectorOnMainThread:@selector(setGrapher:) withObject:g waitUntilDone:YES];
+	if (decorateCommits)
+		[self performSelectorOnMainThread:@selector(setGrapher:) withObject:g waitUntilDone:YES];
 
 	while (!([[NSThread currentThread] isCancelled] && [revisions count] == 0)) {
 		if ([revisions count] == 0)
-			usleep(10000);
+			usleep(5000);
 
 		NSArray* currentRevisions;
 		@synchronized(revisions) {
@@ -151,9 +164,10 @@
 		}
 		for (PBGitCommit* commit in currentRevisions) {
 			num++;
-			[g decorateCommit: commit];
+			if (decorateCommits)
+				[g decorateCommit: commit];
 			[allRevisions addObject: commit];
-			if (num % 1000 == 0)
+			if (num % 1000 == 0 || num == 10)
 				[self performSelectorOnMainThread:@selector(setCommits:) withObject:allRevisions waitUntilDone:NO];
 		}
 	}
