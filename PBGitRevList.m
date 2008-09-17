@@ -65,7 +65,6 @@
 	
 	NSMutableArray* newArray = [NSMutableArray array];
 	NSMutableArray* arguments;
-	NSDate* start = [NSDate date];
 	BOOL showSign = [rev hasLeftRight];
 
 	if (showSign)
@@ -80,6 +79,10 @@
 
 	NSFileHandle* handle = [repository handleForArguments: arguments];
 	
+	// We decorate the commits in a separate thread.
+	NSThread * decorationThread = [[NSThread alloc] initWithTarget: self selector: @selector(decorateRevisions:) object:newArray];
+	[decorationThread start];
+
 	int fd = [handle fileDescriptor];
 	FILE* f = fdopen(fd, "r");
 	int BUFFERSIZE = 2048;
@@ -87,7 +90,7 @@
 	buffer[BUFFERSIZE - 2] = 0;
 	
 	char* l;
-	int num = 0;
+
 	NSMutableString* currentLine = [NSMutableString string];
 	while (l = fgets(buffer, BUFFERSIZE, f)) {
 		NSString *s = [NSString stringWithCString:(const char *)l encoding:NSUTF8StringEncoding];
@@ -117,28 +120,49 @@
 		if (showSign)
 			newCommit.sign = [[components objectAtIndex:5] characterAtIndex:0];
 
-		[newArray addObject: newCommit];
-		num++;
-		if (num % 10000 == 0)
-			[self performSelectorOnMainThread:@selector(setCommits:) withObject:newArray waitUntilDone:NO];
+		@synchronized(newArray) {
+			[newArray addObject: newCommit];
+		}
 		currentLine = [NSMutableString string];
 	}
 	
-	[self performSelectorOnMainThread:@selector(setCommits:) withObject:newArray waitUntilDone:YES];
+	[decorationThread cancel];
 	
-	if (![rev hasPathLimiter]) {
-		PBGitGrapher* g = [[PBGitGrapher alloc] initWithRepository: repository];
-		[g parseCommits: self.commits];
-		[self performSelectorOnMainThread:@selector(setGrapher:) withObject:g waitUntilDone:YES];
-		[self performSelectorOnMainThread:@selector(setCommits:) withObject:newArray waitUntilDone:YES];
-	}
-	else
-		grapher = nil;
-
-	NSTimeInterval duration = [[NSDate date] timeIntervalSinceDate:start];
-	NSLog(@"Loaded %i commits in %f seconds", num, duration);
 	[NSThread exit];
 }
 
+- (void) decorateRevisions: (NSMutableArray*) revisions
+{
+	NSDate* start = [NSDate date];
+
+	NSMutableArray* allRevisions = [NSMutableArray arrayWithCapacity:1000];
+	int num = 0;
+	PBGitGrapher* g = [[PBGitGrapher alloc] initWithRepository: repository];
+	[self performSelectorOnMainThread:@selector(setGrapher:) withObject:g waitUntilDone:YES];
+
+	while (!([[NSThread currentThread] isCancelled] && [revisions count] == 0)) {
+		if ([revisions count] == 0)
+			usleep(10000);
+
+		NSArray* currentRevisions;
+		@synchronized(revisions) {
+			currentRevisions = [revisions copy];
+			[revisions removeAllObjects];
+		}
+		for (PBGitCommit* commit in currentRevisions) {
+			num++;
+			[g decorateCommit: commit];
+			[allRevisions addObject: commit];
+			if (num % 1000 == 0)
+				[self performSelectorOnMainThread:@selector(setCommits:) withObject:allRevisions waitUntilDone:NO];
+		}
+	}
+
+	[self performSelectorOnMainThread:@selector(setCommits:) withObject:allRevisions waitUntilDone:YES];
+	NSTimeInterval duration = [[NSDate date] timeIntervalSinceDate:start];
+	NSLog(@"Loaded %i commits in %f seconds", num, duration);
+
+	[NSThread exit];
+}
 
 @end
