@@ -58,19 +58,11 @@
 
 @implementation PBGitRevisionCell
 
-@synthesize cellInfo;
--(void) setCellInfo: (PBGraphCellInfo*) info
-{
-	isReady = YES;
-	cellInfo = info;
-}
 
 - (id) initWithCoder: (id) coder
 {
 	self = [super initWithCoder:coder];
-	if (self != nil) {
-		isReady = NO;
-	}
+	textCell = [[NSTextFieldCell alloc] initWithCoder:coder];
 	return self;
 }
 
@@ -196,13 +188,14 @@
 	static const float ref_padding = 10.0f;
 	static const float ref_spacing = 2.0f;
 
+	NSArray* refs = [self.objectValue refs];
 	NSRect refRect = (NSRect){rect->origin, rect->size};
 
 	[[NSColor blackColor] setStroke];
 
 	int index;
-	for (index = 0; index < [cellInfo.refs count]; ++index) {
-		PBGitRef* ref    = [cellInfo.refs objectAtIndex:index];
+	for (index = 0; index < [refs count]; ++index) {
+		PBGitRef* ref    = [refs objectAtIndex:index];
 
 		NSMutableDictionary* attributes = [self attributesForRefLabelSelected:[self isHighlighted]];
 		NSSize refSize = [[ref shortName] sizeWithAttributes:attributes];
@@ -231,31 +224,44 @@
 
 - (void) drawWithFrame: (NSRect) rect inView:(NSView *)view
 {
-	if (!isReady)
-		return [super drawWithFrame:rect inView:view];
+	cellInfo = [self.objectValue lineInfo];
+	
+	if (cellInfo) {
+		float pathWidth = 10 + 10 * cellInfo.numColumns;
 
-	float pathWidth = 10 + 10 * cellInfo.numColumns;
+		NSRect ownRect;
+		NSDivideRect(rect, &ownRect, &rect, pathWidth, NSMinXEdge);
 
-	NSRect ownRect;
-	NSDivideRect(rect, &ownRect, &rect, pathWidth, NSMinXEdge);
+		for (PBGitGraphLine* line in cellInfo.lines) {
+			if (line.upper == 0)
+				[self drawLineFromColumn: line.from toColumn: line.to inRect:ownRect offset: ownRect.size.height color: line.colorIndex];
+			else
+				[self drawLineFromColumn: line.from toColumn: line.to inRect:ownRect offset: 0 color:line.colorIndex];
+		}
 
-	for (PBGitGraphLine* line in cellInfo.lines) {
-		if (line.upper == 0)
-			[self drawLineFromColumn: line.from toColumn: line.to inRect:ownRect offset: ownRect.size.height color: line.colorIndex];
+		if (cellInfo.sign == '<' || cellInfo.sign == '>')
+			[self drawTriangleInRect: ownRect sign: cellInfo.sign];
 		else
-			[self drawLineFromColumn: line.from toColumn: line.to inRect:ownRect offset: 0 color:line.colorIndex];
+			[self drawCircleInRect: ownRect];
 	}
 
-	if (cellInfo.sign == '<' || cellInfo.sign == '>')
-		[self drawTriangleInRect: ownRect sign: cellInfo.sign];
-	else
-		[self drawCircleInRect: ownRect];
-
-	if (cellInfo.refs)
+	if ([self.objectValue refs])
 		[self drawRefsInRect:&rect];
-	
-	[super drawWithFrame:rect inView:view];
-	isReady = NO;
+
+	// Still use this superclass because of hilighting differences
+	//_contents = [self.objectValue subject];
+	//[super drawWithFrame:rect inView:view];
+	[textCell setObjectValue: [self.objectValue subject]];
+	[textCell setHighlighted: [self isHighlighted]];
+	[textCell drawWithFrame:rect inView: view];
+}
+
+- (void) setObjectValue: (PBGitCommit*)object {
+	[super setObjectValue:[NSValue valueWithNonretainedObject:object]];
+}
+
+- (PBGitCommit*) objectValue {
+    return [[super objectValue] nonretainedObjectValue];
 }
 
 @end

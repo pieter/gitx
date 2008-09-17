@@ -14,7 +14,7 @@
 
 @implementation PBGitRevList
 
-@synthesize commits, grapher;
+@synthesize commits;
 - initWithRepository: (id) repo
 {
 	repository = repo;
@@ -142,6 +142,7 @@ struct decorateParameters {
 {
 	NSMutableArray* revisions = params->revisions;
 	PBGitRevSpecifier* rev = params->rev;
+	NSDictionary* refs = [repository refs];
 
 	BOOL decorateCommits = ![rev hasPathLimiter];
 	NSDate* start = [NSDate date];
@@ -150,8 +151,6 @@ struct decorateParameters {
 	int num = 0;
 
 	PBGitGrapher* g = [[PBGitGrapher alloc] initWithRepository: repository];
-	if (decorateCommits)
-		[self performSelectorOnMainThread:@selector(setGrapher:) withObject:g waitUntilDone:YES];
 
 	while (!([[NSThread currentThread] isCancelled] && [revisions count] == 0)) {
 		if ([revisions count] == 0)
@@ -166,6 +165,10 @@ struct decorateParameters {
 			num++;
 			if (decorateCommits)
 				[g decorateCommit: commit];
+
+			if (refs && [refs objectForKey:commit.sha])
+				commit.refs = [refs objectForKey:commit.sha];
+
 			[allRevisions addObject: commit];
 			if (num % 1000 == 0 || num == 10)
 				[self performSelectorOnMainThread:@selector(setCommits:) withObject:allRevisions waitUntilDone:NO];

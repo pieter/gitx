@@ -15,9 +15,7 @@
 - (id) initWithRepository: (PBGitRepository*) repo
 {
 	refs = repo.refs;
-	// We don't know how many commits to parse.
-	cellsInfo = [NSMutableArray arrayWithCapacity:100];
-	
+	repository = repo;
 	previousLanes = [NSMutableArray array];
 
 	return self;
@@ -119,8 +117,6 @@
 
 	previous = [[PBGraphCellInfo alloc] initWithPosition:newPos andLines:lines];
 	previous.sign = commit.sign;
-	if (refs && [refs objectForKey:commit.sha])
-		previous.refs = [refs objectForKey:commit.sha];
 
 	// If a parent was added, we have room to not indent.
 	if (addedParent)
@@ -134,12 +130,7 @@
 		[currentLanes removeObject:currentLane];
 
 	previousLanes = currentLanes;
-	[cellsInfo addObject: previous];
-}
-
-- (PBGraphCellInfo*) cellInfoForRow: (int) row
-{
-	return [cellsInfo objectAtIndex: row];
+	commit.lineInfo = previous;
 }
 
 - (void) finalize

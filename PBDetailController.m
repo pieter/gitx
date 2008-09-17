@@ -160,18 +160,4 @@
 	int index = [[commitController selectionIndexes] firstIndex];
 	[commitList scrollRowToVisible: index];
 }
-
-- (void)tableView:(NSTableView *)aTableView willDisplayCell:(id)aCell forTableColumn:(NSTableColumn *)aTableColumn row:(int)rowIndex
-{
-	if (![[aTableColumn identifier] isEqualToString:@"subject"])
-		return;
-
-	PBGitRevisionCell* cell = aCell;
-	if (self.repository.revisionList.grapher &&
-		![commitController filterPredicate] &&
-		[[commitController sortDescriptors] count] == 0) {
-		PBGitGrapher* g = self.repository.revisionList.grapher;
-		[cell setCellInfo: [g cellInfoForRow:rowIndex]];
-	}
-}
 @end

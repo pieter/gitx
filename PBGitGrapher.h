@@ -22,12 +22,10 @@ struct PBGitGraphColumn {
 @interface PBGitGrapher : NSObject {
 	PBGraphCellInfo* previous;
 	NSMutableArray* previousLanes;
-	NSMutableArray* cellsInfo;
 	NSDictionary* refs;
 	PBGitRepository* repository;
 }
 
 - (id) initWithRepository: (PBGitRepository*) repo;
 - (void) decorateCommit: (PBGitCommit *) commit;
-- (PBGraphCellInfo*) cellInfoForRow: (int) row;
 @end
