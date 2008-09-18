@@ -37,7 +37,11 @@ static NSString* gitPath;
 		return;
 	
 	// Still no path. Let's try some default locations.
-	NSArray* locations = [NSArray arrayWithObjects:@"/opt/local/bin/git", @"/sw/bin/git", @"/opt/git/bin/git", nil];
+	NSArray* locations = [NSArray arrayWithObjects:@"/opt/local/bin/git",
+												   @"/sw/bin/git",
+												   @"/opt/git/bin/git",
+												   @"/usr/local/bin/git",
+												   nil];
 	for (NSString* location in locations) {
 		if ([[NSFileManager defaultManager] fileExistsAtPath:location]) {
 			gitPath = location;
