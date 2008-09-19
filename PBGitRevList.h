@@ -17,7 +17,8 @@
 }
 
 - initWithRepository:(id)repo;
-- (void) readCommits;
+- (void) readCommitsForce: (BOOL) force;
+- (void) reload;
 
 @property(retain) NSArray* commits;
 @property(retain) id grapher;

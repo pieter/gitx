@@ -16,7 +16,7 @@ extern NSString* PBGitRepositoryErrorDomain;
 	PBGitRevList* revisionList;
 	NSMutableArray* branches;
 	NSIndexSet* currentBranch;
-	NSDictionary* refs;
+	NSMutableDictionary* refs;
 }
 
 - (NSFileHandle*) handleForCommand:(NSString*) cmd;
@@ -24,7 +24,8 @@ extern NSString* PBGitRepositoryErrorDomain;
 - (NSString*) outputForCommand:(NSString*) cmd;
 - (NSString*) outputForArguments:(NSArray*) args;
 
-- (void) readRefs;
+- (BOOL) reloadRefs;
+- (void) addRef:(PBGitRef *)ref fromParameters:(NSArray *)params;
 - (void) readCurrentBranch;
 - (PBGitRevSpecifier*) addBranch: (PBGitRevSpecifier*) rev;
 - (void) selectBranch: (PBGitRevSpecifier*) rev;
@@ -36,9 +37,10 @@ extern NSString* PBGitRepositoryErrorDomain;
 + (NSURL*)baseDirForURL:(NSURL*)repositoryURL;
 
 - (id) initWithURL: (NSURL*) path andRevSpecifier:(PBGitRevSpecifier*) rev;
+- (void) setup;
 
 @property (retain) PBGitRevList* revisionList;
 @property (assign) NSMutableArray* branches;
 @property (assign) NSIndexSet* currentBranch;
-@property (assign) NSDictionary* refs;
+@property (assign) NSMutableDictionary* refs;
 @end

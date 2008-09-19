@@ -69,7 +69,7 @@
 		return NO;
 	
 	if ([self isSimpleRef])
-		return [[self description] isEqualToString: [other description]];
+		return [[[self parameters] objectAtIndex: 0] isEqualToString: [other.parameters objectAtIndex: 0]];
 
 	return ([[parameters componentsJoinedByString:@" "] isEqualToString: [other.parameters componentsJoinedByString:@" "]] &&
 			 (!description  || [description isEqualToString:other.description]));

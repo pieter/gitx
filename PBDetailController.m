@@ -149,7 +149,8 @@
 
 - (IBAction) refresh: sender
 {
-	repository.currentBranch = repository.currentBranch;
+	[repository reloadRefs];
+	[repository.revisionList reload];
 }
 
 - (void) selectCommit: (NSString*) commit

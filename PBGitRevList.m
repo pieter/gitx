@@ -23,7 +23,12 @@
 	return self;
 }
 
-- (void) readCommits
+- (void) reload
+{
+	[self readCommitsForce: YES];
+}
+
+- (void) readCommitsForce: (BOOL) force
 {
 	// We use refparse to get the commit sha that we will parse. That way,
 	// we can check if the current branch is the same as the previous one
@@ -42,7 +47,7 @@
 	PBGitRevSpecifier* newRev = [selectedBranches objectAtIndex:0];
 	NSString* newSha = nil;
 
-	if (newRev && [newRev isSimpleRef]) {
+	if (!force && newRev && [newRev isSimpleRef]) {
 		newSha = [repository parseReference:[newRev simpleRef]];
 		if ([newSha isEqualToString:lastSha])
 			return;
@@ -57,7 +62,7 @@
 	change:(NSDictionary *)change context:(void *)context
 {
 	if (object == repository)
-		[self readCommits];
+		[self readCommitsForce: NO];
 }
 
 - (void) walkRevisionListWithSpecifier: (PBGitRevSpecifier*) rev

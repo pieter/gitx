@@ -121,13 +121,19 @@ static NSString* gitPath;
 		}
 
 		if (success) {
-			[self readRefs];
-			revisionList = [[PBGitRevList alloc] initWithRepository:self];
+			[self setup];
 			[self readCurrentBranch];
 		}
 	}
 
 	return success;
+}
+
+- (void) setup
+{
+	self.branches = [NSMutableArray array];
+	[self reloadRefs];
+	revisionList = [[PBGitRevList alloc] initWithRepository:self];
 }
 
 - (id) initWithURL: (NSURL*) path andRevSpecifier:(PBGitRevSpecifier*) rev
@@ -136,9 +142,7 @@ static NSString* gitPath;
 	NSURL* gitDirURL = [PBGitRepository gitDirForURL:path];
 	[self setFileURL: gitDirURL];
 
-	[self readRefs];
-
-	revisionList = [[PBGitRevList alloc] initWithRepository:self];
+	[self setup];
 	[self selectBranch: [self addBranch: rev]];
 
 	return self;
@@ -161,33 +165,49 @@ static NSString* gitPath;
 	[controller release];
 }
 
-- (void) readRefs
+- (void) addRef: (PBGitRef *) ref fromParameters: (NSArray *) components
 {
+	NSString* type = [components objectAtIndex:1];
+
+	NSString* sha;
+	if ([type isEqualToString:@"tag"] && [components count] == 4)
+		sha = [components objectAtIndex:3];
+	else
+		sha = [components objectAtIndex:2];
+
+	NSMutableArray* curRefs;
+	if (curRefs = [refs objectForKey:sha])
+		[curRefs addObject:ref];
+	else
+		[refs setObject:[NSMutableArray arrayWithObject:ref] forKey:sha];
+}
+
+// reloadRefs: reload all refs in the repository, like in readRefs
+// To stay compatible, this does not remove a ref from the branches list
+// even after it has been deleted.
+// returns YES when a ref was changed
+- (BOOL) reloadRefs
+{
+	BOOL ret = NO;
 	NSString* output = [PBEasyPipe outputForCommand:gitPath withArgs:[NSArray arrayWithObjects:@"for-each-ref", @"--format=%(refname) %(objecttype) %(objectname) %(*objectname)", @"refs", nil] inDir: self.fileURL.path];
 	NSArray* lines = [output componentsSeparatedByString:@"\n"];
-	NSMutableDictionary* newRefs = [NSMutableDictionary dictionary];
-	NSMutableArray* newBranches = [NSMutableArray array];
+	refs = [NSMutableDictionary dictionary];
+
 	for (NSString* line in lines) {
 		NSArray* components = [line componentsSeparatedByString:@" "];
-		PBGitRef* ref = [PBGitRef refFromString:[components objectAtIndex:0]];
-		NSString* type = [components objectAtIndex:1];
-		NSString* sha;
-		if ([type isEqualToString:@"tag"] && [components count] == 4)
-			sha = [components objectAtIndex:3];
-		else
-			sha = [components objectAtIndex:2];
 
-		if ([[ref type] isEqualToString:@"head"] || [[ref type] isEqualToString:@"remote"])
-			[newBranches addObject: [[PBGitRevSpecifier alloc] initWithRef:ref]];
+		// First do the ref matching. If this ref is new, add it to our ref list
+		PBGitRef *newRef = [PBGitRef refFromString:[components objectAtIndex:0]];
+		PBGitRevSpecifier* revSpec = [[PBGitRevSpecifier alloc] initWithRef:newRef];
+		if ([self addBranch:revSpec] == revSpec)
+			ret = YES;
 
-		NSMutableArray* curRefs;
-		if (curRefs = [newRefs objectForKey:sha])
-			[curRefs addObject:ref];
-		else
-			[newRefs setObject:[NSMutableArray arrayWithObject:ref] forKey:sha];
+		// Also add this ref to the branches list
+		[self addRef:newRef fromParameters:components];
+
 	}
-	self.refs = newRefs;
-	self.branches = newBranches;
+	self.refs = refs;
+	return ret;
 }
 
 - (PBGitRevSpecifier*) headRef
