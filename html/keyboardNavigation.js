@@ -24,6 +24,8 @@ var handleKeyFromCocoa = function(key) {
 		changeHunk(false);
 	else if (key == 'v')
 		showDiffs();
+	else if (key == 'c')
+		Controller.copySource();
 }
 
 var changeHunk = function(next) {
