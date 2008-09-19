@@ -230,7 +230,6 @@ static NSString* gitPath;
 		if ([rev isEqualTo: r])
 			return r;
 
-	NSLog(@"Adding new branch");
 	[branches addObject: rev];
 	return rev;
 }
