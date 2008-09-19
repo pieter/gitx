@@ -199,10 +199,11 @@ static NSString* gitPath;
 		// First do the ref matching. If this ref is new, add it to our ref list
 		PBGitRef *newRef = [PBGitRef refFromString:[components objectAtIndex:0]];
 		PBGitRevSpecifier* revSpec = [[PBGitRevSpecifier alloc] initWithRef:newRef];
-		if ([self addBranch:revSpec] == revSpec)
-			ret = YES;
+		if ([[newRef type] isEqualToString:@"head"] || [[newRef type] isEqualToString:@"remote"])
+			if ([self addBranch:revSpec] != revSpec)
+				ret = YES;
 
-		// Also add this ref to the branches list
+		// Also add this ref to the refs list
 		[self addRef:newRef fromParameters:components];
 
 	}
