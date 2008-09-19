@@ -11,7 +11,6 @@
 
 @interface PBGitRevList : NSObject {
 	NSArray* commits;
-	id grapher;
 	id repository;
 	NSString* lastSha;
 }
@@ -21,6 +20,5 @@
 - (void) reload;
 
 @property(retain) NSArray* commits;
-@property(retain) id grapher;
 
 @end

@@ -36,4 +36,24 @@ a.showdiff {
 	font-size: 1.3em;
 }
 
+.refs {
+	font-size: 9px;
+	font-family: Helvetica;
+	border: 1px solid black;
+	margin-right: 5px;
+	padding: 1px 3px 1px 3px;
+	-webkit-border-radius: 2px;
+}
+
+.refs.head {
+	background-color: #aaf254;
+}
+
+.refs.remote {
+	background-color: #b2dfff;
+}
+
+.refs.tag {
+	background-color: #fced4f;
+}
 

@@ -16,8 +16,10 @@
 	NSString* author;
 	NSString* details;
 	NSArray* parents;
+	NSArray* refs;
 	NSDate* date;
 	char sign;
+	id lineInfo;
 	PBGitRepository* repository;
 }
 
@@ -26,7 +28,7 @@
 @property (copy) NSString* sha;
 @property (copy) NSString* subject;
 @property (copy) NSString* author;
-@property (retain) NSArray* parents;
+@property (retain) NSArray* parents,  *refs;
 @property (copy) NSDate* date;
 @property (readonly) NSString* dateString;
 @property (assign) char sign;
@@ -35,4 +37,5 @@
 @property (readonly) PBGitTree* tree;
 @property (readonly) NSArray* treeContents;
 @property (retain) PBGitRepository* repository;
+@property (retain) id lineInfo;
 @end

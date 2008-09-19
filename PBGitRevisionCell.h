@@ -8,11 +8,13 @@
 
 #import <Cocoa/Cocoa.h>
 #import "PBGitGrapher.h"
+#import "PBGraphCellInfo.h"
 
-@interface PBGitRevisionCell : NSTextFieldCell {
-	PBGraphCellInfo* cellInfo;
-	BOOL isReady;
+@interface PBGitRevisionCell : NSActionCell {
+	id objectValue;
+	PBGraphCellInfo*	cellInfo;
+	NSTextFieldCell* textCell;
 }
 
-@property(assign)  PBGraphCellInfo* cellInfo;
+@property(retain) PBGitCommit* objectValue;
 @end

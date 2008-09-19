@@ -20,11 +20,12 @@ struct PBGitGraphColumn {
 #define PBGitMaxColumns 100
 
 @interface PBGitGrapher : NSObject {
-	NSMutableArray* cellsInfo;
+	PBGraphCellInfo* previous;
+	NSMutableArray* previousLanes;
+	NSDictionary* refs;
 	PBGitRepository* repository;
 }
 
 - (id) initWithRepository: (PBGitRepository*) repo;
-- (void) parseCommits: (NSArray *) array;
-- (PBGraphCellInfo*) cellInfoForRow: (int) row;
+- (void) decorateCommit: (PBGitCommit *) commit;
 @end

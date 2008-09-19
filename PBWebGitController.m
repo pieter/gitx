@@ -90,4 +90,24 @@
 	return NO;
 }
 
+- (void) removeRef: (id) sender
+{
+	NSLog(@"Removing refs is not yet supported");
+}
+
+- (NSArray *)webView:(WebView *)sender contextMenuItemsForElement:(NSDictionary *)element defaultMenuItems:(NSArray *)defaultMenuItems {
+	DOMNode *node = [element valueForKey:@"WebElementDOMNode"];
+
+	if ([[node className] isEqualToString:@"DOMText"])
+		node = [node parentNode];
+
+	// Every ref has a class name of 'refs' and some other class. We check on that to see if we pressed on a ref.
+	if ([[node className] hasPrefix:@"refs "]) {
+		NSMenuItem *item = [[NSMenuItem alloc] initWithTitle:@"Remove" action:@selector(removeRef:) keyEquivalent: @""];
+		[item setTarget: self];
+		return [NSArray arrayWithObject: item];
+	}
+
+	return defaultMenuItems;
+}
 @end
