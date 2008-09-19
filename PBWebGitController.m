@@ -73,6 +73,14 @@
 	[script callWebScriptMethod:@"handleKeyFromCocoa" withArguments: [NSArray arrayWithObject:key]];
 }
 
+- (void) copySource
+{
+	NSString *source = [[[[view mainFrame] DOMDocument] documentElement] outerHTML];
+	NSPasteboard *a =[NSPasteboard generalPasteboard];
+	[a declareTypes:[NSArray arrayWithObject:NSStringPboardType] owner:self];
+	[a setString:source forType: NSStringPboardType];
+}
+
 + (BOOL)isSelectorExcludedFromWebScript:(SEL)aSelector
 {
 	return NO;
