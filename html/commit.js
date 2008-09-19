@@ -32,7 +32,10 @@ var Commit = Class.create({
 		this.committer_date = new Date(parseInt(match[3]) * 1000);
 
 		this.parents = obj.parents;
-	},	
+	},
+	reloadRefs: function() {
+		this.refs = CommitObject.refs;
+	}
 });
 
 var selectCommit = function(a) {
@@ -46,6 +49,24 @@ var showDiffs = function() {
 
 	highlightDiffs();
 	$("details").show();
+}
+
+var reload = function() {
+	commit.refs = null;
+	showRefs();
+	commit.reloadRefs();
+	showRefs();
+}
+
+var showRefs = function() {
+	if (commit.refs){
+		$('refs').parentNode.style.display = "";
+		$('refs').innerHTML = "";
+		$A(commit.refs).each(function(ref) {
+							 $('refs').innerHTML += '<span class="refs ' + ref.type() + '">' + ref.shortName() + '</span>';
+							 });
+	} else
+		$('refs').parentNode.style.display = "none";
 }
 
 var loadCommit = function() {
@@ -68,14 +89,7 @@ var loadCommit = function() {
 		new_row.innerHTML = "<td class='property_name'>Parent:</td><td><a href='' onclick=\"selectCommit(this.innerHTML); return false;\">" + parent + "</a></td>";
 	});
 
-	if (commit.refs){
-		$('refs').parentNode.style.display = "";
-		$('refs').innerHTML = "";
-		$A(commit.refs).each(function(ref) {
-			$('refs').innerHTML += '<span class="refs ' + ref.type() + '">' + ref.shortName() + '</span>';
-		});
-	} else
-		$('refs').parentNode.style.display = "none";
+	showRefs();
 
 	$("message").innerHTML = commit.message.replace(/\n/g,"<br>");
 

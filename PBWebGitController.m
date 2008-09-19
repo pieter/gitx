@@ -45,15 +45,21 @@
 
 - (void) changeContentTo: (PBGitCommit *) content
 {
-	if (content == nil)
+	if (content == nil || [currentSha isEqualToString:@"Not Loaded"])
 		return;
 
-	if ([currentSha isEqualToString: content.sha] || [currentSha isEqualToString:@"Not Loaded"])
-		return;
-	
-	currentSha = content.sha;
 	id script = [view windowScriptObject];
 	[script setValue: content forKey:@"CommitObject"];
+
+	// The sha is the same, but refs may have changed.. reload it lazy
+	if ([currentSha isEqualToString: content.sha])
+	{
+		[script callWebScriptMethod:@"reload" withArguments: nil];
+		return;
+	}
+	
+	currentSha = content.sha;
+
 	[script callWebScriptMethod:@"loadCommit" withArguments: nil];
 }
 
