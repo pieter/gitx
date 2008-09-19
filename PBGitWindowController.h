@@ -12,13 +12,17 @@
 @interface PBGitWindowController : NSWindowController {
 	IBOutlet NSSearchField* searchField;
 	PBGitRepository* repository;
+	int selectedViewIndex;
 	IBOutlet NSView* contentView;
 	NSViewController* viewController;
 }
 
 @property (retain) PBGitRepository *repository;
 @property (readonly) NSViewController *viewController;
+@property (assign) int selectedViewIndex;
 
 - (id)initWithRepository:(PBGitRepository*)theRepository;
+
+- (void)changeViewController:(NSInteger)whichViewTag;
 - (void) focusOnSearchField;
 @end
