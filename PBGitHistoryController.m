@@ -1,53 +1,52 @@
 //
-//  PBDetailController.m
+//  PBGitHistoryView.m
 //  GitX
 //
-//  Created by Pieter de Bie on 16-06-08.
+//  Created by Pieter de Bie on 19-09-08.
 //  Copyright 2008 __MyCompanyName__. All rights reserved.
 //
 
-#import "PBDetailController.h"
+#import "PBGitHistoryController.h"
 #import "CWQuickLook.h"
 #import "PBGitGrapher.h"
 #import "PBGitRevisionCell.h"
 #define QLPreviewPanel NSClassFromString(@"QLPreviewPanel")
 
 
-@implementation PBDetailController
+@implementation PBGitHistoryController
+@synthesize repository, selectedTab, webCommit, rawCommit, gitTree, commitController;
 
-@synthesize repository, selectedTab, webCommit, rawCommit, gitTree;
-
-- (id)initWithRepository:(PBGitRepository*)theRepository;
+- (id)initWithRepository:(PBGitRepository *)theRepository superController:(PBGitWindowController *)controller
 {
-	if(self = [self initWithWindowNibName:@"RepositoryWindow"])
-	{
+	if(self = [self initWithNibName:@"PBGitHistoryView" bundle:nil]) {
 		self.repository = theRepository;
-		[self showWindow:nil];
+		superController = controller;
 	}
+
 	return self;
 }
 
 - (void)awakeFromNib
 {
-	[fileBrowser setTarget:self];
-	[fileBrowser setDoubleAction:@selector(openSelectedFile:)];
 	self.selectedTab = [[NSUserDefaults standardUserDefaults] integerForKey:@"Repository Window Selected Tab Index"];;
 	[commitController addObserver:self forKeyPath:@"selection" options:(NSKeyValueObservingOptionNew,NSKeyValueObservingOptionOld) context:@"commitChange"];
 	[treeController addObserver:self forKeyPath:@"selection" options:0 context:@"treeChange"];
 	NSSize cellSpacing = [commitList intercellSpacing];
 	cellSpacing.height = 0;
 	[commitList setIntercellSpacing:cellSpacing];
+	[fileBrowser setTarget:self];
+	[fileBrowser setDoubleAction:@selector(openSelectedFile:)];
 }
 
 - (void) updateKeys
 {
 	NSArray* selection = [commitController selectedObjects];
-
+	
 	// Remove any references in the QLPanel
-	[[QLPreviewPanel sharedPreviewPanel] setURLs:[NSArray array] currentIndex:0 preservingDisplayState:YES];
+	//[[QLPreviewPanel sharedPreviewPanel] setURLs:[NSArray array] currentIndex:0 preservingDisplayState:YES];
 	// We have to do this manually, as NSTreeController leaks memory?
-	[treeController setSelectionIndexPaths:[NSArray array]];
-
+	//[treeController setSelectionIndexPaths:[NSArray array]];
+	
 	if ([selection count] > 0)
 		realCommit = [selection objectAtIndex:0];
 	else
@@ -56,7 +55,7 @@
 	self.webCommit = nil;
 	self.rawCommit = nil;
 	self.gitTree = nil;
-
+	
 	switch (self.selectedTab) {
 		case 0:	self.webCommit = realCommit;			break;
 		case 1:	self.rawCommit = realCommit;			break;
@@ -79,9 +78,9 @@
 		return;
 	}
 	else if ([(NSString *)context isEqualToString: @"treeChange"]) {
-			[self updateQuicklookForce: NO];
+		[self updateQuicklookForce: NO];
 	}
-
+	
 	else {
 		[super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
 	}
@@ -109,8 +108,9 @@
 
 - (void)keyDown:(NSEvent*)event
 {
+	NSLog(@"Key down!");
 	if ([[event charactersIgnoringModifiers] isEqualToString: @"f"] && [event modifierFlags] & NSAlternateKeyMask && [event modifierFlags] & NSCommandKeyMask)
-		[[self window] makeFirstResponder:searchField];
+		[superController focusOnSearchField];
 	else
 		[super keyDown: event];
 }
@@ -132,7 +132,7 @@
 		return;
 	
 	NSArray* selectedFiles = [treeController selectedObjects];
-
+	
 	if ([selectedFiles count] == 0)
 		return;
 	
@@ -142,9 +142,9 @@
 		if (s)
 			[fileNames addObject:[NSURL fileURLWithPath: s]];
 	}
-
+	
 	[[QLPreviewPanel sharedPreviewPanel] setURLs:fileNames currentIndex:0 preservingDisplayState:YES];
-
+	
 }
 
 - (IBAction) refresh: sender
@@ -161,4 +161,5 @@
 	int index = [[commitController selectionIndexes] firstIndex];
 	[commitList scrollRowToVisible: index];
 }
+
 @end

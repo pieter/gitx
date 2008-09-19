@@ -7,10 +7,10 @@
 //
 
 #import <Cocoa/Cocoa.h>
-#import "PBDetailController.h"
+#import "PBGitHistoryController.h"
 
 @interface PBQLOutlineView : NSOutlineView {
-	IBOutlet PBDetailController* controller;
+	IBOutlet PBGitHistoryController* controller;
 }
 
 @end

@@ -15,12 +15,11 @@
 
 - (void) awakeFromNib
 {
-	[detailController addObserver:self forKeyPath:@"webCommit" options:0 context:@"ChangedCommit"];
-	
-	NSLog([[NSBundle mainBundle] resourcePath]);
+	[historyController addObserver:self forKeyPath:@"webCommit" options:0 context:@"ChangedCommit"];
 	NSString* file = [[NSBundle mainBundle] pathForResource:@"commit" ofType:@"html"];
 	NSURLRequest * request = [NSURLRequest requestWithURL:[NSURL fileURLWithPath:file]];
 	currentSha = @"Not Loaded";
+
 	[[view mainFrame] loadRequest:request];	
 }
 
@@ -30,13 +29,13 @@
 	[script setValue: self forKey:@"Controller"];
 	currentSha = @"";
 
-	[self changeContentTo: detailController.webCommit];
+	[self changeContentTo: historyController.webCommit];
 }
 
 - (void) observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
 {
     if (context == @"ChangedCommit") {
-		[self changeContentTo: detailController.webCommit];
+		[self changeContentTo: historyController.webCommit];
 	}
 	else {
 		[super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
@@ -70,7 +69,7 @@
 
 - (void) selectCommit: (NSString*) sha
 {
-	[detailController selectCommit:sha];
+	[historyController selectCommit:sha];
 }
 
 - (void) sendKey: (NSString*) key

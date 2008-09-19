@@ -13,7 +13,7 @@ drawn on the top or bottom part of the row. Furthermore, it has a colorIndex
 to indicate the color the line should be given. Note that this number
 increases forever, so you can modulo it with the number of colors you have.
 
-In the PBDetailController, the -
+In the PBGitWindowController, the -
 (void)tableView:willDisplayCell:forTableColumn:row: is implemented which sets
 the correct PBGraphCellInfo for the cell to be drawn. This cell is of the
 class PBGitRevisionCell, which has the actual drawing implementation.

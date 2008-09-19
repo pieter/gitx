@@ -1,39 +1,42 @@
 //
-//  PBDetailController.h
+//  PBGitHistoryView.h
 //  GitX
 //
-//  Created by Pieter de Bie on 16-06-08.
+//  Created by Pieter de Bie on 19-09-08.
 //  Copyright 2008 __MyCompanyName__. All rights reserved.
 //
 
 #import <Cocoa/Cocoa.h>
-#import "PBGitRepository.h"
 #import "PBGitCommit.h"
 #import "PBGitTree.h"
+#import "PBGitRepository.h"
+#import "PBGitWindowController.h"
 
-@interface PBDetailController : NSWindowController {
+@interface PBGitHistoryController : NSViewController {
+	PBGitRepository* repository;
+	PBGitWindowController *superController;
+
+	IBOutlet NSSearchField* searchField;
 	IBOutlet NSArrayController* commitController;
 	IBOutlet NSTreeController* treeController;
 	IBOutlet NSOutlineView* fileBrowser;
-	IBOutlet NSSearchField* searchField;
-	IBOutlet NSTableView* commitList;
-
+	IBOutlet NSTableView* commitList;	
 	int selectedTab;
-
-	PBGitRepository* repository;
+	
 	PBGitTree* gitTree;
 	PBGitCommit* webCommit;
 	PBGitCommit* rawCommit;
 	PBGitCommit* realCommit;
+	
 }
 
-@property (assign) int selectedTab;
-@property (retain) PBGitRepository* repository;
-@property (retain) PBGitCommit* webCommit;
-@property (retain) PBGitCommit* rawCommit;
-@property (retain) PBGitTree* gitTree;
+- (id)initWithRepository:(PBGitRepository *)theRepository superController:(PBGitWindowController *)controller;
 
-- (id)initWithRepository:(PBGitRepository*)theRepository;
+@property (assign) int selectedTab;
+@property (retain) PBGitCommit *webCommit, *rawCommit;
+@property (retain) PBGitRepository *repository;
+@property (retain) PBGitTree* gitTree;
+@property (readonly) NSArrayController *commitController;
 
 - (IBAction) setDetailedView: sender;
 - (IBAction) setRawView: sender;

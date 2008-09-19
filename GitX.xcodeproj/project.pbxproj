@@ -21,6 +21,8 @@
 		D26DC6450E782C9000C777B2 /* gitx.icns in Resources */ = {isa = PBXBuildFile; fileRef = D26DC6440E782C9000C777B2 /* gitx.icns */; };
 		F50FE0E30E07BE9600854FCD /* PBGitRevisionCell.m in Sources */ = {isa = PBXBuildFile; fileRef = F50FE0E20E07BE9600854FCD /* PBGitRevisionCell.m */; };
 		F513085B0E0740F2000C8BCD /* PBQLOutlineView.m in Sources */ = {isa = PBXBuildFile; fileRef = F513085A0E0740F2000C8BCD /* PBQLOutlineView.m */; };
+		F52BCE030E84208300AA3741 /* PBGitHistoryView.xib in Resources */ = {isa = PBXBuildFile; fileRef = F52BCE020E84208300AA3741 /* PBGitHistoryView.xib */; };
+		F52BCE070E84211300AA3741 /* PBGitHistoryController.m in Sources */ = {isa = PBXBuildFile; fileRef = F52BCE060E84211300AA3741 /* PBGitHistoryController.m */; };
 		F53FF2050E7ABB5300389171 /* PBGitRevSpecifier.m in Sources */ = {isa = PBXBuildFile; fileRef = F53FF2040E7ABB5300389171 /* PBGitRevSpecifier.m */; };
 		F561727F0E056A11001DCD79 /* diff_style.css in Resources */ = {isa = PBXBuildFile; fileRef = F561727C0E056A11001DCD79 /* diff_style.css */; };
 		F56173280E056ED2001DCD79 /* diffHighlighter.js in Resources */ = {isa = PBXBuildFile; fileRef = F56173270E056ED2001DCD79 /* diffHighlighter.js */; };
@@ -37,7 +39,7 @@
 		F57ABE0B0E0442DD00A088B8 /* commit.js in Resources */ = {isa = PBXBuildFile; fileRef = F57ABDDE0E0441DE00A088B8 /* commit.js */; };
 		F57ABE2B0E04435100A088B8 /* prototype.js in Resources */ = {isa = PBXBuildFile; fileRef = F57ABE180E04431D00A088B8 /* prototype.js */; };
 		F57CC3910E05DDF2000472E2 /* PBEasyPipe.m in Sources */ = {isa = PBXBuildFile; fileRef = F57CC3900E05DDF2000472E2 /* PBEasyPipe.m */; };
-		F57CC4410E05E496000472E2 /* PBDetailController.m in Sources */ = {isa = PBXBuildFile; fileRef = F57CC4400E05E496000472E2 /* PBDetailController.m */; };
+		F57CC4410E05E496000472E2 /* PBGitWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = F57CC4400E05E496000472E2 /* PBGitWindowController.m */; };
 		F580E6AE0E733276009E2D3F /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F580E6AD0E733276009E2D3F /* Sparkle.framework */; };
 		F580E6B10E73328C009E2D3F /* Sparkle.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = F580E6AD0E733276009E2D3F /* Sparkle.framework */; };
 		F58A8F280E043698007E3FC0 /* commits.css in Resources */ = {isa = PBXBuildFile; fileRef = F58A8F270E043698007E3FC0 /* commits.css */; };
@@ -100,6 +102,9 @@
 		F50FE0E20E07BE9600854FCD /* PBGitRevisionCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PBGitRevisionCell.m; sourceTree = "<group>"; };
 		F51308590E0740F2000C8BCD /* PBQLOutlineView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PBQLOutlineView.h; sourceTree = "<group>"; };
 		F513085A0E0740F2000C8BCD /* PBQLOutlineView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PBQLOutlineView.m; sourceTree = "<group>"; };
+		F52BCE020E84208300AA3741 /* PBGitHistoryView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PBGitHistoryView.xib; sourceTree = "<group>"; };
+		F52BCE050E84211300AA3741 /* PBGitHistoryController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PBGitHistoryController.h; sourceTree = "<group>"; };
+		F52BCE060E84211300AA3741 /* PBGitHistoryController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PBGitHistoryController.m; sourceTree = "<group>"; };
 		F53EE3590E06BBA00022B925 /* CWQuickLook.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CWQuickLook.h; sourceTree = "<group>"; };
 		F53FF2030E7ABB5300389171 /* PBGitRevSpecifier.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PBGitRevSpecifier.h; sourceTree = "<group>"; };
 		F53FF2040E7ABB5300389171 /* PBGitRevSpecifier.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PBGitRevSpecifier.m; sourceTree = "<group>"; };
@@ -125,8 +130,8 @@
 		F57ABE180E04431D00A088B8 /* prototype.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; name = prototype.js; path = html/prototype.js; sourceTree = "<group>"; };
 		F57CC38F0E05DDF2000472E2 /* PBEasyPipe.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PBEasyPipe.h; sourceTree = "<group>"; };
 		F57CC3900E05DDF2000472E2 /* PBEasyPipe.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PBEasyPipe.m; sourceTree = "<group>"; };
-		F57CC43F0E05E496000472E2 /* PBDetailController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PBDetailController.h; sourceTree = "<group>"; };
-		F57CC4400E05E496000472E2 /* PBDetailController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PBDetailController.m; sourceTree = "<group>"; };
+		F57CC43F0E05E496000472E2 /* PBGitWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PBGitWindowController.h; sourceTree = "<group>"; };
+		F57CC4400E05E496000472E2 /* PBGitWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PBGitWindowController.m; sourceTree = "<group>"; };
 		F580E6AD0E733276009E2D3F /* Sparkle.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Sparkle.framework; sourceTree = "<group>"; };
 		F58A8F270E043698007E3FC0 /* commits.css */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.css; name = commits.css; path = html/commits.css; sourceTree = "<group>"; };
 		F5945E150E02B0C200706420 /* PBGitRepository.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PBGitRepository.h; sourceTree = "<group>"; };
@@ -241,6 +246,7 @@
 				089C165CFE840E0CC02AAC07 /* InfoPlist.strings */,
 				F5B721C20E05CF7E00AF29DC /* MainMenu.xib */,
 				911111E00E58BD5A00BF76B4 /* RepositoryWindow.xib */,
+				F52BCE020E84208300AA3741 /* PBGitHistoryView.xib */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -297,12 +303,14 @@
 				F565262A0E03D89B00F03B52 /* PBWebGitController.m */,
 				77C8280B06725ACE000B614F /* ApplicationController.h */,
 				77C8280C06725ACE000B614F /* ApplicationController.m */,
-				F57CC43F0E05E496000472E2 /* PBDetailController.h */,
-				F57CC4400E05E496000472E2 /* PBDetailController.m */,
+				F57CC43F0E05E496000472E2 /* PBGitWindowController.h */,
+				F57CC4400E05E496000472E2 /* PBGitWindowController.m */,
 				911111F60E594F3F00BF76B4 /* PBRepositoryDocumentController.h */,
 				911111F70E594F3F00BF76B4 /* PBRepositoryDocumentController.m */,
 				913D5E5D0E556A9300CECEA2 /* PBCLIProxy.h */,
 				913D5E5E0E556A9300CECEA2 /* PBCLIProxy.mm */,
+				F52BCE050E84211300AA3741 /* PBGitHistoryController.h */,
+				F52BCE060E84211300AA3741 /* PBGitHistoryController.m */,
 			);
 			name = Controllers;
 			sourceTree = "<group>";
@@ -431,6 +439,7 @@
 				F5B721C40E05CF7E00AF29DC /* MainMenu.xib in Resources */,
 				911111E20E58BD5A00BF76B4 /* RepositoryWindow.xib in Resources */,
 				D26DC6450E782C9000C777B2 /* gitx.icns in Resources */,
+				F52BCE030E84208300AA3741 /* PBGitHistoryView.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -450,7 +459,7 @@
 				F565262B0E03D89B00F03B52 /* PBWebGitController.m in Sources */,
 				F56174570E058893001DCD79 /* PBGitTree.m in Sources */,
 				F57CC3910E05DDF2000472E2 /* PBEasyPipe.m in Sources */,
-				F57CC4410E05E496000472E2 /* PBDetailController.m in Sources */,
+				F57CC4410E05E496000472E2 /* PBGitWindowController.m in Sources */,
 				F513085B0E0740F2000C8BCD /* PBQLOutlineView.m in Sources */,
 				F5DFFA6C0E075D8800617813 /* PBEasyFS.m in Sources */,
 				F50FE0E30E07BE9600854FCD /* PBGitRevisionCell.m in Sources */,
@@ -464,6 +473,7 @@
 				F5C007750E731B48007B84B2 /* PBGitRef.m in Sources */,
 				F5AD56790E79B78100EDAAFE /* PBCommitList.m in Sources */,
 				F53FF2050E7ABB5300389171 /* PBGitRevSpecifier.m in Sources */,
+				F52BCE070E84211300AA3741 /* PBGitHistoryController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

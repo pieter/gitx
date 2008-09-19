@@ -8,7 +8,7 @@
 
 #import "PBGitRepository.h"
 #import "PBGitCommit.h"
-#import "PBDetailController.h"
+#import "PBGitWindowController.h"
 
 #import "NSFileHandleExt.h"
 #import "PBEasyPipe.h"
@@ -160,7 +160,7 @@ static NSString* gitPath;
 // Overridden to create our custom window controller
 - (void)makeWindowControllers
 {
-	PBDetailController* controller = [[PBDetailController alloc] initWithRepository:self];
+	PBGitWindowController* controller = [[PBGitWindowController alloc] initWithRepository:self];
 	[self addWindowController:controller];
 	[controller release];
 }

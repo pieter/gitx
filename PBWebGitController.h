@@ -9,12 +9,12 @@
 #import <Cocoa/Cocoa.h>
 #import "ApplicationController.h"
 #import "PBGitCommit.h"
-#import "PBDetailController.h"
+#import "PBGitHistoryController.h"
 #import <WebKit/WebKit.h>
 
 @interface PBWebGitController : NSObject {
 	IBOutlet WebView* view;
-	IBOutlet PBDetailController* detailController;
+	IBOutlet PBGitHistoryController* historyController;
 	NSString* currentSha;
 	NSString* diff;
 }

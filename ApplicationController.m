@@ -8,7 +8,7 @@
 
 #import "ApplicationController.h"
 #import "PBGitRevisionCell.h"
-#import "PBDetailController.h"
+#import "PBGitWindowController.h"
 #import "PBRepositoryDocumentController.h"
 #import "PBCLIProxy.h"
 
