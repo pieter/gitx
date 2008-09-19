@@ -2,6 +2,7 @@ var commit;
 var Commit = Class.create({
 	initialize: function(obj) {
 		this.raw = obj.details;
+		this.refs = obj.refs;
 
 		var diffStart = this.raw.indexOf("\ndiff ");
 		var messageStart = this.raw.indexOf("\n\n") + 2;
@@ -66,6 +67,15 @@ var loadCommit = function() {
 		var new_row = $("commit_header").insertRow(-1);
 		new_row.innerHTML = "<td class='property_name'>Parent:</td><td><a href='' onclick=\"selectCommit(this.innerHTML); return false;\">" + parent + "</a></td>";
 	});
+
+	if (commit.refs){
+		$('refs').parentNode.style.display = "";
+		$('refs').innerHTML = "";
+		$A(commit.refs).each(function(ref) {
+			$('refs').innerHTML += '<span class="refs ' + ref.type() + '">' + ref.shortName() + '</span>';
+		});
+	} else
+		$('refs').parentNode.style.display = "none";
 
 	$("message").innerHTML = commit.message.replace(/\n/g,"<br>");
 
