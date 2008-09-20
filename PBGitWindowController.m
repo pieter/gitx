@@ -40,7 +40,8 @@
 - (void)changeViewController:(NSInteger)whichViewTag
 {
 	[self willChangeValueForKey:@"viewController"];
-	
+	self.searchController = nil;
+	[self unbind:@"searchController"];
 	if ([viewController view] != nil)
 		[[viewController view] removeFromSuperview];	// remove the current view
 	
@@ -60,8 +61,9 @@
 	
 	// Allow the viewcontroller to catch actions
 	[self setNextResponder: viewController];
-	[self bind:@"searchController" toObject:viewController withKeyPath:@"commitController" options:nil];
-	
+	if ([viewController respondsToSelector:@selector(commitController)])
+		[self bind:@"searchController" toObject:viewController withKeyPath:@"commitController" options:nil];
+
 	// make sure we automatically resize the controller's view to the current window size
 	[[viewController view] setFrame: [contentView bounds]];
 		

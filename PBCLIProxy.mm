@@ -31,6 +31,7 @@
 	// FIXME I found that creating this redundant NSURL reference was necessary to
 	// work around an apparent bug with GC and Distributed Objects
 	// I am not familiar with GC though, so perhaps I was doing something wrong.
+
 	NSURL* url = [NSURL fileURLWithPath:[repositoryPath path]];
 	NSArray* arguments = [NSArray arrayWithArray:args];
 	PBGitRevSpecifier* rev = [[PBGitRevSpecifier alloc] initWithParameters:arguments];
