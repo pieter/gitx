@@ -36,6 +36,9 @@
 	id document = [self documentForURL:url];
 	if (!document) {
 		document = [[PBGitRepository alloc] initWithURL:url	andRevSpecifier:rev];
+		if (!document)
+			return nil;
+
 		[self addDocument:document];
 		[document makeWindowControllers];
 	} else {

@@ -138,8 +138,11 @@ static NSString* gitPath;
 
 - (id) initWithURL: (NSURL*) path andRevSpecifier:(PBGitRevSpecifier*) rev
 {
-	self = [self init];
 	NSURL* gitDirURL = [PBGitRepository gitDirForURL:path];
+	if (!gitDirURL)
+		return nil;
+
+	self = [self init];
 	[self setFileURL: gitDirURL];
 
 	[self setup];
