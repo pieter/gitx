@@ -12,6 +12,7 @@
 @interface PBGitWindowController : NSWindowController {
 	IBOutlet NSSearchField* searchField;
 	IBOutlet NSArrayController* searchController;
+	IBOutlet NSArrayController *branchesController;
 	PBGitRepository* repository;
 	int selectedViewIndex;
 	IBOutlet NSView* contentView;

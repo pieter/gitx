@@ -231,7 +231,9 @@ static NSString* gitPath;
 		if ([rev isEqualTo: r])
 			return r;
 
+	[self willChangeValueForKey:@"branches"];
 	[branches addObject: rev];
+	[self didChangeValueForKey:@"branches"];
 	return rev;
 }
 
