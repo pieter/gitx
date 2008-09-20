@@ -16,7 +16,6 @@
 	PBGitRepository* repository;
 	PBGitWindowController *superController;
 
-	IBOutlet NSSearchField* searchField;
 	IBOutlet NSArrayController* commitController;
 	IBOutlet NSTreeController* treeController;
 	IBOutlet NSOutlineView* fileBrowser;

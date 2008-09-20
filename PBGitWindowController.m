@@ -8,11 +8,13 @@
 
 #import "PBGitWindowController.h"
 #import "PBGitHistoryController.h"
+#import "PBGitCommitController.h"
 
 
 @implementation PBGitWindowController
 
-@synthesize repository, viewController, searchController;
+
+@synthesize repository, viewController, searchController, selectedViewIndex;
 
 - (id)initWithRepository:(PBGitRepository*)theRepository;
 {
@@ -29,6 +31,12 @@
 	[[self window] makeFirstResponder:searchField];
 }
 
+- (void) setSelectedViewIndex: (int) i
+{
+	selectedViewIndex = i;
+	[self changeViewController: i];
+}
+
 - (void)changeViewController:(NSInteger)whichViewTag
 {
 	[self willChangeValueForKey:@"viewController"];
@@ -41,6 +49,8 @@
 		case 0:	// swap in the "CustomImageViewController - NSImageView"
 			viewController = [[PBGitHistoryController alloc] initWithRepository:repository superController:self];
 			break;
+		case 1:
+			viewController = [[PBGitCommitController alloc] initWithRepository:repository superController:self];
 	}
 	
 
