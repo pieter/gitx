@@ -58,6 +58,8 @@
 	//// embed the current view to our host view
 	[contentView addSubview: [viewController view]];
 	
+	// Allow the viewcontroller to catch actions
+	[self setNextResponder: viewController];
 	[self bind:@"searchController" toObject:viewController withKeyPath:@"commitController" options:nil];
 	
 	// make sure we automatically resize the controller's view to the current window size
