@@ -11,6 +11,7 @@
 
 @interface PBGitWindowController : NSWindowController {
 	IBOutlet NSSearchField* searchField;
+	IBOutlet NSArrayController* searchController;
 	PBGitRepository* repository;
 	IBOutlet NSView* contentView;
 	NSViewController* viewController;
@@ -18,6 +19,7 @@
 
 @property (retain) PBGitRepository *repository;
 @property (readonly) NSViewController *viewController;
+@property (retain) NSArrayController *searchController;
 
 - (id)initWithRepository:(PBGitRepository*)theRepository;
 - (void) focusOnSearchField;
