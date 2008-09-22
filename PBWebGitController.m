@@ -7,6 +7,15 @@
 //
 
 #import "PBWebGitController.h"
+@interface RefMenuItem : NSMenuItem
+{
+	NSString *ref;
+}
+@property (copy) NSString *ref;
+@end
+@implementation RefMenuItem
+@synthesize ref;
+@end
 
 
 @implementation PBWebGitController
@@ -95,9 +104,13 @@
 	return NO;
 }
 
-- (void) removeRef: (id) sender
+- (void) removeRef:(RefMenuItem *)sender
 {
-	NSLog(@"Removing refs is not yet supported");
+	NSLog(@"Removing ref: %@", [sender ref]);
+	if ([historyController.repository removeRef: [sender ref]])
+		NSLog(@"Deletion succesful!");
+	else
+		NSLog(@"Deletion failed!");
 }
 
 - (NSArray *)webView:(WebView *)sender contextMenuItemsForElement:(NSDictionary *)element defaultMenuItems:(NSArray *)defaultMenuItems {
@@ -108,8 +121,9 @@
 
 	// Every ref has a class name of 'refs' and some other class. We check on that to see if we pressed on a ref.
 	if ([[node className] hasPrefix:@"refs "]) {
-		NSMenuItem *item = [[NSMenuItem alloc] initWithTitle:@"Remove" action:@selector(removeRef:) keyEquivalent: @""];
+		RefMenuItem *item = [[RefMenuItem alloc] initWithTitle:@"Remove" action:@selector(removeRef:) keyEquivalent: @""];
 		[item setTarget: self];
+		[item setRef: [[[node childNodes] item:0] textContent]];
 		return [NSArray arrayWithObject: item];
 	}
 
