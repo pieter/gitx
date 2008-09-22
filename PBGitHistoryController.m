@@ -14,17 +14,7 @@
 
 
 @implementation PBGitHistoryController
-@synthesize repository, selectedTab, webCommit, rawCommit, gitTree, commitController;
-
-- (id)initWithRepository:(PBGitRepository *)theRepository superController:(PBGitWindowController *)controller
-{
-	if(self = [self initWithNibName:@"PBGitHistoryView" bundle:nil]) {
-		self.repository = theRepository;
-		superController = controller;
-	}
-
-	return self;
-}
+@synthesize selectedTab, webCommit, rawCommit, gitTree, commitController;
 
 - (void)awakeFromNib
 {

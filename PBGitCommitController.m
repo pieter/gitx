@@ -11,16 +11,4 @@
 
 @implementation PBGitCommitController
 
-@synthesize repository;
-
-- (id)initWithRepository:(PBGitRepository *)theRepository superController:(PBGitWindowController *)controller
-{
-	if(self = [self initWithNibName:@"PBGitCommitView" bundle:nil]) {
-		self.repository = theRepository;
-		superController = controller;
-	}
-	
-	return self;
-}
-
 @end

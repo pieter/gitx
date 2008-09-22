@@ -7,17 +7,11 @@
 //
 
 #import <Cocoa/Cocoa.h>
-#import "PBGitRepository.h"
-#import "PBGitWindowController.h"
+#import "PBViewController.h"
 
-@interface PBGitCommitController : NSViewController {
-	PBGitRepository* repository;
-	PBGitWindowController *superController;
-
+@interface PBGitCommitController : PBViewController {
+	NSArray *unstagedFiles;
+	NSArray *cachedFiles;
 }
-
-@property (retain) PBGitRepository *repository;
-
-- (id)initWithRepository:(PBGitRepository *)theRepository superController:(PBGitWindowController *)controller;
 
 @end

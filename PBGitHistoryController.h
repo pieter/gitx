@@ -9,13 +9,9 @@
 #import <Cocoa/Cocoa.h>
 #import "PBGitCommit.h"
 #import "PBGitTree.h"
-#import "PBGitRepository.h"
-#import "PBGitWindowController.h"
+#import "PBViewController.h"
 
-@interface PBGitHistoryController : NSViewController {
-	PBGitRepository* repository;
-	PBGitWindowController *superController;
-
+@interface PBGitHistoryController : PBViewController {
 	IBOutlet NSArrayController* commitController;
 	IBOutlet NSTreeController* treeController;
 	IBOutlet NSOutlineView* fileBrowser;
@@ -29,11 +25,8 @@
 	
 }
 
-- (id)initWithRepository:(PBGitRepository *)theRepository superController:(PBGitWindowController *)controller;
-
 @property (assign) int selectedTab;
 @property (retain) PBGitCommit *webCommit, *rawCommit;
-@property (retain) PBGitRepository *repository;
 @property (retain) PBGitTree* gitTree;
 @property (readonly) NSArrayController *commitController;
 
