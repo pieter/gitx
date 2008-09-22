@@ -16,19 +16,24 @@
 	return [self handleForCommand:cmd withArgs:args inDir:nil];
 }
 
-+ (NSFileHandle*) handleForCommand: (NSString*) cmd withArgs: (NSArray*) args inDir: (NSString*) dir
++ (NSTask *) taskForCommand:(NSString *)cmd withArgs:(NSArray *)args inDir:(NSString *)dir
 {
 	NSTask* task = [[NSTask alloc] init];
 	task.launchPath = cmd;
 	task.arguments = args;
 	if (dir)
 		task.currentDirectoryPath = dir;
+	
 	NSLog(@"Starting `cmd %@ %@` in dir %@", cmd, [args componentsJoinedByString:@" "], dir);
 	NSPipe* pipe = [NSPipe pipe];
 	task.standardOutput = pipe;
-	
-	NSFileHandle* handle = [NSFileHandle fileHandleWithStandardOutput];
-	handle = [pipe fileHandleForReading];
+	return task;
+}
+
++ (NSFileHandle*) handleForCommand: (NSString*) cmd withArgs: (NSArray*) args inDir: (NSString*) dir
+{
+	NSTask *task = [self taskForCommand:cmd withArgs:args inDir:dir];
+	NSFileHandle* handle = [task.standardOutput fileHandleForReading];
 	
 	[task launch];
 	return handle;
@@ -36,16 +41,45 @@
 
 
 
-+ (NSString*) outputForCommand: (NSString*) cmd withArgs: (NSArray*) args inDir: (NSString*) dir
++ (NSString*) outputForCommand:(NSString *) cmd
+					  withArgs:(NSArray *)  args
+						 inDir:(NSString *) dir
+				      retValue:(int *)      ret
 {
-	NSFileHandle* handle = [self handleForCommand:cmd withArgs: args inDir: dir];
+	NSTask *task = [self taskForCommand:cmd withArgs:args inDir:dir];
+	NSFileHandle* handle = [task.standardOutput fileHandleForReading];
+	[task launch];
+
 	NSData* data = [handle readDataToEndOfFile];
 	NSString* string = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+
+	// Strip trailing newline
 	if ([string hasSuffix:@"\n"])
 		string = [string substringToIndex:[string length]-1];
-	
+
+	[task waitUntilExit];
+	if (ret)
+		*ret = [task terminationStatus];
 	return string;
 }	
+
+// We don't use the above function because then we'd have to wait until the program was finished
+// with running
++ (NSString*) outputForCommand: (NSString*) cmd withArgs: (NSArray*) args inDir: (NSString*) dir
+{
+	NSTask *task = [self taskForCommand:cmd withArgs:args inDir:dir];
+	NSFileHandle* handle = [task.standardOutput fileHandleForReading];
+	[task launch];
+	
+	NSData* data = [handle readDataToEndOfFile];
+	NSString* string = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+	
+	// Strip trailing newline
+	if ([string hasSuffix:@"\n"])
+		string = [string substringToIndex:[string length]-1];
+	return string;
+}
+
 + (NSString*) outputForCommand: (NSString*) cmd withArgs: (NSArray*) args
 {
 	return [self outputForCommand:cmd withArgs:args inDir:nil];

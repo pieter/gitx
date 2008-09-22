@@ -18,4 +18,9 @@
 
 + (NSString*) outputForCommand: (NSString*) cmd withArgs: (NSArray*) args;
 + (NSString*) outputForCommand: (NSString*) cmd withArgs: (NSArray*) args inDir: (NSString*) dir;
++ (NSString*) outputForCommand:(NSString *) cmd
+					  withArgs:(NSArray *)  args
+						 inDir:(NSString *) dir
+				      retValue:(int *)      ret;
+
 @end

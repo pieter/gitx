@@ -278,9 +278,20 @@ static NSString* gitPath;
 	return [self outputForArguments: arguments];
 }
 
+- (NSString*) outputForCommand:(NSString *)str retValue:(int *)ret;
+{
+	NSArray* arguments = [str componentsSeparatedByString:@" "];
+	return [self outputForArguments: arguments retValue: ret];
+}
+
 - (NSString*) outputForArguments:(NSArray*) arguments
 {
 	return [PBEasyPipe outputForCommand:gitPath withArgs:arguments inDir: self.fileURL.path];
+}
+
+- (NSString*) outputForArguments:(NSArray *)arguments retValue:(int *)ret;
+{
+	return [PBEasyPipe outputForCommand:gitPath withArgs:arguments inDir: self.fileURL.path retValue: ret];
 }
 
 - (NSString*) parseReference:(NSString *)reference
