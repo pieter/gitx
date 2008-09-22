@@ -257,6 +257,22 @@ static NSString* gitPath;
 		[self selectBranch: [self addBranch: [self headRef]]];
 }
 
+- (NSString *) workingDirectory
+{
+	if ([self.fileURL.path hasSuffix:@"/.git"])
+		return [self.fileURL.path substringToIndex:[self.fileURL.path length] - 5];
+	else if ([[self outputForCommand:@"rev-parse --is-inside-work-tree"] isEqualToString:@"true"])
+		return gitPath;
+	
+	return nil;
+}		
+
+- (int) returnValueForCommand:(NSString *)cmd
+{
+	int i;
+	[self outputForCommand:cmd retValue: &i];
+	return i;
+}
 
 - (NSFileHandle*) handleForArguments:(NSArray *)args
 {
@@ -264,6 +280,14 @@ static NSString* gitPath;
 	NSMutableArray* arguments =  [NSMutableArray arrayWithObject: gitDirArg];
 	[arguments addObjectsFromArray: args];
 	return [PBEasyPipe handleForCommand:gitPath withArgs:arguments];
+}
+
+- (NSFileHandle*) handleInWorkDirForArguments:(NSArray *)args
+{
+	NSString* gitDirArg = [@"--git-dir=" stringByAppendingString:self.fileURL.path];
+	NSMutableArray* arguments =  [NSMutableArray arrayWithObject: gitDirArg];
+	[arguments addObjectsFromArray: args];
+	return [PBEasyPipe handleForCommand:gitPath withArgs:arguments inDir:[self workingDirectory]];
 }
 
 - (NSFileHandle*) handleForCommand:(NSString *)cmd

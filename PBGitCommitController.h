@@ -14,4 +14,5 @@
 	NSArray *cachedFiles;
 }
 
+@property (retain) NSArray *unstagedFiles, *cachedFiles;
 @end
