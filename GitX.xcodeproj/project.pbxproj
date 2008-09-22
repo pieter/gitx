@@ -52,6 +52,13 @@
 		F5C6F68D0E65FF9300478D97 /* PBGitLane.m in Sources */ = {isa = PBXBuildFile; fileRef = F5C6F68C0E65FF9300478D97 /* PBGitLane.m */; };
 		F5DFFA6C0E075D8800617813 /* PBEasyFS.m in Sources */ = {isa = PBXBuildFile; fileRef = F5DFFA6B0E075D8800617813 /* PBEasyFS.m */; };
 		F5E926060E8827D300056E75 /* PBViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F5E926050E8827D300056E75 /* PBViewController.m */; };
+		F5E927F80E883E7200056E75 /* PBChangedFile.m in Sources */ = {isa = PBXBuildFile; fileRef = F5E927F70E883E7200056E75 /* PBChangedFile.m */; };
+		F5E927FC0E883F0700056E75 /* PBWebChangesController.m in Sources */ = {isa = PBXBuildFile; fileRef = F5E927FB0E883F0700056E75 /* PBWebChangesController.m */; };
+		F5E9281D0E8840CF00056E75 /* diff.html in Resources */ = {isa = PBXBuildFile; fileRef = F5E9281C0E8840CF00056E75 /* diff.html */; };
+		F5E928210E88414000056E75 /* diff.js in Sources */ = {isa = PBXBuildFile; fileRef = F5E928200E88414000056E75 /* diff.js */; };
+		F5E928550E8841FB00056E75 /* diff.js in Sources */ = {isa = PBXBuildFile; fileRef = F5E928540E8841FB00056E75 /* diff.js */; };
+		F5E92A1B0E88550E00056E75 /* empty_file.png in Resources */ = {isa = PBXBuildFile; fileRef = F5E92A1A0E88550E00056E75 /* empty_file.png */; };
+		F5E92A230E88569500056E75 /* new_file.png in Resources */ = {isa = PBXBuildFile; fileRef = F5E92A220E88569500056E75 /* new_file.png */; };
 		F5FF4E180E0829C20006317A /* PBGitRevList.m in Sources */ = {isa = PBXBuildFile; fileRef = F5FF4E170E0829C20006317A /* PBGitRevList.m */; };
 		F5FF4E7A0E082E440006317A /* PBGitGrapher.m in Sources */ = {isa = PBXBuildFile; fileRef = F5FF4E790E082E440006317A /* PBGitGrapher.m */; };
 /* End PBXBuildFile section */
@@ -153,6 +160,15 @@
 		F5DFFA6B0E075D8800617813 /* PBEasyFS.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PBEasyFS.m; sourceTree = "<group>"; };
 		F5E926040E8827D300056E75 /* PBViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PBViewController.h; sourceTree = "<group>"; };
 		F5E926050E8827D300056E75 /* PBViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PBViewController.m; sourceTree = "<group>"; };
+		F5E927F60E883E7200056E75 /* PBChangedFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PBChangedFile.h; sourceTree = "<group>"; };
+		F5E927F70E883E7200056E75 /* PBChangedFile.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PBChangedFile.m; sourceTree = "<group>"; };
+		F5E927FA0E883F0700056E75 /* PBWebChangesController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PBWebChangesController.h; sourceTree = "<group>"; };
+		F5E927FB0E883F0700056E75 /* PBWebChangesController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PBWebChangesController.m; sourceTree = "<group>"; };
+		F5E9281C0E8840CF00056E75 /* diff.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = diff.html; path = html/diff.html; sourceTree = "<group>"; };
+		F5E928200E88414000056E75 /* diff.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = diff.js; sourceTree = "<group>"; };
+		F5E928540E8841FB00056E75 /* diff.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; name = diff.js; path = html/diff.js; sourceTree = "<group>"; };
+		F5E92A1A0E88550E00056E75 /* empty_file.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = empty_file.png; path = Images/empty_file.png; sourceTree = "<group>"; };
+		F5E92A220E88569500056E75 /* new_file.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = new_file.png; path = Images/new_file.png; sourceTree = "<group>"; };
 		F5FF4E160E0829C20006317A /* PBGitRevList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PBGitRevList.h; sourceTree = "<group>"; };
 		F5FF4E170E0829C20006317A /* PBGitRevList.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PBGitRevList.m; sourceTree = "<group>"; };
 		F5FF4E780E082E440006317A /* PBGitGrapher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PBGitGrapher.h; sourceTree = "<group>"; };
@@ -240,8 +256,10 @@
 		29B97315FDCFA39411CA2CEA /* Other Sources */ = {
 			isa = PBXGroup;
 			children = (
+				F5E92A1A0E88550E00056E75 /* empty_file.png */,
 				32CA4F630368D1EE00C91783 /* GitX_Prefix.pch */,
 				29B97316FDCFA39411CA2CEA /* main.m */,
+				F5E92A220E88569500056E75 /* new_file.png */,
 			);
 			name = "Other Sources";
 			sourceTree = "<group>";
@@ -288,19 +306,10 @@
 		F56174540E05887E001DCD79 /* Git */ = {
 			isa = PBXGroup;
 			children = (
-				F5C007730E731B48007B84B2 /* PBGitRef.h */,
-				F5C007740E731B48007B84B2 /* PBGitRef.m */,
-				F5C6F6750E65FE2B00478D97 /* Graphing */,
+				F5E927E30E883D6800056E75 /* Commit */,
+				F5E927E10E883D2E00056E75 /* History */,
 				F5945E150E02B0C200706420 /* PBGitRepository.h */,
 				F5945E160E02B0C200706420 /* PBGitRepository.m */,
-				F56524EE0E02D45200F03B52 /* PBGitCommit.h */,
-				F56524EF0E02D45200F03B52 /* PBGitCommit.m */,
-				F56174550E058893001DCD79 /* PBGitTree.h */,
-				F56174560E058893001DCD79 /* PBGitTree.m */,
-				F5FF4E160E0829C20006317A /* PBGitRevList.h */,
-				F5FF4E170E0829C20006317A /* PBGitRevList.m */,
-				F53FF2030E7ABB5300389171 /* PBGitRevSpecifier.h */,
-				F53FF2040E7ABB5300389171 /* PBGitRevSpecifier.m */,
 			);
 			name = Git;
 			sourceTree = "<group>";
@@ -308,6 +317,7 @@
 		F57CC3850E05DDC1000472E2 /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				F5E927F90E883EF600056E75 /* Commit */,
 				F56526290E03D89B00F03B52 /* PBWebGitController.h */,
 				F565262A0E03D89B00F03B52 /* PBWebGitController.m */,
 				77C8280B06725ACE000B614F /* ApplicationController.h */,
@@ -320,8 +330,6 @@
 				913D5E5E0E556A9300CECEA2 /* PBCLIProxy.mm */,
 				F52BCE050E84211300AA3741 /* PBGitHistoryController.h */,
 				F52BCE060E84211300AA3741 /* PBGitHistoryController.m */,
-				F59116E70E843BCB0072CCB1 /* PBGitCommitController.h */,
-				F59116E80E843BCB0072CCB1 /* PBGitCommitController.m */,
 				F5E926040E8827D300056E75 /* PBViewController.h */,
 				F5E926050E8827D300056E75 /* PBViewController.m */,
 			);
@@ -349,13 +357,16 @@
 		F58A8F250E04368A007E3FC0 /* HTML */ = {
 			isa = PBXGroup;
 			children = (
-				F561727C0E056A11001DCD79 /* diff_style.css */,
+				F5E928540E8841FB00056E75 /* diff.js */,
 				F56526590E03E71B00F03B52 /* commit.html */,
+				F5E9281C0E8840CF00056E75 /* diff.html */,
+				F561727C0E056A11001DCD79 /* diff_style.css */,
 				F561E6CB0E7AFDD000521636 /* keyboardNavigation.js */,
 				F58A8F270E043698007E3FC0 /* commits.css */,
 				F57ABDDE0E0441DE00A088B8 /* commit.js */,
 				F57ABE180E04431D00A088B8 /* prototype.js */,
 				F56173270E056ED2001DCD79 /* diffHighlighter.js */,
+				F5E928200E88414000056E75 /* diff.js */,
 			);
 			name = HTML;
 			sourceTree = "<group>";
@@ -375,6 +386,44 @@
 				F5C6F68C0E65FF9300478D97 /* PBGitLane.m */,
 			);
 			name = Graphing;
+			sourceTree = "<group>";
+		};
+		F5E927E10E883D2E00056E75 /* History */ = {
+			isa = PBXGroup;
+			children = (
+				F5C6F6750E65FE2B00478D97 /* Graphing */,
+				F56524EE0E02D45200F03B52 /* PBGitCommit.h */,
+				F56524EF0E02D45200F03B52 /* PBGitCommit.m */,
+				F5C007730E731B48007B84B2 /* PBGitRef.h */,
+				F5C007740E731B48007B84B2 /* PBGitRef.m */,
+				F5FF4E160E0829C20006317A /* PBGitRevList.h */,
+				F5FF4E170E0829C20006317A /* PBGitRevList.m */,
+				F53FF2030E7ABB5300389171 /* PBGitRevSpecifier.h */,
+				F53FF2040E7ABB5300389171 /* PBGitRevSpecifier.m */,
+				F56174550E058893001DCD79 /* PBGitTree.h */,
+				F56174560E058893001DCD79 /* PBGitTree.m */,
+			);
+			name = History;
+			sourceTree = "<group>";
+		};
+		F5E927E30E883D6800056E75 /* Commit */ = {
+			isa = PBXGroup;
+			children = (
+				F5E927F60E883E7200056E75 /* PBChangedFile.h */,
+				F5E927F70E883E7200056E75 /* PBChangedFile.m */,
+			);
+			name = Commit;
+			sourceTree = "<group>";
+		};
+		F5E927F90E883EF600056E75 /* Commit */ = {
+			isa = PBXGroup;
+			children = (
+				F59116E70E843BCB0072CCB1 /* PBGitCommitController.h */,
+				F59116E80E843BCB0072CCB1 /* PBGitCommitController.m */,
+				F5E927FA0E883F0700056E75 /* PBWebChangesController.h */,
+				F5E927FB0E883F0700056E75 /* PBWebChangesController.m */,
+			);
+			name = Commit;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -440,6 +489,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				F561E6CD0E7AFDDF00521636 /* keyboardNavigation.js in Resources */,
+				F5E92A1B0E88550E00056E75 /* empty_file.png in Resources */,
 				913D5E500E55645900CECEA2 /* gitx in Resources */,
 				8D11072B0486CEB800E47090 /* InfoPlist.strings in Resources */,
 				F565265A0E03E71B00F03B52 /* commit.html in Resources */,
@@ -454,6 +504,8 @@
 				D26DC6450E782C9000C777B2 /* gitx.icns in Resources */,
 				F52BCE030E84208300AA3741 /* PBGitHistoryView.xib in Resources */,
 				F59116E60E843BB50072CCB1 /* PBGitCommitView.xib in Resources */,
+				F5E9281D0E8840CF00056E75 /* diff.html in Resources */,
+				F5E92A230E88569500056E75 /* new_file.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -490,6 +542,10 @@
 				F52BCE070E84211300AA3741 /* PBGitHistoryController.m in Sources */,
 				F59116E90E843BCB0072CCB1 /* PBGitCommitController.m in Sources */,
 				F5E926060E8827D300056E75 /* PBViewController.m in Sources */,
+				F5E927F80E883E7200056E75 /* PBChangedFile.m in Sources */,
+				F5E927FC0E883F0700056E75 /* PBWebChangesController.m in Sources */,
+				F5E928210E88414000056E75 /* diff.js in Sources */,
+				F5E928550E8841FB00056E75 /* diff.js in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

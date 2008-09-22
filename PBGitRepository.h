@@ -26,6 +26,9 @@ extern NSString* PBGitRepositoryErrorDomain;
 - (NSString*) outputForCommand:(NSString *)str retValue:(int *)ret;
 - (NSString*) outputForArguments:(NSArray*) args;
 - (NSString*) outputForArguments:(NSArray*) args retValue:(int *)ret;
+- (NSString *)outputInWorkdirForArguments:(NSArray*) arguments;
+
+- (NSString *)workingDirectory;
 
 - (BOOL) reloadRefs;
 - (void) addRef:(PBGitRef *)ref fromParameters:(NSArray *)params;

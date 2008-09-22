@@ -15,4 +15,8 @@
 }
 
 @property (retain) NSArray *unstagedFiles, *cachedFiles;
+
+- (void) readCachedFiles;
+- (void) readUnstagedFiles;
+
 @end

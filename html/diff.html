@@ -1,0 +1,24 @@
+<html>
+<head>
+	<title>Diff for file</title>
+	<link rel="stylesheet" href="commits.css" type="text/css" media="screen" title="no title" charset="utf-8">
+	<link rel="stylesheet" href="diff_style.css" type="text/css" media="screen" title="no title" charset="utf-8">
+		<script src="prototype.js" type="text/javascript" charset="utf-8"></script>
+	<script src="commit.js" type="text/javascript" charset="utf-8"></script>
+	<script src="diff.js" type="text/javascript" charset="utf-8"></script>
+	<script>
+		var showDiff = function(diff) {
+			$("diff").hide();
+			$("diff").innerHTML = diff.escapeHTML();
+			highlightDiffs();
+			$("diff").show();
+		}
+	</script>
+	<script src="diffHighlighter.js" type="text/javascript" charset="utf-8"></script>
+	<script src="keyboardNavigation.js" type="text/javascript" charset="utf-8"></script>
+
+</head>
+
+<body style="padding: 0px; border: 0px" onLoad="">
+	<pre><code class="diffcode" id='diff'>Hey</code></pre>
+</body>

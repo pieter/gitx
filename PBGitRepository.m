@@ -313,6 +313,12 @@ static NSString* gitPath;
 	return [PBEasyPipe outputForCommand:gitPath withArgs:arguments inDir: self.fileURL.path];
 }
 
+- (NSString*) outputInWorkdirForArguments:(NSArray*) arguments
+{
+	return [PBEasyPipe outputForCommand:gitPath withArgs:arguments inDir: [self workingDirectory]];
+}
+
+
 - (NSString*) outputForArguments:(NSArray *)arguments retValue:(int *)ret;
 {
 	return [PBEasyPipe outputForCommand:gitPath withArgs:arguments inDir: self.fileURL.path retValue: ret];
