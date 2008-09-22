@@ -10,13 +10,16 @@
 #import "PBViewController.h"
 
 @interface PBGitCommitController : PBViewController {
-	NSArray *unstagedFiles;
-	NSArray *cachedFiles;
+	NSMutableArray *files;
+	
+	IBOutlet NSArrayController *unstagedFilesController;
+	IBOutlet NSArrayController *cachedFilesController;
 }
 
-@property (retain) NSArray *unstagedFiles, *cachedFiles;
+@property (retain) NSMutableArray *files;
 
 - (void) readCachedFiles;
+- (void) readOtherFiles;
 - (void) readUnstagedFiles;
 
 @end

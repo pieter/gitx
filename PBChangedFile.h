@@ -14,9 +14,10 @@ typedef enum {
 	MODIFIED,
 	DELETED
 } PBChangedFileStatus;
-	
+
 @interface PBChangedFile : NSObject {
 	NSString *path;
+	BOOL cached;
 	PBGitRepository *repository;
 	PBChangedFileStatus status;
 }
@@ -24,7 +25,7 @@ typedef enum {
 
 @property (readonly) NSString *path;
 @property (assign) PBChangedFileStatus status;
-
+@property (assign) BOOL cached;
 - (NSImage *)icon;
 - (NSString *)changes;
 

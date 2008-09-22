@@ -36,6 +36,11 @@ static PBChangedFile *lastFileSelected = nil;
 	if ([[object selectedObjects] count] == 0)
 		return;
 
+	if (object == unstagedFilesController)
+		[cachedFilesController setSelectionIndexes:[NSIndexSet indexSet]];
+	else
+		[unstagedFilesController setSelectionIndexes:[NSIndexSet indexSet]];
+	
 	PBChangedFile *file = [[object selectedObjects] objectAtIndex:0];
 
 	if ([view isLoading]) {

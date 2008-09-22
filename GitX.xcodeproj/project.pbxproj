@@ -59,6 +59,7 @@
 		F5E928550E8841FB00056E75 /* diff.js in Sources */ = {isa = PBXBuildFile; fileRef = F5E928540E8841FB00056E75 /* diff.js */; };
 		F5E92A1B0E88550E00056E75 /* empty_file.png in Resources */ = {isa = PBXBuildFile; fileRef = F5E92A1A0E88550E00056E75 /* empty_file.png */; };
 		F5E92A230E88569500056E75 /* new_file.png in Resources */ = {isa = PBXBuildFile; fileRef = F5E92A220E88569500056E75 /* new_file.png */; };
+		F5E92AA30E885CCE00056E75 /* PBFileCell.m in Sources */ = {isa = PBXBuildFile; fileRef = F5E92AA20E885CCE00056E75 /* PBFileCell.m */; };
 		F5FF4E180E0829C20006317A /* PBGitRevList.m in Sources */ = {isa = PBXBuildFile; fileRef = F5FF4E170E0829C20006317A /* PBGitRevList.m */; };
 		F5FF4E7A0E082E440006317A /* PBGitGrapher.m in Sources */ = {isa = PBXBuildFile; fileRef = F5FF4E790E082E440006317A /* PBGitGrapher.m */; };
 /* End PBXBuildFile section */
@@ -169,6 +170,8 @@
 		F5E928540E8841FB00056E75 /* diff.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; name = diff.js; path = html/diff.js; sourceTree = "<group>"; };
 		F5E92A1A0E88550E00056E75 /* empty_file.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = empty_file.png; path = Images/empty_file.png; sourceTree = "<group>"; };
 		F5E92A220E88569500056E75 /* new_file.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = new_file.png; path = Images/new_file.png; sourceTree = "<group>"; };
+		F5E92AA10E885CCE00056E75 /* PBFileCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PBFileCell.h; sourceTree = "<group>"; };
+		F5E92AA20E885CCE00056E75 /* PBFileCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PBFileCell.m; sourceTree = "<group>"; };
 		F5FF4E160E0829C20006317A /* PBGitRevList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PBGitRevList.h; sourceTree = "<group>"; };
 		F5FF4E170E0829C20006317A /* PBGitRevList.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PBGitRevList.m; sourceTree = "<group>"; };
 		F5FF4E780E082E440006317A /* PBGitGrapher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PBGitGrapher.h; sourceTree = "<group>"; };
@@ -411,6 +414,8 @@
 			children = (
 				F5E927F60E883E7200056E75 /* PBChangedFile.h */,
 				F5E927F70E883E7200056E75 /* PBChangedFile.m */,
+				F5E92AA10E885CCE00056E75 /* PBFileCell.h */,
+				F5E92AA20E885CCE00056E75 /* PBFileCell.m */,
 			);
 			name = Commit;
 			sourceTree = "<group>";
@@ -546,6 +551,7 @@
 				F5E927FC0E883F0700056E75 /* PBWebChangesController.m in Sources */,
 				F5E928210E88414000056E75 /* diff.js in Sources */,
 				F5E928550E8841FB00056E75 /* diff.js in Sources */,
+				F5E92AA30E885CCE00056E75 /* PBFileCell.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

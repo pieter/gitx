@@ -11,7 +11,7 @@
 
 @implementation PBChangedFile
 
-@synthesize path, status;
+@synthesize path, status, cached;
 
 - (id) initWithPath:(NSString *)p andRepository:(PBGitRepository *)r
 {
@@ -24,8 +24,12 @@
 {
 	if (status == NEW)
 		return [PBEasyPipe outputForCommand:@"/bin/cat" withArgs:[NSArray arrayWithObjects:@"cat-file", @"blob", path, nil] inDir:[repository workingDirectory]];
-	else
-		return [repository outputInWorkdirForArguments:[NSArray arrayWithObjects:@"diff", @"HEAD", @"--", path, nil]];
+	else {
+		if (cached == YES)
+			return [repository outputInWorkdirForArguments:[NSArray arrayWithObjects:@"diff", @"--cached", @"--", path, nil]];
+		else
+			return [repository outputInWorkdirForArguments:[NSArray arrayWithObjects:@"diff", @"--", path, nil]];
+	}
 }
 
 - (NSImage *) icon
