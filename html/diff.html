@@ -7,18 +7,46 @@
 	<script src="commit.js" type="text/javascript" charset="utf-8"></script>
 	<script src="diff.js" type="text/javascript" charset="utf-8"></script>
 	<script>
-		var showDiff = function(diff) {
-			$("diff").hide();
-			$("diff").innerHTML = diff.escapeHTML();
-			highlightDiffs();
-			$("diff").show();
+		var showFileChanges = function(file) {
+			if (file.status == 0)
+			{
+				$("diff").innerHTML = file.changes();
+				$("diff").show();
+				$('title').innerHTML = "New file: " + file.path;
+			}  else {
+				$("diff").hide();
+				$("diff").innerHTML = file.changes().escapeHTML();
+				highlightDiffs();
+				$("diff").show();
+				$("title").innerHTML = "Changes for " + file.path;
+			}
 		}
 	</script>
+	<style type="text/css" media="screen">
+		body {
+			padding: 0px;
+			margin: 0px;
+			margin-top: 20px;
+		}
+		#title {
+			padding: 0px;
+			padding-left: 5px;
+			border-bottom: 1px solid black;
+			margin: 0px;
+			font-weight: 500;
+			background-color: #ECF3FD;
+			font-size: 100%;
+			position: fixed;
+			font-family: Helvetica;
+			top: 0px;
+			width: 100%;
+		}
+	</style>
 	<script src="diffHighlighter.js" type="text/javascript" charset="utf-8"></script>
 	<script src="keyboardNavigation.js" type="text/javascript" charset="utf-8"></script>
 
 </head>
-
+<h1 id='title'>Here comes the title</h1>
 <body style="padding: 0px; border: 0px" onLoad="">
 	<pre><code class="diffcode" id='diff'>Hey</code></pre>
 </body>

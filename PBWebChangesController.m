@@ -53,7 +53,6 @@ static PBChangedFile *lastFileSelected = nil;
 - (void) showDiff:(PBChangedFile *)file
 {
 	id script = [view windowScriptObject];
-	NSString *changes = [file changes];
-	[script callWebScriptMethod:@"showDiff" withArguments:[NSArray arrayWithObject:changes]];	
+	[script callWebScriptMethod:@"showFileChanges" withArguments:[NSArray arrayWithObject:file]];	
 }
 @end
