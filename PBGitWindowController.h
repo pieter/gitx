@@ -14,14 +14,12 @@
 	IBOutlet NSArrayController* searchController;
 	IBOutlet NSArrayController *branchesController;
 	PBGitRepository* repository;
-	int selectedViewIndex;
 	IBOutlet NSView* contentView;
 	NSViewController* viewController;
 }
 
 @property (retain) PBGitRepository *repository;
 @property (readonly) NSViewController *viewController;
-@property (assign) int selectedViewIndex;
 @property (retain) NSArrayController *searchController;
 
 - (id)initWithRepository:(PBGitRepository*)theRepository;

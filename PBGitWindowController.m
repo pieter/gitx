@@ -14,7 +14,7 @@
 @implementation PBGitWindowController
 
 
-@synthesize repository, viewController, searchController, selectedViewIndex;
+@synthesize repository, viewController, searchController;
 
 - (id)initWithRepository:(PBGitRepository*)theRepository;
 {
@@ -22,6 +22,7 @@
 	{
 		self.repository = theRepository;
 		[self showWindow:nil];
+		[[NSUserDefaults standardUserDefaults] addObserver:self forKeyPath:@"selectedViewIndex" options:NULL context:NULL];
 	}
 	return self;
 }
@@ -31,10 +32,10 @@
 	[[self window] makeFirstResponder:searchField];
 }
 
-- (void) setSelectedViewIndex: (int) i
+- (void)observeValueForKeyPath:(NSString*)keyPath ofObject:(id)object change:(NSDictionary*)change context:(void*)context
 {
-	selectedViewIndex = i;
-	[self changeViewController: i];
+	if ([keyPath isEqualToString:@"selectedViewIndex"])
+		[self changeViewController:[[[NSUserDefaults standardUserDefaults] objectForKey:@"selectedViewIndex"] intValue]];
 }
 
 - (void)changeViewController:(NSInteger)whichViewTag
@@ -74,7 +75,7 @@
 {
 	// We bind this ourselves because otherwise we would lose our selection
 	[branchesController bind:@"selectionIndexes" toObject:repository withKeyPath:@"currentBranch" options:nil];	NSLog(@"CurrentBranch: %@", repository.currentBranch);
-	[self changeViewController:0];
+	[self changeViewController:[[[NSUserDefaults standardUserDefaults] objectForKey:@"selectedViewIndex"] intValue]];
 	[[self window] setAutorecalculatesContentBorderThickness:NO forEdge:NSMinYEdge];
 	[[self window] setContentBorderThickness:35.0f forEdge:NSMinYEdge];
 
