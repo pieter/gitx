@@ -18,6 +18,9 @@
 {
 	[unstagedFilesController setFilterPredicate:[NSPredicate predicateWithFormat:@"cached == 0"]];
 	[cachedFilesController setFilterPredicate:[NSPredicate predicateWithFormat:@"cached == 1"]];
+	[unstagedButtonCell setAction:@selector(cellClicked:)];
+	[cachedButtonCell setAction:@selector(cellClicked:)];
+
 	[self refresh:self];
 }
 

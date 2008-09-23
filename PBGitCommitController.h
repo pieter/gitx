@@ -14,6 +14,9 @@
 	
 	IBOutlet NSArrayController *unstagedFilesController;
 	IBOutlet NSArrayController *cachedFilesController;
+
+	IBOutlet NSButtonCell* unstagedButtonCell;
+	IBOutlet NSButtonCell* cachedButtonCell;
 }
 
 @property (retain) NSMutableArray *files;
