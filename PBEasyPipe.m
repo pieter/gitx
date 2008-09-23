@@ -49,14 +49,42 @@
 	NSTask *task = [self taskForCommand:cmd withArgs:args inDir:dir];
 	NSFileHandle* handle = [task.standardOutput fileHandleForReading];
 	[task launch];
-
+	
 	NSData* data = [handle readDataToEndOfFile];
 	NSString* string = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-
+	
 	// Strip trailing newline
 	if ([string hasSuffix:@"\n"])
 		string = [string substringToIndex:[string length]-1];
+	
+	[task waitUntilExit];
+	if (ret)
+		*ret = [task terminationStatus];
+	return string;
+}	
 
++ (NSString*) outputForCommand:(NSString *) cmd
+					  withArgs:(NSArray *)  args
+						 inDir:(NSString *) dir
+				   inputString:(NSString *)input
+				      retValue:(int *)      ret
+{
+	NSTask *task = [self taskForCommand:cmd withArgs:args inDir:dir];
+	NSFileHandle* handle = [task.standardOutput fileHandleForReading];
+	task.standardInput = [NSPipe pipe];
+	NSFileHandle *inHandle = [task.standardInput fileHandleForWriting];
+	[inHandle writeData:[input dataUsingEncoding:NSUTF8StringEncoding]];
+	[inHandle closeFile];
+	
+	[task launch];
+	
+	NSData* data = [handle readDataToEndOfFile];
+	NSString* string = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+	
+	// Strip trailing newline
+	if ([string hasSuffix:@"\n"])
+		string = [string substringToIndex:[string length]-1];
+	
 	[task waitUntilExit];
 	if (ret)
 		*ret = [task terminationStatus];
@@ -65,10 +93,12 @@
 
 // We don't use the above function because then we'd have to wait until the program was finished
 // with running
-+ (NSString*) outputForCommand: (NSString*) cmd withArgs: (NSArray*) args inDir: (NSString*) dir
+
++ (NSString*) outputForCommand: (NSString*) cmd withArgs: (NSArray*) args  inDir: (NSString*) dir
 {
 	NSTask *task = [self taskForCommand:cmd withArgs:args inDir:dir];
 	NSFileHandle* handle = [task.standardOutput fileHandleForReading];
+	
 	[task launch];
 	
 	NSData* data = [handle readDataToEndOfFile];
@@ -79,6 +109,7 @@
 		string = [string substringToIndex:[string length]-1];
 	return string;
 }
+
 
 + (NSString*) outputForCommand: (NSString*) cmd withArgs: (NSArray*) args
 {
