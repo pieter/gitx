@@ -64,4 +64,61 @@
 	cellSize.width += (image ? [image size].width : 0) + 3;
 	return cellSize;
 }
+
+// ===============
+// = Hit testing =
+// ===============
+// Adopted from PhotoSearch Apple sample code
+
+- (NSUInteger)hitTestForEvent:(NSEvent *)event inRect:(NSRect)cellFrame ofView:(NSView *)controlView
+{
+	NSPoint point = [controlView convertPoint:[event locationInWindow] fromView:nil];
+
+	NSRect textFrame, imageFrame;
+	NSDivideRect (cellFrame, &imageFrame, &textFrame, 3 + [image size].width, NSMinXEdge);
+	if (NSMouseInRect(point, imageFrame, [controlView isFlipped]))
+		return NSCellHitContentArea | NSCellHitTrackableArea;
+
+	return [super hitTestForEvent:event inRect:cellFrame ofView:controlView];
+}
+
++ (BOOL)prefersTrackingUntilMouseUp
+{
+	// NSCell returns NO for this by default. If you want to have trackMouse:inRect:ofView:untilMouseUp: always track until the mouse is up, then you MUST return YES. Otherwise, strange things will happen.
+	return YES;
+}
+
+- (BOOL)trackMouse:(NSEvent *)theEvent inRect:(NSRect)cellFrame ofView:(NSView *)controlView untilMouseUp:(BOOL)flag
+{
+	[self setControlView:controlView];
+
+	NSRect textFrame, imageFrame;
+	NSDivideRect (cellFrame, &imageFrame, &textFrame, 3 + [image size].width, NSMinXEdge);
+	while ([theEvent type] != NSLeftMouseUp) {
+		// This is VERY simple event tracking. We simply check to see if the mouse is in the "i" button or not and dispatch entered/exited mouse events
+		NSPoint point = [controlView convertPoint:[theEvent locationInWindow] fromView:nil];
+		BOOL mouseInButton = NSMouseInRect(point, imageFrame, [controlView isFlipped]);
+		if (mouseDownInButton != mouseInButton) {
+			mouseDownInButton = mouseInButton;
+			[controlView setNeedsDisplayInRect:cellFrame];
+		}
+		if ([theEvent type] == NSMouseEntered || [theEvent type] == NSMouseExited)
+			[NSApp sendEvent:theEvent];
+		// Note that we process mouse entered and exited events and dispatch them to properly handle updates
+		theEvent = [[controlView window] nextEventMatchingMask:(NSLeftMouseUpMask | NSLeftMouseDraggedMask | NSMouseEnteredMask | NSMouseExitedMask)];
+	}
+
+	// Another way of implementing the above code would be to keep an NSButtonCell as an ivar, and simply call trackMouse:inRect:ofView:untilMouseUp: on it, if the tracking area was inside of it. 
+	if (mouseDownInButton) {
+		// Send the action, and redisplay
+		mouseDownInButton = NO;
+		[controlView setNeedsDisplayInRect:cellFrame];
+		if (self.action)
+			[NSApp sendAction:self.action to:self.target from:self];
+	}
+
+	// We return YES since the mouse was released while we were tracking. Not returning YES when you processed the mouse up is an easy way to introduce bugs!
+	return YES;
+}
+
 @end

@@ -9,14 +9,16 @@
 #import <Cocoa/Cocoa.h>
 #import "PBViewController.h"
 
+@class PBIconAndTextCell;
+
 @interface PBGitCommitController : PBViewController {
 	NSMutableArray *files;
 	
 	IBOutlet NSArrayController *unstagedFilesController;
 	IBOutlet NSArrayController *cachedFilesController;
 
-	IBOutlet NSButtonCell* unstagedButtonCell;
-	IBOutlet NSButtonCell* cachedButtonCell;
+	IBOutlet PBIconAndTextCell* unstagedButtonCell;
+	IBOutlet PBIconAndTextCell* cachedButtonCell;
 }
 
 @property (retain) NSMutableArray *files;

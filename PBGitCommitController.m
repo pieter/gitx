@@ -81,9 +81,15 @@
 	}
 }
 
-- (void) cellClicked:(id) sender
+- (void) cellClicked:(NSCell*) sender
 {
-	NSLog(@"Cell clicked: %@", sender);
+	NSTableView* tableView = [sender controlView];
+	if([tableView numberOfSelectedRows] == 1)
+	{
+		NSUInteger selectionIndex = [[tableView selectedRowIndexes] firstIndex];
+		id selectedItem           = [[(([tableView tag] == 0) ? unstagedFilesController : cachedFilesController) arrangedObjects] objectAtIndex:selectionIndex];
+		NSLog(@"%s selectedItem: %@", _cmd, [selectedItem valueForKey:@"path"]);
+	}
 }
 
 - (void)tableView:(NSTableView*)tableView willDisplayCell:(id)cell forTableColumn:(NSTableColumn*)tableColumn row:(int)rowIndex

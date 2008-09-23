@@ -12,6 +12,8 @@
 @interface PBIconAndTextCell : NSTextFieldCell
 {
     NSImage *image;
+    BOOL mouseDownInButton;
+    BOOL mouseHoveredInButton;
 }
 @property (retain) NSImage *image;
 
