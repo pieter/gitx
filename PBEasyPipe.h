@@ -22,5 +22,10 @@
 					  withArgs:(NSArray *)  args
 						 inDir:(NSString *) dir
 				      retValue:(int *)      ret;
++ (NSString*) outputForCommand:(NSString *) cmd
+					  withArgs:(NSArray *)  args
+						 inDir:(NSString *) dir
+				   inputString:(NSString *)input
+				      retValue:(int *)      ret;
 
 @end

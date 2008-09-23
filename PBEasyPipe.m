@@ -63,6 +63,7 @@
 	return string;
 }	
 
+// TODO: Refactor this to use the function above
 + (NSString*) outputForCommand:(NSString *) cmd
 					  withArgs:(NSArray *)  args
 						 inDir:(NSString *) dir

@@ -117,6 +117,8 @@
 	}
 
 	NSLog(@"Success! New commit: %@", commit);
+	[commitMessageView setString:@""];
+	[self refresh:self];
 }
 
 - (void) cellClicked:(NSCell*) sender
