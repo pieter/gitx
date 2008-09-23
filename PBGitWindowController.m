@@ -75,6 +75,9 @@
 	// We bind this ourselves because otherwise we would lose our selection
 	[branchesController bind:@"selectionIndexes" toObject:repository withKeyPath:@"currentBranch" options:nil];	NSLog(@"CurrentBranch: %@", repository.currentBranch);
 	[self changeViewController:0];
+	[[self window] setAutorecalculatesContentBorderThickness:NO forEdge:NSMinYEdge];
+	[[self window] setContentBorderThickness:35.0f forEdge:NSMinYEdge];
+
 }
 
 @end

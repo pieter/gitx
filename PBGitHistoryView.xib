@@ -915,7 +915,7 @@
 								</object>
 							</object>
 						</object>
-						<string key="NSFrame">{{0, 36}, {852, 396}}</string>
+						<string key="NSFrame">{{0, 35}, {852, 396}}</string>
 						<reference key="NSSuperview" ref="319362431"/>
 						<int key="NSDividerStyle">2</int>
 					</object>
@@ -1887,7 +1887,7 @@
 				</object>
 				<object class="IBPartialClassDescription">
 					<string key="className">PBGitHistoryController</string>
-					<string key="superclassName">NSViewController</string>
+					<string key="superclassName">PBViewController</string>
 					<object class="NSMutableDictionary" key="actions">
 						<bool key="EncodedWithXMLCoder">YES</bool>
 						<object class="NSMutableArray" key="dict.sortedKeys">
@@ -1916,7 +1916,6 @@
 							<string>commitController</string>
 							<string>commitList</string>
 							<string>fileBrowser</string>
-							<string>searchField</string>
 							<string>treeController</string>
 						</object>
 						<object class="NSMutableArray" key="dict.values">
@@ -1924,7 +1923,6 @@
 							<string>NSArrayController</string>
 							<string>NSTableView</string>
 							<string>NSOutlineView</string>
-							<string>NSSearchField</string>
 							<string>NSTreeController</string>
 						</object>
 					</object>
@@ -1935,7 +1933,7 @@
 				</object>
 				<object class="IBPartialClassDescription">
 					<string key="className">PBGitHistoryController</string>
-					<string key="superclassName">NSViewController</string>
+					<string key="superclassName">PBViewController</string>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
 						<string key="majorKey">IBUserSource</string>
 						<string key="minorKey"/>
@@ -1963,6 +1961,14 @@
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
 						<string key="majorKey">IBProjectSource</string>
 						<string key="minorKey">PBQLOutlineView.h</string>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
+					<string key="className">PBViewController</string>
+					<string key="superclassName">NSViewController</string>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<string key="majorKey">IBProjectSource</string>
+						<string key="minorKey">PBViewController.h</string>
 					</object>
 				</object>
 				<object class="IBPartialClassDescription">
