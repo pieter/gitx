@@ -83,6 +83,42 @@
 	}
 }
 
+- (IBAction) commit:(id) sender
+{
+	NSString *commitMessage = [commitMessageView string];
+	if ([commitMessage length] < 3) {
+		[[NSAlert alertWithMessageText:@"Commitmessage missing"
+						 defaultButton:nil
+					   alternateButton:nil
+						   otherButton:nil
+			 informativeTextWithFormat:@"Please enter a commit message before committing"] runModal];
+		return;
+	}
+	
+	NSString *tree = [repository outputForCommand:@"write-tree"];
+	if ([tree length] != 40) {
+		NSLog(@"Tree: %@", tree);
+		return;
+	}
+	int ret;
+	NSString *commit = [repository outputForArguments:[NSArray arrayWithObjects:@"commit-tree", tree, @"-p", @"HEAD", nil]
+										  inputString:commitMessage
+											 retValue: &ret];
+	if (ret || [commit length] != 40) {
+		NSLog(@"Commit failed");
+		return;
+	}
+	
+	[repository outputForArguments:[NSArray arrayWithObjects:@"update-ref", @"-m", @"Commit from GitX", @"HEAD", commit, nil]
+						  retValue: &ret];
+	if (ret) {
+		NSLog(@"Commit failed(2)");
+		return;
+	}
+
+	NSLog(@"Success! New commit: %@", commit);
+}
+
 - (void) cellClicked:(NSCell*) sender
 {
 	NSTableView* tableView = [sender controlView];

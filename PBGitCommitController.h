@@ -14,6 +14,7 @@
 @interface PBGitCommitController : PBViewController {
 	NSMutableArray *files;
 	
+	IBOutlet NSTextView *commitMessageView;
 	IBOutlet NSArrayController *unstagedFilesController;
 	IBOutlet NSArrayController *cachedFilesController;
 
@@ -28,4 +29,5 @@
 - (void) readUnstagedFiles;
 
 - (IBAction) refresh:(id) sender;
+- (IBAction) commit:(id) sender;
 @end
