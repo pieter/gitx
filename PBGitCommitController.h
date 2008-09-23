@@ -25,4 +25,5 @@
 - (void) readOtherFiles;
 - (void) readUnstagedFiles;
 
+- (IBAction) refresh:(id) sender;
 @end
