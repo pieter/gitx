@@ -11,12 +11,9 @@
 
 @interface PBIconAndTextCell : NSTextFieldCell
 {
-@private
-    NSImage  *image;
+    NSImage *image;
 }
-
-- (void)setImage:(NSImage *)anImage;
-- (NSImage *)image;
+@property (retain) NSImage *image;
 
 - (void)drawWithFrame:(NSRect)cellFrame inView:(NSView *)controlView;
 - (NSSize)cellSize;
