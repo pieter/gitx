@@ -47,6 +47,16 @@
 	return [[NSImage alloc] initByReferencingFile: p];
 }
 
+- (void) stageChanges
+{
+	[repository outputInWorkdirForArguments:[NSArray arrayWithObjects:@"add", path, nil]];
+	self.cached = YES;
+}
+- (void) unstageChanges
+{	[repository outputInWorkdirForArguments:[NSArray arrayWithObjects:@"reset", path, nil]];
+	self.cached = NO;
+}
+
 + (BOOL)isSelectorExcludedFromWebScript:(SEL)aSelector
 {
 	return NO;

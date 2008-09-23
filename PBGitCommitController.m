@@ -16,12 +16,13 @@
 
 - (void)awakeFromNib
 {
-	[unstagedFilesController setFilterPredicate:[NSPredicate predicateWithFormat:@"cached == 0"]];
-	[cachedFilesController setFilterPredicate:[NSPredicate predicateWithFormat:@"cached == 1"]];
 	[unstagedButtonCell setAction:@selector(cellClicked:)];
 	[cachedButtonCell setAction:@selector(cellClicked:)];
 
 	[self refresh:self];
+	
+	[unstagedFilesController setFilterPredicate:[NSPredicate predicateWithFormat:@"cached == 0"]];
+	[cachedFilesController setFilterPredicate:[NSPredicate predicateWithFormat:@"cached == 1"]];
 }
 
 - (void) readOtherFiles
@@ -43,6 +44,7 @@
 - (void) refresh:(id) sender
 {
 	files = [NSMutableArray array];
+	[repository outputForCommand:@"update-index"];
 	[self readUnstagedFiles];
 	[self readCachedFiles];
 	[self readOtherFiles];
@@ -87,11 +89,24 @@
 	if([tableView numberOfSelectedRows] == 1)
 	{
 		NSUInteger selectionIndex = [[tableView selectedRowIndexes] firstIndex];
-		id selectedItem           = [[(([tableView tag] == 0) ? unstagedFilesController : cachedFilesController) arrangedObjects] objectAtIndex:selectionIndex];
-		NSLog(@"%s selectedItem: %@", _cmd, [selectedItem valueForKey:@"path"]);
+		PBChangedFile *selectedItem = [[(([tableView tag] == 0) ? unstagedFilesController : cachedFilesController) arrangedObjects] objectAtIndex:selectionIndex];
+		if (selectedItem.cached == NO) {
+			[selectedItem stageChanges];
+			
+		}
+		else {
+			[selectedItem unstageChanges];
+		}
+		[self refreshControllers];
+	
 	}
 }
 
+- (void) refreshControllers
+{
+	[self refresh:self];
+}
+	
 - (void)tableView:(NSTableView*)tableView willDisplayCell:(id)cell forTableColumn:(NSTableColumn*)tableColumn row:(int)rowIndex
 {
 	[[tableColumn dataCell] setImage:[[[(([tableView tag] == 0) ? unstagedFilesController : cachedFilesController) arrangedObjects] objectAtIndex:rowIndex] icon]];
