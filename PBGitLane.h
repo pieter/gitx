@@ -8,8 +8,6 @@
 
 #import <Cocoa/Cocoa.h>
 
-static int PBGITLANE_CURRENT_INDEX = 0;
-
 @interface PBGitLane : NSObject {
 	NSString* sha;
 	int index;

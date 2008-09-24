@@ -22,7 +22,7 @@
 	{
 		self.repository = theRepository;
 		[self showWindow:nil];
-		[[NSUserDefaults standardUserDefaults] addObserver:self forKeyPath:@"selectedViewIndex" options:NULL context:NULL];
+		[[NSUserDefaults standardUserDefaults] addObserver:self forKeyPath:@"selectedViewIndex" options:0 context:NULL];
 	}
 	return self;
 }

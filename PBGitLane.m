@@ -11,6 +11,8 @@
 
 @implementation PBGitLane
 
+static int PBGITLANE_CURRENT_INDEX = 0;
+
 @synthesize sha, index;
 - (id) initWithCommit: (NSString*) c
 {

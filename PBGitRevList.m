@@ -90,8 +90,8 @@ struct decorateParameters {
 	NSFileHandle* handle = [repository handleForArguments: arguments];
 	
 	// We decorate the commits in a separate thread.
-	struct decorateParameters params = { newArray, rev };
-	NSThread * decorationThread = [[NSThread alloc] initWithTarget: self selector: @selector(decorateRevisions:) object:&params];
+	NSArray *decorationArguments = [NSArray arrayWithObjects:newArray, rev, nil];
+	NSThread * decorationThread = [[NSThread alloc] initWithTarget: self selector: @selector(decorateRevisions:) object:decorationArguments];
 	[decorationThread start];
 
 	int fd = [handle fileDescriptor];
@@ -142,11 +142,10 @@ struct decorateParameters {
 	[NSThread exit];
 }
 
-// We're not supposed to pass on structs, only objects, but this is much easier
-- (void) decorateRevisions: (struct decorateParameters*) params
+- (void) decorateRevisions:(NSArray *)params
 {
-	NSMutableArray* revisions = params->revisions;
-	PBGitRevSpecifier* rev = params->rev;
+	NSMutableArray* revisions = [params objectAtIndex:0];
+	PBGitRevSpecifier* rev = [params objectAtIndex:1];
 	NSDictionary* refs = [repository refs];
 
 	BOOL decorateCommits = ![rev hasPathLimiter];

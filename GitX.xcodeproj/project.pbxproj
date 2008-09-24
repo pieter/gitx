@@ -22,6 +22,7 @@
 		D26DC6450E782C9000C777B2 /* gitx.icns in Resources */ = {isa = PBXBuildFile; fileRef = D26DC6440E782C9000C777B2 /* gitx.icns */; };
 		F50FE0E30E07BE9600854FCD /* PBGitRevisionCell.m in Sources */ = {isa = PBXBuildFile; fileRef = F50FE0E20E07BE9600854FCD /* PBGitRevisionCell.m */; };
 		F513085B0E0740F2000C8BCD /* PBQLOutlineView.m in Sources */ = {isa = PBXBuildFile; fileRef = F513085A0E0740F2000C8BCD /* PBQLOutlineView.m */; };
+		F5140DC90E8A8EB20091E9F3 /* RoundedRectangle.m in Sources */ = {isa = PBXBuildFile; fileRef = F5140DC80E8A8EB20091E9F3 /* RoundedRectangle.m */; };
 		F52BCE030E84208300AA3741 /* PBGitHistoryView.xib in Resources */ = {isa = PBXBuildFile; fileRef = F52BCE020E84208300AA3741 /* PBGitHistoryView.xib */; };
 		F52BCE070E84211300AA3741 /* PBGitHistoryController.m in Sources */ = {isa = PBXBuildFile; fileRef = F52BCE060E84211300AA3741 /* PBGitHistoryController.m */; };
 		F53FF2050E7ABB5300389171 /* PBGitRevSpecifier.m in Sources */ = {isa = PBXBuildFile; fileRef = F53FF2040E7ABB5300389171 /* PBGitRevSpecifier.m */; };
@@ -56,8 +57,7 @@
 		F5E927F80E883E7200056E75 /* PBChangedFile.m in Sources */ = {isa = PBXBuildFile; fileRef = F5E927F70E883E7200056E75 /* PBChangedFile.m */; };
 		F5E927FC0E883F0700056E75 /* PBWebChangesController.m in Sources */ = {isa = PBXBuildFile; fileRef = F5E927FB0E883F0700056E75 /* PBWebChangesController.m */; };
 		F5E9281D0E8840CF00056E75 /* diff.html in Resources */ = {isa = PBXBuildFile; fileRef = F5E9281C0E8840CF00056E75 /* diff.html */; };
-		F5E928210E88414000056E75 /* diff.js in Sources */ = {isa = PBXBuildFile; fileRef = F5E928200E88414000056E75 /* diff.js */; };
-		F5E928550E8841FB00056E75 /* diff.js in Sources */ = {isa = PBXBuildFile; fileRef = F5E928540E8841FB00056E75 /* diff.js */; };
+		F5E928550E8841FB00056E75 /* diff.js in Resources */ = {isa = PBXBuildFile; fileRef = F5E928540E8841FB00056E75 /* diff.js */; };
 		F5E92A1B0E88550E00056E75 /* empty_file.png in Resources */ = {isa = PBXBuildFile; fileRef = F5E92A1A0E88550E00056E75 /* empty_file.png */; };
 		F5E92A230E88569500056E75 /* new_file.png in Resources */ = {isa = PBXBuildFile; fileRef = F5E92A220E88569500056E75 /* new_file.png */; };
 		F5FF4E180E0829C20006317A /* PBGitRevList.m in Sources */ = {isa = PBXBuildFile; fileRef = F5FF4E170E0829C20006317A /* PBGitRevList.m */; };
@@ -115,6 +115,8 @@
 		F50FE0E20E07BE9600854FCD /* PBGitRevisionCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PBGitRevisionCell.m; sourceTree = "<group>"; };
 		F51308590E0740F2000C8BCD /* PBQLOutlineView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PBQLOutlineView.h; sourceTree = "<group>"; };
 		F513085A0E0740F2000C8BCD /* PBQLOutlineView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PBQLOutlineView.m; sourceTree = "<group>"; };
+		F5140DC70E8A8EB20091E9F3 /* RoundedRectangle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RoundedRectangle.h; sourceTree = "<group>"; };
+		F5140DC80E8A8EB20091E9F3 /* RoundedRectangle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RoundedRectangle.m; sourceTree = "<group>"; };
 		F52BCE020E84208300AA3741 /* PBGitHistoryView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PBGitHistoryView.xib; sourceTree = "<group>"; };
 		F52BCE050E84211300AA3741 /* PBGitHistoryController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PBGitHistoryController.h; sourceTree = "<group>"; };
 		F52BCE060E84211300AA3741 /* PBGitHistoryController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PBGitHistoryController.m; sourceTree = "<group>"; };
@@ -168,7 +170,6 @@
 		F5E927FA0E883F0700056E75 /* PBWebChangesController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PBWebChangesController.h; sourceTree = "<group>"; };
 		F5E927FB0E883F0700056E75 /* PBWebChangesController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PBWebChangesController.m; sourceTree = "<group>"; };
 		F5E9281C0E8840CF00056E75 /* diff.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = diff.html; path = html/diff.html; sourceTree = "<group>"; };
-		F5E928200E88414000056E75 /* diff.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = diff.js; sourceTree = "<group>"; };
 		F5E928540E8841FB00056E75 /* diff.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; name = diff.js; path = html/diff.js; sourceTree = "<group>"; };
 		F5E92A1A0E88550E00056E75 /* empty_file.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = empty_file.png; path = Images/empty_file.png; sourceTree = "<group>"; };
 		F5E92A220E88569500056E75 /* new_file.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = new_file.png; path = Images/new_file.png; sourceTree = "<group>"; };
@@ -355,6 +356,8 @@
 				F513085A0E0740F2000C8BCD /* PBQLOutlineView.m */,
 				91B103CA0E898EC300C84364 /* PBIconAndTextCell.h */,
 				91B103CB0E898EC300C84364 /* PBIconAndTextCell.mm */,
+				F5140DC70E8A8EB20091E9F3 /* RoundedRectangle.h */,
+				F5140DC80E8A8EB20091E9F3 /* RoundedRectangle.m */,
 			);
 			name = Aux;
 			sourceTree = "<group>";
@@ -371,7 +374,6 @@
 				F57ABDDE0E0441DE00A088B8 /* commit.js */,
 				F57ABE180E04431D00A088B8 /* prototype.js */,
 				F56173270E056ED2001DCD79 /* diffHighlighter.js */,
-				F5E928200E88414000056E75 /* diff.js */,
 			);
 			name = HTML;
 			sourceTree = "<group>";
@@ -493,6 +495,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F5E928550E8841FB00056E75 /* diff.js in Resources */,
 				F561E6CD0E7AFDDF00521636 /* keyboardNavigation.js in Resources */,
 				F5E92A1B0E88550E00056E75 /* empty_file.png in Resources */,
 				913D5E500E55645900CECEA2 /* gitx in Resources */,
@@ -549,9 +552,8 @@
 				F5E926060E8827D300056E75 /* PBViewController.m in Sources */,
 				F5E927F80E883E7200056E75 /* PBChangedFile.m in Sources */,
 				F5E927FC0E883F0700056E75 /* PBWebChangesController.m in Sources */,
-				F5E928210E88414000056E75 /* diff.js in Sources */,
-				F5E928550E8841FB00056E75 /* diff.js in Sources */,
 				91B103CC0E898EC300C84364 /* PBIconAndTextCell.mm in Sources */,
+				F5140DC90E8A8EB20091E9F3 /* RoundedRectangle.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

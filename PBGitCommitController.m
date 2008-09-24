@@ -123,7 +123,7 @@
 
 - (void) cellClicked:(NSCell*) sender
 {
-	NSTableView* tableView = [sender controlView];
+	NSTableView *tableView = (NSTableView *)[sender controlView];
 	if([tableView numberOfSelectedRows] == 1)
 	{
 		NSUInteger selectionIndex = [[tableView selectedRowIndexes] firstIndex];
@@ -135,16 +135,11 @@
 		else {
 			[selectedItem unstageChanges];
 		}
-		[self refreshControllers];
+		[self refresh: self];
 	
 	}
 }
 
-- (void) refreshControllers
-{
-	[self refresh:self];
-}
-	
 - (void)tableView:(NSTableView*)tableView willDisplayCell:(id)cell forTableColumn:(NSTableColumn*)tableColumn row:(int)rowIndex
 {
 	[[tableColumn dataCell] setImage:[[[(([tableView tag] == 0) ? unstagedFilesController : cachedFilesController) arrangedObjects] objectAtIndex:rowIndex] icon]];

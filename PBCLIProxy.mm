@@ -35,7 +35,7 @@
 	NSURL* url = [NSURL fileURLWithPath:[repositoryPath path]];
 	NSArray* arguments = [NSArray arrayWithArray:args];
 	PBGitRevSpecifier* rev = [[PBGitRevSpecifier alloc] initWithParameters:arguments];
-	if (id document = [[PBRepositoryDocumentController sharedDocumentController] openRepositoryAtLocation: url RevSpecifier: rev]) {
+	if ([[PBRepositoryDocumentController sharedDocumentController] openRepositoryAtLocation: url RevSpecifier: rev]) {
 		[NSApp activateIgnoringOtherApps:YES];
 		return YES;
 	}

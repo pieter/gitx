@@ -89,7 +89,7 @@
 
 - (void) copySource
 {
-	NSString *source = [[[[view mainFrame] DOMDocument] documentElement] outerHTML];
+	NSString *source = [(DOMHTMLElement *)[[[view mainFrame] DOMDocument] documentElement] outerHTML];
 	NSPasteboard *a =[NSPasteboard generalPasteboard];
 	[a declareTypes:[NSArray arrayWithObject:NSStringPboardType] owner:self];
 	[a setString:source forType: NSStringPboardType];
