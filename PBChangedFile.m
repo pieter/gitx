@@ -53,7 +53,7 @@
 	self.cached = YES;
 }
 - (void) unstageChanges
-{	[repository outputInWorkdirForArguments:[NSArray arrayWithObjects:@"reset", path, nil]];
+{	[repository outputInWorkdirForArguments:[NSArray arrayWithObjects:@"reset", @"--", path, nil]];
 	self.cached = NO;
 }
 
