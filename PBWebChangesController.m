@@ -43,6 +43,10 @@ static PBChangedFile *lastFileSelected = nil;
 	
 	PBChangedFile *file = [[object selectedObjects] objectAtIndex:0];
 
+	if (previousFile == file)
+		return;
+	
+	previousFile = file;
 	if ([view isLoading]) {
 		lastFileSelected = file;
 		return;

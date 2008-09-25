@@ -100,9 +100,8 @@
 		PBChangedFile *file =[[PBChangedFile alloc] initWithPath:line andRepository:repository];
 		file.status = NEW;
 		file.cached = NO;
-		[files addObject: file];
+		[unstagedFilesController addObject:file];
 	}
-	self.files = files;
 	[self doneProcessingIndex];
 }
 
@@ -116,10 +115,9 @@
 
 		PBChangedFile *file = [[PBChangedFile alloc] initWithPath:[components objectAtIndex:1] andRepository:repository];
 		file.status = MODIFIED;
-		file.cached =NO;
-		[files addObject: file];
+		file.cached = NO;
+		[unstagedFilesController addObject: file];
 	}
-	self.files = files;
 	[self doneProcessingIndex];
 }
 
@@ -135,7 +133,7 @@
 		PBChangedFile *file = [[PBChangedFile alloc] initWithPath:[components objectAtIndex:1] andRepository:repository];
 		file.status = MODIFIED;
 		file.cached = YES;
-		[files addObject: file];
+		[cachedFilesController addObject: file];
 	}
 	self.files = files;
 	[self doneProcessingIndex];
@@ -199,20 +197,33 @@
 - (void) cellClicked:(NSCell*) sender
 {
 	NSTableView *tableView = (NSTableView *)[sender controlView];
-	if([tableView numberOfSelectedRows] == 1)
-	{
-		NSUInteger selectionIndex = [[tableView selectedRowIndexes] firstIndex];
-		PBChangedFile *selectedItem = [[(([tableView tag] == 0) ? unstagedFilesController : cachedFilesController) arrangedObjects] objectAtIndex:selectionIndex];
-		if (selectedItem.cached == NO) {
-			[selectedItem stageChanges];
-			
-		}
-		else {
-			[selectedItem unstageChanges];
-		}
-		[self refresh: self];
+	if([tableView numberOfSelectedRows] != 1)
+		return;
 	
+	NSUInteger selectionIndex = [[tableView selectedRowIndexes] firstIndex];
+	NSArrayController *controller, *otherController;
+	if ([tableView tag] == 0) {
+		controller = unstagedFilesController;
+		otherController = cachedFilesController;
 	}
+	else {
+		controller = cachedFilesController;
+		otherController = unstagedFilesController;
+	}
+	
+	PBChangedFile *selectedItem = [[controller arrangedObjects] objectAtIndex:selectionIndex];
+	[controller removeObject:selectedItem];
+	if (selectedItem.cached == NO)
+		[selectedItem stageChanges];
+	else
+		[selectedItem unstageChanges];
+
+	// Add the file to the other controller if it's not there yet
+	for (PBChangedFile *object in [otherController arrangedObjects])
+		if ([[object path] isEqualToString:[selectedItem path]])
+			return;
+
+	[otherController addObject:selectedItem];	
 }
 
 - (void)tableView:(NSTableView*)tableView willDisplayCell:(id)cell forTableColumn:(NSTableColumn*)tableColumn row:(int)rowIndex
