@@ -14,7 +14,7 @@
 @implementation PBGitWindowController
 
 
-@synthesize repository, viewController, searchController;
+@synthesize repository, viewController, searchController, selectedViewIndex;
 
 - (id)initWithRepository:(PBGitRepository*)theRepository;
 {
@@ -22,7 +22,6 @@
 	{
 		self.repository = theRepository;
 		[self showWindow:nil];
-		[[NSUserDefaults standardUserDefaults] addObserver:self forKeyPath:@"selectedViewIndex" options:0 context:NULL];
 	}
 	return self;
 }
@@ -32,10 +31,11 @@
 	[[self window] makeFirstResponder:searchField];
 }
 
-- (void)observeValueForKeyPath:(NSString*)keyPath ofObject:(id)object change:(NSDictionary*)change context:(void*)context
+- (void) setSelectedViewIndex: (int) i
 {
-	if ([keyPath isEqualToString:@"selectedViewIndex"])
-		[self changeViewController:[[[NSUserDefaults standardUserDefaults] objectForKey:@"selectedViewIndex"] intValue]];
+	selectedViewIndex = i;
+	[[NSUserDefaults standardUserDefaults] setInteger:i forKey:@"selectedViewIndex"];
+	[self changeViewController: i];
 }
 
 - (void)changeViewController:(NSInteger)whichViewTag
@@ -74,8 +74,9 @@
 - (void)awakeFromNib
 {
 	// We bind this ourselves because otherwise we would lose our selection
-	[branchesController bind:@"selectionIndexes" toObject:repository withKeyPath:@"currentBranch" options:nil];	NSLog(@"CurrentBranch: %@", repository.currentBranch);
-	[self changeViewController:[[[NSUserDefaults standardUserDefaults] objectForKey:@"selectedViewIndex"] intValue]];
+	[branchesController bind:@"selectionIndexes" toObject:repository withKeyPath:@"currentBranch" options:nil];
+
+	self.selectedViewIndex = [[NSUserDefaults standardUserDefaults] integerForKey:@"selectedViewIndex"];
 	[[self window] setAutorecalculatesContentBorderThickness:NO forEdge:NSMinYEdge];
 	[[self window] setContentBorderThickness:35.0f forEdge:NSMinYEdge];
 
