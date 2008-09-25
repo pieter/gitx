@@ -119,7 +119,18 @@
 		PBChangedFile *file = [[PBChangedFile alloc] initWithPath:[components objectAtIndex:1] andRepository:repository];
 		file.status = MODIFIED;
 		file.cached = NO;
-		[unstagedFilesController addObject: file];
+
+		// FIXME: If you are in a merge and have conflicts, a file is displayed twice, with different
+		// index values. For now, we don't handle this gracefully.
+		BOOL fileExists = NO;
+		for (PBChangedFile *object in [unstagedFilesController arrangedObjects]) {
+			if ([[object path] isEqualToString:[file path]]) {
+				fileExists = YES;
+				break;
+			}
+		}
+		if (!fileExists)
+			[unstagedFilesController addObject: file];
 	}
 	[self doneProcessingIndex];
 }
