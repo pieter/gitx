@@ -25,62 +25,98 @@
 	[cachedFilesController setFilterPredicate:[NSPredicate predicateWithFormat:@"cached == 1"]];
 }
 
-- (void) readOtherFiles
+- (NSArray *) linesFromNotification:(NSNotification *)notification
 {
-	NSArray *arguments = [NSArray arrayWithObjects:@"ls-files", @"--others", @"--exclude-standard", nil];
-	NSFileHandle *handle = [repository handleInWorkDirForArguments:arguments];
+	NSDictionary *userInfo = [notification userInfo];
+	NSData *data = [userInfo valueForKey:NSFileHandleNotificationDataItem];
+	if (!data)
+		return NULL;
 	
-	NSString *line;
-	while (line = [handle readLine]) {
+	NSString* string = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+	if (!string)
+		return NULL;
+	
+	// Strip trailing newline
+	if ([string hasSuffix:@"\n"])
+		string = [string substringToIndex:[string length]-1];
+	
+	NSArray *lines = [string componentsSeparatedByString:@"\n"];
+	return lines;
+}
+
+- (void) readOtherFiles:(NSNotification *)notification;
+{
+	NSArray *lines = [self linesFromNotification:notification];
+	for (NSString *line in lines) {
 		if ([line length] == 0)
-			break;
+			continue;
 		PBChangedFile *file =[[PBChangedFile alloc] initWithPath:line andRepository:repository];
 		file.status = NEW;
 		file.cached = NO;
 		[files addObject: file];
 	}
+	self.files = files;
 }
 
 - (void) refresh:(id) sender
 {
 	files = [NSMutableArray array];
-	[repository outputForCommand:@"update-index"];
-	[self readUnstagedFiles];
-	[self readCachedFiles];
-	[self readOtherFiles];
+	[repository outputInWorkdirForArguments:[NSArray arrayWithObjects:@"update-index", @"-q", @"--unmerged", @"--ignore-missing", @"--refresh", nil]];
+	
+
+	NSNotificationCenter *nc = [NSNotificationCenter defaultCenter]; 
+	[nc removeObserver:self]; 
+
+	// Other files
+	NSArray *arguments = [NSArray arrayWithObjects:@"ls-files", @"--others", @"--exclude-standard", nil];
+	NSFileHandle *handle = [repository handleInWorkDirForArguments:arguments];
+	[nc addObserver:self selector:@selector(readOtherFiles:) name:NSFileHandleReadCompletionNotification object:handle]; 
+	[handle readInBackgroundAndNotify];
+
+	// Unstaged files
+	handle = [repository handleInWorkDirForArguments:[NSArray arrayWithObject:@"diff-files"]];
+	[nc addObserver:self selector:@selector(readUnstagedFiles:) name:NSFileHandleReadCompletionNotification object:handle]; 
+	[handle readInBackgroundAndNotify];
+
+	// Cached files
+	handle = [repository handleInWorkDirForArguments:[NSArray arrayWithObjects:@"diff-index", @"--cached", @"HEAD", nil]];
+	[nc addObserver:self selector:@selector(readCachedFiles:) name:NSFileHandleReadCompletionNotification object:handle]; 
+	[handle readInBackgroundAndNotify];
+	
 	self.files = files;
 }
 
-- (void) readUnstagedFiles
+- (void) readUnstagedFiles:(NSNotification *)notification
 {
-	NSFileHandle *handle = [repository handleInWorkDirForArguments:[NSArray arrayWithObject:@"diff-files"]];
-		
-	NSString *line;
-	while (line = [handle readLine]) {
+	NSArray *lines = [self linesFromNotification:notification];
+	for (NSString *line in lines) {
 		NSArray *components = [line componentsSeparatedByString:@"\t"];
 		if ([components count] < 2)
 			break;
+
 		PBChangedFile *file = [[PBChangedFile alloc] initWithPath:[components objectAtIndex:1] andRepository:repository];
 		file.status = MODIFIED;
 		file.cached =NO;
 		[files addObject: file];
 	}
+	self.files = files;
 }
 
-- (void) readCachedFiles
+- (void) readCachedFiles:(NSNotification *)notification
 {
-	NSFileHandle *handle = [repository handleInWorkDirForArguments:[NSArray arrayWithObjects:@"diff-index", @"--cached", @"HEAD", nil]];
-	
-	NSString *line;
-	while (line = [handle readLine]) {
+	NSLog(@"Reading cached files!");
+	NSArray *lines = [self linesFromNotification:notification];
+	for (NSString *line in lines) {
 		NSArray *components = [line componentsSeparatedByString:@"\t"];
 		if ([components count] < 2)
 			break;
+
 		PBChangedFile *file = [[PBChangedFile alloc] initWithPath:[components objectAtIndex:1] andRepository:repository];
 		file.status = MODIFIED;
 		file.cached = YES;
 		[files addObject: file];
 	}
+	self.files = files;
 }
 
 - (IBAction) commit:(id) sender
