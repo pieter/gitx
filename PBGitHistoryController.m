@@ -21,6 +21,7 @@
 	self.selectedTab = [[NSUserDefaults standardUserDefaults] integerForKey:@"Repository Window Selected Tab Index"];;
 	[commitController addObserver:self forKeyPath:@"selection" options:(NSKeyValueObservingOptionNew,NSKeyValueObservingOptionOld) context:@"commitChange"];
 	[treeController addObserver:self forKeyPath:@"selection" options:0 context:@"treeChange"];
+	[repository addObserver:self forKeyPath:@"currentBranch" options:0 context:@"branchChange"];
 	NSSize cellSpacing = [commitList intercellSpacing];
 	cellSpacing.height = 0;
 	[commitList setIntercellSpacing:cellSpacing];
@@ -70,7 +71,10 @@
 	else if ([(NSString *)context isEqualToString: @"treeChange"]) {
 		[self updateQuicklookForce: NO];
 	}
-	
+	else if([(NSString *)context isEqualToString:@"branchChange"]) {
+		// Reset the sorting
+		commitController.sortDescriptors = [NSArray array];
+	}
 	else {
 		[super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
 	}
