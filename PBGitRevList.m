@@ -87,11 +87,13 @@ struct decorateParameters {
 	else
 		[arguments addObjectsFromArray:[rev parameters]];
 
+	if ([rev hasPathLimiter])
+		[arguments insertObject:@"--children" atIndex:1];
+
 	NSFileHandle* handle = [repository handleForArguments: arguments];
 	
 	// We decorate the commits in a separate thread.
-	NSArray *decorationArguments = [NSArray arrayWithObjects:newArray, rev, nil];
-	NSThread * decorationThread = [[NSThread alloc] initWithTarget: self selector: @selector(decorateRevisions:) object:decorationArguments];
+	NSThread * decorationThread = [[NSThread alloc] initWithTarget: self selector: @selector(decorateRevisions:) object:newArray];
 	[decorationThread start];
 
 	int fd = [handle fileDescriptor];
@@ -142,13 +144,10 @@ struct decorateParameters {
 	[NSThread exit];
 }
 
-- (void) decorateRevisions:(NSArray *)params
+- (void) decorateRevisions:(NSMutableArray *)revisions
 {
-	NSMutableArray* revisions = [params objectAtIndex:0];
-	PBGitRevSpecifier* rev = [params objectAtIndex:1];
 	NSDictionary* refs = [repository refs];
 
-	BOOL decorateCommits = ![rev hasPathLimiter];
 	NSDate* start = [NSDate date];
 
 	NSMutableArray* allRevisions = [NSMutableArray arrayWithCapacity:1000];
@@ -167,8 +166,7 @@ struct decorateParameters {
 		}
 		for (PBGitCommit* commit in currentRevisions) {
 			num++;
-			if (decorateCommits)
-				[g decorateCommit: commit];
+			[g decorateCommit: commit];
 
 			if (refs && [refs objectForKey:commit.sha])
 				commit.refs = [refs objectForKey:commit.sha];
