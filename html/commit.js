@@ -9,11 +9,11 @@ var Commit = Class.create({
 		var messageStart = this.raw.indexOf("\n\n") + 2;
 
 		if (diffStart > 0) {
-			this.message = this.raw.substring(messageStart, diffStart);
-			this.diff = this.raw.substring(diffStart)
+			this.message = this.raw.substring(messageStart, diffStart).escapeHTML();
+			this.diff = this.raw.substring(diffStart);
 		} else {
-			this.message = this.raw.substring(messageStart)
-			this.diff = ""
+			this.message = this.raw.substring(messageStart).escapeHTML();
+			this.diff = "";
 		}
 		this.header = this.raw.substring(0, messageStart);
 
@@ -119,7 +119,7 @@ var loadCommit = function() {
 	else
 		$("authorID").innerHTML = commit.author_name;
 	$("date").innerHTML = commit.author_date;
-	$("subjectID").innerHTML =CommitObject.subject;
+	$("subjectID").innerHTML =CommitObject.subject.escapeHTML();
 	
 	$A($("commit_header").rows).each(function(row) {
 		if (row.innerHTML.match(/Parent:/))
