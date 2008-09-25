@@ -23,7 +23,7 @@
 - (NSString *) changes
 {
 	if (status == NEW)
-		return [PBEasyPipe outputForCommand:@"/bin/cat" withArgs:[NSArray arrayWithObjects:@"cat-file", @"blob", path, nil] inDir:[repository workingDirectory]];
+		return [PBEasyPipe outputForCommand:@"/bin/cat" withArgs:[NSArray arrayWithObject:path] inDir:[repository workingDirectory]];
 	else {
 		if (cached == YES)
 			return [repository outputInWorkdirForArguments:[NSArray arrayWithObjects:@"diff", @"--cached", @"--", path, nil]];

@@ -8,9 +8,15 @@
 	<script src="diff.js" type="text/javascript" charset="utf-8"></script>
 	<script>
 		var showFileChanges = function(file) {
+			// New file?
 			if (file.status == 0)
 			{
-				$("diff").innerHTML = file.changes();
+				var contents = file.changes();
+				if (contents)
+					$("diff").innerHTML = contents;
+				else
+					$("diff").innerHTML = "Could not display changes";
+
 				$("diff").show();
 				$('title').innerHTML = "New file: " + file.path;
 			}  else {
