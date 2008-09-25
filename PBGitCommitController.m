@@ -56,7 +56,8 @@
 {
 	self.status = @"Refreshing index…";
 	self.busy++;
-	files = [NSMutableArray array];
+	self.files = [NSMutableArray array];
+
 	[repository outputInWorkdirForArguments:[NSArray arrayWithObjects:@"update-index", @"-q", @"--unmerged", @"--ignore-missing", @"--refresh", nil]];
 	self.busy--;
 
