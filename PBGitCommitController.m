@@ -12,10 +12,12 @@
 
 @implementation PBGitCommitController
 
-@synthesize files;
+@synthesize files, status, busy;
 
 - (void)awakeFromNib
 {
+	self.busy = 0;
+
 	[unstagedButtonCell setAction:@selector(cellClicked:)];
 	[cachedButtonCell setAction:@selector(cellClicked:)];
 
@@ -44,6 +46,45 @@
 	return lines;
 }
 
+- (void) refresh:(id) sender
+{
+	self.status = @"Refreshing index…";
+	self.busy++;
+	files = [NSMutableArray array];
+	[repository outputInWorkdirForArguments:[NSArray arrayWithObjects:@"update-index", @"-q", @"--unmerged", @"--ignore-missing", @"--refresh", nil]];
+	self.busy--;
+
+	NSNotificationCenter *nc = [NSNotificationCenter defaultCenter]; 
+	[nc removeObserver:self]; 
+
+	// Other files
+	NSArray *arguments = [NSArray arrayWithObjects:@"ls-files", @"--others", @"--exclude-standard", nil];
+	NSFileHandle *handle = [repository handleInWorkDirForArguments:arguments];
+	[nc addObserver:self selector:@selector(readOtherFiles:) name:NSFileHandleReadCompletionNotification object:handle]; 
+	self.busy++;
+	[handle readInBackgroundAndNotify];
+	
+	// Unstaged files
+	handle = [repository handleInWorkDirForArguments:[NSArray arrayWithObject:@"diff-files"]];
+	[nc addObserver:self selector:@selector(readUnstagedFiles:) name:NSFileHandleReadCompletionNotification object:handle]; 
+	self.busy++;
+	[handle readInBackgroundAndNotify];
+
+	// Cached files
+	handle = [repository handleInWorkDirForArguments:[NSArray arrayWithObjects:@"diff-index", @"--cached", @"HEAD", nil]];
+	[nc addObserver:self selector:@selector(readCachedFiles:) name:NSFileHandleReadCompletionNotification object:handle]; 
+	self.busy++;
+	[handle readInBackgroundAndNotify];
+	
+	self.files = files;
+}
+
+- (void) doneProcessingIndex
+{
+	if (!--self.busy)
+		self.status = @"Ready";
+}
+
 - (void) readOtherFiles:(NSNotification *)notification;
 {
 	NSArray *lines = [self linesFromNotification:notification];
@@ -56,34 +97,7 @@
 		[files addObject: file];
 	}
 	self.files = files;
-}
-
-- (void) refresh:(id) sender
-{
-	files = [NSMutableArray array];
-	[repository outputInWorkdirForArguments:[NSArray arrayWithObjects:@"update-index", @"-q", @"--unmerged", @"--ignore-missing", @"--refresh", nil]];
-	
-
-	NSNotificationCenter *nc = [NSNotificationCenter defaultCenter]; 
-	[nc removeObserver:self]; 
-
-	// Other files
-	NSArray *arguments = [NSArray arrayWithObjects:@"ls-files", @"--others", @"--exclude-standard", nil];
-	NSFileHandle *handle = [repository handleInWorkDirForArguments:arguments];
-	[nc addObserver:self selector:@selector(readOtherFiles:) name:NSFileHandleReadCompletionNotification object:handle]; 
-	[handle readInBackgroundAndNotify];
-
-	// Unstaged files
-	handle = [repository handleInWorkDirForArguments:[NSArray arrayWithObject:@"diff-files"]];
-	[nc addObserver:self selector:@selector(readUnstagedFiles:) name:NSFileHandleReadCompletionNotification object:handle]; 
-	[handle readInBackgroundAndNotify];
-
-	// Cached files
-	handle = [repository handleInWorkDirForArguments:[NSArray arrayWithObjects:@"diff-index", @"--cached", @"HEAD", nil]];
-	[nc addObserver:self selector:@selector(readCachedFiles:) name:NSFileHandleReadCompletionNotification object:handle]; 
-	[handle readInBackgroundAndNotify];
-	
-	self.files = files;
+	[self doneProcessingIndex];
 }
 
 - (void) readUnstagedFiles:(NSNotification *)notification
@@ -100,6 +114,7 @@
 		[files addObject: file];
 	}
 	self.files = files;
+	[self doneProcessingIndex];
 }
 
 - (void) readCachedFiles:(NSNotification *)notification
@@ -117,10 +132,24 @@
 		[files addObject: file];
 	}
 	self.files = files;
+	[self doneProcessingIndex];
+}
+
+- (void) commitFailedBecause:(NSString *)reason
+{
+	self.busy--;
+	self.status = [@"Commit failed: " stringByAppendingString:reason];
+	[[NSAlert alertWithMessageText:@"Commit failed"
+					 defaultButton:nil
+				   alternateButton:nil
+					   otherButton:nil
+		 informativeTextWithFormat:reason] runModal];
+	return;
 }
 
 - (IBAction) commit:(id) sender
 {
+
 	NSString *commitMessage = [commitMessageView string];
 	if ([commitMessage length] < 3) {
 		[[NSAlert alertWithMessageText:@"Commitmessage missing"
@@ -130,29 +159,33 @@
 			 informativeTextWithFormat:@"Please enter a commit message before committing"] runModal];
 		return;
 	}
-	
+
+	self.busy++;
+	self.status = @"Creating tree..";
 	NSString *tree = [repository outputForCommand:@"write-tree"];
-	if ([tree length] != 40) {
-		NSLog(@"Tree: %@", tree);
-		return;
-	}
+	if ([tree length] != 40)
+		return [self commitFailedBecause:@"Could not create a tree"];
+
 	int ret;
 	NSString *commit = [repository outputForArguments:[NSArray arrayWithObjects:@"commit-tree", tree, @"-p", @"HEAD", nil]
 										  inputString:commitMessage
 											 retValue: &ret];
-	if (ret || [commit length] != 40) {
-		NSLog(@"Commit failed");
-		return;
-	}
+
+	if (ret || [commit length] != 40)
+		return [self commitFailedBecause:@"Could not create a commit object"];
 	
 	[repository outputForArguments:[NSArray arrayWithObjects:@"update-ref", @"-m", @"Commit from GitX", @"HEAD", commit, nil]
 						  retValue: &ret];
-	if (ret) {
-		NSLog(@"Commit failed(2)");
-		return;
-	}
+	if (ret)
+		return [self commitFailedBecause:@"Could not update HEAD"];
 
-	NSLog(@"Success! New commit: %@", commit);
+	[[NSAlert alertWithMessageText:@"Commit succesful"
+					 defaultButton:nil
+				   alternateButton:nil
+					   otherButton:nil
+		 informativeTextWithFormat:@"Successfully created commit %@", commit] runModal];
+	
+	self.busy--;
 	[commitMessageView setString:@""];
 	[self refresh:self];
 }
