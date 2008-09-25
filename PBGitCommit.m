@@ -44,6 +44,15 @@
 	return details;
 }
 
+- (NSString *) patch
+{
+	if (_patch != nil)
+		return _patch;
+
+	_patch = [repository outputForArguments:[NSArray arrayWithObjects:@"format-patch",  @"-1", @"--stdout", sha, nil]];
+	return _patch;
+}
+
 - (PBGitTree*) tree
 {
 	return [PBGitTree rootForCommit: self];

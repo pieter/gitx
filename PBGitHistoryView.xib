@@ -8,7 +8,7 @@
 		<string key="IBDocument.HIToolboxVersion">352.00</string>
 		<object class="NSMutableArray" key="IBDocument.EditedObjectIDs">
 			<bool key="EncodedWithXMLCoder">YES</bool>
-			<integer value="46"/>
+			<integer value="6"/>
 		</object>
 		<object class="NSArray" key="IBDocument.PluginDependencies">
 			<bool key="EncodedWithXMLCoder">YES</bool>
@@ -320,7 +320,7 @@
 									<object class="NSTabViewItem" id="375889551">
 										<string key="NSIdentifier">1</string>
 										<object class="NSView" key="NSView" id="859052736">
-											<nil key="NSNextResponder"/>
+											<reference key="NSNextResponder" ref="135073984"/>
 											<int key="NSvFlags">256</int>
 											<object class="NSMutableArray" key="NSSubviews">
 												<bool key="EncodedWithXMLCoder">YES</bool>
@@ -346,7 +346,7 @@
 															<string>public.url-name</string>
 														</object>
 													</object>
-													<string key="NSFrame">{{1, 0}, {851, 220}}</string>
+													<string key="NSFrame">{{1, 0}, {851, 229}}</string>
 													<reference key="NSSuperview" ref="859052736"/>
 													<reference key="NSNextKeyView"/>
 													<string key="FrameName"/>
@@ -373,7 +373,8 @@
 													<bool key="AllowsUndo">YES</bool>
 												</object>
 											</object>
-											<string key="NSFrameSize">{852, 220}</string>
+											<string key="NSFrameSize">{852, 229}</string>
+											<reference key="NSSuperview" ref="135073984"/>
 										</object>
 										<string key="NSLabel">Details</string>
 										<object class="NSColor" key="NSColor" id="457244339">
@@ -645,7 +646,7 @@
 									<object class="NSTabViewItem" id="529992882">
 										<string key="NSIdentifier">Item 2</string>
 										<object class="NSView" key="NSView" id="657042048">
-											<reference key="NSNextResponder" ref="135073984"/>
+											<nil key="NSNextResponder"/>
 											<int key="NSvFlags">256</int>
 											<object class="NSMutableArray" key="NSSubviews">
 												<bool key="EncodedWithXMLCoder">YES</bool>
@@ -768,29 +769,6 @@
 																		<object class="NSTextView" id="75600241">
 																			<reference key="NSNextResponder" ref="321980917"/>
 																			<int key="NSvFlags">2322</int>
-																			<object class="NSMutableSet" key="NSDragTypes">
-																				<bool key="EncodedWithXMLCoder">YES</bool>
-																				<object class="NSMutableArray" key="set.sortedObjects">
-																					<bool key="EncodedWithXMLCoder">YES</bool>
-																					<string>Apple HTML pasteboard type</string>
-																					<string>Apple PDF pasteboard type</string>
-																					<string>Apple PICT pasteboard type</string>
-																					<string>Apple PNG pasteboard type</string>
-																					<string>Apple URL pasteboard type</string>
-																					<string>CorePasteboardFlavorType 0x6D6F6F76</string>
-																					<string>CorePasteboardFlavorType 0x75726C20</string>
-																					<string>NSColor pasteboard type</string>
-																					<string>NSFilenamesPboardType</string>
-																					<string>NSStringPboardType</string>
-																					<string>NeXT Encapsulated PostScript v1.2 pasteboard type</string>
-																					<string>NeXT RTFD pasteboard type</string>
-																					<string>NeXT Rich Text Format v1.0 pasteboard type</string>
-																					<string>NeXT TIFF v4.0 pasteboard type</string>
-																					<string>NeXT font pasteboard type</string>
-																					<string>NeXT ruler pasteboard type</string>
-																					<string>WebURLsWithTitlesPboardType</string>
-																				</object>
-																			</object>
 																			<string key="NSFrameSize">{543, 112}</string>
 																			<reference key="NSSuperview" ref="321980917"/>
 																			<object class="NSTextContainer" key="NSTextContainer" id="480935218">
@@ -897,21 +875,20 @@
 												</object>
 											</object>
 											<string key="NSFrameSize">{852, 229}</string>
-											<reference key="NSSuperview" ref="135073984"/>
 										</object>
 										<string key="NSLabel">Tree</string>
 										<reference key="NSColor" ref="457244339"/>
 										<reference key="NSTabView" ref="135073984"/>
 									</object>
 								</object>
-								<reference key="NSSelectedTabViewItem" ref="529992882"/>
+								<reference key="NSSelectedTabViewItem" ref="375889551"/>
 								<reference key="NSFont" ref="924107556"/>
 								<int key="NSTvFlags">6</int>
 								<bool key="NSAllowTruncatedLabels">YES</bool>
 								<bool key="NSDrawsBackground">YES</bool>
 								<object class="NSMutableArray" key="NSSubviews">
 									<bool key="EncodedWithXMLCoder">YES</bool>
-									<reference ref="657042048"/>
+									<reference ref="859052736"/>
 								</object>
 							</object>
 						</object>
@@ -1326,6 +1303,14 @@
 						<reference key="destination" ref="1001"/>
 					</object>
 					<int key="connectionID">107</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
+						<string key="label">policyDelegate</string>
+						<reference key="source" ref="676796335"/>
+						<reference key="destination" ref="568231003"/>
+					</object>
+					<int key="connectionID">109</int>
 				</object>
 			</object>
 			<object class="IBMutableOrderedSet" key="objectRecords">
@@ -1859,7 +1844,7 @@
 				</object>
 			</object>
 			<nil key="sourceID"/>
-			<int key="maxID">107</int>
+			<int key="maxID">109</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<object class="NSMutableArray" key="referencedPartialClassDescriptions">

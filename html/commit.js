@@ -3,6 +3,7 @@ var Commit = Class.create({
 	initialize: function(obj) {
 		this.raw = obj.details;
 		this.refs = obj.refs;
+		this.object = obj;
 
 		var diffStart = this.raw.indexOf("\ndiff ");
 		var messageStart = this.raw.indexOf("\n\n") + 2;
@@ -37,6 +38,45 @@ var Commit = Class.create({
 	}
 });
 
+var notify = function(text, busy) {
+	var n = $("notification");
+	n.style.display = "";
+	if (busy)
+		$("spinner").style.display = "";
+	else
+		$("spinner").style.display = "none";
+	
+	$("notification_message").innerHTML = text;
+}
+
+var gistie = function() {
+	notify("Uploading code to Gistie..", true);
+	
+	new Ajax.Request("http://gist.github.com/gists", {
+		method: 'post',
+		parameters: {
+			"file_ext[gistfile1]":      "patch",
+			"file_name[gistfile1]":     commit.object.subject.replace(/[^a-zA-Z0-9]/g, "-") + ".patch",
+			"file_contents[gistfile1]": commit.object.patch()
+		},
+
+		onSuccess: function(t) {
+			if (m = t.responseText.match(/gist: (\d+)/))
+				notify("Code uploaded to gistie <a target='_new' href='http://gist.github.com/" + m[1] + "'>#" + m[1] + "</a>");
+			else
+				notify("Pasting to Gistie failed.");
+		},
+		onFailure: function(t) {
+			notify("Pasting to Gistie failed.");
+		},
+		onException: function(t) {
+			notify("Pasting to Gistie failed.");
+		},
+		
+	});
+	
+}
+
 var selectCommit = function(a) {
 	Controller.selectCommit_(a);
 }
@@ -51,6 +91,7 @@ var showDiffs = function() {
 }
 
 var reload = function() {
+	$("notification").style.display = "none";
 	commit.refs = null;
 	showRefs();
 	commit.reloadRefs();
@@ -70,6 +111,7 @@ var showRefs = function() {
 
 var loadCommit = function() {
 	commit = new Commit(CommitObject);
+	$("notification").style.display = "none";
 
 	$("commitID").innerHTML = commit.sha;
 	if (commit.author_email)

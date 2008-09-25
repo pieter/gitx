@@ -15,6 +15,7 @@
 	NSString* subject;
 	NSString* author;
 	NSString* details;
+	NSString *_patch;
 	NSArray* parents;
 	NSArray* refs;
 	NSDate* date;
@@ -31,6 +32,7 @@
 @property (retain) NSArray* parents,  *refs;
 @property (copy) NSDate* date;
 @property (readonly) NSString* dateString;
+@property (readonly) NSString* patch;
 @property (assign) char sign;
 
 @property (readonly) NSString* details;
