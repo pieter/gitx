@@ -9,11 +9,13 @@
 #import <Cocoa/Cocoa.h>
 #import "PBGitGrapher.h"
 #import "PBGraphCellInfo.h"
+#import "PBGitHistoryController.h"
 
 @interface PBGitRevisionCell : NSActionCell {
 	id objectValue;
-	PBGraphCellInfo*	cellInfo;
-	NSTextFieldCell* textCell;
+	PBGraphCellInfo *cellInfo;
+	NSTextFieldCell *textCell;
+	IBOutlet PBGitHistoryController *controller;
 }
 
 @property(retain) PBGitCommit* objectValue;

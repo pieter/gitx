@@ -152,4 +152,8 @@
 	[commitList scrollRowToVisible: index];
 }
 
+- (BOOL) hasNonlinearPath
+{
+	return [commitController filterPredicate] || [[commitController sortDescriptors] count] > 0;
+}
 @end

@@ -180,7 +180,7 @@
 {
 	cellInfo = [self.objectValue lineInfo];
 	
-	if (cellInfo) {
+	if (cellInfo && ![controller hasNonlinearPath]) {
 		float pathWidth = 10 + 10 * cellInfo.numColumns;
 
 		NSRect ownRect;

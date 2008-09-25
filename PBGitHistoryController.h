@@ -40,4 +40,5 @@
 - (IBAction) openSelectedFile: sender;
 - (void) updateQuicklookForce: (BOOL) force;
 
+- (BOOL) hasNonlinearPath;
 @end
