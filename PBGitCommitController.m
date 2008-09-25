@@ -25,6 +25,12 @@
 	
 	[unstagedFilesController setFilterPredicate:[NSPredicate predicateWithFormat:@"cached == 0"]];
 	[cachedFilesController setFilterPredicate:[NSPredicate predicateWithFormat:@"cached == 1"]];
+	
+	[unstagedFilesController setSortDescriptors:[NSArray arrayWithObjects:
+		[[NSSortDescriptor alloc] initWithKey:@"status" ascending:false],
+		[[NSSortDescriptor alloc] initWithKey:@"path" ascending:true], nil]];
+	[cachedFilesController setSortDescriptors:[NSArray arrayWithObject:
+		[[NSSortDescriptor alloc] initWithKey:@"path" ascending:true]]];
 }
 
 - (NSArray *) linesFromNotification:(NSNotification *)notification
