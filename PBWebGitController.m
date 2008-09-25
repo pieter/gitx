@@ -129,4 +129,13 @@
 
 	return defaultMenuItems;
 }
+
+-   (void)webView:(WebView *)sender decidePolicyForNewWindowAction:(NSDictionary *)actionInformation
+   		  request:(NSURLRequest *)request
+     newFrameName:(NSString *)frameName
+ decisionListener:(id < WebPolicyDecisionListener >)listener
+{
+	[[NSWorkspace sharedWorkspace] openURL:[request URL]];
+}
+
 @end
