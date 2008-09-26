@@ -69,21 +69,21 @@
 	// Other files
 	NSArray *arguments = [NSArray arrayWithObjects:@"ls-files", @"--others", @"--exclude-standard", nil];
 	NSFileHandle *handle = [repository handleInWorkDirForArguments:arguments];
-	[nc addObserver:self selector:@selector(readOtherFiles:) name:NSFileHandleReadCompletionNotification object:handle]; 
+	[nc addObserver:self selector:@selector(readOtherFiles:) name:NSFileHandleReadToEndOfFileCompletionNotification object:handle]; 
 	self.busy++;
-	[handle readInBackgroundAndNotify];
+	[handle readToEndOfFileInBackgroundAndNotify];
 	
 	// Unstaged files
 	handle = [repository handleInWorkDirForArguments:[NSArray arrayWithObject:@"diff-files"]];
-	[nc addObserver:self selector:@selector(readUnstagedFiles:) name:NSFileHandleReadCompletionNotification object:handle]; 
+	[nc addObserver:self selector:@selector(readUnstagedFiles:) name:NSFileHandleReadToEndOfFileCompletionNotification object:handle]; 
 	self.busy++;
-	[handle readInBackgroundAndNotify];
+	[handle readToEndOfFileInBackgroundAndNotify];
 
 	// Cached files
 	handle = [repository handleInWorkDirForArguments:[NSArray arrayWithObjects:@"diff-index", @"--cached", @"HEAD", nil]];
-	[nc addObserver:self selector:@selector(readCachedFiles:) name:NSFileHandleReadCompletionNotification object:handle]; 
+	[nc addObserver:self selector:@selector(readCachedFiles:) name:NSFileHandleReadToEndOfFileCompletionNotification object:handle]; 
 	self.busy++;
-	[handle readInBackgroundAndNotify];
+	[handle readToEndOfFileInBackgroundAndNotify];
 	
 	self.files = files;
 }
