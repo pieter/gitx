@@ -28,4 +28,7 @@
 
 - (void)changeViewController:(NSInteger)whichViewTag;
 - (void) focusOnSearchField;
+
+- (IBAction) showCommitView:(id)sender;
+- (IBAction) showHistoryView:(id)sender;
 @end

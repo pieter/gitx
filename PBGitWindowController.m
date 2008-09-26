@@ -88,4 +88,14 @@
 
 }
 
+- (void) showCommitView:(id)sender
+{
+	self.selectedViewIndex = 1;
+}
+
+- (void) showHistoryView:(id)sender
+{
+	self.selectedViewIndex = 0;
+}
+
 @end

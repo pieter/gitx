@@ -251,7 +251,7 @@ static NSString* gitPath;
 	if (!windowController)
 		return;
 	
-	((PBGitWindowController *)windowController).selectedViewIndex = 0;
+	[((PBGitWindowController *)windowController) showHistoryView:self];
 }
 
 - (void) selectBranch: (PBGitRevSpecifier*) rev
