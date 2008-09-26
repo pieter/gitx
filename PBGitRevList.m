@@ -78,9 +78,9 @@ struct decorateParameters {
 	BOOL showSign = [rev hasLeftRight];
 
 	if (showSign)
-		arguments = [NSMutableArray arrayWithObjects:@"log", @"--topo-order", @"--pretty=format:%H\01%an\01%s\01%P\01%at\01%m", nil];
+		arguments = [NSMutableArray arrayWithObjects:@"log", @"--early-output", @"--topo-order", @"--pretty=format:%H\01%an\01%s\01%P\01%at\01%m", nil];
 	else
-		arguments = [NSMutableArray arrayWithObjects:@"log", @"--topo-order", @"--pretty=format:%H\01%an\01%s\01%P\01%at", nil];
+		arguments = [NSMutableArray arrayWithObjects:@"log", @"--early-output", @"--topo-order", @"--pretty=format:%H\01%an\01%s\01%P\01%at", nil];
 
 	if (!rev)
 		[arguments addObject:@"HEAD"];
@@ -118,10 +118,16 @@ struct decorateParameters {
 			continue;
 		}
 		
+		if ([currentLine hasPrefix:@"Final output:"]) {
+			currentLine = [NSMutableString string];
+			continue;
+		}
+
 		// If we are here, we currentLine is a full line.
 		NSArray* components = [currentLine componentsSeparatedByString:@"\01"];
 		if ([components count] < 5) {
 			NSLog(@"Can't split string: %@", currentLine);
+			currentLine = [NSMutableString string];
 			continue;
 		}
 		PBGitCommit* newCommit = [[PBGitCommit alloc] initWithRepository: repository andSha: [components objectAtIndex:0]];
