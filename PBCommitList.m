@@ -28,4 +28,9 @@
 		[super keyDown: event];
 }
 
+- (void) copy:(id)sender
+{
+	[controller copyCommitInfo];
+};	
+
 @end

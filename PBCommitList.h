@@ -13,6 +13,7 @@
 @interface PBCommitList : NSTableView {
 	IBOutlet WebView* webView;
 	IBOutlet PBWebGitController* webController;
+	IBOutlet PBGitHistoryController *controller;
 }
 
 @end

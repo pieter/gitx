@@ -40,5 +40,7 @@
 - (IBAction) openSelectedFile: sender;
 - (void) updateQuicklookForce: (BOOL) force;
 
+- (void) copyCommitInfo;
+
 - (BOOL) hasNonlinearPath;
 @end

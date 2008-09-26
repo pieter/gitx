@@ -102,11 +102,23 @@
 
 - (void)keyDown:(NSEvent*)event
 {
-	NSLog(@"Key down!");
 	if ([[event charactersIgnoringModifiers] isEqualToString: @"f"] && [event modifierFlags] & NSAlternateKeyMask && [event modifierFlags] & NSCommandKeyMask)
 		[superController focusOnSearchField];
 	else
 		[super keyDown: event];
+}
+
+- (void) copyCommitInfo
+{
+	PBGitCommit *commit = [[commitController selectedObjects] objectAtIndex:0];
+	if (!commit)
+		return;
+	NSString *info = [NSString stringWithFormat:@"%@ (%@)", [commit sha], [commit subject]];
+
+	NSPasteboard *a =[NSPasteboard generalPasteboard];
+	[a declareTypes:[NSArray arrayWithObject:NSStringPboardType] owner:self];
+	[a setString:info forType: NSStringPboardType];
+	
 }
 
 - (IBAction) toggleQuickView: sender
