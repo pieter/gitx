@@ -19,7 +19,7 @@ NSString* PBGitRepositoryErrorDomain = @"GitXErrorDomain";
 
 @implementation PBGitRepository
 
-@synthesize revisionList, branches, currentBranch, refs;
+@synthesize revisionList, branches, currentBranch, refs, windowController;
 static NSString* gitPath;
 
 + (void) initialize
@@ -131,12 +131,11 @@ static NSString* gitPath;
 
 - (void) setup
 {
-	self.branches = [NSMutableArray array];
 	[self reloadRefs];
 	revisionList = [[PBGitRevList alloc] initWithRepository:self];
 }
 
-- (id) initWithURL: (NSURL*) path andRevSpecifier:(PBGitRevSpecifier*) rev
+- (id) initWithURL: (NSURL*) path
 {
 	NSURL* gitDirURL = [PBGitRepository gitDirForURL:path];
 	if (!gitDirURL)
@@ -146,10 +145,16 @@ static NSString* gitPath;
 	[self setFileURL: gitDirURL];
 
 	[self setup];
-	[self selectBranch: [self addBranch: rev]];
+	
+	// We don't want the window controller to display anything yet..
+	// We'll leave that to the caller of this method.
+	windowController = [[PBGitWindowController alloc] initWithRepository:self displayDefault:NO];
+	[self addWindowController:windowController];
+	[self showWindows];
 
 	return self;
 }
+
 // The fileURL the document keeps is to the .git dir, but that’s pretty
 // useless for display in the window title bar, so we show the directory above
 - (NSString*)displayName
@@ -163,10 +168,10 @@ static NSString* gitPath;
 // Overridden to create our custom window controller
 - (void)makeWindowControllers
 {
-	PBGitWindowController* controller = [[PBGitWindowController alloc] initWithRepository:self];
-	[self addWindowController:controller];
-	[controller release];
+	windowController = [[PBGitWindowController alloc] initWithRepository:self displayDefault:YES];
+	[self addWindowController:windowController];
 }
+
 
 - (void) addRef: (PBGitRef *) ref fromParameters: (NSArray *) components
 {
@@ -192,6 +197,7 @@ static NSString* gitPath;
 - (BOOL) reloadRefs
 {
 	BOOL ret = NO;
+	self.branches = [NSMutableArray array];
 	NSString* output = [PBEasyPipe outputForCommand:gitPath withArgs:[NSArray arrayWithObjects:@"for-each-ref", @"--format=%(refname) %(objecttype) %(objectname) %(*objectname)", @"refs", nil] inDir: self.fileURL.path];
 	NSArray* lines = [output componentsSeparatedByString:@"\n"];
 	refs = [NSMutableDictionary dictionary];
@@ -240,6 +246,14 @@ static NSString* gitPath;
 	return rev;
 }
 
+- (void) showHistoryView
+{
+	if (!windowController)
+		return;
+	
+	((PBGitWindowController *)windowController).selectedViewIndex = 0;
+}
+
 - (void) selectBranch: (PBGitRevSpecifier*) rev
 {
 	int i;
@@ -247,11 +261,12 @@ static NSString* gitPath;
 		PBGitRevSpecifier* aRev = [branches objectAtIndex:i];
 		if (rev == aRev) {
 			self.currentBranch = [NSIndexSet indexSetWithIndex:i];
+			[self showHistoryView];
 			return;
 		}
 	}
 }
-
+	
 - (void) readCurrentBranch
 {
 		[self selectBranch: [self addBranch: [self headRef]]];

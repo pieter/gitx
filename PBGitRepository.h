@@ -14,6 +14,8 @@ extern NSString* PBGitRepositoryErrorDomain;
 
 @interface PBGitRepository : NSDocument {
 	PBGitRevList* revisionList;
+	NSWindowController *windowController;
+
 	NSMutableArray* branches;
 	NSIndexSet* currentBranch;
 	NSMutableDictionary* refs;
@@ -45,9 +47,10 @@ extern NSString* PBGitRepositoryErrorDomain;
 + (NSURL*)gitDirForURL:(NSURL*)repositoryURL;
 + (NSURL*)baseDirForURL:(NSURL*)repositoryURL;
 
-- (id) initWithURL: (NSURL*) path andRevSpecifier:(PBGitRevSpecifier*) rev;
+- (id) initWithURL: (NSURL*) path;
 - (void) setup;
 
+@property (readonly) NSWindowController *windowController;
 @property (retain) PBGitRevList* revisionList;
 @property (assign) NSMutableArray* branches;
 @property (assign) NSIndexSet* currentBranch;

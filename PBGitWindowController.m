@@ -16,13 +16,20 @@
 
 @synthesize repository, viewController, searchController, selectedViewIndex;
 
-- (id)initWithRepository:(PBGitRepository*)theRepository;
+- (id)initWithRepository:(PBGitRepository*)theRepository displayDefault:(BOOL)displayDefault
 {
 	if(self = [self initWithWindowNibName:@"RepositoryWindow"])
 	{
 		self.repository = theRepository;
 		[self showWindow:nil];
 	}
+	
+	if (displayDefault) {
+		self.selectedViewIndex = [[NSUserDefaults standardUserDefaults] integerForKey:@"selectedViewIndex"];
+	} else {
+		self.selectedViewIndex = -1;
+	}
+
 	return self;
 }
 
@@ -76,7 +83,6 @@
 	// We bind this ourselves because otherwise we would lose our selection
 	[branchesController bind:@"selectionIndexes" toObject:repository withKeyPath:@"currentBranch" options:nil];
 
-	self.selectedViewIndex = [[NSUserDefaults standardUserDefaults] integerForKey:@"selectedViewIndex"];
 	[[self window] setAutorecalculatesContentBorderThickness:NO forEdge:NSMinYEdge];
 	[[self window] setContentBorderThickness:35.0f forEdge:NSMinYEdge];
 

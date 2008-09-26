@@ -15,5 +15,5 @@
 
 }
 
-- (id) openRepositoryAtLocation:(NSURL*) url RevSpecifier:(PBGitRevSpecifier*) rev;
+- (id) documentForLocation:(NSURL*) url;
 @end

@@ -13,18 +13,18 @@
 	IBOutlet NSSearchField* searchField;
 	IBOutlet NSArrayController* searchController;
 	IBOutlet NSArrayController *branchesController;
-	PBGitRepository* repository;
+	__weak PBGitRepository* repository;
 	int selectedViewIndex;
 	IBOutlet NSView* contentView;
 	NSViewController* viewController;
 }
 
-@property (retain) PBGitRepository *repository;
+@property (assign) __weak PBGitRepository *repository;
 @property (readonly) NSViewController *viewController;
 @property (assign) int selectedViewIndex;
 @property (retain) NSArrayController *searchController;
 
-- (id)initWithRepository:(PBGitRepository*)theRepository;
+- (id)initWithRepository:(PBGitRepository*)theRepository displayDefault:(BOOL)display;
 
 - (void)changeViewController:(NSInteger)whichViewTag;
 - (void) focusOnSearchField;
