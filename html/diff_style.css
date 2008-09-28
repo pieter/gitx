@@ -1,3 +1,7 @@
+body {
+	margin: 0;
+	margin-top: 5px;
+}
 code .delline, code .oldfile {
   background-color: #FEE;
   color: #B00;
@@ -11,26 +15,37 @@ code .fileline {
   font-weight: bold;
 }
 
-code .fileheader {
-  margin-top: 20px;
-}
-
 code .hunkheader {
   background-color: #f7f7f7;
   color: #bbb;
 }
 
 pre {
-  overflow-y: auto;
   width: 100%;
 }
 
 pre code {
   display: table-cell;
-  padding: 9px;
   width: 100%;
+}
+
+#message {
+	margin: 5px;
+	font-family: Monaco;
 }
 
 #CurrentHunk {
 	border-left: 5px solid black;
+}
+
+table.diff {
+	border: 1px solid #a9a9a9;
+	border-spacing: 0;
+}
+.lineno {
+	padding-left: 2px;
+	padding-right: 2px;
+	background-color: #ECECEC;
+	color: #A9A9A9;
+	border-right: 1px solid #A9A9A9;
 }
