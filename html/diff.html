@@ -13,7 +13,7 @@
 			{
 				var contents = file.changes();
 				if (contents)
-					$("diff").innerHTML = contents;
+					$("diff").innerHTML = contents.escapeHTML();
 				else
 					$("diff").innerHTML = "Could not display changes";
 
