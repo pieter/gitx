@@ -19,7 +19,7 @@ NSString* PBGitRepositoryErrorDomain = @"GitXErrorDomain";
 
 @implementation PBGitRepository
 
-@synthesize revisionList, branches, currentBranch, refs, windowController, hasChanged;
+@synthesize revisionList, branches, currentBranch, refs, hasChanged;
 static NSString* gitPath;
 
 + (void) initialize
@@ -149,8 +149,7 @@ static NSString* gitPath;
 	
 	// We don't want the window controller to display anything yet..
 	// We'll leave that to the caller of this method.
-	windowController = [[PBGitWindowController alloc] initWithRepository:self displayDefault:NO];
-	[self addWindowController:windowController];
+	[self addWindowController:[[PBGitWindowController alloc] initWithRepository:self displayDefault:NO]];
 	[self showWindows];
 
 	return self;
@@ -169,10 +168,16 @@ static NSString* gitPath;
 // Overridden to create our custom window controller
 - (void)makeWindowControllers
 {
-	windowController = [[PBGitWindowController alloc] initWithRepository:self displayDefault:YES];
-	[self addWindowController:windowController];
+	[self addWindowController: [[PBGitWindowController alloc] initWithRepository:self displayDefault:YES]];
 }
 
+- (NSWindowController *)windowController
+{
+	if ([[self windowControllers] count] == 0)
+		return NULL;
+	
+	return [[self windowControllers] objectAtIndex:0];
+}
 
 - (void) addRef: (PBGitRef *) ref fromParameters: (NSArray *) components
 {
@@ -263,10 +268,10 @@ static NSString* gitPath;
 
 - (void) showHistoryView
 {
-	if (!windowController)
+	if (!self.windowController)
 		return;
 	
-	[((PBGitWindowController *)windowController) showHistoryView:self];
+	[((PBGitWindowController *)self.windowController) showHistoryView:self];
 }
 
 - (void) selectBranch: (PBGitRevSpecifier*) rev

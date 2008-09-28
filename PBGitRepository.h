@@ -14,7 +14,6 @@ extern NSString* PBGitRepositoryErrorDomain;
 
 @interface PBGitRepository : NSDocument {
 	PBGitRevList* revisionList;
-	NSWindowController *windowController;
 
 	BOOL hasChanged;
 	NSMutableArray* branches;
