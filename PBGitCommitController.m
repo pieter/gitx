@@ -167,7 +167,15 @@
 
 - (IBAction) commit:(id) sender
 {
-
+	if ([[cachedFilesController arrangedObjects] count] == 0) {
+		[[NSAlert alertWithMessageText:@"No changes to commit"
+						 defaultButton:nil
+					   alternateButton:nil
+						   otherButton:nil
+			 informativeTextWithFormat:@"You must first stage some changes before committing"] runModal];
+		return;
+	}		
+	
 	NSString *commitMessage = [commitMessageView string];
 	if ([commitMessage length] < 3) {
 		[[NSAlert alertWithMessageText:@"Commitmessage missing"
@@ -177,7 +185,7 @@
 			 informativeTextWithFormat:@"Please enter a commit message before committing"] runModal];
 		return;
 	}
-
+	
 	self.busy++;
 	self.status = @"Creating tree..";
 	NSString *tree = [repository outputForCommand:@"write-tree"];
