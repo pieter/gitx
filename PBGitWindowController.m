@@ -62,7 +62,8 @@
 			viewController = [[PBGitCommitController alloc] initWithRepository:repository superController:self];
 	}
 	
-
+	// make sure we automatically resize the controller's view to the current window size
+	[[viewController view] setFrame: [contentView bounds]];
 	
 	//// embed the current view to our host view
 	[contentView addSubview: [viewController view]];
@@ -72,8 +73,6 @@
 	if ([viewController respondsToSelector:@selector(commitController)])
 		[self bind:@"searchController" toObject:viewController withKeyPath:@"commitController" options:nil];
 
-	// make sure we automatically resize the controller's view to the current window size
-	[[viewController view] setFrame: [contentView bounds]];
 		
 	[self didChangeValueForKey:@"viewController"];	// this will trigger the NSTextField's value binding to change
 }
