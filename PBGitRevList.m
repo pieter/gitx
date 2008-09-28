@@ -65,15 +65,13 @@
 		[self readCommitsForce: NO];
 }
 
-struct decorateParameters {
-	NSMutableArray* revisions;
-	PBGitRevSpecifier* rev;
-};
-
 - (void) walkRevisionListWithSpecifier: (PBGitRevSpecifier*) rev
 {
 	
-	NSMutableArray* newArray = [NSMutableArray array];
+	NSMutableArray* revisions = [NSMutableArray array];
+	PBGitGrapher* g = [[PBGitGrapher alloc] initWithRepository: repository];
+	NSDictionary* refs = [repository refs];
+
 	NSMutableArray* arguments;
 	BOOL showSign = [rev hasLeftRight];
 
@@ -92,10 +90,6 @@ struct decorateParameters {
 
 	NSFileHandle* handle = [repository handleForArguments: arguments];
 	
-	// We decorate the commits in a separate thread.
-	NSThread * decorationThread = [[NSThread alloc] initWithTarget: self selector: @selector(decorateRevisions:) object:newArray];
-	[decorationThread start];
-
 	int fd = [handle fileDescriptor];
 	FILE* f = fdopen(fd, "r");
 	int BUFFERSIZE = 2048;
@@ -103,7 +97,7 @@ struct decorateParameters {
 	buffer[BUFFERSIZE - 2] = 0;
 	
 	char* l;
-
+	int num = 0;
 	NSMutableString* currentLine = [NSMutableString string];
 	while (l = fgets(buffer, BUFFERSIZE, f)) {
 		NSString *s = [NSString stringWithCString:(const char *)l encoding:NSUTF8StringEncoding];
@@ -117,8 +111,13 @@ struct decorateParameters {
 			buffer[BUFFERSIZE - 2] = 0;
 			continue;
 		}
-		
+
+		// We reached the end of some temporary output. Show what we have
+		// until now, and then start from the beginning.
 		if ([currentLine hasPrefix:@"Final output:"]) {
+			[self performSelectorOnMainThread:@selector(setCommits:) withObject:revisions waitUntilDone:NO];
+			g = [[PBGitGrapher alloc] initWithRepository: repository];
+			revisions = [NSMutableArray array];
 			currentLine = [NSMutableString string];
 			continue;
 		}
@@ -130,6 +129,7 @@ struct decorateParameters {
 			currentLine = [NSMutableString string];
 			continue;
 		}
+
 		PBGitCommit* newCommit = [[PBGitCommit alloc] initWithRepository: repository andSha: [components objectAtIndex:0]];
 		NSArray* parents = [[components objectAtIndex:3] componentsSeparatedByString:@" "];
 		newCommit.parents = parents;
@@ -139,54 +139,22 @@ struct decorateParameters {
 		if (showSign)
 			newCommit.sign = [[components objectAtIndex:5] characterAtIndex:0];
 
-		@synchronized(newArray) {
-			[newArray addObject: newCommit];
-		}
+		[revisions addObject: newCommit];
+		[g decorateCommit: newCommit];
+		
+		if (refs && [refs objectForKey:newCommit.sha])
+			newCommit.refs = [refs objectForKey:newCommit.sha];
+		
+		if (++num % 1000 == 0)
+			[self performSelectorOnMainThread:@selector(setCommits:) withObject:revisions waitUntilDone:NO];
+
+	
 		currentLine = [NSMutableString string];
 	}
 	
-	[decorationThread cancel];
+	// Make sure the commits are stored before exiting.
+	[self performSelectorOnMainThread:@selector(setCommits:) withObject:revisions waitUntilDone:YES];
 	
-	[NSThread exit];
-}
-
-- (void) decorateRevisions:(NSMutableArray *)revisions
-{
-	NSDictionary* refs = [repository refs];
-
-	NSDate* start = [NSDate date];
-
-	NSMutableArray* allRevisions = [NSMutableArray arrayWithCapacity:1000];
-	int num = 0;
-
-	PBGitGrapher* g = [[PBGitGrapher alloc] initWithRepository: repository];
-
-	while (!([[NSThread currentThread] isCancelled] && [revisions count] == 0)) {
-		if ([revisions count] == 0)
-			usleep(5000);
-
-		NSArray* currentRevisions;
-		@synchronized(revisions) {
-			currentRevisions = [revisions copy];
-			[revisions removeAllObjects];
-		}
-		for (PBGitCommit* commit in currentRevisions) {
-			num++;
-			[g decorateCommit: commit];
-
-			if (refs && [refs objectForKey:commit.sha])
-				commit.refs = [refs objectForKey:commit.sha];
-
-			[allRevisions addObject: commit];
-			if (num % 1000 == 0 || num == 10)
-				[self performSelectorOnMainThread:@selector(setCommits:) withObject:allRevisions waitUntilDone:NO];
-		}
-	}
-
-	[self performSelectorOnMainThread:@selector(setCommits:) withObject:allRevisions waitUntilDone:YES];
-	NSTimeInterval duration = [[NSDate date] timeIntervalSinceDate:start];
-	NSLog(@"Loaded %i commits in %f seconds", num, duration);
-
 	[NSThread exit];
 }
 
