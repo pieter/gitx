@@ -18,7 +18,7 @@ typedef enum {
 @interface PBChangedFile : NSObject {
 	NSString *path;
 	BOOL cached;
-	PBGitRepository *repository;
+	__weak PBGitRepository *repository;
 	PBChangedFileStatus status;
 }
 

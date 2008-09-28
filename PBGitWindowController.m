@@ -51,7 +51,7 @@
 	self.searchController = nil;
 	[self unbind:@"searchController"];
 	if ([viewController view] != nil)
-		[[viewController view] removeFromSuperview];	// remove the current view
+		[(PBViewController *)viewController removeView];
 	
 	switch (whichViewTag)
 	{

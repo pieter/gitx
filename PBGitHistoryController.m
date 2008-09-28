@@ -179,4 +179,10 @@
 {
 	return [commitController filterPredicate] || [[commitController sortDescriptors] count] > 0;
 }
+
+- (void) removeView
+{
+	[webView close];
+	[super removeView];
+}
 @end

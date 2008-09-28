@@ -11,12 +11,12 @@
 #import "PBGitWindowController.h"
 
 @interface PBViewController : NSViewController {
-	PBGitRepository *repository;
-	PBGitWindowController *superController;
+	__weak PBGitRepository *repository;
+	__weak PBGitWindowController *superController;
 }
 
-@property (readonly) PBGitRepository *repository;
+@property (readonly) __weak PBGitRepository *repository;
 
 - (id)initWithRepository:(PBGitRepository *)theRepository superController:(PBGitWindowController *)controller;
-
+- (void) removeView;
 @end

@@ -25,4 +25,8 @@
 	return self;
 }
 
+- (void) removeView
+{
+	[[self view] removeFromSuperview];	// remove the current view
+}
 @end
