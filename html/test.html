@@ -1,0 +1,61 @@
+<html>
+<head>
+	<title>Details for commit</title>
+	<link rel="stylesheet" href="commits.css" type="text/css" media="screen" title="no title" charset="utf-8">
+	<link rel="stylesheet" href="diff_style.css" type="text/css" media="screen" title="no title" charset="utf-8">
+	<script src="prototype.js" type="text/javascript" charset="utf-8"></script>
+	<script src="diffHighlighter.js" type="text/javascript" charset="utf-8"></script>
+	<script type="text/javascript" charset="utf-8">
+	var doeHet = function() {
+		$("details").innerHTML = $("diff").value;
+		highlightDiffs();
+	}
+	</script>
+</head>
+
+<body style="padding: 0px; border: 0px" onLoad="doeHet()">
+	<textarea style='display:none' id="diff" rows="8" cols="40">
+diff --git a/PBGitRepository.m b/PBGitRepository.m
+index f3625e8..637058e 100644
+--- a/PBGitRepository.m
++++ b/PBGitRepository.m
+@@ -131,6 +131,7 @@ static NSString* gitPath;
+
+ - (void) setup
+ {
++	self.branches = [NSMutableArray array];
+ 	[self reloadRefs];
+ 	revisionList = [[PBGitRevList alloc] initWithRepository:self];
+ }
+@@ -197,11 +198,15 @@ static NSString* gitPath;
+ - (BOOL) reloadRefs
+ {
+ 	BOOL ret = NO;
+-	self.branches = [NSMutableArray array];
+-	NSString* output = [PBEasyPipe outputForCommand:gitPath withArgs:[NSArray arrayWithObjects:@"for-each-ref", @"--format=%(refname) %(objecttype) %(objectname) %(*objectname)", @"refs", nil] inDir: self.fileURL.path];
+-	NSArray* lines = [output componentsSeparatedByString:@"\n"];
++
+ 	refs = [NSMutableDictionary dictionary];
+
++	NSString* output = [PBEasyPipe outputForCommand:gitPath 
++										   withArgs:[NSArray arrayWithObjects:@"for-each-ref", @"--format=%(refname) %(objecttype) %(objectname)"
++													 " %(*objectname)", @"refs", nil]
++											  inDir: self.fileURL.path];
++	NSArray* lines = [output componentsSeparatedByString:@"\n"];
++
+ 	for (NSString* line in lines) {
+ 		NSArray* components = [line componentsSeparatedByString:@" "];
+
+@@ -214,8 +219,8 @@ static NSString* gitPath;
+
+ 		// Also add this ref to the refs list
+ 		[self addRef:newRef fromParameters:components];
+-
+ 	}
++
+ 	self.refs = refs;
+ 	return ret;
+		 }
+	</textarea>
+	<pre><code class="diffcode" id='details'></code></pre>
+</body>
