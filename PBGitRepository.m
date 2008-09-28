@@ -131,6 +131,7 @@ static NSString* gitPath;
 
 - (void) setup
 {
+	self.branches = [NSMutableArray array];
 	[self reloadRefs];
 	revisionList = [[PBGitRevList alloc] initWithRepository:self];
 }
@@ -197,10 +198,14 @@ static NSString* gitPath;
 - (BOOL) reloadRefs
 {
 	BOOL ret = NO;
-	self.branches = [NSMutableArray array];
-	NSString* output = [PBEasyPipe outputForCommand:gitPath withArgs:[NSArray arrayWithObjects:@"for-each-ref", @"--format=%(refname) %(objecttype) %(objectname) %(*objectname)", @"refs", nil] inDir: self.fileURL.path];
-	NSArray* lines = [output componentsSeparatedByString:@"\n"];
+
 	refs = [NSMutableDictionary dictionary];
+
+	NSString* output = [PBEasyPipe outputForCommand:gitPath 
+										   withArgs:[NSArray arrayWithObjects:@"for-each-ref", @"--format=%(refname) %(objecttype) %(objectname)"
+													 " %(*objectname)", @"refs", nil]
+											  inDir: self.fileURL.path];
+	NSArray* lines = [output componentsSeparatedByString:@"\n"];
 
 	for (NSString* line in lines) {
 		NSArray* components = [line componentsSeparatedByString:@" "];
@@ -214,8 +219,8 @@ static NSString* gitPath;
 
 		// Also add this ref to the refs list
 		[self addRef:newRef fromParameters:components];
-
 	}
+
 	self.refs = refs;
 	return ret;
 }
