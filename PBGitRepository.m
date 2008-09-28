@@ -19,7 +19,7 @@ NSString* PBGitRepositoryErrorDomain = @"GitXErrorDomain";
 
 @implementation PBGitRepository
 
-@synthesize revisionList, branches, currentBranch, refs, windowController;
+@synthesize revisionList, branches, currentBranch, refs, windowController, hasChanged;
 static NSString* gitPath;
 
 + (void) initialize
@@ -218,6 +218,16 @@ static NSString* gitPath;
 	}
 	self.refs = refs;
 	return ret;
+}
+
+- (void) lazyReload
+{
+	if (!hasChanged)
+		return;
+
+	[self reloadRefs];
+	[self.revisionList reload];
+	hasChanged = NO;
 }
 
 - (PBGitRevSpecifier*) headRef

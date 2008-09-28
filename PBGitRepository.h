@@ -16,6 +16,7 @@ extern NSString* PBGitRepositoryErrorDomain;
 	PBGitRevList* revisionList;
 	NSWindowController *windowController;
 
+	BOOL hasChanged;
 	NSMutableArray* branches;
 	NSIndexSet* currentBranch;
 	NSMutableDictionary* refs;
@@ -36,6 +37,7 @@ extern NSString* PBGitRepositoryErrorDomain;
 - (BOOL) reloadRefs;
 - (void) addRef:(PBGitRef *)ref fromParameters:(NSArray *)params;
 - (BOOL) removeRef:(NSString *)ref;
+- (void) lazyReload;
 
 - (void) readCurrentBranch;
 - (PBGitRevSpecifier*) addBranch: (PBGitRevSpecifier*) rev;
@@ -50,6 +52,7 @@ extern NSString* PBGitRepositoryErrorDomain;
 - (id) initWithURL: (NSURL*) path;
 - (void) setup;
 
+@property (assign) BOOL hasChanged;
 @property (readonly) NSWindowController *windowController;
 @property (retain) PBGitRevList* revisionList;
 @property (assign) NSMutableArray* branches;

@@ -27,6 +27,13 @@
 	[commitList setIntercellSpacing:cellSpacing];
 	[fileBrowser setTarget:self];
 	[fileBrowser setDoubleAction:@selector(openSelectedFile:)];
+
+	if ([repository.currentBranch count] == 0) {
+		[repository reloadRefs];
+		[repository readCurrentBranch];
+	}
+	else
+		[repository lazyReload];
 }
 
 - (void) updateKeys

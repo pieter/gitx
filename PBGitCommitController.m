@@ -203,6 +203,7 @@
 					   otherButton:nil
 		 informativeTextWithFormat:@"Successfully created commit %@", commit] runModal];
 	
+	repository.hasChanged = YES;
 	self.busy--;
 	[commitMessageView setString:@""];
 	[self refresh:self];
