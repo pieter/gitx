@@ -213,6 +213,10 @@ static NSString* gitPath;
 	NSArray* lines = [output componentsSeparatedByString:@"\n"];
 
 	for (NSString* line in lines) {
+		// If its an empty line, skip it (e.g. with empty repositories)
+		if ([line length] == 0)
+			continue;
+
 		NSArray* components = [line componentsSeparatedByString:@" "];
 
 		// First do the ref matching. If this ref is new, add it to our ref list
