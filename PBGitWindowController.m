@@ -57,9 +57,12 @@
 	{
 		case 0:	// swap in the "CustomImageViewController - NSImageView"
 			viewController = [[PBGitHistoryController alloc] initWithRepository:repository superController:self];
+			[[self window] setToolbar:historyToolbar];
 			break;
 		case 1:
 			viewController = [[PBGitCommitController alloc] initWithRepository:repository superController:self];
+			[[self window] setToolbar:commitToolbar];
+			break;
 	}
 	
 	// make sure we automatically resize the controller's view to the current window size
@@ -84,6 +87,7 @@
 
 	[[self window] setAutorecalculatesContentBorderThickness:NO forEdge:NSMinYEdge];
 	[[self window] setContentBorderThickness:35.0f forEdge:NSMinYEdge];
+	[self showHistoryView:nil];
 
 }
 

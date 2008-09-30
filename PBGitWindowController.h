@@ -17,6 +17,9 @@
 	int selectedViewIndex;
 	IBOutlet NSView* contentView;
 	NSViewController* viewController;
+
+	IBOutlet NSToolbar* historyToolbar;
+	IBOutlet NSToolbar* commitToolbar;
 }
 
 @property (assign) __weak PBGitRepository *repository;
