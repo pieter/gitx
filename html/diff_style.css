@@ -1,6 +1,7 @@
 body {
 	margin: 0;
 	margin-top: 5px;
+	width: 100%;
 }
 code .delline, code .oldfile {
   background-color: #FEE;
@@ -25,12 +26,12 @@ pre {
 }
 
 pre code {
-  display: table-cell;
   width: 100%;
 }
 
 #message {
 	margin: 5px;
+	margin-left: 20px;
 	font-family: Monaco;
 }
 
@@ -39,7 +40,9 @@ pre code {
 }
 
 table.diff {
-	border: 1px solid #a9a9a9;
+	margin-top: 15px;
+	margin-left: 5px;
+	margin-right: 5px;
 	border-spacing: 0;
 }
 .lineno {
@@ -47,5 +50,5 @@ table.diff {
 	padding-right: 2px;
 	background-color: #ECECEC;
 	color: #A9A9A9;
-	border-right: 1px solid #A9A9A9;
+	border: 1px solid #A9A9A9;
 }

@@ -71,7 +71,7 @@ var highlightDiffs = function() {
 			}
 		});
 		var duration = new Date() - start;
-		var new_content = "<table class='diff' width='100%'><tr><td class='lineno'l><pre>" + line1 + "</pre></td>";
+		var new_content = "<table class='diff'><tr><td class='lineno'l><pre>" + line1 + "</pre></td>";
 		new_content += "<td class='lineno'l><pre>" + line2 + "</pre></td>";
 		new_content +=  "<td width='100%'><pre width='100%'>" + diffContent + "</pre></td></tr></table>";
 		diff.innerHTML = new_content;
