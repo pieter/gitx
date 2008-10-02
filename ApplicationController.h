@@ -11,7 +11,7 @@
 
 @class PBCLIProxy;
 
-@interface ApplicationController : NSObject 
+@interface ApplicationController : NSObject
 {
 	IBOutlet NSWindow *window;
 	IBOutlet id firstResponder;
@@ -26,6 +26,8 @@
 - (NSPersistentStoreCoordinator *)persistentStoreCoordinator;
 - (NSManagedObjectModel *)managedObjectModel;
 - (NSManagedObjectContext *)managedObjectContext;
+
+- (IBAction)openPreferencesWindow:(id)sender;
 
 - (IBAction)installCliTool:(id)sender;
 
