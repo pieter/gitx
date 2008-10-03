@@ -1,0 +1,78 @@
+/* COLOR SCHEME
+ base:   #FFE9B7 
+ darker: #E3D185
+ green:  #9AB54F
+ red:    #6E212E
+ lred:   #B5463F
+*/
+
+body { 
+    background:#fff;
+    color: #333; 
+}
+a { color: #6E212E; }
+.center { text-align: center; }
+.pad { padding: 5px; }
+.chapter img { display: block; }
+
+#toc { padding: 10px; font-size: 120%; }
+#toc ul { display: inline; }
+#toc ul li { display: inline; margin-left: 20px; margin-right: 20px;}
+#toc ul li a { color: #240; }
+
+.chapter { font-size: 120%; }
+.chapter .header { background: #9AB54F; padding: 5px; }
+.chapter .header .title a { color: #fff; text-align: left; font-weight: bold; font-size: 120%;}
+.chapter .header .nav { float: right }
+.chapter .header .nav a { color: #fff; }
+
+ul.a-index li#m-index a, ul.a-about li#m-about a, 
+ul.a-documentation li#m-documentation a, ul.a-download li#m-download a, 
+ul.a-tools li#m-tools a { font-weight: bold; color: #fff; text-decoration: none;}
+
+ul#about-list li { padding: 5px; }
+ul#about-list li b { color: #6E212E; }
+
+.header h1 { text-align: center; }
+.navbar { text-align: center; background: #9AB54F;}
+.footer { text-align: center; background: #E3D185;}
+.menu { padding: 10px; }
+
+h2.section-start {
+	text-align:center;
+	background: #9AB54F;
+	color: #240;
+}
+
+h2 {
+	clear: both;
+}
+h3.title { background: #eee; padding: 5px;}
+
+.inner { background: #eee; padding: 5px 10px;}
+.inner p { margin: 10px 0; }
+
+.example { background: #eee; padding: 10px; }
+img.book { border: 1px solid #666; }
+
+#book-intro { padding: 10px; margin-bottom: 15px; background: #FFE9B7;}
+#book-intro h3 { color: #630; font-size: 200%; font-weight: bold;}
+
+#download { padding: 10px; background: #9AB54F; text-align:center; }
+#download h3 { color: #efe; font-size: 150%; font-weight: bold; text-align: center;}
+#download .inner { background: #efe; padding: 5px 10px;}
+
+#new-to-git { padding: 10px; padding-bottom:15px; background: #B5463F; }
+#new-to-git h3 { color: #fee; font-size: 150%; font-weight: bold; text-align: center;}
+#new-to-git h3 small { color: #eee; font-weight: normal; font-size: 70%;}
+
+a.chapter-link { font-size: 120%; }
+a.todo { color: #888 !important; }
+
+table tr td { vertical-align: top;}
+
+table.data-table tr td { vertical-align: top;}
+table.data-table tr td h3 { background: #B5463F; color: #fff; padding: 5px; }
+
+pre { background: #eee !important; padding: 5px;}
+.gitcast { padding: 20px; background: #FFE9B7; border: 1px solid #E3D185; text-align: center;}
