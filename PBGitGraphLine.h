@@ -11,14 +11,14 @@
 
 @interface PBGitGraphLine : NSObject
 {
-	int upper;
-	int from;
-	int to;
-	int colorIndex;
+	char upper;
+	char from;
+	char to;
+	char colorIndex;
 }
-@property(readonly) int upper, from, to, colorIndex;
-- (id)initWithUpper: (int) u From: (int) f to: (int) t color: (int) c;
-+ (PBGitGraphLine*) lowerLineFrom:(int) f to: (int) t color: (int) c;
-+ (PBGitGraphLine*) upperLineFrom:(int) f to: (int) t color: (int) c;
+@property(readonly) char upper, from, to, colorIndex;
+- (id)initWithUpper: (char) u From: (char) f to: (char) t color: (char) c;
++ (PBGitGraphLine*) lowerLineFrom:(char) f to: (char) t color: (char) c;
++ (PBGitGraphLine*) upperLineFrom:(char) f to: (char) t color: (char) c;
 
 @end

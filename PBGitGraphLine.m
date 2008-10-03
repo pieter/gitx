@@ -11,7 +11,7 @@
 
 @implementation PBGitGraphLine
 @synthesize upper, from, to, colorIndex;
-- (id)initWithUpper: (int) u From: (int) f to: (int) t  color: (int) c;
+- (id)initWithUpper: (char) u From: (char) f to: (char) t  color: (char) c;
 {
 	upper = u;
 	from = f;
@@ -20,12 +20,12 @@
 	return self;
 }
 
-+ (PBGitGraphLine*) lowerLineFrom:(int) f to: (int) t color: (int) c
++ (PBGitGraphLine*) lowerLineFrom:(char) f to: (char) t color: (char) c
 {
 	return [[PBGitGraphLine alloc] initWithUpper:0 From:f to:t color:c];
 }
 
-+ (PBGitGraphLine*) upperLineFrom:(int) f to: (int) t color: (int) c
++ (PBGitGraphLine*) upperLineFrom:(char) f to: (char) t color: (char) c
 {
 	return [[PBGitGraphLine alloc] initWithUpper:1 From:f to:t color: c];
 }
