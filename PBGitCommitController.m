@@ -51,7 +51,7 @@
 	if ([string hasSuffix:@"\n"])
 		string = [string substringToIndex:[string length]-1];
 	
-	NSArray *lines = [string componentsSeparatedByString:@"\n"];
+	NSArray *lines = [string componentsSeparatedByString:@"\0"];
 	return lines;
 }
 
@@ -75,13 +75,13 @@
 	[handle readToEndOfFileInBackgroundAndNotify];
 	
 	// Unstaged files
-	handle = [repository handleInWorkDirForArguments:[NSArray arrayWithObject:@"diff-files"]];
+	handle = [repository handleInWorkDirForArguments:[NSArray arrayWithObjects:@"diff-files", @"-z", nil]];
 	[nc addObserver:self selector:@selector(readUnstagedFiles:) name:NSFileHandleReadToEndOfFileCompletionNotification object:handle]; 
 	self.busy++;
 	[handle readToEndOfFileInBackgroundAndNotify];
 
 	// Cached files
-	handle = [repository handleInWorkDirForArguments:[NSArray arrayWithObjects:@"diff-index", @"--cached", @"HEAD", nil]];
+	handle = [repository handleInWorkDirForArguments:[NSArray arrayWithObjects:@"diff-index", @"--cached", @"-z", @"HEAD", nil]];
 	[nc addObserver:self selector:@selector(readCachedFiles:) name:NSFileHandleReadToEndOfFileCompletionNotification object:handle]; 
 	self.busy++;
 	[handle readToEndOfFileInBackgroundAndNotify];
@@ -112,12 +112,18 @@
 - (void) readUnstagedFiles:(NSNotification *)notification
 {
 	NSArray *lines = [self linesFromNotification:notification];
+	NSArray *fileStatus;
+	int even = 0;
 	for (NSString *line in lines) {
-		NSArray *components = [line componentsSeparatedByString:@"\t"];
-		if ([components count] < 2)
-			break;
+		if (!even) {
+			even = 1;
+			fileStatus = [line componentsSeparatedByString:@" "];
+			continue;
+		}
+		even = 0;
+		
+		PBChangedFile *file = [[PBChangedFile alloc] initWithPath:line andRepository:repository];
 
-		PBChangedFile *file = [[PBChangedFile alloc] initWithPath:[components objectAtIndex:1] andRepository:repository];
 		file.status = MODIFIED;
 		file.cached = NO;
 
@@ -138,15 +144,21 @@
 
 - (void) readCachedFiles:(NSNotification *)notification
 {
-	NSLog(@"Reading cached files!");
 	NSArray *lines = [self linesFromNotification:notification];
+	NSLog(@"Reading cached files!");
+	NSArray *fileStatus;
+	int even = 0;
 	for (NSString *line in lines) {
-		NSArray *components = [line componentsSeparatedByString:@"\t"];
-		if ([components count] < 2)
-			break;
-
-		PBChangedFile *file = [[PBChangedFile alloc] initWithPath:[components objectAtIndex:1] andRepository:repository];
-		file.status = MODIFIED;
+		if (!even) {
+			even = 1;
+			fileStatus = [line componentsSeparatedByString:@" "];
+			continue;
+		}
+		even = 0;
+		
+		PBChangedFile *file = [[PBChangedFile alloc] initWithPath:line andRepository:repository];
+			file.status = MODIFIED;
+		
 		file.cached = YES;
 		[cachedFilesController addObject: file];
 	}
