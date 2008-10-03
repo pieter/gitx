@@ -68,7 +68,7 @@
 	[nc removeObserver:self]; 
 
 	// Other files
-	NSArray *arguments = [NSArray arrayWithObjects:@"ls-files", @"--others", @"--exclude-standard", nil];
+	NSArray *arguments = [NSArray arrayWithObjects:@"ls-files", @"--others", @"--exclude-standard", @"-z", nil];
 	NSFileHandle *handle = [repository handleInWorkDirForArguments:arguments];
 	[nc addObserver:self selector:@selector(readOtherFiles:) name:NSFileHandleReadToEndOfFileCompletionNotification object:handle]; 
 	self.busy++;
