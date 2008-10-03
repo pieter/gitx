@@ -11,7 +11,7 @@
 
 @implementation PBViewController
 
-@synthesize repository;
+@synthesize repository, viewToolbar;
 
 - (id)initWithRepository:(PBGitRepository *)theRepository superController:(PBGitWindowController *)controller
 {
@@ -28,5 +28,13 @@
 - (void) removeView
 {
 	[[self view] removeFromSuperview];	// remove the current view
+}
+
+- (void) awakeFromNib
+{
+	if (viewToolbar)
+		[superController useToolbar:viewToolbar];
+	else
+		[superController useToolbar:[[NSToolbar alloc] initWithIdentifier:@"EmptyBar"]];
 }
 @end
