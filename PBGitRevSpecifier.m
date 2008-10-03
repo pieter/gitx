@@ -11,7 +11,7 @@
 
 @implementation PBGitRevSpecifier
 
-@synthesize parameters;
+@synthesize parameters, description;
 
 - (id) initWithParameters:(NSArray*) params
 {
@@ -27,6 +27,13 @@
 	return self;
 }
 
++ (PBGitRevSpecifier *)allBranchesRevSpec
+{
+	id revspec = [[PBGitRevSpecifier alloc] initWithParameters:[NSArray arrayWithObject:@"--all"]];
+	[revspec setDescription:@"All branches"];
+	return revspec;
+}
+	
 - (BOOL) isSimpleRef
 {
 	return ([parameters count] == 1 && ![[parameters objectAtIndex:0] hasPrefix:@"-"]);

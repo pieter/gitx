@@ -23,6 +23,9 @@
 - (BOOL) hasLeftRight;
 
 - (BOOL) isEqualTo: (PBGitRevSpecifier*) other;
-@property(readonly) NSString* description;
+
++ (PBGitRevSpecifier *)allBranchesRevSpec;
+
+@property(copy) NSString* description;
 @property(readonly) NSArray* parameters;
 @end
