@@ -31,6 +31,7 @@
 		F56174570E058893001DCD79 /* PBGitTree.m in Sources */ = {isa = PBXBuildFile; fileRef = F56174560E058893001DCD79 /* PBGitTree.m */; };
 		F561777D0E05C88E001DCD79 /* DetailView.png in Resources */ = {isa = PBXBuildFile; fileRef = F561777C0E05C88E001DCD79 /* DetailView.png */; };
 		F561E6CD0E7AFDDF00521636 /* keyboardNavigation.js in Resources */ = {isa = PBXBuildFile; fileRef = F561E6CB0E7AFDD000521636 /* keyboardNavigation.js */; };
+		F56244090E9684B0002B6C44 /* PBUnsortableTableHeader.m in Sources */ = {isa = PBXBuildFile; fileRef = F56244080E9684B0002B6C44 /* PBUnsortableTableHeader.m */; };
 		F56524BB0E02D22D00F03B52 /* NSFileHandleExt.m in Sources */ = {isa = PBXBuildFile; fileRef = F56524B90E02D22D00F03B52 /* NSFileHandleExt.m */; };
 		F56524F00E02D45200F03B52 /* PBGitCommit.m in Sources */ = {isa = PBXBuildFile; fileRef = F56524EF0E02D45200F03B52 /* PBGitCommit.m */; };
 		F56526240E03D85900F03B52 /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F56526230E03D85900F03B52 /* WebKit.framework */; };
@@ -131,6 +132,8 @@
 		F56174560E058893001DCD79 /* PBGitTree.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PBGitTree.m; sourceTree = "<group>"; };
 		F561777C0E05C88E001DCD79 /* DetailView.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = DetailView.png; sourceTree = "<group>"; };
 		F561E6CB0E7AFDD000521636 /* keyboardNavigation.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; name = keyboardNavigation.js; path = html/keyboardNavigation.js; sourceTree = "<group>"; };
+		F56244070E9684B0002B6C44 /* PBUnsortableTableHeader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PBUnsortableTableHeader.h; sourceTree = "<group>"; };
+		F56244080E9684B0002B6C44 /* PBUnsortableTableHeader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PBUnsortableTableHeader.m; sourceTree = "<group>"; };
 		F56524B90E02D22D00F03B52 /* NSFileHandleExt.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSFileHandleExt.m; sourceTree = "<group>"; };
 		F56524BA0E02D22D00F03B52 /* NSFileHandleExt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSFileHandleExt.h; sourceTree = "<group>"; };
 		F56524EE0E02D45200F03B52 /* PBGitCommit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PBGitCommit.h; sourceTree = "<group>"; };
@@ -364,6 +367,8 @@
 				91B103CB0E898EC300C84364 /* PBIconAndTextCell.mm */,
 				F5140DC70E8A8EB20091E9F3 /* RoundedRectangle.h */,
 				F5140DC80E8A8EB20091E9F3 /* RoundedRectangle.m */,
+				F56244070E9684B0002B6C44 /* PBUnsortableTableHeader.h */,
+				F56244080E9684B0002B6C44 /* PBUnsortableTableHeader.m */,
 			);
 			name = Aux;
 			sourceTree = "<group>";
@@ -562,6 +567,7 @@
 				F5E927FC0E883F0700056E75 /* PBWebChangesController.m in Sources */,
 				91B103CC0E898EC300C84364 /* PBIconAndTextCell.mm in Sources */,
 				F5140DC90E8A8EB20091E9F3 /* RoundedRectangle.m in Sources */,
+				F56244090E9684B0002B6C44 /* PBUnsortableTableHeader.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
