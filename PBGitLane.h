@@ -15,6 +15,8 @@
 - (id) initWithCommit: (NSString*) c;
 - (BOOL) isCommit: (NSString*) c;
 
++ (void) resetColors;
+
 @property(assign)  NSString* sha;
 @property(readonly) int index;
 

@@ -17,6 +17,7 @@
 	refs = repo.refs;
 	repository = repo;
 	previousLanes = [NSMutableArray array];
+	[PBGitLane resetColors];
 
 	return self;
 }

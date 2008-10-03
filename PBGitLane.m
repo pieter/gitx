@@ -14,6 +14,12 @@
 static int PBGITLANE_CURRENT_INDEX = 0;
 
 @synthesize sha, index;
+
++ (void) resetColors
+{
+	PBGITLANE_CURRENT_INDEX = 0;
+}
+
 - (id) initWithCommit: (NSString*) c
 {
 	index = PBGITLANE_CURRENT_INDEX++;
