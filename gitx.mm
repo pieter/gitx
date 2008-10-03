@@ -15,9 +15,30 @@ NSDistantObject* connect()
 	return proxy;
 }
 
+void usage(char const *programName)
+{
+	
+	printf("Usage: %s --help\n", programName);
+	printf("   or: %s (--commit|-h)\n", programName);
+	printf("   or: %s <revlist options>\n", programName);
+	printf("\n");
+	printf("\t-h, --help          print this help\n");
+	printf("\t--commit, -c        start GitX in commit mode\n");
+	printf("\n");
+	printf("RevList options\n");
+	printf("\tSee 'man git-log' and 'man git-rev-list' for options you can pass to gitx\n");
+	printf("\n");
+	printf("\t--all                  show all branches\n");
+	printf("\t<branch>               show specific branch\n");
+	printf("\t -- <path>             show commits touching paths\n");
+	exit(1);
+}
 
 int main(int argc, const char** argv)
 {
+	if (argc >= 2 && (!strcmp(argv[1], "--help") || !strcmp(argv[1], "-h")))
+		usage(argv[0]);
+
 	// Attempt to connect to the app
 	id proxy = connect();
 
