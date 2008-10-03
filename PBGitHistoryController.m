@@ -35,6 +35,10 @@
 	else
 		[repository lazyReload];
 
+	// Set a sort descriptor for the subject column in the history list, as
+	// It can't be sorted by default (because it's bound to a PBGitCommit)
+	[[commitList tableColumnWithIdentifier:@"subject"] setSortDescriptorPrototype:[[NSSortDescriptor alloc] initWithKey:@"subject" ascending:YES]];
+	
 	[super awakeFromNib];
 	// We bind this ourselves because otherwise we would lose our selection
 	[branchesController bind:@"selectionIndexes" toObject:repository withKeyPath:@"currentBranch" options:nil];
