@@ -38,6 +38,7 @@
 		F565265A0E03E71B00F03B52 /* commit.html in Resources */ = {isa = PBXBuildFile; fileRef = F56526590E03E71B00F03B52 /* commit.html */; };
 		F56CC7290E65E0AD004307B4 /* PBGitGraphLine.m in Sources */ = {isa = PBXBuildFile; fileRef = F56CC7280E65E0AD004307B4 /* PBGitGraphLine.m */; };
 		F56CC7320E65E0E5004307B4 /* PBGraphCellInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = F56CC7310E65E0E5004307B4 /* PBGraphCellInfo.m */; };
+		F57240BB0E9678EA00D8EE66 /* deleted_file.png in Resources */ = {isa = PBXBuildFile; fileRef = F57240BA0E9678EA00D8EE66 /* deleted_file.png */; };
 		F57ABE0B0E0442DD00A088B8 /* commit.js in Resources */ = {isa = PBXBuildFile; fileRef = F57ABDDE0E0441DE00A088B8 /* commit.js */; };
 		F57ABE2B0E04435100A088B8 /* prototype.js in Resources */ = {isa = PBXBuildFile; fileRef = F57ABE180E04431D00A088B8 /* prototype.js */; };
 		F57CC3910E05DDF2000472E2 /* PBEasyPipe.m in Sources */ = {isa = PBXBuildFile; fileRef = F57CC3900E05DDF2000472E2 /* PBEasyPipe.m */; };
@@ -142,6 +143,7 @@
 		F56CC7280E65E0AD004307B4 /* PBGitGraphLine.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PBGitGraphLine.m; sourceTree = "<group>"; };
 		F56CC7300E65E0E5004307B4 /* PBGraphCellInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PBGraphCellInfo.h; sourceTree = "<group>"; };
 		F56CC7310E65E0E5004307B4 /* PBGraphCellInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PBGraphCellInfo.m; sourceTree = "<group>"; };
+		F57240BA0E9678EA00D8EE66 /* deleted_file.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = deleted_file.png; path = Images/deleted_file.png; sourceTree = "<group>"; };
 		F57ABDDE0E0441DE00A088B8 /* commit.js */ = {isa = PBXFileReference; explicitFileType = sourcecode.javascript; fileEncoding = 4; name = commit.js; path = html/commit.js; sourceTree = "<group>"; };
 		F57ABE180E04431D00A088B8 /* prototype.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; name = prototype.js; path = html/prototype.js; sourceTree = "<group>"; };
 		F57CC38F0E05DDF2000472E2 /* PBEasyPipe.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PBEasyPipe.h; sourceTree = "<group>"; };
@@ -262,6 +264,7 @@
 		29B97315FDCFA39411CA2CEA /* Other Sources */ = {
 			isa = PBXGroup;
 			children = (
+				F57240BA0E9678EA00D8EE66 /* deleted_file.png */,
 				F5EC2DAC0E8C235C000FA381 /* spinner.gif */,
 				F5E92A1A0E88550E00056E75 /* empty_file.png */,
 				32CA4F630368D1EE00C91783 /* GitX_Prefix.pch */,
@@ -518,6 +521,7 @@
 				F5E9281D0E8840CF00056E75 /* diff.html in Resources */,
 				F5E92A230E88569500056E75 /* new_file.png in Resources */,
 				F5EC2DAD0E8C235C000FA381 /* spinner.gif in Resources */,
+				F57240BB0E9678EA00D8EE66 /* deleted_file.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

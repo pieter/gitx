@@ -39,6 +39,9 @@
 		case NEW:
 			filename = @"new_file";
 			break;
+		case DELETED:
+			filename = @"deleted_file";
+			break;
 		default:
 			filename = @"empty_file";
 			break;
@@ -49,11 +52,16 @@
 
 - (void) stageChanges
 {
-	[repository outputInWorkdirForArguments:[NSArray arrayWithObjects:@"add", path, nil]];
+	if (status == DELETED)
+		[repository outputInWorkdirForArguments:[NSArray arrayWithObjects:@"rm", path, nil]];
+	else
+		[repository outputInWorkdirForArguments:[NSArray arrayWithObjects:@"add", path, nil]];
+
 	self.cached = YES;
 }
 - (void) unstageChanges
-{	[repository outputInWorkdirForArguments:[NSArray arrayWithObjects:@"reset", @"--", path, nil]];
+{
+	[repository outputInWorkdirForArguments:[NSArray arrayWithObjects:@"reset", @"--", path, nil]];
 	self.cached = NO;
 }
 

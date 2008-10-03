@@ -123,8 +123,11 @@
 		even = 0;
 		
 		PBChangedFile *file = [[PBChangedFile alloc] initWithPath:line andRepository:repository];
+		if ([[fileStatus objectAtIndex:4] isEqualToString:@"D"])
+			file.status = DELETED;
+		else
+			file.status = MODIFIED;
 
-		file.status = MODIFIED;
 		file.cached = NO;
 
 		// FIXME: If you are in a merge and have conflicts, a file is displayed twice, with different
@@ -157,6 +160,9 @@
 		even = 0;
 		
 		PBChangedFile *file = [[PBChangedFile alloc] initWithPath:line andRepository:repository];
+		if ([[fileStatus objectAtIndex:4] isEqualToString:@"D"])
+			file.status = DELETED;
+		else
 			file.status = MODIFIED;
 		
 		file.cached = YES;
