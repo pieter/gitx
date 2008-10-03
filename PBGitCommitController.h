@@ -26,6 +26,9 @@
 
 	IBOutlet PBIconAndTextCell* unstagedButtonCell;
 	IBOutlet PBIconAndTextCell* cachedButtonCell;
+
+	IBOutlet NSTableView *unstagedTable;
+	IBOutlet NSTableView *cachedTable;
 }
 
 @property (retain) NSMutableArray *files;

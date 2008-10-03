@@ -19,8 +19,11 @@
 	[super awakeFromNib];
 	self.busy = 0;
 
-	[unstagedButtonCell setAction:@selector(cellClicked:)];
-	[cachedButtonCell setAction:@selector(cellClicked:)];
+	[unstagedButtonCell setAction:@selector(rowClicked:)];
+	[cachedButtonCell setAction:@selector(rowClicked:)];
+
+	[unstagedTable setDoubleAction:@selector(tableClicked:)];
+	[cachedTable setDoubleAction:@selector(tableClicked:)];
 
 	[self refresh:self];
 
@@ -236,12 +239,8 @@
 	[self refresh:self];
 }
 
-- (void) cellClicked:(NSCell*) sender
+- (void) tableClicked:(NSTableView *) tableView
 {
-	NSTableView *tableView = (NSTableView *)[sender controlView];
-	if([tableView numberOfSelectedRows] != 1)
-		return;
-	
 	NSUInteger selectionIndex = [[tableView selectedRowIndexes] firstIndex];
 	NSArrayController *controller, *otherController;
 	if ([tableView tag] == 0) {
@@ -266,6 +265,14 @@
 			return;
 
 	[otherController addObject:selectedItem];	
+}
+
+- (void) rowClicked:(NSCell *)sender
+{
+	NSTableView *tableView = (NSTableView *)[sender controlView];
+	if([tableView numberOfSelectedRows] != 1)
+		return;
+	[self tableClicked: tableView];
 }
 
 - (void)tableView:(NSTableView*)tableView willDisplayCell:(id)cell forTableColumn:(NSTableColumn*)tableColumn row:(int)rowIndex
