@@ -49,7 +49,9 @@
 	if (_patch != nil)
 		return _patch;
 
-	_patch = [repository outputForArguments:[NSArray arrayWithObjects:@"format-patch",  @"-1", @"--stdout", sha, nil]];
+	NSString *p = [repository outputForArguments:[NSArray arrayWithObjects:@"format-patch",  @"-1", @"--stdout", sha, nil]];
+	// Add a GitX identifier to the patch ;)
+	_patch = [[p substringToIndex:[p length] -1] stringByAppendingString:@"+GitX"];
 	return _patch;
 }
 
