@@ -34,6 +34,10 @@
 	}
 	else
 		[repository lazyReload];
+
+	[super awakeFromNib];
+	// We bind this ourselves because otherwise we would lose our selection
+	[branchesController bind:@"selectionIndexes" toObject:repository withKeyPath:@"currentBranch" options:nil];
 }
 
 - (void) updateKeys
@@ -110,7 +114,7 @@
 - (void)keyDown:(NSEvent*)event
 {
 	if ([[event charactersIgnoringModifiers] isEqualToString: @"f"] && [event modifierFlags] & NSAlternateKeyMask && [event modifierFlags] & NSCommandKeyMask)
-		[superController focusOnSearchField];
+		[superController.window makeFirstResponder: searchField];
 	else
 		[super keyDown: event];
 }

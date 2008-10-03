@@ -16,6 +16,7 @@
 
 - (void)awakeFromNib
 {
+	[super awakeFromNib];
 	self.busy = 0;
 
 	[unstagedButtonCell setAction:@selector(cellClicked:)];

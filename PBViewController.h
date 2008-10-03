@@ -13,9 +13,12 @@
 @interface PBViewController : NSViewController {
 	__weak PBGitRepository *repository;
 	__weak PBGitWindowController *superController;
+
+	IBOutlet NSToolbar *viewToolbar;
 }
 
 @property (readonly) __weak PBGitRepository *repository;
+@property (readonly) NSToolbar *viewToolbar;
 
 - (id)initWithRepository:(PBGitRepository *)theRepository superController:(PBGitWindowController *)controller;
 - (void) removeView;
