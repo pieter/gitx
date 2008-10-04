@@ -368,7 +368,7 @@ NSString* PBGitRepositoryErrorDomain = @"GitXErrorDomain";
 
 - (NSString*) parseSymbolicReference:(NSString*) reference
 {
-	NSString* ref = [self outputForArguments:[NSArray arrayWithObjects: @"symbolic-ref", reference, nil]];
+	NSString* ref = [self outputForArguments:[NSArray arrayWithObjects: @"symbolic-ref", @"-q", reference, nil]];
 	if ([ref hasPrefix:@"refs/"])
 		return ref;
 
