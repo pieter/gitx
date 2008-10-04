@@ -100,6 +100,11 @@
     former cannot be found), the system's temporary directory.
  */
 
+- (IBAction) showHelp:(id) sender
+{
+	[[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:@"http://frim.frim.nl/gitx/UserManual.html"]];
+}
+
 - (NSString *)applicationSupportFolder {
 
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory, NSUserDomainMask, YES);
