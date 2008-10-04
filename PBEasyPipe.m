@@ -23,8 +23,10 @@
 	task.arguments = args;
 	if (dir)
 		task.currentDirectoryPath = dir;
-	
-	NSLog(@"Starting `cmd %@ %@` in dir %@", cmd, [args componentsJoinedByString:@" "], dir);
+
+	if ([[NSUserDefaults standardUserDefaults] boolForKey:@"Show Debug Messages"])
+		NSLog(@"Starting command `%@ %@` in dir %@", cmd, [args componentsJoinedByString:@" "], dir);
+
 	NSPipe* pipe = [NSPipe pipe];
 	task.standardOutput = pipe;
 	return task;
