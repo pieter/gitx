@@ -7,24 +7,22 @@
     <item>
       <title>Version 0.2.1</title>
       <pubDate>Sun, 06 Sep 2008 11:24:54 +0900</pubDate>
-      <enclosure url="http://frim.frim.nl/GitXStable.app.zip" length="1355684" type="application/oc
-tet-stream" sparkle:version="0.3.1"/>
+      <enclosure url="http://frim.frim.nl/GitXStable.app.zip" length="1493409" type="application/oc
+tet-stream" sparkle:version="0.4"/>
       <description>
         <![CDATA[
-        <h1>GitX Version 0.3.1</h1>
+        <h1>GitX Version 0.4</h1>
         <div style='font-size: 70%'>
-        <p><b>NOTE, you will NEED to reinstall the terminal tool after this update</b></p>
-        <p>Changes since Version 0.3.0:</p>
-        <ul><li>Fixed an out-of-bounds crasher</li></ul>
-        <p>Changes since Version 0.2.1:</p>
+        <p>Changes since Version 0.3.1:</p>
         <ul>
-          <li>You can now pass on command-line arguments just like you can with 'git log'</li>
-          <li>The program has an icon</li>
-          <li>Also displays remote branches in the branch list</li>
-          <li>Is better in determining if a directory is a bare git repository</li>
-          <li>Support for --left-right: use 'gitx --left-right HEAD..origin/master' to see which commits are only on your branch or on their branch</li>
-          <li>Navigate through changed hunks by using j/k keys</li>
-          <li>Scroll down in webview by using space / shift-space</li>
+          <li>A new commitview, allowing you to selectively add changes and commit them.</li>
+          <li>You can now upload a commit as a patch to gist.github.com</li>
+          <li>GitX now searches for your git binary in more directories and is smarter about reporting errors regarding git paths.</li>
+          <li>You can now remove branches by right-clicking on them in the detailed view</li>
+          <li>GitX now comes with a spicy new icon</li>
+          <li>The diff view has become prettier and now also highlights trailing whitespace.</li>
+          <li>Various little changes and stability improvement</li>
+          <li>Now comes with nice <a href="http://frim.frim.nl/gitx/UserManual.html">Documentation</a>
         </ul></div>
         ]]>
       </description>
