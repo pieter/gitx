@@ -30,5 +30,4 @@
 - (IBAction)installCliTool:(id)sender;
 
 - (IBAction)saveAction:sender;
-- (IBAction)switchBranch:sender;
 @end
