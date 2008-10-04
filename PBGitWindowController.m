@@ -87,41 +87,11 @@
 
 #pragma mark -
 #pragma mark Toolbar Delegates
-- (NSToolbarItem *) toolbar:(NSToolbar *)toolbar
-      itemForItemIdentifier:(NSString *)itemIdentifier
-  willBeInsertedIntoToolbar:(BOOL)flag
-{
-	if ([itemIdentifier isEqualToString:[viewSelector itemIdentifier]])
-		return viewSelector;
-
-	return nil;
-}
-
-- (NSArray *)toolbarAllowedItemIdentifiers:(NSToolbar *)toolbar
-{
-	NSMutableArray *array = [NSMutableArray array];
-	for (NSToolbarItem *item in [toolbar items])
-		[array addObject:[item itemIdentifier]];
-	return array;
-}
-
-- (NSArray *)toolbarDefaultItemIdentifiers:(NSToolbar *)toolbar
-{
-	NSMutableArray *array = [NSMutableArray array];
-	for (NSToolbarItem *item in [toolbar items])
-		[array addObject:[item itemIdentifier]];
-	return array;
-}
 
 - (void) useToolbar:(NSToolbar *)toolbar
 {
-	[toolbar setDelegate:self];
-
-	[toolbar insertItemWithItemIdentifier:NSToolbarSeparatorItemIdentifier atIndex:0];
-	[toolbar insertItemWithItemIdentifier:[viewSelector itemIdentifier] atIndex:0];
-
-	NSSegmentedControl *viewSelect = (NSSegmentedControl *)[[[toolbar items] objectAtIndex:0] view];
-	[viewSelect bind:@"selectedIndex" toObject:self withKeyPath:@"selectedViewIndex" options:0];
+	NSSegmentedControl *item = (NSSegmentedControl *)[[[toolbar items] objectAtIndex:0] view];
+	[item bind:@"selectedIndex" toObject:self withKeyPath:@"selectedViewIndex" options:0];
 
 	[self.window setToolbar:toolbar];
 }

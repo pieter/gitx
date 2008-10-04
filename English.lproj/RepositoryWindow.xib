@@ -538,55 +538,6 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 				<string key="NSMaxSize">{3.40282e+38, 3.40282e+38}</string>
 				<string key="NSFrameAutosaveName">GitX</string>
 			</object>
-			<object class="NSToolbarItem" id="562497830">
-				<object class="NSMutableString" key="NSToolbarItemIdentifier">
-					<characters key="NS.bytes">B6D80172-2D01-49BD-8E3A-2F1D9F672390</characters>
-				</object>
-				<string key="NSToolbarItemLabel">View</string>
-				<string key="NSToolbarItemPaletteLabel">View selector</string>
-				<nil key="NSToolbarItemToolTip"/>
-				<object class="NSSegmentedControl" key="NSToolbarItemView" id="469221894">
-					<nil key="NSNextResponder"/>
-					<int key="NSvFlags">268</int>
-					<string key="NSFrame">{{0, 14}, {142, 25}}</string>
-					<int key="NSTag">3</int>
-					<bool key="NSEnabled">YES</bool>
-					<object class="NSSegmentedCell" key="NSCell" id="1071657361">
-						<int key="NSCellFlags">67239424</int>
-						<int key="NSCellFlags2">0</int>
-						<object class="NSFont" key="NSSupport">
-							<string key="NSName">LucidaGrande</string>
-							<double key="NSSize">1.300000e+01</double>
-							<int key="NSfFlags">1044</int>
-						</object>
-						<reference key="NSControlView" ref="469221894"/>
-						<object class="NSMutableArray" key="NSSegmentImages">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-							<object class="NSSegmentItem">
-								<string key="NSSegmentItemLabel">History</string>
-								<int key="NSSegmentItemImageScaling">0</int>
-							</object>
-							<object class="NSSegmentItem">
-								<string key="NSSegmentItemLabel">Commit</string>
-								<bool key="NSSegmentItemSelected">YES</bool>
-								<int key="NSSegmentItemImageScaling">0</int>
-							</object>
-						</object>
-						<int key="NSSelectedSegment">1</int>
-						<int key="NSSegmentStyle">2</int>
-					</object>
-				</object>
-				<nil key="NSToolbarItemImage"/>
-				<nil key="NSToolbarItemTarget"/>
-				<nil key="NSToolbarItemAction"/>
-				<string key="NSToolbarItemMinSize">{142, 25}</string>
-				<string key="NSToolbarItemMaxSize">{142, 25}</string>
-				<bool key="NSToolbarItemEnabled">YES</bool>
-				<bool key="NSToolbarItemAutovalidates">YES</bool>
-				<int key="NSToolbarItemTag">3</int>
-				<bool key="NSToolbarIsUserRemovable">YES</bool>
-				<int key="NSToolbarItemVisibilityPriority">0</int>
-			</object>
 		</object>
 		<object class="IBObjectContainer" key="IBDocument.Objects">
 			<object class="NSMutableArray" key="connectionRecords">
@@ -606,30 +557,6 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 						<reference key="destination" ref="491121796"/>
 					</object>
 					<int key="connectionID">292</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBBindingConnection" key="connection">
-						<string key="label">selectedIndex: selectedViewIndex</string>
-						<reference key="source" ref="469221894"/>
-						<reference key="destination" ref="1001"/>
-						<object class="NSNibBindingConnector" key="connector">
-							<reference key="NSSource" ref="469221894"/>
-							<reference key="NSDestination" ref="1001"/>
-							<string key="NSLabel">selectedIndex: selectedViewIndex</string>
-							<string key="NSBinding">selectedIndex</string>
-							<string key="NSKeyPath">selectedViewIndex</string>
-							<int key="NSNibBindingConnectorVersion">2</int>
-						</object>
-					</object>
-					<int key="connectionID">329</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBOutletConnection" key="connection">
-						<string key="label">viewSelector</string>
-						<reference key="source" ref="1001"/>
-						<reference key="destination" ref="562497830"/>
-					</object>
-					<int key="connectionID">350</int>
 				</object>
 			</object>
 			<object class="IBMutableOrderedSet" key="objectRecords">
@@ -679,29 +606,6 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 							<bool key="EncodedWithXMLCoder">YES</bool>
 						</object>
 						<reference key="parent" ref="491121796"/>
-					</object>
-					<object class="IBObjectRecord">
-						<int key="objectID">324</int>
-						<reference key="object" ref="562497830"/>
-						<object class="NSMutableArray" key="children">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-							<reference ref="469221894"/>
-						</object>
-						<reference key="parent" ref="1002"/>
-					</object>
-					<object class="IBObjectRecord">
-						<int key="objectID">325</int>
-						<reference key="object" ref="469221894"/>
-						<object class="NSMutableArray" key="children">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-							<reference ref="1071657361"/>
-						</object>
-						<reference key="parent" ref="562497830"/>
-					</object>
-					<object class="IBObjectRecord">
-						<int key="objectID">326</int>
-						<reference key="object" ref="1071657361"/>
-						<reference key="parent" ref="469221894"/>
 					</object>
 					<object class="IBObjectRecord">
 						<int key="objectID">342</int>
@@ -772,8 +676,6 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 					<string>3.windowTemplate.hasMinSize</string>
 					<string>3.windowTemplate.maxSize</string>
 					<string>3.windowTemplate.minSize</string>
-					<string>325.IBPluginDependency</string>
-					<string>326.IBPluginDependency</string>
 					<string>342.IBPluginDependency</string>
 					<string>343.IBPluginDependency</string>
 					<string>344.IBPluginDependency</string>
@@ -790,9 +692,9 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilderKit</string>
 					<string>com.apple.InterfaceBuilderKit</string>
-					<string>{{312, 315}, {850, 418}}</string>
+					<string>{{1047, -144}, {850, 418}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<string>{{312, 315}, {850, 418}}</string>
+					<string>{{1047, -144}, {850, 418}}</string>
 					<integer value="1" id="9"/>
 					<reference ref="9"/>
 					<string>{{15, 196}, {850, 418}}</string>
@@ -800,8 +702,6 @@ ELIAAAAAAAgACAAIAAgAAQABAAEAAQ</bytes>
 					<reference ref="9"/>
 					<string>{3.40282e+38, 3.40282e+38}</string>
 					<string>{213, 107}</string>
-					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
