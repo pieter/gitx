@@ -7,6 +7,7 @@
 //
 
 #import "PBCLIProxy.h"
+#import "PBGitBinary.h"
 
 NSDistantObject* connect()
 {
@@ -38,6 +39,11 @@ int main(int argc, const char** argv)
 {
 	if (argc >= 2 && (!strcmp(argv[1], "--help") || !strcmp(argv[1], "-h")))
 		usage(argv[0]);
+
+	if (![PBGitBinary path]) {
+		printf("%s\n", [[PBGitBinary notFoundError] cStringUsingEncoding:NSUTF8StringEncoding]);
+		exit(2);
+	}
 
 	// Attempt to connect to the app
 	id proxy = connect();

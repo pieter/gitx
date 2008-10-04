@@ -9,6 +9,7 @@
 #import "PBGitRepository.h"
 #import "PBGitCommit.h"
 #import "PBGitWindowController.h"
+#import "PBGitBinary.h"
 
 #import "NSFileHandleExt.h"
 #import "PBEasyPipe.h"
@@ -20,37 +21,6 @@ NSString* PBGitRepositoryErrorDomain = @"GitXErrorDomain";
 @implementation PBGitRepository
 
 @synthesize revisionList, branches, currentBranch, refs, hasChanged;
-static NSString* gitPath;
-
-+ (void) initialize
-{
-	// Try to find the path of the Git binary
-	char* path = getenv("GIT_PATH");
-	if (path != nil) {
-		gitPath = [NSString stringWithCString:path];
-		return;
-	}
-	
-	// No explicit path. Try it with "which"
-	gitPath = [PBEasyPipe outputForCommand:@"/usr/bin/which" withArgs:[NSArray arrayWithObject:@"git"]];
-	if (gitPath.length > 0)
-		return;
-	
-	// Still no path. Let's try some default locations.
-	NSArray* locations = [NSArray arrayWithObjects:@"/opt/local/bin/git",
-												   @"/sw/bin/git",
-												   @"/opt/git/bin/git",
-												   @"/usr/local/bin/git",
-												   nil];
-	for (NSString* location in locations) {
-		if ([[NSFileManager defaultManager] fileExistsAtPath:location]) {
-			gitPath = location;
-			return;
-		}
-	}
-	
-	NSLog(@"Could not find a git binary!");
-}
 
 - (BOOL)readFromData:(NSData *)data ofType:(NSString *)typeName error:(NSError **)outError
 {
@@ -64,11 +34,14 @@ static NSString* gitPath;
 
 + (BOOL) isBareRepository: (NSString*) path
 {
-	return [[PBEasyPipe outputForCommand:gitPath withArgs:[NSArray arrayWithObjects:@"rev-parse", @"--is-bare-repository", nil] inDir:path] isEqualToString:@"true"];
+	return [[PBEasyPipe outputForCommand:[PBGitBinary path] withArgs:[NSArray arrayWithObjects:@"rev-parse", @"--is-bare-repository", nil] inDir:path] isEqualToString:@"true"];
 }
 
 + (NSURL*)gitDirForURL:(NSURL*)repositoryURL;
 {
+	if (![PBGitBinary path])
+		return nil;
+
 	NSString* repositoryPath = [repositoryURL path];
 
 	if ([self isBareRepository:repositoryPath])
@@ -76,7 +49,7 @@ static NSString* gitPath;
 
 
 	// Use rev-parse to find the .git dir for the repository being opened
-	NSString* newPath = [PBEasyPipe outputForCommand:gitPath withArgs:[NSArray arrayWithObjects:@"rev-parse", @"--git-dir", nil] inDir:repositoryPath];
+	NSString* newPath = [PBEasyPipe outputForCommand:[PBGitBinary path] withArgs:[NSArray arrayWithObjects:@"rev-parse", @"--git-dir", nil] inDir:repositoryPath];
 	if ([newPath isEqualToString:@".git"])
 		return [NSURL fileURLWithPath:[repositoryPath stringByAppendingPathComponent:@".git"]];
 	if ([newPath length] > 0)
@@ -102,6 +75,16 @@ static NSString* gitPath;
 - (BOOL)readFromFileWrapper:(NSFileWrapper *)fileWrapper ofType:(NSString *)typeName error:(NSError **)outError
 {
 	BOOL success = NO;
+
+	if (![PBGitBinary path])
+	{
+		if (outError) {
+			NSDictionary* userInfo = [NSDictionary dictionaryWithObject:[PBGitBinary notFoundError]
+																 forKey:NSLocalizedRecoverySuggestionErrorKey];
+			*outError = [NSError errorWithDomain:PBGitRepositoryErrorDomain code:0 userInfo:userInfo];
+		}
+		return NO;
+	}
 
 	if (![fileWrapper isDirectory]) {
 		if (outError) {
@@ -138,6 +121,9 @@ static NSString* gitPath;
 
 - (id) initWithURL: (NSURL*) path
 {
+	if (![PBGitBinary path])
+		return nil;
+
 	NSURL* gitDirURL = [PBGitRepository gitDirForURL:path];
 	if (!gitDirURL)
 		return nil;
@@ -206,7 +192,7 @@ static NSString* gitPath;
 
 	refs = [NSMutableDictionary dictionary];
 
-	NSString* output = [PBEasyPipe outputForCommand:gitPath 
+	NSString* output = [PBEasyPipe outputForCommand:[PBGitBinary path]
 										   withArgs:[NSArray arrayWithObjects:@"for-each-ref", @"--format=%(refname) %(objecttype) %(objectname)"
 													 " %(*objectname)", @"refs", nil]
 											  inDir: self.fileURL.path];
@@ -304,7 +290,7 @@ static NSString* gitPath;
 	if ([self.fileURL.path hasSuffix:@"/.git"])
 		return [self.fileURL.path substringToIndex:[self.fileURL.path length] - 5];
 	else if ([[self outputForCommand:@"rev-parse --is-inside-work-tree"] isEqualToString:@"true"])
-		return gitPath;
+		return [PBGitBinary path];
 	
 	return nil;
 }		
@@ -321,7 +307,7 @@ static NSString* gitPath;
 	NSString* gitDirArg = [@"--git-dir=" stringByAppendingString:self.fileURL.path];
 	NSMutableArray* arguments =  [NSMutableArray arrayWithObject: gitDirArg];
 	[arguments addObjectsFromArray: args];
-	return [PBEasyPipe handleForCommand:gitPath withArgs:arguments];
+	return [PBEasyPipe handleForCommand:[PBGitBinary path] withArgs:arguments];
 }
 
 - (NSFileHandle*) handleInWorkDirForArguments:(NSArray *)args
@@ -329,7 +315,7 @@ static NSString* gitPath;
 	NSString* gitDirArg = [@"--git-dir=" stringByAppendingString:self.fileURL.path];
 	NSMutableArray* arguments =  [NSMutableArray arrayWithObject: gitDirArg];
 	[arguments addObjectsFromArray: args];
-	return [PBEasyPipe handleForCommand:gitPath withArgs:arguments inDir:[self workingDirectory]];
+	return [PBEasyPipe handleForCommand:[PBGitBinary path] withArgs:arguments inDir:[self workingDirectory]];
 }
 
 - (NSFileHandle*) handleForCommand:(NSString *)cmd
@@ -352,23 +338,23 @@ static NSString* gitPath;
 
 - (NSString*) outputForArguments:(NSArray*) arguments
 {
-	return [PBEasyPipe outputForCommand:gitPath withArgs:arguments inDir: self.fileURL.path];
+	return [PBEasyPipe outputForCommand:[PBGitBinary path] withArgs:arguments inDir: self.fileURL.path];
 }
 
 - (NSString*) outputInWorkdirForArguments:(NSArray*) arguments
 {
-	return [PBEasyPipe outputForCommand:gitPath withArgs:arguments inDir: [self workingDirectory]];
+	return [PBEasyPipe outputForCommand:[PBGitBinary path] withArgs:arguments inDir: [self workingDirectory]];
 }
 
 
 - (NSString*) outputForArguments:(NSArray *)arguments retValue:(int *)ret;
 {
-	return [PBEasyPipe outputForCommand:gitPath withArgs:arguments inDir: self.fileURL.path retValue: ret];
+	return [PBEasyPipe outputForCommand:[PBGitBinary path] withArgs:arguments inDir: self.fileURL.path retValue: ret];
 }
 
 - (NSString*) outputForArguments:(NSArray *)arguments inputString:(NSString *)input retValue:(int *)ret;
 {
-	return [PBEasyPipe outputForCommand:gitPath
+	return [PBEasyPipe outputForCommand:[PBGitBinary path]
 							   withArgs:arguments
 								  inDir: self.fileURL.path
 							inputString:input

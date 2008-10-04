@@ -37,8 +37,13 @@
 	NSArray* arguments = [NSArray arrayWithArray:args];
 
 	PBGitRepository *document = [[PBRepositoryDocumentController sharedDocumentController] documentForLocation:url];
-	if (!document)
+	if (!document) {
+		if (error) {
+			NSDictionary *userInfo = [NSDictionary dictionaryWithObject:@"Could not create document. Perhaps GitX can't find you git binary?" forKey:NSLocalizedFailureReasonErrorKey];
+			*error = [NSError errorWithDomain:PBGitRepositoryErrorDomain code:2 userInfo:userInfo];
+		}
 		return NO;
+	}
 	
 	if ([arguments count] > 0 && ([[arguments objectAtIndex:0] isEqualToString:@"--commit"] ||
 		[[arguments objectAtIndex:0] isEqualToString:@"-c"]))
