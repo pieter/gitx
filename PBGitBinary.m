@@ -51,6 +51,7 @@ static NSString* gitPath;
 						  @"/sw/bin/git",
 						  @"/opt/git/bin/git",
 						  @"/usr/local/bin/git",
+						  @"/usr/local/git/bin/git",
 						  nil];
 	return locations;
 }
