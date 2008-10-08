@@ -51,17 +51,22 @@ var notify = function(text, busy) {
 
 var gistie = function() {
 	notify("Uploading code to Gistie..", true);
-	
+	parameters = {
+		"file_ext[gistfile1]":      "patch",
+		"file_name[gistfile1]":     commit.object.subject.replace(/[^a-zA-Z0-9]/g, "-") + ".patch",
+		"file_contents[gistfile1]": commit.object.patch(),
+	};
+
+	// TODO: Replace true with private preference
+	if (true)
+		parameters.private = true;
+
 	new Ajax.Request("http://gist.github.com/gists", {
 		method: 'post',
-		parameters: {
-			"file_ext[gistfile1]":      "patch",
-			"file_name[gistfile1]":     commit.object.subject.replace(/[^a-zA-Z0-9]/g, "-") + ".patch",
-			"file_contents[gistfile1]": commit.object.patch()
-		},
+		parameters: parameters,
 
 		onSuccess: function(t) {
-			if (m = t.responseText.match(/gist: (\d+)/))
+			if (m = t.responseText.match(/gist: ([a-f0-9]+)/))
 				notify("Code uploaded to gistie <a target='_new' href='http://gist.github.com/" + m[1] + "'>#" + m[1] + "</a>");
 			else
 				notify("Pasting to Gistie failed.");
