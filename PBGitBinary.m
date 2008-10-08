@@ -45,14 +45,21 @@ static NSString* gitPath;
 	return gitPath;
 }
 
+static NSMutableArray *locations = nil;
+
 + (NSArray *) searchLocations
 {
-	NSArray* locations = [NSArray arrayWithObjects:@"/opt/local/bin/git",
+	if (locations)
+		return locations;
+
+	locations = [NSMutableArray arrayWithObjects:@"/opt/local/bin/git",
 						  @"/sw/bin/git",
 						  @"/opt/git/bin/git",
 						  @"/usr/local/bin/git",
 						  @"/usr/local/git/bin/git",
 						  nil];
+
+	[locations addObject:[@"~/bin/git" stringByExpandingTildeInPath]];
 	return locations;
 }
 
