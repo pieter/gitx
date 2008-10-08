@@ -221,7 +221,14 @@
 			 informativeTextWithFormat:@"Please enter a commit message before committing"] runModal];
 		return;
 	}
+
+	NSString *commitSubject = [commitMessage substringToIndex:
+							   [commitMessage rangeOfString:@"\n"].location];
+	if (!commitSubject)
+		commitSubject = commitMessage;
 	
+	commitSubject = [@"commit: " stringByAppendingString:commitSubject];
+
 	self.busy++;
 	self.status = @"Creating tree..";
 	NSString *tree = [repository outputForCommand:@"write-tree"];
@@ -243,7 +250,7 @@
 	if (ret || [commit length] != 40)
 		return [self commitFailedBecause:@"Could not create a commit object"];
 	
-	[repository outputForArguments:[NSArray arrayWithObjects:@"update-ref", @"-m", @"Commit from GitX", @"HEAD", commit, nil]
+	[repository outputForArguments:[NSArray arrayWithObjects:@"update-ref", @"-m", commitSubject, @"HEAD", commit, nil]
 						  retValue: &ret];
 	if (ret)
 		return [self commitFailedBecause:@"Could not update HEAD"];
