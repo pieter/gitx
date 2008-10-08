@@ -9,8 +9,8 @@ Requirements
 
 GitX is made specifically for Mac OS X 10.5 and higher. Because it uses
 features like Garbage Collection, you can't compile it on earlier systems.
-GitX also requires a fairly recent Git -- anything higher than v1.5.3 should
-do.
+GitX also requires a fairly recent Git -- version 1.5.4 and higher are all
+supported.
 
 Contact
 -------
