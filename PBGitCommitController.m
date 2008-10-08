@@ -58,6 +58,20 @@
 	return lines;
 }
 
+- (NSString *) parentTree
+{
+	id a = [repository parseReference:@"HEAD"];
+
+	// TODO: parseReference should exit nil if it errors out. For
+	// now, compare to "HEAD"
+	if ([a isEqualToString:@"HEAD"]) {
+		// We don't have a head ref. Return the empty tree.
+		return @"4b825dc642cb6eb9a060e54bf8d69288fbee4904";
+	}
+
+	return @"HEAD";
+}
+
 - (void) refresh:(id) sender
 {
 	self.status = @"Refreshing index…";
@@ -84,7 +98,7 @@
 	[handle readToEndOfFileInBackgroundAndNotify];
 
 	// Cached files
-	handle = [repository handleInWorkDirForArguments:[NSArray arrayWithObjects:@"diff-index", @"--cached", @"-z", @"HEAD", nil]];
+	handle = [repository handleInWorkDirForArguments:[NSArray arrayWithObjects:@"diff-index", @"--cached", @"-z", [self parentTree], nil]];
 	[nc addObserver:self selector:@selector(readCachedFiles:) name:NSFileHandleReadToEndOfFileCompletionNotification object:handle]; 
 	self.busy++;
 	[handle readToEndOfFileInBackgroundAndNotify];
@@ -215,7 +229,14 @@
 		return [self commitFailedBecause:@"Could not create a tree"];
 
 	int ret;
-	NSString *commit = [repository outputForArguments:[NSArray arrayWithObjects:@"commit-tree", tree, @"-p", @"HEAD", nil]
+
+	NSMutableArray *arguments = [NSMutableArray arrayWithObjects:@"commit-tree", tree, nil];
+	if ([repository parseSymbolicReference:@"HEAD"]) {
+		[arguments addObject:@"-p"];
+		[arguments addObject:@"HEAD"];
+	}
+
+	NSString *commit = [repository outputForArguments:arguments
 										  inputString:commitMessage
 											 retValue: &ret];
 
