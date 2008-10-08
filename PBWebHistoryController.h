@@ -7,13 +7,12 @@
 //
 
 #import <Cocoa/Cocoa.h>
-#import "ApplicationController.h"
+#import "PBWebController.h"
+
 #import "PBGitCommit.h"
 #import "PBGitHistoryController.h"
-#import <WebKit/WebKit.h>
 
-@interface PBWebGitController : NSObject {
-	IBOutlet WebView* view;
+@interface PBWebHistoryController : PBWebController {
 	IBOutlet PBGitHistoryController* historyController;
 	NSString* currentSha;
 	NSString* diff;

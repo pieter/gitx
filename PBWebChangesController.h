@@ -7,12 +7,11 @@
 //
 
 #import <Cocoa/Cocoa.h>
-#import "WebKit/WebKit.h"
+#import "PBWebController.h"
 #import "PBGitCommitController.h"
 #import "PBChangedFile.h"
 
-@interface PBWebChangesController : NSObject {
-	IBOutlet WebView *view;
+@interface PBWebChangesController : PBWebController {
 	IBOutlet NSArrayController *unstagedFilesController;
 	IBOutlet NSArrayController *cachedFilesController;
 	IBOutlet PBGitCommitController *controller;

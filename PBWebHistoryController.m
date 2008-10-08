@@ -6,7 +6,7 @@
 //  Copyright 2008 __MyCompanyName__. All rights reserved.
 //
 
-#import "PBWebGitController.h"
+#import "PBWebHistoryController.h"
 @interface RefMenuItem : NSMenuItem
 {
 	NSString *ref;
@@ -18,42 +18,33 @@
 @end
 
 
-@implementation PBWebGitController
+@implementation PBWebHistoryController
 
 @synthesize diff;
 
 - (void) awakeFromNib
 {
+	startFile = @"commit";
+	[super awakeFromNib];
 	[historyController addObserver:self forKeyPath:@"webCommit" options:0 context:@"ChangedCommit"];
-	NSString* file = [[NSBundle mainBundle] pathForResource:@"commit" ofType:@"html"];
-	NSURLRequest * request = [NSURLRequest requestWithURL:[NSURL fileURLWithPath:file]];
-	currentSha = @"Not Loaded";
-
-	[[view mainFrame] loadRequest:request];	
 }
 
-- (void) webView:(id) v didFinishLoadForFrame:(id) frame
+- (void) didLoad
 {
-	id script = [view windowScriptObject];
-	[script setValue: self forKey:@"Controller"];
-	currentSha = @"";
-
 	[self changeContentTo: historyController.webCommit];
 }
 
-- (void) observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
+- (void) observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(NSString *)context
 {
-    if (context == @"ChangedCommit") {
+    if ([context isEqualToString: @"ChangedCommit"])
 		[self changeContentTo: historyController.webCommit];
-	}
-	else {
+	else
 		[super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
-	}
 }
 
 - (void) changeContentTo: (PBGitCommit *) content
 {
-	if (content == nil || [currentSha isEqualToString:@"Not Loaded"])
+	if (content == nil || !finishedLoading)
 		return;
 
 	id script = [view windowScriptObject];
@@ -113,23 +104,30 @@
 		NSLog(@"Deletion failed!");
 }
 
-- (NSArray *)webView:(WebView *)sender contextMenuItemsForElement:(NSDictionary *)element defaultMenuItems:(NSArray *)defaultMenuItems {
+- (NSArray *)	   webView:(WebView *)sender
+contextMenuItemsForElement:(NSDictionary *)element
+		  defaultMenuItems:(NSArray *)defaultMenuItems
+{
 	DOMNode *node = [element valueForKey:@"WebElementDOMNode"];
 
+	// If clicked on the text, select the containing div
 	if ([[node className] isEqualToString:@"DOMText"])
 		node = [node parentNode];
 
 	// Every ref has a class name of 'refs' and some other class. We check on that to see if we pressed on a ref.
-	if ([[node className] hasPrefix:@"refs "]) {
-		RefMenuItem *item = [[RefMenuItem alloc] initWithTitle:@"Remove" action:@selector(removeRef:) keyEquivalent: @""];
-		[item setTarget: self];
-		[item setRef: [[[node childNodes] item:0] textContent]];
-		return [NSArray arrayWithObject: item];
-	}
+	if (![[node className] hasPrefix:@"refs "])
+		return defaultMenuItems;
 
-	return defaultMenuItems;
+	RefMenuItem *item = [[RefMenuItem alloc] initWithTitle:@"Remove"
+													action:@selector(removeRef:)
+											 keyEquivalent: @""];
+	[item setTarget: self];
+	[item setRef: [[[node childNodes] item:0] textContent]];
+	return [NSArray arrayWithObject: item];
 }
 
+
+// Open external links in the default browser
 -   (void)webView:(WebView *)sender decidePolicyForNewWindowAction:(NSDictionary *)actionInformation
    		  request:(NSURLRequest *)request
      newFrameName:(NSString *)frameName

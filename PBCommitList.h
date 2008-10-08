@@ -8,11 +8,11 @@
 
 #import <Cocoa/Cocoa.h>
 #import <WebKit/WebView.h>
-#import "PBWebGitController.h"
+#import "PBWebHistoryController.h"
 
 @interface PBCommitList : NSTableView {
 	IBOutlet WebView* webView;
-	IBOutlet PBWebGitController* webController;
+	IBOutlet PBWebHistoryController* webController;
 	IBOutlet PBGitHistoryController *controller;
 }
 

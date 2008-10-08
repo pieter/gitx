@@ -12,9 +12,8 @@
 
 - (void) awakeFromNib
 {
-	NSString* file = [[NSBundle mainBundle] pathForResource:@"diff" ofType:@"html"];
-	NSURLRequest * request = [NSURLRequest requestWithURL:[NSURL fileURLWithPath:file]];
-	[[view mainFrame] loadRequest:request];	
+	startFile = @"diff";
+	[super awakeFromNib];
 
 	[unstagedFilesController addObserver:self forKeyPath:@"selection" options:0 context:@"UnstagedFileSelected"];
 	[cachedFilesController addObserver:self forKeyPath:@"selection" options:0 context:@"cachedFileSelected"];
@@ -22,7 +21,7 @@
 
 static PBChangedFile *lastFileSelected = nil;
 
-- (void) webView:(id) v didFinishLoadForFrame:(id) frame
+- (void) didLoad
 {
 	if (lastFileSelected)
 		[self showDiff: lastFileSelected];
@@ -40,22 +39,25 @@ static PBChangedFile *lastFileSelected = nil;
 		[cachedFilesController setSelectionIndexes:[NSIndexSet indexSet]];
 	else
 		[unstagedFilesController setSelectionIndexes:[NSIndexSet indexSet]];
-	
+
 	PBChangedFile *file = [[object selectedObjects] objectAtIndex:0];
 
-	if (previousFile == file)
-		return;
-	
-	previousFile = file;
-	if ([view isLoading]) {
-		lastFileSelected = file;
-		return;
-	}
 	[self showDiff: file];
 }
 
 - (void) showDiff:(PBChangedFile *)file
 {
+	if (!finishedLoading) {
+		lastFileSelected = file;
+		return;
+	}
+
+	// Don't reload if we already display this file
+	if (previousFile == file)
+		return;
+
+	previousFile = file;
+
 	id script = [view windowScriptObject];
 	[script callWebScriptMethod:@"showFileChanges" withArguments:[NSArray arrayWithObject:file]];	
 }
