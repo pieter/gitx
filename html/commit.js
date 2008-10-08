@@ -9,10 +9,10 @@ var Commit = Class.create({
 		var messageStart = this.raw.indexOf("\n\n") + 2;
 
 		if (diffStart > 0) {
-			this.message = this.raw.substring(messageStart, diffStart).escapeHTML();
+			this.message = this.raw.substring(messageStart, diffStart).gsub(/^    /m, "").escapeHTML();
 			this.diff = this.raw.substring(diffStart);
 		} else {
-			this.message = this.raw.substring(messageStart).escapeHTML();
+			this.message = this.raw.substring(messageStart).gsub(/^    /m, "").escapeHTML();
 			this.diff = "";
 		}
 		this.header = this.raw.substring(0, messageStart);
