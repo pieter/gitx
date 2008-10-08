@@ -19,3 +19,7 @@ task :generate do
   end
   `open output/UserManual.html`
 end
+
+task :upload do
+  `rsync -a output/ sydney:public_html/gitx/`
+end
