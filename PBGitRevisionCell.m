@@ -109,14 +109,20 @@
 	[path stroke];
 }
 
-- (NSMutableDictionary*) attributesForRefLabelSelected: (BOOL) selected
+- (NSMutableDictionary*) attributesForRefLabelSelected: (BOOL) selected isCurrentBranch: (BOOL) curBranch
 {
 	NSMutableDictionary *attributes = [[[NSMutableDictionary alloc] initWithCapacity:2] autorelease];
 	NSMutableParagraphStyle* style = [[[NSParagraphStyle defaultParagraphStyle] mutableCopy] autorelease];
+	NSString *fontName;
+
+	if(curBranch)
+		fontName = @"Helvetica-Bold";
+	else
+		fontName = @"Helvetica";
 	
 	[style setAlignment:NSCenterTextAlignment];
 	[attributes setObject:style forKey:NSParagraphStyleAttributeName];
-	[attributes setObject:[NSFont fontWithName:@"Helvetica"	size:9] forKey:NSFontAttributeName];
+	[attributes setObject:[NSFont fontWithName:fontName size:9] forKey:NSFontAttributeName];
 
 	//if (selected)
 	//	[attributes setObject:[NSColor alternateSelectedControlTextColor] forKey:NSForegroundColorAttributeName];
@@ -149,9 +155,11 @@
 
 	int index;
 	for (index = 0; index < [refs count]; ++index) {
-		PBGitRef* ref    = [refs objectAtIndex:index];
+		PBGitRef *ref         = [refs objectAtIndex:index];
+		BOOL      isCurBranch = [ref.ref isEqualToString:[[[controller repository] headRef] simpleRef]];
 
-		NSMutableDictionary* attributes = [self attributesForRefLabelSelected:[self isHighlighted]];
+		NSMutableDictionary* attributes = [self attributesForRefLabelSelected:[self isHighlighted]
+															  isCurrentBranch:isCurBranch];
 		NSSize refSize = [[ref shortName] sizeWithAttributes:attributes];
 		
 		refRect.size.width = refSize.width + ref_padding;

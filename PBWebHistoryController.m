@@ -49,6 +49,7 @@
 
 	id script = [view windowScriptObject];
 	[script setValue: content forKey:@"CommitObject"];
+	[script setValue:[[[historyController repository] headRef] simpleRef] forKey:@"CurrentBranch"];
 
 	// The sha is the same, but refs may have changed.. reload it lazy
 	if ([currentSha isEqualToString: content.sha])

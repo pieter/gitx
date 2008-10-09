@@ -37,6 +37,7 @@ extern NSString* PBGitRepositoryErrorDomain;
 - (void) addRef:(PBGitRef *)ref fromParameters:(NSArray *)params;
 - (BOOL) removeRef:(NSString *)ref;
 - (void) lazyReload;
+- (PBGitRevSpecifier*) headRef;
 
 - (void) readCurrentBranch;
 - (PBGitRevSpecifier*) addBranch: (PBGitRevSpecifier*) rev;

@@ -108,7 +108,8 @@ var showRefs = function() {
 		$('refs').parentNode.style.display = "";
 		$('refs').innerHTML = "";
 		$A(commit.refs).each(function(ref) {
-							 $('refs').innerHTML += '<span class="refs ' + ref.type() + '">' + ref.shortName() + '</span>';
+							 curBranch = "";
+							 $('refs').innerHTML += '<span class="refs ' + ref.type()  + (CurrentBranch == ref.ref ? ' currentBranch' : '') + '">' + ref.shortName() + '</span>';
 							 });
 	} else
 		$('refs').parentNode.style.display = "none";
