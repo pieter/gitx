@@ -41,6 +41,8 @@
 - (void) readOtherFiles:(NSNotification *)notification;
 - (void) readUnstagedFiles:(NSNotification *)notification;
 
+- (NSMenu *) menuForTable:(NSTableView *)table;
+
 - (IBAction) refresh:(id) sender;
 - (IBAction) commit:(id) sender;
 @end

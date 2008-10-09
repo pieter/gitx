@@ -27,6 +27,8 @@
 	[unstagedTable setDoubleAction:@selector(tableClicked:)];
 	[cachedTable setDoubleAction:@selector(tableClicked:)];
 
+	[unstagedTable setController: self];
+
 	[self refresh:self];
 
 	[commitMessageView setTypingAttributes:[NSDictionary dictionaryWithObject:[NSFont fontWithName:@"Monaco" size:12.0] forKey:NSFontAttributeName]];
@@ -158,17 +160,22 @@
 		}
 		even = 0;
 
+		BOOL isNew = YES;
 		// If the file is already added, we shouldn't add it again
 		// but rather update it to incorporate our changes
-		NSArray *existingFiles = [files filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"path == '%@'", line]];
-		if ([existingFiles count] != 0) {
-			PBChangedFile *file = [existingFiles objectAtIndex:0];
-			if (cached)
-				file.hasCachedChanges = YES;
-			else
-				file.hasUnstagedChanges = YES;
-			return;
+		for (PBChangedFile *file in files) {
+			if ([file.path isEqualToString:line]) {
+				if (cached)
+					file.hasCachedChanges = YES;
+				else
+					file.hasUnstagedChanges = YES;
+				isNew = NO;
+				break;
+			}
 		}
+
+		if (!isNew)
+			continue;
 
 		PBChangedFile *file = [[PBChangedFile alloc] initWithPath:line andRepository:repository];
 		if ([[fileStatus objectAtIndex:4] isEqualToString:@"D"])
@@ -284,29 +291,14 @@
 - (void) tableClicked:(NSTableView *) tableView
 {
 	NSUInteger selectionIndex = [[tableView selectedRowIndexes] firstIndex];
-	NSArrayController *controller, *otherController;
-	if ([tableView tag] == 0) {
-		controller = unstagedFilesController;
-		otherController = cachedFilesController;
-	}
-	else {
-		controller = cachedFilesController;
-		otherController = unstagedFilesController;
-	}
-	
+	NSArrayController *controller = [tableView tag] == 0 ? unstagedFilesController : cachedFilesController;
 	PBChangedFile *selectedItem = [[controller arrangedObjects] objectAtIndex:selectionIndex];
-	[controller removeObject:selectedItem];
+
 	if ([tableView tag] == 0)
 		[selectedItem stageChanges];
 	else
 		[selectedItem unstageChangesAmend:amend];
 
-	// Add the file to the other controller if it's not there yet
-	for (PBChangedFile *object in [otherController arrangedObjects])
-		if ([[object path] isEqualToString:[selectedItem path]])
-			return;
-
-	[otherController addObject:selectedItem];	
 }
 
 - (void) rowClicked:(NSCell *)sender
@@ -320,5 +312,33 @@
 - (void)tableView:(NSTableView*)tableView willDisplayCell:(id)cell forTableColumn:(NSTableColumn*)tableColumn row:(int)rowIndex
 {
 	[[tableColumn dataCell] setImage:[[[(([tableView tag] == 0) ? unstagedFilesController : cachedFilesController) arrangedObjects] objectAtIndex:rowIndex] icon]];
+}
+
+- (NSMenu *) menuForTable:(NSTableView *)table
+{
+	NSUInteger selectionIndex = [[table selectedRowIndexes] firstIndex];
+	PBChangedFile *selectedItem = [[unstagedFilesController arrangedObjects] objectAtIndex:selectionIndex];
+
+	NSMenu *a = [[NSMenu alloc] init];
+	NSMenuItem *stageItem = [[NSMenuItem alloc] initWithTitle:@"Stage Changes" action:@selector(stageChanges) keyEquivalent:@""];
+	[stageItem setTarget:selectedItem];
+	[a addItem:stageItem];
+
+	// Do not add "revert" options for untracked files
+	if (selectedItem.status == NEW)
+		return a;
+
+	NSMenuItem *revertItem = [[NSMenuItem alloc] initWithTitle:@"Revert Changes…" action:@selector(revertChanges) keyEquivalent:@""];
+	[revertItem setTarget:selectedItem];
+	[revertItem setAlternate:NO];
+	[a addItem:revertItem];
+
+	NSMenuItem *revertForceItem = [[NSMenuItem alloc] initWithTitle:@"Revert Changes" action:@selector(forceRevertChanges) keyEquivalent:@""];
+	[revertForceItem setTarget:selectedItem];
+	[revertForceItem setAlternate:YES];
+	[revertForceItem setKeyEquivalentModifierMask:NSAlternateKeyMask];
+	[a addItem:revertForceItem];
+
+	return a;
 }
 @end

@@ -76,6 +76,24 @@
 	self.hasUnstagedChanges = YES;
 }
 
+- (void) forceRevertChanges
+{
+	[repository outputInWorkdirForArguments:[NSArray arrayWithObjects:@"checkout", @"--", path, nil]];
+	self.hasUnstagedChanges = NO;
+}
+
+- (void) revertChanges
+{
+	int ret = [[NSAlert alertWithMessageText:@"Revert changes"
+					 defaultButton:nil
+				   alternateButton:@"Cancel"
+					   otherButton:nil
+		 informativeTextWithFormat:@"Are you sure you wish to revert the changes in '%@'?\n\n You cannot undo this operation.", path] runModal];	
+
+	if (ret == NSAlertDefaultReturn)
+		[self forceRevertChanges];
+}
+
 + (BOOL)isSelectorExcludedFromWebScript:(SEL)aSelector
 {
 	return NO;
