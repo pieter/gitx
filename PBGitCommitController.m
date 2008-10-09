@@ -222,10 +222,12 @@
 		return;
 	}
 
-	NSString *commitSubject = [commitMessage substringToIndex:
-							   [commitMessage rangeOfString:@"\n"].location];
-	if (!commitSubject)
+	NSString *commitSubject;
+	NSRange newLine = [commitMessage rangeOfString:@"\n"];
+	if (newLine.location == NSNotFound)
 		commitSubject = commitMessage;
+	else
+		commitSubject = [commitMessage substringToIndex:newLine.location];
 	
 	commitSubject = [@"commit: " stringByAppendingString:commitSubject];
 
