@@ -139,7 +139,7 @@ var loadCommit = function() {
 
 	$("message").innerHTML = commit.message.replace(/\n/g,"<br>");
 
-	if (commit.diff.length < 10000) {
+	if (commit.diff.length < 200000) {
 		showDiffs();
 	} else {
 		$("details").innerHTML = "<a class='showdiff' href='' onclick='showDiffs(); return false;'>This is a large commit. Click here or press 'v' to view.</a>";
