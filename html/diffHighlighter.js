@@ -14,7 +14,7 @@ var highlightDiffs = function() {
 	for (var diffn = 0; diffn < diffs.length; diffn++) {
 		var diff = diffs[diffn];
 
-		var content = diff.innerHTML.replace(/\s+$/, '');
+		var content = diff.innerHTML.replace(/\t/g, "    ");;
 
 		var line1 = "";
 		var line2 = "";
@@ -42,7 +42,7 @@ var highlightDiffs = function() {
 				continue;
 			}
 
-			l = l.replace(/\t/g, "    ");
+
 			if (firstChar == "+") {
 				// Highlight trailing whitespace
 				if (m = l.match(/\s+$/))
