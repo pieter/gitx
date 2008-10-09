@@ -19,6 +19,8 @@
 	NSURLRequest * request = [NSURLRequest requestWithURL:[NSURL fileURLWithPath:file]];
 
 	finishedLoading = NO;
+	[view setUIDelegate:self];
+	[view setFrameLoadDelegate:self];
 	[[view mainFrame] loadRequest:request];
 }
 
@@ -30,6 +32,26 @@
 	finishedLoading = YES;
 	if ([self respondsToSelector:@selector(didLoad)])
 		[self performSelector:@selector(didLoad)];
+}
+
+- (void)webView:(WebView *)webView addMessageToConsole:(NSDictionary *)dictionary
+{
+	NSLog(@"Error from webkit!");
+}
+
++ (BOOL)isSelectorExcludedFromWebScript:(SEL)aSelector
+{
+	return NO;
+}
+
++ (BOOL)isKeyExcludedFromWebScript:(const char *)name {
+	return NO;
+}
+
+#pragma mark Functions to be used from JavaScript
+- (void) log: (NSString*) logMessage
+{
+	NSLog(logMessage);
 }
 
 @end

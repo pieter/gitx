@@ -62,11 +62,6 @@
 	[script callWebScriptMethod:@"loadCommit" withArguments: nil];
 }
 
-- (void) log: (NSString*) logMessage
-{
-	NSLog(logMessage);
-}
-
 - (void) selectCommit: (NSString*) sha
 {
 	[historyController selectCommit:sha];
@@ -84,15 +79,6 @@
 	NSPasteboard *a =[NSPasteboard generalPasteboard];
 	[a declareTypes:[NSArray arrayWithObject:NSStringPboardType] owner:self];
 	[a setString:source forType: NSStringPboardType];
-}
-
-+ (BOOL)isSelectorExcludedFromWebScript:(SEL)aSelector
-{
-	return NO;
-}
-
-+ (BOOL)isKeyExcludedFromWebScript:(const char *)name {
-	return NO;
 }
 
 - (void) removeRef:(RefMenuItem *)sender
