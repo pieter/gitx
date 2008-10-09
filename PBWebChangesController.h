@@ -15,8 +15,6 @@
 	IBOutlet NSArrayController *unstagedFilesController;
 	IBOutlet NSArrayController *cachedFilesController;
 	IBOutlet PBGitCommitController *controller;
-	
-	id previousFile;
 }
 
 - (void) showDiff:(PBChangedFile *)file cached:(BOOL)cached;

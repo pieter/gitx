@@ -58,12 +58,6 @@ static PBChangedFile *lastFileSelected = nil;
 		return;
 	}
 
-	// Don't reload if we already display this file
-	if (previousFile == file)
-		return;
-
-	previousFile = file;
-
 	id script = [view windowScriptObject];
 	NSLog(@"Showing diff..");
 	[script callWebScriptMethod:@"showFileChanges" withArguments:[NSArray arrayWithObjects:file, [NSNumber numberWithBool:cached], nil]];
