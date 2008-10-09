@@ -23,6 +23,7 @@
 	// You can increase it when your process start
 	// And decrease it after you have finished.
 	int busy;
+	BOOL amend;
 
 	IBOutlet PBIconAndTextCell* unstagedButtonCell;
 	IBOutlet PBIconAndTextCell* cachedButtonCell;
@@ -34,6 +35,7 @@
 @property (retain) NSMutableArray *files;
 @property (copy) NSString *status;
 @property (assign) int busy;
+@property (assign) BOOL amend;
 
 - (void) readCachedFiles:(NSNotification *)notification;
 - (void) readOtherFiles:(NSNotification *)notification;

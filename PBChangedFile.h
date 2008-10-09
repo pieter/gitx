@@ -29,9 +29,11 @@ typedef enum {
 @property (assign) BOOL hasCachedChanges;
 @property (assign) BOOL hasUnstagedChanges;
 - (NSImage *)icon;
-- (NSString *)changes;
+- (NSString *)cachedChangesAmend:(BOOL)amend;
+- (NSString *)unstagedChanges;
+
 - (void) stageChanges;
-- (void) unstageChanges;
+- (void) unstageChangesAmend:(BOOL)amend;
 
 - (id) initWithPath:(NSString *)p andRepository:(PBGitRepository *)r;
 @end

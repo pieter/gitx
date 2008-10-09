@@ -20,8 +20,11 @@
 	return self;
 }
 
-- (NSString *) cachedChanges
+- (NSString *) cachedChangesAmend:(BOOL) amend
 {
+	if (amend)
+		return [repository outputInWorkdirForArguments:[NSArray arrayWithObjects:@"diff", @"--cached", @"HEAD^", @"--", path, nil]];
+
 	return [repository outputInWorkdirForArguments:[NSArray arrayWithObjects:@"diff", @"--cached", @"--", path, nil]];
 }
 
@@ -63,9 +66,12 @@
 	self.hasCachedChanges = YES;
 }
 
-- (void) unstageChanges
+- (void) unstageChangesAmend:(BOOL) amend
 {
-	[repository outputInWorkdirForArguments:[NSArray arrayWithObjects:@"reset", @"--", path, nil]];
+	if (amend)
+		[repository outputInWorkdirForArguments:[NSArray arrayWithObjects:@"reset", @"HEAD^", @"--", path, nil]];
+	else
+		[repository outputInWorkdirForArguments:[NSArray arrayWithObjects:@"reset", @"--", path, nil]];
 	self.hasCachedChanges = NO;
 	self.hasUnstagedChanges = YES;
 }

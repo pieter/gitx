@@ -22,7 +22,7 @@
 			}  else {
 				$("diff").hide();
 				if (cached)
-					$("diff").innerHTML = file.cachedChanges().escapeHTML();
+					$("diff").innerHTML = file.cachedChangesAmend_(Controller.amend()).escapeHTML();
 				else
 					$("diff").innerHTML = file.unstagedChanges().escapeHTML();
 				highlightDiffs();

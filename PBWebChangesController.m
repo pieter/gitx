@@ -27,6 +27,11 @@ static PBChangedFile *lastFileSelected = nil;
 		[self showDiff: lastFileSelected cached:NO];
 }
 
+- (BOOL) amend
+{
+	return controller.amend;
+}
+
 - (void)observeValueForKeyPath:(NSString *)keyPath
 					  ofObject:(id)object
 						change:(NSDictionary *)change

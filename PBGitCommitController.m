@@ -12,12 +12,14 @@
 
 @implementation PBGitCommitController
 
-@synthesize files, status, busy;
+@synthesize files, status, busy, amend;
 
 - (void)awakeFromNib
 {
 	[super awakeFromNib];
 	self.busy = 0;
+
+	amend = NO;
 
 	[unstagedButtonCell setAction:@selector(rowClicked:)];
 	[cachedButtonCell setAction:@selector(rowClicked:)];
@@ -37,6 +39,18 @@
 		[[NSSortDescriptor alloc] initWithKey:@"path" ascending:true], nil]];
 	[cachedFilesController setSortDescriptors:[NSArray arrayWithObject:
 		[[NSSortDescriptor alloc] initWithKey:@"path" ascending:true]]];
+}
+
+- (void) setAmend:(BOOL)newAmend
+{
+	if (newAmend == amend)
+		return;
+	amend = newAmend;
+
+	if (amend && [[commitMessageView string] length] <= 3)
+		commitMessageView.string = [repository outputForCommand:@"log -1 --pretty=format:%s%n%n%b HEAD"];
+
+	[self refresh:self];
 }
 
 - (NSArray *) linesFromNotification:(NSNotification *)notification
@@ -60,16 +74,18 @@
 
 - (NSString *) parentTree
 {
-	id a = [repository parseReference:@"HEAD"];
+	NSString *parent = amend ? @"HEAD^" : @"HEAD";
+
+	NSString *a = [repository parseReference:@"HEAD^"];
 
 	// TODO: parseReference should exit nil if it errors out. For
 	// now, compare to "HEAD"
-	if ([a isEqualToString:@"HEAD"]) {
+	if ([a isEqualToString:parent]) {
 		// We don't have a head ref. Return the empty tree.
 		return @"4b825dc642cb6eb9a060e54bf8d69288fbee4904";
 	}
 
-	return @"HEAD";
+	return parent;
 }
 
 - (void) refresh:(id) sender
@@ -233,9 +249,10 @@
 	int ret;
 
 	NSMutableArray *arguments = [NSMutableArray arrayWithObjects:@"commit-tree", tree, nil];
-	if ([repository parseSymbolicReference:@"HEAD"]) {
+	NSString *parent = amend ? @"HEAD^" : @"HEAD";
+	if ([repository parseReference:parent]) {
 		[arguments addObject:@"-p"];
-		[arguments addObject:@"HEAD"];
+		[arguments addObject:parent];
 	}
 
 	NSString *commit = [repository outputForArguments:arguments
@@ -259,7 +276,9 @@
 	repository.hasChanged = YES;
 	self.busy--;
 	[commitMessageView setString:@""];
+	amend = NO;
 	[self refresh:self];
+	self.amend = NO;
 }
 
 - (void) tableClicked:(NSTableView *) tableView
@@ -280,7 +299,7 @@
 	if ([tableView tag] == 0)
 		[selectedItem stageChanges];
 	else
-		[selectedItem unstageChanges];
+		[selectedItem unstageChangesAmend:amend];
 
 	// Add the file to the other controller if it's not there yet
 	for (PBChangedFile *object in [otherController arrangedObjects])
