@@ -24,7 +24,7 @@ static PBChangedFile *lastFileSelected = nil;
 - (void) didLoad
 {
 	if (lastFileSelected)
-		[self showDiff: lastFileSelected];
+		[self showDiff: lastFileSelected cached:NO];
 }
 
 - (void)observeValueForKeyPath:(NSString *)keyPath
@@ -35,6 +35,7 @@ static PBChangedFile *lastFileSelected = nil;
 	if ([[object selectedObjects] count] == 0)
 		return;
 
+	// TODO: Move this to commitcontroller
 	if (object == unstagedFilesController)
 		[cachedFilesController setSelectionIndexes:[NSIndexSet indexSet]];
 	else
@@ -42,10 +43,10 @@ static PBChangedFile *lastFileSelected = nil;
 
 	PBChangedFile *file = [[object selectedObjects] objectAtIndex:0];
 
-	[self showDiff: file];
+	[self showDiff: file cached: object == cachedFilesController];
 }
 
-- (void) showDiff:(PBChangedFile *)file
+- (void) showDiff:(PBChangedFile *)file cached:(BOOL) cached
 {
 	if (!finishedLoading) {
 		lastFileSelected = file;
@@ -59,6 +60,7 @@ static PBChangedFile *lastFileSelected = nil;
 	previousFile = file;
 
 	id script = [view windowScriptObject];
-	[script callWebScriptMethod:@"showFileChanges" withArguments:[NSArray arrayWithObject:file]];	
+	NSLog(@"Showing diff..");
+	[script callWebScriptMethod:@"showFileChanges" withArguments:[NSArray arrayWithObjects:file, [NSNumber numberWithBool:cached], nil]];
 }
 @end

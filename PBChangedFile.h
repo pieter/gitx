@@ -17,7 +17,8 @@ typedef enum {
 
 @interface PBChangedFile : NSObject {
 	NSString *path;
-	BOOL cached;
+	BOOL hasCachedChanges;
+	BOOL hasUnstagedChanges;
 	__weak PBGitRepository *repository;
 	PBChangedFileStatus status;
 }
@@ -25,7 +26,8 @@ typedef enum {
 
 @property (readonly) NSString *path;
 @property (assign) PBChangedFileStatus status;
-@property (assign) BOOL cached;
+@property (assign) BOOL hasCachedChanges;
+@property (assign) BOOL hasUnstagedChanges;
 - (NSImage *)icon;
 - (NSString *)changes;
 - (void) stageChanges;

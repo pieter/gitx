@@ -7,11 +7,11 @@
 	<script src="commit.js" type="text/javascript" charset="utf-8"></script>
 	<script src="diff.js" type="text/javascript" charset="utf-8"></script>
 	<script>
-		var showFileChanges = function(file) {
+		var showFileChanges = function(file, cached) {
 			// New file?
 			if (file.status == 0)
 			{
-				var contents = file.changes();
+				var contents = file.unstagedChanges();
 				if (contents)
 					$("diff").innerHTML = contents.escapeHTML();
 				else
@@ -21,7 +21,10 @@
 				$('title').innerHTML = "New file: " + file.path;
 			}  else {
 				$("diff").hide();
-				$("diff").innerHTML = file.changes().escapeHTML();
+				if (cached)
+					$("diff").innerHTML = file.cachedChanges().escapeHTML();
+				else
+					$("diff").innerHTML = file.unstagedChanges().escapeHTML();
 				highlightDiffs();
 				$("diff").show();
 				$("title").innerHTML = "Changes for " + file.path;

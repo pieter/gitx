@@ -29,8 +29,8 @@
 
 	[commitMessageView setTypingAttributes:[NSDictionary dictionaryWithObject:[NSFont fontWithName:@"Monaco" size:12.0] forKey:NSFontAttributeName]];
 	
-	[unstagedFilesController setFilterPredicate:[NSPredicate predicateWithFormat:@"cached == 0"]];
-	[cachedFilesController setFilterPredicate:[NSPredicate predicateWithFormat:@"cached == 1"]];
+	[unstagedFilesController setFilterPredicate:[NSPredicate predicateWithFormat:@"hasUnstagedChanges == 1"]];
+	[cachedFilesController setFilterPredicate:[NSPredicate predicateWithFormat:@"hasCachedChanges == 1"]];
 	
 	[unstagedFilesController setSortDescriptors:[NSArray arrayWithObjects:
 		[[NSSortDescriptor alloc] initWithKey:@"status" ascending:false],
@@ -110,6 +110,8 @@
 {
 	if (!--self.busy)
 		self.status = @"Ready";
+	[unstagedFilesController didChangeArrangementCriteria];
+	[cachedFilesController didChangeArrangementCriteria];
 }
 
 - (void) readOtherFiles:(NSNotification *)notification;
@@ -120,15 +122,16 @@
 			continue;
 		PBChangedFile *file =[[PBChangedFile alloc] initWithPath:line andRepository:repository];
 		file.status = NEW;
-		file.cached = NO;
-		[unstagedFilesController addObject:file];
+		file.hasCachedChanges = NO;
+		file.hasUnstagedChanges = YES;
+
+		[files addObject: file];
 	}
 	[self doneProcessingIndex];
 }
 
-- (void) readUnstagedFiles:(NSNotification *)notification
+- (void) addFilesFromLines:(NSArray *)lines cached:(BOOL) cached
 {
-	NSArray *lines = [self linesFromNotification:notification];
 	NSArray *fileStatus;
 	int even = 0;
 	for (NSString *line in lines) {
@@ -138,54 +141,44 @@
 			continue;
 		}
 		even = 0;
-		
+
+		// If the file is already added, we shouldn't add it again
+		// but rather update it to incorporate our changes
+		NSArray *existingFiles = [files filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"path == '%@'", line]];
+		if ([existingFiles count] != 0) {
+			PBChangedFile *file = [existingFiles objectAtIndex:0];
+			if (cached)
+				file.hasCachedChanges = YES;
+			else
+				file.hasUnstagedChanges = YES;
+			return;
+		}
+
 		PBChangedFile *file = [[PBChangedFile alloc] initWithPath:line andRepository:repository];
 		if ([[fileStatus objectAtIndex:4] isEqualToString:@"D"])
 			file.status = DELETED;
 		else
 			file.status = MODIFIED;
 
-		file.cached = NO;
+		file.hasCachedChanges = cached;
+		file.hasUnstagedChanges = !cached;
 
-		// FIXME: If you are in a merge and have conflicts, a file is displayed twice, with different
-		// index values. For now, we don't handle this gracefully.
-		BOOL fileExists = NO;
-		for (PBChangedFile *object in [unstagedFilesController arrangedObjects]) {
-			if ([[object path] isEqualToString:[file path]]) {
-				fileExists = YES;
-				break;
-			}
-		}
-		if (!fileExists)
-			[unstagedFilesController addObject: file];
+		[files addObject: file];
 	}
+
+}
+
+- (void) readUnstagedFiles:(NSNotification *)notification
+{
+	NSArray *lines = [self linesFromNotification:notification];
+	[self addFilesFromLines:lines cached:NO];
 	[self doneProcessingIndex];
 }
 
 - (void) readCachedFiles:(NSNotification *)notification
 {
 	NSArray *lines = [self linesFromNotification:notification];
-	NSLog(@"Reading cached files!");
-	NSArray *fileStatus;
-	int even = 0;
-	for (NSString *line in lines) {
-		if (!even) {
-			even = 1;
-			fileStatus = [line componentsSeparatedByString:@" "];
-			continue;
-		}
-		even = 0;
-		
-		PBChangedFile *file = [[PBChangedFile alloc] initWithPath:line andRepository:repository];
-		if ([[fileStatus objectAtIndex:4] isEqualToString:@"D"])
-			file.status = DELETED;
-		else
-			file.status = MODIFIED;
-		
-		file.cached = YES;
-		[cachedFilesController addObject: file];
-	}
-	self.files = files;
+	[self addFilesFromLines:lines cached:YES];
 	[self doneProcessingIndex];
 }
 
@@ -284,7 +277,7 @@
 	
 	PBChangedFile *selectedItem = [[controller arrangedObjects] objectAtIndex:selectionIndex];
 	[controller removeObject:selectedItem];
-	if (selectedItem.cached == NO)
+	if ([tableView tag] == 0)
 		[selectedItem stageChanges];
 	else
 		[selectedItem unstageChanges];

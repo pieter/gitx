@@ -19,5 +19,5 @@
 	id previousFile;
 }
 
-- (void) showDiff:(PBChangedFile *)file;
+- (void) showDiff:(PBChangedFile *)file cached:(BOOL)cached;
 @end

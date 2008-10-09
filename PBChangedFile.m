@@ -11,7 +11,7 @@
 
 @implementation PBChangedFile
 
-@synthesize path, status, cached;
+@synthesize path, status, hasCachedChanges, hasUnstagedChanges;
 
 - (id) initWithPath:(NSString *)p andRepository:(PBGitRepository *)r
 {
@@ -20,17 +20,19 @@
 	return self;
 }
 
-- (NSString *) changes
+- (NSString *) cachedChanges
+{
+	return [repository outputInWorkdirForArguments:[NSArray arrayWithObjects:@"diff", @"--cached", @"--", path, nil]];
+}
+
+- (NSString *)unstagedChanges
 {
 	if (status == NEW)
 		return [PBEasyPipe outputForCommand:@"/bin/cat" withArgs:[NSArray arrayWithObject:path] inDir:[repository workingDirectory]];
-	else {
-		if (cached == YES)
-			return [repository outputInWorkdirForArguments:[NSArray arrayWithObjects:@"diff", @"--cached", @"--", path, nil]];
-		else
-			return [repository outputInWorkdirForArguments:[NSArray arrayWithObjects:@"diff", @"--", path, nil]];
-	}
+
+	return [repository outputInWorkdirForArguments:[NSArray arrayWithObjects:@"diff", @"--", path, nil]];
 }
+
 
 - (NSImage *) icon
 {
@@ -57,12 +59,15 @@
 	else
 		[repository outputInWorkdirForArguments:[NSArray arrayWithObjects:@"add", path, nil]];
 
-	self.cached = YES;
+	self.hasUnstagedChanges = NO;
+	self.hasCachedChanges = YES;
 }
+
 - (void) unstageChanges
 {
 	[repository outputInWorkdirForArguments:[NSArray arrayWithObjects:@"reset", @"--", path, nil]];
-	self.cached = NO;
+	self.hasCachedChanges = NO;
+	self.hasUnstagedChanges = YES;
 }
 
 + (BOOL)isSelectorExcludedFromWebScript:(SEL)aSelector
