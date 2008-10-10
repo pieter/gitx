@@ -51,7 +51,7 @@
 #pragma mark Functions to be used from JavaScript
 - (void) log: (NSString*) logMessage
 {
-	NSLog(logMessage);
+	NSLog(@"%@", logMessage);
 }
 
 @end
