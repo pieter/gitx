@@ -9,11 +9,13 @@
 #import <Cocoa/Cocoa.h>
 #import "PBGitRevList.h"
 #import "PBGitRevSpecifier.h"
+#import "PBGitConfig.h"
 
 extern NSString* PBGitRepositoryErrorDomain;
 
 @interface PBGitRepository : NSDocument {
 	PBGitRevList* revisionList;
+	PBGitConfig *config;
 
 	BOOL hasChanged;
 	NSMutableArray* branches;
@@ -54,6 +56,7 @@ extern NSString* PBGitRepositoryErrorDomain;
 
 @property (assign) BOOL hasChanged;
 @property (readonly) NSWindowController *windowController;
+@property (readonly) PBGitConfig *config;
 @property (retain) PBGitRevList* revisionList;
 @property (assign) NSMutableArray* branches;
 @property (assign) NSIndexSet* currentBranch;

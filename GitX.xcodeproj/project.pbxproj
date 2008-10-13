@@ -58,6 +58,7 @@
 		F5B721C40E05CF7E00AF29DC /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = F5B721C20E05CF7E00AF29DC /* MainMenu.xib */; };
 		F5C007750E731B48007B84B2 /* PBGitRef.m in Sources */ = {isa = PBXBuildFile; fileRef = F5C007740E731B48007B84B2 /* PBGitRef.m */; };
 		F5C6F68D0E65FF9300478D97 /* PBGitLane.m in Sources */ = {isa = PBXBuildFile; fileRef = F5C6F68C0E65FF9300478D97 /* PBGitLane.m */; };
+		F5D2DC870EA401A80034AD24 /* PBGitConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = F5D2DC860EA401A80034AD24 /* PBGitConfig.m */; };
 		F5DFFA6C0E075D8800617813 /* PBEasyFS.m in Sources */ = {isa = PBXBuildFile; fileRef = F5DFFA6B0E075D8800617813 /* PBEasyFS.m */; };
 		F5E926060E8827D300056E75 /* PBViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F5E926050E8827D300056E75 /* PBViewController.m */; };
 		F5E927F80E883E7200056E75 /* PBChangedFile.m in Sources */ = {isa = PBXBuildFile; fileRef = F5E927F70E883E7200056E75 /* PBChangedFile.m */; };
@@ -176,6 +177,8 @@
 		F5C007740E731B48007B84B2 /* PBGitRef.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PBGitRef.m; sourceTree = "<group>"; };
 		F5C6F68B0E65FF9300478D97 /* PBGitLane.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PBGitLane.h; sourceTree = "<group>"; };
 		F5C6F68C0E65FF9300478D97 /* PBGitLane.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PBGitLane.m; sourceTree = "<group>"; };
+		F5D2DC850EA401A80034AD24 /* PBGitConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PBGitConfig.h; sourceTree = "<group>"; };
+		F5D2DC860EA401A80034AD24 /* PBGitConfig.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PBGitConfig.m; sourceTree = "<group>"; };
 		F5DFFA6A0E075D8800617813 /* PBEasyFS.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PBEasyFS.h; sourceTree = "<group>"; };
 		F5DFFA6B0E075D8800617813 /* PBEasyFS.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PBEasyFS.m; sourceTree = "<group>"; };
 		F5E926040E8827D300056E75 /* PBViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PBViewController.h; sourceTree = "<group>"; };
@@ -336,6 +339,8 @@
 				F5945E160E02B0C200706420 /* PBGitRepository.m */,
 				F53C4DF50E97FC630022AD59 /* PBGitBinary.h */,
 				F53C4DF60E97FC630022AD59 /* PBGitBinary.m */,
+				F5D2DC850EA401A80034AD24 /* PBGitConfig.h */,
+				F5D2DC860EA401A80034AD24 /* PBGitConfig.m */,
 			);
 			name = Git;
 			sourceTree = "<group>";
@@ -596,6 +601,7 @@
 				F56244090E9684B0002B6C44 /* PBUnsortableTableHeader.m in Sources */,
 				F53C4DF70E97FC630022AD59 /* PBGitBinary.m in Sources */,
 				F593DF780E9E636C003A8559 /* PBFileChangesTableView.m in Sources */,
+				F5D2DC870EA401A80034AD24 /* PBGitConfig.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

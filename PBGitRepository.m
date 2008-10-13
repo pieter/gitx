@@ -20,7 +20,7 @@ NSString* PBGitRepositoryErrorDomain = @"GitXErrorDomain";
 
 @implementation PBGitRepository
 
-@synthesize revisionList, branches, currentBranch, refs, hasChanged;
+@synthesize revisionList, branches, currentBranch, refs, hasChanged, config;
 
 - (BOOL)readFromData:(NSData *)data ofType:(NSString *)typeName error:(NSError **)outError
 {
@@ -114,6 +114,7 @@ NSString* PBGitRepositoryErrorDomain = @"GitXErrorDomain";
 
 - (void) setup
 {
+	config = [[PBGitConfig alloc] initWithRepository:self.fileURL.path];
 	self.branches = [NSMutableArray array];
 	[self reloadRefs];
 	revisionList = [[PBGitRevList alloc] initWithRepository:self];
