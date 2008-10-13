@@ -19,6 +19,8 @@ extern NSString* PBGitRepositoryErrorDomain;
 	NSMutableArray* branches;
 	NSIndexSet* currentBranch;
 	NSMutableDictionary* refs;
+
+	PBGitRevSpecifier *_headRef; // Caching
 }
 
 - (NSFileHandle*) handleForCommand:(NSString*) cmd;

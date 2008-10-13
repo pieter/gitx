@@ -188,6 +188,7 @@ NSString* PBGitRepositoryErrorDomain = @"GitXErrorDomain";
 // returns YES when a ref was changed
 - (BOOL) reloadRefs
 {
+	_headRef = nil;
 	BOOL ret = NO;
 
 	refs = [NSMutableDictionary dictionary];
@@ -233,13 +234,18 @@ NSString* PBGitRepositoryErrorDomain = @"GitXErrorDomain";
 	hasChanged = NO;
 }
 
-- (PBGitRevSpecifier*) headRef
+- (PBGitRevSpecifier *)headRef
 {
+	if (_headRef)
+		return _headRef;
+
 	NSString* branch = [self parseSymbolicReference: @"HEAD"];
 	if (branch && [branch hasPrefix:@"refs/heads/"])
-		return [[PBGitRevSpecifier alloc] initWithRef:[PBGitRef refFromString:branch]];
+		_headRef = [[PBGitRevSpecifier alloc] initWithRef:[PBGitRef refFromString:branch]];
+	else
+		_headRef = [[PBGitRevSpecifier alloc] initWithRef:[PBGitRef refFromString:@"HEAD"]];
 
-	return [[PBGitRevSpecifier alloc] initWithRef:[PBGitRef refFromString:@"HEAD"]];
+	return _headRef;
 }
 		
 // Returns either this object, or an existing, equal object
