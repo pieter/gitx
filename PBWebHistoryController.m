@@ -123,4 +123,9 @@ contextMenuItemsForElement:(NSDictionary *)element
 	[[NSWorkspace sharedWorkspace] openURL:[request URL]];
 }
 
+- getConfig:(NSString *)config
+{
+	return [historyController valueForKeyPath:[@"repository.config." stringByAppendingString:config]];
+}
+
 @end
