@@ -63,6 +63,9 @@
 		F5C007750E731B48007B84B2 /* PBGitRef.m in Sources */ = {isa = PBXBuildFile; fileRef = F5C007740E731B48007B84B2 /* PBGitRef.m */; };
 		F5C6F68D0E65FF9300478D97 /* PBGitLane.m in Sources */ = {isa = PBXBuildFile; fileRef = F5C6F68C0E65FF9300478D97 /* PBGitLane.m */; };
 		F5DFFA6C0E075D8800617813 /* PBEasyFS.m in Sources */ = {isa = PBXBuildFile; fileRef = F5DFFA6B0E075D8800617813 /* PBEasyFS.m */; };
+		F5E424110EA3E4D60046E362 /* PBDiffWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = F5E424100EA3E4D60046E362 /* PBDiffWindow.xib */; };
+		F5E424150EA3E4E10046E362 /* PBDiffWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = F5E424130EA3E4E10046E362 /* PBDiffWindowController.m */; };
+		F5E424180EA3E4EB0046E362 /* PBWebDiffController.m in Sources */ = {isa = PBXBuildFile; fileRef = F5E424160EA3E4EB0046E362 /* PBWebDiffController.m */; };
 		F5E4DBFB0EAB58D90013FAFC /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F5E4DBFA0EAB58D90013FAFC /* SystemConfiguration.framework */; };
 		F5E926060E8827D300056E75 /* PBViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F5E926050E8827D300056E75 /* PBViewController.m */; };
 		F5E927F80E883E7200056E75 /* PBChangedFile.m in Sources */ = {isa = PBXBuildFile; fileRef = F5E927F70E883E7200056E75 /* PBChangedFile.m */; };
@@ -190,6 +193,11 @@
 		F5D2DC850EA401A80034AD24 /* PBGitConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PBGitConfig.h; sourceTree = "<group>"; };
 		F5DFFA6A0E075D8800617813 /* PBEasyFS.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PBEasyFS.h; sourceTree = "<group>"; };
 		F5DFFA6B0E075D8800617813 /* PBEasyFS.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PBEasyFS.m; sourceTree = "<group>"; };
+		F5E424100EA3E4D60046E362 /* PBDiffWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PBDiffWindow.xib; sourceTree = "<group>"; };
+		F5E424130EA3E4E10046E362 /* PBDiffWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PBDiffWindowController.m; sourceTree = "<group>"; };
+		F5E424140EA3E4E10046E362 /* PBDiffWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PBDiffWindowController.h; sourceTree = "<group>"; };
+		F5E424160EA3E4EB0046E362 /* PBWebDiffController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PBWebDiffController.m; sourceTree = "<group>"; };
+		F5E424170EA3E4EB0046E362 /* PBWebDiffController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PBWebDiffController.h; sourceTree = "<group>"; };
 		F5E4DBFA0EAB58D90013FAFC /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = /System/Library/Frameworks/SystemConfiguration.framework; sourceTree = "<absolute>"; };
 		F5E926040E8827D300056E75 /* PBViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PBViewController.h; sourceTree = "<group>"; };
 		F5E926050E8827D300056E75 /* PBViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PBViewController.m; sourceTree = "<group>"; };
@@ -311,6 +319,7 @@
 				089C165CFE840E0CC02AAC07 /* InfoPlist.strings */,
 				F5B721C20E05CF7E00AF29DC /* MainMenu.xib */,
 				911111E00E58BD5A00BF76B4 /* RepositoryWindow.xib */,
+				F5E424100EA3E4D60046E362 /* PBDiffWindow.xib */,
 				F52BCE020E84208300AA3741 /* PBGitHistoryView.xib */,
 				F59116E50E843BB50072CCB1 /* PBGitCommitView.xib */,
 			);
@@ -347,6 +356,7 @@
 		F56174540E05887E001DCD79 /* Git */ = {
 			isa = PBXGroup;
 			children = (
+				F5E424120EA3E4DD0046E362 /* Diff */,
 				F5E927E30E883D6800056E75 /* Commit */,
 				F5E927E10E883D2E00056E75 /* History */,
 				F5945E150E02B0C200706420 /* PBGitRepository.h */,
@@ -362,6 +372,7 @@
 		F57CC3850E05DDC1000472E2 /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				F5B161BB0EAB6E0C005A1DE1 /* Diff */,
 				F5EF8C880E9D498F0050906B /* History */,
 				F5E927F90E883EF600056E75 /* Commit */,
 				77C8280B06725ACE000B614F /* ApplicationController.h */,
@@ -421,6 +432,15 @@
 			name = HTML;
 			sourceTree = "<group>";
 		};
+		F5B161BB0EAB6E0C005A1DE1 /* Diff */ = {
+			isa = PBXGroup;
+			children = (
+				F5E424140EA3E4E10046E362 /* PBDiffWindowController.h */,
+				F5E424130EA3E4E10046E362 /* PBDiffWindowController.m */,
+			);
+			name = Diff;
+			sourceTree = "<group>";
+		};
 		F5C6F6750E65FE2B00478D97 /* Graphing */ = {
 			isa = PBXGroup;
 			children = (
@@ -436,6 +456,15 @@
 				F5C6F68C0E65FF9300478D97 /* PBGitLane.m */,
 			);
 			name = Graphing;
+			sourceTree = "<group>";
+		};
+		F5E424120EA3E4DD0046E362 /* Diff */ = {
+			isa = PBXGroup;
+			children = (
+				F5E424160EA3E4EB0046E362 /* PBWebDiffController.m */,
+				F5E424170EA3E4EB0046E362 /* PBWebDiffController.h */,
+			);
+			name = Diff;
 			sourceTree = "<group>";
 		};
 		F5E927E10E883D2E00056E75 /* History */ = {
@@ -575,6 +604,7 @@
 				F5E92A230E88569500056E75 /* new_file.png in Resources */,
 				F5EC2DAD0E8C235C000FA381 /* spinner.gif in Resources */,
 				F57240BB0E9678EA00D8EE66 /* deleted_file.png in Resources */,
+				F5E424110EA3E4D60046E362 /* PBDiffWindow.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -620,8 +650,10 @@
 				F53C4DF70E97FC630022AD59 /* PBGitBinary.m in Sources */,
 				F593DF780E9E636C003A8559 /* PBFileChangesTableView.m in Sources */,
 				93F7857F0EA3ABF100C1F443 /* PBCommitMessageView.m in Sources */,
-				93FCCBA90EA8AF450061B02B /* PBGitConfig.m in Sources */,
 				93CB42C20EAB7B2200530609 /* PBGitDefaults.m in Sources */,
+				F5D2DC870EA401A80034AD24 /* PBGitConfig.m in Sources */,
+				F5E424150EA3E4E10046E362 /* PBDiffWindowController.m in Sources */,
+				F5E424180EA3E4EB0046E362 /* PBWebDiffController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

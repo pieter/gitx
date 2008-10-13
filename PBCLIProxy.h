@@ -21,4 +21,5 @@
 
 @protocol GitXCliToolProtocol
 - (BOOL)openRepository:(NSURL*)repositoryPath arguments: (NSArray*) args error:(NSError**)error;
+- (void)openDiffWindowWithDiff:(NSString *)diff;
 @end
