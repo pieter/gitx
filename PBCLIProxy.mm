@@ -11,6 +11,7 @@
 #import "PBGitRevSpecifier.h"
 #import "PBGitRepository.h"
 #import "PBGitWindowController.h"
+#import "PBGitBinary.h"
 
 @implementation PBCLIProxy
 @synthesize connection;
@@ -39,7 +40,11 @@
 	PBGitRepository *document = [[PBRepositoryDocumentController sharedDocumentController] documentForLocation:url];
 	if (!document) {
 		if (error) {
-			NSDictionary *userInfo = [NSDictionary dictionaryWithObject:@"Could not create document. Perhaps GitX can't find you git binary?" forKey:NSLocalizedFailureReasonErrorKey];
+			NSString *suggestion = [PBGitBinary path] ? @"this isn't a git repository" : @"GitX can't find your git binary";
+
+			NSDictionary *userInfo = [NSDictionary dictionaryWithObject:[NSString stringWithFormat:@"Could not create document. Perhaps %@", suggestion]
+																 forKey:NSLocalizedFailureReasonErrorKey];
+
 			*error = [NSError errorWithDomain:PBGitRepositoryErrorDomain code:2 userInfo:userInfo];
 		}
 		return NO;
