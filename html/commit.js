@@ -127,10 +127,14 @@ var loadCommit = function() {
 	$("notification").style.display = "none";
 
 	$("commitID").innerHTML = commit.sha;
-	if (commit.author_email)
+	if (commit.author_email) {
 		$("authorID").innerHTML = commit.author_name + " &lt;<a href='mailto:" + commit.author_email + "'>" + commit.author_email + "</a>&gt;";
-	else
+		$("gravatar").src = "http://www.gravatar.com/avatar/" + hex_md5(commit.author_email) + "?d=wavatar";
+	}
+	else {
 		$("authorID").innerHTML = commit.author_name;
+		$("gravatar").src = "http://www.gravatar.com/avatar/?d=wavatar";
+	}
 	$("date").innerHTML = commit.author_date;
 	$("subjectID").innerHTML =CommitObject.subject.escapeHTML();
 	
