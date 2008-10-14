@@ -11,33 +11,61 @@
 
 @implementation PBGitBinary
 
-static NSString* gitPath;
+static NSString* gitPath = nil;
+
++ (NSString *)versionForPath:(NSString *)path
+{
+	if (!path)
+		return nil;
+
+	if (![[NSFileManager defaultManager] fileExistsAtPath:path])
+		return nil;
+
+	NSString *version = [PBEasyPipe outputForCommand:path withArgs:[NSArray arrayWithObject:@"--version"]];
+	if ([version hasPrefix:@"git version "])
+		return [version substringFromIndex:12];
+
+	return nil;
+}
+
++ (BOOL) acceptBinary:(NSString *)path
+{
+	if (!path)
+		return NO;
+
+	NSString *version = [self versionForPath:path];
+	if (!version)
+		return NO;
+
+	int c = [version compare:@"1.5.4"];
+	if (c == NSOrderedSame || c == NSOrderedDescending) {
+		gitPath = path;
+		return YES;
+	}
+
+	NSLog(@"Found a git binary at %@, but is only version %@", path, version);
+	return NO;
+}
 
 + (void) initialize
 {
-	gitPath = nil;
-
 	// Try to find the path of the Git binary
 	char* path = getenv("GIT_PATH");
-	if (path != nil) {
-		gitPath = [NSString stringWithCString:path];
+	if (path && [self acceptBinary:[NSString stringWithCString:path]])
 		return;
-	}
 
 	// No explicit path. Try it with "which"
-	gitPath = [PBEasyPipe outputForCommand:@"/usr/bin/which" withArgs:[NSArray arrayWithObject:@"git"]];
-	if (gitPath.length > 0)
+	NSString *whichPath = [PBEasyPipe outputForCommand:@"/usr/bin/which" withArgs:[NSArray arrayWithObject:@"git"]];
+	if ([self acceptBinary:whichPath])
 		return;
 
 	// Still no path. Let's try some default locations.
 	for (NSString* location in [PBGitBinary searchLocations]) {
-		if ([[NSFileManager defaultManager] fileExistsAtPath:location]) {
-			gitPath = location;
+		if ([self acceptBinary:location])
 			return;
-		}
 	}
 
-	NSLog(@"Could not find a git binary!");
+	NSLog(@"Could not find a git binary higher than version 1.5.4.");
 }
 
 + (NSString *) path;
@@ -66,12 +94,19 @@ static NSMutableArray *locations = nil;
 + (NSString *) notFoundError
 {
 	NSMutableString *error = [NSMutableString stringWithString:
-							  @"Could not find a git binary\n"
+							  @"Could not find a git binary version 1.5.4 or higher.\n"
 							  "Please make sure there is a git binary in one of the following locations:\n\n"];
 	for (NSString *location in [PBGitBinary searchLocations]) {
 		[error appendFormat:@"\t%@\n", location];
 	}
 	return error;
 }
+
+
++ (NSString *)version
+{
+	return [self versionForPath:gitPath];
+}
+
 
 @end

@@ -40,7 +40,7 @@ void version_info()
 	NSString *version = [[[NSBundle bundleForClass:[PBGitBinary class]] infoDictionary] valueForKey:@"CFBundleVersion"];
 	printf("This is GitX version %s\n", [version UTF8String]);
 	if ([PBGitBinary path])
-		printf("Using git found at %s\n", [[PBGitBinary path] UTF8String]);
+		printf("Using git found at %s, version %s\n", [[PBGitBinary path] UTF8String], [[PBGitBinary version] UTF8String]);
 	else
 		printf("GitX cannot find a git binary\n");
 	exit(1);
