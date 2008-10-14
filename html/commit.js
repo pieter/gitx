@@ -58,8 +58,15 @@ var gistie = function() {
 	};
 
 	// TODO: Replace true with private preference
-	if (true)
+	token = Controller.getConfig_("github.token");
+	login = Controller.getConfig_("github.user");
+	if (token && login)
+	{
+		parameters.login = login;
+		parameters.token = token;
+	} else {
 		parameters.private = true;
+	}
 
 	new Ajax.Request("http://gist.github.com/gists", {
 		method: 'post',
