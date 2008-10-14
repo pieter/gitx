@@ -19,7 +19,7 @@ NSDistantObject* connect()
 void usage(char const *programName)
 {
 	
-	printf("Usage: %s --help\n", programName);
+	printf("Usage: %s (--help|--version)\n", programName);
 	printf("   or: %s (--commit|-h)\n", programName);
 	printf("   or: %s <revlist options>\n", programName);
 	printf("\n");
@@ -35,10 +35,23 @@ void usage(char const *programName)
 	exit(1);
 }
 
+void version_info()
+{
+	NSString *version = [[[NSBundle bundleForClass:[PBGitBinary class]] infoDictionary] valueForKey:@"CFBundleVersion"];
+	printf("This is GitX version %s\n", [version UTF8String]);
+	if ([PBGitBinary path])
+		printf("Using git found at %s\n", [[PBGitBinary path] UTF8String]);
+	else
+		printf("GitX cannot find a git binary\n");
+	exit(1);
+}
+
 int main(int argc, const char** argv)
 {
 	if (argc >= 2 && (!strcmp(argv[1], "--help") || !strcmp(argv[1], "-h")))
 		usage(argv[0]);
+	if (argc >= 2 && (!strcmp(argv[1], "--version") || !strcmp(argv[1], "-v")))
+		version_info();
 
 	if (![PBGitBinary path]) {
 		printf("%s\n", [[PBGitBinary notFoundError] cStringUsingEncoding:NSUTF8StringEncoding]);
