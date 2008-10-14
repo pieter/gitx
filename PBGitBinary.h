@@ -14,6 +14,7 @@
 }
 
 + (NSString *) path;
++ (NSString *) version;
 + (NSArray *) searchLocations;
 + (NSString *) notFoundError;
 @end
