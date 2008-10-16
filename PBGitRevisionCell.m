@@ -39,7 +39,7 @@
 	NSPoint origin = r.origin;
 	
 	NSPoint source = NSMakePoint(origin.x + columnWidth* from, origin.y + offset);
-	NSPoint center = NSMakePoint( origin.x + columnWidth * to, origin.y + r.size.height * 0.5);
+	NSPoint center = NSMakePoint( origin.x + columnWidth * to, origin.y + r.size.height * 0.5 + 0.5);
 
 	// Just use red for now.
 	NSArray* colors = [self colors];
