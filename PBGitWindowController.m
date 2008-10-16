@@ -90,6 +90,9 @@
 
 - (void) useToolbar:(NSToolbar *)toolbar
 {
+	toolbar.displayMode = [self.window toolbar].displayMode;
+	[toolbar setVisible: [[self.window toolbar] isVisible]];
+
 	NSSegmentedControl *item = (NSSegmentedControl *)[[[toolbar items] objectAtIndex:0] view];
 	[item bind:@"selectedIndex" toObject:self withKeyPath:@"selectedViewIndex" options:0];
 
