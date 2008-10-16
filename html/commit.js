@@ -38,19 +38,28 @@ var Commit = Class.create({
 	}
 });
 
-var notify = function(text, busy) {
+var notify = function(text, state) {
 	var n = $("notification");
 	n.style.display = "";
-	if (busy)
-		$("spinner").style.display = "";
-	else
-		$("spinner").style.display = "none";
-	
 	$("notification_message").innerHTML = text;
+
+	// Change color
+	if (!state) { // Busy
+		$("spinner").style.display = "";
+		n.setAttribute("class", "");
+	}
+	else if (state == 1) { // Success
+		$("spinner").style.display = "none";
+		n.setAttribute("class", "success");
+	} else if (state == -1) {// Fail
+		$("spinner").style.display = "none";
+		n.setAttribute("class", "fail");
+	}
 }
 
 var gistie = function() {
-	notify("Uploading code to Gistie..", true);
+	notify("Uploading code to Gistie..", 0);
+
 	parameters = {
 		"file_ext[gistfile1]":      "patch",
 		"file_name[gistfile1]":     commit.object.subject.replace(/[^a-zA-Z0-9]/g, "-") + ".patch",
@@ -74,15 +83,15 @@ var gistie = function() {
 
 		onSuccess: function(t) {
 			if (m = t.responseText.match(/gist: ([a-f0-9]+)/))
-				notify("Code uploaded to gistie <a target='_new' href='http://gist.github.com/" + m[1] + "'>#" + m[1] + "</a>");
+				notify("Code uploaded to gistie <a target='_new' href='http://gist.github.com/" + m[1] + "'>#" + m[1] + "</a>", 1);
 			else
-				notify("Pasting to Gistie failed.");
+				notify("Pasting to Gistie failed.", -1);
 		},
 		onFailure: function(t) {
-			notify("Pasting to Gistie failed.");
+			notify("Pasting to Gistie failed.", -1);
 		},
 		onException: function(t) {
-			notify("Pasting to Gistie failed.");
+			notify("Pasting to Gistie failed.", -1);
 		},
 		
 	});
@@ -127,14 +136,12 @@ var loadCommit = function() {
 	$("notification").style.display = "none";
 
 	$("commitID").innerHTML = commit.sha;
-	if (commit.author_email) {
+
+	if (commit.author_email)
 		$("authorID").innerHTML = commit.author_name + " &lt;<a href='mailto:" + commit.author_email + "'>" + commit.author_email + "</a>&gt;";
-		$("gravatar").src = "http://www.gravatar.com/avatar/" + hex_md5(commit.author_email) + "?d=wavatar";
-	}
-	else {
+	else
 		$("authorID").innerHTML = commit.author_name;
-		$("gravatar").src = "http://www.gravatar.com/avatar/?d=wavatar";
-	}
+
 	$("date").innerHTML = commit.author_date;
 	$("subjectID").innerHTML =CommitObject.subject.escapeHTML();
 	
@@ -156,6 +163,11 @@ var loadCommit = function() {
 	} else {
 		$("details").innerHTML = "<a class='showdiff' href='' onclick='showDiffs(); return false;'>This is a large commit. Click here or press 'v' to view.</a>";
 	}
+
+	if (commit.author_email)
+		$("gravatar").src = "http://www.gravatar.com/avatar/" + hex_md5(commit.author_email) + "?d=wavatar&s=60";
+	else
+		$("gravatar").src = "http://www.gravatar.com/avatar/?d=wavatar&s=60";
 
 	scroll(0, 0);
 }
