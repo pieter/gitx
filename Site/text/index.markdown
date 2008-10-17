@@ -1,10 +1,19 @@
-<h2>
+<div class="nohover">
+	<a href="http://frim.frim.nl/GitXStable.app.zip" title="Latest GitX download" id="download" class="nohover">
+Download GitX
+	<div id="version">Version 0.4.1</div>
+	</a>
+</div>
+
+<h2 class="noclear">
 	GitX
 </h2>
-<p>
+
+<p class="noclear">
 	GitX is a git history viewer desgined specifically for Mac OS X. En hier gaat Pieter nog wat meer leuke informatie
 	over zijn toffe project typen. Het is toch een schatje!
 </p>
+
 <h3>
 	Features
 </h3>

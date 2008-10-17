@@ -1,3 +1,5 @@
+@import "usermanual.css";
+
 body
 {
 	background-color: #abc;
@@ -25,9 +27,18 @@ a:visited
 p
 {
 	margin-left: 10px;
+	margin-right: 10px;
+/*	clear: both;*/
+	text-align: justify; 
+	text-justify: auto;
 }
 
-h3
+h2, h3, h4
+{
+	clear: both;
+}
+
+h3, h4
 {
 	margin-left: 10px;
 }
@@ -81,6 +92,52 @@ h3
 	padding: 5px 5px 0px 5px;
 	font-size: 60%;
 	border-top: 1px solid #999999;
+	clear: both;
+}
+
+/*Download*/
+
+#download
+{
+	display: block;
+	
+	height: 60px;
+	width: 194px;
+	color: #FFFFFF;
+	font-size: 175%;
+	
+	text-align: center;
+
+	background-image: url('../images/download.png');
+	background-repeat: no-repeat;
+	background-position:center;
+	
+	margin: 20px 0px 0px 20px;
+	padding: 20px 20px 10px 20px;	
+	float: right;
+}
+
+.nohover a:hover
+{
+	background-color: white;
+}
+
+
+#version
+{
+	font-size: 80%;
+}
+
+
+
+h2.noclear
+{
+	clear: none;
+}
+
+p.noclear
+{
+	clear: none;
 }
 
 /*Navigation*/

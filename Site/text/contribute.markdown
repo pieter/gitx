@@ -3,7 +3,7 @@
 </h2>
 <p>
 	GitX is an open source project. This means that you can help developing or even take the code and develop you own version.
-	GitX is released under a GPL v2 license (<a>more about that here</a>). 
+	GitX is released under a <a href="http://github.com/pieter/gitx/tree/master/COPYING" title="GPL">GPL v2 license</a>. 
 </p>
 <h3>Develop</h3>
 <p>
