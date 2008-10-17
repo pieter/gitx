@@ -1,0 +1,170 @@
+body
+{
+	background-color: #abc;
+	font-family: 'Lucida Grande' Arial;
+	background: url('../images/bg.png') repeat;
+}
+
+a
+{
+	color: #527cb2;
+	font-weight: bold;
+	text-decoration: none;
+}
+
+a:hover
+{
+	background-color: #b5d5f8;
+}
+
+a:visited
+{
+	color: ##527cb2;
+}
+
+p
+{
+	margin-left: 10px;
+}
+
+h3
+{
+	margin-left: 10px;
+}
+
+#container
+{
+	width: 800px;
+	
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+	-moz-border-radius-topleft: 0px;
+	-webkit-border-top-left-radius: 0px;
+	-moz-border-radius-topright: 0px;
+	-webkit-border-top-right-radius: 0px;
+	
+	border: 1px solid #999999;
+	padding-bottom: 5px;
+	
+	background-color: #CCCCCC;
+	margin: 10px auto 10px auto;
+}
+
+#header
+{
+	height: 100px;
+	font-size: 400%;
+	color: white;
+	
+	text-align: center;
+	
+	background-image: url('../images/header.jpg');
+	background-repeat: no-repeat;
+	background-position:center;
+}
+
+#content
+{
+	padding: 10px;
+	clear: both;
+	background-color: white;
+	border-top: solid 1px #999999;
+	
+	font-size: 80%;
+}
+
+#footer
+{
+	color: #999999;
+	text-align: center;
+	background-color: #CCCCCC;
+	padding: 5px 5px 0px 5px;
+	font-size: 60%;
+	border-top: 1px solid #999999;
+}
+
+/*Navigation*/
+
+#nav
+{
+	clear: both;
+}
+
+#nav a
+{
+	display: block;
+	width: 90px;
+	padding: 2px;
+	margin: 4px 4px 0px 4px;
+	
+	float: left;
+
+	border: 1px solid #3465a4;
+	border-bottom: none;
+	background-color: #527cb2;
+	color: #FFFFFF;
+	font-size: 65%;
+	text-decoration: none;
+	text-align: center;
+
+	-moz-border-radius-topleft: 2px;
+	-webkit-border-top-left-radius: 2px;
+	-moz-border-radius-topright: 2px;
+	-webkit-border-top-right-radius: 2px;
+}
+
+#nav a:hover
+{
+	border: 1px solid #527cb2;
+	border-bottom: none;
+	background-color: #3465a4;
+}
+
+#nav a.here
+{
+	color: #3465a4;
+	background-color: #FFFFFF;
+}
+
+/*Subnavigation*/
+
+#subnav
+{
+	clear: both;
+	border-top: 1px solid #999999;
+	background-color: white;
+	height: 26px;
+	text-align: center;
+}
+
+#subnav a
+{
+	display: block;
+	width: 70px;
+	padding: 2px;
+	margin: 4px 4px 0px 4px;
+
+	float: left;
+
+	border: 1px solid #666666;
+	background-color: #999999;
+	color: #ffffff;
+	font-size: 65%;
+	text-decoration: none;
+	text-align: center;
+
+	-moz-border-radius: 2px;
+	-webkit-border-radius: 2px;
+}
+
+#subnav a:hover
+{
+	border: 1px solid #cccccc;
+	background-color: #333333;
+}
+
+#subnav a.here
+{
+	color: #3465a4;
+	background-color: #ffffff;
+}

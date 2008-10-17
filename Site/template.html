@@ -1,0 +1,45 @@
+<% 
+def create_link(name, description)
+	"<a href='#{name}.html' class='#{name == @filename.gsub(".html", "") ? 'here' : ''}'>#{description}</a>"
+end
+ %>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
+<html>
+	<head>
+		<title>
+			GitX
+		</title>
+		<link rel="stylesheet" href="css/master.css" type="text/css" media="screen" title="Main Style" charset="utf-8">
+		<link rel="shortcut icon" href="images/favicon.png" type="image/x-icon">
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	</head>
+	<body>
+		<div id="container">
+			<div id="header">
+				GitX
+			</div>
+			<div id="nav">
+				<%= create_link("index", "Home") %>
+				<%= create_link "seeit", "See it" %>
+				<%= create_link "contribute", "Contribute" %>
+				<%= create_link 'release_history', "Release History" %>
+				<%= create_link '', "User Manual" %>
+				<%= create_link 'links', "Links" %>
+				<%= create_link 'contact', "Contact" %>
+			</div>
+			<!-- <div id="subnav">
+				<a href="#">Home</a>
+				<a href="#">Screenshots</a>
+				<a href="#">Movies</a>
+				<a href="#">Open Source</a>
+				<a href="#">About</a>
+			</div> -->
+			<div id="content">
+<%= body %>				
+			</div>
+			<div id="footer">
+				© Some rights reserved. [GPL license v2] <a href="">Pieter de Bie</a> is the founder / lead developer of GitX. Website design by <a href="">Kim Does</a>.
+			</div>
+		</div>
+	</body>
+</html>

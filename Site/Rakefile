@@ -1,0 +1,27 @@
+require 'fileutils'
+require 'erb'
+
+task :generate do
+  require 'rdiscount'
+  `rm -rf output`
+  FileUtils.mkdir("output")
+  `cat text/*.markdown > output/UserManual.markdown`
+  `cp -r assets/* output`
+
+  template = ERB.new(File.read("template.html"))
+
+  source = Dir.glob("text/*.markdown").each do |file|
+    contents = File.read(file)
+		body = Markdown.new(contents).to_html
+		@filename = File.basename(file).gsub(/markdown$/,"html")
+		File.open("output/" + @filename, "w") do |f|
+			f.puts template.result(binding)
+		end
+  end
+
+  `open output/index.html`
+end
+
+task :upload do
+  `rsync -a output/ sydney:public_html/gitx/`
+end
