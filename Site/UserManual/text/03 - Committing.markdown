@@ -1,7 +1,6 @@
-Committing
-==========
+### Committing
 
-![GitX's commit view](assets/images/commitview.png "The Commit View") GitX
+![GitX's commit view](images/UserManual/commitview.png "The Commit View") GitX
 also has a commit interface. This interface mimicks some of `git gui`'s
 functionality, but will be extended in future releases.
 
@@ -22,6 +21,6 @@ Every file has an icon associated with it. This shows the status of that file:
 * A _white_ icon indicates a file that is not tracked by Git, but also not ignored.
 * A _red_ icon indicates a file that has been deleted.
 
-### Committing
+#### Committing
 
 Once you have staged all your changes, you can commit them. Enter a commit message in the center pane, but remember to use proper commit messages: your first line should be a short description of what you have changed, on which you can elaborate below that. Make sure the subject of your commit is short enough to fit in GitX's history view! Pressing the commit button will hopefully convey to you that the commit was succesful, and also give you the commit hash.

@@ -1,5 +1,5 @@
-Advance GitX usage
-==================
+### Advance GitX usage
+
 
 While GitX can be used just fine without ever touching the terminal, some of
 it's power can currently only be used through the command line utility.
@@ -55,4 +55,4 @@ If there are changes both on a remote and on your local side, you can show them 
 
 will show commits that are only on your side OR only on the remote side. The `--left-right` options does some other magic: instead of the usual circles GitX uses in the branch lines, it will now use an arrow pointing left for commits only on the right side (that is, in `origin/master`), and an arrow to the right for commits only on the right side. For example, when I issued the same command on this repository, I got:
 
-![Showing --left-right](assets/images/left-right.png)
+![Showing --left-right](images/UserManual/left-right.png)

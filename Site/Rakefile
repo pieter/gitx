@@ -1,7 +1,7 @@
 require 'fileutils'
 require 'erb'
 
-task :generate do
+task :generate => [:generate_usermanual] do
   require 'rdiscount'
   `rm -rf output`
   FileUtils.mkdir("output")
@@ -19,7 +19,32 @@ task :generate do
 		end
   end
 
+	# Add the user manual
+	FileUtils.mkdir("output/images/UserManual")
+	`cp -r UserManual/output/images/* output/images/UserManual`
+	@filename = 'user_manual.html'
+	body = File.read("UserManual/output/UserManual.html")
+	File.open("output/user_manual.html", "w") do |f|
+		f.puts template.result(binding)
+	end
+
   `open output/index.html`
+end
+
+task :generate_usermanual do
+  require 'rdiscount'
+  `rm -rf UserManual/output`
+  FileUtils.mkdir("UserManual/output")
+  `cat UserManual/text/*.markdown > output/UserManual.markdown`
+  `cp -r UserManual/assets/images UserManual/output`
+ 
+  source = Dir.glob("UserManual/text/**/*.markdown").map do |file|
+    File.read(file)
+  end.join("\n")
+  body = Markdown.new(source).to_html
+  File.open("UserManual/output/UserManual.html", "w") do |f|
+    f.puts body
+  end
 end
 
 task :upload do
