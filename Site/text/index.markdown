@@ -9,31 +9,21 @@ Download GitX
 	GitX
 </h2>
 
-<p class="noclear">
-	GitX is a git history viewer desgined specifically for Mac OS X. En hier gaat Pieter nog wat meer leuke informatie
-	over zijn toffe project typen. Het is toch een schatje!
-</p>
+<p class="noclear"> GitX is a git GUI specifically for Mac OS X. It currently
+features a history viewer much like gitk and a commit GUI like git gui. But
+then in silky smooth OS X style!</p>
 
 <h3>
 	Features
 </h3>
 <ul>
-	<li>Show pretty information for any revision
-	</li>
-	<li>Fast
-	</li>
-	<li>Nice Aqua interface
-	</li>
-	<li>Quickly search for any commit subject / author
-	</li>
-	<li>Explore tree of any revision
-	</li>
-	<li>QuickLook any file in any revision!
-	</li>
-	<li>Double click any file or directory in a tree to open that version
-	</li>
-	<li>Auto-updates
-	</li>
+	<li>Detailed history viewer</li>
+	<li>Nice commit GUI</li>
+	<li>Fast</li>
+	<li>Nice Aqua interface</li>
+	<li>Paste commits to gist.github.com</li>
+	<li>Explore tree of any revision</li>
+	<li>QuickLook integration</li>
 </ul>
 <h3>
 	Requirements
@@ -45,8 +35,8 @@ Download GitX
 	Download
 </h3>
 <p>
-	The newest version of GitX is 0.4.1. This version can be downloaded from <a href="http://frim.frim.nl/GitXStable.app.zip">here</a>. To see what has changed, read the <a href="http://github.com/pieter/gitx/wikis/releasenotes">Release Notes</a>.
+	The newest version of GitX is 0.4.1. This version can be downloaded from <a href="http://frim.frim.nl/GitXStable.app.zip">here</a>. To see what has changed, read the <a href="release_history.html">Release History</a>.
 </p>
 <p>
-	After you have started it once, you can install the command-line tool through the menu (GitX-&gt;Enable Terminal Usage…). This will install a “gitx” binary in /usr/bin. <b>Note that you have to reinstall the command-line tool after upgrading to 0.3!</b>.
+	After you have started it once, you can install the command-line tool through the menu (GitX-&gt;Enable Terminal Usage…). This will install a “gitx” binary in /usr/bin.
 </p>

@@ -8,11 +8,21 @@
 	Screenshots
 </h3>
 <p>
-	Hippe schermshoten
+	<h4>The Commit View:</h4>
+	<img width="500px" src="http://ss.frim.nl/==892">
 </p>
+<p>
+	<h4>The History View:</h4>
+	<img width="500px" src="http://ss.frim.nl/==891">
+</p>
+
 <h3>
 	Screencaptures
 </h3>
 <p>
-	Screencapture for the win!
+	<ul>
+		<li><a href="http://gitx.frim.nl/Movies/GitX6.mov">See an old movie showing some features</a></li>
+		<li><a href="http://gitx.frim.nl/Movies/GitX9.mov">See how you can use GitX to show arbitrary diffs</a></li>
+		<li><a href="http://gitx.frim.nl/Movies/GitX10.mov">See how you can use GitX to paste to gist.github.com</a></li>
+	</ul>
 </p>
