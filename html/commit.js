@@ -98,6 +98,19 @@ var gistie = function() {
 	
 }
 
+var setGravatar = function(email, image) {
+	if (Controller && !Controller.isReachable_("www.gravatar.com"))
+		return;
+
+	if (!email) {
+		$("gravatar").src = "http://www.gravatar.com/avatar/?d=wavatar&s=60";
+		return;
+	}
+
+	$("gravatar").src = "http://www.gravatar.com/avatar/" +
+		hex_md5(commit.author_email) + "?d=wavatar&s=60";
+}
+
 var selectCommit = function(a) {
 	Controller.selectCommit_(a);
 }
@@ -164,10 +177,7 @@ var loadCommit = function() {
 		$("details").innerHTML = "<a class='showdiff' href='' onclick='showDiffs(); return false;'>This is a large commit. Click here or press 'v' to view.</a>";
 	}
 
-	if (commit.author_email)
-		$("gravatar").src = "http://www.gravatar.com/avatar/" + hex_md5(commit.author_email) + "?d=wavatar&s=60";
-	else
-		$("gravatar").src = "http://www.gravatar.com/avatar/?d=wavatar&s=60";
+	setGravatar(commit.author_email, $("gravatar"));
 
 	scroll(0, 0);
 }
