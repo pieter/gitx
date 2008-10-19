@@ -54,4 +54,19 @@
 	NSLog(@"%@", logMessage);
 }
 
+#include <SystemConfiguration/SCNetworkReachability.h>
+
+- (BOOL) isReachable:(NSString *)hostname
+{
+	SCNetworkConnectionFlags flags;
+	if (!SCNetworkCheckReachabilityByName([hostname cStringUsingEncoding:NSASCIIStringEncoding], &flags))
+		return FALSE;
+
+	// If a connection is required, then it's not reachable
+	if (flags & (kSCNetworkFlagsConnectionRequired | kSCNetworkFlagsConnectionAutomatic | kSCNetworkFlagsInterventionRequired))
+		return FALSE;
+
+	return flags > 0;
+}
+
 @end

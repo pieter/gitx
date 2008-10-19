@@ -4,18 +4,21 @@
 	<link rel="stylesheet" href="commits.css" type="text/css" media="screen" title="no title" charset="utf-8">
 	<link rel="stylesheet" href="diff_style.css" type="text/css" media="screen" title="no title" charset="utf-8">
 	<script src="prototype.js" type="text/javascript" charset="utf-8"></script>
+	<script src="md5.js" type="text/javascript" charset="utf-8"></script>
 	<script src="commit.js" type="text/javascript" charset="utf-8"></script>
 	<script src="diffHighlighter.js" type="text/javascript" charset="utf-8"></script>
 	<script src="keyboardNavigation.js" type="text/javascript" charset="utf-8"></script>
 </head>
 
 <body style="padding: 0px; border: 0px">
-
-	<div id="notification" style="display:none;">
-		<img src="spinner.gif" width="25px" alt="Spinner" id="spinner"></img>
-		<span id="notification_message"></span>
+	<div id="rightcontent">
+		<div id="buttons">
+			<a class="servicebutton" onClick="gistie();return false" href='#'>
+				Gist&nbsp;it
+			</a>
+		</div>
+		<img id="gravatar" src="">
 	</div>
-	<div id="gistie" onClick="gistie()">Paste online</div>
 	<table id="commit_header">
 	<tr>
 		<td class="property_name">SHA:</td>
@@ -38,6 +41,10 @@
 		<td id="refs"></td>
 	</tr>
 	</table>
+	<div id="notification" style="display:none;">
+		<img src="spinner.gif" alt="Spinner" id="spinner"></img>
+		<div id="notification_message"></div>
+	</div>
 	<hr>
 	<pre id="message"></pre>
 	<pre><code class="diffcode" id='details'></code></pre>
