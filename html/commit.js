@@ -1,42 +1,41 @@
 var commit;
-var Commit = Class.create({
-	initialize: function(obj) {
-		this.raw = obj.details;
-		this.refs = obj.refs;
-		this.object = obj;
+var Commit = function(obj) {
+	this.raw = obj.details;
+	this.refs = obj.refs;
+	this.object = obj;
 
-		var diffStart = this.raw.indexOf("\ndiff ");
-		var messageStart = this.raw.indexOf("\n\n") + 2;
+	var diffStart = this.raw.indexOf("\ndiff ");
+	var messageStart = this.raw.indexOf("\n\n") + 2;
 
-		if (diffStart > 0) {
-			this.message = this.raw.substring(messageStart, diffStart).gsub(/^    /m, "").escapeHTML();
-			this.diff = this.raw.substring(diffStart);
-		} else {
-			this.message = this.raw.substring(messageStart).gsub(/^    /m, "").escapeHTML();
-			this.diff = "";
-		}
-		this.header = this.raw.substring(0, messageStart);
+	if (diffStart > 0) {
+		this.message = this.raw.substring(messageStart, diffStart).replace(/^    /gm, "").escapeHTML();
+		this.diff = this.raw.substring(diffStart);
+	} else {
+		this.message = this.raw.substring(messageStart).replace(/^    /gm, "").escapeHTML();
+		this.diff = "";
+	}
+	this.header = this.raw.substring(0, messageStart);
 
-		this.sha = this.header.match(/^commit ([0-9a-f]{40,40})/)[1];
+	this.sha = this.header.match(/^commit ([0-9a-f]{40,40})/)[1];
 
-		var match = this.header.match(/\nauthor (.*) <(.*@.*)> ([0-9].*)/);
-		this.author_name = match[1];
-		if (!(match[2].match(/@[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}/)))
-			this.author_email = match[2];
+	var match = this.header.match(/\nauthor (.*) <(.*@.*)> ([0-9].*)/);
+	this.author_name = match[1];
+	if (!(match[2].match(/@[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}/)))
+		this.author_email = match[2];
 
-		this.author_date = new Date(parseInt(match[3]) * 1000);
+	this.author_date = new Date(parseInt(match[3]) * 1000);
 
-		match = this.header.match(/\ncommitter (.*) <(.*@.*)> ([0-9].*)/);
-		this.committer_name = match[1];
-		this.committer_email = match[2];
-		this.committer_date = new Date(parseInt(match[3]) * 1000);
+	match = this.header.match(/\ncommitter (.*) <(.*@.*)> ([0-9].*)/);
+	this.committer_name = match[1];
+	this.committer_email = match[2];
+	this.committer_date = new Date(parseInt(match[3]) * 1000);
 
-		this.parents = obj.parents;
-	},
-	reloadRefs: function() {
+	this.parents = obj.parents;
+
+	this.reloadRefs = function() {
 		this.refs = CommitObject.refs;
 	}
-});
+};
 
 var notify = function(text, state) {
 	var n = $("notification");
@@ -77,25 +76,31 @@ var gistie = function() {
 		parameters.private = true;
 	}
 
-	new Ajax.Request("http://gist.github.com/gists", {
-		method: 'post',
-		parameters: parameters,
+	var params = [];
+	for (var name in parameters)
+		params.push(encodeURIComponent(name) + "=" + encodeURIComponent(parameters[name]));
+	params = params.join("&");
 
-		onSuccess: function(t) {
+	var t = new XMLHttpRequest();
+	t.onreadystatechange = function() {
+		if (t.readyState == 4 && t.status >= 200 && t.status < 300) {
 			if (m = t.responseText.match(/gist: ([a-f0-9]+)/))
 				notify("Code uploaded to gistie <a target='_new' href='http://gist.github.com/" + m[1] + "'>#" + m[1] + "</a>", 1);
 			else
 				notify("Pasting to Gistie failed.", -1);
-		},
-		onFailure: function(t) {
-			notify("Pasting to Gistie failed.", -1);
-		},
-		onException: function(t) {
-			notify("Pasting to Gistie failed.", -1);
-		},
-		
-	});
-	
+		}
+	}
+
+	t.open('POST', "http://gist.github.com/gists?" + params);
+	t.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+	t.setRequestHeader('Accept', 'text/javascript, text/html, application/xml, text/xml, */*');
+	t.setRequestHeader('Content-type', 'application/x-www-form-urlencoded;charset=UTF-8');
+
+	try {
+		t.send(params);
+	} catch(e) {
+		notify("Pasting to Gistie failed.", -1);
+	}
 }
 
 var setGravatar = function(email, image) {
@@ -116,12 +121,11 @@ var selectCommit = function(a) {
 }
 
 var showDiffs = function() {
-	$("details").hide();
-
-	$("details").innerHTML = commit.diff.escapeHTML();
-
+	var details = $("details");
+	details.style.display = "none";
+	details.innerHTML = commit.diff.escapeHTML();
 	highlightDiffs();
-	$("details").show();
+	details.style.display = "";
 }
 
 var reload = function() {
@@ -133,15 +137,16 @@ var reload = function() {
 }
 
 var showRefs = function() {
-	if (commit.refs){
-		$('refs').parentNode.style.display = "";
-		$('refs').innerHTML = "";
-		$A(commit.refs).each(function(ref) {
-							 curBranch = "";
-							 $('refs').innerHTML += '<span class="refs ' + ref.type()  + (CurrentBranch == ref.ref ? ' currentBranch' : '') + '">' + ref.shortName() + '</span>';
-							 });
+	var refs = $("refs");
+	if (commit.refs) {
+		refs.parentNode.style.display = "";
+		refs.innerHTML = "";
+		for (var i = 0; i < commit.refs.length; i++) {
+			var ref = commit.refs[i], curBranch = "";
+			refs.innerHTML += '<span class="refs ' + ref.type()  + (CurrentBranch == ref.ref ? ' currentBranch' : '') + '">' + ref.shortName() + '</span>';
+		}
 	} else
-		$('refs').parentNode.style.display = "none";
+		refs.parentNode.style.display = "none";
 }
 
 var loadCommit = function() {
@@ -157,15 +162,18 @@ var loadCommit = function() {
 
 	$("date").innerHTML = commit.author_date;
 	$("subjectID").innerHTML =CommitObject.subject.escapeHTML();
-	
-	$A($("commit_header").rows).each(function(row) {
+
+	var commitHeader = $("commit_header");
+	for (var i = 0; i < commitHeader.rows.length; i++) {
+		var row = commitHeader.rows[i];
 		if (row.innerHTML.match(/Parent:/))
-			row.remove();
-	});
-	commit.parents.each(function(parent) {
-		var new_row = $("commit_header").insertRow(-1);
+			row.parentNode.removeChild(row);
+	}
+
+	for (var i = 0; i < commit.parents; i++) {
+		var parent = commit.parents[i], newRow = commitHeader.insertRow(-1);
 		new_row.innerHTML = "<td class='property_name'>Parent:</td><td><a href='' onclick=\"selectCommit(this.innerHTML); return false;\">" + parent + "</a></td>";
-	});
+	}
 
 	showRefs();
 

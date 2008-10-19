@@ -17,7 +17,7 @@
 				else
 					$("diff").innerHTML = "Could not display changes";
 
-				$("diff").show();
+				$("diff").style.display = '';
 				$('title').innerHTML = "New file: " + file.path;
 			}  else {
 				$("diff").style.display = 'none';
