@@ -36,7 +36,7 @@
 
 - (void)webView:(WebView *)webView addMessageToConsole:(NSDictionary *)dictionary
 {
-	NSLog(@"Error from webkit!");
+	NSLog(@"Error from webkit: %@", dictionary);
 }
 
 + (BOOL)isSelectorExcludedFromWebScript:(SEL)aSelector
