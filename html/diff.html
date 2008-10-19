@@ -3,8 +3,8 @@
 	<title>Diff for file</title>
 	<link rel="stylesheet" href="commits.css" type="text/css" media="screen" title="no title" charset="utf-8">
 	<link rel="stylesheet" href="diff_style.css" type="text/css" media="screen" title="no title" charset="utf-8">
-		<script src="prototype.js" type="text/javascript" charset="utf-8"></script>
-	<script src="commit.js" type="text/javascript" charset="utf-8"></script>
+
+	<script src="GitX.js" type="text/javascript" charset="utf-8"></script>
 	<script src="diff.js" type="text/javascript" charset="utf-8"></script>
 	<script>
 		var showFileChanges = function(file, cached) {
@@ -20,13 +20,13 @@
 				$("diff").show();
 				$('title').innerHTML = "New file: " + file.path;
 			}  else {
-				$("diff").hide();
+				$("diff").style.display = 'none';
 				if (cached)
 					$("diff").innerHTML = file.cachedChangesAmend_(Controller.amend()).escapeHTML();
 				else
 					$("diff").innerHTML = file.unstagedChanges().escapeHTML();
 				highlightDiffs();
-				$("diff").show();
+				$("diff").style.display = '';
 				$("title").innerHTML = "Changes for " + file.path;
 			}
 		}
