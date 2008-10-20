@@ -10,7 +10,7 @@
 
 
 @implementation PBGraphCellInfo
-@synthesize lines, position, numColumns, refs, sign;
+@synthesize lines, position, numColumns, sign;
 - (id)initWithPosition: (int) p andLines: (NSArray*) l
 {
 	position = p;

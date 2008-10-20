@@ -18,7 +18,6 @@
 	NSArray* refs;
 }
 @property(readonly)  NSArray* lines;
-@property(retain) NSArray* refs;
 @property(assign)  int position, numColumns;
 @property(assign) char sign;
 
