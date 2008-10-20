@@ -1,5 +1,20 @@
 GitX Release Notes
 
+v0.5
+====
+
+This feature release has several new smaller or larger features:
+* The current branch is now highlighted
+* In the commit view, there is an option to amend commits
+* The "Gist it" button now respects github.user/token
+* Display a gravatar of the committer
+* The commit message view now displays a vertical line at 50 characters
+
+In addition, the following bugs have been fixed:
+* Better detection of git version
+* Branch lines are no longer interspersed with half a pixel of whitespace
+* The toolbar keeps its state when switching views
+
 v0.4.1
 ==
 
