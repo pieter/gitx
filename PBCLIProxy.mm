@@ -12,6 +12,7 @@
 #import "PBGitRepository.h"
 #import "PBGitWindowController.h"
 #import "PBGitBinary.h"
+#import "PBDiffWindowController.h"
 
 @implementation PBCLIProxy
 @synthesize connection;
@@ -60,5 +61,12 @@
 	[NSApp activateIgnoringOtherApps:YES];
 
 	return YES;
+}
+
+- (void)openDiffWindowWithDiff:(NSString *)diff
+{
+	PBDiffWindowController *diffController = [[PBDiffWindowController alloc] initWithDiff:[diff copy]];
+	[diffController showWindow:nil];
+	[[NSApplication sharedApplication] activateIgnoringOtherApps:YES];
 }
 @end

@@ -8,12 +8,40 @@
 
 #import "PBCLIProxy.h"
 #import "PBGitBinary.h"
+#import "PBEasyPipe.h"
 
 NSDistantObject* connect()
 {
 	id proxy = [NSConnection rootProxyForConnectionWithRegisteredName:ConnectionName host:nil];
 	[proxy setProtocolForProxy:@protocol(GitXCliToolProtocol)];
 	return proxy;
+}
+
+NSDistantObject *createProxy()
+{
+	NSDistantObject *proxy = connect();
+
+	if (proxy)
+		return proxy;
+
+	// The connection failed, so try to launch the app
+	[[NSWorkspace sharedWorkspace] launchAppWithBundleIdentifier: @"nl.frim.GitX"
+														 options: NSWorkspaceLaunchWithoutActivation
+								  additionalEventParamDescriptor: nil
+												launchIdentifier: nil];
+
+	// Now attempt to connect, allowing the app time to startup
+	for (int attempt = 0; proxy == nil && attempt < 50; ++attempt) {
+		if (proxy = connect())
+			return proxy;
+
+		usleep(15000);
+	}
+
+	// not succesful!
+	fprintf(stderr, "Couldn't connect to app server!\n");
+	exit(1);
+	return nil;
 }
 
 void usage(char const *programName)
@@ -46,6 +74,32 @@ void version_info()
 	exit(1);
 }
 
+void handleSTDINDiff(id<GitXCliToolProtocol> proxy)
+{
+	NSFileHandle *handle = [NSFileHandle fileHandleWithStandardInput];
+	NSData *data = [handle readDataToEndOfFile];
+	NSString *string = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+
+	if (string && [string length] > 0) {
+		[proxy openDiffWindowWithDiff:string];
+		exit(0);
+	}
+}
+
+void handleDiffWithArguments(NSArray *arguments, NSString *directory, id<GitXCliToolProtocol> proxy)
+{
+	int ret;
+	arguments = [[NSArray arrayWithObject:@"diff"] arrayByAddingObjectsFromArray:arguments];
+	NSString *diff = [PBEasyPipe outputForCommand:[PBGitBinary path] withArgs:arguments inDir:directory retValue:&ret];
+	if (ret) {
+		printf("Invalid diff command\n");
+		exit(3);
+	}
+
+	[proxy openDiffWindowWithDiff:diff];
+	exit(0);
+}
+
 int main(int argc, const char** argv)
 {
 	if (argc >= 2 && (!strcmp(argv[1], "--help") || !strcmp(argv[1], "-h")))
@@ -59,43 +113,34 @@ int main(int argc, const char** argv)
 	}
 
 	// Attempt to connect to the app
-	id proxy = connect();
+	id proxy = createProxy();
 
-	if (!proxy) {
-		// If the connection failed, try to launch the app
-		[[NSWorkspace sharedWorkspace] launchAppWithBundleIdentifier: @"nl.frim.GitX"
-															 options: NSWorkspaceLaunchWithoutActivation
-									  additionalEventParamDescriptor: nil
-													launchIdentifier: nil];
+	// Create arguments
+	argv++; argc--;
+	NSMutableArray* arguments = [NSMutableArray arrayWithCapacity:argc];
+	int i = 0;
+	for (i = 0; i < argc; i++)
+		[arguments addObject: [NSString stringWithCString:argv[i]]];
 
-		// Now attempt to connect, allowing the app time to startup
-		for (int attempt = 0; proxy == nil && attempt < 50; ++attempt){
-			if (proxy = connect())
-				break;
-			usleep(15000);
-		}
-	}
-	if (!proxy) {
-		fprintf(stderr, "Couldn't connect to app server!\n");
-		exit(1);
-	}
+	if (!isatty(STDIN_FILENO) && fdopen(STDIN_FILENO, "r"))
+		handleSTDINDiff(proxy);
 
-	if ([[[NSProcessInfo processInfo] environment] objectForKey:@"PWD"]) {
-		int i;
-		argv++; argc--;
-		NSURL* url     = [NSURL fileURLWithPath:[[[NSProcessInfo processInfo] environment] objectForKey:@"PWD"]];
+	// From this point, we require a working directory
+	NSString *pwd = [[[NSProcessInfo processInfo] environment] objectForKey:@"PWD"];
+	if (!pwd)
+		exit(2);
 
-		NSMutableArray* arguments = [NSMutableArray arrayWithCapacity:argc];
-		for (i = 0; i < argc; i++)
-			[arguments addObject: [NSString stringWithCString:argv[i]]];
+	if ([arguments count] > 0 && ([[arguments objectAtIndex:0] isEqualToString:@"--diff"] ||
+		[[arguments objectAtIndex:0] isEqualToString:@"-d"]))
+		handleDiffWithArguments([arguments subarrayWithRange:NSMakeRange(1, [arguments count] - 1)], pwd, proxy);
 
-		NSError* error = nil;
-		if (![proxy openRepository:url arguments: arguments error:&error]) {
-			fprintf(stderr, "Error opening repository at %s", [[url path] UTF8String]);
-			if (error) {
-				fprintf(stderr, ": %s", [[error localizedFailureReason] UTF8String]);
-			}
-			fprintf(stderr, "\n");
-		}
+	// No diff, just open the current dir
+	NSURL* url = [NSURL fileURLWithPath:pwd];
+	NSError* error = nil;
+
+	if (![proxy openRepository:url arguments: arguments error:&error]) {
+		fprintf(stderr, "Error opening repository at %s\n", [[url path] UTF8String]);
+		if (error)
+			fprintf(stderr, "\t%s\n", [[error localizedFailureReason] UTF8String]);
 	}
 }
