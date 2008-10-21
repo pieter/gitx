@@ -5,7 +5,7 @@ body {
 }
 
 #title {
-	padding: 0px;
+	padding: 2px;
 	padding-left: 5px;
 	border-bottom: 1px solid black;
 	margin: 0px;
@@ -13,7 +13,22 @@ body {
 	background-color: #ECF3FD;
 	font-size: 100%;
 	position: fixed;
-	font-family: Helvetica;
 	top: 0px;
 	width: 100%;
+}
+
+.floatright {
+	float: right;
+}
+
+pre {
+	margin-top: 0;
+}
+
+table.diff {
+	margin-top: 0;
+}
+
+#notification {
+	margin-top: 30px;
 }

@@ -1,0 +1,23 @@
+#notification {
+	margin: 5px;
+	padding: 3px;
+	clear: both;
+
+	border: 1px solid black;
+	background-color: #f3f3f3;
+
+	text-align: center;
+	font-size: 80%;
+
+	-webkit-border-radius: 2px;
+}
+
+#notification.success {
+	background-color: #CCFF99;
+	border: 1px solid #99CC66;
+}
+
+#notification.fail {
+	background-color: #ff9999;
+	border: 1px solid #cc6666;
+}

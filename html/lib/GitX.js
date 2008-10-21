@@ -44,3 +44,7 @@ var notify = function(text, state) {
 		n.setAttribute("class", "fail");
 	}
 }
+
+var hideNotification = function() {
+	$("notification").style.display = "none";
+}
