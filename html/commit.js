@@ -68,8 +68,7 @@ var gistie = function() {
 	// TODO: Replace true with private preference
 	token = Controller.getConfig_("github.token");
 	login = Controller.getConfig_("github.user");
-	if (token && login)
-	{
+	if (token && login) {
 		parameters.login = login;
 		parameters.token = token;
 	} else {

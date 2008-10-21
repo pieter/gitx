@@ -1,9 +1,7 @@
-
 // If we run from a Safari instance, we don't
 // have a Controller object. Instead, we fake it by
 // using the console
-if (typeof Controller == 'undefined')
-{
+if (typeof Controller == 'undefined') {
 	Controller = console;
 	Controller.log_ = console.log;
 }
@@ -42,23 +40,19 @@ var highlightDiffs = function() {
 				continue;
 			}
 
-
 			if (firstChar == "+") {
 				// Highlight trailing whitespace
 				if (m = l.match(/\s+$/))
-				  l = l.replace(/\s+$/, "<span class='whitespace'>" + m + "</span>");
+					l = l.replace(/\s+$/, "<span class='whitespace'>" + m + "</span>");
 
 				line1 += "\n";
 				line2 += ++hunk_start_line_2 + "\n";
 				diffContent += "<div class='addline'>" + l + "</div>";
-			}
-			else if (firstChar == "-") {
+			} else if (firstChar == "-") {
 				line1 += ++hunk_start_line_1 + "\n";
 				line2 += "\n";
 				diffContent += "<div class='delline'>" + l + "</div>";
-			}
-			else if (firstChar == "@")
-			{
+			} else if (firstChar == "@") {
 				header = false;
 				if (m = l.match(/@@ \-([0-9]+),\d+ \+(\d+),\d+ @@/))
 				{
@@ -68,22 +62,19 @@ var highlightDiffs = function() {
 				line1 += "...\n";
 				line2 += "...\n";
 				diffContent += "<div class='hunkheader'>" + l + "</div>";
-			}
-			else if (firstChar == " ")
-			{
+			} else if (firstChar == " ") {
 				line1 += ++hunk_start_line_1 + "\n";
 				line2 += ++hunk_start_line_2 + "\n";
 				diffContent += l + "\n";
 			}
 		}
 
-
 		// This takes about 7ms
 		diff.innerHTML = "<table class='diff'><tr><td class='lineno'l><pre>" + line1 + "</pre></td>" +
 		                  "<td class='lineno'l><pre>" + line2 + "</pre></td>" +
 		                  "<td width='100%'><pre width='100%'>" + diffContent + "</pre></td></tr></table>";
-
 	}
+
 	// TODO: Replace this with a performance pref call
 	if (false)
 		Controller.log_("Total time:" + (new Date().getTime() - start));

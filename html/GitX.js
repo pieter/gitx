@@ -6,7 +6,6 @@
  */
 
 function $(element) {
-	Controller.log_("Calling _");
 	return document.getElementById(element);
 }
 
