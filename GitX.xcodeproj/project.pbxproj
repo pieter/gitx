@@ -334,7 +334,6 @@
 		F56174540E05887E001DCD79 /* Git */ = {
 			isa = PBXGroup;
 			children = (
-				F5E424120EA3E4DD0046E362 /* Diff */,
 				F5E927E30E883D6800056E75 /* Commit */,
 				F5E927E10E883D2E00056E75 /* History */,
 				F5945E150E02B0C200706420 /* PBGitRepository.h */,
@@ -396,6 +395,8 @@
 			children = (
 				F5E424140EA3E4E10046E362 /* PBDiffWindowController.h */,
 				F5E424130EA3E4E10046E362 /* PBDiffWindowController.m */,
+				F5E424160EA3E4EB0046E362 /* PBWebDiffController.m */,
+				F5E424170EA3E4EB0046E362 /* PBWebDiffController.h */,
 			);
 			name = Diff;
 			sourceTree = "<group>";
@@ -415,15 +416,6 @@
 				F5C6F68C0E65FF9300478D97 /* PBGitLane.m */,
 			);
 			name = Graphing;
-			sourceTree = "<group>";
-		};
-		F5E424120EA3E4DD0046E362 /* Diff */ = {
-			isa = PBXGroup;
-			children = (
-				F5E424160EA3E4EB0046E362 /* PBWebDiffController.m */,
-				F5E424170EA3E4EB0046E362 /* PBWebDiffController.h */,
-			);
-			name = Diff;
 			sourceTree = "<group>";
 		};
 		F5E927E10E883D2E00056E75 /* History */ = {
@@ -449,6 +441,8 @@
 		F5E927E30E883D6800056E75 /* Commit */ = {
 			isa = PBXGroup;
 			children = (
+				93F7857D0EA3ABF100C1F443 /* PBCommitMessageView.h */,
+				93F7857E0EA3ABF100C1F443 /* PBCommitMessageView.m */,
 				F5E927F60E883E7200056E75 /* PBChangedFile.h */,
 				F5E927F70E883E7200056E75 /* PBChangedFile.m */,
 				F593DF760E9E636C003A8559 /* PBFileChangesTableView.h */,
@@ -464,8 +458,6 @@
 				F59116E80E843BCB0072CCB1 /* PBGitCommitController.m */,
 				F5E927FA0E883F0700056E75 /* PBWebChangesController.h */,
 				F5E927FB0E883F0700056E75 /* PBWebChangesController.m */,
-				93F7857D0EA3ABF100C1F443 /* PBCommitMessageView.h */,
-				93F7857E0EA3ABF100C1F443 /* PBCommitMessageView.m */,
 			);
 			name = Commit;
 			sourceTree = "<group>";
