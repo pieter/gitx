@@ -341,4 +341,19 @@
 
 	return a;
 }
+
+- (void) stageHunk:(NSString *)hunk reverse:(BOOL)reverse
+{
+	NSMutableArray *array = [NSMutableArray arrayWithObjects:@"apply", @"--cached", nil];
+	if (reverse)
+		[array addObject:@"--reverse"];
+
+	int ret;
+	NSString *error = [repository outputForArguments:array
+										 inputString:hunk
+											retValue: &ret];
+	if (ret)
+		NSLog(@"Error: %@", error);
+	[self refresh:self]; // TODO: We should do this smarter by checking if the file diff is empty, which is faster.
+}
 @end
