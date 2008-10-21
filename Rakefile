@@ -53,7 +53,7 @@ task :create_zip do
   if ENV["STABLE"]
     name = "GitXStable"
   else
-    name = "GitX"
+    name = "Nightly"
   end
 
   delete = File.directory?("build/Release")
@@ -61,5 +61,6 @@ task :create_zip do
   system("cd build/Release && zip -r #{name}.app.zip GitX.app")
   system("mv build/Release/#{name}.app.zip .")
   system("rm -rf build/Release") if delete
-  system("upload #{name}.app.zip") # This is a local script -- Pieter
+  system("scp #{name}.app.zip sydney:public_html/gitx/Downloads/") # This is a local script -- Pieter
+  puts "Uploaded to http://gitx.frim.nl/Downloads/#{name}.app.zip"
 end
