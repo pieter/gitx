@@ -1,6 +1,5 @@
 var scrollToCenter = function(element) {
-	var pos = element.cumulativeOffset();
-    window.scrollTo(pos[0], pos[1] - 100);
+    window.scrollTo(0, element.offsetTop);
 }
 
 var handleKeys = function(event) {
@@ -29,19 +28,26 @@ var handleKeyFromCocoa = function(key) {
 }
 
 var changeHunk = function(next) {
-	var hunks = $A(document.getElementsByClassName("hunkheader"));
+	var hunks = document.getElementsByClassName("hunkheader");
+
 	if (hunks.length == 0)
 		return;
 
 	var currentHunk = document.getElementById("CurrentHunk");
 	var newHunk;
 
-	if (currentHunk && hunks.indexOf(currentHunk) >= 0) {
+	var index = -1;
+	for (; index < hunks.length; ++index) {
+		if (hunks[index] == currentHunk)
+			break;
+	}
+
+	if (currentHunk && index >= 0) {
 		currentHunk.id = null;
 		if (next)
-			newHunk = hunks[hunks.indexOf(currentHunk) + 1];
+			newHunk = hunks[index + 1];
 		else
-			newHunk = hunks[hunks.indexOf(currentHunk) - 1];
+			newHunk = hunks[index - 1];
 	}
 	if (!newHunk)
 		newHunk = hunks[0];
