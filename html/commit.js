@@ -85,12 +85,14 @@ var gistie = function() {
 		if (t.readyState == 4 && t.status >= 200 && t.status < 300) {
 			if (m = t.responseText.match(/gist: ([a-f0-9]+)/))
 				notify("Code uploaded to gistie <a target='_new' href='http://gist.github.com/" + m[1] + "'>#" + m[1] + "</a>", 1);
-			else
-				notify("Pasting to Gistie failed.", -1);
+			else {
+				notify("Pasting to Gistie failed :(.", -1);
+				Controller.log_(t.responseText);
+			}
 		}
 	}
 
-	t.open('POST', "http://gist.github.com/gists?" + params);
+	t.open('POST', "http://gist.github.com/gists");
 	t.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
 	t.setRequestHeader('Accept', 'text/javascript, text/html, application/xml, text/xml, */*');
 	t.setRequestHeader('Content-type', 'application/x-www-form-urlencoded;charset=UTF-8');
@@ -98,7 +100,7 @@ var gistie = function() {
 	try {
 		t.send(params);
 	} catch(e) {
-		notify("Pasting to Gistie failed.", -1);
+		notify("Pasting to Gistie failed: " + e, -1);
 	}
 }
 
