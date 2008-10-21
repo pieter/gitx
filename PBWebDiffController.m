@@ -13,7 +13,7 @@
 
 - (void) awakeFromNib
 {
-	startFile = @"simpleDiff";
+	startFile = @"diff";
 	[super awakeFromNib];
 	[diffController addObserver:self forKeyPath:@"diff" options:0 context:@"ChangedDiff"];
 }

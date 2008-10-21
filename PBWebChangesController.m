@@ -12,7 +12,7 @@
 
 - (void) awakeFromNib
 {
-	startFile = @"diff";
+	startFile = @"commit";
 	[super awakeFromNib];
 
 	[unstagedFilesController addObserver:self forKeyPath:@"selection" options:0 context:@"UnstagedFileSelected"];

@@ -25,3 +25,22 @@ Array.prototype.indexOf = function(item, i) {
     if (this[i] === item) return i;
   return -1;
 };
+
+var notify = function(text, state) {
+	var n = $("notification");
+	n.style.display = "";
+	$("notification_message").innerHTML = text;
+	
+	// Change color
+	if (!state) { // Busy
+		$("spinner").style.display = "";
+		n.setAttribute("class", "");
+	}
+	else if (state == 1) { // Success
+		$("spinner").style.display = "none";
+		n.setAttribute("class", "success");
+	} else if (state == -1) {// Fail
+		$("spinner").style.display = "none";
+		n.setAttribute("class", "fail");
+	}
+}

@@ -15,7 +15,9 @@
 
 - (void) awakeFromNib
 {
-	NSString* file = [[NSBundle mainBundle] pathForResource:startFile ofType:@"html"];
+	NSString *path = [NSString stringWithFormat:@"html/views/%@", startFile];
+	NSString* file = [[NSBundle mainBundle] pathForResource:@"index" ofType:@"html" inDirectory:path];
+	NSLog(@"path: %@, file: %@", path, file);
 	NSURLRequest * request = [NSURLRequest requestWithURL:[NSURL fileURLWithPath:file]];
 
 	finishedLoading = NO;

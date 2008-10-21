@@ -37,25 +37,6 @@ var Commit = function(obj) {
 	}
 };
 
-var notify = function(text, state) {
-	var n = $("notification");
-	n.style.display = "";
-	$("notification_message").innerHTML = text;
-
-	// Change color
-	if (!state) { // Busy
-		$("spinner").style.display = "";
-		n.setAttribute("class", "");
-	}
-	else if (state == 1) { // Success
-		$("spinner").style.display = "none";
-		n.setAttribute("class", "success");
-	} else if (state == -1) {// Fail
-		$("spinner").style.display = "none";
-		n.setAttribute("class", "fail");
-	}
-}
-
 var gistie = function() {
 	notify("Uploading code to Gistie..", 0);
 

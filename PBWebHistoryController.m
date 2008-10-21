@@ -24,7 +24,7 @@
 
 - (void) awakeFromNib
 {
-	startFile = @"commit";
+	startFile = @"history";
 	[super awakeFromNib];
 	[historyController addObserver:self forKeyPath:@"webCommit" options:0 context:@"ChangedCommit"];
 }
