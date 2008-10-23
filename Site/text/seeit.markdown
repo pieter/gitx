@@ -2,9 +2,9 @@
 	See it
 </h2>
 <p>
-	Here you can have a look at what GitX looks like. There are <a href="">screenshots</a> and <a href="">screencaptures</a> for you to enjoy!
+	Here you can have a look at what GitX looks like. There are <a href="#screenshots">screenshots</a> and <a href="#screencaptures">screencaptures</a> for you to enjoy!
 </p>
-<h3>
+<h3 id="screenshots">
 	Screenshots
 </h3>
 <p>
@@ -16,7 +16,7 @@
 	<img width="500px" src="http://ss.frim.nl/==891">
 </p>
 
-<h3>
+<h3 id="screencaptures">
 	Screencaptures
 </h3>
 <p>
