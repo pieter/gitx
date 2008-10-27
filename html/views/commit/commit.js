@@ -9,6 +9,7 @@ var showNewFile = function(file)
 	}
 
 	diff.innerHTML = contents.escapeHTML();
+	diff.style.display = '';
 }
 
 var showFileChanges = function(file, cached) {
