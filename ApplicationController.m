@@ -11,6 +11,7 @@
 #import "PBGitWindowController.h"
 #import "PBRepositoryDocumentController.h"
 #import "PBCLIProxy.h"
+#import "PBServicesController.h"
 
 @implementation ApplicationController
 @synthesize cliProxy;
@@ -31,8 +32,26 @@
 	return self;
 }
 
+- (void)registerServices
+{
+	// Register the service class
+	PBServicesController *services = [[PBServicesController alloc] init];
+	[NSApp setServicesProvider:services];
+
+	// Force update the services menu if we have a new services version
+	int serviceVersion = [[NSUserDefaults standardUserDefaults] integerForKey:@"Services Version"];
+	if (serviceVersion < 2)
+	{
+		NSLog(@"Updating services menu…");
+		NSUpdateDynamicServices();
+		[[NSUserDefaults standardUserDefaults] setInteger:2 forKey:@"Services Version"];
+	}
+}
+
 - (void)applicationDidFinishLaunching:(NSNotification*)notification
 {
+	[self registerServices];
+
 	// Only try to open a default document if there are no documents open already.
 	// For example, the application might have been launched by double-clicking a .git repository,
 	// or by dragging a folder to the app icon

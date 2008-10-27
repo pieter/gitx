@@ -65,6 +65,7 @@
 		F5E92A1B0E88550E00056E75 /* empty_file.png in Resources */ = {isa = PBXBuildFile; fileRef = F5E92A1A0E88550E00056E75 /* empty_file.png */; };
 		F5E92A230E88569500056E75 /* new_file.png in Resources */ = {isa = PBXBuildFile; fileRef = F5E92A220E88569500056E75 /* new_file.png */; };
 		F5EF8C8E0E9D4A5D0050906B /* PBWebController.m in Sources */ = {isa = PBXBuildFile; fileRef = F5EF8C8D0E9D4A5D0050906B /* PBWebController.m */; };
+		F5FE6C030EB13BC900F30D12 /* PBServicesController.m in Sources */ = {isa = PBXBuildFile; fileRef = F5FE6C020EB13BC900F30D12 /* PBServicesController.m */; };
 		F5FF4E180E0829C20006317A /* PBGitRevList.m in Sources */ = {isa = PBXBuildFile; fileRef = F5FF4E170E0829C20006317A /* PBGitRevList.m */; };
 		F5FF4E7A0E082E440006317A /* PBGitGrapher.m in Sources */ = {isa = PBXBuildFile; fileRef = F5FF4E790E082E440006317A /* PBGitGrapher.m */; };
 /* End PBXBuildFile section */
@@ -191,6 +192,8 @@
 		F5E92A220E88569500056E75 /* new_file.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = new_file.png; path = Images/new_file.png; sourceTree = "<group>"; };
 		F5EF8C8C0E9D4A5D0050906B /* PBWebController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PBWebController.h; sourceTree = "<group>"; };
 		F5EF8C8D0E9D4A5D0050906B /* PBWebController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PBWebController.m; sourceTree = "<group>"; };
+		F5FE6C010EB13BC900F30D12 /* PBServicesController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PBServicesController.h; sourceTree = "<group>"; };
+		F5FE6C020EB13BC900F30D12 /* PBServicesController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PBServicesController.m; sourceTree = "<group>"; };
 		F5FF4E160E0829C20006317A /* PBGitRevList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PBGitRevList.h; sourceTree = "<group>"; };
 		F5FF4E170E0829C20006317A /* PBGitRevList.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PBGitRevList.m; sourceTree = "<group>"; };
 		F5FF4E780E082E440006317A /* PBGitGrapher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PBGitGrapher.h; sourceTree = "<group>"; };
@@ -365,6 +368,8 @@
 				F5EF8C8C0E9D4A5D0050906B /* PBWebController.h */,
 				F5E926050E8827D300056E75 /* PBViewController.m */,
 				F5EF8C8D0E9D4A5D0050906B /* PBWebController.m */,
+				F5FE6C010EB13BC900F30D12 /* PBServicesController.h */,
+				F5FE6C020EB13BC900F30D12 /* PBServicesController.m */,
 			);
 			name = Controllers;
 			sourceTree = "<group>";
@@ -623,6 +628,7 @@
 				93CB42C20EAB7B2200530609 /* PBGitDefaults.m in Sources */,
 				F5E424150EA3E4E10046E362 /* PBDiffWindowController.m in Sources */,
 				F5E424180EA3E4EB0046E362 /* PBWebDiffController.m in Sources */,
+				F5FE6C030EB13BC900F30D12 /* PBServicesController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
