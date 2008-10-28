@@ -78,14 +78,9 @@
 {
 	NSString *parent = amend ? @"HEAD^" : @"HEAD";
 
-	NSString *a = [repository parseReference:@"HEAD^"];
-
-	// TODO: parseReference should exit nil if it errors out. For
-	// now, compare to "HEAD"
-	if ([a isEqualToString:parent]) {
+	if (![repository parseReference:parent])
 		// We don't have a head ref. Return the empty tree.
 		return @"4b825dc642cb6eb9a060e54bf8d69288fbee4904";
-	}
 
 	return parent;
 }

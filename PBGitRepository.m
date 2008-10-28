@@ -368,9 +368,14 @@ NSString* PBGitRepositoryErrorDomain = @"GitXErrorDomain";
 							   retValue: ret];
 }
 
-- (NSString*) parseReference:(NSString *)reference
+- (NSString *)parseReference:(NSString *)reference
 {
-	return [self outputForArguments:[NSArray arrayWithObjects: @"rev-parse", reference, nil]];
+	int ret = 1;
+	NSString *ref = [self outputForArguments:[NSArray arrayWithObjects: @"rev-parse", @"--verify", reference, nil] retValue: &ret];
+	if (ret)
+		return nil;
+
+	return ref;
 }
 
 - (NSString*) parseSymbolicReference:(NSString*) reference
