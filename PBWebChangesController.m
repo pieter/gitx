@@ -12,6 +12,9 @@
 
 - (void) awakeFromNib
 {
+	selectedFile = nil;
+	selectedFileIsCached = NO;
+
 	startFile = @"commit";
 	[super awakeFromNib];
 
@@ -19,12 +22,9 @@
 	[cachedFilesController addObserver:self forKeyPath:@"selection" options:0 context:@"cachedFileSelected"];
 }
 
-static PBChangedFile *lastFileSelected = nil;
-
 - (void) didLoad
 {
-	if (lastFileSelected)
-		[self showDiff: lastFileSelected cached:NO];
+	[self refresh];
 }
 
 - (BOOL) amend
@@ -46,20 +46,25 @@ static PBChangedFile *lastFileSelected = nil;
 	else
 		[unstagedFilesController setSelectionIndexes:[NSIndexSet indexSet]];
 
-	PBChangedFile *file = [[object selectedObjects] objectAtIndex:0];
+	selectedFile = [[object selectedObjects] objectAtIndex:0];
+	selectedFileIsCached = object == cachedFilesController;
 
-	[self showDiff: file cached: object == cachedFilesController];
+	[self refresh];
 }
 
-- (void) showDiff:(PBChangedFile *)file cached:(BOOL) cached
+- (void) refresh
 {
-	if (!finishedLoading) {
-		lastFileSelected = file;
+	if (!finishedLoading)
 		return;
-	}
 
 	id script = [view windowScriptObject];
-	NSLog(@"Showing diff..");
-	[script callWebScriptMethod:@"showFileChanges" withArguments:[NSArray arrayWithObjects:file, [NSNumber numberWithBool:cached], nil]];
+	[script callWebScriptMethod:@"showFileChanges"
+				  withArguments:[NSArray arrayWithObjects:selectedFile, [NSNumber numberWithBool:selectedFileIsCached], nil]];
+}
+
+- (void) stageHunk:(NSString *)hunk reverse:(BOOL)reverse
+{
+	[controller stageHunk: hunk reverse:reverse];
+	[self refresh];
 }
 @end

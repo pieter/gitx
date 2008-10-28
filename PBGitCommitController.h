@@ -40,6 +40,7 @@
 - (void) readCachedFiles:(NSNotification *)notification;
 - (void) readOtherFiles:(NSNotification *)notification;
 - (void) readUnstagedFiles:(NSNotification *)notification;
+- (void) stageHunk: (NSString *)hunk reverse:(BOOL)reverse;
 
 - (NSMenu *) menuForTable:(NSTableView *)table;
 

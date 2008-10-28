@@ -15,7 +15,10 @@
 	IBOutlet NSArrayController *unstagedFilesController;
 	IBOutlet NSArrayController *cachedFilesController;
 	IBOutlet PBGitCommitController *controller;
+
+	PBChangedFile *selectedFile;
+	BOOL selectedFileIsCached;
 }
 
-- (void) showDiff:(PBChangedFile *)file cached:(BOOL)cached;
+- (void) refresh;
 @end

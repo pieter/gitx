@@ -4,17 +4,18 @@
 	<link rel="stylesheet" href="commits.css" type="text/css" media="screen" title="no title" charset="utf-8">
 	<link rel="stylesheet" href="diff_style.css" type="text/css" media="screen" title="no title" charset="utf-8">
 	<script src="diffHighlighter.js" type="text/javascript" charset="utf-8"></script>
+	<script src="diff.js" type="text/javascript" charset="utf-8"></script>
+	
 	<script type="text/javascript" charset="utf-8">
 
 	var doeHet = function() {
-		document.getElementById("details").innerHTML = document.getElementById("diff").value.replace(/</g, "&lt;");
-		highlightDiffs();
+		displayDiff($("orig_diff").value.replace(/</g, "&lt;"));
 	}
 	</script>
 </head>
-
 <body style="padding: 0px; border: 0px" onLoad="doeHet()">
-	<textarea style='display:none' id="diff" rows="8" cols="40">
+	<div id="title"></div>
+	<textarea style='display:none' id="orig_diff" rows="8" cols="40">
 diff --git a/English.lproj/RepositoryWindow.xib b/English.lproj/RepositoryWindow.xib
 index 6cd49fa..7474752 100644
 --- a/English.lproj/RepositoryWindow.xib
@@ -857,5 +858,5 @@ index db530c0..18c2393 100644
  	[self.window setToolbar:toolbar];
  }
 	</textarea>
-	<pre><code class="diffcode" id='details'></code></pre>
+	<pre><code class="diffcode" id='diff'></code></pre>
 </body>

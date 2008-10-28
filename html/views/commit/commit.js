@@ -13,22 +13,72 @@ var showNewFile = function(file)
 }
 
 var showFileChanges = function(file, cached) {
-	var diff = $("diff");
-	diff.style.display = 'none';
+	$("diff").style.display = 'none';
 	hideNotification();
 
 	if (file.status == 0) // New file?
 		return showNewFile(file);
 
+	var changes;
 	if (cached) {
 		$("title").innerHTML = "Staged changes for " + file.path;
-		diff.innerHTML = file.cachedChangesAmend_(Controller.amend()).escapeHTML();
+		changes = file.cachedChangesAmend_(Controller.amend());
 	}
 	else {
 		$("title").innerHTML = "Unstaged changes for " + file.path;
-		diff.innerHTML = file.unstagedChanges().escapeHTML();
+		changes = file.unstagedChanges();
 	}
 
+	if (changes == "") {
+		notify("This file has no more changes", 1);
+		return;
+	}
+
+	displayDiff(changes, cached);
+	$("diff").style.display = '';
+}
+
+var diffHeader;
+var originalDiff;
+
+var displayDiff = function(diff, cached)
+{
+	diffHeader = diff.split("\n").slice(0,4).join("\n");
+	originalDiff = diff;
+
+	$("diff").innerHTML = diff.escapeHTML();
 	highlightDiffs();
-	diff.style.display = '';
+	hunkHeaders = $("diff").getElementsByClassName("hunkheader");
+
+	for (i = 0; i < hunkHeaders.length; ++i) {
+		var header = hunkHeaders[i];
+		if (cached)
+			header.innerHTML = "<a href='#' class='stagebutton' onclick='addHunk(this, true); return false'>Unstage</a>" + header.innerHTML;
+		else
+			header.innerHTML = "<a href='#' class='stagebutton' onclick='addHunk(this, false); return false'>Stage</a>" + header.innerHTML;
+	}
+}
+
+var addHunk = function(hunk, reverse)
+{
+	hunkHeader = hunk.nextSibling.data.split("\n")[0];
+	if (m = hunkHeader.match(/@@.*@@/))
+		hunkHeader = m;
+
+	start = originalDiff.indexOf(hunkHeader);
+	end = originalDiff.indexOf("\n@@", start + 1);
+	end2 = originalDiff.indexOf("\ndiff", start + 1);
+	if (end2 < end && end2 > 0)
+		end = end2;
+
+	if (end == -1)
+		end = originalDiff.length;
+
+	hunkText = originalDiff.substring(start, end);
+	hunkText = diffHeader + "\n" + hunkText + "\n";
+
+	if (Controller.stageHunk_reverse_)
+		Controller.stageHunk_reverse_(hunkText, reverse);
+	else
+		alert(hunkText);
 }
