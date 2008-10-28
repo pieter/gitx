@@ -30,8 +30,15 @@
 
 - (NSString *)unstagedChanges
 {
-	if (status == NEW)
-		return [PBEasyPipe outputForCommand:@"/bin/cat" withArgs:[NSArray arrayWithObject:path] inDir:[repository workingDirectory]];
+	if (status == NEW) {
+		NSStringEncoding encoding;
+		NSError *error = nil;
+		NSString *contents = [NSString stringWithContentsOfFile:[[repository workingDirectory] stringByAppendingPathComponent:path] usedEncoding:&encoding error:&error];
+		if (error)
+			return nil;
+
+		return contents;
+	}
 
 	return [repository outputInWorkdirForArguments:[NSArray arrayWithObjects:@"diff", @"--", path, nil]];
 }
