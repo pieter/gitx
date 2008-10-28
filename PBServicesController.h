@@ -13,7 +13,7 @@
 
 }
 
-- (NSString *)completeSHA1For:(NSString *)sha;
+- (NSString *)completeSHA1For:(NSString *)sha URL:(NSURL **)url;
 
 - (void)completeSha:(NSPasteboard *)pboard userData:(NSString *)userData error:(NSString **)error;
 @end

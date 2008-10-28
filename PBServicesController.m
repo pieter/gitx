@@ -12,15 +12,17 @@
 
 @implementation PBServicesController
 
-- (NSString *)completeSHA1For:(NSString *)sha
+- (NSString *)completeSHA1For:(NSString *)sha URL:(NSURL **)url
 {
 	NSArray *documents = [[NSApplication sharedApplication] orderedDocuments];
 	for (PBGitRepository *repo in documents)
 	{
 		int ret = 1;
 		NSString *s = [repo outputForArguments:[NSArray arrayWithObjects:@"log", @"-1", @"--pretty=format:%h (%s)", sha, nil] retValue:&ret];
-		if (!ret)
+		if (!ret) {
+			*url = [NSURL URLWithString:[NSString stringWithFormat:@"http://github.com/pieter/gitx/commit/%@", [s substringToIndex:[s rangeOfString:@" "].location]]];
 			return s;
+		}
 	}
 	return @"Could not find SHA";
 }
@@ -48,12 +50,23 @@
 	}
 
 	NSString *s = [pboard stringForType:NSStringPboardType];
+	NSURL *url = nil;
 	if ([s rangeOfString:@" "].location == NSNotFound)
-		s = [self completeSHA1For:s];
+		s = [self completeSHA1For:s URL:&url];
 	else
 		s = [self runNameRevFor:s];
 
-	[pboard declareTypes:[NSArray arrayWithObject:NSStringPboardType] owner:nil];
+	NSMutableAttributedString *as = [[NSMutableAttributedString alloc] initWithString:s];
+	if (url) {
+		[as beginEditing];
+		[as addAttribute:NSLinkAttributeName value:url range:NSMakeRange(0, [as length])];
+		[as endEditing];
+	}
+	NSLog(@"Returning: %@", as);
+	[pboard declareTypes:[NSArray arrayWithObjects:NSStringPboardType, NSRTFDPboardType, NSHTMLPboardType, nil] owner:nil];
+	NSString *html = [NSString stringWithFormat:@"<a href='%@'>%@</a>", url, s];
+	[pboard setData:[html dataUsingEncoding:NSUTF8StringEncoding] forType:NSHTMLPboardType];
+	[pboard setData:[as RTFDFromRange:NSMakeRange(0, [as length]) documentAttributes:nil] forType:NSRTFDPboardType];
 	[pboard setString:s forType:NSStringPboardType];
 }
 @end
