@@ -18,7 +18,9 @@
 	IBOutlet NSArrayController *unstagedFilesController;
 	IBOutlet NSArrayController *cachedFilesController;
 	NSString *status;
-	
+
+	IBOutlet id webController;
+
 	// We use busy as a count of active processes. 
 	// You can increase it when your process start
 	// And decrease it after you have finished.

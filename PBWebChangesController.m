@@ -54,7 +54,7 @@
 
 - (void) refresh
 {
-	if (!finishedLoading)
+	if (!finishedLoading || !selectedFile)
 		return;
 
 	id script = [view windowScriptObject];
@@ -67,4 +67,11 @@
 	[controller stageHunk: hunk reverse:reverse];
 	[self refresh];
 }
+
+- (void) setStateMessage:(NSString *)state
+{
+	id script = [view windowScriptObject];
+	[script callWebScriptMethod:@"setState" withArguments: [NSArray arrayWithObject:state]];
+}
+
 @end

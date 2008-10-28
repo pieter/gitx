@@ -21,4 +21,6 @@
 }
 
 - (void) refresh;
+- (void) setStateMessage:(NSString *)state;
+
 @end

@@ -12,9 +12,23 @@ var showNewFile = function(file)
 	diff.style.display = '';
 }
 
+var hideState = function() {
+	$("state").style.display = "none";
+}
+
+var setState = function(state) {
+	$("state").style.display = "";
+	$("diff").style.display = "none";
+	$("state").innerHTML = state.escapeHTML();
+}
+
 var showFileChanges = function(file, cached) {
+	if (!file)
+		return;
+
 	$("diff").style.display = 'none';
 	hideNotification();
+	hideState();
 
 	if (file.status == 0) // New file?
 		return showNewFile(file);

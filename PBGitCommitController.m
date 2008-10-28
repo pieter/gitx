@@ -269,11 +269,7 @@
 	if (ret)
 		return [self commitFailedBecause:@"Could not update HEAD"];
 
-	[[NSAlert alertWithMessageText:@"Commit succesful"
-					 defaultButton:nil
-				   alternateButton:nil
-					   otherButton:nil
-		 informativeTextWithFormat:@"Successfully created commit %@", commit] runModal];
+	[webController setStateMessage:[NSString stringWithFormat:@"Succesfully created commit %@", commit]];
 	
 	repository.hasChanged = YES;
 	self.busy--;
