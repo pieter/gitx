@@ -8,7 +8,7 @@
 		<string key="IBDocument.HIToolboxVersion">352.00</string>
 		<object class="NSMutableArray" key="IBDocument.EditedObjectIDs">
 			<bool key="EncodedWithXMLCoder">YES</bool>
-			<integer value="3"/>
+			<integer value="9"/>
 		</object>
 		<object class="NSArray" key="IBDocument.PluginDependencies">
 			<bool key="EncodedWithXMLCoder">YES</bool>
@@ -738,7 +738,7 @@
 																<object class="NSTextView" id="239018083">
 																	<reference key="NSNextResponder" ref="948090592"/>
 																	<int key="NSvFlags">2322</int>
-																	<string key="NSFrameSize">{835, 37}</string>
+																	<string key="NSFrameSize">{835, 70}</string>
 																	<reference key="NSSuperview" ref="948090592"/>
 																	<object class="NSTextContainer" key="NSTextContainer" id="53511606">
 																		<object class="NSLayoutManager" key="NSLayoutManager">
@@ -1125,7 +1125,7 @@
 																					<string>WebURLsWithTitlesPboardType</string>
 																				</object>
 																			</object>
-																			<string key="NSFrameSize">{543, 71}</string>
+																			<string key="NSFrameSize">{543, 112}</string>
 																			<reference key="NSSuperview" ref="321980917"/>
 																			<object class="NSTextContainer" key="NSTextContainer" id="480935218">
 																				<object class="NSLayoutManager" key="NSLayoutManager">
@@ -1467,22 +1467,6 @@
 						<reference key="destination" ref="16222431"/>
 					</object>
 					<int key="connectionID">66</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBBindingConnection" key="connection">
-						<string key="label">value: selection.details</string>
-						<reference key="source" ref="239018083"/>
-						<reference key="destination" ref="391209158"/>
-						<object class="NSNibBindingConnector" key="connector">
-							<reference key="NSSource" ref="239018083"/>
-							<reference key="NSDestination" ref="391209158"/>
-							<string key="NSLabel">value: selection.details</string>
-							<string key="NSBinding">value</string>
-							<string key="NSKeyPath">selection.details</string>
-							<int key="NSNibBindingConnectorVersion">2</int>
-						</object>
-					</object>
-					<int key="connectionID">69</int>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBBindingConnection" key="connection">
@@ -1865,6 +1849,22 @@
 						<reference key="destination" ref="391209158"/>
 					</object>
 					<int key="connectionID">217</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">value: rawCommit.details</string>
+						<reference key="source" ref="239018083"/>
+						<reference key="destination" ref="1001"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="239018083"/>
+							<reference key="NSDestination" ref="1001"/>
+							<string key="NSLabel">value: rawCommit.details</string>
+							<string key="NSBinding">value</string>
+							<string key="NSKeyPath">rawCommit.details</string>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">230</int>
 				</object>
 			</object>
 			<object class="IBMutableOrderedSet" key="objectRecords">
@@ -2537,7 +2537,7 @@
 						</object>
 					</object>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<string>{{387, 484}, {852, 432}}</string>
+					<string>{{592, 572}, {852, 432}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -2567,7 +2567,7 @@
 				</object>
 			</object>
 			<nil key="sourceID"/>
-			<int key="maxID">225</int>
+			<int key="maxID">230</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<object class="NSMutableArray" key="referencedPartialClassDescriptions">

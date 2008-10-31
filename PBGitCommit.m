@@ -33,6 +33,8 @@
 	return self;
 }
 
+// NOTE: This method should remain threadsafe, as we load it in async
+// from the web view.
 - (NSString*) details
 {
 	if (details != nil)

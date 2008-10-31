@@ -1,40 +1,49 @@
 var commit;
 var Commit = function(obj) {
-	this.raw = obj.details;
-	this.refs = obj.refs;
 	this.object = obj;
 
-	var diffStart = this.raw.indexOf("\ndiff ");
-	var messageStart = this.raw.indexOf("\n\n") + 2;
-
-	if (diffStart > 0) {
-		this.message = this.raw.substring(messageStart, diffStart).replace(/^    /gm, "").escapeHTML();
-		this.diff = this.raw.substring(diffStart);
-	} else {
-		this.message = this.raw.substring(messageStart).replace(/^    /gm, "").escapeHTML();
-		this.diff = "";
-	}
-	this.header = this.raw.substring(0, messageStart);
-
-	this.sha = this.header.match(/^commit ([0-9a-f]{40,40})/)[1];
-
-	var match = this.header.match(/\nauthor (.*) <(.*@.*)> ([0-9].*)/);
-	this.author_name = match[1];
-	if (!(match[2].match(/@[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}/)))
-		this.author_email = match[2];
-
-	this.author_date = new Date(parseInt(match[3]) * 1000);
-
-	match = this.header.match(/\ncommitter (.*) <(.*@.*)> ([0-9].*)/);
-	this.committer_name = match[1];
-	this.committer_email = match[2];
-	this.committer_date = new Date(parseInt(match[3]) * 1000);
-
+	this.refs = obj.refs;
+	this.author_name = obj.author;
+	this.sha = obj.sha;
 	this.parents = obj.parents;
+	this.subject = obj.subject;
+
+	// TODO:
+	// this.author_date instant
+
+	// This all needs to be async
+	this.loadedRaw = function(details) {
+		this.raw = details;
+
+		var diffStart = this.raw.indexOf("\ndiff ");
+		var messageStart = this.raw.indexOf("\n\n") + 2;
+
+		if (diffStart > 0) {
+			this.message = this.raw.substring(messageStart, diffStart).replace(/^    /gm, "").escapeHTML();
+			this.diff = this.raw.substring(diffStart);
+		} else {
+			this.message = this.raw.substring(messageStart).replace(/^    /gm, "").escapeHTML();
+			this.diff = "";
+		}
+		this.header = this.raw.substring(0, messageStart);
+
+		var match = this.header.match(/\nauthor (.*) <(.*@.*)> ([0-9].*)/);
+		if (!(match[2].match(/@[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}/)))
+			this.author_email = match[2];
+
+		this.author_date = new Date(parseInt(match[3]) * 1000);
+
+		match = this.header.match(/\ncommitter (.*) <(.*@.*)> ([0-9].*)/);
+		this.committer_name = match[1];
+		this.committer_email = match[2];
+		this.committer_date = new Date(parseInt(match[3]) * 1000);		
+	}
 
 	this.reloadRefs = function() {
 		this.refs = CommitObject.refs;
 	}
+
+	// this.loadedRaw(this.raw);
 };
 
 var gistie = function() {
@@ -118,47 +127,60 @@ var reload = function() {
 	showRefs();
 }
 
-var showRefs = function() {
+var showRefs = function(currentRef) {
 	var refs = $("refs");
 	if (commit.refs) {
 		refs.parentNode.style.display = "";
 		refs.innerHTML = "";
 		for (var i = 0; i < commit.refs.length; i++) {
 			var ref = commit.refs[i], curBranch = "";
-			refs.innerHTML += '<span class="refs ' + ref.type()  + (CurrentBranch == ref.ref ? ' currentBranch' : '') + '">' + ref.shortName() + '</span>';
+			refs.innerHTML += '<span class="refs ' + ref.type() + (currentRef == ref.ref ? ' currentBranch' : '') + '">' + ref.shortName() + '</span>';
 		}
 	} else
 		refs.parentNode.style.display = "none";
 }
 
-var loadCommit = function() {
-	commit = new Commit(CommitObject);
-	$("notification").style.display = "none";
+var loadCommit = function(commitObject, currentRef) {
+	// These are only the things we can do instantly.
+	// Other information will be loaded later by loadExtendedCommit
+	commit = new Commit(commitObject);
+	Controller.callSelector_onObject_callBack_("details", commitObject,
+		function(data) { commit.loadedRaw(data); loadExtendedCommit(commit); });
+	commit.currentRef = currentRef;
+
+	notify("Loading commit…", 0);
 
 	$("commitID").innerHTML = commit.sha;
+	$("authorID").innerHTML = commit.author_name;
+	$("subjectID").innerHTML = commit.subject.escapeHTML();
+	$("details").innerHTML = ""
+	$("message").innerHTML = ""
+	$("date").innerHTML = ""
+	showRefs(commit.currentRef);
 
-	if (commit.author_email)
-		$("authorID").innerHTML = commit.author_name + " &lt;<a href='mailto:" + commit.author_email + "'>" + commit.author_email + "</a>&gt;";
-	else
-		$("authorID").innerHTML = commit.author_name;
-
-	$("date").innerHTML = commit.author_date;
-	$("subjectID").innerHTML =CommitObject.subject.escapeHTML();
-
-	var commitHeader = $("commit_header");
 	for (var i = 0; i < commitHeader.rows.length; i++) {
-		var row = commitHeader.rows[i];
+		var row = $("commit_header").rows[i];
 		if (row.innerHTML.match(/Parent:/))
 			row.parentNode.removeChild(row);
 	}
 
 	for (var i = 0; i < commit.parents; i++) {
-		var parent = commit.parents[i], newRow = commitHeader.insertRow(-1);
-		new_row.innerHTML = "<td class='property_name'>Parent:</td><td><a href='' onclick=\"selectCommit(this.innerHTML); return false;\">" + parent + "</a></td>";
+		var newRow = $("commit_header").insertRow(-1);
+		new_row.innerHTML = "<td class='property_name'>Parent:</td><td>" +
+			"<a href='' onclick='selectCommit(this.innerHTML); return false;'>" +
+			commit.parents[i] + "</a></td>";
 	}
 
-	showRefs();
+	// Scroll to top
+	scroll(0, 0);
+}
 
+var loadExtendedCommit = function(commit)
+{
+	if (commit.author_email)
+		$("authorID").innerHTML = commit.author_name + " &lt;<a href='mailto:" + commit.author_email + "'>" + commit.author_email + "</a>&gt;";
+
+	$("date").innerHTML = commit.author_date;
 	$("message").innerHTML = commit.message.replace(/\n/g,"<br>");
 
 	if (commit.diff.length < 200000) {
@@ -166,8 +188,6 @@ var loadCommit = function() {
 	} else {
 		$("details").innerHTML = "<a class='showdiff' href='' onclick='showDiffs(); return false;'>This is a large commit. Click here or press 'v' to view.</a>";
 	}
-
+	hideNotification();
 	setGravatar(commit.author_email, $("gravatar"));
-
-	scroll(0, 0);
 }

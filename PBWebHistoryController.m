@@ -47,20 +47,16 @@
 	if (content == nil || !finishedLoading)
 		return;
 
-	id script = [view windowScriptObject];
-	[script setValue: content forKey:@"CommitObject"];
-	[script setValue:[[[historyController repository] headRef] simpleRef] forKey:@"CurrentBranch"];
-
 	// The sha is the same, but refs may have changed.. reload it lazy
 	if ([currentSha isEqualToString: content.sha])
 	{
-		[script callWebScriptMethod:@"reload" withArguments: nil];
+		[[self script] callWebScriptMethod:@"reload" withArguments: nil];
 		return;
 	}
-	
 	currentSha = content.sha;
 
-	[script callWebScriptMethod:@"loadCommit" withArguments: nil];
+	NSArray *arguments = [NSArray arrayWithObjects:content, [[[historyController repository] headRef] simpleRef], nil];
+	[[self script] callWebScriptMethod:@"loadCommit" withArguments: arguments];
 }
 
 - (void) selectCommit: (NSString*) sha
