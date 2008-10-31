@@ -9,6 +9,13 @@ This feature release has several new smaller or larger features:
 * The "Gist it" button now respects github.user/token
 * Display a gravatar of the committer
 * The commit message view now displays a vertical line at 50 characters
+* It is now possible to revert changes by using the context menu in the
+  commit view
+* You can now stage only parts of a file by using the "Stage Hunk" buttons
+  in the commit view
+* You can now use GitX to show a diff of anything, for example by using
+  'gitx --diff HEAD^^' or 'git diff HEAD~3 | gitx --diff'
+* You can now drag and drop refs to move them and also create branches
 
 In addition, the following bugs have been fixed:
 * Better detection of git version
