@@ -13,6 +13,9 @@
 	IBOutlet WebView* view;
 	NSString *startFile;
 	BOOL finishedLoading;
+
+	// For async git reading
+	NSMapTable *callbacks;
 }
 
 @property (retain) NSString *startFile;

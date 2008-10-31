@@ -1,0 +1,81 @@
+Introduction
+============
+
+A lot of the display code in GitX is based on the HTML views that are rendered
+by WebKit. As such, it's necessary to access a lot of information from WebKit
+that is only available in the Objective-C environment.
+
+Because of this, some convenience methods have been added. Most notably, some
+objects can be accessed completely from WebKit, including:
+
+	* All webcontrollers
+	* All PBGitRefs and PBGitCommits
+
+All WebKit views should be controlled by a subclass of PBWebController.
+
+
+Subclassing PBWebController
+===========================
+
+PBWebController does some magic to make using it easier. First of all, it
+automatically loads in the view specified by "startFile". This means that
+your views have to conform to a specific structure. For example, if you set
+startFile (in your awakeFromNib) to "commit", there should be a file named
+html/views/commit/index.html that will get loaded.
+
+Furthermore, the controller keeps a finishedLoading member that indicates
+whether or not the webview is ready to be used. If it is ready, and your
+subclass has implemented the didLoad method, that method will be called.
+
+After the document has succesfully loaded, the controller inserts itself into
+the Javascript environment under the "Controller" variable.
+
+Useful PBWebController functions
+================================
+
+There are some functions that might be useful in any context. These are put in
+the PBWebController class for easy access. To access these, replace the colons
+with underscores in the JS call. for example,
+
+	- (void) log:(NSString) logMessage
+
+would be called in JS by:
+
+	Controller.log_("Hello from javascript!");
+
+## - (void) log:(NSString) logMessage
+
+This method simply relays a JS message to the program, which outputs it using
+NSLog. Handy for debugging.
+
+## - (BOOL) isReachable:(NSString *)hostname
+
+Will return true if the hostname is reachable from Javascript without creating
+an internet connection (for example, dialup). This is useful for optional
+features that depend on a working internet connection.
+
+** NOTE ** The GitX JS environment is _NOT_ secure, which means that external
+HTTP calls should only be made to trusted sites. For example, DON'T open any
+link in a commit message, as this could potentially allow any site to run any
+command on your mac.
+
+## - (void) runCommand:(WebScriptObject *)arguments
+          inRepository:(PBGitRepository *)repository
+              callBack:(WebScriptObject *)callBack
+
+This somewhat specific function allows you to call any git command and have
+its output returned to a callback function. For example, the following:
+
+Controller.runCommand_inRepository_callBack_(["--version"], obj.repository, 
+             function(v) { notify("Git Version: " + v, 1); });
+
+will show a notification displaying the current git version. This method is
+async, which means that it doesn't matter if it takes a long time to run.
+
+## - (void) callSelector:(NSString *)selectorString
+                onObject:(id)object
+                callBack:(WebScriptObject *)callBack
+
+While you can have direct access to most objects, sometimes it is useful to
+have an async task, for example if the operation can take a long time. Use
+this function to keep the UI responsive.
