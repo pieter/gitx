@@ -28,6 +28,13 @@
 	[[view mainFrame] loadRequest:request];
 }
 
+- (WebScriptObject *) script
+{
+	return [view windowScriptObject];
+}
+
+# pragma mark Delegate methods
+
 - (void) webView:(id) v didFinishLoadForFrame:(id) frame
 {
 	id script = [view windowScriptObject];
