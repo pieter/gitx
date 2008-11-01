@@ -8,6 +8,7 @@
 
 #import "PBCommitList.h"
 #import "PBGitRevisionCell.h"
+#import "PBWebHistoryController.h"
 
 @implementation PBCommitList
 
@@ -29,7 +30,7 @@
 			[webView scrollPageDown: self];
 	}
 	else if ([character rangeOfCharacterFromSet:[NSCharacterSet characterSetWithCharactersInString:@"jkcv"]].location == 0)
-		[webController sendKey: character];
+		[((PBWebHistoryController *)webController) sendKey: character];
 	else
 		[super keyDown: event];
 }

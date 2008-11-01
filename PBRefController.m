@@ -8,6 +8,17 @@
 
 #import "PBRefController.h"
 #import "PBGitRevisionCell.h"
+@interface RefMenuItem : NSMenuItem
+{
+	PBGitRef *ref;
+	PBGitCommit *commit;
+}
+@property (retain) PBGitCommit *commit;
+@property (retain) PBGitRef *ref;
+@end
+@implementation RefMenuItem
+@synthesize ref, commit;
+@end
 
 @implementation PBRefController
 
@@ -15,6 +26,32 @@
 {
 	[commitList registerForDraggedTypes:[NSArray arrayWithObject:@"PBGitRef"]];
 }
+
+- (void) removeRef:(RefMenuItem *) sender
+{
+	int ret = 1;
+	[historyController.repository outputForArguments:[NSArray arrayWithObjects:@"update-ref", @"-d", [[sender ref] ref], nil] retValue: &ret];
+	if (ret) {
+		NSLog(@"Removing ref failed!");
+		return;
+	}
+
+	[[sender commit] removeRef:[sender ref]];
+	[commitController rearrangeObjects];
+}
+
+- (NSArray *) menuItemsForRef:(PBGitRef *)ref commit:(PBGitCommit *)commit
+{
+	RefMenuItem *item = [[RefMenuItem alloc] initWithTitle:@"Remove"
+													action:@selector(removeRef:)
+											 keyEquivalent: @""];
+	[item setTarget: self];
+	[item setRef: ref];
+	[item setCommit:commit];
+	return [NSArray arrayWithObject: item];
+}
+
+# pragma mark Tableview delegate methods
 
 - (BOOL)tableView:(NSTableView *)tv writeRowsWithIndexes:(NSIndexSet *)rowIndexes toPasteboard:(NSPasteboard*)pboard
 {
@@ -116,6 +153,12 @@
 	PBGitCommit *commit = [[commitController selectedObjects] objectAtIndex:0];
 	int retValue = 1;
 	[historyController.repository outputForArguments:[NSArray arrayWithObjects:@"update-ref", @"-mCreate branch from GitX", branchName, [commit sha], NULL] retValue:&retValue];
+	if (retValue)
+	{
+		NSLog(@"Creating ref failed!");
+		return;
+	}
+
 	[commit addRef:[PBGitRef refFromString:branchName]];
 	[commitController rearrangeObjects];
 }

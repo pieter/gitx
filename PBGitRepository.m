@@ -387,17 +387,4 @@ NSString* PBGitRepositoryErrorDomain = @"GitXErrorDomain";
 	return nil;
 }
 
-- (BOOL) removeRef:(NSString *)ref
-{
-	int i;
-	[self outputForArguments:[NSArray arrayWithObjects:@"branch", @"-D", ref, nil] retValue:&i];
-	
-	if (i == 0) {
-		// Todo: We can do better than this!
-		[self reloadRefs];
-		[revisionList reload];
-		return YES;
-	}
-	return NO;
-}
 @end

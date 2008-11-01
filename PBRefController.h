@@ -9,6 +9,8 @@
 #import <Cocoa/Cocoa.h>
 #import "PBGitHistoryController.h"
 #import "PBCommitList.h"
+#import "PBGitRef.h"
+#import "PBGitCommit.h"
 
 @interface PBRefController : NSObject {
 	IBOutlet __weak PBGitHistoryController *historyController;
@@ -19,8 +21,9 @@
 	IBOutlet NSTextField *newBranchName;
 }
 
-- (IBAction) addRef:(id)sender;
+- (IBAction)addRef:(id)sender;
 - (IBAction)closeSheet:(id) sender;
 - (IBAction)saveSheet:(id) sender;
 
+- (NSArray *) menuItemsForRef:(PBGitRef *)ref commit:(PBGitCommit *)commit;
 @end

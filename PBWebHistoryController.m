@@ -7,16 +7,6 @@
 //
 
 #import "PBWebHistoryController.h"
-@interface RefMenuItem : NSMenuItem
-{
-	NSString *ref;
-}
-@property (copy) NSString *ref;
-@end
-@implementation RefMenuItem
-@synthesize ref;
-@end
-
 
 @implementation PBWebHistoryController
 
@@ -78,12 +68,6 @@
 	[a setString:source forType: NSStringPboardType];
 }
 
-- (void) removeRef:(RefMenuItem *)sender
-{
-	if (![historyController.repository removeRef: [sender ref]])
-		NSLog(@"Deletion failed!");
-}
-
 - (NSArray *)	   webView:(WebView *)sender
 contextMenuItemsForElement:(NSDictionary *)element
 		  defaultMenuItems:(NSArray *)defaultMenuItems
@@ -98,12 +82,15 @@ contextMenuItemsForElement:(NSDictionary *)element
 	if (![[node className] hasPrefix:@"refs "])
 		return defaultMenuItems;
 
-	RefMenuItem *item = [[RefMenuItem alloc] initWithTitle:@"Remove"
-													action:@selector(removeRef:)
-											 keyEquivalent: @""];
-	[item setTarget: self];
-	[item setRef: [[[node childNodes] item:0] textContent]];
-	return [NSArray arrayWithObject: item];
+	NSString *selectedRefString = [[[node childNodes] item:0] textContent];
+	for (PBGitRef *ref in historyController.webCommit.refs)
+	{
+		if ([[ref shortName] isEqualToString:selectedRefString])
+			return [refController menuItemsForRef:ref commit:historyController.webCommit];
+	}
+	NSLog(@"Could not find selected ref!");
+
+	return defaultMenuItems;
 }
 
 
