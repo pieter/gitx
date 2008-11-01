@@ -40,10 +40,10 @@ var Commit = function(obj) {
 	}
 
 	this.reloadRefs = function() {
-		this.refs = CommitObject.refs;
+		this.refs = this.object.refs;
+		Controller.log_("New refs: " + this.refs);
 	}
 
-	// this.loadedRaw(this.raw);
 };
 
 var gistie = function() {
@@ -121,20 +121,18 @@ var showDiffs = function() {
 
 var reload = function() {
 	$("notification").style.display = "none";
-	commit.refs = null;
-	showRefs();
 	commit.reloadRefs();
 	showRefs();
 }
 
-var showRefs = function(currentRef) {
+var showRefs = function() {
 	var refs = $("refs");
 	if (commit.refs) {
 		refs.parentNode.style.display = "";
 		refs.innerHTML = "";
 		for (var i = 0; i < commit.refs.length; i++) {
-			var ref = commit.refs[i], curBranch = "";
-			refs.innerHTML += '<span class="refs ' + ref.type() + (currentRef == ref.ref ? ' currentBranch' : '') + '">' + ref.shortName() + '</span>';
+			var ref = commit.refs[i];
+			refs.innerHTML += '<span class="refs ' + ref.type() + (commit.currentRef == ref.ref ? ' currentBranch' : '') + '">' + ref.shortName() + '</span>';
 		}
 	} else
 		refs.parentNode.style.display = "none";
@@ -156,7 +154,7 @@ var loadCommit = function(commitObject, currentRef) {
 	$("details").innerHTML = ""
 	$("message").innerHTML = ""
 	$("date").innerHTML = ""
-	showRefs(commit.currentRef);
+	showRefs();
 
 	for (var i = 0; i < commitHeader.rows.length; i++) {
 		var row = $("commit_header").rows[i];
