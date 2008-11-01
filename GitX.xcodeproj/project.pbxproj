@@ -44,6 +44,7 @@
 		F56CC7290E65E0AD004307B4 /* PBGitGraphLine.m in Sources */ = {isa = PBXBuildFile; fileRef = F56CC7280E65E0AD004307B4 /* PBGitGraphLine.m */; };
 		F56CC7320E65E0E5004307B4 /* PBGraphCellInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = F56CC7310E65E0E5004307B4 /* PBGraphCellInfo.m */; };
 		F57240BB0E9678EA00D8EE66 /* deleted_file.png in Resources */ = {isa = PBXBuildFile; fileRef = F57240BA0E9678EA00D8EE66 /* deleted_file.png */; };
+		F574A2850EAE2EAC003F2CB1 /* PBRefController.m in Sources */ = {isa = PBXBuildFile; fileRef = F574A2840EAE2EAC003F2CB1 /* PBRefController.m */; };
 		F574A2910EAE2FF4003F2CB1 /* PBGitConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = 93FCCBA80EA8AF450061B02B /* PBGitConfig.m */; };
 		F57CC3910E05DDF2000472E2 /* PBEasyPipe.m in Sources */ = {isa = PBXBuildFile; fileRef = F57CC3900E05DDF2000472E2 /* PBEasyPipe.m */; };
 		F57CC4410E05E496000472E2 /* PBGitWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = F57CC4400E05E496000472E2 /* PBGitWindowController.m */; };
@@ -161,6 +162,8 @@
 		F56CC7300E65E0E5004307B4 /* PBGraphCellInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PBGraphCellInfo.h; sourceTree = "<group>"; };
 		F56CC7310E65E0E5004307B4 /* PBGraphCellInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PBGraphCellInfo.m; sourceTree = "<group>"; };
 		F57240BA0E9678EA00D8EE66 /* deleted_file.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = deleted_file.png; path = Images/deleted_file.png; sourceTree = "<group>"; };
+		F574A2830EAE2EAC003F2CB1 /* PBRefController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PBRefController.h; sourceTree = "<group>"; };
+		F574A2840EAE2EAC003F2CB1 /* PBRefController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PBRefController.m; sourceTree = "<group>"; };
 		F57CC38F0E05DDF2000472E2 /* PBEasyPipe.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PBEasyPipe.h; sourceTree = "<group>"; };
 		F57CC3900E05DDF2000472E2 /* PBEasyPipe.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PBEasyPipe.m; sourceTree = "<group>"; };
 		F57CC43F0E05E496000472E2 /* PBGitWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PBGitWindowController.h; sourceTree = "<group>"; };
@@ -498,6 +501,8 @@
 				F565262A0E03D89B00F03B52 /* PBWebHistoryController.m */,
 				F52BCE050E84211300AA3741 /* PBGitHistoryController.h */,
 				F52BCE060E84211300AA3741 /* PBGitHistoryController.m */,
+				F574A2830EAE2EAC003F2CB1 /* PBRefController.h */,
+				F574A2840EAE2EAC003F2CB1 /* PBRefController.m */,
 			);
 			name = History;
 			sourceTree = "<group>";
@@ -649,6 +654,7 @@
 				F5FE6C030EB13BC900F30D12 /* PBServicesController.m in Sources */,
 				F50A41230EBB875D00208746 /* PBNiceSplitView.m in Sources */,
 				F5FC41F40EBCBD4300191D80 /* PBGitXProtocol.m in Sources */,
+				F574A2850EAE2EAC003F2CB1 /* PBRefController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

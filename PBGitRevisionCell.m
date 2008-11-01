@@ -143,45 +143,65 @@
 	return [NSColor yellowColor];
 }
 
-- (void) drawRefsInRect: (NSRect*) rect
+-(NSArray *)rectsForRefsinRect:(NSRect) rect;
 {
-	static const float ref_padding = 10.0f;
-	static const float ref_spacing = 2.0f;
+	NSMutableArray *array = [NSMutableArray array];
+	
+	static const int ref_padding = 10;
+	static const int ref_spacing = 2;
+	
+	NSRect lastRect = rect;
+	lastRect.origin.x = round(lastRect.origin.x) - 0.5;
+	lastRect.origin.y = round(lastRect.origin.y) - 0.5;
+	
+	for (PBGitRef *ref in self.objectValue.refs) {
+		NSMutableDictionary* attributes = [self attributesForRefLabelSelected:NO isCurrentBranch:NO];
+		NSSize textSize = [[ref shortName] sizeWithAttributes:attributes];
+		
+		NSRect newRect = lastRect;
+		newRect.size.width = textSize.width + ref_padding;
+		newRect.size.height = textSize.height;
+		newRect.origin.y = rect.origin.y + (rect.size.height - newRect.size.height) / 2;
+		
+		[array addObject:[NSValue valueWithRect:newRect]];
+		lastRect = newRect;
+		lastRect.origin.x += (int)lastRect.size.width + ref_spacing;
+	}
+	
+	return array;
+}
 
-	NSArray* refs = [self.objectValue refs];
-	NSRect refRect = (NSRect){rect->origin, rect->size};
+- (void) drawLabelAtIndex:(int)index inRect:(NSRect)rect
+{
+	NSArray *refs = self.objectValue.refs;
+	PBGitRef *ref = [refs objectAtIndex:index];
+	BOOL isCurBranch = [ref.ref isEqualToString:[[[controller repository] headRef] simpleRef]];
+	
+	NSMutableDictionary* attributes = [self attributesForRefLabelSelected:[self isHighlighted]
+														  isCurrentBranch:isCurBranch];
+	NSBezierPath *border = [NSBezierPath bezierPathWithRoundedRect:rect cornerRadius: 2.0];
+	[[self colorForRef:ref] set];
+	[border fill];
+	
+	[[ref shortName] drawInRect:rect withAttributes:attributes];
+	[border stroke];	
+}
 
+- (void) drawRefsInRect: (NSRect *)refRect
+{
 	[[NSColor blackColor] setStroke];
 
-	int index;
-	for (index = 0; index < [refs count]; ++index) {
-		PBGitRef *ref         = [refs objectAtIndex:index];
-		BOOL      isCurBranch = [ref.ref isEqualToString:[[[controller repository] headRef] simpleRef]];
-
-		NSMutableDictionary* attributes = [self attributesForRefLabelSelected:[self isHighlighted]
-															  isCurrentBranch:isCurBranch];
-		NSSize refSize = [[ref shortName] sizeWithAttributes:attributes];
-		
-		refRect.size.width = refSize.width + ref_padding;
-		refRect.size.height = refSize.height;
-		refRect.origin.y = rect->origin.y + (rect->size.height - refRect.size.height) / 2; 
-		
-		// Round rects to 0.5 pixels in order to draw only a single pixel
-		refRect.origin.x = round(refRect.origin.x) - 0.5;
-		refRect.origin.y = round(refRect.origin.y) - 0.5;
-
-		NSBezierPath *border = [NSBezierPath bezierPathWithRoundedRect:refRect cornerRadius: 2.0];
-		[[self colorForRef: ref] set];
-		[border fill];
-
-		[[ref shortName] drawInRect:refRect withAttributes:attributes];
-		[border stroke];
-
-		refRect.origin.x += (int)refRect.size.width + ref_spacing;
+	NSRect lastRect;
+	int index = 0;
+	for (NSValue *rectValue in [self rectsForRefsinRect:*refRect])
+	{
+		NSRect rect = [rectValue rectValue];
+		[self drawLabelAtIndex:index inRect:rect];
+		lastRect = rect;
+		++index;
 	}
-
-	rect->size.width -= refRect.origin.x - rect->origin.x;
-	rect->origin.x    = refRect.origin.x;
+	refRect->size.width -= lastRect.origin.x - refRect->origin.x + lastRect.size.width;
+	refRect->origin.x    = lastRect.origin.x + lastRect.size.width;
 }
 
 - (void) drawWithFrame: (NSRect) rect inView:(NSView *)view
@@ -207,6 +227,7 @@
 			[self drawCircleInRect: ownRect];
 	}
 
+
 	if ([self.objectValue refs])
 		[self drawRefsInRect:&rect];
 
@@ -224,6 +245,37 @@
 
 - (PBGitCommit*) objectValue {
     return [[super objectValue] nonretainedObjectValue];
+}
+
+- (int) indexAtX:(float)x
+{
+	cellInfo = [self.objectValue lineInfo];
+	float pathWidth = 0;
+	if (cellInfo && ![controller hasNonlinearPath])
+		pathWidth = 10 + 10 * cellInfo.numColumns;
+
+	int index = 0;
+	NSRect refRect = NSMakeRect(pathWidth, 0, 1000, 10000);
+	for (NSValue *rectValue in [self rectsForRefsinRect:refRect])
+	{
+		NSRect rect = [rectValue rectValue];
+		if (x >= rect.origin.x && x <= (rect.origin.x + rect.size.width))
+			return index;
+		++index;
+	}
+
+	return -1;
+}
+
+- (NSRect) rectAtIndex:(int)index
+{
+	cellInfo = [self.objectValue lineInfo];
+	float pathWidth = 0;
+	if (cellInfo && ![controller hasNonlinearPath])
+		pathWidth = 10 + 10 * cellInfo.numColumns;
+	NSRect refRect = NSMakeRect(pathWidth, 0, 1000, 10000);
+
+	return [[[self rectsForRefsinRect:refRect] objectAtIndex:index] rectValue];
 }
 
 @end

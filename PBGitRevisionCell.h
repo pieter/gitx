@@ -18,5 +18,9 @@
 	IBOutlet PBGitHistoryController *controller;
 }
 
+- (int) indexAtX:(float)x;
+- (NSRect) rectAtIndex:(int)index;
+- (void) drawLabelAtIndex:(int)index inRect:(NSRect)rect;
+
 @property(retain) PBGitCommit* objectValue;
 @end

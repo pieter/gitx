@@ -62,6 +62,14 @@
 	return [PBGitTree rootForCommit: self];
 }
 
+- (void)addRef:(id)ref
+{
+	if (!self.refs)
+		self.refs = [NSMutableArray arrayWithObject:ref];
+	else
+		[self.refs addObject:ref];
+}
+
 + (BOOL)isSelectorExcludedFromWebScript:(SEL)aSelector
 {
 	return NO;

@@ -14,6 +14,9 @@
 	IBOutlet WebView* webView;
 	IBOutlet PBWebHistoryController* webController;
 	IBOutlet PBGitHistoryController *controller;
+
+	NSPoint mouseDownPoint;
 }
 
+@property (readonly) NSPoint mouseDownPoint;
 @end

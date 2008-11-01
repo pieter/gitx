@@ -17,7 +17,7 @@
 	NSString* details;
 	NSString *_patch;
 	NSArray* parents;
-	NSArray* refs;
+	NSMutableArray* refs;
 	NSDate* date;
 	char sign;
 	id lineInfo;
@@ -26,10 +26,13 @@
 
 - initWithRepository:(PBGitRepository*) repo andSha:(NSString*) sha;
 
+- (void)addRef:(id)ref;
+
 @property (copy) NSString* sha;
 @property (copy) NSString* subject;
 @property (copy) NSString* author;
-@property (retain) NSArray* parents,  *refs;
+@property (retain) NSArray* parents;
+@property (retain) NSMutableArray* refs;
 @property (copy) NSDate* date;
 @property (readonly) NSString* dateString;
 @property (readonly) NSString* patch;
