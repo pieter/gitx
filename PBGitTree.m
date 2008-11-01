@@ -103,10 +103,7 @@
 	if (!localFileName)
 		localFileName = [PBEasyFS tmpDirWithPrefix: path];
 
-	NSLog(@"Exporting children..");
-
 	for (PBGitTree* child in [self children]) {
-		NSLog(@"Telling %@ to save to %@!", [child fullPath], localFileName);
 		[child saveToFolder: localFileName];
 	}
 	
@@ -142,7 +139,6 @@
 		return children;
 	
 	NSString* ref = [self refSpec];
-	NSLog(@"Starting get for %@", ref);
 
 	NSFileHandle* handle = [repository handleForArguments:[NSArray arrayWithObjects:@"show", ref, nil]];
 	[handle readLine];

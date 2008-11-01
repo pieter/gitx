@@ -107,7 +107,6 @@
 		
 		// If buffer is full, we go for another round
 		if (buffer[BUFFERSIZE - 2] != 0) {
-			//NSLog(@"Line too long!");
 			buffer[BUFFERSIZE - 2] = 0;
 			continue;
 		}

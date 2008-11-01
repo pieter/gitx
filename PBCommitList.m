@@ -14,7 +14,6 @@
 @synthesize mouseDownPoint;
 - (NSDragOperation)draggingSourceOperationMaskForLocal:(BOOL) local
 {
-	NSLog(@"a");
 	return NSDragOperationCopy;
 }
 

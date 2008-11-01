@@ -19,7 +19,6 @@
 	[defaultValues setObject:[NSNumber numberWithInt:kDefaultVerticalLineLength]
                       forKey:kCommitMessageViewVerticalLineLength];
 	[[NSUserDefaults standardUserDefaults] registerDefaults:defaultValues];
-	NSLog(@"registered defaults: %@", defaultValues);
 }
 
 + (int) commitMessageViewVerticalLineLength

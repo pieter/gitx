@@ -80,10 +80,7 @@
 
 - (void) removeRef:(RefMenuItem *)sender
 {
-	NSLog(@"Removing ref: %@", [sender ref]);
-	if ([historyController.repository removeRef: [sender ref]])
-		NSLog(@"Deletion succesful!");
-	else
+	if (![historyController.repository removeRef: [sender ref]])
 		NSLog(@"Deletion failed!");
 }
 
