@@ -27,6 +27,7 @@
 - initWithRepository:(PBGitRepository*) repo andSha:(NSString*) sha;
 
 - (void)addRef:(id)ref;
+- (void)removeRef:(id)ref;
 
 @property (copy) NSString* sha;
 @property (copy) NSString* subject;

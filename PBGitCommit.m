@@ -70,6 +70,16 @@
 		[self.refs addObject:ref];
 }
 
+- (void)removeRef:(id)ref
+{
+	if (!self.refs)
+		return;
+
+	[refs removeObject:ref];
+	if ([refs count] == 0)
+		refs = NULL;
+}
+
 + (BOOL)isSelectorExcludedFromWebScript:(SEL)aSelector
 {
 	return NO;

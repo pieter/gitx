@@ -88,10 +88,7 @@
 		return NO;
 	
 	[dropCommit addRef:ref];
-	
-	[oldCommit.refs removeObject:ref];
-	if ([oldCommit.refs count] == 0)
-		oldCommit.refs = NULL;
+	[oldCommit removeRef:ref];
 	
 	[commitController rearrangeObjects];
 	[aTableView needsToDrawRect:[aTableView rectOfRow:oldRow]];
