@@ -10,12 +10,14 @@
 #import "PBGitGrapher.h"
 #import "PBGraphCellInfo.h"
 #import "PBGitHistoryController.h"
+#import "PBRefContextDelegate.h"
 
 @interface PBGitRevisionCell : NSActionCell {
 	id objectValue;
 	PBGraphCellInfo *cellInfo;
 	NSTextFieldCell *textCell;
 	IBOutlet PBGitHistoryController *controller;
+	IBOutlet id<PBRefContextDelegate> contextMenuDelegate;
 }
 
 - (int) indexAtX:(float)x;

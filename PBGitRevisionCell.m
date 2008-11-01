@@ -278,4 +278,27 @@
 	return [[[self rectsForRefsinRect:refRect] objectAtIndex:index] rectValue];
 }
 
+# pragma mark context menu delegate methods
+
+- (NSMenu *) menuForEvent:(NSEvent *)event inRect:(NSRect)rect ofView:(NSView *)view
+{
+	if (!contextMenuDelegate)
+		return [self menu];
+
+	int i = [self indexAtX:[view convertPointFromBase:[event locationInWindow]].x];
+	if (i < 0)
+		return [self menu];
+
+	id ref = [[[self objectValue] refs] objectAtIndex:i];
+	if (!ref)
+		return [self menu];
+
+	NSArray *items = [contextMenuDelegate menuItemsForRef:ref commit:[self objectValue]];
+	NSMenu *menu = [[NSMenu alloc] init];
+	for (NSMenuItem *item in items)
+		[menu addItem:item];
+	return menu;
+
+	return [self menu];
+}
 @end

@@ -11,8 +11,9 @@
 #import "PBCommitList.h"
 #import "PBGitRef.h"
 #import "PBGitCommit.h"
+#import "PBRefContextDelegate.h"
 
-@interface PBRefController : NSObject {
+@interface PBRefController : NSObject <PBRefContextDelegate> {
 	IBOutlet __weak PBGitHistoryController *historyController;
 	IBOutlet NSArrayController *commitController;
 	IBOutlet PBCommitList *commitList;

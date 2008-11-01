@@ -11,11 +11,11 @@
 
 #import "PBGitCommit.h"
 #import "PBGitHistoryController.h"
-#import "PBRefController.h"
+#import "PBRefContextDelegate.h"
 
 @interface PBWebHistoryController : PBWebController {
 	IBOutlet PBGitHistoryController* historyController;
-	IBOutlet PBRefController *refController;
+	IBOutlet id<PBRefContextDelegate> contextMenuDelegate;
 
 	NSString* currentSha;
 	NSString* diff;
