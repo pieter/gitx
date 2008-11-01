@@ -52,8 +52,17 @@ static NSString* gitPath = nil;
 	// Check what we might have in user defaults
 	// NOTE: Currently this should NOT have a registered default, or the searching bits below won't work
 	gitPath = [[NSUserDefaults standardUserDefaults] stringForKey:@"gitExecutable"];
-	if (gitPath.length > 0)
-		return;
+	if (gitPath.length > 0) {
+		if ([self acceptBinary:gitPath])
+			return;
+		[[NSAlert alertWithMessageText:@"Invalid git path"
+						defaultButton:@"OK"
+					  alternateButton:nil
+						  otherButton:nil
+			informativeTextWithFormat:@"You entered a custom git path in the Preferences pane, "
+		 "but this path is not a valid git v1.5.4 or higher binary. We're going to use the default "
+		 "search paths instead"] runModal];
+	}
 
 	// Try to find the path of the Git binary
 	char* path = getenv("GIT_PATH");
