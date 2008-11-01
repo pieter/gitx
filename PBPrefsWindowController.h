@@ -25,5 +25,6 @@
 - (IBAction) checkGitValidity: sender;
 - (void)pathCell:(NSPathCell *)pathCell willDisplayOpenPanel:(NSOpenPanel *)openPanel;
 - (IBAction) showHideAllFiles: sender;
+- (IBAction) resetGitPath: sender;
 
 @end

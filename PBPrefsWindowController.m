@@ -30,6 +30,11 @@
 	//[badGitPathIcon setHidden:[PBGitRepository validateGit:[[NSValueTransformer valueTransformerForName:@"PBNSURLPathUserDefaultsTransfomer"] reverseTransformedValue:[gitPathController URL]]]];
 }
 
+- (IBAction) resetGitPath: sender
+{
+	[[NSUserDefaults standardUserDefaults] removeObjectForKey:@"gitExecutable"];
+}
+
 - (void)pathCell:(NSPathCell *)pathCell willDisplayOpenPanel:(NSOpenPanel *)openPanel
 {
 	[openPanel setCanChooseDirectories:NO];
