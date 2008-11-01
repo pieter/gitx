@@ -34,6 +34,7 @@ extern NSString* PBGitRepositoryErrorDomain;
 - (NSString*) outputForArguments:(NSArray*) args;
 - (NSString*) outputForArguments:(NSArray*) args retValue:(int *)ret;
 - (NSString *)outputInWorkdirForArguments:(NSArray*) arguments;
+- (NSString *)outputInWorkdirForArguments:(NSArray*) arguments retValue:(int *)ret;
 
 - (NSString *)workingDirectory;
 

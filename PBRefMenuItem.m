@@ -24,10 +24,10 @@
 	[array addObject:[[PBRefMenuItem alloc] initWithTitle:[@"Delete " stringByAppendingString:type]
 												   action:@selector(removeRef:)
 											keyEquivalent: @""]];
-	
-	[array addObject:[[PBRefMenuItem alloc] initWithTitle:[@"Checkout " stringByAppendingString:type]
-												   action:@selector(checkoutRef:)
-											keyEquivalent: @""]];
+	if ([type isEqualToString:@"branch"])
+		[array addObject:[[PBRefMenuItem alloc] initWithTitle:@"Checkout branch"
+													   action:@selector(checkoutRef:)
+												keyEquivalent: @""]];
 	
 	for (PBRefMenuItem *item in array)
 	{

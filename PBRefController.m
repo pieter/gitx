@@ -30,6 +30,21 @@
 	[commitController rearrangeObjects];
 }
 
+- (void) checkoutRef:(PBRefMenuItem *)sender
+{
+	int ret = 1;
+	[historyController.repository outputInWorkdirForArguments:[NSArray arrayWithObjects:@"checkout", [[sender ref] shortName], nil] retValue: &ret];
+	if (ret) {
+		[[NSAlert alertWithMessageText:@"Checking out branch failed"
+						 defaultButton:@"OK"
+					   alternateButton:nil
+						   otherButton:nil
+			 informativeTextWithFormat:@"There was an error checking out the branch. Perhaps your working directory is not clean?"] runModal];
+		return;
+	}
+	[historyController.repository reloadRefs];
+}
+
 - (NSArray *) menuItemsForRef:(PBGitRef *)ref commit:(PBGitCommit *)commit
 {
 	return [PBRefMenuItem defaultMenuItemsForRef:ref commit:commit target:self];
