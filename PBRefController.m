@@ -8,17 +8,7 @@
 
 #import "PBRefController.h"
 #import "PBGitRevisionCell.h"
-@interface RefMenuItem : NSMenuItem
-{
-	PBGitRef *ref;
-	PBGitCommit *commit;
-}
-@property (retain) PBGitCommit *commit;
-@property (retain) PBGitRef *ref;
-@end
-@implementation RefMenuItem
-@synthesize ref, commit;
-@end
+#import "PBRefMenuItem.h"
 
 @implementation PBRefController
 
@@ -27,7 +17,7 @@
 	[commitList registerForDraggedTypes:[NSArray arrayWithObject:@"PBGitRef"]];
 }
 
-- (void) removeRef:(RefMenuItem *) sender
+- (void) removeRef:(PBRefMenuItem *) sender
 {
 	int ret = 1;
 	[historyController.repository outputForArguments:[NSArray arrayWithObjects:@"update-ref", @"-d", [[sender ref] ref], nil] retValue: &ret];
@@ -42,13 +32,7 @@
 
 - (NSArray *) menuItemsForRef:(PBGitRef *)ref commit:(PBGitCommit *)commit
 {
-	RefMenuItem *item = [[RefMenuItem alloc] initWithTitle:@"Remove"
-													action:@selector(removeRef:)
-											 keyEquivalent: @""];
-	[item setTarget: self];
-	[item setRef: ref];
-	[item setCommit:commit];
-	return [NSArray arrayWithObject: item];
+	return [PBRefMenuItem defaultMenuItemsForRef:ref commit:commit target:self];
 }
 
 # pragma mark Tableview delegate methods
