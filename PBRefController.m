@@ -97,4 +97,37 @@
 	[aTableView needsToDrawRect:[aTableView rectOfRow:oldRow]];
 	return YES;
 }
+
+# pragma mark Add ref methods
+-(void)addRef:(id)sender
+{
+	[NSApp beginSheet:newBranchSheet
+	   modalForWindow:[[historyController view] window]
+		modalDelegate:NULL
+	   didEndSelector:NULL
+		  contextInfo:NULL];
+}
+
+-(void)saveSheet:(id) sender
+{
+	NSString *branchName = [@"refs/heads/" stringByAppendingString:[newBranchName stringValue]];
+	[self closeSheet:sender];
+	
+	if ([[commitController selectedObjects] count] == 0)
+		return;
+	
+	PBGitCommit *commit = [[commitController selectedObjects] objectAtIndex:0];
+	int retValue = 1;
+	[historyController.repository outputForArguments:[NSArray arrayWithObjects:@"update-ref", @"-mCreate branch from GitX", branchName, [commit sha], NULL] retValue:&retValue];
+	[commit addRef:[PBGitRef refFromString:branchName]];
+	[commitController rearrangeObjects];
+}
+
+-(void)closeSheet:(id) sender
+{	
+	[NSApp endSheet:newBranchSheet];
+	[newBranchName setStringValue:@""];
+	[newBranchSheet orderOut:self];
+}
+
 @end

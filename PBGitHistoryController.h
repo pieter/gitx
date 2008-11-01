@@ -17,7 +17,7 @@
 	IBOutlet NSArrayController *branchesController;
 	IBOutlet NSTreeController* treeController;
 	IBOutlet NSOutlineView* fileBrowser;
-	IBOutlet NSTableView* commitList;	
+	IBOutlet NSTableView* commitList;
 
 	IBOutlet id webView;
 	int selectedTab;

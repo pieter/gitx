@@ -194,4 +194,5 @@
 	[webView close];
 	[super removeView];
 }
+
 @end

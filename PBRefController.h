@@ -14,6 +14,13 @@
 	IBOutlet __weak PBGitHistoryController *historyController;
 	IBOutlet NSArrayController *commitController;
 	IBOutlet PBCommitList *commitList;
+
+	IBOutlet NSWindow *newBranchSheet;
+	IBOutlet NSTextField *newBranchName;
 }
+
+- (IBAction) addRef:(id)sender;
+- (IBAction)closeSheet:(id) sender;
+- (IBAction)saveSheet:(id) sender;
 
 @end
