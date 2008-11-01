@@ -16,9 +16,13 @@
 
 	// For async git reading
 	NSMapTable *callbacks;
+
+	// For the repository access
+	IBOutlet id repository;
 }
 
 @property (retain) NSString *startFile;
+@property (retain) id repository;
 
 - (WebScriptObject *) script;
 @end

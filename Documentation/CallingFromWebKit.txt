@@ -79,3 +79,23 @@ async, which means that it doesn't matter if it takes a long time to run.
 While you can have direct access to most objects, sometimes it is useful to
 have an async task, for example if the operation can take a long time. Use
 this function to keep the UI responsive.
+
+Loading files from WebKit
+=========================
+
+All views that have a subclass of PBWebController set as ResourceLoadDelegate
+(this happens automatically if you assign a view to your controllers) gain
+access to the GitX:// protocol. This protocol allows you to load in blobs from
+the repository. The format is as follows:
+
+	GitX://REVISION/path/to/file
+
+Which means that revision can't have a path separator in it (so HEAD is valid,
+but pu/pb/fix_it is not). You also can't just pass on a blob oid. These things
+will probably be fixed in future revisions of the protocol.
+
+What this allows you to do, for instance, is to display images that have
+changed. For example, if you want to show the new file from a diff, you can
+use something like
+
+	<img src="GitX://HEAD:Images/new_file.png">

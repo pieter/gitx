@@ -12,6 +12,7 @@
 #import "PBRepositoryDocumentController.h"
 #import "PBCLIProxy.h"
 #import "PBServicesController.h"
+#import "PBGitXProtocol.h"
 
 @implementation ApplicationController
 @synthesize cliProxy;
@@ -34,6 +35,9 @@
 
 - (void)registerServices
 {
+	// Register URL
+	[NSURLProtocol registerClass:[PBGitXProtocol class]];
+
 	// Register the service class
 	PBServicesController *services = [[PBServicesController alloc] init];
 	[NSApp setServicesProvider:services];

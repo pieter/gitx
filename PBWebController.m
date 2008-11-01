@@ -8,11 +8,13 @@
 
 #import "PBWebController.h"
 #import "PBGitRepository.h"
+#import "PBGitXProtocol.h"
+
 #include <SystemConfiguration/SCNetworkReachability.h>
 
 @implementation PBWebController
 
-@synthesize startFile;
+@synthesize startFile, repository;
 
 - (void) awakeFromNib
 {
@@ -25,6 +27,7 @@
 	finishedLoading = NO;
 	[view setUIDelegate:self];
 	[view setFrameLoadDelegate:self];
+	[view setResourceLoadDelegate:self];
 	[[view mainFrame] loadRequest:request];
 }
 
@@ -49,6 +52,26 @@
 {
 	NSLog(@"Error from webkit: %@", dictionary);
 }
+
+- (NSURLRequest *)webView:(WebView *)sender
+                 resource:(id)identifier
+          willSendRequest:(NSURLRequest *)request
+         redirectResponse:(NSURLResponse *)redirectResponse
+           fromDataSource:(WebDataSource *)dataSource
+{
+	if (!self.repository)
+		return request;
+
+	// TODO: Change this to canInitWithRequest
+	if ([[[request URL] scheme] isEqualToString:@"GitX"]) {
+		NSMutableURLRequest *newRequest = [request mutableCopy];
+		[newRequest setRepository:self.repository];
+		return newRequest;
+	}
+
+	return request;
+}
+
 
 + (BOOL)isSelectorExcludedFromWebScript:(SEL)aSelector
 {
@@ -81,7 +104,7 @@
 
 #pragma mark Using async function from JS
 
-- (void) runCommand:(WebScriptObject *)arguments inRepository:(PBGitRepository *)repository callBack:(WebScriptObject *)callBack
+- (void) runCommand:(WebScriptObject *)arguments inRepository:(PBGitRepository *)repo callBack:(WebScriptObject *)callBack
 {
 	// The JS bridge does not handle JS Arrays, even though the docs say it does. So, we convert it ourselves.
 	int length = [[arguments valueForKey:@"length"] intValue];
@@ -90,7 +113,7 @@
 	for (i = 0; i < length; i++)
 		[realArguments addObject:[arguments webScriptValueAtIndex:i]];
 
-	NSFileHandle *handle = [repository handleInWorkDirForArguments:realArguments];
+	NSFileHandle *handle = [repo handleInWorkDirForArguments:realArguments];
 	[callbacks setObject:callBack forKey:handle];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(JSRunCommandDone:) name:NSFileHandleReadToEndOfFileCompletionNotification object:handle]; 
 	[handle readToEndOfFileInBackgroundAndNotify];

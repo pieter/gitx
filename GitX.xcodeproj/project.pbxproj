@@ -68,6 +68,7 @@
 		F5E92A1B0E88550E00056E75 /* empty_file.png in Resources */ = {isa = PBXBuildFile; fileRef = F5E92A1A0E88550E00056E75 /* empty_file.png */; };
 		F5E92A230E88569500056E75 /* new_file.png in Resources */ = {isa = PBXBuildFile; fileRef = F5E92A220E88569500056E75 /* new_file.png */; };
 		F5EF8C8E0E9D4A5D0050906B /* PBWebController.m in Sources */ = {isa = PBXBuildFile; fileRef = F5EF8C8D0E9D4A5D0050906B /* PBWebController.m */; };
+		F5FC41F40EBCBD4300191D80 /* PBGitXProtocol.m in Sources */ = {isa = PBXBuildFile; fileRef = F5FC41F30EBCBD4300191D80 /* PBGitXProtocol.m */; };
 		F5FE6C030EB13BC900F30D12 /* PBServicesController.m in Sources */ = {isa = PBXBuildFile; fileRef = F5FE6C020EB13BC900F30D12 /* PBServicesController.m */; };
 		F5FF4E180E0829C20006317A /* PBGitRevList.m in Sources */ = {isa = PBXBuildFile; fileRef = F5FF4E170E0829C20006317A /* PBGitRevList.m */; };
 		F5FF4E7A0E082E440006317A /* PBGitGrapher.m in Sources */ = {isa = PBXBuildFile; fileRef = F5FF4E790E082E440006317A /* PBGitGrapher.m */; };
@@ -199,6 +200,8 @@
 		F5E92A220E88569500056E75 /* new_file.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = new_file.png; path = Images/new_file.png; sourceTree = "<group>"; };
 		F5EF8C8C0E9D4A5D0050906B /* PBWebController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PBWebController.h; sourceTree = "<group>"; };
 		F5EF8C8D0E9D4A5D0050906B /* PBWebController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PBWebController.m; sourceTree = "<group>"; };
+		F5FC41F20EBCBD4300191D80 /* PBGitXProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PBGitXProtocol.h; sourceTree = "<group>"; };
+		F5FC41F30EBCBD4300191D80 /* PBGitXProtocol.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PBGitXProtocol.m; sourceTree = "<group>"; };
 		F5FE6C010EB13BC900F30D12 /* PBServicesController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PBServicesController.h; sourceTree = "<group>"; };
 		F5FE6C020EB13BC900F30D12 /* PBServicesController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PBServicesController.m; sourceTree = "<group>"; };
 		F5FF4E160E0829C20006317A /* PBGitRevList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PBGitRevList.h; sourceTree = "<group>"; };
@@ -410,6 +413,8 @@
 				F56244080E9684B0002B6C44 /* PBUnsortableTableHeader.m */,
 				F50A41210EBB875D00208746 /* PBNiceSplitView.h */,
 				F50A41220EBB875D00208746 /* PBNiceSplitView.m */,
+				F5FC41F20EBCBD4300191D80 /* PBGitXProtocol.h */,
+				F5FC41F30EBCBD4300191D80 /* PBGitXProtocol.m */,
 			);
 			name = Aux;
 			sourceTree = "<group>";
@@ -643,6 +648,7 @@
 				F5E424180EA3E4EB0046E362 /* PBWebDiffController.m in Sources */,
 				F5FE6C030EB13BC900F30D12 /* PBServicesController.m in Sources */,
 				F50A41230EBB875D00208746 /* PBNiceSplitView.m in Sources */,
+				F5FC41F40EBCBD4300191D80 /* PBGitXProtocol.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
