@@ -117,7 +117,7 @@
 			[self performSelectorOnMainThread:@selector(setCommits:) withObject:revisions waitUntilDone:NO];
 			g = [[PBGitGrapher alloc] initWithRepository: repository];
 			revisions = [NSMutableArray array];
-			currentLine = [NSMutableString string];
+			[currentLine = setString: @""];
 			continue;
 		}
 
@@ -125,7 +125,7 @@
 		NSArray* components = [currentLine componentsSeparatedByString:@"\01"];
 		if ([components count] < 5) {
 			NSLog(@"Can't split string: %@", currentLine);
-			currentLine = [NSMutableString string];
+			[currentLine = setString: @""];
 			continue;
 		}
 
@@ -148,13 +148,11 @@
 			[self performSelectorOnMainThread:@selector(setCommits:) withObject:revisions waitUntilDone:NO];
 
 	
-		currentLine = [NSMutableString string];
+		[currentLine = setString: @""];
 	}
 	
 	// Make sure the commits are stored before exiting.
 	[self performSelectorOnMainThread:@selector(setCommits:) withObject:revisions waitUntilDone:YES];
-	
-	[NSThread exit];
 }
 
 @end
