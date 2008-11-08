@@ -81,7 +81,7 @@
 - (IBAction)installCliTool:(id)sender;
 {
 	BOOL success               = NO;
-	NSString* installationPath = @"/usr/bin/gitx";
+	NSString* installationPath = @"/usr/local/bin/gitx";
 	NSString* toolPath         = [[NSBundle mainBundle] pathForResource:@"gitx" ofType:@""];
 	if (toolPath) {
 		AuthorizationRef auth;
