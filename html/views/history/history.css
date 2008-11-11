@@ -54,12 +54,39 @@ a.servicebutton{
 	font-weight: bold;
 }
 
+
+#message_files {
+	margin: 5px;
+	padding-left: 1em;
+	width: auto;
+}
+
 #message {
 	font-family: Monaco;
-	margin: 5px;
-	margin-left: 20px;
-	width: auto;
-	font-size: 12px;
+	font-size: 10px;
+}
+
+#files {
+	margin-top: 1em;
+	font-family: Monaco;
+	font-size: 10px;
+}
+
+#files a {
+	color: #666666;
+}
+
+#files a:hover {
+	color: #4444ff;
+}
+
+.clear_both {
+	clear:both;
+	display:block;
+	height:1px;
+	line-height:0;
+	margin:1em;
+	visibility:hidden;
 }
 
 #details {

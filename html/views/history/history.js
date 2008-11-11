@@ -33,6 +33,13 @@ var Commit = function(obj) {
 
 		this.author_date = new Date(parseInt(match[3]) * 1000);
 
+		this.files = this.raw.match(/diff --git a\/\S*/g);
+		
+		for (var i=0; i < this.files.length; i++) {
+			var match = this.files[i].match(/diff --git a\/(.*)/);
+			this.files[i] = match[1];
+		}
+
 		match = this.header.match(/\ncommitter (.*) <(.*@.*)> ([0-9].*)/);
 		this.committer_name = match[1];
 		this.committer_email = match[2];
@@ -153,6 +160,7 @@ var loadCommit = function(commitObject, currentRef) {
 	$("subjectID").innerHTML = commit.subject.escapeHTML();
 	$("details").innerHTML = ""
 	$("message").innerHTML = ""
+	$("files").innerHTML = ""
 	$("date").innerHTML = ""
 	showRefs();
 
@@ -180,6 +188,15 @@ var loadExtendedCommit = function(commit)
 
 	$("date").innerHTML = commit.author_date;
 	$("message").innerHTML = commit.message.replace(/\n/g,"<br>");
+
+	if (commit.files)
+		var commit_file_links = commit.files;
+		for (var i=0; i < commit_file_links.length; i++) {
+			index = i+1;
+			commit_file_links[i] = "<a href='#file_index_" + i + "'>" + commit.files[i] + "</a>";
+		}
+		
+		$("files").innerHTML = commit_file_links.join("<br>");
 
 	if (commit.diff.length < 200000) {
 		showDiffs();

@@ -13,6 +13,8 @@ var highlightDiffs = function() {
 		var diff = diffs[diffn];
 
 		var content = diff.innerHTML.replace(/\t/g, "    ");;
+		
+		var file_index = 0;
 
 		var line1 = "";
 		var line2 = "";
@@ -33,10 +35,12 @@ var highlightDiffs = function() {
 				if (firstChar == "+" || firstChar == "-")
 					continue;
 			} else if (firstChar == "d") {
+				++file_index;
 				header = true;
 				line1 += '\n';
 				line2 += '\n';
-				diffContent += '<div class="fileHeader"><span class="fileline">' + l + '</span></div>';
+				var match = l.match(/diff --git a\/(\S*)/);
+				diffContent += '</div><div class="fileHeader" id="file_index_' + file_index + '">' + file_index + ' <span class="fileline">' + match[1] + '</span></div>';
 				continue;
 			}
 

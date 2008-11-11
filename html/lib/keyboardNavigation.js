@@ -2,13 +2,21 @@ var scrollToCenter = function(element) {
     window.scrollTo(0, element.offsetTop);
 }
 
+var scrollToTop = function(element) {
+	element.scrollIntoView(true);
+}
+
 var handleKeys = function(event) {
-	if (event.altKey || event.ctrlKey || event.metaKey || event.shiftKey)
+	if (event.altKey || event.metaKey || event.shiftKey)
 		return;
 	if (event.keyCode == 74)
 		return changeHunk(true);
 	else if (event.keyCode == 75)
 		return changeHunk(false);
+	else if (event.keyCode == 40 && event.ctrlKey == true) // ctrl-down_arrow
+		return changeFile(true);
+	else if (event.keyCode == 38 && event.ctrlKey == true) // ctrl-up_arrow
+		return changeFile(false);
 	else if (event.keyCode == 86) {// 'v'
 		showDiffs();
 		return false;
@@ -21,6 +29,10 @@ var handleKeyFromCocoa = function(key) {
 		changeHunk(true);
 	else if (key == 'k')
 		changeHunk(false);
+	else if (event.keyCode == 40 && event.ctrlKey == true) // ctrl-down_arrow
+		changeFile(true);
+	else if (event.keyCode == 38 && event.ctrlKey == true) // ctrl-up_arrow
+		changeFile(false);
 	else if (key == 'v')
 		showDiffs();
 	else if (key == 'c')
@@ -54,6 +66,42 @@ var changeHunk = function(next) {
 
 	newHunk.id = 'CurrentHunk';
 	scrollToCenter(newHunk);
+	return false;
+}
+
+var changeFile = function(next) {
+	var files = document.getElementsByClassName("fileHeader");
+	
+	if (files.length == 0)
+		return;
+	
+	var currentFile = document.getElementById("CurrentFile");
+	var newFile;
+	
+	var index = -1;
+	for (; index < files.length; ++index) {
+		if (files[index] == currentFile)
+			break;
+	}
+	
+	if (currentFile && index >= 0) {
+		currentFile.id = null;
+		
+		if (next) {
+			if (index <= files.length-1)
+				newFile = files[index + 1];			
+		}
+		else {
+			newFile = files[index - 1];
+			if (!newFile)
+				newFile = files[files.length-1];
+		}
+	}
+	if (!newFile)
+		newFile = files[0];
+	
+	newFile.id = 'CurrentFile';
+	scrollToTop(newFile);
 	return false;
 }
 
