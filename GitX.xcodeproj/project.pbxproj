@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		056438B70ED0C40B00985397 /* DetailViewTemplate.png in Resources */ = {isa = PBXBuildFile; fileRef = 056438B60ED0C40B00985397 /* DetailViewTemplate.png */; };
 		770B37ED0679A11B001EADE2 /* GitTest_DataModel.xcdatamodel in Sources */ = {isa = PBXBuildFile; fileRef = 770B37EC0679A11B001EADE2 /* GitTest_DataModel.xcdatamodel */; };
 		77C8280E06725ACE000B614F /* ApplicationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 77C8280C06725ACE000B614F /* ApplicationController.m */; };
 		8D11072B0486CEB800E47090 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C165CFE840E0CC02AAC07 /* InfoPlist.strings */; };
@@ -25,7 +26,6 @@
 		F50A411F0EBB874C00208746 /* mainSplitterBar.tiff in Resources */ = {isa = PBXBuildFile; fileRef = F50A411D0EBB874C00208746 /* mainSplitterBar.tiff */; };
 		F50A41200EBB874C00208746 /* mainSplitterDimple.tiff in Resources */ = {isa = PBXBuildFile; fileRef = F50A411E0EBB874C00208746 /* mainSplitterDimple.tiff */; };
 		F50A41230EBB875D00208746 /* PBNiceSplitView.m in Sources */ = {isa = PBXBuildFile; fileRef = F50A41220EBB875D00208746 /* PBNiceSplitView.m */; };
-		F50A41D40EBB9B0400208746 /* add_branch.png in Resources */ = {isa = PBXBuildFile; fileRef = F50A41D30EBB9B0400208746 /* add_branch.png */; };
 		F50FE0E30E07BE9600854FCD /* PBGitRevisionCell.m in Sources */ = {isa = PBXBuildFile; fileRef = F50FE0E20E07BE9600854FCD /* PBGitRevisionCell.m */; };
 		F513085B0E0740F2000C8BCD /* PBQLOutlineView.m in Sources */ = {isa = PBXBuildFile; fileRef = F513085A0E0740F2000C8BCD /* PBQLOutlineView.m */; };
 		F5140DC90E8A8EB20091E9F3 /* RoundedRectangle.m in Sources */ = {isa = PBXBuildFile; fileRef = F5140DC80E8A8EB20091E9F3 /* RoundedRectangle.m */; };
@@ -36,12 +36,13 @@
 		F53C4DF90E97FCAD0022AD59 /* PBEasyPipe.m in Sources */ = {isa = PBXBuildFile; fileRef = F57CC3900E05DDF2000472E2 /* PBEasyPipe.m */; };
 		F53FF2050E7ABB5300389171 /* PBGitRevSpecifier.m in Sources */ = {isa = PBXBuildFile; fileRef = F53FF2040E7ABB5300389171 /* PBGitRevSpecifier.m */; };
 		F56174570E058893001DCD79 /* PBGitTree.m in Sources */ = {isa = PBXBuildFile; fileRef = F56174560E058893001DCD79 /* PBGitTree.m */; };
-		F561777D0E05C88E001DCD79 /* DetailView.png in Resources */ = {isa = PBXBuildFile; fileRef = F561777C0E05C88E001DCD79 /* DetailView.png */; };
 		F56244090E9684B0002B6C44 /* PBUnsortableTableHeader.m in Sources */ = {isa = PBXBuildFile; fileRef = F56244080E9684B0002B6C44 /* PBUnsortableTableHeader.m */; };
 		F56524BB0E02D22D00F03B52 /* NSFileHandleExt.m in Sources */ = {isa = PBXBuildFile; fileRef = F56524B90E02D22D00F03B52 /* NSFileHandleExt.m */; };
 		F56524F00E02D45200F03B52 /* PBGitCommit.m in Sources */ = {isa = PBXBuildFile; fileRef = F56524EF0E02D45200F03B52 /* PBGitCommit.m */; };
 		F56526240E03D85900F03B52 /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F56526230E03D85900F03B52 /* WebKit.framework */; };
 		F565262B0E03D89B00F03B52 /* PBWebHistoryController.m in Sources */ = {isa = PBXBuildFile; fileRef = F565262A0E03D89B00F03B52 /* PBWebHistoryController.m */; };
+		F56ADDD90ED19F9E002AC78F /* AddBranchTemplate.png in Resources */ = {isa = PBXBuildFile; fileRef = F56ADDD70ED19F9E002AC78F /* AddBranchTemplate.png */; };
+		F56ADDDA0ED19F9E002AC78F /* AddLabelTemplate.png in Resources */ = {isa = PBXBuildFile; fileRef = F56ADDD80ED19F9E002AC78F /* AddLabelTemplate.png */; };
 		F56CC7290E65E0AD004307B4 /* PBGitGraphLine.m in Sources */ = {isa = PBXBuildFile; fileRef = F56CC7280E65E0AD004307B4 /* PBGitGraphLine.m */; };
 		F56CC7320E65E0E5004307B4 /* PBGraphCellInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = F56CC7310E65E0E5004307B4 /* PBGraphCellInfo.m */; };
 		F57240BB0E9678EA00D8EE66 /* deleted_file.png in Resources */ = {isa = PBXBuildFile; fileRef = F57240BA0E9678EA00D8EE66 /* deleted_file.png */; };
@@ -101,6 +102,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		056438B60ED0C40B00985397 /* DetailViewTemplate.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = DetailViewTemplate.png; path = Images/DetailViewTemplate.png; sourceTree = "<group>"; };
 		089C165DFE840E0CC02AAC07 /* English */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = English; path = English.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
 		29B97316FDCFA39411CA2CEA /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -133,7 +135,6 @@
 		F50A411E0EBB874C00208746 /* mainSplitterDimple.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; name = mainSplitterDimple.tiff; path = Images/mainSplitterDimple.tiff; sourceTree = "<group>"; };
 		F50A41210EBB875D00208746 /* PBNiceSplitView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PBNiceSplitView.h; sourceTree = "<group>"; };
 		F50A41220EBB875D00208746 /* PBNiceSplitView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PBNiceSplitView.m; sourceTree = "<group>"; };
-		F50A41D30EBB9B0400208746 /* add_branch.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = add_branch.png; path = Images/add_branch.png; sourceTree = "<group>"; };
 		F50FE0E10E07BE9600854FCD /* PBGitRevisionCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PBGitRevisionCell.h; sourceTree = "<group>"; };
 		F50FE0E20E07BE9600854FCD /* PBGitRevisionCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PBGitRevisionCell.m; sourceTree = "<group>"; };
 		F51308590E0740F2000C8BCD /* PBQLOutlineView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PBQLOutlineView.h; sourceTree = "<group>"; };
@@ -150,7 +151,6 @@
 		F53FF2040E7ABB5300389171 /* PBGitRevSpecifier.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PBGitRevSpecifier.m; sourceTree = "<group>"; };
 		F56174550E058893001DCD79 /* PBGitTree.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PBGitTree.h; sourceTree = "<group>"; };
 		F56174560E058893001DCD79 /* PBGitTree.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PBGitTree.m; sourceTree = "<group>"; };
-		F561777C0E05C88E001DCD79 /* DetailView.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = DetailView.png; sourceTree = "<group>"; };
 		F56244070E9684B0002B6C44 /* PBUnsortableTableHeader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PBUnsortableTableHeader.h; sourceTree = "<group>"; };
 		F56244080E9684B0002B6C44 /* PBUnsortableTableHeader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PBUnsortableTableHeader.m; sourceTree = "<group>"; };
 		F56524B90E02D22D00F03B52 /* NSFileHandleExt.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSFileHandleExt.m; sourceTree = "<group>"; };
@@ -160,6 +160,8 @@
 		F56526230E03D85900F03B52 /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = /System/Library/Frameworks/WebKit.framework; sourceTree = "<absolute>"; };
 		F56526290E03D89B00F03B52 /* PBWebHistoryController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PBWebHistoryController.h; sourceTree = "<group>"; };
 		F565262A0E03D89B00F03B52 /* PBWebHistoryController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PBWebHistoryController.m; sourceTree = "<group>"; };
+		F56ADDD70ED19F9E002AC78F /* AddBranchTemplate.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = AddBranchTemplate.png; path = Images/AddBranchTemplate.png; sourceTree = "<group>"; };
+		F56ADDD80ED19F9E002AC78F /* AddLabelTemplate.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = AddLabelTemplate.png; path = Images/AddLabelTemplate.png; sourceTree = "<group>"; };
 		F56CC7270E65E0AD004307B4 /* PBGitGraphLine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PBGitGraphLine.h; sourceTree = "<group>"; };
 		F56CC7280E65E0AD004307B4 /* PBGitGraphLine.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PBGitGraphLine.m; sourceTree = "<group>"; };
 		F56CC7300E65E0E5004307B4 /* PBGraphCellInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PBGraphCellInfo.h; sourceTree = "<group>"; };
@@ -286,7 +288,6 @@
 				913D5E420E5563FD00CECEA2 /* cli */,
 				F57CC43E0E05E472000472E2 /* Aux */,
 				F57CC3850E05DDC1000472E2 /* Controllers */,
-				F561777C0E05C88E001DCD79 /* DetailView.png */,
 				F56174540E05887E001DCD79 /* Git */,
 				F5D619ED0EAE62EA00341D73 /* html */,
 				7756732906782D8800D1FEB8 /* Models */,
@@ -302,7 +303,9 @@
 		29B97315FDCFA39411CA2CEA /* Other Sources */ = {
 			isa = PBXGroup;
 			children = (
-				F50A41D30EBB9B0400208746 /* add_branch.png */,
+				F56ADDD70ED19F9E002AC78F /* AddBranchTemplate.png */,
+				F56ADDD80ED19F9E002AC78F /* AddLabelTemplate.png */,
+				056438B60ED0C40B00985397 /* DetailViewTemplate.png */,
 				F57240BA0E9678EA00D8EE66 /* deleted_file.png */,
 				F5E92A1A0E88550E00056E75 /* empty_file.png */,
 				32CA4F630368D1EE00C91783 /* GitX_Prefix.pch */,
@@ -583,7 +586,6 @@
 				F5E92A1B0E88550E00056E75 /* empty_file.png in Resources */,
 				913D5E500E55645900CECEA2 /* gitx in Resources */,
 				8D11072B0486CEB800E47090 /* InfoPlist.strings in Resources */,
-				F561777D0E05C88E001DCD79 /* DetailView.png in Resources */,
 				F5B721C40E05CF7E00AF29DC /* MainMenu.xib in Resources */,
 				911111E20E58BD5A00BF76B4 /* RepositoryWindow.xib in Resources */,
 				D26DC6450E782C9000C777B2 /* gitx.icns in Resources */,
@@ -594,7 +596,9 @@
 				F5E424110EA3E4D60046E362 /* PBDiffWindow.xib in Resources */,
 				F50A411F0EBB874C00208746 /* mainSplitterBar.tiff in Resources */,
 				F50A41200EBB874C00208746 /* mainSplitterDimple.tiff in Resources */,
-				F50A41D40EBB9B0400208746 /* add_branch.png in Resources */,
+				056438B70ED0C40B00985397 /* DetailViewTemplate.png in Resources */,
+				F56ADDD90ED19F9E002AC78F /* AddBranchTemplate.png in Resources */,
+				F56ADDDA0ED19F9E002AC78F /* AddLabelTemplate.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
