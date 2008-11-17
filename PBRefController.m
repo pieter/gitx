@@ -43,6 +43,7 @@
 		return;
 	}
 	[historyController.repository reloadRefs];
+	[commitController rearrangeObjects];
 }
 
 - (NSArray *) menuItemsForRef:(PBGitRef *)ref commit:(PBGitCommit *)commit
