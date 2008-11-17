@@ -99,10 +99,15 @@ h3, h4
 
 #download
 {
+	float: right;
+}
+
+#download_link
+{
 	display: block;
-	
 	height: 60px;
 	width: 194px;
+
 	color: #FFFFFF;
 	font-size: 175%;
 	
@@ -113,10 +118,14 @@ h3, h4
 	background-position:center;
 	
 	margin: 20px 0px 0px 20px;
-	padding: 20px 20px 10px 20px;	
-	float: right;
+	padding: 20px 20px 10px 20px;
 }
 
+#donate_link
+{
+	font-size: 50%;
+	text-align: center;
+}
 .nohover a:hover
 {
 	background-color: white;
