@@ -39,5 +39,5 @@ then in silky smooth OS X style!</p>
 	The newest version of GitX is 0.5. This version can be downloaded from <a href="http://frim.frim.nl/GitXStable.app.zip">here</a>. To see what has changed, read the <a href="release_history.html">Release History</a>.
 </p>
 <p>
-	After you have started it once, you can install the command-line tool through the menu (GitX-&gt;Enable Terminal Usage…). This will install a “gitx” binary in /usr/bin.
+	After you have started it once, you can install the command-line tool through the menu (GitX-&gt;Enable Terminal Usage…). This will install a “gitx” binary in /usr/local/bin.
 </p>
