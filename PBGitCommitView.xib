@@ -48,7 +48,7 @@
 								<int key="NSfFlags">1044</int>
 							</object>
 							<reference key="NSControlView" ref="1073221655"/>
-							<object class="NSColor" key="NSBackgroundColor" id="602862277">
+							<object class="NSColor" key="NSBackgroundColor" id="111072416">
 								<int key="NSColorSpace">6</int>
 								<string key="NSCatalogName">System</string>
 								<string key="NSColorName">controlColor</string>
@@ -678,19 +678,19 @@
 						<double key="NSMinValue">1.600000e+01</double>
 						<double key="NSMaxValue">1.000000e+02</double>
 					</object>
-					<object class="NSTextField" id="981504079">
+					<object class="NSTextField" id="850994479">
 						<reference key="NSNextResponder" ref="750704519"/>
 						<int key="NSvFlags">292</int>
 						<string key="NSFrame">{{264, 10}, {169, 17}}</string>
 						<reference key="NSSuperview" ref="750704519"/>
 						<bool key="NSEnabled">YES</bool>
-						<object class="NSTextFieldCell" key="NSCell" id="780514957">
+						<object class="NSTextFieldCell" key="NSCell" id="197627814">
 							<int key="NSCellFlags">68288064</int>
 							<int key="NSCellFlags2">272630784</int>
 							<string key="NSContents">Label</string>
 							<reference key="NSSupport" ref="554612341"/>
-							<reference key="NSControlView" ref="981504079"/>
-							<reference key="NSBackgroundColor" ref="602862277"/>
+							<reference key="NSControlView" ref="850994479"/>
+							<reference key="NSBackgroundColor" ref="111072416"/>
 							<reference key="NSTextColor" ref="132492410"/>
 						</object>
 					</object>
@@ -847,7 +847,7 @@
 					<bool key="EncodedWithXMLCoder">YES</bool>
 				</object>
 			</object>
-			<object class="NSCustomObject" id="49450131">
+			<object class="NSCustomObject" id="446885874">
 				<string key="NSClassName">PBGitIndexController</string>
 			</object>
 		</object>
@@ -1066,14 +1066,14 @@
 					<object class="IBOutletConnection" key="connection">
 						<string key="label">indexController</string>
 						<reference key="source" ref="1001"/>
-						<reference key="destination" ref="49450131"/>
+						<reference key="destination" ref="446885874"/>
 					</object>
 					<int key="connectionID">256</int>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBOutletConnection" key="connection">
 						<string key="label">commitController</string>
-						<reference key="source" ref="49450131"/>
+						<reference key="source" ref="446885874"/>
 						<reference key="destination" ref="1001"/>
 					</object>
 					<int key="connectionID">257</int>
@@ -1082,7 +1082,7 @@
 					<object class="IBOutletConnection" key="connection">
 						<string key="label">delegate</string>
 						<reference key="source" ref="588180404"/>
-						<reference key="destination" ref="49450131"/>
+						<reference key="destination" ref="446885874"/>
 					</object>
 					<int key="connectionID">258</int>
 				</object>
@@ -1090,14 +1090,14 @@
 					<object class="IBOutletConnection" key="connection">
 						<string key="label">delegate</string>
 						<reference key="source" ref="638535043"/>
-						<reference key="destination" ref="49450131"/>
+						<reference key="destination" ref="446885874"/>
 					</object>
 					<int key="connectionID">259</int>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBOutletConnection" key="connection">
 						<string key="label">unstagedFilesController</string>
-						<reference key="source" ref="49450131"/>
+						<reference key="source" ref="446885874"/>
 						<reference key="destination" ref="128809524"/>
 					</object>
 					<int key="connectionID">260</int>
@@ -1105,7 +1105,7 @@
 				<object class="IBConnectionRecord">
 					<object class="IBOutletConnection" key="connection">
 						<string key="label">stagedFilesController</string>
-						<reference key="source" ref="49450131"/>
+						<reference key="source" ref="446885874"/>
 						<reference key="destination" ref="667905213"/>
 					</object>
 					<int key="connectionID">261</int>
@@ -1114,14 +1114,14 @@
 					<object class="IBOutletConnection" key="connection">
 						<string key="label">indexController</string>
 						<reference key="source" ref="1007648253"/>
-						<reference key="destination" ref="49450131"/>
+						<reference key="destination" ref="446885874"/>
 					</object>
 					<int key="connectionID">262</int>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBOutletConnection" key="connection">
 						<string key="label">stagedTable</string>
-						<reference key="source" ref="49450131"/>
+						<reference key="source" ref="446885874"/>
 						<reference key="destination" ref="638535043"/>
 					</object>
 					<int key="connectionID">263</int>
@@ -1129,7 +1129,7 @@
 				<object class="IBConnectionRecord">
 					<object class="IBOutletConnection" key="connection">
 						<string key="label">unstagedTable</string>
-						<reference key="source" ref="49450131"/>
+						<reference key="source" ref="446885874"/>
 						<reference key="destination" ref="588180404"/>
 					</object>
 					<int key="connectionID">264</int>
@@ -1137,7 +1137,7 @@
 				<object class="IBConnectionRecord">
 					<object class="IBOutletConnection" key="connection">
 						<string key="label">stagedButtonCell</string>
-						<reference key="source" ref="49450131"/>
+						<reference key="source" ref="446885874"/>
 						<reference key="destination" ref="39450212"/>
 					</object>
 					<int key="connectionID">265</int>
@@ -1145,7 +1145,7 @@
 				<object class="IBConnectionRecord">
 					<object class="IBOutletConnection" key="connection">
 						<string key="label">unstagedButtonCell</string>
-						<reference key="source" ref="49450131"/>
+						<reference key="source" ref="446885874"/>
 						<reference key="destination" ref="45690317"/>
 					</object>
 					<int key="connectionID">266</int>
@@ -1153,7 +1153,7 @@
 				<object class="IBConnectionRecord">
 					<object class="IBActionConnection" key="connection">
 						<string key="label">rowClicked:</string>
-						<reference key="source" ref="49450131"/>
+						<reference key="source" ref="446885874"/>
 						<reference key="destination" ref="45690317"/>
 					</object>
 					<int key="connectionID">268</int>
@@ -1161,7 +1161,7 @@
 				<object class="IBConnectionRecord">
 					<object class="IBActionConnection" key="connection">
 						<string key="label">rowClicked:</string>
-						<reference key="source" ref="49450131"/>
+						<reference key="source" ref="446885874"/>
 						<reference key="destination" ref="39450212"/>
 					</object>
 					<int key="connectionID">269</int>
@@ -1169,10 +1169,10 @@
 				<object class="IBConnectionRecord">
 					<object class="IBBindingConnection" key="connection">
 						<string key="label">value: selection.commitBlobSHA</string>
-						<reference key="source" ref="981504079"/>
+						<reference key="source" ref="850994479"/>
 						<reference key="destination" ref="667905213"/>
 						<object class="NSNibBindingConnector" key="connector">
-							<reference key="NSSource" ref="981504079"/>
+							<reference key="NSSource" ref="850994479"/>
 							<reference key="NSDestination" ref="667905213"/>
 							<string key="NSLabel">value: selection.commitBlobSHA</string>
 							<string key="NSBinding">value</string>
@@ -1181,6 +1181,22 @@
 						</object>
 					</object>
 					<int key="connectionID">274</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
+						<string key="label">dataSource</string>
+						<reference key="source" ref="588180404"/>
+						<reference key="destination" ref="446885874"/>
+					</object>
+					<int key="connectionID">276</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
+						<string key="label">dataSource</string>
+						<reference key="source" ref="638535043"/>
+						<reference key="destination" ref="446885874"/>
+					</object>
+					<int key="connectionID">277</int>
 				</object>
 			</object>
 			<object class="IBMutableOrderedSet" key="objectRecords">
@@ -1220,7 +1236,7 @@
 							<reference ref="812432808"/>
 							<reference ref="221814497"/>
 							<reference ref="1073221655"/>
-							<reference ref="981504079"/>
+							<reference ref="850994479"/>
 						</object>
 						<reference key="parent" ref="1002"/>
 					</object>
@@ -1505,22 +1521,22 @@
 					</object>
 					<object class="IBObjectRecord">
 						<int key="objectID">254</int>
-						<reference key="object" ref="49450131"/>
+						<reference key="object" ref="446885874"/>
 						<reference key="parent" ref="1002"/>
 					</object>
 					<object class="IBObjectRecord">
 						<int key="objectID">270</int>
-						<reference key="object" ref="981504079"/>
+						<reference key="object" ref="850994479"/>
 						<object class="NSMutableArray" key="children">
 							<bool key="EncodedWithXMLCoder">YES</bool>
-							<reference ref="780514957"/>
+							<reference ref="197627814"/>
 						</object>
 						<reference key="parent" ref="750704519"/>
 					</object>
 					<object class="IBObjectRecord">
 						<int key="objectID">271</int>
-						<reference key="object" ref="780514957"/>
-						<reference key="parent" ref="981504079"/>
+						<reference key="object" ref="197627814"/>
+						<reference key="parent" ref="850994479"/>
 					</object>
 				</object>
 			</object>
@@ -1643,7 +1659,7 @@
 				</object>
 			</object>
 			<nil key="sourceID"/>
-			<int key="maxID">275</int>
+			<int key="maxID">277</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<object class="NSMutableArray" key="referencedPartialClassDescriptions">

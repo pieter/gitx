@@ -9,6 +9,8 @@
 #import "PBGitIndexController.h"
 #import "PBChangedFile.h"
 
+#define FileChangesTableViewType @"GitFileChangedType"
+
 @implementation PBGitIndexController
 
 - (void)awakeFromNib
@@ -18,6 +20,10 @@
 
 	[unstagedTable setTarget:self];
 	[stagedTable setTarget:self];
+
+	[unstagedTable registerForDraggedTypes: [NSArray arrayWithObject:FileChangesTableViewType]];
+	[stagedTable registerForDraggedTypes: [NSArray arrayWithObject:FileChangesTableViewType]];
+
 }
 
 - (void) stageFiles:(NSArray *)files
@@ -193,6 +199,49 @@
 	if([tableView numberOfSelectedRows] != 1)
 		return;
 	[self tableClicked: tableView];
+}
+
+- (BOOL)tableView:(NSTableView *)tv
+writeRowsWithIndexes:(NSIndexSet *)rowIndexes
+	 toPasteboard:(NSPasteboard*)pboard
+{
+    // Copy the row numbers to the pasteboard.
+    NSData *data = [NSKeyedArchiver archivedDataWithRootObject:rowIndexes];
+    [pboard declareTypes:[NSArray arrayWithObject:FileChangesTableViewType] owner:self];
+    [pboard setData:data forType:FileChangesTableViewType];
+    return YES;
+}
+
+- (NSDragOperation)tableView:(NSTableView*)tableView
+				validateDrop:(id <NSDraggingInfo>)info
+				 proposedRow:(int)row
+	   proposedDropOperation:(NSTableViewDropOperation)operation
+{
+	if ([info draggingSource] == tableView)
+		return NSDragOperationNone;
+
+	[tableView setDropRow:-1 dropOperation:NSTableViewDropOn];
+    return NSDragOperationCopy;
+}
+
+- (BOOL)tableView:(NSTableView *)aTableView
+	   acceptDrop:(id <NSDraggingInfo>)info
+			  row:(int)row
+	dropOperation:(NSTableViewDropOperation)operation
+{
+    NSPasteboard* pboard = [info draggingPasteboard];
+    NSData* rowData = [pboard dataForType:FileChangesTableViewType];
+    NSIndexSet* rowIndexes = [NSKeyedUnarchiver unarchiveObjectWithData:rowData];
+
+	NSArrayController *controller = [aTableView tag] == 0 ? stagedFilesController : unstagedFilesController;
+	NSArray *files = [[controller arrangedObjects] objectsAtIndexes:rowIndexes];
+
+	if ([aTableView tag] == 0)
+		[self unstageFiles:files];
+	else
+		[self stageFiles:files];
+
+	return YES;
 }
 
 # pragma mark WebKit Accessibility
