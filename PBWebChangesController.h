@@ -15,6 +15,7 @@
 	IBOutlet NSArrayController *unstagedFilesController;
 	IBOutlet NSArrayController *cachedFilesController;
 	IBOutlet PBGitCommitController *controller;
+	IBOutlet id indexController;
 
 	PBChangedFile *selectedFile;
 	BOOL selectedFileIsCached;
@@ -23,4 +24,5 @@
 - (void) refresh;
 - (void) setStateMessage:(NSString *)state;
 
+- (void) showMultiple:(NSArray *)files;
 @end

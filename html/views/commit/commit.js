@@ -2,7 +2,7 @@ var showNewFile = function(file)
 {
 	$('title').innerHTML = "New file: " + file.path;
 
-	var contents = file.unstagedChanges();
+	var contents = IndexController.unstagedChangesForFile_(file);
 	if (!contents) {
 		notify("Can not display changes (Binary file?)", -1);
 		return;
@@ -36,11 +36,11 @@ var showFileChanges = function(file, cached) {
 	var changes;
 	if (cached) {
 		$("title").innerHTML = "Staged changes for " + file.path;
-		changes = file.cachedChangesAmend_(Controller.amend());
+		changes = IndexController.stagedChangesForFile_(file);
 	}
 	else {
 		$("title").innerHTML = "Unstaged changes for " + file.path;
-		changes = file.unstagedChanges();
+		changes = IndexController.unstagedChangesForFile_(file);
 	}
 
 	if (changes == "") {

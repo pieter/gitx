@@ -10,8 +10,6 @@
 
 
 @interface PBFileChangesTableView : NSTableView {
-	id controller;
 }
 
-@property (retain) id controller;
 @end

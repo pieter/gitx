@@ -367,7 +367,7 @@ NSString* PBGitRepositoryErrorDomain = @"GitXErrorDomain";
 {
 	return [PBEasyPipe outputForCommand:[PBGitBinary path]
 							   withArgs:arguments
-								  inDir: self.fileURL.path
+								  inDir:[self workingDirectory]
 							inputString:input
 							   retValue: ret];
 }

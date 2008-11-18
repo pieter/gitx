@@ -24,6 +24,7 @@
 
 - (void) didLoad
 {
+	[[self script] setValue:indexController forKey:@"IndexController"];
 	[self refresh];
 }
 

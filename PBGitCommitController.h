@@ -17,9 +17,11 @@
 	IBOutlet NSTextView *commitMessageView;
 	IBOutlet NSArrayController *unstagedFilesController;
 	IBOutlet NSArrayController *cachedFilesController;
-	NSString *status;
 
+	IBOutlet id indexController;
 	IBOutlet id webController;
+
+	NSString *status;
 
 	// We use busy as a count of active processes. 
 	// You can increase it when your process start
@@ -27,11 +29,6 @@
 	int busy;
 	BOOL amend;
 
-	IBOutlet PBIconAndTextCell* unstagedButtonCell;
-	IBOutlet PBIconAndTextCell* cachedButtonCell;
-
-	IBOutlet NSTableView *unstagedTable;
-	IBOutlet NSTableView *cachedTable;
 }
 
 @property (retain) NSMutableArray *files;
@@ -43,8 +40,6 @@
 - (void) readOtherFiles:(NSNotification *)notification;
 - (void) readUnstagedFiles:(NSNotification *)notification;
 - (void) stageHunk: (NSString *)hunk reverse:(BOOL)reverse;
-
-- (NSMenu *) menuForTable:(NSTableView *)table;
 
 - (IBAction) refresh:(id) sender;
 - (IBAction) commit:(id) sender;

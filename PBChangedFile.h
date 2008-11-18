@@ -19,21 +19,22 @@ typedef enum {
 	NSString *path;
 	BOOL hasCachedChanges;
 	BOOL hasUnstagedChanges;
-	__weak PBGitRepository *repository;
+
+	// Index and HEAD stuff, to be used to revert changes
+	NSString *commitBlobSHA;
+	NSString *commitBlobMode;
+
 	PBChangedFileStatus status;
 }
 
 
-@property (readonly) NSString *path;
+@property (copy) NSString *path, *commitBlobSHA, *commitBlobMode;
 @property (assign) PBChangedFileStatus status;
 @property (assign) BOOL hasCachedChanges;
 @property (assign) BOOL hasUnstagedChanges;
+
 - (NSImage *)icon;
-- (NSString *)cachedChangesAmend:(BOOL)amend;
-- (NSString *)unstagedChanges;
+- (NSString *)indexInfo;
 
-- (void) stageChanges;
-- (void) unstageChangesAmend:(BOOL)amend;
-
-- (id) initWithPath:(NSString *)p andRepository:(PBGitRepository *)r;
+- (id) initWithPath:(NSString *)p;
 @end

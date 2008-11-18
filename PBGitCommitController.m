@@ -17,18 +17,6 @@
 - (void)awakeFromNib
 {
 	[super awakeFromNib];
-	self.busy = 0;
-
-	amend = NO;
-
-	[unstagedButtonCell setAction:@selector(rowClicked:)];
-	[cachedButtonCell setAction:@selector(rowClicked:)];
-
-	[unstagedTable setDoubleAction:@selector(tableClicked:)];
-	[cachedTable setDoubleAction:@selector(tableClicked:)];
-
-	[unstagedTable setController: self];
-
 	[self refresh:self];
 
 	[commitMessageView setTypingAttributes:[NSDictionary dictionaryWithObject:[NSFont fontWithName:@"Monaco" size:12.0] forKey:NSFontAttributeName]];
@@ -133,7 +121,7 @@
 	for (NSString *line in lines) {
 		if ([line length] == 0)
 			continue;
-		PBChangedFile *file =[[PBChangedFile alloc] initWithPath:line andRepository:repository];
+		PBChangedFile *file =[[PBChangedFile alloc] initWithPath:line];
 		file.status = NEW;
 		file.hasCachedChanges = NO;
 		file.hasUnstagedChanges = YES;
@@ -155,15 +143,22 @@
 		}
 		even = 0;
 
+		NSString *mode = [[fileStatus objectAtIndex:0] substringFromIndex:1];
+		NSString *sha = [fileStatus objectAtIndex:2];
+
 		BOOL isNew = YES;
 		// If the file is already added, we shouldn't add it again
 		// but rather update it to incorporate our changes
 		for (PBChangedFile *file in files) {
 			if ([file.path isEqualToString:line]) {
-				if (cached)
+				if (cached) {
+					file.commitBlobSHA = sha;
+					file.commitBlobMode = mode;
 					file.hasCachedChanges = YES;
+				}
 				else
 					file.hasUnstagedChanges = YES;
+
 				isNew = NO;
 				break;
 			}
@@ -172,11 +167,16 @@
 		if (!isNew)
 			continue;
 
-		PBChangedFile *file = [[PBChangedFile alloc] initWithPath:line andRepository:repository];
+		PBChangedFile *file = [[PBChangedFile alloc] initWithPath:line];
 		if ([[fileStatus objectAtIndex:4] isEqualToString:@"D"])
 			file.status = DELETED;
+		else if([[fileStatus objectAtIndex:0] isEqualToString:@":000000"])
+			file.status = NEW;
 		else
 			file.status = MODIFIED;
+
+		file.commitBlobSHA = sha;
+		file.commitBlobMode = mode;
 
 		file.hasCachedChanges = cached;
 		file.hasUnstagedChanges = !cached;
@@ -277,60 +277,6 @@
 	amend = NO;
 	[self refresh:self];
 	self.amend = NO;
-}
-
-- (void) tableClicked:(NSTableView *) tableView
-{
-	NSUInteger selectionIndex = [[tableView selectedRowIndexes] firstIndex];
-	NSArrayController *controller = [tableView tag] == 0 ? unstagedFilesController : cachedFilesController;
-	PBChangedFile *selectedItem = [[controller arrangedObjects] objectAtIndex:selectionIndex];
-
-	if ([tableView tag] == 0)
-		[selectedItem stageChanges];
-	else
-		[selectedItem unstageChangesAmend:amend];
-
-}
-
-- (void) rowClicked:(NSCell *)sender
-{
-	NSTableView *tableView = (NSTableView *)[sender controlView];
-	if([tableView numberOfSelectedRows] != 1)
-		return;
-	[self tableClicked: tableView];
-}
-
-- (void)tableView:(NSTableView*)tableView willDisplayCell:(id)cell forTableColumn:(NSTableColumn*)tableColumn row:(int)rowIndex
-{
-	[[tableColumn dataCell] setImage:[[[(([tableView tag] == 0) ? unstagedFilesController : cachedFilesController) arrangedObjects] objectAtIndex:rowIndex] icon]];
-}
-
-- (NSMenu *) menuForTable:(NSTableView *)table
-{
-	NSUInteger selectionIndex = [[table selectedRowIndexes] firstIndex];
-	PBChangedFile *selectedItem = [[unstagedFilesController arrangedObjects] objectAtIndex:selectionIndex];
-
-	NSMenu *a = [[NSMenu alloc] init];
-	NSMenuItem *stageItem = [[NSMenuItem alloc] initWithTitle:@"Stage Changes" action:@selector(stageChanges) keyEquivalent:@""];
-	[stageItem setTarget:selectedItem];
-	[a addItem:stageItem];
-
-	// Do not add "revert" options for untracked files
-	if (selectedItem.status == NEW)
-		return a;
-
-	NSMenuItem *revertItem = [[NSMenuItem alloc] initWithTitle:@"Revert Changes…" action:@selector(revertChanges) keyEquivalent:@""];
-	[revertItem setTarget:selectedItem];
-	[revertItem setAlternate:NO];
-	[a addItem:revertItem];
-
-	NSMenuItem *revertForceItem = [[NSMenuItem alloc] initWithTitle:@"Revert Changes" action:@selector(forceRevertChanges) keyEquivalent:@""];
-	[revertForceItem setTarget:selectedItem];
-	[revertForceItem setAlternate:YES];
-	[revertForceItem setKeyEquivalentModifierMask:NSAlternateKeyMask];
-	[a addItem:revertForceItem];
-
-	return a;
 }
 
 - (void) stageHunk:(NSString *)hunk reverse:(BOOL)reverse

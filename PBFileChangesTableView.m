@@ -7,17 +7,14 @@
 //
 
 #import "PBFileChangesTableView.h"
-#import "PBGitCommitController.h"
 
 @implementation PBFileChangesTableView
-
-@synthesize controller;
 
 #pragma mark NSTableView overrides
 - (NSMenu *)menuForEvent:(NSEvent *)theEvent
 {
-	if (controller)
-		return [(PBGitCommitController *)controller menuForTable: self];
+	if ([self delegate])
+		return [[self delegate] menuForTable: self];
 
 	return nil;
 }
