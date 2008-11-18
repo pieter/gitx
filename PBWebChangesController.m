@@ -37,7 +37,8 @@
 						change:(NSDictionary *)change
 					   context:(void *)context
 {
-	if ([[object selectedObjects] count] == 0)
+	int count = [[object selectedObjects] count];
+	if (count == 0)
 		return;
 
 	// TODO: Move this to commitcontroller
@@ -46,10 +47,20 @@
 	else
 		[unstagedFilesController setSelectionIndexes:[NSIndexSet indexSet]];
 
+	if (count > 1) {
+		[self showMultiple: [object selectedObjects]];
+		return;
+	}
+
 	selectedFile = [[object selectedObjects] objectAtIndex:0];
 	selectedFileIsCached = object == cachedFilesController;
 
 	[self refresh];
+}
+
+- (void) showMultiple: (NSArray *)objects
+{
+	[[self script] callWebScriptMethod:@"showMultipleFilesSelection" withArguments:[NSArray arrayWithObject:objects]];
 }
 
 - (void) refresh
