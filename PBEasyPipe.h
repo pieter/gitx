@@ -12,6 +12,7 @@
 @interface PBEasyPipe : NSObject {
 
 }
++ (NSTask *) taskForCommand:(NSString *)cmd withArgs:(NSArray *)args inDir:(NSString *)dir;
 
 + (NSFileHandle*) handleForCommand: (NSString*) cmd withArgs: (NSArray*) args;
 + (NSFileHandle*) handleForCommand: (NSString*) cmd withArgs: (NSArray*) args inDir: (NSString*) dir;

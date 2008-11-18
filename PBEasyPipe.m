@@ -106,7 +106,7 @@
 	
 	NSData* data = [handle readDataToEndOfFile];
 	NSString* string = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-	
+	[task waitUntilExit];
 	// Strip trailing newline
 	if ([string hasSuffix:@"\n"])
 		string = [string substringToIndex:[string length]-1];

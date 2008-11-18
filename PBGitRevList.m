@@ -88,7 +88,9 @@
 	if ([rev hasPathLimiter])
 		[arguments insertObject:@"--children" atIndex:1];
 
-	NSFileHandle* handle = [repository handleForArguments: arguments];
+	NSTask *task = [PBEasyPipe taskForCommand:[PBGitBinary path] withArgs:arguments inDir:nil];
+	[task launch];
+	NSFileHandle* handle = [task.standardOutput fileHandleForReading];
 	
 	int fd = [handle fileDescriptor];
 	FILE* f = fdopen(fd, "r");
@@ -153,6 +155,7 @@
 	
 	// Make sure the commits are stored before exiting.
 	[self performSelectorOnMainThread:@selector(setCommits:) withObject:revisions waitUntilDone:YES];
+	[task waitUntilExit];
 }
 
 @end
