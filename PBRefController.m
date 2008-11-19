@@ -18,6 +18,7 @@
 	[historyController addObserver:self forKeyPath:@"repository.branches" options:0 context:@"branchChange"];
 	[historyController addObserver:self forKeyPath:@"repository.currentBranch" options:0 context:@"currentBranchChange"];
 	[self updateBranchMenu];
+	[self selectCurrentBranch];
 }
 
 - (void) observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(id)context
