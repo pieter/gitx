@@ -29,4 +29,9 @@
 - (IBAction)saveSheet:(id) sender;
 
 - (NSArray *) menuItemsForRef:(PBGitRef *)ref commit:(PBGitCommit *)commit;
+
+- (void) changeBranch:(NSMenuItem *)sender;
+- (void) selectCurrentBranch;
+- (void) updateBranchMenu;
+
 @end

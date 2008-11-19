@@ -15,13 +15,18 @@
 - (void)awakeFromNib
 {
 	[commitList registerForDraggedTypes:[NSArray arrayWithObject:@"PBGitRef"]];
-	[self observeValueForKeyPath:@"repository.branches" ofObject:historyController change:NULL context:@"branchChange"];
+	[historyController addObserver:self forKeyPath:@"repository.branches" options:0 context:@"branchChange"];
+	[historyController addObserver:self forKeyPath:@"repository.currentBranch" options:0 context:@"currentBranchChange"];
+	[self updateBranchMenu];
 }
 
 - (void) observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(id)context
 {
     if ([context isEqualToString: @"branchChange"]) {
 		[self updateBranchMenu];
+	}
+	else if ([context isEqualToString:@"currentBranchChange"]) {
+		[self selectCurrentBranch];
 	}
 	else {
 		[super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
@@ -186,7 +191,6 @@
 
 - (void) updateBranchMenu
 {
-	NSLog(@"Updating branch");
 	if (!branchPopUp)
 		return;
 
@@ -286,6 +290,12 @@
 {
 	PBGitRevSpecifier *rev = [sender representedObject];
 	historyController.repository.currentBranch = rev;
-	[branchPopUp setTitle:[sender title]];
 }
+
+- (void) selectCurrentBranch
+{
+	PBGitRevSpecifier *rev = historyController.repository.currentBranch;
+	[branchPopUp setTitle:[rev description]];
+}
+
 @end
