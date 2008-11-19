@@ -33,7 +33,13 @@
 	[revspec setDescription:@"All branches"];
 	return revspec;
 }
-	
+
++ (PBGitRevSpecifier *)localBranchesRevSpec
+{
+	id revspec = [[PBGitRevSpecifier alloc] initWithParameters:[NSArray arrayWithObject:@"--branches"]];
+	[revspec setDescription:@"Local branches"];
+	return revspec;
+}
 - (BOOL) isSimpleRef
 {
 	return ([parameters count] == 1 && ![[parameters objectAtIndex:0] hasPrefix:@"-"]);

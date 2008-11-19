@@ -25,6 +25,7 @@
 - (BOOL) isEqualTo: (PBGitRevSpecifier*) other;
 
 + (PBGitRevSpecifier *)allBranchesRevSpec;
++ (PBGitRevSpecifier *)localBranchesRevSpec;
 
 @property(copy) NSString* description;
 @property(readonly) NSArray* parameters;
