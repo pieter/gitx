@@ -77,12 +77,14 @@
 
 - (void) showCommitView:(id)sender
 {
-	self.selectedViewIndex = 1;
+	if (self.selectedViewIndex != 1)
+		self.selectedViewIndex = 1;
 }
 
 - (void) showHistoryView:(id)sender
 {
-	self.selectedViewIndex = 0;
+	if (self.selectedViewIndex != 0)
+		self.selectedViewIndex = 0;
 }
 
 #pragma mark -
