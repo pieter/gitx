@@ -82,7 +82,7 @@
 	if ([rev hasPathLimiter])
 		[arguments insertObject:@"--children" atIndex:1];
 
-	NSTask *task = [PBEasyPipe taskForCommand:[PBGitBinary path] withArgs:arguments inDir:nil];
+	NSTask *task = [PBEasyPipe taskForCommand:[PBGitBinary path] withArgs:arguments inDir:[repository fileURL].path];
 	[task launch];
 	NSFileHandle* handle = [task.standardOutput fileHandleForReading];
 	
