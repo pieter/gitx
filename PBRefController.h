@@ -20,6 +20,8 @@
 
 	IBOutlet NSWindow *newBranchSheet;
 	IBOutlet NSTextField *newBranchName;
+
+	IBOutlet NSPopUpButton *branchPopUp;
 }
 
 - (IBAction)addRef:(id)sender;
