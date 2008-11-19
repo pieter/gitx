@@ -18,4 +18,10 @@
 
 	return nil;
 }
+
+- (NSDragOperation) draggingSourceOperationMaskForLocal:(BOOL) local
+{
+	return NSDragOperationEvery;
+}
+
 @end

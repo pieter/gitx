@@ -206,9 +206,22 @@ writeRowsWithIndexes:(NSIndexSet *)rowIndexes
 	 toPasteboard:(NSPasteboard*)pboard
 {
     // Copy the row numbers to the pasteboard.
-    NSData *data = [NSKeyedArchiver archivedDataWithRootObject:rowIndexes];
-    [pboard declareTypes:[NSArray arrayWithObject:FileChangesTableViewType] owner:self];
+    [pboard declareTypes:[NSArray arrayWithObjects:FileChangesTableViewType, NSFilenamesPboardType, nil] owner:self];
+
+	// Internal, for dragging from one tableview to the other
+	NSData *data = [NSKeyedArchiver archivedDataWithRootObject:rowIndexes];
     [pboard setData:data forType:FileChangesTableViewType];
+
+	// External, to drag them to for example XCode or Textmate
+	NSArrayController *controller = [tv tag] == 0 ? unstagedFilesController : stagedFilesController;
+	NSArray *files = [[controller arrangedObjects] objectsAtIndexes:rowIndexes];
+	NSString *workingDirectory = [commitController.repository workingDirectory];
+
+	NSMutableArray *filenames = [NSMutableArray arrayWithCapacity:[rowIndexes count]];
+	for (PBChangedFile *file in files)
+		[filenames addObject:[workingDirectory stringByAppendingPathComponent:[file path]]];
+
+	[pboard setPropertyList:filenames forType:NSFilenamesPboardType];
     return YES;
 }
 
