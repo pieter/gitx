@@ -285,7 +285,7 @@
 - (void) changeBranch:(NSMenuItem *)sender
 {
 	PBGitRevSpecifier *rev = [sender representedObject];
-	[historyController.repository selectBranch:rev];
-	[branchPopUp selectItem:nil];
+	historyController.repository.currentBranch = rev;
+	[branchPopUp setTitle:[sender title]];
 }
 @end

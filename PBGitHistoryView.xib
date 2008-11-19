@@ -43,21 +43,6 @@
 				<string key="NSTreeContentChildrenKey">children</string>
 				<string key="NSTreeContentLeafKey">leaf</string>
 			</object>
-			<object class="NSArrayController" id="886549521">
-				<object class="NSMutableArray" key="NSDeclaredKeys">
-					<bool key="EncodedWithXMLCoder">YES</bool>
-					<string>a</string>
-					<string>shortName</string>
-					<string>description</string>
-				</object>
-				<bool key="NSEditable">YES</bool>
-				<object class="_NSManagedProxy" key="_NSManagedProxy"/>
-				<bool key="NSAvoidsEmptySelection">YES</bool>
-				<bool key="NSPreservesSelection">YES</bool>
-				<bool key="NSSelectsInsertedObjects">YES</bool>
-				<bool key="NSFilterRestrictsInsertion">YES</bool>
-				<bool key="NSClearsFilterPredicateOnInsertion">YES</bool>
-			</object>
 			<object class="NSArrayController" id="391209158">
 				<object class="NSMutableArray" key="NSDeclaredKeys">
 					<bool key="EncodedWithXMLCoder">YES</bool>
@@ -1825,30 +1810,6 @@
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBBindingConnection" key="connection">
-						<string key="label">contentArray: repository.branches</string>
-						<reference key="source" ref="886549521"/>
-						<reference key="destination" ref="1001"/>
-						<object class="NSNibBindingConnector" key="connector">
-							<reference key="NSSource" ref="886549521"/>
-							<reference key="NSDestination" ref="1001"/>
-							<string key="NSLabel">contentArray: repository.branches</string>
-							<string key="NSBinding">contentArray</string>
-							<string key="NSKeyPath">repository.branches</string>
-							<int key="NSNibBindingConnectorVersion">2</int>
-						</object>
-					</object>
-					<int key="connectionID">193</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBOutletConnection" key="connection">
-						<string key="label">branchesController</string>
-						<reference key="source" ref="1001"/>
-						<reference key="destination" ref="886549521"/>
-					</object>
-					<int key="connectionID">198</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBBindingConnection" key="connection">
 						<string key="label">predicate: filterPredicate</string>
 						<reference key="source" ref="449521666"/>
 						<reference key="destination" ref="391209158"/>
@@ -2465,12 +2426,6 @@
 						<reference key="parent" ref="976830280"/>
 					</object>
 					<object class="IBObjectRecord">
-						<int key="objectID">190</int>
-						<reference key="object" ref="886549521"/>
-						<reference key="parent" ref="1002"/>
-						<string key="objectName">Branches Controller</string>
-					</object>
-					<object class="IBObjectRecord">
 						<int key="objectID">231</int>
 						<reference key="object" ref="892732705"/>
 						<reference key="parent" ref="1002"/>
@@ -2748,7 +2703,6 @@
 					<string>17.IBPluginDependency</string>
 					<string>18.IBPluginDependency</string>
 					<string>19.IBPluginDependency</string>
-					<string>190.IBPluginDependency</string>
 					<string>2.CustomClassName</string>
 					<string>2.IBEditorWindowLastContentRect</string>
 					<string>2.IBPluginDependency</string>
@@ -2842,7 +2796,6 @@
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>PBQLOutlineView</string>
-					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>

@@ -18,9 +18,9 @@ extern NSString* PBGitRepositoryErrorDomain;
 	PBGitConfig *config;
 
 	BOOL hasChanged;
-	NSMutableArray* branches;
-	NSIndexSet* currentBranch;
-	NSMutableDictionary* refs;
+	NSMutableArray *branches;
+	PBGitRevSpecifier *currentBranch;
+	NSMutableDictionary *refs;
 
 	PBGitRevSpecifier *_headRef; // Caching
 }
@@ -45,7 +45,6 @@ extern NSString* PBGitRepositoryErrorDomain;
 
 - (void) readCurrentBranch;
 - (PBGitRevSpecifier*) addBranch: (PBGitRevSpecifier*) rev;
-- (void) selectBranch: (PBGitRevSpecifier*) rev;
 
 - (NSString*) parseSymbolicReference:(NSString*) ref;
 - (NSString*) parseReference:(NSString*) ref;
@@ -61,6 +60,6 @@ extern NSString* PBGitRepositoryErrorDomain;
 @property (readonly) PBGitConfig *config;
 @property (retain) PBGitRevList* revisionList;
 @property (assign) NSMutableArray* branches;
-@property (assign) NSIndexSet* currentBranch;
+@property (assign) PBGitRevSpecifier *currentBranch;
 @property (assign) NSMutableDictionary* refs;
 @end

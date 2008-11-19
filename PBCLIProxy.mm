@@ -56,7 +56,7 @@
 		((PBGitWindowController *)document.windowController).selectedViewIndex = 1;
 	else {
 		PBGitRevSpecifier* rev = [[PBGitRevSpecifier alloc] initWithParameters:arguments];
-		[document selectBranch: [document addBranch: rev]];
+		document.currentBranch = [document addBranch: rev];
 	}
 	[NSApp activateIgnoringOtherApps:YES];
 

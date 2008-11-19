@@ -35,16 +35,10 @@
 	// and in that case we don't have to reload the revision list.
 
 	// If no branch is selected, don't do anything
-	if (![repository currentBranch] || [[repository currentBranch] count] == 0)
+	if (![repository currentBranch])
 		return;
 
-	NSArray* selectedBranches = [[repository branches] objectsAtIndexes: [repository currentBranch]];
-
-	// Apparently, The selected index does not exist.. don't do anything
-	if ([selectedBranches count] == 0)
-		return;
-
-	PBGitRevSpecifier* newRev = [selectedBranches objectAtIndex:0];
+	PBGitRevSpecifier* newRev = [repository currentBranch];
 	NSString* newSha = nil;
 
 	if (!force && newRev && [newRev isSimpleRef]) {

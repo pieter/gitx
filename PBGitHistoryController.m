@@ -29,7 +29,7 @@
 	[fileBrowser setTarget:self];
 	[fileBrowser setDoubleAction:@selector(openSelectedFile:)];
 
-	if ([repository.currentBranch count] == 0) {
+	if (!repository.currentBranch) {
 		[repository reloadRefs];
 		[repository readCurrentBranch];
 	}
@@ -41,8 +41,6 @@
 	[[commitList tableColumnWithIdentifier:@"subject"] setSortDescriptorPrototype:[[NSSortDescriptor alloc] initWithKey:@"subject" ascending:YES]];
 
 	[super awakeFromNib];
-	// We bind this ourselves because otherwise we would lose our selection
-	[branchesController bind:@"selectionIndexes" toObject:repository withKeyPath:@"currentBranch" options:nil];
 }
 
 - (void) updateKeys

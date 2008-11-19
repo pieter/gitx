@@ -264,31 +264,10 @@ NSString* PBGitRepositoryErrorDomain = @"GitXErrorDomain";
 	[self didChangeValueForKey:@"branches"];
 	return rev;
 }
-
-- (void) showHistoryView
-{
-	if (!self.windowController)
-		return;
-	
-	[((PBGitWindowController *)self.windowController) showHistoryView:self];
-}
-
-- (void) selectBranch: (PBGitRevSpecifier*) rev
-{
-	int i;
-	for (i = 0; i < [branches count]; i++) {
-		PBGitRevSpecifier* aRev = [branches objectAtIndex:i];
-		if (rev == aRev) {
-			self.currentBranch = [NSIndexSet indexSetWithIndex:i];
-			[self showHistoryView];
-			return;
-		}
-	}
-}
 	
 - (void) readCurrentBranch
 {
-		[self selectBranch: [self addBranch: [self headRef]]];
+		self.currentBranch = [self addBranch: [self headRef]];
 }
 
 - (NSString *) workingDirectory

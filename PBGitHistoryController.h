@@ -14,7 +14,6 @@
 @interface PBGitHistoryController : PBViewController {
 	IBOutlet NSSearchField *searchField;
 	IBOutlet NSArrayController* commitController;
-	IBOutlet NSArrayController *branchesController;
 	IBOutlet NSTreeController* treeController;
 	IBOutlet NSOutlineView* fileBrowser;
 	IBOutlet NSTableView* commitList;
