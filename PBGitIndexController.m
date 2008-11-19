@@ -127,24 +127,29 @@
 - (NSMenu *) menuForTable:(NSTableView *)table
 {
 	NSMenu *menu = [[NSMenu alloc] init];
+	id controller = [table tag] == 0 ? unstagedFilesController : stagedFilesController;
+	NSArray *selectedFiles = [controller selectedObjects];
 
 	// Unstaged changes
 	if ([table tag] == 0) {
-		NSArray *selectedFiles = [unstagedFilesController selectedObjects];
-
 		NSMenuItem *stageItem = [[NSMenuItem alloc] initWithTitle:@"Stage Changes" action:@selector(stageFilesAction:) keyEquivalent:@""];
 		[stageItem setTarget:self];
 		[stageItem setRepresentedObject:selectedFiles];
 		[menu addItem:stageItem];
 	}
 	else if ([table tag] == 1) {
-		NSArray *selectedFiles = [stagedFilesController selectedObjects];
-		
 		NSMenuItem *unstageItem = [[NSMenuItem alloc] initWithTitle:@"Unstage Changes" action:@selector(unstageFilesAction:) keyEquivalent:@""];
 		[unstageItem setTarget:self];
 		[unstageItem setRepresentedObject:selectedFiles];
 		[menu addItem:unstageItem];
-	}		
+	}
+
+	NSString *title = [selectedFiles count] == 1 ? @"Open file" : @"Open files";
+	NSMenuItem *openItem = [[NSMenuItem alloc] initWithTitle:title action:@selector(openFilesAction:) keyEquivalent:@""];
+	[openItem setTarget:self];
+	[openItem setRepresentedObject:selectedFiles];
+	[menu addItem:openItem];
+
 	
 	// Do not add "revert" options for untracked files
 	//	if (selectedItem.status == NEW)
@@ -172,6 +177,14 @@
 - (void) unstageFilesAction:(id) sender
 {
 	[self unstageFiles:[sender representedObject]];
+}
+
+- (void) openFilesAction:(id) sender
+{
+	NSArray *files = [sender representedObject];
+	NSString *workingDirectory = [commitController.repository workingDirectory];
+	for (PBChangedFile *file in files)
+		[[NSWorkspace sharedWorkspace] openFile:[workingDirectory stringByAppendingPathComponent:[file path]]];
 }
 
 # pragma mark TableView icon delegate
