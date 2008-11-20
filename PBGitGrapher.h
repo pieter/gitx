@@ -11,17 +11,9 @@
 #import "PBGitGraphLine.h"
 #import "PBGraphCellInfo.h"
 
-struct PBGitGraphColumn {
-	NSString* commit; // Commit that we're looking for
-	int color;
-};
-
-
-#define PBGitMaxColumns 100
-
 @interface PBGitGrapher : NSObject {
 	PBGraphCellInfo* previous;
-	NSMutableArray* previousLanes;
+	void *pl;
 	NSDictionary* refs;
 	PBGitRepository* repository;
 }

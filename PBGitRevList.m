@@ -61,7 +61,7 @@
 
 - (void) walkRevisionListWithSpecifier: (PBGitRevSpecifier*) rev
 {
-	
+	NSDate *start = [NSDate date];
 	NSMutableArray* revisions = [NSMutableArray array];
 	PBGitGrapher* g = [[PBGitGrapher alloc] initWithRepository: repository];
 	NSDictionary* refs = [repository refs];
@@ -147,6 +147,8 @@
 		[currentLine setString: @""];
 	}
 	
+	NSTimeInterval duration = [[NSDate date] timeIntervalSinceDate:start];
+	NSLog(@"Loaded %i commits in %f seconds", num, duration);
 	// Make sure the commits are stored before exiting.
 	[self performSelectorOnMainThread:@selector(setCommits:) withObject:revisions waitUntilDone:YES];
 	[task waitUntilExit];

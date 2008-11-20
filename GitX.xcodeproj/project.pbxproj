@@ -62,7 +62,7 @@
 		F5AD56790E79B78100EDAAFE /* PBCommitList.m in Sources */ = {isa = PBXBuildFile; fileRef = F5AD56780E79B78100EDAAFE /* PBCommitList.m */; };
 		F5B721C40E05CF7E00AF29DC /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = F5B721C20E05CF7E00AF29DC /* MainMenu.xib */; };
 		F5C007750E731B48007B84B2 /* PBGitRef.m in Sources */ = {isa = PBXBuildFile; fileRef = F5C007740E731B48007B84B2 /* PBGitRef.m */; };
-		F5C6F68D0E65FF9300478D97 /* PBGitLane.m in Sources */ = {isa = PBXBuildFile; fileRef = F5C6F68C0E65FF9300478D97 /* PBGitLane.m */; };
+		F5C6F68D0E65FF9300478D97 /* PBGitLane.mm in Sources */ = {isa = PBXBuildFile; fileRef = F5C6F68C0E65FF9300478D97 /* PBGitLane.mm */; };
 		F5DFFA6C0E075D8800617813 /* PBEasyFS.m in Sources */ = {isa = PBXBuildFile; fileRef = F5DFFA6B0E075D8800617813 /* PBEasyFS.m */; };
 		F5E424110EA3E4D60046E362 /* PBDiffWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = F5E424100EA3E4D60046E362 /* PBDiffWindow.xib */; };
 		F5E424150EA3E4E10046E362 /* PBDiffWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = F5E424130EA3E4E10046E362 /* PBDiffWindowController.m */; };
@@ -78,7 +78,7 @@
 		F5FC43FE0EBD08EE00191D80 /* PBRefMenuItem.m in Sources */ = {isa = PBXBuildFile; fileRef = F5FC43FD0EBD08EE00191D80 /* PBRefMenuItem.m */; };
 		F5FE6C030EB13BC900F30D12 /* PBServicesController.m in Sources */ = {isa = PBXBuildFile; fileRef = F5FE6C020EB13BC900F30D12 /* PBServicesController.m */; };
 		F5FF4E180E0829C20006317A /* PBGitRevList.m in Sources */ = {isa = PBXBuildFile; fileRef = F5FF4E170E0829C20006317A /* PBGitRevList.m */; };
-		F5FF4E7A0E082E440006317A /* PBGitGrapher.m in Sources */ = {isa = PBXBuildFile; fileRef = F5FF4E790E082E440006317A /* PBGitGrapher.m */; };
+		F5FF4E7A0E082E440006317A /* PBGitGrapher.mm in Sources */ = {isa = PBXBuildFile; fileRef = F5FF4E790E082E440006317A /* PBGitGrapher.mm */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -194,7 +194,7 @@
 		F5C007730E731B48007B84B2 /* PBGitRef.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PBGitRef.h; sourceTree = "<group>"; };
 		F5C007740E731B48007B84B2 /* PBGitRef.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PBGitRef.m; sourceTree = "<group>"; };
 		F5C6F68B0E65FF9300478D97 /* PBGitLane.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PBGitLane.h; sourceTree = "<group>"; };
-		F5C6F68C0E65FF9300478D97 /* PBGitLane.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PBGitLane.m; sourceTree = "<group>"; };
+		F5C6F68C0E65FF9300478D97 /* PBGitLane.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PBGitLane.mm; sourceTree = "<group>"; };
 		F5D2DC850EA401A80034AD24 /* PBGitConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PBGitConfig.h; sourceTree = "<group>"; };
 		F5D619ED0EAE62EA00341D73 /* html */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = folder; path = html; sourceTree = "<group>"; };
 		F5DFFA6A0E075D8800617813 /* PBEasyFS.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PBEasyFS.h; sourceTree = "<group>"; };
@@ -225,7 +225,7 @@
 		F5FF4E160E0829C20006317A /* PBGitRevList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PBGitRevList.h; sourceTree = "<group>"; };
 		F5FF4E170E0829C20006317A /* PBGitRevList.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PBGitRevList.m; sourceTree = "<group>"; };
 		F5FF4E780E082E440006317A /* PBGitGrapher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PBGitGrapher.h; sourceTree = "<group>"; };
-		F5FF4E790E082E440006317A /* PBGitGrapher.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PBGitGrapher.m; sourceTree = "<group>"; };
+		F5FF4E790E082E440006317A /* PBGitGrapher.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PBGitGrapher.mm; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -456,7 +456,7 @@
 			isa = PBXGroup;
 			children = (
 				F5FF4E780E082E440006317A /* PBGitGrapher.h */,
-				F5FF4E790E082E440006317A /* PBGitGrapher.m */,
+				F5FF4E790E082E440006317A /* PBGitGrapher.mm */,
 				F50FE0E10E07BE9600854FCD /* PBGitRevisionCell.h */,
 				F50FE0E20E07BE9600854FCD /* PBGitRevisionCell.m */,
 				F56CC7270E65E0AD004307B4 /* PBGitGraphLine.h */,
@@ -464,7 +464,7 @@
 				F56CC7300E65E0E5004307B4 /* PBGraphCellInfo.h */,
 				F56CC7310E65E0E5004307B4 /* PBGraphCellInfo.m */,
 				F5C6F68B0E65FF9300478D97 /* PBGitLane.h */,
-				F5C6F68C0E65FF9300478D97 /* PBGitLane.m */,
+				F5C6F68C0E65FF9300478D97 /* PBGitLane.mm */,
 			);
 			name = Graphing;
 			sourceTree = "<group>";
@@ -656,12 +656,12 @@
 				F5DFFA6C0E075D8800617813 /* PBEasyFS.m in Sources */,
 				F50FE0E30E07BE9600854FCD /* PBGitRevisionCell.m in Sources */,
 				F5FF4E180E0829C20006317A /* PBGitRevList.m in Sources */,
-				F5FF4E7A0E082E440006317A /* PBGitGrapher.m in Sources */,
+				F5FF4E7A0E082E440006317A /* PBGitGrapher.mm in Sources */,
 				911111F80E594F3F00BF76B4 /* PBRepositoryDocumentController.m in Sources */,
 				913D5E5F0E556A9300CECEA2 /* PBCLIProxy.mm in Sources */,
 				F56CC7290E65E0AD004307B4 /* PBGitGraphLine.m in Sources */,
 				F56CC7320E65E0E5004307B4 /* PBGraphCellInfo.m in Sources */,
-				F5C6F68D0E65FF9300478D97 /* PBGitLane.m in Sources */,
+				F5C6F68D0E65FF9300478D97 /* PBGitLane.mm in Sources */,
 				F5C007750E731B48007B84B2 /* PBGitRef.m in Sources */,
 				F5AD56790E79B78100EDAAFE /* PBCommitList.m in Sources */,
 				F53FF2050E7ABB5300389171 /* PBGitRevSpecifier.m in Sources */,
