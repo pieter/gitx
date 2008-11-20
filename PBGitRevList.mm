@@ -12,6 +12,12 @@
 #import "PBGitGrapher.h"
 #import "PBGitRevSpecifier.h"
 
+#include <ext/stdio_filebuf.h>
+#include <iostream>
+#include <string>
+
+using namespace std;
+
 @implementation PBGitRevList
 
 @synthesize commits;
@@ -70,9 +76,9 @@
 	BOOL showSign = [rev hasLeftRight];
 
 	if (showSign)
-		arguments = [NSMutableArray arrayWithObjects:@"log", @"--early-output", @"--topo-order", @"--pretty=format:%H\01%an\01%s\01%P\01%at\01%m", nil];
+		arguments = [NSMutableArray arrayWithObjects:@"log", @"-z", @"--early-output", @"--topo-order", @"--pretty=format:%H%x00%an%x00%s%x00%P%x00%at%x00%m", nil];
 	else
-		arguments = [NSMutableArray arrayWithObjects:@"log", @"--early-output", @"--topo-order", @"--pretty=format:%H\01%an\01%s\01%P\01%at", nil];
+		arguments = [NSMutableArray arrayWithObjects:@"log", @"-z", @"--early-output", @"--topo-order", @"--pretty=format:%H%x00%an%x00%s%x00%P%x00%at", nil];
 
 	if (!rev)
 		[arguments addObject:@"HEAD"];
@@ -87,64 +93,75 @@
 	NSFileHandle* handle = [task.standardOutput fileHandleForReading];
 	
 	int fd = [handle fileDescriptor];
-	FILE* f = fdopen(fd, "r");
-	int BUFFERSIZE = 2048;
-	char buffer[BUFFERSIZE];
-	buffer[BUFFERSIZE - 2] = 0;
-	
-	char* l;
+	__gnu_cxx::stdio_filebuf<char> buf(fd, std::ios::in);
+	std::istream stream(&buf);
+
 	int num = 0;
-	NSMutableString* currentLine = [NSMutableString string];
-	while (l = fgets(buffer, BUFFERSIZE, f)) {
-		NSString *s = [NSString stringWithCString:(const char *)l encoding:NSUTF8StringEncoding];
-		if ([s length] == 0)
-			s = [NSString stringWithCString:(const char *)l encoding:NSASCIIStringEncoding];
-		[currentLine appendString: s];
-		
-		// If buffer is full, we go for another round
-		if (buffer[BUFFERSIZE - 2] != 0) {
-			buffer[BUFFERSIZE - 2] = 0;
-			continue;
-		}
+	while (true) {
+		string sha;
+		if (!getline(stream, sha, '\0'))
+			break;
 
 		// We reached the end of some temporary output. Show what we have
-		// until now, and then start from the beginning.
-		if ([currentLine hasPrefix:@"Final output:"]) {
+		// until now, and then start again. The sha of the next thing is still
+		// in this buffer. So, we use a substring of current input.
+		if (sha[1] == 'i') // Matches 'Final output'
+		{
+			num = 0;
 			[self performSelectorOnMainThread:@selector(setCommits:) withObject:revisions waitUntilDone:NO];
 			g = [[PBGitGrapher alloc] initWithRepository: repository];
 			revisions = [NSMutableArray array];
-			[currentLine setString: @""];
-			continue;
+			
+			sha = sha.substr(sha.length() - 40, 40);
 		}
 
-		// If we are here, we currentLine is a full line.
-		NSArray* components = [currentLine componentsSeparatedByString:@"\01"];
-		if ([components count] < 5) {
-			NSLog(@"Can't split string: %@", currentLine);
-			[currentLine setString: @""];
-			continue;
-		}
+		// From now on, 1.2 seconds
+		PBGitCommit* newCommit = [[PBGitCommit alloc] initWithRepository: repository andSha: [NSString stringWithUTF8String:sha.c_str()]];
 
-		PBGitCommit* newCommit = [[PBGitCommit alloc] initWithRepository: repository andSha: [components objectAtIndex:0]];
-		NSArray* parents = [[components objectAtIndex:3] componentsSeparatedByString:@" "];
-		newCommit.parents = parents;
-		newCommit.subject = [components objectAtIndex:2];
-		newCommit.author = [components objectAtIndex:1];
-		newCommit.date = [NSDate dateWithTimeIntervalSince1970:[[components objectAtIndex:4] intValue]];
+		string author;
+		getline(stream, author, '\0');
+
+		string subject;
+		getline(stream, subject, '\0');
+
+		string parents;
+		getline(stream, parents, '\0');
+
+		int time;
+		stream >> time;
+		char c;
+		stream >> c;
+
+		if (c != '\0')
+			cout << "Error" << endl;
+		
+		
+		[newCommit setParents:[[NSString stringWithUTF8String:parents.c_str()] componentsSeparatedByString:@" "]];
+		[newCommit setSubject:[NSString stringWithUTF8String:subject.c_str()]];
+		[newCommit setAuthor:[NSString stringWithUTF8String:author.c_str()]];
+		NSDate *date = [NSDate dateWithTimeIntervalSince1970:time];
+		[newCommit setDate:date];
+		
 		if (showSign)
-			newCommit.sign = [[components objectAtIndex:5] characterAtIndex:0];
+		{
+			stream >> c;
+			if (c != '>' && c != '<' && c != '^' && c != '-')
+				NSLog(@"Error loading commits: sign not correct");
+			[newCommit setSign: c];
+			stream >> c;
+			if (c != '\0' && !stream.eof())
+				NSLog(@"Error: unexpected char (expected '0', was: %c)", c);
+		}
 
 		[revisions addObject: newCommit];
-		[g decorateCommit: newCommit];
+		//[g decorateCommit: newCommit];
 		
+		// 0.1 second on linux-2.6
 		if (refs && [refs objectForKey:newCommit.sha])
 			newCommit.refs = [refs objectForKey:newCommit.sha];
 		
 		if (++num % 1000 == 0)
 			[self performSelectorOnMainThread:@selector(setCommits:) withObject:revisions waitUntilDone:NO];
-
-	
-		[currentLine setString: @""];
 	}
 	
 	NSTimeInterval duration = [[NSDate date] timeIntervalSinceDate:start];

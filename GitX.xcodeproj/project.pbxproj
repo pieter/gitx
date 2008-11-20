@@ -57,7 +57,7 @@
 		F580E6B10E73328C009E2D3F /* Sparkle.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = F580E6AD0E733276009E2D3F /* Sparkle.framework */; };
 		F5886A160ED5D3490066E74C /* speedtest.m in Sources */ = {isa = PBXBuildFile; fileRef = F5886A0A0ED5D27A0066E74C /* speedtest.m */; };
 		F5886A170ED5D34F0066E74C /* PBGitRepository.m in Sources */ = {isa = PBXBuildFile; fileRef = F5945E160E02B0C200706420 /* PBGitRepository.m */; };
-		F5886A180ED5D3540066E74C /* PBGitRevList.m in Sources */ = {isa = PBXBuildFile; fileRef = F5FF4E170E0829C20006317A /* PBGitRevList.m */; };
+		F5886A180ED5D3540066E74C /* PBGitRevList.mm in Sources */ = {isa = PBXBuildFile; fileRef = F5FF4E170E0829C20006317A /* PBGitRevList.mm */; };
 		F5886A190ED5D3560066E74C /* PBGitRef.m in Sources */ = {isa = PBXBuildFile; fileRef = F5C007740E731B48007B84B2 /* PBGitRef.m */; };
 		F5886A1B0ED5D37C0066E74C /* NSFileHandleExt.m in Sources */ = {isa = PBXBuildFile; fileRef = F56524B90E02D22D00F03B52 /* NSFileHandleExt.m */; };
 		F5886A1C0ED5D37C0066E74C /* PBEasyPipe.m in Sources */ = {isa = PBXBuildFile; fileRef = F57CC3900E05DDF2000472E2 /* PBEasyPipe.m */; };
@@ -95,7 +95,7 @@
 		F5FC41F40EBCBD4300191D80 /* PBGitXProtocol.m in Sources */ = {isa = PBXBuildFile; fileRef = F5FC41F30EBCBD4300191D80 /* PBGitXProtocol.m */; };
 		F5FC43FE0EBD08EE00191D80 /* PBRefMenuItem.m in Sources */ = {isa = PBXBuildFile; fileRef = F5FC43FD0EBD08EE00191D80 /* PBRefMenuItem.m */; };
 		F5FE6C030EB13BC900F30D12 /* PBServicesController.m in Sources */ = {isa = PBXBuildFile; fileRef = F5FE6C020EB13BC900F30D12 /* PBServicesController.m */; };
-		F5FF4E180E0829C20006317A /* PBGitRevList.m in Sources */ = {isa = PBXBuildFile; fileRef = F5FF4E170E0829C20006317A /* PBGitRevList.m */; };
+		F5FF4E180E0829C20006317A /* PBGitRevList.mm in Sources */ = {isa = PBXBuildFile; fileRef = F5FF4E170E0829C20006317A /* PBGitRevList.mm */; };
 		F5FF4E7A0E082E440006317A /* PBGitGrapher.mm in Sources */ = {isa = PBXBuildFile; fileRef = F5FF4E790E082E440006317A /* PBGitGrapher.mm */; };
 /* End PBXBuildFile section */
 
@@ -244,7 +244,7 @@
 		F5FE6C010EB13BC900F30D12 /* PBServicesController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PBServicesController.h; sourceTree = "<group>"; };
 		F5FE6C020EB13BC900F30D12 /* PBServicesController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PBServicesController.m; sourceTree = "<group>"; };
 		F5FF4E160E0829C20006317A /* PBGitRevList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PBGitRevList.h; sourceTree = "<group>"; };
-		F5FF4E170E0829C20006317A /* PBGitRevList.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PBGitRevList.m; sourceTree = "<group>"; };
+		F5FF4E170E0829C20006317A /* PBGitRevList.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PBGitRevList.mm; sourceTree = "<group>"; };
 		F5FF4E780E082E440006317A /* PBGitGrapher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PBGitGrapher.h; sourceTree = "<group>"; };
 		F5FF4E790E082E440006317A /* PBGitGrapher.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PBGitGrapher.mm; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -520,7 +520,7 @@
 				F5C007730E731B48007B84B2 /* PBGitRef.h */,
 				F5C007740E731B48007B84B2 /* PBGitRef.m */,
 				F5FF4E160E0829C20006317A /* PBGitRevList.h */,
-				F5FF4E170E0829C20006317A /* PBGitRevList.m */,
+				F5FF4E170E0829C20006317A /* PBGitRevList.mm */,
 				F53FF2030E7ABB5300389171 /* PBGitRevSpecifier.h */,
 				F53FF2040E7ABB5300389171 /* PBGitRevSpecifier.m */,
 				F56174550E058893001DCD79 /* PBGitTree.h */,
@@ -720,7 +720,7 @@
 				F513085B0E0740F2000C8BCD /* PBQLOutlineView.m in Sources */,
 				F5DFFA6C0E075D8800617813 /* PBEasyFS.m in Sources */,
 				F50FE0E30E07BE9600854FCD /* PBGitRevisionCell.m in Sources */,
-				F5FF4E180E0829C20006317A /* PBGitRevList.m in Sources */,
+				F5FF4E180E0829C20006317A /* PBGitRevList.mm in Sources */,
 				F5FF4E7A0E082E440006317A /* PBGitGrapher.mm in Sources */,
 				911111F80E594F3F00BF76B4 /* PBRepositoryDocumentController.m in Sources */,
 				913D5E5F0E556A9300CECEA2 /* PBCLIProxy.mm in Sources */,
@@ -780,7 +780,7 @@
 				F5886A1B0ED5D37C0066E74C /* NSFileHandleExt.m in Sources */,
 				F5886A1C0ED5D37C0066E74C /* PBEasyPipe.m in Sources */,
 				F5886A1D0ED5D37C0066E74C /* PBEasyFS.m in Sources */,
-				F5886A180ED5D3540066E74C /* PBGitRevList.m in Sources */,
+				F5886A180ED5D3540066E74C /* PBGitRevList.mm in Sources */,
 				F5886A170ED5D34F0066E74C /* PBGitRepository.m in Sources */,
 				F5886A190ED5D3560066E74C /* PBGitRef.m in Sources */,
 				F5886A160ED5D3490066E74C /* speedtest.m in Sources */,
