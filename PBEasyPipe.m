@@ -26,6 +26,9 @@
 
 	if ([[NSUserDefaults standardUserDefaults] boolForKey:@"Show Debug Messages"])
 		NSLog(@"Starting command `%@ %@` in dir %@", cmd, [args componentsJoinedByString:@" "], dir);
+#ifdef CLI
+	NSLog(@"Starting command `%@ %@` in dir %@", cmd, [args componentsJoinedByString:@" "], dir);
+#endif
 
 	NSPipe* pipe = [NSPipe pipe];
 	task.standardOutput = pipe;

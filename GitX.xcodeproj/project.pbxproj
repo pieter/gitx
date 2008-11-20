@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 44;
+	objectVersion = 45;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -55,6 +55,24 @@
 		F57CC4410E05E496000472E2 /* PBGitWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = F57CC4400E05E496000472E2 /* PBGitWindowController.m */; };
 		F580E6AE0E733276009E2D3F /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F580E6AD0E733276009E2D3F /* Sparkle.framework */; };
 		F580E6B10E73328C009E2D3F /* Sparkle.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = F580E6AD0E733276009E2D3F /* Sparkle.framework */; };
+		F5886A160ED5D3490066E74C /* speedtest.m in Sources */ = {isa = PBXBuildFile; fileRef = F5886A0A0ED5D27A0066E74C /* speedtest.m */; };
+		F5886A170ED5D34F0066E74C /* PBGitRepository.m in Sources */ = {isa = PBXBuildFile; fileRef = F5945E160E02B0C200706420 /* PBGitRepository.m */; };
+		F5886A180ED5D3540066E74C /* PBGitRevList.m in Sources */ = {isa = PBXBuildFile; fileRef = F5FF4E170E0829C20006317A /* PBGitRevList.m */; };
+		F5886A190ED5D3560066E74C /* PBGitRef.m in Sources */ = {isa = PBXBuildFile; fileRef = F5C007740E731B48007B84B2 /* PBGitRef.m */; };
+		F5886A1B0ED5D37C0066E74C /* NSFileHandleExt.m in Sources */ = {isa = PBXBuildFile; fileRef = F56524B90E02D22D00F03B52 /* NSFileHandleExt.m */; };
+		F5886A1C0ED5D37C0066E74C /* PBEasyPipe.m in Sources */ = {isa = PBXBuildFile; fileRef = F57CC3900E05DDF2000472E2 /* PBEasyPipe.m */; };
+		F5886A1D0ED5D37C0066E74C /* PBEasyFS.m in Sources */ = {isa = PBXBuildFile; fileRef = F5DFFA6B0E075D8800617813 /* PBEasyFS.m */; };
+		F5886A1E0ED5D3880066E74C /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
+		F5886A260ED5D4870066E74C /* PBGitGrapher.mm in Sources */ = {isa = PBXBuildFile; fileRef = F5FF4E790E082E440006317A /* PBGitGrapher.mm */; };
+		F5886A270ED5D4870066E74C /* PBGitRevisionCell.m in Sources */ = {isa = PBXBuildFile; fileRef = F50FE0E20E07BE9600854FCD /* PBGitRevisionCell.m */; };
+		F5886A280ED5D4870066E74C /* PBGitGraphLine.m in Sources */ = {isa = PBXBuildFile; fileRef = F56CC7280E65E0AD004307B4 /* PBGitGraphLine.m */; };
+		F5886A290ED5D4870066E74C /* PBGraphCellInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = F56CC7310E65E0E5004307B4 /* PBGraphCellInfo.m */; };
+		F5886A2A0ED5D4870066E74C /* PBGitLane.mm in Sources */ = {isa = PBXBuildFile; fileRef = F5C6F68C0E65FF9300478D97 /* PBGitLane.mm */; };
+		F5886A310ED5D54C0066E74C /* PBGitConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = 93FCCBA80EA8AF450061B02B /* PBGitConfig.m */; };
+		F5886A320ED5D5510066E74C /* PBGitCommit.m in Sources */ = {isa = PBXBuildFile; fileRef = F56524EF0E02D45200F03B52 /* PBGitCommit.m */; };
+		F5886A330ED5D5580066E74C /* PBGitRevSpecifier.m in Sources */ = {isa = PBXBuildFile; fileRef = F53FF2040E7ABB5300389171 /* PBGitRevSpecifier.m */; };
+		F5886A340ED5D55D0066E74C /* PBGitBinary.m in Sources */ = {isa = PBXBuildFile; fileRef = F53C4DF60E97FC630022AD59 /* PBGitBinary.m */; };
+		F5886A360ED5D56E0066E74C /* PBGitTree.m in Sources */ = {isa = PBXBuildFile; fileRef = F56174560E058893001DCD79 /* PBGitTree.m */; };
 		F59116E60E843BB50072CCB1 /* PBGitCommitView.xib in Resources */ = {isa = PBXBuildFile; fileRef = F59116E50E843BB50072CCB1 /* PBGitCommitView.xib */; };
 		F59116E90E843BCB0072CCB1 /* PBGitCommitController.m in Sources */ = {isa = PBXBuildFile; fileRef = F59116E80E843BCB0072CCB1 /* PBGitCommitController.m */; };
 		F593DF780E9E636C003A8559 /* PBFileChangesTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = F593DF770E9E636C003A8559 /* PBFileChangesTableView.m */; };
@@ -181,6 +199,9 @@
 		F57CC43F0E05E496000472E2 /* PBGitWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PBGitWindowController.h; sourceTree = "<group>"; };
 		F57CC4400E05E496000472E2 /* PBGitWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PBGitWindowController.m; sourceTree = "<group>"; };
 		F580E6AD0E733276009E2D3F /* Sparkle.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Sparkle.framework; sourceTree = "<group>"; };
+		F5886A0A0ED5D27A0066E74C /* speedtest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = speedtest.m; sourceTree = "<group>"; };
+		F5886A100ED5D33D0066E74C /* SpeedTest.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SpeedTest.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		F5886A120ED5D33D0066E74C /* SpeedTest-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "SpeedTest-Info.plist"; sourceTree = "<group>"; };
 		F59116E50E843BB50072CCB1 /* PBGitCommitView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PBGitCommitView.xib; sourceTree = "<group>"; };
 		F59116E70E843BCB0072CCB1 /* PBGitCommitController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PBGitCommitController.h; sourceTree = "<group>"; };
 		F59116E80E843BCB0072CCB1 /* PBGitCommitController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PBGitCommitController.m; sourceTree = "<group>"; };
@@ -248,6 +269,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		F5886A0E0ED5D33D0066E74C /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F5886A1E0ED5D3880066E74C /* Cocoa.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -285,6 +314,7 @@
 			children = (
 				8D1107320486CEB800E47090 /* GitX.app */,
 				913D5E490E55644600CECEA2 /* gitx */,
+				F5886A100ED5D33D0066E74C /* SpeedTest.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -292,6 +322,7 @@
 		29B97314FDCFA39411CA2CEA /* GitTest */ = {
 			isa = PBXGroup;
 			children = (
+				F5886A080ED5D26B0066E74C /* SpeedTest */,
 				913D5E420E5563FD00CECEA2 /* cli */,
 				F57CC43E0E05E472000472E2 /* Aux */,
 				F57CC3850E05DDC1000472E2 /* Controllers */,
@@ -303,6 +334,7 @@
 				29B97317FDCFA39411CA2CEA /* Resources */,
 				29B97323FDCFA39411CA2CEA /* Frameworks */,
 				19C28FACFE9D520D11CA2CBB /* Products */,
+				F5886A120ED5D33D0066E74C /* SpeedTest-Info.plist */,
 			);
 			name = GitTest;
 			sourceTree = "<group>";
@@ -441,6 +473,14 @@
 			name = Aux;
 			sourceTree = "<group>";
 		};
+		F5886A080ED5D26B0066E74C /* SpeedTest */ = {
+			isa = PBXGroup;
+			children = (
+				F5886A0A0ED5D27A0066E74C /* speedtest.m */,
+			);
+			name = SpeedTest;
+			sourceTree = "<group>";
+		};
 		F5B161BB0EAB6E0C005A1DE1 /* Diff */ = {
 			isa = PBXGroup;
 			children = (
@@ -571,13 +611,30 @@
 			productReference = 913D5E490E55644600CECEA2 /* gitx */;
 			productType = "com.apple.product-type.tool";
 		};
+		F5886A0F0ED5D33D0066E74C /* SpeedTest */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = F5886A150ED5D33E0066E74C /* Build configuration list for PBXNativeTarget "SpeedTest" */;
+			buildPhases = (
+				F5886A0C0ED5D33D0066E74C /* Resources */,
+				F5886A0D0ED5D33D0066E74C /* Sources */,
+				F5886A0E0ED5D33D0066E74C /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = SpeedTest;
+			productName = SpeedTest;
+			productReference = F5886A100ED5D33D0066E74C /* SpeedTest.app */;
+			productType = "com.apple.product-type.application";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
 		29B97313FDCFA39411CA2CEA /* Project object */ = {
 			isa = PBXProject;
 			buildConfigurationList = 26FC0A880875C7B200E6366F /* Build configuration list for PBXProject "GitX" */;
-			compatibilityVersion = "Xcode 3.0";
+			compatibilityVersion = "Xcode 3.1";
 			hasScannedForEncodings = 1;
 			mainGroup = 29B97314FDCFA39411CA2CEA /* GitTest */;
 			projectDirPath = "";
@@ -585,6 +642,7 @@
 			targets = (
 				8D1107260486CEB800E47090 /* GitX */,
 				913D5E480E55644600CECEA2 /* cli tool */,
+				F5886A0F0ED5D33D0066E74C /* SpeedTest */,
 			);
 		};
 /* End PBXProject section */
@@ -612,6 +670,13 @@
 				F56ADDDA0ED19F9E002AC78F /* AddLabelTemplate.png in Resources */,
 				3BC07F4C0ED5A5C5009A7768 /* HistoryViewTemplate.png in Resources */,
 				3BC07F4D0ED5A5C5009A7768 /* CommitViewTemplate.png in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F5886A0C0ED5D33D0066E74C /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -695,6 +760,30 @@
 				F53C4DF90E97FCAD0022AD59 /* PBEasyPipe.m in Sources */,
 				F53C4DF80E97FCA70022AD59 /* PBGitBinary.m in Sources */,
 				913D5E4D0E55644E00CECEA2 /* gitx.mm in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F5886A0D0ED5D33D0066E74C /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F5886A260ED5D4870066E74C /* PBGitGrapher.mm in Sources */,
+				F5886A360ED5D56E0066E74C /* PBGitTree.m in Sources */,
+				F5886A330ED5D5580066E74C /* PBGitRevSpecifier.m in Sources */,
+				F5886A310ED5D54C0066E74C /* PBGitConfig.m in Sources */,
+				F5886A270ED5D4870066E74C /* PBGitRevisionCell.m in Sources */,
+				F5886A320ED5D5510066E74C /* PBGitCommit.m in Sources */,
+				F5886A340ED5D55D0066E74C /* PBGitBinary.m in Sources */,
+				F5886A280ED5D4870066E74C /* PBGitGraphLine.m in Sources */,
+				F5886A290ED5D4870066E74C /* PBGraphCellInfo.m in Sources */,
+				F5886A2A0ED5D4870066E74C /* PBGitLane.mm in Sources */,
+				F5886A1B0ED5D37C0066E74C /* NSFileHandleExt.m in Sources */,
+				F5886A1C0ED5D37C0066E74C /* PBEasyPipe.m in Sources */,
+				F5886A1D0ED5D37C0066E74C /* PBEasyFS.m in Sources */,
+				F5886A180ED5D3540066E74C /* PBGitRevList.m in Sources */,
+				F5886A170ED5D34F0066E74C /* PBGitRepository.m in Sources */,
+				F5886A190ED5D3560066E74C /* PBGitRef.m in Sources */,
+				F5886A160ED5D3490066E74C /* speedtest.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -785,7 +874,7 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				PREBINDING = NO;
-				SDKROOT = "$(DEVELOPER_SDK_DIR)/MacOSX10.5.sdk";
+				SDKROOT = macosx10.5;
 			};
 			name = Debug;
 		};
@@ -800,7 +889,7 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				PREBINDING = NO;
-				SDKROOT = "$(DEVELOPER_SDK_DIR)/MacOSX10.5.sdk";
+				SDKROOT = macosx10.5;
 			};
 			name = Release;
 		};
@@ -849,6 +938,57 @@
 			};
 			name = Release;
 		};
+		F5886A130ED5D33E0066E74C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = YES;
+				CODE_SIGN_IDENTITY = "";
+				COPY_PHASE_STRIP = NO;
+				FRAMEWORK_SEARCH_PATHS = /System/Library/Frameworks;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 2;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = GitX_Prefix.pch;
+				INFOPLIST_FILE = "SpeedTest-Info.plist";
+				INSTALL_PATH = "$(HOME)/Applications";
+				OTHER_CFLAGS = "-DCLI";
+				OTHER_LDFLAGS = (
+					"-framework",
+					Foundation,
+					"-framework",
+					Cocoa,
+				);
+				PREBINDING = NO;
+				PRODUCT_NAME = SpeedTest;
+				SDKROOT = macosx10.5;
+			};
+			name = Debug;
+		};
+		F5886A140ED5D33E0066E74C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/UIKit.framework/Headers/UIKit.h";
+				INFOPLIST_FILE = "SpeedTest-Info.plist";
+				INSTALL_PATH = "$(HOME)/Applications";
+				OTHER_LDFLAGS = (
+					"-framework",
+					Foundation,
+					"-framework",
+					UIKit,
+				);
+				PREBINDING = NO;
+				PRODUCT_NAME = SpeedTest;
+				SDKROOT = iphoneos2.0;
+				ZERO_LINK = NO;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -875,6 +1015,15 @@
 			buildConfigurations = (
 				913D5E4B0E55644600CECEA2 /* Debug */,
 				913D5E4C0E55644600CECEA2 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		F5886A150ED5D33E0066E74C /* Build configuration list for PBXNativeTarget "SpeedTest" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F5886A130ED5D33E0066E74C /* Debug */,
+				F5886A140ED5D33E0066E74C /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

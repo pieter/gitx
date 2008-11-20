@@ -136,7 +136,10 @@ NSString* PBGitRepositoryErrorDomain = @"GitXErrorDomain";
 	
 	// We don't want the window controller to display anything yet..
 	// We'll leave that to the caller of this method.
+#ifndef CLI
 	[self addWindowController:[[PBGitWindowController alloc] initWithRepository:self displayDefault:NO]];
+#endif
+
 	[self showWindows];
 
 	return self;
@@ -155,7 +158,9 @@ NSString* PBGitRepositoryErrorDomain = @"GitXErrorDomain";
 // Overridden to create our custom window controller
 - (void)makeWindowControllers
 {
+#ifndef CLI
 	[self addWindowController: [[PBGitWindowController alloc] initWithRepository:self displayDefault:YES]];
+#endif
 }
 
 - (NSWindowController *)windowController
