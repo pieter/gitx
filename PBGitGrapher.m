@@ -12,11 +12,13 @@
 
 @implementation PBGitGrapher
 
+#define MAX_LANES 32
+
 - (id) initWithRepository: (PBGitRepository*) repo
 {
 	refs = repo.refs;
 	repository = repo;
-	previousLanes = [NSMutableArray array];
+	previousLanes = [NSMutableArray arrayWithCapacity:MAX_LANES];
 	[PBGitLane resetColors];
 
 	return self;
@@ -25,7 +27,7 @@
 - (void) decorateCommit: (PBGitCommit *) commit
 {
 	int i = 0, newPos = -1;
-	NSMutableArray* currentLanes = [NSMutableArray array];
+	NSMutableArray* currentLanes = [NSMutableArray arrayWithCapacity:MAX_LANES];
 	NSMutableArray* lines = [NSMutableArray array];
 	PBGitLane* currentLane = NULL;
 	BOOL didFirst = NO;
@@ -82,7 +84,7 @@
 	//Add your own parents
 
 	// If we already did the first parent, don't do so again
-	if (!didFirst) {
+	if (!didFirst && [currentLanes count] < MAX_LANES) {
 		PBGitLane* newLane = [[PBGitLane alloc] initWithCommit:[commit.parents objectAtIndex:0]];
 		[currentLanes addObject: newLane];
 		newPos = [currentLanes count];
@@ -109,6 +111,9 @@
 		if (was_displayed)
 			continue;
 		
+		if ([currentLanes count] >= MAX_LANES)
+			break;
+
 		// Really add this parent
 		addedParent = YES;
 		PBGitLane* newLane = [[PBGitLane alloc] initWithCommit:parent];
