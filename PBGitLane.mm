@@ -24,10 +24,22 @@
 
 int PBGitLane::s_colorIndex = 0;
 
+static git_oid str_to_oid(NSString *str)
+{
+	git_oid oid;
+	git_oid_mkstr(&oid, [str UTF8String]);
+	return oid;
+}
+
+bool PBGitLane::isCommit(git_oid *sha) const
+{
+	return !git_oid_cmp(&d_sha, sha);
+}
+
 bool PBGitLane::isCommit(NSString *sha) const
 {
-	//NSLog(@"Comparing %@ with %@", d_sha, sha);
-	return [d_sha isEqualToString:sha];
+	git_oid a = str_to_oid(sha);
+	return isCommit(&a);
 }
 
 int PBGitLane::index() const
@@ -35,10 +47,16 @@ int PBGitLane::index() const
 	return d_index;
 }
 
-void PBGitLane::setSha(NSString *sha)
+void PBGitLane::setSha(git_oid sha)
 {
 	d_sha = sha;
 }
+
+void PBGitLane::setSha(NSString *sha)
+{
+	return setSha(str_to_oid(sha));
+}
+
 
 void PBGitLane::resetColors()
 {

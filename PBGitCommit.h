@@ -9,9 +9,10 @@
 #import <Cocoa/Cocoa.h>
 #import "PBGitRepository.h"
 #import "PBGitTree.h"
+#include "git/oid.h"
 
 @interface PBGitCommit : NSObject {
-	NSString* sha;
+	git_oid sha;
 	NSString* subject;
 	NSString* author;
 	NSString* details;
@@ -24,12 +25,14 @@
 	PBGitRepository* repository;
 }
 
-- initWithRepository:(PBGitRepository*) repo andSha:(NSString*) sha;
+- initWithRepository:(PBGitRepository *)repo andSha:(git_oid)sha;
 
 - (void)addRef:(id)ref;
 - (void)removeRef:(id)ref;
 
-@property (copy) NSString* sha;
+- (NSString *)realSha;
+
+@property (readonly) git_oid *sha;
 @property (copy) NSString* subject;
 @property (copy) NSString* author;
 @property (retain) NSArray* parents;

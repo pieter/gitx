@@ -38,12 +38,12 @@
 		return;
 
 	// The sha is the same, but refs may have changed.. reload it lazy
-	if ([currentSha isEqualToString: content.sha])
+	if ([currentSha isEqualToString: [content realSha]])
 	{
 		[[self script] callWebScriptMethod:@"reload" withArguments: nil];
 		return;
 	}
-	currentSha = content.sha;
+	currentSha = [content realSha];
 
 	NSArray *arguments = [NSArray arrayWithObjects:content, [[[historyController repository] headRef] simpleRef], nil];
 	[[self script] callWebScriptMethod:@"loadCommit" withArguments: arguments];

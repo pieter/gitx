@@ -11,7 +11,7 @@
 
 @implementation PBGitCommit
 
-@synthesize sha, repository, subject, author, date, parents, sign, lineInfo, refs;
+@synthesize repository, subject, author, date, parents, sign, lineInfo, refs;
 
 
 - (NSString *) dateString
@@ -25,12 +25,25 @@
 	return self.tree.children;
 }
 
-- initWithRepository:(PBGitRepository*) repo andSha:(NSString*) newSha
+- (git_oid *)sha
+{
+	return &sha;
+}
+
+- initWithRepository:(PBGitRepository*) repo andSha:(git_oid)newSha
 {
 	details = nil;
-	self.repository = repo;
-	self.sha = newSha;
+	repository = repo;
+	sha = newSha;
 	return self;
+}
+
+- (NSString *)realSha
+{
+	char *hex = git_oid_mkhex(&sha);
+	NSString *str = [NSString stringWithUTF8String:hex];
+	free(hex);
+	return str;
 }
 
 // NOTE: This method should remain threadsafe, as we load it in async
@@ -40,7 +53,7 @@
 	if (details != nil)
 		return details;
 
-	details = [self.repository outputForCommand:[@"show --pretty=raw " stringByAppendingString:self.sha]];
+	details = [self.repository outputForCommand:[@"show --pretty=raw " stringByAppendingString:[self realSha]]];
 	
 	return details;
 }

@@ -6,32 +6,46 @@
 //  Copyright 2008 __MyCompanyName__. All rights reserved.
 //
 #import <Cocoa/Cocoa.h>
+extern "C"
+{
+#include "git/oid.h"
+}
 
 class PBGitLane {
 	static int s_colorIndex;
 
-	NSString *d_sha;
+	git_oid d_sha;
 	int d_index;
 
 public:
 
-	PBGitLane(NSString *sha)
+	PBGitLane(git_oid sha)
 	{
 		d_index = s_colorIndex++;
-		d_sha = [sha copy];
+		d_sha = sha;
+	}
+
+	PBGitLane(NSString *sha)
+	{
+		git_oid_mkstr(&d_sha, [sha UTF8String]);
+		d_index = s_colorIndex++;
 	}
 	
 	PBGitLane()
 	{
 		d_index = s_colorIndex++;
-		d_sha = NULL;
+		//d_sha = NULL;
 	}
 	
+	bool isCommit(git_oid *sha) const;
 	bool isCommit(NSString *sha) const;
+	
+	void setSha(git_oid sha);
 	void setSha(NSString *sha);
-	NSString *sha() const
+	
+	git_oid const *sha() const
 	{
-		return [d_sha copy];
+		return &d_sha;
 	}
 	
 	int index() const;

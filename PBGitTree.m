@@ -22,7 +22,7 @@
 	PBGitTree* tree = [[self alloc] init];
 	tree.parent = nil;
 	tree.leaf = NO;
-	tree.sha = c.sha;
+	tree.sha = [c realSha];
 	tree.repository = c.repository;
 	tree.path = @"";
 	return tree;

@@ -4,7 +4,7 @@ var Commit = function(obj) {
 
 	this.refs = obj.refs;
 	this.author_name = obj.author;
-	this.sha = obj.sha;
+	this.sha = obj.realSha();
 	this.parents = obj.parents;
 	this.subject = obj.subject;
 

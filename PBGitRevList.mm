@@ -6,6 +6,11 @@
 //  Copyright 2008 __MyCompanyName__. All rights reserved.
 //
 
+extern "C"
+{
+#include "git/oid.h"
+}
+
 #import "PBGitRevList.h"
 #import "PBGitRepository.h"
 #import "PBGitCommit.h"
@@ -116,7 +121,9 @@ using namespace std;
 		}
 
 		// From now on, 1.2 seconds
-		PBGitCommit* newCommit = [[PBGitCommit alloc] initWithRepository: repository andSha: [NSString stringWithUTF8String:sha.c_str()]];
+		git_oid oid;
+		git_oid_mkstr(&oid, sha.c_str());
+		PBGitCommit* newCommit = [[PBGitCommit alloc] initWithRepository:repository andSha:oid];
 
 		string author;
 		getline(stream, author, '\0');
@@ -154,11 +161,11 @@ using namespace std;
 		}
 
 		[revisions addObject: newCommit];
-		//[g decorateCommit: newCommit];
+		[g decorateCommit: newCommit];
 		
 		// 0.1 second on linux-2.6
-		if (refs && [refs objectForKey:newCommit.sha])
-			newCommit.refs = [refs objectForKey:newCommit.sha];
+		if (refs && [refs objectForKey:[newCommit realSha]])
+			newCommit.refs = [refs objectForKey:[newCommit realSha]];
 		
 		if (++num % 1000 == 0)
 			[self performSelectorOnMainThread:@selector(setCommits:) withObject:revisions waitUntilDone:NO];

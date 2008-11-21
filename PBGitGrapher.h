@@ -14,6 +14,9 @@
 @interface PBGitGrapher : NSObject {
 	PBGraphCellInfo* previous;
 	void *pl;
+	void *storage;
+	int curLane;
+
 	NSDictionary* refs;
 	PBGitRepository* repository;
 }

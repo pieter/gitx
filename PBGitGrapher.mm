@@ -6,6 +6,10 @@
 //  Copyright 2008 __MyCompanyName__. All rights reserved.
 //
 
+extern "C" {
+#import "git/oid.h"
+}
+
 #import "PBGitGrapher.h"
 #import "PBGitCommit.h"
 #import "PBGitLane.h"
@@ -31,7 +35,6 @@ using namespace std;
 
 - (void) decorateCommit: (PBGitCommit *) commit
 {
-	//NSLog(@"Decoriting commit %@", commit.sha);
 	int i = 0, newPos = -1;
 	std::vector<PBGitLane *> *currentLanes = new std::vector<PBGitLane *>;
 	std::vector<PBGitLane *> *previousLanes = (std::vector<PBGitLane *> *)pl;
@@ -48,7 +51,6 @@ using namespace std;
 			i++;
 			// This is our commit! We should do a "merge": move the line from
 			// our upperMapping to their lowerMapping
-
 			if ((*it)->isCommit([commit sha])) {
 				if (!didFirst) {
 					didFirst = YES;
@@ -116,7 +118,7 @@ using namespace std;
 	// This boolean will tell us if that happened
 	BOOL addedParent = NO;
 
-	for (NSString* parent in [commit.parents subarrayWithRange:NSMakeRange(1, [commit.parents count] -1)]) {
+	for (NSString *parent in [commit.parents subarrayWithRange:NSMakeRange(1, [commit.parents count] -1)]) {
 		int i = 0;
 		BOOL was_displayed = NO;
 		std::vector<PBGitLane *>::iterator it = currentLanes->begin();
