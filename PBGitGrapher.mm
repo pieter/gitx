@@ -66,32 +66,9 @@ using namespace std;
 			}
 			else {
 				// We are not this commit.
-				// Try to find an earlier column for this commit.
-				int j = 0;
-				BOOL found = NO;
-				std::vector<PBGitLane *>::iterator it2 = currentLanes->begin();
-				for (; it2 < currentLanes->end(); ++it2) {
-					j++;
-					// ??? what is this?
-//						if (j == newPos)
-//							continue;
-					if ((*it)->isCommit([commit sha])) {
-						// We already have a column for this commit. use it instead
-						[lines addObject: [PBGitGraphLine upperLineFrom: i to: j color: (*it)->index()]];
-						found = YES;
-						break;
-					}
-				}
-
-				// We need a new column for this.
-				if (found) {
-					//NSLog(@"Need to delete");
-				} else {
-					//NSLog(@"Found another");
-					currentLanes->push_back(*it);
-					[lines addObject: [PBGitGraphLine upperLineFrom: i to: currentLanes->size() color: (*it)->index()]];
-					[lines addObject: [PBGitGraphLine lowerLineFrom: currentLanes->size() to: currentLanes->size() color: (*it)->index()]];
-				}
+				currentLanes->push_back(*it);
+				[lines addObject: [PBGitGraphLine upperLineFrom: i to: currentLanes->size() color: (*it)->index()]];
+				[lines addObject: [PBGitGraphLine lowerLineFrom: currentLanes->size() to: currentLanes->size() color: (*it)->index()]];
 			}
 			// For existing columns, we always just continue straight down
 			// ^^ I don't know what that means anymore :(
