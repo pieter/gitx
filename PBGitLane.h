@@ -19,10 +19,10 @@ class PBGitLane {
 
 public:
 
-	PBGitLane(git_oid sha)
+	PBGitLane(git_oid *sha)
 	{
 		d_index = s_colorIndex++;
-		d_sha = sha;
+		d_sha = *sha;
 	}
 
 	PBGitLane(NSString *sha)

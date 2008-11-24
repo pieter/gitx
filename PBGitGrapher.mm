@@ -47,7 +47,7 @@ void add_line(struct PBGitGraphLine *lines, int *nLines, int upper, int from, in
 	std::vector<PBGitLane *> *currentLanes = new std::vector<PBGitLane *>;
 	std::vector<PBGitLane *> *previousLanes = (std::vector<PBGitLane *> *)pl;
 
-	int maxLines = (previousLanes->size() + [commit.parents count] + 2) * 3;
+	int maxLines = (previousLanes->size() + commit.nParents + 2) * 3;
 	struct PBGitGraphLine *lines = (struct PBGitGraphLine *)malloc(sizeof(struct PBGitGraphLine) * maxLines);
 	int currentLine = 0;
 
@@ -94,7 +94,7 @@ void add_line(struct PBGitGraphLine *lines, int *nLines, int upper, int from, in
 
 	// If we already did the first parent, don't do so again
 	if (!didFirst && currentLanes->size() < MAX_LANES) {
-		PBGitLane *newLane = new PBGitLane([commit.parents objectAtIndex:0]);
+		PBGitLane *newLane = new PBGitLane(commit.parentShas);
 		currentLanes->push_back(newLane);
 		newPos = currentLanes->size();
 		add_line(lines, &currentLine, 0, newPos, newPos, newLane->index());
@@ -106,7 +106,9 @@ void add_line(struct PBGitGraphLine *lines, int *nLines, int upper, int from, in
 	// This boolean will tell us if that happened
 	BOOL addedParent = NO;
 
-	for (NSString *parent in [commit.parents subarrayWithRange:NSMakeRange(1, [commit.parents count] -1)]) {
+	int parentIndex;
+	for (parentIndex = 1; parentIndex < commit.nParents; ++parentIndex) {
+		git_oid *parent = commit.parentShas + parentIndex;
 		int i = 0;
 		BOOL was_displayed = NO;
 		std::vector<PBGitLane *>::iterator it = currentLanes->begin();
@@ -145,8 +147,8 @@ void add_line(struct PBGitGraphLine *lines, int *nLines, int upper, int from, in
 		previous.numColumns = currentLanes->size();
 
 	// Update the current lane to point to the new parent
-	if (currentLane && [commit.parents count] > 0 && ![[commit.parents objectAtIndex:0] isEqualToString:@""])
-		currentLane->setSha([commit.parents objectAtIndex:0]);
+	if (currentLane && commit.nParents > 0)
+		currentLane->setSha(commit.parentShas[0]);
 	//	else
 	//		[currentLanes removeObject:currentLane];
 

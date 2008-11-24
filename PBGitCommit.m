@@ -11,8 +11,23 @@
 
 @implementation PBGitCommit
 
-@synthesize repository, subject, author, date, parents, sign, lineInfo, refs;
+@synthesize repository, subject, author, date, parentShas, nParents, sign, lineInfo, refs;
 
+- (NSArray *) parents
+{
+	if (nParents == 0)
+		return NULL;
+
+	int i;
+	NSMutableArray *p = [NSMutableArray arrayWithCapacity:nParents];
+	for (i = 0; i < nParents; ++i)
+	{
+		char *s = git_oid_mkhex(parentShas + i);
+		[p addObject:[NSString stringWithUTF8String:s]];
+		free(s);
+	}
+	return p;
+}
 
 - (NSString *) dateString
 {
@@ -90,6 +105,12 @@
 	[refs removeObject:ref];
 	if ([refs count] == 0)
 		refs = NULL;
+}
+
+- (void)finalize
+{
+	free(parentShas);
+	[super finalize];
 }
 
 + (BOOL)isSelectorExcludedFromWebScript:(SEL)aSelector

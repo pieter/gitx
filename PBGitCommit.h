@@ -13,6 +13,9 @@
 
 @interface PBGitCommit : NSObject {
 	git_oid sha;
+	git_oid *parentShas;
+	int nParents;
+
 	NSString* subject;
 	NSString* author;
 	NSString* details;
@@ -35,7 +38,11 @@
 @property (readonly) git_oid *sha;
 @property (copy) NSString* subject;
 @property (copy) NSString* author;
-@property (retain) NSArray* parents;
+@property (readonly) NSArray* parents; // TODO: remove this and its uses
+
+@property (assign) git_oid *parentShas;
+@property (assign) int nParents;
+
 @property (retain) NSMutableArray* refs;
 @property (copy) NSDate* date;
 @property (readonly) NSString* dateString;

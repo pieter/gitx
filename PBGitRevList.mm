@@ -131,8 +131,23 @@ using namespace std;
 		string subject;
 		getline(stream, subject, '\0');
 
-		string parents;
-		getline(stream, parents, '\0');
+		string parentString;
+		getline(stream, parentString, '\0');
+		if (parentString.size() != 0)
+		{
+			if (((parentString.size() + 1) % 41) != 0) {
+				NSLog(@"invalid parents: %i", parentString.size());
+				continue;
+			}
+			int nParents = (parentString.size() + 1) / 41;
+			git_oid *parents = (git_oid *)malloc(sizeof(git_oid) * nParents);
+			int parentIndex;
+			for (parentIndex = 0; parentIndex < nParents; ++parentIndex)
+				git_oid_mkstr(parents + parentIndex, parentString.substr(parentIndex * 41, 40).c_str());
+			
+			newCommit.parentShas = parents;
+			newCommit.nParents = nParents;
+		}
 
 		int time;
 		stream >> time;
@@ -142,8 +157,6 @@ using namespace std;
 		if (c != '\0')
 			cout << "Error" << endl;
 		
-		
-		[newCommit setParents:[[NSString stringWithUTF8String:parents.c_str()] componentsSeparatedByString:@" "]];
 		[newCommit setSubject:[NSString stringWithUTF8String:subject.c_str()]];
 		[newCommit setAuthor:[NSString stringWithUTF8String:author.c_str()]];
 		NSDate *date = [NSDate dateWithTimeIntervalSince1970:time];
