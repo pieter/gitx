@@ -14,7 +14,7 @@ extern "C" {
 #import "PBGitCommit.h"
 #import "PBGitLane.h"
 #import "PBGitGraphLine.h"
-#import <vector>
+#import <list>
 
 using namespace std;
 
@@ -26,7 +26,7 @@ using namespace std;
 {
 	refs = repo.refs;
 	repository = repo;
-	pl = new std::vector<PBGitLane>;
+	pl = new std::list<PBGitLane>;
 
 	PBGitLane::resetColors();
 	//[PBGitLane resetColors];
@@ -44,8 +44,8 @@ void add_line(struct PBGitGraphLine *lines, int *nLines, int upper, int from, in
 - (void) decorateCommit: (PBGitCommit *) commit
 {
 	int i = 0, newPos = -1;
-	std::vector<PBGitLane *> *currentLanes = new std::vector<PBGitLane *>;
-	std::vector<PBGitLane *> *previousLanes = (std::vector<PBGitLane *> *)pl;
+	std::list<PBGitLane *> *currentLanes = new std::list<PBGitLane *>;
+	std::list<PBGitLane *> *previousLanes = (std::list<PBGitLane *> *)pl;
 
 	int maxLines = (previousLanes->size() + commit.nParents + 2) * 3;
 	struct PBGitGraphLine *lines = (struct PBGitGraphLine *)malloc(sizeof(struct PBGitGraphLine) * maxLines);
@@ -57,8 +57,8 @@ void add_line(struct PBGitGraphLine *lines, int *nLines, int upper, int from, in
 	// First, iterate over earlier columns and pass through any that don't want this commit
 	if (previous != nil) {
 		// We can't count until numColumns here, as it's only used for the width of the cell.
-		std::vector<PBGitLane *>::iterator it = previousLanes->begin();
-		for (; it < previousLanes->end(); ++it) {
+		std::list<PBGitLane *>::iterator it = previousLanes->begin();
+		for (; it != previousLanes->end(); ++it) {
 			i++;
 			// This is our commit! We should do a "merge": move the line from
 			// our upperMapping to their lowerMapping
@@ -111,8 +111,8 @@ void add_line(struct PBGitGraphLine *lines, int *nLines, int upper, int from, in
 		git_oid *parent = commit.parentShas + parentIndex;
 		int i = 0;
 		BOOL was_displayed = NO;
-		std::vector<PBGitLane *>::iterator it = currentLanes->begin();
-		for (; it < currentLanes->end(); ++it) {
+		std::list<PBGitLane *>::iterator it = currentLanes->begin();
+		for (; it != currentLanes->end(); ++it) {
 			i++;
 			if ((*it)->isCommit(parent)) {
 				add_line(lines, &currentLine, 0, i, newPos,(*it)->index());
@@ -136,6 +136,7 @@ void add_line(struct PBGitGraphLine *lines, int *nLines, int upper, int from, in
 	previous = [[PBGraphCellInfo alloc] initWithPosition:newPos andLines:lines];
 	if (currentLine > maxLines)
 		NSLog(@"Number of lines: %i vs allocated: %i", currentLine, maxLines);
+	//NSLog(@"Number of parents: %i, number of previous: %i, new lines: %i", commit.nParents, previousLanes->size(), currentLine);
 
 	previous.nLines = currentLine;
 	previous.sign = commit.sign;
@@ -149,8 +150,8 @@ void add_line(struct PBGitGraphLine *lines, int *nLines, int upper, int from, in
 	// Update the current lane to point to the new parent
 	if (currentLane && commit.nParents > 0)
 		currentLane->setSha(commit.parentShas[0]);
-	//	else
-	//		[currentLanes removeObject:currentLane];
+	else
+		currentLanes->remove(currentLane);
 
 	delete previousLanes;
 
