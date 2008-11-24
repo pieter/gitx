@@ -11,7 +11,7 @@
 
 @implementation PBGitCommit
 
-@synthesize repository, subject, author, date, parentShas, nParents, sign, lineInfo, refs;
+@synthesize repository, subject, timestamp, author, parentShas, nParents, sign, lineInfo, refs;
 
 - (NSArray *) parents
 {
@@ -27,6 +27,11 @@
 		free(s);
 	}
 	return p;
+}
+
+- (NSDate *)date
+{
+	return [NSDate dateWithTimeIntervalSince1970:timestamp];
 }
 
 - (NSString *) dateString

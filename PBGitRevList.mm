@@ -159,8 +159,7 @@ using namespace std;
 		
 		[newCommit setSubject:[NSString stringWithUTF8String:subject.c_str()]];
 		[newCommit setAuthor:[NSString stringWithUTF8String:author.c_str()]];
-		NSDate *date = [NSDate dateWithTimeIntervalSince1970:time];
-		[newCommit setDate:date];
+		[newCommit setTimestamp:time];
 		
 		if (showSign)
 		{

@@ -22,7 +22,7 @@
 	NSString *_patch;
 	NSArray* parents;
 	NSMutableArray* refs;
-	NSDate* date;
+	int timestamp;
 	char sign;
 	id lineInfo;
 	PBGitRepository* repository;
@@ -41,10 +41,10 @@
 @property (readonly) NSArray* parents; // TODO: remove this and its uses
 
 @property (assign) git_oid *parentShas;
-@property (assign) int nParents;
+@property (assign) int nParents, timestamp;
 
 @property (retain) NSMutableArray* refs;
-@property (copy) NSDate* date;
+@property (readonly) NSDate *date;
 @property (readonly) NSString* dateString;
 @property (readonly) NSString* patch;
 @property (assign) char sign;
