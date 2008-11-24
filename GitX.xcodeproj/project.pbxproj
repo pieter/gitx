@@ -46,7 +46,6 @@
 		F565262B0E03D89B00F03B52 /* PBWebHistoryController.m in Sources */ = {isa = PBXBuildFile; fileRef = F565262A0E03D89B00F03B52 /* PBWebHistoryController.m */; };
 		F56ADDD90ED19F9E002AC78F /* AddBranchTemplate.png in Resources */ = {isa = PBXBuildFile; fileRef = F56ADDD70ED19F9E002AC78F /* AddBranchTemplate.png */; };
 		F56ADDDA0ED19F9E002AC78F /* AddLabelTemplate.png in Resources */ = {isa = PBXBuildFile; fileRef = F56ADDD80ED19F9E002AC78F /* AddLabelTemplate.png */; };
-		F56CC7290E65E0AD004307B4 /* PBGitGraphLine.m in Sources */ = {isa = PBXBuildFile; fileRef = F56CC7280E65E0AD004307B4 /* PBGitGraphLine.m */; };
 		F56CC7320E65E0E5004307B4 /* PBGraphCellInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = F56CC7310E65E0E5004307B4 /* PBGraphCellInfo.m */; };
 		F57240BB0E9678EA00D8EE66 /* deleted_file.png in Resources */ = {isa = PBXBuildFile; fileRef = F57240BA0E9678EA00D8EE66 /* deleted_file.png */; };
 		F574A2850EAE2EAC003F2CB1 /* PBRefController.m in Sources */ = {isa = PBXBuildFile; fileRef = F574A2840EAE2EAC003F2CB1 /* PBRefController.m */; };
@@ -65,7 +64,6 @@
 		F5886A1E0ED5D3880066E74C /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
 		F5886A260ED5D4870066E74C /* PBGitGrapher.mm in Sources */ = {isa = PBXBuildFile; fileRef = F5FF4E790E082E440006317A /* PBGitGrapher.mm */; };
 		F5886A270ED5D4870066E74C /* PBGitRevisionCell.m in Sources */ = {isa = PBXBuildFile; fileRef = F50FE0E20E07BE9600854FCD /* PBGitRevisionCell.m */; };
-		F5886A280ED5D4870066E74C /* PBGitGraphLine.m in Sources */ = {isa = PBXBuildFile; fileRef = F56CC7280E65E0AD004307B4 /* PBGitGraphLine.m */; };
 		F5886A290ED5D4870066E74C /* PBGraphCellInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = F56CC7310E65E0E5004307B4 /* PBGraphCellInfo.m */; };
 		F5886A2A0ED5D4870066E74C /* PBGitLane.mm in Sources */ = {isa = PBXBuildFile; fileRef = F5C6F68C0E65FF9300478D97 /* PBGitLane.mm */; };
 		F5886A310ED5D54C0066E74C /* PBGitConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = 93FCCBA80EA8AF450061B02B /* PBGitConfig.m */; };
@@ -190,7 +188,6 @@
 		F56ADDD70ED19F9E002AC78F /* AddBranchTemplate.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = AddBranchTemplate.png; path = Images/AddBranchTemplate.png; sourceTree = "<group>"; };
 		F56ADDD80ED19F9E002AC78F /* AddLabelTemplate.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = AddLabelTemplate.png; path = Images/AddLabelTemplate.png; sourceTree = "<group>"; };
 		F56CC7270E65E0AD004307B4 /* PBGitGraphLine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PBGitGraphLine.h; sourceTree = "<group>"; };
-		F56CC7280E65E0AD004307B4 /* PBGitGraphLine.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PBGitGraphLine.m; sourceTree = "<group>"; };
 		F56CC7300E65E0E5004307B4 /* PBGraphCellInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PBGraphCellInfo.h; sourceTree = "<group>"; };
 		F56CC7310E65E0E5004307B4 /* PBGraphCellInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PBGraphCellInfo.m; sourceTree = "<group>"; };
 		F57240BA0E9678EA00D8EE66 /* deleted_file.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = deleted_file.png; path = Images/deleted_file.png; sourceTree = "<group>"; };
@@ -506,7 +503,6 @@
 				F50FE0E10E07BE9600854FCD /* PBGitRevisionCell.h */,
 				F50FE0E20E07BE9600854FCD /* PBGitRevisionCell.m */,
 				F56CC7270E65E0AD004307B4 /* PBGitGraphLine.h */,
-				F56CC7280E65E0AD004307B4 /* PBGitGraphLine.m */,
 				F56CC7300E65E0E5004307B4 /* PBGraphCellInfo.h */,
 				F56CC7310E65E0E5004307B4 /* PBGraphCellInfo.m */,
 				F5C6F68B0E65FF9300478D97 /* PBGitLane.h */,
@@ -745,7 +741,6 @@
 				F5FF4E7A0E082E440006317A /* PBGitGrapher.mm in Sources */,
 				911111F80E594F3F00BF76B4 /* PBRepositoryDocumentController.m in Sources */,
 				913D5E5F0E556A9300CECEA2 /* PBCLIProxy.mm in Sources */,
-				F56CC7290E65E0AD004307B4 /* PBGitGraphLine.m in Sources */,
 				F56CC7320E65E0E5004307B4 /* PBGraphCellInfo.m in Sources */,
 				F5C6F68D0E65FF9300478D97 /* PBGitLane.mm in Sources */,
 				F5C007750E731B48007B84B2 /* PBGitRef.m in Sources */,
@@ -795,7 +790,6 @@
 				F5886A270ED5D4870066E74C /* PBGitRevisionCell.m in Sources */,
 				F5886A320ED5D5510066E74C /* PBGitCommit.m in Sources */,
 				F5886A340ED5D55D0066E74C /* PBGitBinary.m in Sources */,
-				F5886A280ED5D4870066E74C /* PBGitGraphLine.m in Sources */,
 				F5886A290ED5D4870066E74C /* PBGraphCellInfo.m in Sources */,
 				F5886A2A0ED5D4870066E74C /* PBGitLane.mm in Sources */,
 				F5886A1B0ED5D37C0066E74C /* NSFileHandleExt.m in Sources */,

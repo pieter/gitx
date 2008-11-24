@@ -214,11 +214,13 @@
 		NSRect ownRect;
 		NSDivideRect(rect, &ownRect, &rect, pathWidth, NSMinXEdge);
 
-		for (PBGitGraphLine* line in cellInfo.lines) {
-			if (line.upper == 0)
-				[self drawLineFromColumn: line.from toColumn: line.to inRect:ownRect offset: ownRect.size.height color: line.colorIndex];
+		int i;
+		struct PBGitGraphLine *lines = cellInfo.lines;
+		for (i = 0; i < cellInfo.nLines; i++) {
+			if (lines[i].upper == 0)
+				[self drawLineFromColumn: lines[i].from toColumn: lines[i].to inRect:ownRect offset: ownRect.size.height color: lines[i].colorIndex];
 			else
-				[self drawLineFromColumn: line.from toColumn: line.to inRect:ownRect offset: 0 color:line.colorIndex];
+				[self drawLineFromColumn: lines[i].from toColumn: lines[i].to inRect:ownRect offset: 0 color:lines[i].colorIndex];
 		}
 
 		if (cellInfo.sign == '<' || cellInfo.sign == '>')

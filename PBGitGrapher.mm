@@ -13,6 +13,7 @@ extern "C" {
 #import "PBGitGrapher.h"
 #import "PBGitCommit.h"
 #import "PBGitLane.h"
+#import "PBGitGraphLine.h"
 #import <vector>
 
 using namespace std;
@@ -33,13 +34,23 @@ using namespace std;
 	return self;
 }
 
+void add_line(struct PBGitGraphLine *lines, int *nLines, int upper, int from, int to, int index)
+{
+	// TODO: put in one thing
+	struct PBGitGraphLine a = { upper, from, to, index };
+	lines[(*nLines)++] = a;
+}
+
 - (void) decorateCommit: (PBGitCommit *) commit
 {
 	int i = 0, newPos = -1;
 	std::vector<PBGitLane *> *currentLanes = new std::vector<PBGitLane *>;
 	std::vector<PBGitLane *> *previousLanes = (std::vector<PBGitLane *> *)pl;
 
-	NSMutableArray* lines = [NSMutableArray array];
+	int maxLines = (previousLanes->size() + [commit.parents count] + 2) * 3;
+	struct PBGitGraphLine *lines = (struct PBGitGraphLine *)malloc(sizeof(struct PBGitGraphLine) * maxLines);
+	int currentLine = 0;
+
 	PBGitLane *currentLane = NULL;
 	BOOL didFirst = NO;
 	
@@ -57,26 +68,26 @@ using namespace std;
 					currentLanes->push_back(*it);
 					currentLane = currentLanes->back();
 					newPos = currentLanes->size();
-					[lines addObject: [PBGitGraphLine upperLineFrom: i to: newPos color: (*it)->index()]];
+					add_line(lines, &currentLine, 1, i, newPos,(*it)->index());
 				}
 				else {
-					[lines addObject: [PBGitGraphLine upperLineFrom: i to: newPos color: (*it)->index()]];
+					add_line(lines, &currentLine, 1, i, newPos,(*it)->index());
 					delete *it;
 				}
 			}
 			else {
 				// We are not this commit.
 				currentLanes->push_back(*it);
-				[lines addObject: [PBGitGraphLine upperLineFrom: i to: currentLanes->size() color: (*it)->index()]];
-				[lines addObject: [PBGitGraphLine lowerLineFrom: currentLanes->size() to: currentLanes->size() color: (*it)->index()]];
+				add_line(lines, &currentLine, 1, i, currentLanes->size(),(*it)->index());
+				add_line(lines, &currentLine, 0, currentLanes->size(), currentLanes->size(), (*it)->index());
 			}
 			// For existing columns, we always just continue straight down
 			// ^^ I don't know what that means anymore :(
 
 			if (currentLane)
-				[lines addObject:[PBGitGraphLine lowerLineFrom:newPos to:newPos color: currentLane->index()]];
+				add_line(lines, &currentLine, 0, newPos, newPos,(*it)->index());
 			else
-				[lines addObject:[PBGitGraphLine lowerLineFrom:newPos to:newPos color: 0]];
+				add_line(lines, &currentLine, 0, newPos, newPos, 0);
 		}
 	}
 	//Add your own parents
@@ -86,7 +97,7 @@ using namespace std;
 		PBGitLane *newLane = new PBGitLane([commit.parents objectAtIndex:0]);
 		currentLanes->push_back(newLane);
 		newPos = currentLanes->size();
-		[lines addObject:[PBGitGraphLine lowerLineFrom: newPos to: newPos color: newLane->index()]];
+		add_line(lines, &currentLine, 0, newPos, newPos, newLane->index());
 	}
 
 	// Add all other parents
@@ -102,7 +113,7 @@ using namespace std;
 		for (; it < currentLanes->end(); ++it) {
 			i++;
 			if ((*it)->isCommit(parent)) {
-				[lines addObject:[PBGitGraphLine lowerLineFrom: i to: newPos color: (*it)->index()]];
+				add_line(lines, &currentLine, 0, i, newPos,(*it)->index());
 				was_displayed = YES;
 				break;
 			}
@@ -117,10 +128,14 @@ using namespace std;
 		addedParent = YES;
 		PBGitLane *newLane = new PBGitLane(parent);
 		currentLanes->push_back(newLane);
-		[lines addObject:[PBGitGraphLine lowerLineFrom: currentLanes->size() to: newPos color: newLane->index()]];
+		add_line(lines, &currentLine, 0, currentLanes->size(), newPos, newLane->index());
 	}
 
 	previous = [[PBGraphCellInfo alloc] initWithPosition:newPos andLines:lines];
+	if (currentLine > maxLines)
+		NSLog(@"Number of lines: %i vs allocated: %i", currentLine, maxLines);
+
+	previous.nLines = currentLine;
 	previous.sign = commit.sign;
 
 	// If a parent was added, we have room to not indent.
