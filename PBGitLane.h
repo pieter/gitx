@@ -6,10 +6,7 @@
 //  Copyright 2008 __MyCompanyName__. All rights reserved.
 //
 #import <Cocoa/Cocoa.h>
-extern "C"
-{
 #include "git/oid.h"
-}
 
 class PBGitLane {
 	static int s_colorIndex;

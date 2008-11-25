@@ -6,15 +6,12 @@
 //  Copyright 2008 __MyCompanyName__. All rights reserved.
 //
 
-extern "C" {
-#import "git/oid.h"
-}
-
 #import "PBGitGrapher.h"
 #import "PBGitCommit.h"
 #import "PBGitLane.h"
 #import "PBGitGraphLine.h"
 #import <list>
+#import "git/oid.h"
 
 using namespace std;
 

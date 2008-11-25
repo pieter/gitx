@@ -6,17 +6,13 @@
 //  Copyright 2008 __MyCompanyName__. All rights reserved.
 //
 
-extern "C"
-{
-#include "git/oid.h"
-}
-
 #import "PBGitRevList.h"
 #import "PBGitRepository.h"
 #import "PBGitCommit.h"
 #import "PBGitGrapher.h"
 #import "PBGitRevSpecifier.h"
 
+#include "git/oid.h"
 #include <ext/stdio_filebuf.h>
 #include <iostream>
 #include <string>
