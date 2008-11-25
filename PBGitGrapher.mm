@@ -130,7 +130,6 @@ void add_line(struct PBGitGraphLine *lines, int *nLines, int upper, int from, in
 	previous = [[PBGraphCellInfo alloc] initWithPosition:newPos andLines:lines];
 	if (currentLine > maxLines)
 		NSLog(@"Number of lines: %i vs allocated: %i", currentLine, maxLines);
-	//NSLog(@"Number of parents: %i, number of previous: %i, new lines: %i", commit.nParents, previousLanes->size(), currentLine);
 
 	previous.nLines = currentLine;
 	previous.sign = commit.sign;
