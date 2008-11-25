@@ -118,14 +118,6 @@ var selectCommit = function(a) {
 	Controller.selectCommit_(a);
 }
 
-var showDiffs = function() {
-	var details = $("details");
-	details.style.display = "none";
-	details.innerHTML = commit.diff.escapeHTML();
-	highlightDiffs();
-	details.style.display = "";
-}
-
 var reload = function() {
 	$("notification").style.display = "none";
 	commit.reloadRefs();
@@ -158,7 +150,7 @@ var loadCommit = function(commitObject, currentRef) {
 	$("commitID").innerHTML = commit.sha;
 	$("authorID").innerHTML = commit.author_name;
 	$("subjectID").innerHTML = commit.subject.escapeHTML();
-	$("details").innerHTML = ""
+	$("diff").innerHTML = ""
 	$("message").innerHTML = ""
 	$("files").innerHTML = ""
 	$("date").innerHTML = ""
@@ -189,7 +181,7 @@ var loadExtendedCommit = function(commit)
 	$("date").innerHTML = commit.author_date;
 	$("message").innerHTML = commit.message.replace(/\n/g,"<br>");
 
-	if (commit.files)
+	if (commit.files) {
 		var commit_file_links = commit.files;
 		for (var i=0; i < commit_file_links.length; i++) {
 			index = i+1;
@@ -197,12 +189,14 @@ var loadExtendedCommit = function(commit)
 		}
 		
 		$("files").innerHTML = commit_file_links.join("<br>");
+	}
 
 	if (commit.diff.length < 200000) {
-		showDiffs();
+		highlightDiff(commit.diff, $("diff"));
 	} else {
-		$("details").innerHTML = "<a class='showdiff' href='' onclick='showDiffs(); return false;'>This is a large commit. Click here or press 'v' to view.</a>";
+		$("diff").innerHTML = "<a class='showdiff' href='' onclick='showDiffs(); return false;'>This is a large commit. Click here or press 'v' to view.</a>";
 	}
+
 	hideNotification();
 	setGravatar(commit.author_email, $("gravatar"));
 }

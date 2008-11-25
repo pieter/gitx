@@ -26,7 +26,6 @@ var showFileChanges = function(file, cached) {
 	if (!file)
 		return;
 
-	$("diff").style.display = 'none';
 	hideNotification();
 	hideState();
 
@@ -49,7 +48,6 @@ var showFileChanges = function(file, cached) {
 	}
 
 	displayDiff(changes, cached);
-	$("diff").style.display = '';
 }
 
 var diffHeader;
@@ -60,8 +58,8 @@ var displayDiff = function(diff, cached)
 	diffHeader = diff.split("\n").slice(0,4).join("\n");
 	originalDiff = diff;
 
-	$("diff").innerHTML = diff.escapeHTML();
-	highlightDiffs();
+	$("diff").style.display = "";
+	highlightDiff(diff, $("diff"));
 	hunkHeaders = $("diff").getElementsByClassName("hunkheader");
 
 	for (i = 0; i < hunkHeaders.length; ++i) {

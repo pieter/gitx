@@ -11,20 +11,20 @@ body {
 	border-top:0.1em solid #999999;
 }
 
-code .delline, code .oldfile {
+.delline, .oldfile {
   background-color: #FEE;
   color: #B00;
 }
 
-code .addline, code .newfile {
+.addline, .newfile {
   background-color: #DFD;
   color: #080;
 }
-code .fileline {
+.fileline {
   font-weight: bold;
 }
 
-code .hunkheader {
+.hunkheader {
   background-color: #f7f7f7;
   color: #bbb;
 }
