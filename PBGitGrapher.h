@@ -12,15 +12,13 @@
 #import "PBGraphCellInfo.h"
 
 @interface PBGitGrapher : NSObject {
-	PBGraphCellInfo* previous;
+	PBGraphCellInfo *previous;
 	void *pl;
-	void *storage;
 	int curLane;
 
-	NSDictionary* refs;
-	PBGitRepository* repository;
+	NSDictionary *refs;
 }
 
-- (id) initWithRepository: (PBGitRepository*) repo;
-- (void) decorateCommit: (PBGitCommit *) commit;
+- (id) initWithRepository:(PBGitRepository *)repo;
+- (void) decorateCommit:(PBGitCommit *)commit;
 @end

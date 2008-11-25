@@ -25,12 +25,9 @@ using namespace std;
 - (id) initWithRepository: (PBGitRepository*) repo
 {
 	refs = repo.refs;
-	repository = repo;
-	pl = new std::list<PBGitLane>;
+	pl = new std::list<PBGitLane *>;
 
 	PBGitLane::resetColors();
-	//[PBGitLane resetColors];
-
 	return self;
 }
 
@@ -161,6 +158,13 @@ void add_line(struct PBGitGraphLine *lines, int *nLines, int upper, int from, in
 
 - (void) finalize
 {
+	std::list<PBGitLane *> *lanes = (std::list<PBGitLane *> *)pl;
+	std::list<PBGitLane *>::iterator it = lanes->begin();
+	for (; it != lanes->end(); ++it)
+		delete *it;
+
+	delete lanes;
+
 	[super finalize];
 }
 @end
