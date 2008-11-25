@@ -17,6 +17,13 @@ String.prototype.unEscapeHTML = function() {
   return this.replace(/&amp;/g,'&').replace(/&lt;/g,'<').replace(/&gt;/g,'>');
 };
 
+Element.prototype.toggleDisplay = function() {
+	if (this.style.display != "")
+		this.style.display = "";
+	else
+		this.style.display = "none";
+}
+
 Array.prototype.indexOf = function(item, i) {
   i || (i = 0);
   var length = this.length;
