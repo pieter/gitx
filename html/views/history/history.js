@@ -48,7 +48,6 @@ var Commit = function(obj) {
 
 	this.reloadRefs = function() {
 		this.refs = this.object.refs;
-		Controller.log_("New refs: " + this.refs);
 	}
 
 };
