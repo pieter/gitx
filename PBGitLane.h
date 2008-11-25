@@ -34,14 +34,14 @@ public:
 	PBGitLane()
 	{
 		d_index = s_colorIndex++;
-		//d_sha = NULL;
 	}
 	
-	bool isCommit(git_oid *sha) const;
-	bool isCommit(NSString *sha) const;
+	bool PBGitLane::isCommit(git_oid *sha) const
+	{
+		return !git_oid_cmp(&d_sha, sha);
+	}
 	
 	void setSha(git_oid sha);
-	void setSha(NSString *sha);
 	
 	git_oid const *sha() const
 	{
