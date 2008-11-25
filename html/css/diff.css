@@ -1,62 +1,52 @@
-body {
-	margin: 0;
-	margin-top: 5px;
-	width: 100%;
+.diff .file {
+	margin: 10px;
+	padding: 10px;
+	-webkit-border-radius: 10px;
+	border: 1px solid gray;
+	-webkit-box-shadow: 1px 1px 3px #888;
 }
 
-.fileHeader {
-	margin-top: 0px;
-	padding-top: 2px;
+.diff .file .fileHeader {
+	margin-top: -5px;
 	padding-bottom: 1px;
-	border-top:0.1em solid #999999;
+	font-weight: bold;
 }
 
-.delline, .oldfile {
-  background-color: #FEE;
-  color: #B00;
+.diff .file .diffContent {
+	white-space: pre;
+	font-family: Monaco;
 }
 
-.addline, .newfile {
-  background-color: #DFD;
-  color: #080;
-}
-.fileline {
-  font-weight: bold;
-}
-
-.hunkheader {
-  background-color: #f7f7f7;
-  color: #bbb;
-}
-
-pre {
-  width: 100%;
-}
-
-pre code {
-  width: 100%;
-}
-
-#CurrentHunk {
-	border-left: 5px solid black;
-}
-
-.whitespace {
-	background-color: rgba(255,0,0,0.5);
-}
-
-
-table.diff {
-	margin-top: 15px;
-	margin-left: 5px;
-	margin-right: 5px;
-	border-spacing: 0;
-}
-.lineno {
+.diff .file .diffcontent .lineno {
+	float: left;
 	padding-left: 2px;
 	padding-right: 2px;
 	background-color: #ECECEC;
 	color: #A9A9A9;
 	border: 1px solid #DDDDDD;
 	text-align: right;
+}
+
+.diff .file .diffContent .lines .hunkheader {
+  background-color: #f7f7f7;
+  color: #bbb;
+}
+
+
+.diff .file .diffcontent .lines .delline {
+  background-color: #FEE;
+  color: #B00;
+}
+
+.diff .file .diffcontent .lines .addline {
+  background-color: #DFD;
+  color: #080;
+}
+
+.diff .file .diffcontent .lines .whitespace {
+	background-color: rgba(255,0,0,0.5);
+}
+
+#CurrentHunk {
+	border-left: 5px solid black;
 }

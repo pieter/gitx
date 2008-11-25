@@ -8,14 +8,16 @@ if (typeof Controller == 'undefined') {
 
 var highlightDiff = function(diff, element) {
 	var start = new Date().getTime();
-	
+	element.className = "diff"
 	var content = diff.escapeHTML().replace(/\t/g, "    ");;
 	
 	var file_index = 0;
 
+	var filename = "";
 	var line1 = "";
 	var line2 = "";
 	var diffContent = "";
+	var finalContent = "";
 	var lines = content.split('\n');
 
 	var hunk_start_line_1 = -1;
@@ -31,13 +33,26 @@ var highlightDiff = function(diff, element) {
 		if (header) {
 			if (firstChar == "+" || firstChar == "-")
 				continue;
-		} else if (firstChar == "d") {
-			++file_index;
+		} else if (firstChar == "d") { // New file, we have to reset everything
 			header = true;
-			line1 += '\n';
-			line2 += '\n';
-			var match = l.match(/diff --git a\/(\S*)/);
-			diffContent += '</div><div class="fileHeader" id="file_index_' + file_index + '">' + file_index + ' <span class="fileline">' + match[1] + '</span></div>';
+
+			if (file_index++) // Finish last file
+			{
+				finalContent += '<div class="file" id="file_index_' + (file_index - 2) + '">' +
+									'<div class="fileHeader">' + filename + '</div>' +
+									'<div class="diffContent">' +
+										'<div class="lineno">' + line1 + "</div>" +
+										'<div class="lineno">' + line2 + "</div>" +
+										'<div class="lines">' + diffContent + "</div>" +
+									'</div>' +
+								'</div>';
+				line1 = "";
+				line2 = "";
+				diffContent = "";
+			}
+
+			if(match = l.match(/diff --git a\/(\S*)/))
+				filename = match[1];
 			continue;
 		}
 
@@ -54,7 +69,10 @@ var highlightDiff = function(diff, element) {
 			line2 += "\n";
 			diffContent += "<div class='delline'>" + l + "</div>";
 		} else if (firstChar == "@") {
-			header = false;
+			if (header) {
+				header = false;
+			}
+
 			if (m = l.match(/@@ \-([0-9]+),\d+ \+(\d+),\d+ @@/))
 			{
 				hunk_start_line_1 = parseInt(m[1]) - 1;
@@ -70,10 +88,17 @@ var highlightDiff = function(diff, element) {
 		}
 	}
 
+	finalContent += '<div class="file" id="file_index_' + (file_index - 1) + '">' +
+						'<div class="fileHeader">' + filename + '</div>' +
+						'<div class="diffContent">' +
+							'<div class="lineno">' + line1 + "</div>" +
+							'<div class="lineno">' + line2 + "</div>" +
+							'<div class="lines">' + diffContent + "</div>" +
+						'</div>' +
+					'</div>';
+
 	// This takes about 7ms
-	element.innerHTML = "<table class='diff'><tr><td class='lineno'l><pre>" + line1 + "</pre></td>" +
-	                  "<td class='lineno'l><pre>" + line2 + "</pre></td>" +
-	                  "<td width='100%'><pre width='100%'>" + diffContent + "</pre></td></tr></table>";
+	element.innerHTML = finalContent;
 
 	// TODO: Replace this with a performance pref call
 	if (false)

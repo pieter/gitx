@@ -1,15 +1,15 @@
 <html>
 <head>
 	<title>Details for commit</title>
-	<link rel="stylesheet" href="commits.css" type="text/css" media="screen" title="no title" charset="utf-8">
-	<link rel="stylesheet" href="diff_style.css" type="text/css" media="screen" title="no title" charset="utf-8">
-	<script src="diffHighlighter.js" type="text/javascript" charset="utf-8"></script>
-	<script src="diff.js" type="text/javascript" charset="utf-8"></script>
+	<link rel="stylesheet" href="css/GitX.css" type="text/css" media="screen" title="no title" charset="utf-8">
+	<link rel="stylesheet" href="css/diff.css" type="text/css" media="screen" title="no title" charset="utf-8">
+	<script src="lib/GitX.js" type="text/javascript" charset="utf-8"></script>
+	<script src="lib/diffHighlighter.js" type="text/javascript" charset="utf-8"></script>
 	
 	<script type="text/javascript" charset="utf-8">
 
 	var doeHet = function() {
-		displayDiff($("orig_diff").value.replace(/</g, "&lt;"));
+		highlightDiff($("orig_diff").value, $("diff"));
 	}
 	</script>
 </head>
@@ -858,5 +858,5 @@ index db530c0..18c2393 100644
  	[self.window setToolbar:toolbar];
  }
 	</textarea>
-	<pre><code class="diffcode" id='diff'></code></pre>
+	<div id='diff'></div>
 </body>
