@@ -9,11 +9,16 @@
 #import <Cocoa/Cocoa.h>
 #import "PBGitRepository.h"
 
+@class PBViewController;
 @interface PBGitWindowController : NSWindowController {
 	__weak PBGitRepository* repository;
 	int selectedViewIndex;
 	IBOutlet NSView* contentView;
-	NSViewController* viewController;
+
+	PBViewController *historyViewController;
+	PBViewController *commitViewController;
+
+	PBViewController* viewController;
 }
 
 @property (assign) __weak PBGitRepository *repository;

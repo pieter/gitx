@@ -10,7 +10,6 @@
 #import "PBGitHistoryController.h"
 #import "PBGitCommitController.h"
 
-
 @implementation PBGitWindowController
 
 
@@ -35,7 +34,11 @@
 
 - (void)windowWillClose:(NSNotification *)notification
 {
-	[viewController removeView];
+	NSLog(@"Window will close!");
+	if (historyViewController)
+		[historyViewController removeView];
+	if (commitViewController)
+		[commitViewController removeView];
 }
 
 - (void) setSelectedViewIndex: (int) i
@@ -49,16 +52,20 @@
 {
 	[self willChangeValueForKey:@"viewController"];
 
-	if ([viewController view] != nil)
-		[(PBViewController *)viewController removeView];
+	if (viewController != nil)
+		[[viewController view] removeFromSuperview];
 
 	switch (whichViewTag)
 	{
 		case 0:	// swap in the "CustomImageViewController - NSImageView"
-			viewController = [[PBGitHistoryController alloc] initWithRepository:repository superController:self];
+			if (!historyViewController)
+				historyViewController = [[PBGitHistoryController alloc] initWithRepository:repository superController:self];
+			viewController = historyViewController;
 			break;
 		case 1:
-			viewController = [[PBGitCommitController alloc] initWithRepository:repository superController:self];
+			if (!commitViewController)
+				commitViewController = [[PBGitCommitController alloc] initWithRepository:repository superController:self];
+			viewController = commitViewController;
 			break;
 	}
 
