@@ -25,4 +25,5 @@
 @property (retain) id repository;
 
 - (WebScriptObject *) script;
+- (void) closeView;
 @end

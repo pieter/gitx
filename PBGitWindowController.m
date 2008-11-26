@@ -33,6 +33,11 @@
 	return self;
 }
 
+- (void)windowWillClose:(NSNotification *)notification
+{
+	[viewController removeView];
+}
+
 - (void) setSelectedViewIndex: (int) i
 {
 	selectedViewIndex = i;
@@ -70,6 +75,7 @@
 
 - (void)awakeFromNib
 {
+	[[self window] setDelegate:self];
 	[[self window] setAutorecalculatesContentBorderThickness:NO forEdge:NSMinYEdge];
 	[[self window] setContentBorderThickness:35.0f forEdge:NSMinYEdge];
 	[self showHistoryView:nil];

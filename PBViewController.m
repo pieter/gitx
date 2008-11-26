@@ -27,6 +27,7 @@
 
 - (void) removeView
 {
+	[self unbind:@"repository"];
 	[[self view] removeFromSuperview];	// remove the current view
 }
 

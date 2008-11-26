@@ -35,6 +35,12 @@
 	return [view windowScriptObject];
 }
 
+- (void) closeView
+{
+	if (view)
+		[view close];
+}
+
 # pragma mark Delegate methods
 
 - (void) webView:(id) v didFinishLoadForFrame:(id) frame

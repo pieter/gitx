@@ -30,6 +30,11 @@
 	[cachedFilesController setSortDescriptors:[NSArray arrayWithObject:
 		[[NSSortDescriptor alloc] initWithKey:@"path" ascending:true]]];
 }
+- (void) removeView
+{
+	[webController closeView];
+	[super finalize];
+}
 
 - (void) setAmend:(BOOL)newAmend
 {

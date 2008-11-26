@@ -108,4 +108,10 @@ contextMenuItemsForElement:(NSDictionary *)element
 	return [historyController valueForKeyPath:[@"repository.config." stringByAppendingString:config]];
 }
 
+- (void) finalize
+{
+	[historyController removeObserver:self forKeyPath:@"webCommit"];
+	[super finalize];
+}
+
 @end

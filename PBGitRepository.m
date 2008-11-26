@@ -375,4 +375,9 @@ NSString* PBGitRepositoryErrorDomain = @"GitXErrorDomain";
 	return nil;
 }
 
+- (void) finalize
+{
+	NSLog(@"Dealloc of repository");
+	[super finalize];
+}
 @end

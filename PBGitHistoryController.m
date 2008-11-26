@@ -190,6 +190,10 @@
 - (void) removeView
 {
 	[webView close];
+	[commitController removeObserver:self forKeyPath:@"selection"];
+	[treeController removeObserver:self forKeyPath:@"selection"];
+	[repository removeObserver:self forKeyPath:@"currentBranch"];
+
 	[super removeView];
 }
 
