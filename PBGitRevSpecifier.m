@@ -27,6 +27,13 @@
 	return self;
 }
 
+- (id) initWithCoder:(NSCoder *)coder
+{
+	parameters = [coder decodeObjectForKey:@"Parameters"];
+	description = [coder decodeObjectForKey:@"Description"];
+	return self;
+}
+
 + (PBGitRevSpecifier *)allBranchesRevSpec
 {
 	id revspec = [[PBGitRevSpecifier alloc] initWithParameters:[NSArray arrayWithObject:@"--all"]];
@@ -86,5 +93,11 @@
 
 	return ([[parameters componentsJoinedByString:@" "] isEqualToString: [other.parameters componentsJoinedByString:@" "]] &&
 			 (!description  || [description isEqualToString:other.description]));
+}
+
+- (void) encodeWithCoder:(NSCoder *)coder
+{
+	[coder encodeObject:description forKey:@"Description"];
+	[coder encodeObject:parameters forKey:@"Parameters"];
 }
 @end
