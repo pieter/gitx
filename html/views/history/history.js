@@ -172,7 +172,20 @@ var showDiff = function() {
 		$("files").innerHTML += "<a href='#" + id + "'>" + name + "</a><br>";
 	}
 
-	highlightDiff(commit.diff, $("diff"), { "newfile" : newfile });
+	var binaryDiff = function(filename) {
+		if (filename.match(/\.(png|jpg|pdf|icns|psd)$/i))
+			return '<a href="#" onclick="return showImage(this, \'' + filename + '\')">Display image</a>';
+		else
+			return "Binary file differs";
+	}
+
+	highlightDiff(commit.diff, $("diff"), { "newfile" : newfile, "binaryFile" : binaryDiff });
+}
+
+var showImage = function(element, filename)
+{
+	element.outerHTML = '<img src="GitX://' + commit.sha + '/' + filename + '">';
+	return false;
 }
 
 var loadExtendedCommit = function(commit)

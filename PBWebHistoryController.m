@@ -15,6 +15,7 @@
 - (void) awakeFromNib
 {
 	startFile = @"history";
+	repository = historyController.repository;
 	[super awakeFromNib];
 	[historyController addObserver:self forKeyPath:@"webCommit" options:0 context:@"ChangedCommit"];
 }
