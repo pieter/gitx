@@ -1,3 +1,4 @@
+<% @title = "Contribute"  %>
 <h2>
 	Contribute
 </h2>

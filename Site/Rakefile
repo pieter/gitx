@@ -12,7 +12,7 @@ task :generate => [:generate_usermanual] do
 
   source = Dir.glob("text/*.markdown").each do |file|
     contents = File.read(file)
-		body = Markdown.new(contents).to_html
+		@body = Markdown.new(ERB.new(contents).result(binding)).to_html
 		@filename = File.basename(file).gsub(/markdown$/,"html")
 		File.open("output/" + @filename, "w") do |f|
 			f.puts template.result(binding)

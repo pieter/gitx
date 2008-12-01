@@ -1,3 +1,4 @@
+<% @title = "See It"  %>
 <script type="text/javascript" charset="utf-8">
 	var screenshots = screenshots = [["The Commit View", 892], ["The History View", 891]];
 

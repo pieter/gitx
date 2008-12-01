@@ -1,3 +1,4 @@
+<% @title = "Home"  %>
 <div class="nohover" id="download">
 	<a href="http://frim.frim.nl/GitXStable.app.zip" title="Latest GitX download" id="download_link" class="nohover">
 Download GitX

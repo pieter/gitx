@@ -1,3 +1,4 @@
+<% @title = "Links"  %>
 <h2>
 	Links
 </h2>

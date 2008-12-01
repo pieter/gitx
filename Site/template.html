@@ -7,7 +7,7 @@ end
 <html>
 	<head>
 		<title>
-			GitX
+			GitX - <%= @title %>
 		</title>
 		<link rel="stylesheet" href="css/master.css" type="text/css" media="screen" title="Main Style" charset="utf-8" />
 		<link rel="shortcut icon" href="images/favicon.png" type="image/x-icon">
@@ -37,7 +37,7 @@ end
 				<a href="#">About</a>
 			</div> -->
 			<div id="content">
-<%= body %>				
+				<%= @body %>
 			</div>
 			<div id="footer">
 				© Some rights reserved. <a href="http://github.com/pieter/gitx/tree/master/COPYING" title="GPL">GPL v2</a>. <a href="mailto:frimmirf+gitx@gmail.com">Pieter de Bie</a> is the GitX maintainer. Website design by <a href="http://www.ai.rug.nl/~kdoes/index.php?id=webdesign">Kim Does</a>.
