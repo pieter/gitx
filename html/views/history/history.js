@@ -33,13 +33,6 @@ var Commit = function(obj) {
 
 		this.author_date = new Date(parseInt(match[3]) * 1000);
 
-		this.files = this.raw.match(/diff --git a\/\S*/g);
-		
-		for (var i=0; i < this.files.length; i++) {
-			var match = this.files[i].match(/diff --git a\/(.*)/);
-			this.files[i] = match[1];
-		}
-
 		match = this.header.match(/\ncommitter (.*) <(.*@.*)> ([0-9].*)/);
 		this.committer_name = match[1];
 		this.committer_email = match[2];
