@@ -155,15 +155,17 @@ var loadCommit = function(commitObject, currentRef) {
 	$("date").innerHTML = ""
 	showRefs();
 
-	for (var i = 0; i < commitHeader.rows.length; i++) {
+	for (var i = 0; i < $("commit_header").rows.length; ++i) {
 		var row = $("commit_header").rows[i];
-		if (row.innerHTML.match(/Parent:/))
+		if (row.innerHTML.match(/Parent:/)) {
 			row.parentNode.removeChild(row);
+			--i;
+		}
 	}
 
-	for (var i = 0; i < commit.parents; i++) {
+	for (var i = 0; i < commit.parents.length; i++) {
 		var newRow = $("commit_header").insertRow(-1);
-		new_row.innerHTML = "<td class='property_name'>Parent:</td><td>" +
+		newRow.innerHTML = "<td class='property_name'>Parent:</td><td>" +
 			"<a href='' onclick='selectCommit(this.innerHTML); return false;'>" +
 			commit.parents[i] + "</a></td>";
 	}

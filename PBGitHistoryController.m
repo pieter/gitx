@@ -175,7 +175,7 @@
 
 - (void) selectCommit: (NSString*) commit
 {
-	NSPredicate* selection = [NSPredicate predicateWithFormat:@"sha == %@", commit];
+	NSPredicate* selection = [NSPredicate predicateWithFormat:@"realSha == %@", commit];
 	NSArray* selectedCommits = [repository.revisionList.commits filteredArrayUsingPredicate:selection];
 	[commitController setSelectedObjects: selectedCommits];
 	int index = [[commitController selectionIndexes] firstIndex];
