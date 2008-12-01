@@ -138,7 +138,7 @@
 		return NO;
 	
 	int retValue = 1;
-	[historyController.repository outputForArguments:[NSArray arrayWithObjects:@"update-ref", @"-mUpdate from GitX", [ref ref], [dropCommit sha], NULL] retValue:&retValue];
+	[historyController.repository outputForArguments:[NSArray arrayWithObjects:@"update-ref", @"-mUpdate from GitX", [ref ref], [dropCommit realSha], NULL] retValue:&retValue];
 	if (retValue)
 		return NO;
 	
@@ -170,7 +170,7 @@
 	
 	PBGitCommit *commit = [[commitController selectedObjects] objectAtIndex:0];
 	int retValue = 1;
-	[historyController.repository outputForArguments:[NSArray arrayWithObjects:@"update-ref", @"-mCreate branch from GitX", branchName, [commit sha], NULL] retValue:&retValue];
+	[historyController.repository outputForArguments:[NSArray arrayWithObjects:@"update-ref", @"-mCreate branch from GitX", branchName, [commit realSha], NULL] retValue:&retValue];
 	if (retValue)
 	{
 		NSLog(@"Creating ref failed!");
