@@ -27,6 +27,10 @@
 	text-align: right;
 }
 
+.diff .file .diffContent .lines {
+	overflow: auto;
+}
+
 .diff .file .diffContent .lines .hunkheader {
   background-color: #f7f7f7;
   color: #bbb;
