@@ -6,7 +6,9 @@ if (typeof Controller == 'undefined') {
 	Controller.log_ = console.log;
 }
 
-var highlightDiff = function(diff, element) {
+var highlightDiff = function(diff, element, callbacks) {
+	if (!callbacks)
+		callbacks = {};
 	var start = new Date().getTime();
 	element.className = "diff"
 	var content = diff.escapeHTML().replace(/\t/g, "    ");;
@@ -51,8 +53,11 @@ var highlightDiff = function(diff, element) {
 				diffContent = "";
 			}
 
-			if(match = l.match(/diff --git a\/(\S*)/))
+			if(match = l.match(/diff --git a\/(\S*)/)) {
 				filename = match[1];
+				if (callbacks["newfile"])
+					callbacks["newfile"](filename, "file_index_" + (file_index - 1));
+			}
 			continue;
 		}
 

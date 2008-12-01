@@ -8,13 +8,21 @@
 	
 	<script type="text/javascript" charset="utf-8">
 
-	var doeHet = function() {
-		highlightDiff($("orig_diff").value, $("diff"));
-	}
+		var newFile = function(name, id) {
+			$("filelist").innerHTML += "<a href='#" + id + "'>" + name + "</a><br>";
+		}
+
+		var doeHet = function() {
+			highlightDiff($("orig_diff").value,
+				$("diff"),
+				{ "newfile" : newFile }
+			);
+		}
 	</script>
 </head>
-<body style="padding: 0px; border: 0px" onLoad="doeHet()">
+<body style="padding: 0px; border: 0px; font-size:60%" onLoad="doeHet()">
 	<div id="title"></div>
+	<div id="filelist"></div>
 	<textarea style='display:none' id="orig_diff" rows="8" cols="40">
 diff --git a/English.lproj/RepositoryWindow.xib b/English.lproj/RepositoryWindow.xib
 index 6cd49fa..7474752 100644

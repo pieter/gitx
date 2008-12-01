@@ -174,6 +174,14 @@ var loadCommit = function(commitObject, currentRef) {
 	scroll(0, 0);
 }
 
+var showDiff = function() {
+	var newfile = function(name, id) {
+		$("files").innerHTML += "<a href='#" + id + "'>" + name + "</a><br>";
+	}
+
+	highlightDiff(commit.diff, $("diff"), { "newfile" : newfile });
+}
+
 var loadExtendedCommit = function(commit)
 {
 	if (commit.author_email)
@@ -182,21 +190,10 @@ var loadExtendedCommit = function(commit)
 	$("date").innerHTML = commit.author_date;
 	$("message").innerHTML = commit.message.replace(/\n/g,"<br>");
 
-	if (commit.files) {
-		var commit_file_links = commit.files;
-		for (var i=0; i < commit_file_links.length; i++) {
-			index = i+1;
-			commit_file_links[i] = "<a href='#file_index_" + i + "'>" + commit.files[i] + "</a>";
-		}
-		
-		$("files").innerHTML = commit_file_links.join("<br>");
-	}
-
-	if (commit.diff.length < 200000) {
-		highlightDiff(commit.diff, $("diff"));
-	} else {
-		$("diff").innerHTML = "<a class='showdiff' href='' onclick='showDiffs(); return false;'>This is a large commit. Click here or press 'v' to view.</a>";
-	}
+	if (commit.diff.length < 200000)
+		showDiff();
+	else
+		$("diff").innerHTML = "<a class='showdiff' href='' onclick='showDiff(); return false;'>This is a large commit. Click here or press 'v' to view.</a>";
 
 	hideNotification();
 	setGravatar(commit.author_email, $("gravatar"));
