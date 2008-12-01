@@ -75,6 +75,8 @@
 	//// embed the current view to our host view
 	[contentView addSubview: [viewController view]];
 
+	[self useToolbar: [viewController viewToolbar]];
+
 	// Allow the viewcontroller to catch actions
 	[self setNextResponder: viewController];
 	[self didChangeValueForKey:@"viewController"];	// this will trigger the NSTextField's value binding to change
@@ -105,9 +107,6 @@
 
 - (void) useToolbar:(NSToolbar *)toolbar
 {
-	toolbar.displayMode = [self.window toolbar].displayMode;
-	[toolbar setVisible: [[self.window toolbar] isVisible]];
-
 	NSSegmentedControl *item = (NSSegmentedControl *)[[[toolbar items] objectAtIndex:0] view];
 	[item bind:@"selectedIndex" toObject:self withKeyPath:@"selectedViewIndex" options:0];
 

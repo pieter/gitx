@@ -33,9 +33,5 @@
 
 - (void) awakeFromNib
 {
-	if (viewToolbar)
-		[superController useToolbar:viewToolbar];
-	else
-		[superController useToolbar:[[NSToolbar alloc] initWithIdentifier:@"EmptyBar"]];
 }
 @end
