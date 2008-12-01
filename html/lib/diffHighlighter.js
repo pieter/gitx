@@ -34,7 +34,7 @@ var highlightDiff = function(diff, element, callbacks) {
 	var finishContent = function()
 	{
 		finalContent += '<div class="file" id="file_index_' + (file_index - 2) + '">' +
-							'<div class="fileHeader">' + filename + '</div>';
+							'<div class="fileHeader">	<img width="16" src="PBIcon://' + filename + '">' + filename + '</div>';
 		if (!binary)  {
 			finalContent +=		'<div class="diffContent">' +
 								'<div class="lineno">' + line1 + "</div>" +
