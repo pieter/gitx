@@ -41,6 +41,8 @@
 - (void) readUnstagedFiles:(NSNotification *)notification;
 - (void) stageHunk: (NSString *)hunk reverse:(BOOL)reverse;
 
+- (NSString *)parentTree;
+
 - (IBAction) refresh:(id) sender;
 - (IBAction) commit:(id) sender;
 @end

@@ -85,7 +85,7 @@
 	if (file.status == NEW)
 		return [commitController.repository outputForArguments:[NSArray arrayWithObjects:@"show", indexPath, nil]];
 
-	return [commitController.repository outputInWorkdirForArguments:[NSArray arrayWithObjects:@"diff", file.commitBlobSHA, indexPath, nil]];
+	return [commitController.repository outputInWorkdirForArguments:[NSArray arrayWithObjects:@"diff-index", @"-p", @"--cached", [commitController parentTree], @"--", file.path, nil]];
 }
 
 - (NSString *)unstagedChangesForFile:(PBChangedFile *)file
