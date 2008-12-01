@@ -7,6 +7,9 @@ if (typeof Controller == 'undefined') {
 }
 
 var highlightDiff = function(diff, element, callbacks) {
+	if (!diff || diff == "")
+		return;
+
 	if (!callbacks)
 		callbacks = {};
 	var start = new Date().getTime();
