@@ -127,7 +127,7 @@
 	PBGitCommit *commit = [[commitController selectedObjects] objectAtIndex:0];
 	if (!commit)
 		return;
-	NSString *info = [NSString stringWithFormat:@"%@ (%@)", [commit sha], [commit subject]];
+	NSString *info = [NSString stringWithFormat:@"%@ (%@)", [[commit realSha] substringToIndex:10], [commit subject]];
 
 	NSPasteboard *a =[NSPasteboard generalPasteboard];
 	[a declareTypes:[NSArray arrayWithObject:NSStringPboardType] owner:self];
