@@ -26,7 +26,7 @@ task :install_app do
   target_locations.each do |loc|
     if File.directory?(loc)
       puts "Copying to (#{loc})"
-      File.copy("build/Release/GitX.app/", loc)
+      system("cp -R build/Release/GitX.app #{loc}")
       break
     end
   end
