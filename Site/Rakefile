@@ -23,7 +23,8 @@ task :generate => [:generate_usermanual] do
 	FileUtils.mkdir("output/images/UserManual")
 	`cp -r UserManual/output/images/* output/images/UserManual`
 	@filename = 'user_manual.html'
-	body = File.read("UserManual/output/UserManual.html")
+	@body = File.read("UserManual/output/UserManual.html")
+	@title = "User Manual"
 	File.open("output/user_manual.html", "w") do |f|
 		f.puts template.result(binding)
 	end
