@@ -65,8 +65,7 @@
 	NSRect oval = { columnOrigin.x - 5, columnOrigin.y + r.size.height * 0.5 - 5, 10, 10};
 
 	
-	NSBezierPath * path = [NSBezierPath bezierPath];
-	path = [NSBezierPath bezierPathWithOvalInRect:oval];
+	NSBezierPath * path = [NSBezierPath bezierPathWithOvalInRect:oval];
 
 	[[NSColor blackColor] set];
 	[path fill];
