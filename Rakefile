@@ -14,7 +14,7 @@ task :clean => [:clean_app]
 
 desc "Build gitX using XCode"
 task :build_app do
-  system("xcodebuild")
+  system("xcodebuild build OBJROOT=build/ SYMROOT=build/")
 end
 
 task :clean_app do
