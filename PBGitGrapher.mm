@@ -87,7 +87,7 @@ void add_line(struct PBGitGraphLine *lines, int *nLines, int upper, int from, in
 	//Add your own parents
 
 	// If we already did the first parent, don't do so again
-	if (!didFirst && currentLanes->size() < MAX_LANES) {
+	if (!didFirst && currentLanes->size() < MAX_LANES && commit.nParents) {
 		PBGitLane *newLane = new PBGitLane(commit.parentShas);
 		currentLanes->push_back(newLane);
 		newPos = currentLanes->size();
