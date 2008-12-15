@@ -51,21 +51,7 @@
 						 inDir:(NSString *) dir
 				      retValue:(int *)      ret
 {
-	NSTask *task = [self taskForCommand:cmd withArgs:args inDir:dir];
-	NSFileHandle* handle = [task.standardOutput fileHandleForReading];
-	[task launch];
-	
-	NSData* data = [handle readDataToEndOfFile];
-	NSString* string = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-	
-	// Strip trailing newline
-	if ([string hasSuffix:@"\n"])
-		string = [string substringToIndex:[string length]-1];
-	
-	[task waitUntilExit];
-	if (ret)
-		*ret = [task terminationStatus];
-	return string;
+	return [self outputForCommand:cmd withArgs:args inDir:dir inputString:NULL retValue:ret];
 }	
 
 // TODO: Refactor this to use the function above
@@ -77,15 +63,20 @@
 {
 	NSTask *task = [self taskForCommand:cmd withArgs:args inDir:dir];
 	NSFileHandle* handle = [task.standardOutput fileHandleForReading];
-	task.standardInput = [NSPipe pipe];
-	NSFileHandle *inHandle = [task.standardInput fileHandleForWriting];
-	[inHandle writeData:[input dataUsingEncoding:NSUTF8StringEncoding]];
-	[inHandle closeFile];
+
+	if (input) {
+		task.standardInput = [NSPipe pipe];
+		NSFileHandle *inHandle = [task.standardInput fileHandleForWriting];
+		[inHandle writeData:[input dataUsingEncoding:NSUTF8StringEncoding]];
+		[inHandle closeFile];
+	}
 	
 	[task launch];
 	
 	NSData* data = [handle readDataToEndOfFile];
-	NSString* string = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+	NSString *string = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+	if (!string)
+		string = [[NSString alloc] initWithData:data encoding:NSASCIIStringEncoding];
 	
 	// Strip trailing newline
 	if ([string hasSuffix:@"\n"])
@@ -108,7 +99,9 @@
 	[task launch];
 #warning This can cause a "Bad file descriptor"... when?
 	NSData* data = [handle readDataToEndOfFile];
-	NSString* string = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+	NSString *string = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+	if (!string)
+		string = [[NSString alloc] initWithData:data encoding:NSASCIIStringEncoding];
 	
 	// Strip trailing newline
 	if ([string hasSuffix:@"\n"])
