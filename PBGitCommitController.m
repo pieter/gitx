@@ -16,6 +16,7 @@
 
 - (void)awakeFromNib
 {
+	self.files = [NSMutableArray array];
 	[super awakeFromNib];
 	[self refresh:self];
 
@@ -80,9 +81,11 @@
 
 - (void) refresh:(id) sender
 {
+	for (PBChangedFile *file in files)
+		file.shouldBeDeleted = YES;
+
 	self.status = @"Refreshing index…";
 	self.busy++;
-	self.files = [NSMutableArray array];
 
 	[repository outputInWorkdirForArguments:[NSArray arrayWithObjects:@"update-index", @"-q", @"--unmerged", @"--ignore-missing", @"--refresh", nil]];
 	self.busy--;
@@ -108,8 +111,6 @@
 	[nc addObserver:self selector:@selector(readCachedFiles:) name:NSFileHandleReadToEndOfFileCompletionNotification object:handle]; 
 	self.busy++;
 	[handle readToEndOfFileInBackgroundAndNotify];
-	
-	self.files = files;
 }
 
 - (void) updateView
@@ -119,10 +120,16 @@
 
 - (void) doneProcessingIndex
 {
-	if (!--self.busy)
+	[self willChangeValueForKey:@"files"];
+	if (!--self.busy) {
 		self.status = @"Ready";
-	[unstagedFilesController didChangeArrangementCriteria];
-	[cachedFilesController didChangeArrangementCriteria];
+		NSArray *filesToBeDeleted = [files filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"shouldBeDeleted == 1"]];
+		for (PBChangedFile *file in filesToBeDeleted) {
+				NSLog(@"Deleting file: %@", [file path]);
+				[files removeObject:file];
+		}
+	}
+	[self didChangeValueForKey:@"files"];
 }
 
 - (void) readOtherFiles:(NSNotification *)notification;
@@ -131,13 +138,31 @@
 	for (NSString *line in lines) {
 		if ([line length] == 0)
 			continue;
+
+		BOOL added = NO;
+		// Check if file is already in our index
+		for (PBChangedFile *file in files) {
+			if ([[file path] isEqualToString:line]) {
+				file.shouldBeDeleted = NO;
+				added = YES;
+				file.status = NEW;
+				file.hasCachedChanges = NO;
+				file.hasUnstagedChanges = YES;
+				continue;
+			}
+		}
+
+		if (added)
+			continue;
+
+		// File does not exist yet, so add it
 		PBChangedFile *file =[[PBChangedFile alloc] initWithPath:line];
 		file.status = NEW;
 		file.hasCachedChanges = NO;
 		file.hasUnstagedChanges = YES;
-
 		[files addObject: file];
 	}
+
 	[self doneProcessingIndex];
 }
 
@@ -161,6 +186,7 @@
 		// but rather update it to incorporate our changes
 		for (PBChangedFile *file in files) {
 			if ([file.path isEqualToString:line]) {
+				file.shouldBeDeleted = NO;
 				if (cached) {
 					file.commitBlobSHA = sha;
 					file.commitBlobMode = mode;
