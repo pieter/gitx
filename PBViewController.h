@@ -22,4 +22,5 @@
 
 - (id)initWithRepository:(PBGitRepository *)theRepository superController:(PBGitWindowController *)controller;
 - (void) removeView;
+- (void) updateView;
 @end

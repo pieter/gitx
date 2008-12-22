@@ -60,11 +60,16 @@
 		case 0:	// swap in the "CustomImageViewController - NSImageView"
 			if (!historyViewController)
 				historyViewController = [[PBGitHistoryController alloc] initWithRepository:repository superController:self];
+			else
+				[historyViewController updateView];
 			viewController = historyViewController;
 			break;
 		case 1:
 			if (!commitViewController)
 				commitViewController = [[PBGitCommitController alloc] initWithRepository:repository superController:self];
+			else
+				[commitViewController updateView];
+
 			viewController = commitViewController;
 			break;
 	}

@@ -112,6 +112,11 @@
 	self.files = files;
 }
 
+- (void) updateView
+{
+	[self refresh:nil];
+}
+
 - (void) doneProcessingIndex
 {
 	if (!--self.busy)

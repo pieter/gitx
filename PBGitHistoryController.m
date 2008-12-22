@@ -173,6 +173,11 @@
 	[repository.revisionList reload];
 }
 
+- (void) updateView
+{
+	[self refresh:nil];
+}
+
 - (void) selectCommit: (NSString*) commit
 {
 	NSPredicate* selection = [NSPredicate predicateWithFormat:@"realSha == %@", commit];

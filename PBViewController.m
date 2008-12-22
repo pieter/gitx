@@ -34,4 +34,10 @@
 - (void) awakeFromNib
 {
 }
+
+// This is called when the view is displayed again; it 
+// should be updated to show the most recent information
+- (void) updateView
+{
+}
 @end
