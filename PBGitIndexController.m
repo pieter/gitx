@@ -142,23 +142,38 @@
 	return [commitController.repository outputInWorkdirForArguments:[NSArray arrayWithObjects:@"diff", @"--", file.path, nil]];
 }
 
-//- (void) forceRevertChanges
-//{
-//	[repository outputInWorkdirForArguments:[NSArray arrayWithObjects:@"checkout", @"--", file.path, nil]];
-//	self.hasUnstagedChanges = NO;
-//}
-//
-//- (void) revertChanges
-//{
-//	int ret = [[NSAlert alertWithMessageText:@"Revert changes"
-//					 defaultButton:nil
-//				   alternateButton:@"Cancel"
-//					   otherButton:nil
-//		 informativeTextWithFormat:@"Are you sure you wish to revert the changes in '%@'?\n\n You cannot undo this operation.", path] runModal];	
-//
-//	if (ret == NSAlertDefaultReturn)
-//		[self forceRevertChanges];
-//}
+- (void) forceRevertChangesForFiles:(NSArray *)files
+{
+	NSArray *paths = [files valueForKey:@"path"];
+	NSString *input = [paths componentsJoinedByString:@"\0"];
+
+	NSArray *arguments = [NSArray arrayWithObjects:@"checkout-index", @"--index", @"--quiet", @"--force", @"-z", @"--stdin", nil];
+	int ret = 1;
+	[commitController.repository outputForArguments:arguments inputString:input retValue:&ret];
+	if (ret) {
+		[[NSAlert alertWithMessageText:@"Reverting changes failed"
+						 defaultButton:nil
+					   alternateButton:nil
+						   otherButton:nil
+			 informativeTextWithFormat:@"Reverting changes failed with error code %i", ret] runModal];
+		return;
+	}
+
+	for (PBChangedFile *file in files)
+		file.hasUnstagedChanges = NO;
+}
+
+- (void) revertChangesForFiles:(NSArray *)files
+{
+	int ret = [[NSAlert alertWithMessageText:@"Revert changes"
+					 defaultButton:nil
+				   alternateButton:@"Cancel"
+					   otherButton:nil
+		 informativeTextWithFormat:@"Are you sure you wish to revert changes?\n\n You cannot undo this operation."] runModal];
+
+	if (ret == NSAlertDefaultReturn)
+		[self forceRevertChangesForFiles:files];
+}
 
 
 # pragma mark Context Menu methods
@@ -207,20 +222,23 @@
 		[menu addItem:ignoreItem];
 	}
 
-	// Do not add "revert" options for untracked files
-	//	if (selectedItem.status == NEW)
-	//		return a;
-	//
-	//	NSMenuItem *revertItem = [[NSMenuItem alloc] initWithTitle:@"Revert Changes…" action:@selector(revertChanges) keyEquivalent:@""];
-	//	[revertItem setTarget:selectedItem];
-	//	[revertItem setAlternate:NO];
-	//	[a addItem:revertItem];
-	//
-	//	NSMenuItem *revertForceItem = [[NSMenuItem alloc] initWithTitle:@"Revert Changes" action:@selector(forceRevertChanges) keyEquivalent:@""];
-	//	[revertForceItem setTarget:selectedItem];
-	//	[revertForceItem setAlternate:YES];
-	//	[revertForceItem setKeyEquivalentModifierMask:NSAlternateKeyMask];
-	//	[a addItem:revertForceItem];
+	for (PBChangedFile *file in selectedFiles)
+		if (!file.hasUnstagedChanges)
+			return menu;
+
+	NSMenuItem *revertItem = [[NSMenuItem alloc] initWithTitle:@"Revert Changes…" action:@selector(revertFilesAction:) keyEquivalent:@""];
+	[revertItem setTarget:self];
+	[revertItem setAlternate:NO];
+	[revertItem setRepresentedObject:selectedFiles];
+
+	[menu addItem:revertItem];
+
+	NSMenuItem *revertForceItem = [[NSMenuItem alloc] initWithTitle:@"Revert Changes" action:@selector(forceRevertFilesAction:) keyEquivalent:@""];
+	[revertForceItem setTarget:self];
+	[revertForceItem setAlternate:YES];
+	[revertForceItem setRepresentedObject:selectedFiles];
+	[revertForceItem setKeyEquivalentModifierMask:NSAlternateKeyMask];
+	[menu addItem:revertForceItem];
 	
 	return menu;
 }
@@ -250,6 +268,20 @@
 		[self ignoreFiles:selectedFiles];
 	}
 	[commitController refresh:NULL];
+}
+
+- (void) revertFilesAction:(id) sender
+{
+	NSArray *selectedFiles = [sender representedObject];
+	if ([selectedFiles count] > 0)
+		[self revertChangesForFiles:selectedFiles];
+}
+
+- (void) forceRevertFilesAction:(id) sender
+{
+	NSArray *selectedFiles = [sender representedObject];
+	if ([selectedFiles count] > 0)
+		[self forceRevertChangesForFiles:selectedFiles];
 }
 
 
