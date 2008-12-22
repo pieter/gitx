@@ -98,11 +98,11 @@ var setGravatar = function(email, image) {
 		return;
 
 	if (!email) {
-		$("gravatar").src = "http://www.gravatar.com/avatar/?d=wavatar&s=60";
+		image.src = "http://www.gravatar.com/avatar/?d=wavatar&s=60";
 		return;
 	}
 
-	$("gravatar").src = "http://www.gravatar.com/avatar/" +
+	image.src = "http://www.gravatar.com/avatar/" +
 		hex_md5(commit.author_email) + "?d=wavatar&s=60";
 }
 
