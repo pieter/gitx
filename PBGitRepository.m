@@ -155,6 +155,13 @@ NSString* PBGitRepositoryErrorDomain = @"GitXErrorDomain";
 	return displayName;
 }
 
+// Get the .gitignore file at the root of the repository
+- (NSString*)gitIgnoreFilename
+{
+	NSString *dir = [self workingDirectory];
+	return [dir stringByAppendingString:@"/.gitignore"];
+}
+
 // Overridden to create our custom window controller
 - (void)makeWindowControllers
 {
