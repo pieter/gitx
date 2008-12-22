@@ -41,7 +41,7 @@ void add_line(struct PBGitGraphLine *lines, int *nLines, int upper, int from, in
 	std::list<PBGitLane *> *currentLanes = new std::list<PBGitLane *>;
 	std::list<PBGitLane *> *previousLanes = (std::list<PBGitLane *> *)pl;
 
-	int maxLines = (previousLanes->size() + commit.nParents + 2) * 3;
+	int maxLines = (previousLanes->size() + commit.nParents + 2) * 2;
 	struct PBGitGraphLine *lines = (struct PBGitGraphLine *)malloc(sizeof(struct PBGitGraphLine) * maxLines);
 	int currentLine = 0;
 
@@ -63,6 +63,8 @@ void add_line(struct PBGitGraphLine *lines, int *nLines, int upper, int from, in
 					currentLane = currentLanes->back();
 					newPos = currentLanes->size();
 					add_line(lines, &currentLine, 1, i, newPos,(*it)->index());
+					if (commit.nParents)
+						add_line(lines, &currentLine, 0, newPos, newPos,(*it)->index());
 				}
 				else {
 					add_line(lines, &currentLine, 1, i, newPos,(*it)->index());
@@ -78,10 +80,6 @@ void add_line(struct PBGitGraphLine *lines, int *nLines, int upper, int from, in
 			// For existing columns, we always just continue straight down
 			// ^^ I don't know what that means anymore :(
 
-			if (currentLane)
-				add_line(lines, &currentLine, 0, newPos, newPos,(*it)->index());
-			else
-				add_line(lines, &currentLine, 0, newPos, newPos, 0);
 		}
 	}
 	//Add your own parents
