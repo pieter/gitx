@@ -97,6 +97,11 @@ var setGravatar = function(email, image) {
 	if (Controller && !Controller.isReachable_("www.gravatar.com"))
 		return;
 
+	if(Controller && !Controller.isFeatureEnabled_("gravatar")) {
+		image.src = "";
+		return;
+	}
+
 	if (!email) {
 		image.src = "http://www.gravatar.com/avatar/?d=wavatar&s=60";
 		return;
@@ -188,6 +193,23 @@ var showImage = function(element, filename)
 	return false;
 }
 
+var enableFeature = function(feature, element)
+{
+	if(!Controller || Controller.isFeatureEnabled_(feature)) {
+		element.style.display = "";
+	} else {
+		element.style.display = "none";
+	}
+}
+
+var enableFeatures = function()
+{
+	enableFeature("gist", $("gist"))
+	if(commit)
+		setGravatar(commit.author_email, $("gravatar"));
+	enableFeature("gravatar", $("gravatar"))
+}
+
 var loadExtendedCommit = function(commit)
 {
 	if (commit.author_email)
@@ -202,5 +224,5 @@ var loadExtendedCommit = function(commit)
 		$("diff").innerHTML = "<a class='showdiff' href='' onclick='showDiff(); return false;'>This is a large commit. Click here or press 'v' to view.</a>";
 
 	hideNotification();
-	setGravatar(commit.author_email, $("gravatar"));
+	enableFeatures();
 }
