@@ -12,5 +12,7 @@
 }
 
 + (int) commitMessageViewVerticalLineLength;
++ (BOOL) isGistEnabled;
++ (BOOL) isGravatarEnabled;
 
 @end
