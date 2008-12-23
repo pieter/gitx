@@ -17,6 +17,8 @@
 {
 	// GENERAL
 	[self addView:generalPrefsView label:@"General" image:[NSImage imageNamed:@"gitx"]];
+	// INTERGRATION
+	[self addView:integrationPrefsView label:@"Integration" image:[NSImage imageNamed:NSImageNameNetwork]];
 	// UPDATES
 	[self addView:updatesPrefsView label:@"Updates"];
 }
