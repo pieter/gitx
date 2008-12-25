@@ -126,6 +126,7 @@ var highlightDiff = function(diff, element, callbacks) {
 		}
 	}
 
+	file_index++;
 	finishContent();
 
 	// This takes about 7ms
