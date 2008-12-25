@@ -77,7 +77,11 @@
 		data = [handle readDataToEndOfFile];
 	}
 	
-	return [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+	NSString* string = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+	if (!string) {
+		string = [[NSString alloc] initWithData:data encoding:NSISOLatin1StringEncoding];
+	}
+	return string;
 }
 
 - (void) saveToFolder: (NSString *) dir

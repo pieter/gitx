@@ -76,7 +76,7 @@
 	NSData* data = [handle readDataToEndOfFile];
 	NSString *string = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
 	if (!string)
-		string = [[NSString alloc] initWithData:data encoding:NSASCIIStringEncoding];
+		string = [[NSString alloc] initWithData:data encoding:NSISOLatin1StringEncoding];
 	
 	// Strip trailing newline
 	if ([string hasSuffix:@"\n"])
@@ -101,7 +101,7 @@
 	NSData* data = [handle readDataToEndOfFile];
 	NSString *string = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
 	if (!string)
-		string = [[NSString alloc] initWithData:data encoding:NSASCIIStringEncoding];
+		string = [[NSString alloc] initWithData:data encoding:NSISOLatin1StringEncoding];
 	
 	// Strip trailing newline
 	if ([string hasSuffix:@"\n"])
