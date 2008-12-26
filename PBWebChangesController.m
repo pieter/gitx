@@ -38,15 +38,20 @@
 						change:(NSDictionary *)change
 					   context:(void *)context
 {
+	NSArrayController *otherController;
+	otherController = object == unstagedFilesController ? cachedFilesController : unstagedFilesController;
 	int count = [[object selectedObjects] count];
-	if (count == 0)
+	if (count == 0) {
+		if([[otherController selectedObjects] count] == 0) {
+			selectedFile = nil;
+			selectedFileIsCached = NO;
+			[self refresh];
+		}
 		return;
+	}
 
 	// TODO: Move this to commitcontroller
-	if (object == unstagedFilesController)
-		[cachedFilesController setSelectionIndexes:[NSIndexSet indexSet]];
-	else
-		[unstagedFilesController setSelectionIndexes:[NSIndexSet indexSet]];
+	[otherController setSelectionIndexes:[NSIndexSet indexSet]];
 
 	if (count > 1) {
 		[self showMultiple: [object selectedObjects]];
@@ -66,12 +71,13 @@
 
 - (void) refresh
 {
-	if (!finishedLoading || !selectedFile)
+	if (!finishedLoading)
 		return;
 
 	id script = [view windowScriptObject];
 	[script callWebScriptMethod:@"showFileChanges"
-				  withArguments:[NSArray arrayWithObjects:selectedFile, [NSNumber numberWithBool:selectedFileIsCached], nil]];
+		      withArguments:[NSArray arrayWithObjects:selectedFile ?: (id)[NSNull null],
+				     [NSNumber numberWithBool:selectedFileIsCached], nil]];
 }
 
 - (void) stageHunk:(NSString *)hunk reverse:(BOOL)reverse

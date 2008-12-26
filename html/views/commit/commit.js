@@ -23,8 +23,12 @@ var setState = function(state) {
 }
 
 var showFileChanges = function(file, cached) {
-	if (!file)
+	if (!file) {
+		$("title").innerHTML = "No file selected";
+		hideNotification();
+		setState("No file selected");
 		return;
+	}
 
 	hideNotification();
 	hideState();
