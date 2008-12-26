@@ -43,11 +43,14 @@
 
 # pragma mark Delegate methods
 
-- (void) webView:(id) v didFinishLoadForFrame:(id) frame
+- (void)webView:(WebView *)sender didStartProvisionalLoadForFrame:(WebFrame *)frame
 {
 	id script = [view windowScriptObject];
 	[script setValue: self forKey:@"Controller"];
+}
 
+- (void) webView:(id) v didFinishLoadForFrame:(id) frame
+{
 	finishedLoading = YES;
 	if ([self respondsToSelector:@selector(didLoad)])
 		[self performSelector:@selector(didLoad)];
