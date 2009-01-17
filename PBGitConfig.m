@@ -32,7 +32,7 @@
 		[array addObject:@"--global"];
 	else {
 		[array addObject:@"-f"];
-		[array addObject:[repositoryPath stringByAppendingString:@"/config"]];
+		[array addObject:[repositoryPath stringByAppendingPathComponent:@"config"]];
 	}
 
 	[array addObject:key];
@@ -69,7 +69,7 @@
 	// Check if the config option is local. In that case,
 	// write it local
 	if (repositoryPath) {
-		NSMutableArray *arguments = [NSMutableArray arrayWithObjects:@"config", @"-f", [repositoryPath stringByAppendingString:@"/config"], @"--get", path, nil];
+		NSMutableArray *arguments = [NSMutableArray arrayWithObjects:@"config", @"-f", [repositoryPath stringByAppendingPathComponent:@"config"], @"--get", path, nil];
 		int ret;
 		[PBEasyPipe outputForCommand:[PBGitBinary path] withArgs:arguments inDir:nil retValue:&ret];
 
