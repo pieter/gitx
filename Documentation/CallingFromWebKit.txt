@@ -27,7 +27,7 @@ Furthermore, the controller keeps a finishedLoading member that indicates
 whether or not the webview is ready to be used. If it is ready, and your
 subclass has implemented the didLoad method, that method will be called.
 
-After the document has succesfully loaded, the controller inserts itself into
+After the document has successfully loaded, the controller inserts itself into
 the Javascript environment under the "Controller" variable.
 
 Useful PBWebController functions

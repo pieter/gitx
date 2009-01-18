@@ -305,7 +305,7 @@
 	if (ret)
 		return [self commitFailedBecause:@"Could not update HEAD"];
 
-	[webController setStateMessage:[NSString stringWithFormat:@"Succesfully created commit %@", commit]];
+	[webController setStateMessage:[NSString stringWithFormat:@"Successfully created commit %@", commit]];
 	
 	repository.hasChanged = YES;
 	self.busy--;
