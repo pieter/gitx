@@ -9,8 +9,7 @@
 
 	<script type="text/javascript" charset="utf-8">
 		var showDiff = function(diff) {
-			document.getElementById("details").innerHTML = diff.escapeHTML();
-			highlightDiffs();
+			highlightDiff(diff, $("details"));
 		}
 	</script>
 </head>
