@@ -11,6 +11,8 @@
 #import "PBChangedFile.h"
 
 @interface PBGitIndexController : NSObject {
+	int contextSize;
+
 	IBOutlet NSArrayController *stagedFilesController, *unstagedFilesController;
 	IBOutlet PBGitCommitController *commitController;
 
@@ -20,6 +22,10 @@
 	IBOutlet NSTableView *unstagedTable;
 	IBOutlet NSTableView *stagedTable;	
 }
+
+@property (assign) int contextSize;
+
+- (NSString *) contextParameter;
 
 - (void) stageFiles:(NSArray *)files;
 - (void) unstageFiles:(NSArray *)files;

@@ -1,6 +1,6 @@
 var showNewFile = function(file)
 {
-	$('title').innerHTML = "New file: " + file.path;
+	setTitle("New file: " + file.path);
 
 	var contents = IndexController.unstagedChangesForFile_(file);
 	if (!contents) {
@@ -17,15 +17,26 @@ var hideState = function() {
 }
 
 var setState = function(state) {
+	setTitle(state);
+	hideNotification();
 	$("state").style.display = "";
 	$("diff").style.display = "none";
 	$("state").innerHTML = state.escapeHTML();
 }
 
+var setTitle = function(status) {
+	$("status").innerHTML = status;
+	$("contextSize").style.display = "none";
+	$("contextTitle").style.display = "none";
+}
+
+var displayContext = function() {
+	$("contextSize").style.display = "";
+	$("contextTitle").style.display = "";
+}
+
 var showFileChanges = function(file, cached) {
 	if (!file) {
-		$("title").innerHTML = "No file selected";
-		hideNotification();
 		setState("No file selected");
 		return;
 	}
@@ -33,16 +44,22 @@ var showFileChanges = function(file, cached) {
 	hideNotification();
 	hideState();
 
+	$("contextSize").oninput = function(element) {
+		Controller.setContextSize_($("contextSize").value);
+	}
+
 	if (file.status == 0) // New file?
 		return showNewFile(file);
 
 	var changes;
 	if (cached) {
-		$("title").innerHTML = "Staged changes for " + file.path;
+		setTitle("Staged changes for " + file.path);
+		displayContext();
 		changes = IndexController.stagedChangesForFile_(file);
 	}
 	else {
-		$("title").innerHTML = "Unstaged changes for " + file.path;
+		setTitle("Unstaged changes for " + file.path);
+		displayContext();
 		changes = IndexController.unstagedChangesForFile_(file);
 	}
 

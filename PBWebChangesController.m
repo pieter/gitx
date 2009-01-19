@@ -7,6 +7,7 @@
 //
 
 #import "PBWebChangesController.h"
+#import "PBGitIndexController.h"
 
 @implementation PBWebChangesController
 
@@ -92,4 +93,12 @@
 	[script callWebScriptMethod:@"setState" withArguments: [NSArray arrayWithObject:state]];
 }
 
+- (void) setContextSize:(int)size
+{
+	if (size == indexController.contextSize)
+		return;
+
+	indexController.contextSize = size;
+	[self refresh];
+}
 @end

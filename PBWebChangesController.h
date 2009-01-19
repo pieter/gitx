@@ -11,11 +11,13 @@
 #import "PBGitCommitController.h"
 #import "PBChangedFile.h"
 
+@class PBGitIndexController;
+
 @interface PBWebChangesController : PBWebController {
 	IBOutlet NSArrayController *unstagedFilesController;
 	IBOutlet NSArrayController *cachedFilesController;
 	IBOutlet PBGitCommitController *controller;
-	IBOutlet id indexController;
+	IBOutlet PBGitIndexController *indexController;
 
 	PBChangedFile *selectedFile;
 	BOOL selectedFileIsCached;
@@ -25,4 +27,5 @@
 - (void) setStateMessage:(NSString *)state;
 
 - (void) showMultiple:(NSArray *)files;
+- (void) setContextSize:(int)size;
 @end

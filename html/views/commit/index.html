@@ -13,7 +13,12 @@
 </head>
 
 <body>
-	<h1 id='title'><span id="status">Nothing to commit</span></h1>
+	<h1 id='title'>
+		<input type="range" min="1" max="8" value="3" id="contextSize">
+		<span id="contextTitle">Context:</span>
+		<span id="status">Nothing to commit</span>
+
+	</h1>
 
 	<div id="notification" style="display:none">
 		<img src="../../images/spinner.gif" alt="Spinner" id="spinner"></img>

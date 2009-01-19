@@ -14,8 +14,12 @@
 
 @implementation PBGitIndexController
 
+@synthesize contextSize;
+
 - (void)awakeFromNib
 {
+	contextSize = 3;
+
 	[unstagedTable setDoubleAction:@selector(tableClicked:)];
 	[stagedTable setDoubleAction:@selector(tableClicked:)];
 
@@ -123,7 +127,7 @@
 	if (file.status == NEW)
 		return [commitController.repository outputForArguments:[NSArray arrayWithObjects:@"show", indexPath, nil]];
 
-	return [commitController.repository outputInWorkdirForArguments:[NSArray arrayWithObjects:@"diff-index", @"-p", @"--cached", [commitController parentTree], @"--", file.path, nil]];
+	return [commitController.repository outputInWorkdirForArguments:[NSArray arrayWithObjects:@"diff-index", [self contextParameter], @"--cached", [commitController parentTree], @"--", file.path, nil]];
 }
 
 - (NSString *)unstagedChangesForFile:(PBChangedFile *)file
@@ -131,15 +135,17 @@
 	if (file.status == NEW) {
 		NSStringEncoding encoding;
 		NSError *error = nil;
-		NSString *contents = [NSString stringWithContentsOfFile:[[commitController.repository workingDirectory] stringByAppendingPathComponent:file.path]
-												   usedEncoding:&encoding error:&error];
+		NSString *path = [[commitController.repository workingDirectory] stringByAppendingPathComponent:file.path];
+		NSString *contents = [NSString stringWithContentsOfFile:path
+												   usedEncoding:&encoding
+														  error:&error];
 		if (error)
 			return nil;
 
 		return contents;
 	}
 
-	return [commitController.repository outputInWorkdirForArguments:[NSArray arrayWithObjects:@"diff", @"--", file.path, nil]];
+	return [commitController.repository outputInWorkdirForArguments:[NSArray arrayWithObjects:@"diff", [self contextParameter], @"--", file.path, nil]];
 }
 
 - (void) forceRevertChangesForFiles:(NSArray *)files
@@ -366,6 +372,11 @@ writeRowsWithIndexes:(NSIndexSet *)rowIndexes
 		[self stageFiles:files];
 
 	return YES;
+}
+
+- (NSString *) contextParameter
+{
+	return [[NSString alloc] initWithFormat:@"-U%i", contextSize];
 }
 
 # pragma mark WebKit Accessibility
