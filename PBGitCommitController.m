@@ -269,6 +269,9 @@
 		return;
 	}
 
+	[cachedFilesController setSelectionIndexes:[NSIndexSet indexSet]];
+	[unstagedFilesController setSelectionIndexes:[NSIndexSet indexSet]];
+
 	NSString *commitSubject;
 	NSRange newLine = [commitMessage rangeOfString:@"\n"];
 	if (newLine.location == NSNotFound)
