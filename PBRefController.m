@@ -296,7 +296,8 @@
 - (void) selectCurrentBranch
 {
 	PBGitRevSpecifier *rev = historyController.repository.currentBranch;
-	[branchPopUp setTitle:[rev description]];
+	if (rev)
+		[branchPopUp setTitle:[rev description]];
 }
 
 @end
