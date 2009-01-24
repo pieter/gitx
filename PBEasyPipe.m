@@ -106,6 +106,10 @@
 	// Strip trailing newline
 	if ([string hasSuffix:@"\n"])
 		string = [string substringToIndex:[string length]-1];
+
+	if ([NSThread currentThread] != [NSThread mainThread])
+		[task waitUntilExit];
+
 	return string;
 }
 
