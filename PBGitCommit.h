@@ -21,7 +21,7 @@
 	NSString* details;
 	NSString *_patch;
 	NSArray* parents;
-	NSMutableArray* refs;
+
 	int timestamp;
 	char sign;
 	id lineInfo;

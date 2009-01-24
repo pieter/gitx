@@ -15,8 +15,6 @@
 	PBGraphCellInfo *previous;
 	void *pl;
 	int curLane;
-
-	NSDictionary *refs;
 }
 
 - (id) initWithRepository:(PBGitRepository *)repo;

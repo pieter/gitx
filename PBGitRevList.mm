@@ -71,7 +71,6 @@ using namespace std;
 	NSDate *start = [NSDate date];
 	NSMutableArray* revisions = [NSMutableArray array];
 	PBGitGrapher* g = [[PBGitGrapher alloc] initWithRepository: repository];
-	NSDictionary* refs = [repository refs];
 
 	NSMutableArray* arguments;
 	BOOL showSign = [rev hasLeftRight];
@@ -170,11 +169,7 @@ using namespace std;
 
 		[revisions addObject: newCommit];
 		[g decorateCommit: newCommit];
-		
-		// 0.1 second on linux-2.6
-		if (refs && [refs objectForKey:[newCommit realSha]])
-			newCommit.refs = [refs objectForKey:[newCommit realSha]];
-		
+
 		if (++num % 1000 == 0)
 			[self performSelectorOnMainThread:@selector(setCommits:) withObject:revisions waitUntilDone:NO];
 	}

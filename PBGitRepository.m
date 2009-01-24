@@ -228,8 +228,6 @@ NSString* PBGitRepositoryErrorDomain = @"GitXErrorDomain";
 		[self addRef:newRef fromParameters:components];
 	}
 
-	self.refs = refs;
-
 	// Add an "All branches" option in the branches list
 	[self addBranch:[PBGitRevSpecifier allBranchesRevSpec]];
 	[self addBranch:[PBGitRevSpecifier localBranchesRevSpec]];

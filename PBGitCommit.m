@@ -11,7 +11,7 @@
 
 @implementation PBGitCommit
 
-@synthesize repository, subject, timestamp, author, parentShas, nParents, sign, lineInfo, refs;
+@synthesize repository, subject, timestamp, author, parentShas, nParents, sign, lineInfo;
 
 - (NSArray *) parents
 {
@@ -107,9 +107,19 @@
 	if (!self.refs)
 		return;
 
-	[refs removeObject:ref];
-	if ([refs count] == 0)
-		refs = NULL;
+	[self.refs removeObject:ref];
+	if ([self.refs count] == 0)
+		self.refs = NULL;
+}
+
+- (NSMutableArray *)refs
+{
+	return [[repository refs] objectForKey:[self realSha]];
+}
+
+- (void) setRefs:(NSMutableArray *)refs
+{
+	[[repository refs] setObject:[self realSha] forKey:[self realSha]];
 }
 
 - (void)finalize

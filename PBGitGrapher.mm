@@ -21,7 +21,6 @@ using namespace std;
 
 - (id) initWithRepository: (PBGitRepository*) repo
 {
-	refs = repo.refs;
 	pl = new std::list<PBGitLane *>;
 
 	PBGitLane::resetColors();

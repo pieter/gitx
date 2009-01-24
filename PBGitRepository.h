@@ -62,5 +62,5 @@ extern NSString* PBGitRepositoryErrorDomain;
 @property (retain) PBGitRevList* revisionList;
 @property (assign) NSMutableArray* branches;
 @property (assign) PBGitRevSpecifier *currentBranch;
-@property (assign) NSMutableDictionary* refs;
+@property (retain) NSMutableDictionary* refs;
 @end
