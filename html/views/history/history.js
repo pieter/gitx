@@ -178,7 +178,7 @@ var showDiff = function() {
 	}
 
 	var binaryDiff = function(filename) {
-		if (filename.match(/\.(png|jpg|pdf|icns|psd)$/i))
+		if (filename.match(/\.(png|jpg|icns|psd)$/i))
 			return '<a href="#" onclick="return showImage(this, \'' + filename + '\')">Display image</a>';
 		else
 			return "Binary file differs";
