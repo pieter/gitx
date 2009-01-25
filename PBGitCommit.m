@@ -73,7 +73,7 @@
 	if (details != nil)
 		return details;
 
-	details = [self.repository outputForCommand:[@"show --pretty=raw " stringByAppendingString:[self realSha]]];
+	details = [self.repository outputForArguments:[NSArray arrayWithObjects:@"show", @"--pretty=raw", @"-M", [self realSha], nil]];
 	
 	return details;
 }
