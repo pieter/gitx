@@ -68,14 +68,15 @@ a.servicebutton{
 
 #files {
 	margin-top: 1em;
-	font-family: Monaco;
-	font-size: 10px;
 }
 
 #files a {
 	color: #666666;
 }
 
+#files p {
+	margin: 4px;
+}
 #files a:hover {
 	color: #4444ff;
 }
@@ -137,18 +138,45 @@ a.showdiff {
 	font-weight: bold;
 }
 
-.addedfile {
-	color: green;
+div.button
+{
+	color: #666666;
+
+	font-size: 60%;
+	text-align: center;
+
+	width: 50px;
+
+	margin-right: 10px;
+
+	padding: 2px;
+
+	float: left;
+	clear: both;
+
+	border: 1px solid;
+	-webkit-border-radius: 3px;
 }
 
-.deletedfile {
-	color: red;
+div.created
+{
+	background-color: #ccffcc;
+	border-color: #66ff66;
 }
 
-.changedfile {
-	color: purple;
+div.changed
+{
+	background-color: #ffcc99;
+	border-color: #ff9933;
 }
 
-.movedfile {
-	color: gray;
+div.deleted
+{
+	background-color: #ffcccc;
+	border-color: #ff6666;
+}
+
+div.renamed
+{
+	/*No colour needed right now.*/
 }

@@ -175,13 +175,13 @@ var loadCommit = function(commitObject, currentRef) {
 var showDiff = function() {
 	var newfile = function(name1, name2, id) {
 		if (name1 == name2)
-			$("files").innerHTML += "<a href='#" + id + "'>" + name1 + "</a> <span class='changedfile'>changed</span><br>";
+			$("files").innerHTML += "<div class='button changed'>changed</div><p><a href='#" + id + "'>" + name1 + "</a></p>";
 		else if (name1 == "/dev/null")
-			$("files").innerHTML += "<a href='#" + id + "'>" + name2 + "</a> <span class='addedfile'>created</span><br>";
+			$("files").innerHTML += "<div class='button created'>created</div><p><a href='#" + id + "'>" + name2 + "</a></p>";
 		else if (name2 == "/dev/null")
-			$("files").innerHTML += "<a href='#" + id + "'>" + name1 + "</a> <span class='deletedfile'>deleted</span><br>";
+			$("files").innerHTML += "<div class='button deleted'>deleted</div><p><a href='#" + id + "'>" + name1 + "</a></p>";
 		else
-			$("files").innerHTML += "<a href='#" + id + "'>" + name1 + "</a> <span class='movedfile'>moved to</span> " + name2 + "<br>";
+			$("files").innerHTML += "<div class='button renamed' alt='renamed''>renamed</div><p>" + name1 + " &#8594; <a href='#" + id + "'>" + name2 + "</a></p>";
 	}
 
 	var binaryDiff = function(filename) {
