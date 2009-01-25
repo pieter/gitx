@@ -37,10 +37,12 @@
 	if (!document) {
 		
 		if (!(document = [[PBGitRepository alloc] initWithURL:url]))
-			return NO;
+			return nil;
 
 		[self addDocument:document];
 	}
+	else
+		[document showWindows];
 
 	return document;
 }
