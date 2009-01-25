@@ -98,7 +98,17 @@
 	
 	[task launch];
 #warning This can cause a "Bad file descriptor"... when?
-	NSData* data = [handle readDataToEndOfFile];
+	NSData *data;
+	@try {
+		data = [handle readDataToEndOfFile];
+	}
+	@catch (NSException * e) {
+		NSLog(@"Got a bad file descriptor in %s!", _cmd);
+		if ([NSThread currentThread] != [NSThread mainThread])
+			[task waitUntilExit];
+
+		return nil;
+	}
 	NSString *string = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
 	if (!string)
 		string = [[NSString alloc] initWithData:data encoding:NSISOLatin1StringEncoding];
