@@ -49,6 +49,7 @@
 		F56524F00E02D45200F03B52 /* PBGitCommit.m in Sources */ = {isa = PBXBuildFile; fileRef = F56524EF0E02D45200F03B52 /* PBGitCommit.m */; };
 		F56526240E03D85900F03B52 /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F56526230E03D85900F03B52 /* WebKit.framework */; };
 		F565262B0E03D89B00F03B52 /* PBWebHistoryController.m in Sources */ = {isa = PBXBuildFile; fileRef = F565262A0E03D89B00F03B52 /* PBWebHistoryController.m */; };
+		F569AE930F2CBD7C00C2FFA7 /* Credits.html in Resources */ = {isa = PBXBuildFile; fileRef = F569AE920F2CBD7C00C2FFA7 /* Credits.html */; };
 		F56ADDD90ED19F9E002AC78F /* AddBranchTemplate.png in Resources */ = {isa = PBXBuildFile; fileRef = F56ADDD70ED19F9E002AC78F /* AddBranchTemplate.png */; };
 		F56ADDDA0ED19F9E002AC78F /* AddLabelTemplate.png in Resources */ = {isa = PBXBuildFile; fileRef = F56ADDD80ED19F9E002AC78F /* AddLabelTemplate.png */; };
 		F56CC7320E65E0E5004307B4 /* PBGraphCellInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = F56CC7310E65E0E5004307B4 /* PBGraphCellInfo.m */; };
@@ -198,6 +199,7 @@
 		F56526230E03D85900F03B52 /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = /System/Library/Frameworks/WebKit.framework; sourceTree = "<absolute>"; };
 		F56526290E03D89B00F03B52 /* PBWebHistoryController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PBWebHistoryController.h; sourceTree = "<group>"; };
 		F565262A0E03D89B00F03B52 /* PBWebHistoryController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PBWebHistoryController.m; sourceTree = "<group>"; };
+		F569AE920F2CBD7C00C2FFA7 /* Credits.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = Credits.html; sourceTree = "<group>"; };
 		F56ADDD70ED19F9E002AC78F /* AddBranchTemplate.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = AddBranchTemplate.png; path = Images/AddBranchTemplate.png; sourceTree = "<group>"; };
 		F56ADDD80ED19F9E002AC78F /* AddLabelTemplate.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = AddLabelTemplate.png; path = Images/AddLabelTemplate.png; sourceTree = "<group>"; };
 		F56CC7270E65E0AD004307B4 /* PBGitGraphLine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PBGitGraphLine.h; sourceTree = "<group>"; };
@@ -385,6 +387,7 @@
 				F52BCE020E84208300AA3741 /* PBGitHistoryView.xib */,
 				F59116E50E843BB50072CCB1 /* PBGitCommitView.xib */,
 				47DBDB680E94EF6500671A1E /* Preferences.xib */,
+				F569AE920F2CBD7C00C2FFA7 /* Credits.html */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -706,6 +709,7 @@
 				3BC07F4D0ED5A5C5009A7768 /* CommitViewTemplate.png in Resources */,
 				47DBDB6A0E94EF6500671A1E /* Preferences.xib in Resources */,
 				47DBDBB10E94F6CA00671A1E /* Updates.png in Resources */,
+				F569AE930F2CBD7C00C2FFA7 /* Credits.html in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
