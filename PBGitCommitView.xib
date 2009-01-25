@@ -9,7 +9,7 @@
 		<object class="NSMutableArray" key="IBDocument.EditedObjectIDs">
 			<bool key="EncodedWithXMLCoder">YES</bool>
 			<integer value="226"/>
-			<integer value="206"/>
+			<integer value="1" id="9"/>
 		</object>
 		<object class="NSArray" key="IBDocument.PluginDependencies">
 			<bool key="EncodedWithXMLCoder">YES</bool>
@@ -58,7 +58,7 @@
 								<int key="NSfFlags">1044</int>
 							</object>
 							<reference key="NSControlView" ref="1073221655"/>
-							<object class="NSColor" key="NSBackgroundColor" id="111072416">
+							<object class="NSColor" key="NSBackgroundColor">
 								<int key="NSColorSpace">6</int>
 								<string key="NSCatalogName">System</string>
 								<string key="NSColorName">controlColor</string>
@@ -124,7 +124,7 @@
 											<bool key="EncodedWithXMLCoder">YES</bool>
 											<integer value="12" id="777559147"/>
 											<reference ref="777559147"/>
-											<integer value="1" id="9"/>
+											<reference ref="9"/>
 										</object>
 									</object>
 								</object>
@@ -688,22 +688,6 @@
 						<double key="NSMinValue">1.600000e+01</double>
 						<double key="NSMaxValue">1.000000e+02</double>
 					</object>
-					<object class="NSTextField" id="850994479">
-						<reference key="NSNextResponder" ref="750704519"/>
-						<int key="NSvFlags">292</int>
-						<string key="NSFrame">{{264, 10}, {169, 17}}</string>
-						<reference key="NSSuperview" ref="750704519"/>
-						<bool key="NSEnabled">YES</bool>
-						<object class="NSTextFieldCell" key="NSCell" id="197627814">
-							<int key="NSCellFlags">68288064</int>
-							<int key="NSCellFlags2">272630784</int>
-							<string key="NSContents">Label</string>
-							<reference key="NSSupport" ref="554612341"/>
-							<reference key="NSControlView" ref="850994479"/>
-							<reference key="NSBackgroundColor" ref="111072416"/>
-							<reference key="NSTextColor" ref="132492410"/>
-						</object>
-					</object>
 				</object>
 				<string key="NSFrameSize">{852, 432}</string>
 				<reference key="NSSuperview"/>
@@ -1189,22 +1173,6 @@
 					<int key="connectionID">269</int>
 				</object>
 				<object class="IBConnectionRecord">
-					<object class="IBBindingConnection" key="connection">
-						<string key="label">value: selection.commitBlobSHA</string>
-						<reference key="source" ref="850994479"/>
-						<reference key="destination" ref="667905213"/>
-						<object class="NSNibBindingConnector" key="connector">
-							<reference key="NSSource" ref="850994479"/>
-							<reference key="NSDestination" ref="667905213"/>
-							<string key="NSLabel">value: selection.commitBlobSHA</string>
-							<string key="NSBinding">value</string>
-							<string key="NSKeyPath">selection.commitBlobSHA</string>
-							<int key="NSNibBindingConnectorVersion">2</int>
-						</object>
-					</object>
-					<int key="connectionID">274</int>
-				</object>
-				<object class="IBConnectionRecord">
 					<object class="IBOutletConnection" key="connection">
 						<string key="label">dataSource</string>
 						<reference key="source" ref="588180404"/>
@@ -1258,7 +1226,6 @@
 							<reference ref="812432808"/>
 							<reference ref="221814497"/>
 							<reference ref="1073221655"/>
-							<reference ref="850994479"/>
 						</object>
 						<reference key="parent" ref="1002"/>
 					</object>
@@ -1546,20 +1513,6 @@
 						<reference key="object" ref="446885874"/>
 						<reference key="parent" ref="1002"/>
 					</object>
-					<object class="IBObjectRecord">
-						<int key="objectID">270</int>
-						<reference key="object" ref="850994479"/>
-						<object class="NSMutableArray" key="children">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-							<reference ref="197627814"/>
-						</object>
-						<reference key="parent" ref="750704519"/>
-					</object>
-					<object class="IBObjectRecord">
-						<int key="objectID">271</int>
-						<reference key="object" ref="197627814"/>
-						<reference key="parent" ref="850994479"/>
-					</object>
 				</object>
 			</object>
 			<object class="NSMutableDictionary" key="flattenedProperties">
@@ -1595,8 +1548,6 @@
 					<string>247.IBPluginDependency</string>
 					<string>248.IBPluginDependency</string>
 					<string>254.IBPluginDependency</string>
-					<string>270.IBPluginDependency</string>
-					<string>271.IBPluginDependency</string>
 					<string>42.IBPluginDependency</string>
 					<string>45.IBPluginDependency</string>
 					<string>46.IBPluginDependency</string>
@@ -1637,8 +1588,6 @@
 					<string>{{341, 587}, {616, 169}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>{{132, 614}, {616, 0}}</string>
-					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -1830,7 +1779,7 @@
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<string>NSArrayController</string>
 							<string>PBGitCommitController</string>
-							<string>id</string>
+							<string>PBGitIndexController</string>
 							<string>NSArrayController</string>
 						</object>
 					</object>
