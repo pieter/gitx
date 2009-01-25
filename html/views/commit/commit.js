@@ -5,6 +5,7 @@ var showNewFile = function(file)
 	var contents = IndexController.unstagedChangesForFile_(file);
 	if (!contents) {
 		notify("Can not display changes (Binary file?)", -1);
+		diff.innerHTML = "";
 		return;
 	}
 
