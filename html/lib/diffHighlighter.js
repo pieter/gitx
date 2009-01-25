@@ -63,7 +63,7 @@ var highlightDiff = function(diff, element, callbacks) {
 		}
 		else {
 			if (callbacks["binaryFile"])
-				finalContent += callbacks["binaryFile"](filename);
+				finalContent += callbacks["binaryFile"](startname);
 			else
 				finalContent += "<div>Binary file differs</div>";
 		}
@@ -115,10 +115,17 @@ var highlightDiff = function(diff, element, callbacks) {
 				}
 				continue;
 			}
-			if (firstChar == "B") // "Binary files"
+			if (firstChar == "B") // "Binary files .. and .. differ"
 			{
 				binary = true;
-				Controller.log_("Binary file");
+				// We might not have a diff from the binary file if it's new.
+				// So, we use a regex to figure that out
+
+				if (match = l.match(/^Binary files (a\/)?(.*) and (b\/)(.*) differ$/))
+				{
+					startname = match[2];
+					endname = match[4];
+				}
 			}
 
 			// Finish the header
