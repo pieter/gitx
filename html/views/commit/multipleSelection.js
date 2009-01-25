@@ -1,11 +1,13 @@
 var showMultipleFilesSelection = function(files)
 {
-
-	setTitle("Multiple selection");
+	hideNotification();
+	setTitle("");
 
 	var div = $("diff");
 
-	var contents = "<h3>Multiple Selection:</h3>";
+	var contents = '<div id="multiselect">' +
+		'<div class="title">Multiple Selection</div>';
+
 	contents += "<ul>";
 
 	for (var i = 0; i < files.length; ++i)
@@ -13,7 +15,8 @@ var showMultipleFilesSelection = function(files)
 		var file = files[i];
 		contents += "<li>" + file.path + "</li>";
 	}
-	contents += "</ul>";
+	contents += "</ul></div>";
 
 	div.innerHTML = contents;
+	div.style.display = "";
 }
