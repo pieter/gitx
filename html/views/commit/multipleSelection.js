@@ -1,7 +1,7 @@
 var showMultipleFilesSelection = function(files)
 {
 
-	$("title").innerHTML = "Multiple selection";
+	setTitle("Multiple selection");
 
 	var div = $("diff");
 
