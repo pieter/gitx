@@ -44,8 +44,11 @@ var highlightDiff = function(diff, element, callbacks) {
 			callbacks["newfile"](startname, endname, "file_index_" + (file_index - 1));
 
 		var title = startname;
-		if (endname == "/dev/null")
+		var binaryname = endname;
+		if (endname == "/dev/null") {
+			binaryname = startname;
 			title = startname;
+		}
 		else if (startname == "/dev/null")
 			title = endname;
 		else if (startname != endname)
@@ -63,7 +66,7 @@ var highlightDiff = function(diff, element, callbacks) {
 		}
 		else {
 			if (callbacks["binaryFile"])
-				finalContent += callbacks["binaryFile"](startname);
+				finalContent += callbacks["binaryFile"](binaryname);
 			else
 				finalContent += "<div>Binary file differs</div>";
 		}
