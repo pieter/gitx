@@ -1,6 +1,6 @@
 <% @title = "See It"  %>
 <script type="text/javascript" charset="utf-8">
-	var screenshots = screenshots = [["The Commit View", 892], ["The History View", 891]];
+	var screenshots = screenshots = [["The Commit View", 968], ["The History View", 967]];
 
 	var screencasts = [
 		[1, "History View", "This video demonstrates basic GitX features that you can use to browse your repository's history"],

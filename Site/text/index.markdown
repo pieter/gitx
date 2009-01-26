@@ -2,7 +2,7 @@
 <div class="nohover" id="download">
 	<a href="http://frim.frim.nl/GitXStable.app.zip" title="Latest GitX download" id="download_link" class="nohover">
 Download GitX
-	<div id="version">Version 0.5</div>
+	<div id="version">Version 0.6</div>
 	</a>
 	<p id="donate_link">(you can help GitX by <a href="http://www.pledgie.com/campaigns/1816">donating</a>)</p>
 </div>
@@ -20,7 +20,7 @@ then in silky smooth OS X style!</p>
 </h3>
 <ul>
 	<li>Detailed history viewer</li>
-	<li>Nice commit GUI</li>
+	<li>Nice commit GUI, allowing per-commit staging</li>
 	<li>Fast</li>
 	<li>Nice Aqua interface</li>
 	<li>Paste commits to gist.github.com</li>
@@ -37,7 +37,7 @@ then in silky smooth OS X style!</p>
 	Download
 </h3>
 <p>
-	The newest version of GitX is 0.5. This version can be downloaded from <a href="http://frim.frim.nl/GitXStable.app.zip">here</a>. To see what has changed, read the <a href="release_history.html">Release History</a>.
+	The newest version of GitX is 0.6. This version can be downloaded from <a href="http://frim.frim.nl/GitXStable.app.zip">here</a>. To see what has changed, read the <a href="release_history.html">Release History</a>.
 </p>
 <p>
 	After you have started it once, you can install the command-line tool through the menu (GitX-&gt;Enable Terminal Usage…). This will install a “gitx” binary in /usr/local/bin.
