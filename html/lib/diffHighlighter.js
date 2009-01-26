@@ -18,7 +18,8 @@ var highlightDiff = function(diff, element, callbacks) {
 	
 	var file_index = 0;
 
-	var filename = "";
+	var startname = "";
+	var endname = "";
 	var line1 = "";
 	var line2 = "";
 	var diffContent = "";
@@ -33,8 +34,29 @@ var highlightDiff = function(diff, element, callbacks) {
 
 	var finishContent = function()
 	{
-		finalContent += '<div class="file" id="file_index_' + (file_index - 2) + '">' +
-							'<div class="fileHeader">' + filename + '</div>';
+		if (!file_index)
+		{
+			file_index++;
+			return;
+		}
+
+		if (callbacks["newfile"])
+			callbacks["newfile"](startname, endname, "file_index_" + (file_index - 1));
+
+		var title = startname;
+		var binaryname = endname;
+		if (endname == "/dev/null") {
+			binaryname = startname;
+			title = startname;
+		}
+		else if (startname == "/dev/null")
+			title = endname;
+		else if (startname != endname)
+			title = startname + " renamed to " + endname;
+
+		finalContent += '<div class="file" id="file_index_' + (file_index - 1) + '">' +
+							'<div class="fileHeader">' + title + '</div>';
+
 		if (!binary)  {
 			finalContent +=		'<div class="diffContent">' +
 								'<div class="lineno">' + line1 + "</div>" +
@@ -44,47 +66,69 @@ var highlightDiff = function(diff, element, callbacks) {
 		}
 		else {
 			if (callbacks["binaryFile"])
-				finalContent += callbacks["binaryFile"](filename);
+				finalContent += callbacks["binaryFile"](binaryname);
 			else
 				finalContent += "<div>Binary file differs</div>";
 		}
 
 		finalContent += '</div>';
+
 		line1 = "";
 		line2 = "";
 		diffContent = "";
+		file_index++;
+		startname = "";
+		endname = "";
 	}
 	for (var lineno = 0; lineno < lines.length; lineno++) {
 		var l = lines[lineno];
 
 		var firstChar = l.charAt(0);
 
-		// Matches "diff --git ...."
+		if (firstChar == "d" && l.charAt(1) == "i") {			// "diff", i.e. new file, we have to reset everything
+			header = true;						// diff always starts with a header
 
-		if (firstChar == "d") { // New file, we have to reset everything
-			header = true;
+			finishContent(); // Finish last file
 
-			if (file_index++) // Finish last file
-				finishContent();
-
-				binary = false;
-
-			if(match = l.match(/diff --git a\/(\S*)/)) {
-				filename = match[1];
-				if (callbacks["newfile"])
-					callbacks["newfile"](filename, "file_index_" + (file_index - 1));
-			}
-
+			binary = false;
 			continue;
 		}
 
 		if (header) {
-			if (firstChar == "+" || firstChar == "-")
+			if (firstChar == "-") {
+				if (match = l.match(/^--- (a\/)?(.*)$/))
+					startname = match[2];
 				continue;
-			if (firstChar == "B") // "Binary files"
+			}
+			if (firstChar == "+") {
+				if (match = l.match(/^\+\+\+ (b\/)?(.*)$/))
+					endname = match[2];
+				continue;
+			}
+			// If it is a complete rename, we don't know the name yet
+			// We can figure this out from the 'rename from.. rename to.. thing
+			if (firstChar == 'r')
+			{
+				if (match = l.match(/^rename (from|to) (.*)$/))
+				{
+					if (match[1] == "from")
+						startname = match[2];
+					else
+						endname = match[2];
+				}
+				continue;
+			}
+			if (firstChar == "B") // "Binary files .. and .. differ"
 			{
 				binary = true;
-				Controller.log_("Binary file");
+				// We might not have a diff from the binary file if it's new.
+				// So, we use a regex to figure that out
+
+				if (match = l.match(/^Binary files (a\/)?(.*) and (b\/)(.*) differ$/))
+				{
+					startname = match[2];
+					endname = match[4];
+				}
 			}
 
 			// Finish the header
@@ -126,7 +170,6 @@ var highlightDiff = function(diff, element, callbacks) {
 		}
 	}
 
-	file_index++;
 	finishContent();
 
 	// This takes about 7ms

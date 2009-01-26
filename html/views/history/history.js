@@ -173,8 +173,15 @@ var loadCommit = function(commitObject, currentRef) {
 }
 
 var showDiff = function() {
-	var newfile = function(name, id) {
-		$("files").innerHTML += "<a href='#" + id + "'>" + name + "</a><br>";
+	var newfile = function(name1, name2, id) {
+		if (name1 == name2)
+			$("files").innerHTML += "<div class='button changed'>changed</div><p><a href='#" + id + "'>" + name1 + "</a></p>";
+		else if (name1 == "/dev/null")
+			$("files").innerHTML += "<div class='button created'>created</div><p><a href='#" + id + "'>" + name2 + "</a></p>";
+		else if (name2 == "/dev/null")
+			$("files").innerHTML += "<div class='button deleted'>deleted</div><p><a href='#" + id + "'>" + name1 + "</a></p>";
+		else
+			$("files").innerHTML += "<div class='button renamed' alt='renamed''>renamed</div><p>" + name1 + " &#8594; <a href='#" + id + "'>" + name2 + "</a></p>";
 	}
 
 	var binaryDiff = function(filename) {
@@ -184,7 +191,7 @@ var showDiff = function() {
 			return "Binary file differs";
 	}
 
-	highlightDiff(commit.diff, $("diff"), { "newfile" : newfile, "binaryFile" : binaryDiff });
+	highlightDiff(commit.diff, $("diff"), { "newfile" : newfile, "binaryFile" : binaryDiff});
 }
 
 var showImage = function(element, filename)

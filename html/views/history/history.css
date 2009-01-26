@@ -68,14 +68,15 @@ a.servicebutton{
 
 #files {
 	margin-top: 1em;
-	font-family: Monaco;
-	font-size: 10px;
 }
 
 #files a {
 	color: #666666;
 }
 
+#files p {
+	margin: 4px;
+}
 #files a:hover {
 	color: #4444ff;
 }
@@ -135,4 +136,47 @@ a.showdiff {
 
 .refs.currentBranch {
 	font-weight: bold;
+}
+
+div.button
+{
+	color: #666666;
+
+	font-size: 60%;
+	text-align: center;
+
+	width: 50px;
+
+	margin-right: 10px;
+
+	padding: 2px;
+
+	float: left;
+	clear: both;
+
+	border: 1px solid;
+	-webkit-border-radius: 3px;
+}
+
+div.created
+{
+	background-color: #ccffcc;
+	border-color: #66ff66;
+}
+
+div.changed
+{
+	background-color: #ffcc99;
+	border-color: #ff9933;
+}
+
+div.deleted
+{
+	background-color: #ffcccc;
+	border-color: #ff6666;
+}
+
+div.renamed
+{
+	/*No colour needed right now.*/
 }
