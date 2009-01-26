@@ -56,3 +56,8 @@ If there are changes both on a remote and on your local side, you can show them 
 will show commits that are only on your side OR only on the remote side. The `--left-right` options does some other magic: instead of the usual circles GitX uses in the branch lines, it will now use an arrow pointing left for commits only on the right side (that is, in `origin/master`), and an arrow to the right for commits only on the right side. For example, when I issued the same command on this repository, I got:
 
 ![Showing --left-right](images/UserManual/left-right.png)
+
+You canalso pipe any command that produces a diff to GitX to see its changes.
+For example, to compare version 0.5 and version 0.6 of GitX, you can do the following:
+
+	git diff v0.5 v0.6 | gitx
