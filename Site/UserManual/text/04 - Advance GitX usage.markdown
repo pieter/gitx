@@ -39,7 +39,7 @@ You can also specify which branches gitx should display, for example:
 
 	gitx commit_view log_options --grep="fix" --author=Pieter
 
-Will show all commits in the `commit_view` and `log_options` branches that have the word 'fix' in their commit message and which are committed by Pieter.
+will show all commits in the `commit_view` and `log_options` branches that have the word 'fix' in their commit message and which are committed by Pieter.
 
 If you have a lot of commits, you can choose to limit the output. For example,
 
@@ -53,11 +53,11 @@ If there are changes both on a remote and on your local side, you can show them 
 
 	gitx --left-right origin/master...HEAD
 
-will show commits that are only on your side OR only on the remote side. The `--left-right` options does some other magic: instead of the usual circles GitX uses in the branch lines, it will now use an arrow pointing left for commits only on the right side (that is, in `origin/master`), and an arrow to the right for commits only on the right side. For example, when I issued the same command on this repository, I got:
+will show commits that are only on your side OR only on the remote side. The `--left-right` options does some other magic: instead of the usual circles GitX uses in the branch lines, it will now use an arrow pointing left for commits only on the left side (that is, in `origin/master`), and an arrow to the right for commits only on the right side. For example, when I issued the same command on this repository, I got:
 
 ![Showing --left-right](images/UserManual/left-right.png)
 
-You canalso pipe any command that produces a diff to GitX to see its changes.
+You can also pipe any command that produces a diff to GitX to see its changes.
 For example, to compare version 0.5 and version 0.6 of GitX, you can do the following:
 
 	git diff v0.5 v0.6 | gitx

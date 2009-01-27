@@ -9,7 +9,7 @@ currently selected file. The bottom part is a bit more complex.
 
 On the left you will see changes that are _unstaged_. If you are already used to Git's terminology, you will know what this means. These are the changes that have not been added to the index, and thus also will not be committed.
 
-The most right part shows the _staged changes_. These _will_ be committed in the next commit.
+The rightmost part shows the _staged changes_. These _will_ be committed in the next commit.
 
 It is possible to have a filename in both parts at once. In that case, there are some changes in the file that will be committed, and some that have been left out. Clicking on their name will show you what the difference is in the top pane.
 
@@ -29,4 +29,4 @@ If the hunk isn't specific enough, you can decrease the context size by manipula
 
 #### Committing
 
-Once you have staged all your changes, you can commit them. Enter a commit message in the center pane, but remember to use proper commit messages: your first line should be a short description of what you have changed, on which you can elaborate below that. Make sure the subject of your commit is short enough to fit in GitX's history view! Pressing the commit button will hopefully convey to you that the commit was succesful, and also give you the commit hash.
+Once you have staged all your changes, you can commit them. Enter a commit message in the center pane, but remember to use proper commit messages: your first line should be a short description of what you have changed, on which you can elaborate below that. Make sure the subject of your commit is short enough to fit in GitX's history view! Pressing the commit button will hopefully convey to you that the commit was successful, and also give you the commit hash.
