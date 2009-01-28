@@ -76,9 +76,9 @@ using namespace std;
 	BOOL showSign = [rev hasLeftRight];
 
 	if (showSign)
-		arguments = [NSMutableArray arrayWithObjects:@"log", @"-z", @"--early-output", @"--topo-order", @"--pretty=format:%H%x00%an%x00%s%x00%P%x00%at%x00%m", nil];
+		arguments = [NSMutableArray arrayWithObjects:@"log", @"-z", @"--early-output", @"--topo-order", @"--pretty=format:%H\01%an\01%s\01%P\01%at\01%m", nil];
 	else
-		arguments = [NSMutableArray arrayWithObjects:@"log", @"-z", @"--early-output", @"--topo-order", @"--pretty=format:%H%x00%an%x00%s%x00%P%x00%at", nil];
+		arguments = [NSMutableArray arrayWithObjects:@"log", @"-z", @"--early-output", @"--topo-order", @"--pretty=format:%H\01%an\01%s\01%P\01%at", nil];
 
 	if (!rev)
 		[arguments addObject:@"HEAD"];
@@ -99,7 +99,7 @@ using namespace std;
 	int num = 0;
 	while (true) {
 		string sha;
-		if (!getline(stream, sha, '\0'))
+		if (!getline(stream, sha, '\1'))
 			break;
 
 		// We reached the end of some temporary output. Show what we have
@@ -121,13 +121,13 @@ using namespace std;
 		PBGitCommit* newCommit = [[PBGitCommit alloc] initWithRepository:repository andSha:oid];
 
 		string author;
-		getline(stream, author, '\0');
+		getline(stream, author, '\1');
 
 		string subject;
-		getline(stream, subject, '\0');
+		getline(stream, subject, '\1');
 
 		string parentString;
-		getline(stream, parentString, '\0');
+		getline(stream, parentString, '\1');
 		if (parentString.size() != 0)
 		{
 			if (((parentString.size() + 1) % 41) != 0) {
@@ -146,11 +146,7 @@ using namespace std;
 
 		int time;
 		stream >> time;
-		char c;
-		stream >> c;
 
-		if (c != '\0')
-			cout << "Error" << endl;
 		
 		[newCommit setSubject:[NSString stringWithUTF8String:subject.c_str()]];
 		[newCommit setAuthor:[NSString stringWithUTF8String:author.c_str()]];
@@ -158,14 +154,18 @@ using namespace std;
 		
 		if (showSign)
 		{
+			char c;
+			stream >> c; // Remove separator
 			stream >> c;
 			if (c != '>' && c != '<' && c != '^' && c != '-')
 				NSLog(@"Error loading commits: sign not correct");
 			[newCommit setSign: c];
-			stream >> c;
-			if (c != '\0' && !stream.eof())
-				NSLog(@"Error: unexpected char (expected '0', was: %c)", c);
 		}
+
+		char c;
+		stream >> c;
+		if (c != '\0')
+			cout << "Error" << endl;
 
 		[revisions addObject: newCommit];
 		[g decorateCommit: newCommit];
