@@ -136,7 +136,7 @@
 
 - (IBAction) showHelp:(id) sender
 {
-	[[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:@"http://frim.frim.nl/gitx/UserManual.html"]];
+	[[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:@"http://gitx.frim.nl/user_manual.html"]];
 }
 
 - (NSString *)applicationSupportFolder {
