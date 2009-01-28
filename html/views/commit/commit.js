@@ -9,7 +9,7 @@ var showNewFile = function(file)
 		return;
 	}
 
-	diff.innerHTML = contents.escapeHTML();
+	diff.innerHTML = "<pre>" + contents.escapeHTML() + "</pre>";
 	diff.style.display = '';
 }
 
