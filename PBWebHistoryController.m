@@ -22,6 +22,7 @@
 
 - (void) didLoad
 {
+	currentSha = @"";
 	[self changeContentTo: historyController.webCommit];
 }
 

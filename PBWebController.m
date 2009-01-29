@@ -54,7 +54,7 @@
 
 # pragma mark Delegate methods
 
-- (void)webView:(WebView *)sender didStartProvisionalLoadForFrame:(WebFrame *)frame
+- (void)webView:(WebView *)sender didClearWindowObject:(WebScriptObject *)windowObject forFrame:(WebFrame *)frame
 {
 	id script = [view windowScriptObject];
 	[script setValue: self forKey:@"Controller"];
