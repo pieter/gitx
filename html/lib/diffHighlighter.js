@@ -15,7 +15,7 @@ var highlightDiff = function(diff, element, callbacks) {
 	var start = new Date().getTime();
 	element.className = "diff"
 	var content = diff.escapeHTML().replace(/\t/g, "    ");;
-	
+
 	var file_index = 0;
 
 	var startname = "";
@@ -26,6 +26,9 @@ var highlightDiff = function(diff, element, callbacks) {
 	var finalContent = "";
 	var lines = content.split('\n');
 	var binary = false;
+	var mode_change = false;
+	var old_mode = "";
+	var new_mode = "";
 
 	var hunk_start_line_1 = -1;
 	var hunk_start_line_2 = -1;
@@ -41,7 +44,7 @@ var highlightDiff = function(diff, element, callbacks) {
 		}
 
 		if (callbacks["newfile"])
-			callbacks["newfile"](startname, endname, "file_index_" + (file_index - 1));
+			callbacks["newfile"](startname, endname, "file_index_" + (file_index - 1), mode_change, old_mode, new_mode);
 
 		var title = startname;
 		var binaryname = endname;
@@ -65,10 +68,12 @@ var highlightDiff = function(diff, element, callbacks) {
 							'</div>';
 		}
 		else {
-			if (callbacks["binaryFile"])
-				finalContent += callbacks["binaryFile"](binaryname);
-			else
-				finalContent += "<div>Binary file differs</div>";
+			if (binary) {
+				if (callbacks["binaryFile"])
+					finalContent += callbacks["binaryFile"](binaryname);
+				else
+					finalContent += "<div>Binary file differs</div>";
+			}
 		}
 
 		finalContent += '</div>';
@@ -91,6 +96,13 @@ var highlightDiff = function(diff, element, callbacks) {
 			finishContent(); // Finish last file
 
 			binary = false;
+			mode_change = false;
+
+			if(match = l.match(/^diff --git (a\/)+(.*) (b\/)+(.*)$/)) {	// there are cases when we need to capture filenames from
+				startname = match[2];					// the diff line, like with mode-changes.
+				endname = match[4];					// this can get overwritten later if there is a diff or if
+			}								// the file is binary
+
 			continue;
 		}
 
@@ -130,6 +142,17 @@ var highlightDiff = function(diff, element, callbacks) {
 					endname = match[4];
 				}
 			}
+
+			if (match = l.match(/^old mode (.*)$/)) {
+				mode_change = true;
+				old_mode = match[1];
+			}
+
+			if (match = l.match(/^new mode (.*)$/)) {
+				mode_change = true;
+				new_mode = match[1];
+			}
+
 
 			// Finish the header
 			if (firstChar == "@")
