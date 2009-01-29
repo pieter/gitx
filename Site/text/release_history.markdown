@@ -3,6 +3,14 @@
 	Release history
 </h2>
 
+### Changes in v0.6.1:
+
+This is a bugfix release. The following bugs have been fixed:
+
+* The commit view shows new files with linebreaks
+* The history view works with Git >= 1.5.4 again
+* Reloading the detailed view in the History no longer causes an empty page
+
 ### Changes in v0.6
 
 This release has the following new features and enhancements:

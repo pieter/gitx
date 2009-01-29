@@ -7,14 +7,22 @@
 
 
     <item>
-      <title>GitX 0.6</title>
-      <pubDate>Mon, 26 Jan 2009 21:23:01 GMT</pubDate>
-      <enclosure url="http://frim.frim.nl/GitXStable.app.zip" length="1531595" type="application/octet-stream" sparkle:version="0.6"/>
+      <title>GitX 0.6.1</title>
+      <pubDate>Thu, 29 Jan 2009 23:54:01 GMT</pubDate>
+      <enclosure url="http://frim.frim.nl/GitXStable.app.zip" length="1531595" type="application/octet-stream" sparkle:version="0.6.1"/>
       <description>
         <![CDATA[
-          <h1 id="v06">GitX 0.6</h1>
+          <h1>GitX 0.6.1</h1>
           <div style='font-size: 70%'>
-          <p>This release has the following new features and enhancements:</p>
+            <p>This is a bugfix release. The following bugs have been fixed:</p>
+
+            <ul>
+            <li>The commit view shows new files with linebreaks</li>
+            <li>The history view works with Git >= 1.5.4 again</li>
+            <li>Reloading the detailed view in the History no longer causes an empty page</li>
+            </ul>
+
+          <p>Version 0.6 has the following new features and enhancements:</p>
 
           <ul>
           <li>The diff display now looks much nicer, using boxes to segment files</li>
@@ -47,63 +55,5 @@
       </description>
     </item>
 
-
-    <item>
-      <title>GitX 0.5</title>
-      <pubDate>Sun, 17 Now 2008 11:24:54 +0100</pubDate>
-      <enclosure url="http://frim.frim.nl/GitXStable.app.zip" length="1531595" type="application/octet-stream" sparkle:version="0.5"/>
-      <description>
-        <![CDATA[
-        <h1>GitX Version 0.5</h1>
-        <div style='font-size: 70%'>
-          <p>This feature release has several new smaller or larger features:</p>
-
-          <ul>
-          <li>The current branch is now highlighted</li>
-          <li>In the commit view, there is an option to amend commits</li>
-          <li>The "Gist it" button now respects github.user/token</li>
-          <li>Display a gravatar of the committer</li>
-          <li>The commit message view now displays a vertical line at 50 characters</li>
-          <li>It is now possible to revert changes by using the context menu in the
-          commit view</li>
-          <li>You can now stage only parts of a file by using the "Stage Hunk" buttons
-          in the commit view</li>
-          <li>You can now use GitX to show a diff of anything, for example by using
-          'gitx --diff HEAD^^' or 'git diff HEAD~3 | gitx --diff'</li>
-          <li>You can now drag and drop refs to move them and also create branches</li>
-          </ul>
-
-
-          <p>In addition, the following bugs have been fixed:</p>
-
-          <ul>
-          <li>Better detection of git version</li>
-          <li>Branch lines are no longer interspersed with half a pixel of whitespace</li>
-          <li>The toolbar keeps its state when switching views</li>
-          </ul>
-        </div>
-        ]]>
-      </description>
-    </item>
-
-    <item>
-      <title>GitX 0.4.1</title>
-      <pubDate>Sun, 06 Sep 2008 11:24:54 +0900</pubDate>
-      <enclosure url="http://frim.frim.nl/GitXStable.app.zip" length="1495398" type="application/octet-stream" sparkle:version="0.4.1"/>
-      <description>
-        <![CDATA[
-        <h1>GitX Version 0.4.1</h1>
-        <div style='font-size: 70%'>
-          <p>This is a maintenance release</p>
-          <p>Changes since Version 0.4:</p>
-          <ul>
-            <li> The diff display is now much faster</li>
-            <li> More locations are now searched for a default git</li>
-            <li> Code pasted online is now private</li>
-          </ul>
-        </div>
-        ]]>
-      </description>
-    </item>
   </channel>
 </rss>
