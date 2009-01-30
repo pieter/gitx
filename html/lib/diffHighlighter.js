@@ -56,6 +56,16 @@ var highlightDiff = function(diff, element, callbacks) {
 			title = endname;
 		else if (startname != endname)
 			title = startname + " renamed to " + endname;
+		
+		if (binary && endname == "/dev/null") {	// in cases of a deleted binary file, there is no diff/file to display
+			line1 = "";
+			line2 = "";
+			diffContent = "";
+			file_index++;
+			startname = "";
+			endname = "";
+			return;				// so printing the filename in the file-list is enough
+		}
 
 		finalContent += '<div class="file" id="file_index_' + (file_index - 1) + '">' +
 							'<div class="fileHeader">' + title + '</div>';
