@@ -161,6 +161,11 @@ NSString* PBGitRepositoryErrorDomain = @"GitXErrorDomain";
 	return [[self workingDirectory] stringByAppendingPathComponent:@".gitignore"];
 }
 
+- (BOOL)isBareRepository
+{
+	return [PBGitRepository isBareRepository:[self fileURL].path];
+}
+
 // Overridden to create our custom window controller
 - (void)makeWindowControllers
 {

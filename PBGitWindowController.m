@@ -41,6 +41,14 @@
 		[commitViewController removeView];
 }
 
+- (BOOL)validateMenuItem:(NSMenuItem *)menuItem
+{
+	if ([menuItem action] == @selector(showCommitView:) || [menuItem action] == @selector(showHistoryView:)) {
+		return ![repository isBareRepository];
+	}
+	return YES;
+}
+
 - (void) setSelectedViewIndex: (int) i
 {
 	selectedViewIndex = i;
@@ -120,6 +128,7 @@
 		}
 	}
 	[item bind:@"selectedIndex" toObject:self withKeyPath:@"selectedViewIndex" options:0];
+	[item setEnabled: ![repository isBareRepository]];
 
 	[self.window setToolbar:toolbar];
 }
