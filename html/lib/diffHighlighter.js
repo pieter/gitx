@@ -136,7 +136,7 @@ var highlightDiff = function(diff, element, callbacks) {
 				// We might not have a diff from the binary file if it's new.
 				// So, we use a regex to figure that out
 
-				if (match = l.match(/^Binary files (a\/)?(.*) and (b\/)(.*) differ$/))
+				if (match = l.match(/^Binary files (a\/)?(.*) and (b\/)?(.*) differ$/))
 				{
 					startname = match[2];
 					endname = match[4];
