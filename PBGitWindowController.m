@@ -112,7 +112,13 @@
 
 - (void) useToolbar:(NSToolbar *)toolbar
 {
-	NSSegmentedControl *item = (NSSegmentedControl *)[[[toolbar items] objectAtIndex:0] view];
+	NSSegmentedControl *item = nil;
+	for (NSToolbarItem *toolbarItem in [toolbar items]) {
+		if ([[toolbarItem view] isKindOfClass:[NSSegmentedControl class]]) {
+			item = (NSSegmentedControl *)[toolbarItem view];
+			break;
+		}
+	}
 	[item bind:@"selectedIndex" toObject:self withKeyPath:@"selectedViewIndex" options:0];
 
 	[self.window setToolbar:toolbar];
