@@ -85,6 +85,11 @@
 		file.shouldBeDeleted = YES;
 
 	self.status = @"Refreshing index…";
+	if (![repository workingDirectory]) {
+	//if ([[repository outputForCommand:@"rev-parse --is-inside-work-tree"] isEqualToString:@"false"]) {
+		return;
+	}
+
 	self.busy++;
 
 	[repository outputInWorkdirForArguments:[NSArray arrayWithObjects:@"update-index", @"-q", @"--unmerged", @"--ignore-missing", @"--refresh", nil]];
