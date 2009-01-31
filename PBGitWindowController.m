@@ -51,8 +51,6 @@
 
 - (void) setSelectedViewIndex: (int) i
 {
-	selectedViewIndex = i;
-	[[NSUserDefaults standardUserDefaults] setInteger:i forKey:@"selectedViewIndex"];
 	[self changeViewController: i];
 }
 
@@ -62,6 +60,14 @@
 
 	if (viewController != nil)
 		[[viewController view] removeFromSuperview];
+
+	if ([repository isBareRepository]) {	// in bare repository we don't want to view commit
+		whichViewTag = 0;		// even if it was selected by default
+	}
+
+	// Set our default here because we might have changed it (based on bare repo) before
+	selectedViewIndex = whichViewTag;
+	[[NSUserDefaults standardUserDefaults] setInteger:whichViewTag forKey:@"selectedViewIndex"];
 
 	switch (whichViewTag)
 	{
@@ -93,6 +99,7 @@
 	// Allow the viewcontroller to catch actions
 	[self setNextResponder: viewController];
 	[self didChangeValueForKey:@"viewController"];	// this will trigger the NSTextField's value binding to change
+
 }
 
 - (void)awakeFromNib
