@@ -122,6 +122,11 @@ var highlightDiff = function(diff, element, callbacks) {
 					startname = "/dev/null";
 				continue;
 			}
+			if (firstChar == "d") {
+				if (l.match(/^deleted file mode .*$/))
+					endname = "/dev/null";
+				continue;
+			}
 			if (firstChar == "-") {
 				if (match = l.match(/^--- (a\/)?(.*)$/))
 					startname = match[2];
