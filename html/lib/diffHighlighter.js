@@ -67,10 +67,12 @@ var highlightDiff = function(diff, element, callbacks) {
 			return;				// so printing the filename in the file-list is enough
 		}
 
-		finalContent += '<div class="file" id="file_index_' + (file_index - 1) + '">' +
-							'<div class="fileHeader">' + title + '</div>';
+		if (diffContent != "" || binary) {
+			finalContent += '<div class="file" id="file_index_' + (file_index - 1) + '">' +
+				'<div class="fileHeader">' + title + '</div>';
+		}
 
-		if (!binary)  {
+		if (!binary && (diffContent != ""))  {
 			finalContent +=		'<div class="diffContent">' +
 								'<div class="lineno">' + line1 + "</div>" +
 								'<div class="lineno">' + line2 + "</div>" +
@@ -86,7 +88,8 @@ var highlightDiff = function(diff, element, callbacks) {
 			}
 		}
 
-		finalContent += '</div>';
+		if (diffContent != "" || binary)
+			finalContent += '</div>';
 
 		line1 = "";
 		line2 = "";
@@ -120,8 +123,21 @@ var highlightDiff = function(diff, element, callbacks) {
 			if (firstChar == "n") {
 				if (l.match(/^new file mode .*$/))
 					startname = "/dev/null";
+
+				if (match = l.match(/^new mode (.*)$/)) {
+					mode_change = true;
+					new_mode = match[1];
+				}
 				continue;
 			}
+			if (firstChar == "o") {
+				if (match = l.match(/^old mode (.*)$/)) {
+					mode_change = true;
+					old_mode = match[1];
+				}
+				continue;
+			}
+
 			if (firstChar == "d") {
 				if (l.match(/^deleted file mode .*$/))
 					endname = "/dev/null";
@@ -162,17 +178,6 @@ var highlightDiff = function(diff, element, callbacks) {
 					endname = match[4];
 				}
 			}
-
-			if (match = l.match(/^old mode (.*)$/)) {
-				mode_change = true;
-				old_mode = match[1];
-			}
-
-			if (match = l.match(/^new mode (.*)$/)) {
-				mode_change = true;
-				new_mode = match[1];
-			}
-
 
 			// Finish the header
 			if (firstChar == "@")
