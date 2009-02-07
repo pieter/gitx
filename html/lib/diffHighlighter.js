@@ -117,6 +117,11 @@ var highlightDiff = function(diff, element, callbacks) {
 		}
 
 		if (header) {
+			if (firstChar == "n") {
+				if (l.match(/^new file mode .*$/))
+					startname = "/dev/null";
+				continue;
+			}
 			if (firstChar == "-") {
 				if (match = l.match(/^--- (a\/)?(.*)$/))
 					startname = match[2];
