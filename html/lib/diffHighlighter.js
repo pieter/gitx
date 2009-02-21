@@ -214,7 +214,7 @@ var highlightDiff = function(diff, element, callbacks) {
 		} else if (firstChar == " ") {
 			line1 += ++hunk_start_line_1 + "\n";
 			line2 += ++hunk_start_line_2 + "\n";
-			diffContent += l + "\n";
+			diffContent += "<div class='noopline'>" + l + "</div>";
 		}
 	}
 
