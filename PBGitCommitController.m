@@ -193,17 +193,17 @@
 		// but rather update it to incorporate our changes
 		for (PBChangedFile *file in files) {
 			if ([file.path isEqualToString:line]) {
-				file.shouldBeDeleted = NO;
-				if (cached) {
-					file.commitBlobSHA = sha;
+				if (cached && file.hasCachedChanges) {			// if we're listing cached files
+					file.shouldBeDeleted = NO;			// and the matching file in files had cached changes
+					file.commitBlobSHA = sha;			// we don't delete it
 					file.commitBlobMode = mode;
-					file.hasCachedChanges = YES;
+					isNew = NO;
+					break;
+				} else if ((!cached) && file.hasUnstagedChanges) {	// if we're listing unstaged files and the
+					file.shouldBeDeleted = NO;			// matching file in files had unstaged changes
+					isNew = NO;					// we don't delete it
+					break;
 				}
-				else
-					file.hasUnstagedChanges = YES;
-
-				isNew = NO;
-				break;
 			}
 		}
 
