@@ -94,7 +94,7 @@
 		[data writeToFile:newName atomically:YES];
 	} else { // Directory
 		[[NSFileManager defaultManager] createDirectoryAtPath:newName attributes:nil];
-		for (PBGitTree* child in children)
+		for (PBGitTree* child in [self children])
 			[child saveToFolder: newName];
 	}
 }
