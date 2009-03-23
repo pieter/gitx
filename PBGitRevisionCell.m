@@ -229,7 +229,7 @@
 	}
 
 
-	if ([self.objectValue refs])
+	if ([self.objectValue refs] && [[self.objectValue refs] count])
 		[self drawRefsInRect:&rect];
 
 	// Still use this superclass because of hilighting differences

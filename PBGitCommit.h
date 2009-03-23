@@ -30,7 +30,7 @@
 
 - initWithRepository:(PBGitRepository *)repo andSha:(git_oid)sha;
 
-- (void)addRef:(id)ref;
+- (void)addRef:(PBGitRef *)ref;
 - (void)removeRef:(id)ref;
 
 - (NSString *)realSha;

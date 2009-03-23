@@ -94,7 +94,7 @@
 	return [PBGitTree rootForCommit: self];
 }
 
-- (void)addRef:(id)ref
+- (void)addRef:(PBGitRef *)ref
 {
 	if (!self.refs)
 		self.refs = [NSMutableArray arrayWithObject:ref];
@@ -108,8 +108,6 @@
 		return;
 
 	[self.refs removeObject:ref];
-	if ([self.refs count] == 0)
-		self.refs = NULL;
 }
 
 - (NSMutableArray *)refs
@@ -119,7 +117,7 @@
 
 - (void) setRefs:(NSMutableArray *)refs
 {
-	[[repository refs] setObject:[self realSha] forKey:[self realSha]];
+	[[repository refs] setObject:refs forKey:[self realSha]];
 }
 
 - (void)finalize
