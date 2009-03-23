@@ -40,7 +40,7 @@ var Commit = function(obj) {
 	}
 
 	this.reloadRefs = function() {
-		this.refs = this.object.refs;
+		this.refs = this.object.refs();
 	}
 
 };
