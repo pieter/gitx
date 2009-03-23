@@ -139,6 +139,7 @@
 
 - (void) readOtherFiles:(NSNotification *)notification;
 {
+	[unstagedFilesController setAutomaticallyRearrangesObjects:NO];
 	NSArray *lines = [self linesFromNotification:notification];
 	for (NSString *line in lines) {
 		if ([line length] == 0)
@@ -153,7 +154,7 @@
 				file.status = NEW;
 				file.hasCachedChanges = NO;
 				file.hasUnstagedChanges = YES;
-				continue;
+				break;
 			}
 		}
 
@@ -167,7 +168,8 @@
 		file.hasUnstagedChanges = YES;
 		[files addObject: file];
 	}
-
+	[unstagedFilesController setAutomaticallyRearrangesObjects:YES];
+	[unstagedFilesController rearrangeObjects];
 	[self doneProcessingIndex];
 }
 
