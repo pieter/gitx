@@ -74,6 +74,16 @@ void version_info()
 	exit(1);
 }
 
+void git_path()
+{
+	if (![PBGitBinary path])
+		exit(101);
+
+	NSString *path = [[PBGitBinary path] stringByDeletingLastPathComponent];
+	printf("%s", [path UTF8String]);
+	exit(0);
+}
+
 void handleSTDINDiff(id<GitXCliToolProtocol> proxy)
 {
 	NSFileHandle *handle = [NSFileHandle fileHandleWithStandardInput];
@@ -106,6 +116,8 @@ int main(int argc, const char** argv)
 		usage(argv[0]);
 	if (argc >= 2 && (!strcmp(argv[1], "--version") || !strcmp(argv[1], "-v")))
 		version_info();
+	if (argc >= 2 && !strcmp(argv[1], "--git-path"))
+		git_path();
 
 	if (![PBGitBinary path]) {
 		printf("%s\n", [[PBGitBinary notFoundError] cStringUsingEncoding:NSUTF8StringEncoding]);
