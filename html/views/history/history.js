@@ -232,8 +232,12 @@ var loadExtendedCommit = function(commit)
 	if (commit.committer_name != commit.author_name) {
 		$("committerID").parentNode.style.display = "";
 		$("committerID").innerHTML = formatEmail(commit.committer_name, commit.committer_email);
+
+		$("committerDate").parentNode.style.display = "";
+		$("committerDate").innerHTML = commit.committer_date;
 	} else {
 		$("committerID").parentNode.style.display = "none";
+		$("committerDate").parentNode.style.display = "none";
 	}
 
 	$("date").innerHTML = commit.author_date;
