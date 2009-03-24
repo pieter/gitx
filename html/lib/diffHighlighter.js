@@ -203,7 +203,7 @@ var highlightDiff = function(diff, element, callbacks) {
 				header = false;
 			}
 
-			if (m = l.match(/@@ \-([0-9]+),\d+ \+(\d+),\d+ @@/))
+			if (m = l.match(/@@ \-([0-9]+),?\d* \+(\d+),?\d* @@/))
 			{
 				hunk_start_line_1 = parseInt(m[1]) - 1;
 				hunk_start_line_2 = parseInt(m[2]) - 1;
@@ -214,7 +214,7 @@ var highlightDiff = function(diff, element, callbacks) {
 		} else if (firstChar == " ") {
 			line1 += ++hunk_start_line_1 + "\n";
 			line2 += ++hunk_start_line_2 + "\n";
-			diffContent += l + "\n";
+			diffContent += "<div class='noopline'>" + l + "</div>";
 		}
 	}
 
