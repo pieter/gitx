@@ -145,7 +145,7 @@
 		return contents;
 	}
 
-	return [commitController.repository outputInWorkdirForArguments:[NSArray arrayWithObjects:@"diff", [self contextParameter], @"--", file.path, nil]];
+	return [commitController.repository outputInWorkdirForArguments:[NSArray arrayWithObjects:@"diff-files", [self contextParameter], @"--", file.path, nil]];
 }
 
 - (void) forceRevertChangesForFiles:(NSArray *)files
