@@ -223,8 +223,11 @@ var enableFeatures = function()
 
 var loadExtendedCommit = function(commit)
 {
-	if (commit.author_email)
-		$("authorID").innerHTML = commit.author_name + " &lt;<a href='mailto:" + commit.author_email + "'>" + commit.author_email + "</a>&gt;";
+	var formatEmail = function(name, email) {
+		return email ? name + " &lt;<a href='mailto:" + email + "'>" + email + "</a>&gt;" : name;
+	}
+
+	$("authorID").innerHTML = formatEmail(commit.author_name, commit.author_email);
 
 	$("date").innerHTML = commit.author_date;
 	$("message").innerHTML = commit.message.replace(/\n/g,"<br>");
