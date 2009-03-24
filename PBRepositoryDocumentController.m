@@ -46,4 +46,36 @@
 
 	return document;
 }
+
+
+- (IBAction)newDocument:(id)sender
+{
+	NSOpenPanel *op = [NSOpenPanel openPanel];
+
+	[op setCanChooseFiles:NO];
+	[op setCanChooseDirectories:YES];
+	[op setAllowsMultipleSelection:NO];
+	[op setMessage:@"Initialize a repository here:"];
+	[op setTitle:@"New Repository"];
+	if ([op runModal] == NSFileHandlingPanelOKButton)
+	{
+		NSString *path = [op filename];
+		NSInteger terminationStatus;
+		NSString *result = [PBEasyPipe outputForCommand:[PBGitBinary path] withArgs:[NSArray arrayWithObjects:@"init", @"-q", nil] inDir:path inputString:nil retValue:&terminationStatus];
+
+		if (terminationStatus == 0)
+			[self openDocumentWithContentsOfURL:[op URL] display:YES error:NULL];
+		else
+			NSRunAlertPanel(@"Failed to create new Git repository", @"Git returned the following error when trying to create the repository: %@", nil, nil, nil, result);
+	}
+}
+
+
+- (BOOL)validateMenuItem:(NSMenuItem *)item
+{
+	if ([item action] == @selector(newDocument:))
+		return ([PBGitBinary path] != nil);
+	return [super validateMenuItem:item];
+}
+
 @end
