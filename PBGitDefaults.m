@@ -12,6 +12,8 @@
 #define kCommitMessageViewVerticalLineLength @"PBCommitMessageViewVerticalLineLength"
 #define kEnableGist @"PBEnableGist"
 #define kEnableGravatar @"PBEnableGravatar"
+#define kConfirmPublicGists @"PBConfirmPublicGists"
+#define kPublicGist @"PBGistPublic"
 
 @implementation PBGitDefaults
 
@@ -24,6 +26,10 @@
 			  forKey:kEnableGist];
 	[defaultValues setObject:[NSNumber numberWithBool:YES]
 			  forKey:kEnableGravatar];
+	[defaultValues setObject:[NSNumber numberWithBool:YES]
+			  forKey:kConfirmPublicGists];
+	[defaultValues setObject:[NSNumber numberWithBool:NO]
+			  forKey:kPublicGist];
 	[[NSUserDefaults standardUserDefaults] registerDefaults:defaultValues];
 }
 
@@ -42,4 +48,13 @@
 	return [[NSUserDefaults standardUserDefaults] boolForKey:kEnableGravatar];
 }
 
++ (BOOL) confirmPublicGists
+{
+	return [[NSUserDefaults standardUserDefaults] boolForKey:kConfirmPublicGists];
+}
+
++ (BOOL) isGistPublic
+{
+	return [[NSUserDefaults standardUserDefaults] boolForKey:kPublicGist];
+}
 @end

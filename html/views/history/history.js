@@ -45,6 +45,29 @@ var Commit = function(obj) {
 
 };
 
+
+var confirm_gist = function(confirmation_message) {
+	if (!Controller.isFeatureEnabled_("confirmGist")) {
+		gistie();
+		return;
+	}
+
+	// Set optional confirmation_message
+	confirmation_message = confirmation_message || "Yes. Paste this commit.";
+	var deleteMessage = Controller.getConfig_("github.token") ? " " : "You might not be able to delete it after posting.<br>";
+	var publicMessage = Controller.isFeatureEnabled_("publicGist") ? "<b>public</b>" : "private";
+	// Insert the verification links into div#notification_message
+	var notification_text = 'This will create a ' + publicMessage + ' paste of your commit to <a href="http://gist.github.com/">http://gist.github.com/</a><br>' +
+	deleteMessage +
+	'Are you sure you want to continue?<br/><br/>' +
+	'<a href="#" onClick="hideNotification();return false;" style="color: red;">No. Cancel.</a> | ' +
+	'<a href="#" onClick="gistie();return false;" style="color: green;">' + confirmation_message + '</a>';
+
+	notify(notification_text, 0);
+	// Hide img#spinner, since it?s visible by default
+	$("spinner").style.display = "none";
+}
+
 var gistie = function() {
 	notify("Uploading code to Gistie..", 0);
 
@@ -60,9 +83,9 @@ var gistie = function() {
 	if (token && login) {
 		parameters.login = login;
 		parameters.token = token;
-	} else {
-		parameters.private = true;
 	}
+	if (!Controller.isFeatureEnabled_("publicGist"))
+		parameters.private = true;
 
 	var params = [];
 	for (var name in parameters)

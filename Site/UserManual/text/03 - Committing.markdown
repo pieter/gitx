@@ -30,3 +30,4 @@ If the hunk isn't specific enough, you can decrease the context size by manipula
 #### Committing
 
 Once you have staged all your changes, you can commit them. Enter a commit message in the center pane, but remember to use proper commit messages: your first line should be a short description of what you have changed, on which you can elaborate below that. Make sure the subject of your commit is short enough to fit in GitX's history view! Pressing the commit button will hopefully convey to you that the commit was successful, and also give you the commit hash.
+The 'Amend' checkbox does what `git commit --amend` does: It enables you to amend the commit on the tip of the current branch. Checking 'Amend' will give you the commit-message of mentioned commit and also will display all of the changes the commit introduced as staged in the right-hand pane. You may then stage/unstage further changes, change the commit-message and hit 'Commit'.
