@@ -45,6 +45,33 @@ var Commit = function(obj) {
 
 };
 
+
+var confirm_gist = function(confirmation_message) {
+
+	// Check whether github user/token are set in .gitconfig
+	// If yes, we can paste without waiting for confirmation
+	token = Controller.getConfig_("github.token");
+	login = Controller.getConfig_("github.user");
+	if (token && login) {
+		gistie();
+		return;
+	}
+
+	// Set optional confirmation_message
+	confirmation_message = confirmation_message || "Yes. Paste this commit.";
+	// Show div#notification, since it?s set to display:none; by default
+	$("notification").style.display = "";
+	// Reset the class (and therefore the color)
+	$("notification").setAttribute("class", "");
+	// Hide img#spinner, since it?s visible by default
+	$("spinner").style.display = "none";
+	// Insert the verification links into div#notification_message
+	$("notification_message").innerHTML = 'This will upload your commit to <a href="http://gist.github.com/">http://gist.github.com/</a>' +
+	'<br/>Are you sure you want to continue?<br/><br/>' +
+	'<a href="#" onClick="hideNotification();return false;" style="color: red;">No. Cancel.</a> | ' +
+	'<a href="#" onClick="gistie();return false;" style="color: green;">' + confirmation_message + '</a>';
+}
+
 var gistie = function() {
 	notify("Uploading code to Gistie..", 0);
 
