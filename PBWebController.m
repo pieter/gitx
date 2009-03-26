@@ -127,6 +127,10 @@
 		return [PBGitDefaults isGravatarEnabled];
 	else if([feature isEqualToString:@"gist"])
 		return [PBGitDefaults isGistEnabled];
+	else if([feature isEqualToString:@"confirmGist"])
+		return [PBGitDefaults confirmPublicGists];
+	else if([feature isEqualToString:@"publicGist"])
+		return [PBGitDefaults isGistPublic];
 	else
 		return YES;
 }
