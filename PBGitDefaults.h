@@ -14,5 +14,7 @@
 + (int) commitMessageViewVerticalLineLength;
 + (BOOL) isGistEnabled;
 + (BOOL) isGravatarEnabled;
++ (BOOL) confirmPublicGists;
++ (BOOL) isGistPublic;
 
 @end
