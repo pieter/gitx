@@ -8,7 +8,7 @@ task :generate => [:generate_usermanual] do
   `cat text/*.markdown > output/UserManual.markdown`
   `cp -r assets/* output`
 
-  template = ERB.new(File.read("template.html"))
+  template = ERB.new(File.read("templates/site.html"))
 
   source = Dir.glob("text/*.markdown").each do |file|
     contents = File.read(file)
