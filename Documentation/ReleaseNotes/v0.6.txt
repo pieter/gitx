@@ -1,0 +1,29 @@
+v0.6
+===
+
+This release has the following new features and enhancements:
+
+* The diff display now looks much nicer, using boxes to segment files
+* The toolbar can now me customized
+* Images that have been changed or added in a commit can now be viewed
+  inline in GitX
+* GitX has gained a preference pane which allows you to specify a git path
+  and disable the Gist and Gravatar integration
+* The commit interface is now more intuitive. Particularly, you can now
+  select multiple files and use drag and drop to stage / unstage files
+* You can now drag and drop files out of the commit view
+* The files in the commit view have gained a context menu that allows you
+  to revert changes / open the file / ignore the file
+* It is now possible to adjust the amount of context lines in the commit view.
+  Using a smaller context size allows you to do more fine-grained commits
+* The branch menu is now organized in branches/remotes/tags
+* The view switch button now uses icons rather than words
+* The view shortcuts have changed to use command 1/2 for the history/commit 
+  view. The history's subviews can now be changed using command-option-1/2/3
+* Listing commits has become much faster
+* GitX no longer spawns zombie processes
+* GitX now shows a list of files that have been changed in a commit
+* GitX now uses libgit2 to store object id's, reducing it's memory footprint
+
+In addition many bugs were fixed, including the correct calculation of a
+gravatar MD5 hash.
