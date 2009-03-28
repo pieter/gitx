@@ -3,6 +3,8 @@ require 'erb'
 
 task :generate => [:generate_usermanual] do
   require 'rdiscount'
+  require 'lib/release_notes'
+
   `rm -rf output`
   FileUtils.mkdir("output")
   `cat text/*.markdown > output/UserManual.markdown`
