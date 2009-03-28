@@ -21,7 +21,7 @@
 
 - (ApplicationController*)init
 {
-#ifndef NDEBUG
+#ifdef DEBUG_BUILD
 	[NSApp activateIgnoringOtherApps:YES];
 #endif
 

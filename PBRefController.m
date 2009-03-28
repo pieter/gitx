@@ -37,15 +37,22 @@
 
 - (void) removeRef:(PBRefMenuItem *) sender
 {
-	int ret = 1;
-	[historyController.repository outputForArguments:[NSArray arrayWithObjects:@"update-ref", @"-d", [[sender ref] ref], nil] retValue: &ret];
-	if (ret) {
-		NSLog(@"Removing ref failed!");
-		return;
-	}
+	NSString *ref_desc = [NSString stringWithFormat:@"%@ %@", [[sender ref] type], [[sender ref] shortName]];
+	NSString *question = [NSString stringWithFormat:@"Are you sure you want to remove the %@?", ref_desc];
+	int choice = NSRunAlertPanel([NSString stringWithFormat:@"Delete %@?", ref_desc], question, @"Delete", @"Cancel", nil);
+	// TODO: Use a non-modal alert here, so we don't block all the GitX windows
 
-	[[sender commit] removeRef:[sender ref]];
-	[commitController rearrangeObjects];
+	if(choice) {
+		int ret = 1;
+		[historyController.repository outputForArguments:[NSArray arrayWithObjects:@"update-ref", @"-d", [[sender ref] ref], nil] retValue: &ret];
+		if (ret) {
+			NSLog(@"Removing ref failed!");
+			return;
+		}
+
+		[[sender commit] removeRef:[sender ref]];
+		[commitController rearrangeObjects];
+	}
 }
 
 - (void) checkoutRef:(PBRefMenuItem *)sender
