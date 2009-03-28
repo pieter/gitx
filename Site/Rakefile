@@ -50,6 +50,17 @@ task :generate_usermanual do
   end
 end
 
+task :generate_appcast do
+    require 'lib/release_notes.rb'
+    require 'rdiscount'
+    template = ERB.new(File.read("templates/sparkle.xml"))
+
+    filename = ENV["STABLE"] ? "appcast.xml" : "appcast_DEBUG.xml"
+    File.open("output/Downloads/#{filename}", "w") do |f|
+        f.puts template.result(binding)
+    end
+end
+
 task :upload do
   `rsync -a output/ sydney:public_html/gitx/`
 end

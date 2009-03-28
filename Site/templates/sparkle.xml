@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle" version="2.0">
+  <channel>
+    <title>GitX</title>
+    <link>http://github.com/pieter/gitx/wikis</link>
+    <description>A more native clone of Gitk for OS X</description>
+
+
+    <item>
+      <title>GitX 0.6.1</title>
+      <pubDate>Thu, 29 Jan 2009 23:54:01 GMT</pubDate>
+      <enclosure url="http://frim.frim.nl/GitXStable.app.zip" length="1531595" type="application/octet-stream" sparkle:version="<%= ReleaseNotes::last_version %>"/>
+      <description>
+        <![CDATA[
+            <style>
+                body {
+                    font-size: 70%;
+                }
+                h1 {
+                    font-size: 160%;
+                }
+            </style>
+          <%= Markdown.new(ReleaseNotes::last_notes).to_html %>
+        ]]>
+      </description>
+    </item>
+
+  </channel>
+</rss>
