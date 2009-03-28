@@ -53,6 +53,7 @@ end
 task :generate_appcast do
     require 'lib/release_notes.rb'
     require 'rdiscount'
+    FileUtils.mkdir_p("output/Downloads")
     template = ERB.new(File.read("templates/sparkle.xml"))
 
     filename = ENV["STABLE"] ? "appcast.xml" : "appcast_DEBUG.xml"
