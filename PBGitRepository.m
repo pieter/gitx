@@ -149,9 +149,17 @@ NSString* PBGitRepositoryErrorDomain = @"GitXErrorDomain";
 // useless for display in the window title bar, so we show the directory above
 - (NSString*)displayName
 {
-	NSString* displayName = self.fileURL.path.lastPathComponent;
-	if ([displayName isEqualToString:@".git"])
-		displayName = [self.fileURL.path stringByDeletingLastPathComponent].lastPathComponent;
+	NSString* dirName = self.fileURL.path.lastPathComponent;
+	if ([dirName isEqualToString:@".git"])
+		dirName = [self.fileURL.path stringByDeletingLastPathComponent].lastPathComponent;
+	NSString* displayName;
+	if (![[PBGitRef refFromString:[[self headRef] simpleRef]] type]) {
+		displayName = [NSString stringWithFormat:@"%@ (detached HEAD)", dirName];
+	} else {
+		displayName = [NSString stringWithFormat:@"%@ (branch: %@)", dirName,
+					 [[self headRef] description]];
+	}
+
 	return displayName;
 }
 
@@ -236,6 +244,9 @@ NSString* PBGitRepositoryErrorDomain = @"GitXErrorDomain";
 	// Add an "All branches" option in the branches list
 	[self addBranch:[PBGitRevSpecifier allBranchesRevSpec]];
 	[self addBranch:[PBGitRevSpecifier localBranchesRevSpec]];
+
+	[[[self windowController] window] setTitle:[self displayName]];
+
 	return ret;
 }
 
