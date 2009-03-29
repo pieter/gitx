@@ -9,6 +9,7 @@
 #import "PBGitHistoryController.h"
 #import "CWQuickLook.h"
 #import "PBGitGrapher.h"
+#import "PBGitRevList.h"
 #import "PBGitRevisionCell.h"
 #import "PBCommitList.h"
 #define QLPreviewPanel NSClassFromString(@"QLPreviewPanel")

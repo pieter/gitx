@@ -7,6 +7,7 @@
 //
 
 #import "PBWebHistoryController.h"
+#import "PBGitRevSpecifier.h"
 
 @implementation PBWebHistoryController
 

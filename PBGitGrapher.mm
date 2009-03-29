@@ -10,6 +10,7 @@
 #import "PBGitCommit.h"
 #import "PBGitLane.h"
 #import "PBGitGraphLine.h"
+#import "PBGitRepository.h"
 #import <list>
 #import "git/oid.h"
 

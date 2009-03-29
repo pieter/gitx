@@ -9,6 +9,7 @@
 #import "PBRefController.h"
 #import "PBGitRevisionCell.h"
 #import "PBRefMenuItem.h"
+#import "PBGitRevSpecifier.h"
 
 @implementation PBRefController
 

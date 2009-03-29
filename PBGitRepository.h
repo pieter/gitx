@@ -7,9 +7,11 @@
 //
 
 #import <Cocoa/Cocoa.h>
-#import "PBGitRevList.h"
-#import "PBGitRevSpecifier.h"
-#import "PBGitConfig.h"
+
+@class PBGitConfig;
+@class PBGitRevList;
+@class PBGitRevSpecifier;
+@class PBGitRef;
 
 extern NSString* PBGitRepositoryErrorDomain;
 

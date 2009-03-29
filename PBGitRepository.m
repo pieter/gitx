@@ -10,11 +10,14 @@
 #import "PBGitCommit.h"
 #import "PBGitWindowController.h"
 #import "PBGitBinary.h"
-
+#import "PBGitRevSpecifier.h"
 #import "NSFileHandleExt.h"
 #import "PBEasyPipe.h"
 #import "PBGitRef.h"
 #import "PBGitRevSpecifier.h"
+
+#import "PBGitConfig.h"
+#import "PBGitRevList.h"
 
 NSString* PBGitRepositoryErrorDomain = @"GitXErrorDomain";
 

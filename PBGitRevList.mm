@@ -7,10 +7,15 @@
 //
 
 #import "PBGitRevList.h"
+#import "PBGitGrapher.h"
+
+#import "PBRevPoolDelegate.h"
+
 #import "PBGitRepository.h"
 #import "PBGitCommit.h"
-#import "PBGitGrapher.h"
 #import "PBGitRevSpecifier.h"
+#import "PBGitRevPool.h"
+#import "PBGitRepository.h"
 
 #include "git/oid.h"
 #include <ext/stdio_filebuf.h>
