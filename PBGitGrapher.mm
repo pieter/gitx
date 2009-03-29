@@ -86,7 +86,7 @@ void add_line(struct PBGitGraphLine *lines, int *nLines, int upper, int from, in
 
 	// If we already did the first parent, don't do so again
 	if (!didFirst && currentLanes->size() < MAX_LANES && commit.nParents) {
-		PBGitLane *newLane = new PBGitLane(commit.parentShas);
+		PBGitLane *newLane = new PBGitLane(*commit.parentShas);
 		currentLanes->push_back(newLane);
 		newPos = currentLanes->size();
 		add_line(lines, &currentLine, 0, newPos, newPos, newLane->index());
@@ -100,7 +100,7 @@ void add_line(struct PBGitGraphLine *lines, int *nLines, int upper, int from, in
 
 	int parentIndex;
 	for (parentIndex = 1; parentIndex < commit.nParents; ++parentIndex) {
-		git_oid *parent = commit.parentShas + parentIndex;
+		git_oid *parent = commit.parentShas[parentIndex];
 		int i = 0;
 		BOOL was_displayed = NO;
 		std::list<PBGitLane *>::iterator it = currentLanes->begin();
@@ -140,7 +140,7 @@ void add_line(struct PBGitGraphLine *lines, int *nLines, int upper, int from, in
 
 	// Update the current lane to point to the new parent
 	if (currentLane && commit.nParents > 0)
-		currentLane->setSha(commit.parentShas[0]);
+		currentLane->setSha(*commit.parentShas[0]);
 	else
 		currentLanes->remove(currentLane);
 

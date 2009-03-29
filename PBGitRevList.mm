@@ -70,119 +70,21 @@ using namespace std;
 		[self readCommitsForce: NO];
 }
 
-- (void) walkRevisionListWithSpecifier: (PBGitRevSpecifier*) rev
+- (void) walkRevisionListWithSpecifier:(PBGitRevSpecifier *)rev
 {
-	NSDate *start = [NSDate date];
-	NSMutableArray* revisions = [NSMutableArray array];
-	PBGitGrapher* g = [[PBGitGrapher alloc] initWithRepository: repository];
+	commits = [NSMutableArray array];
+	grapher = [[PBGitGrapher alloc] initWithRepository:repository];
+	PBGitRevPool *pool = [[PBGitRevPool alloc] initWithRepository:repository];
+	pool.delegate = self;
+	[pool loadRevisions:rev];
+	[self performSelectorOnMainThread:@selector(setCommits:) withObject:commits waitUntilDone:YES];
+}
 
-	NSMutableArray* arguments;
-	BOOL showSign = [rev hasLeftRight];
 
-	if (showSign)
-		arguments = [NSMutableArray arrayWithObjects:@"log", @"-z", @"--early-output", @"--topo-order", @"--pretty=format:%H\01%an\01%s\01%P\01%at\01%m", nil];
-	else
-		arguments = [NSMutableArray arrayWithObjects:@"log", @"-z", @"--early-output", @"--topo-order", @"--pretty=format:%H\01%an\01%s\01%P\01%at", nil];
-
-	if (!rev)
-		[arguments addObject:@"HEAD"];
-	else
-		[arguments addObjectsFromArray:[rev parameters]];
-
-	if ([rev hasPathLimiter])
-		[arguments insertObject:@"--children" atIndex:1];
-
-	NSTask *task = [PBEasyPipe taskForCommand:[PBGitBinary path] withArgs:arguments inDir:[repository fileURL].path];
-	[task launch];
-	NSFileHandle* handle = [task.standardOutput fileHandleForReading];
-	
-	int fd = [handle fileDescriptor];
-	__gnu_cxx::stdio_filebuf<char> buf(fd, std::ios::in);
-	std::istream stream(&buf);
-
-	int num = 0;
-	while (true) {
-		string sha;
-		if (!getline(stream, sha, '\1'))
-			break;
-
-		// We reached the end of some temporary output. Show what we have
-		// until now, and then start again. The sha of the next thing is still
-		// in this buffer. So, we use a substring of current input.
-		if (sha[1] == 'i') // Matches 'Final output'
-		{
-			num = 0;
-			[self performSelectorOnMainThread:@selector(setCommits:) withObject:revisions waitUntilDone:NO];
-			g = [[PBGitGrapher alloc] initWithRepository: repository];
-			revisions = [NSMutableArray array];
-			
-			sha = sha.substr(sha.length() - 40, 40);
-		}
-
-		// From now on, 1.2 seconds
-		git_oid oid;
-		git_oid_mkstr(&oid, sha.c_str());
-		PBGitCommit* newCommit = [[PBGitCommit alloc] initWithRepository:repository andSha:oid];
-
-		string author;
-		getline(stream, author, '\1');
-
-		string subject;
-		getline(stream, subject, '\1');
-
-		string parentString;
-		getline(stream, parentString, '\1');
-		if (parentString.size() != 0)
-		{
-			if (((parentString.size() + 1) % 41) != 0) {
-				NSLog(@"invalid parents: %i", parentString.size());
-				continue;
-			}
-			int nParents = (parentString.size() + 1) / 41;
-			git_oid *parents = (git_oid *)malloc(sizeof(git_oid) * nParents);
-			int parentIndex;
-			for (parentIndex = 0; parentIndex < nParents; ++parentIndex)
-				git_oid_mkstr(parents + parentIndex, parentString.substr(parentIndex * 41, 40).c_str());
-			
-			newCommit.parentShas = parents;
-			newCommit.nParents = nParents;
-		}
-
-		int time;
-		stream >> time;
-
-		
-		[newCommit setSubject:[NSString stringWithUTF8String:subject.c_str()]];
-		[newCommit setAuthor:[NSString stringWithUTF8String:author.c_str()]];
-		[newCommit setTimestamp:time];
-		
-		if (showSign)
-		{
-			char c;
-			stream >> c; // Remove separator
-			stream >> c;
-			if (c != '>' && c != '<' && c != '^' && c != '-')
-				NSLog(@"Error loading commits: sign not correct");
-			[newCommit setSign: c];
-		}
-
-		char c;
-		stream >> c;
-		if (c != '\0')
-			cout << "Error" << endl;
-
-		[revisions addObject: newCommit];
-		[g decorateCommit: newCommit];
-
-		if (++num % 1000 == 0)
-			[self performSelectorOnMainThread:@selector(setCommits:) withObject:revisions waitUntilDone:NO];
-	}
-	
-	NSTimeInterval duration = [[NSDate date] timeIntervalSinceDate:start];
-	NSLog(@"Loaded %i commits in %f seconds", num, duration);
-	// Make sure the commits are stored before exiting.
-	[self performSelectorOnMainThread:@selector(setCommits:) withObject:revisions waitUntilDone:YES];
-	[task waitUntilExit];
+- (void)revPool:(PBGitRevPool *)pool encounteredCommit:(PBGitCommit *)commit
+{
+	[commits addObject: commit];
+	[grapher decorateCommit: commit];
 }
 
 @end

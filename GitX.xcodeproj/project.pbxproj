@@ -53,6 +53,8 @@
 		F523CEB60ED3399200DDD714 /* PBGitIndexController.m in Sources */ = {isa = PBXBuildFile; fileRef = F523CEB50ED3399200DDD714 /* PBGitIndexController.m */; };
 		F52BCE030E84208300AA3741 /* PBGitHistoryView.xib in Resources */ = {isa = PBXBuildFile; fileRef = F52BCE020E84208300AA3741 /* PBGitHistoryView.xib */; };
 		F52BCE070E84211300AA3741 /* PBGitHistoryController.m in Sources */ = {isa = PBXBuildFile; fileRef = F52BCE060E84211300AA3741 /* PBGitHistoryController.m */; };
+		F53B61790F7FC9D3000E13FA /* PBGitRevPool.mm in Sources */ = {isa = PBXBuildFile; fileRef = F53B61780F7FC9D3000E13FA /* PBGitRevPool.mm */; };
+		F53B617A0F7FC9D3000E13FA /* PBGitRevPool.mm in Sources */ = {isa = PBXBuildFile; fileRef = F53B61780F7FC9D3000E13FA /* PBGitRevPool.mm */; };
 		F53C4DF70E97FC630022AD59 /* PBGitBinary.m in Sources */ = {isa = PBXBuildFile; fileRef = F53C4DF60E97FC630022AD59 /* PBGitBinary.m */; };
 		F53C4DF80E97FCA70022AD59 /* PBGitBinary.m in Sources */ = {isa = PBXBuildFile; fileRef = F53C4DF60E97FC630022AD59 /* PBGitBinary.m */; };
 		F53C4DF90E97FCAD0022AD59 /* PBEasyPipe.m in Sources */ = {isa = PBXBuildFile; fileRef = F57CC3900E05DDF2000472E2 /* PBEasyPipe.m */; };
@@ -204,6 +206,9 @@
 		F52BCE020E84208300AA3741 /* PBGitHistoryView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PBGitHistoryView.xib; sourceTree = "<group>"; };
 		F52BCE050E84211300AA3741 /* PBGitHistoryController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PBGitHistoryController.h; sourceTree = "<group>"; };
 		F52BCE060E84211300AA3741 /* PBGitHistoryController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PBGitHistoryController.m; sourceTree = "<group>"; };
+		F53B61770F7FC9D3000E13FA /* PBGitRevPool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PBGitRevPool.h; sourceTree = "<group>"; };
+		F53B61780F7FC9D3000E13FA /* PBGitRevPool.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PBGitRevPool.mm; sourceTree = "<group>"; };
+		F53B64030F7FF5DC000E13FA /* PBRevPoolDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PBRevPoolDelegate.h; sourceTree = "<group>"; };
 		F53C4DF50E97FC630022AD59 /* PBGitBinary.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PBGitBinary.h; sourceTree = "<group>"; };
 		F53C4DF60E97FC630022AD59 /* PBGitBinary.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PBGitBinary.m; sourceTree = "<group>"; };
 		F53EE3590E06BBA00022B925 /* CWQuickLook.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CWQuickLook.h; sourceTree = "<group>"; };
@@ -458,9 +463,24 @@
 			name = Widgets;
 			sourceTree = "<group>";
 		};
+		F53B61750F7FC9B9000E13FA /* RevLoading */ = {
+			isa = PBXGroup;
+			children = (
+				F53FF2030E7ABB5300389171 /* PBGitRevSpecifier.h */,
+				F53FF2040E7ABB5300389171 /* PBGitRevSpecifier.m */,
+				F5FF4E160E0829C20006317A /* PBGitRevList.h */,
+				F5FF4E170E0829C20006317A /* PBGitRevList.mm */,
+				F53B61770F7FC9D3000E13FA /* PBGitRevPool.h */,
+				F53B61780F7FC9D3000E13FA /* PBGitRevPool.mm */,
+				F53B64030F7FF5DC000E13FA /* PBRevPoolDelegate.h */,
+			);
+			name = RevLoading;
+			sourceTree = "<group>";
+		};
 		F56174540E05887E001DCD79 /* Git */ = {
 			isa = PBXGroup;
 			children = (
+				F53B61750F7FC9B9000E13FA /* RevLoading */,
 				F5E927E30E883D6800056E75 /* Commit */,
 				F5E927E10E883D2E00056E75 /* History */,
 				F5945E150E02B0C200706420 /* PBGitRepository.h */,
@@ -576,10 +596,6 @@
 				F56524EF0E02D45200F03B52 /* PBGitCommit.m */,
 				F5C007730E731B48007B84B2 /* PBGitRef.h */,
 				F5C007740E731B48007B84B2 /* PBGitRef.m */,
-				F5FF4E160E0829C20006317A /* PBGitRevList.h */,
-				F5FF4E170E0829C20006317A /* PBGitRevList.mm */,
-				F53FF2030E7ABB5300389171 /* PBGitRevSpecifier.h */,
-				F53FF2040E7ABB5300389171 /* PBGitRevSpecifier.m */,
 				F56174550E058893001DCD79 /* PBGitTree.h */,
 				F56174560E058893001DCD79 /* PBGitTree.m */,
 				F5FC43C30EBD050800191D80 /* PBRefContextDelegate.h */,
@@ -842,6 +858,7 @@
 				47DBDB580E94EDE700671A1E /* DBPrefsWindowController.m in Sources */,
 				47DBDB670E94EE8B00671A1E /* PBPrefsWindowController.m in Sources */,
 				47DBDBCA0E95016F00671A1E /* PBNSURLPathUserDefaultsTransfomer.m in Sources */,
+				F53B61790F7FC9D3000E13FA /* PBGitRevPool.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -875,6 +892,7 @@
 				F5886A170ED5D34F0066E74C /* PBGitRepository.m in Sources */,
 				F5886A190ED5D3560066E74C /* PBGitRef.m in Sources */,
 				F5886A160ED5D3490066E74C /* speedtest.m in Sources */,
+				F53B617A0F7FC9D3000E13FA /* PBGitRevPool.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1088,6 +1106,7 @@
 				GCC_OPTIMIZATION_LEVEL = 2;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = GitX_Prefix.pch;
+				GCC_VERSION = "";
 				HEADER_SEARCH_PATHS = libgit2/src;
 				INFOPLIST_FILE = "SpeedTest-Info.plist";
 				INSTALL_PATH = "$(HOME)/Applications";

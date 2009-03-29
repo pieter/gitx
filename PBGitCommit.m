@@ -22,7 +22,7 @@
 	NSMutableArray *p = [NSMutableArray arrayWithCapacity:nParents];
 	for (i = 0; i < nParents; ++i)
 	{
-		char *s = git_oid_mkhex(parentShas + i);
+		char *s = git_oid_mkhex(parentShas[i]);
 		[p addObject:[NSString stringWithUTF8String:s]];
 		free(s);
 	}
@@ -47,10 +47,10 @@
 
 - (git_oid *)sha
 {
-	return &sha;
+	return sha;
 }
 
-- initWithRepository:(PBGitRepository*) repo andSha:(git_oid)newSha
+- initWithRepository:(PBGitRepository*) repo andSha:(git_oid *)newSha
 {
 	details = nil;
 	repository = repo;
@@ -60,7 +60,7 @@
 
 - (NSString *)realSha
 {
-	char *hex = git_oid_mkhex(&sha);
+	char *hex = git_oid_mkhex(sha);
 	NSString *str = [NSString stringWithUTF8String:hex];
 	free(hex);
 	return str;

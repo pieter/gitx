@@ -12,8 +12,8 @@
 #include "git/oid.h"
 
 @interface PBGitCommit : NSObject {
-	git_oid sha;
-	git_oid *parentShas;
+	git_oid *sha;
+	git_oid **parentShas;
 	int nParents;
 
 	NSString* subject;
@@ -25,10 +25,10 @@
 	int timestamp;
 	char sign;
 	id lineInfo;
-	PBGitRepository* repository;
+	PBGitRepository *repository;
 }
 
-- initWithRepository:(PBGitRepository *)repo andSha:(git_oid)sha;
+- initWithRepository:(PBGitRepository *)repo andSha:(git_oid *)sha;
 
 - (void)addRef:(PBGitRef *)ref;
 - (void)removeRef:(id)ref;
@@ -40,7 +40,7 @@
 @property (copy) NSString* author;
 @property (readonly) NSArray* parents; // TODO: remove this and its uses
 
-@property (assign) git_oid *parentShas;
+@property (assign) git_oid **parentShas;
 @property (assign) int nParents, timestamp;
 
 @property (retain) NSMutableArray* refs;
