@@ -19,7 +19,7 @@ using namespace std;
 
 #define MAX_LANES 32
 
-- (id) initWithRepository: (PBGitRepository*) repo
+- initWithRepository:(PBGitRepository *)repo
 {
 	pl = new std::list<PBGitLane *>;
 

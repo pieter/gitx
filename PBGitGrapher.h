@@ -7,9 +7,12 @@
 //
 
 #import <Cocoa/Cocoa.h>
+
 #import "PBGitCommit.h"
 #import "PBGitGraphLine.h"
 #import "PBGraphCellInfo.h"
+
+@class PBGitRepository;
 
 @interface PBGitGrapher : NSObject {
 	PBGraphCellInfo *previous;
@@ -17,6 +20,6 @@
 	int curLane;
 }
 
-- (id) initWithRepository:(PBGitRepository *)repo;
-- (void) decorateCommit:(PBGitCommit *)commit;
+- initWithRepository:(PBGitRepository *)repo;
+- (void)decorateCommit:(PBGitCommit *)commit;
 @end

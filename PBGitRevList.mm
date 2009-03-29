@@ -16,13 +16,12 @@
 #include <ext/stdio_filebuf.h>
 #include <iostream>
 #include <string>
-
 using namespace std;
 
 @implementation PBGitRevList
 
 @synthesize commits;
-- initWithRepository: (id) repo
+- initWithRepository:(PBGitRepository *)repo
 {
 	repository = repo;
 	[repository addObserver:self forKeyPath:@"currentBranch" options:0 context:nil];
