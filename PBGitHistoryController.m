@@ -218,4 +218,16 @@
 	return menu;
 }
 
+- (void) showCommitsFromTree:(id) sender
+{
+	// TODO: Enable this from webview as well!
+
+	NSMutableArray *filePaths = [NSMutableArray arrayWithObjects:@"HEAD", @"--", NULL];
+	for (PBGitTree *tree in [treeController selectedObjects])
+		[filePaths addObject:[tree fullPath]];
+	PBGitRevSpecifier *revSpec = [[PBGitRevSpecifier alloc] initWithParameters:filePaths];
+
+	repository.currentBranch = [repository addBranch:revSpec];
+}
+
 @end

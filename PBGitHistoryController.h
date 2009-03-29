@@ -41,6 +41,7 @@
 - (IBAction) toggleQuickView: sender;
 - (IBAction) openSelectedFile: sender;
 - (void) updateQuicklookForce: (BOOL) force;
+- (void) showCommitsFromTree:(id) sender;
 
 - (void) copyCommitInfo;
 
