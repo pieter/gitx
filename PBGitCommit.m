@@ -73,7 +73,7 @@
 	if (details != nil)
 		return details;
 
-	details = [self.repository outputForArguments:[NSArray arrayWithObjects:@"show", @"--pretty=raw", @"-M", [self realSha], nil]];
+	details = [self.repository outputForArguments:[NSArray arrayWithObjects:@"show", @"--pretty=raw", @"-M", @"--no-color", [self realSha], nil]];
 	
 	return details;
 }
