@@ -71,6 +71,23 @@
 	[commitController rearrangeObjects];
 }
 
+- (void) tagInfo:(PBRefMenuItem *)sender
+{
+    NSString *message = [NSString stringWithFormat:@"Info for tag: %@", [[sender ref] shortName]];
+
+    int ret = 1;
+    NSString *info = [historyController.repository outputInWorkdirForArguments:[NSArray arrayWithObjects:@"tag", @"-n50", @"-l", [[sender ref] shortName], nil] retValue: &ret];
+
+    if (!ret) {
+        [[NSAlert alertWithMessageText:message
+                         defaultButton:@"OK"
+                       alternateButton:nil
+                           otherButton:nil
+             informativeTextWithFormat:info] runModal];
+    }
+    return;
+}
+
 - (NSArray *) menuItemsForRef:(PBGitRef *)ref commit:(PBGitCommit *)commit
 {
 	return [PBRefMenuItem defaultMenuItemsForRef:ref commit:commit target:self];
