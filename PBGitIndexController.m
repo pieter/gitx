@@ -54,11 +54,13 @@
 		return;
 	}
 
+	[self stopTrackingIndex];
 	for (PBChangedFile *file in files)
 	{
 		file.hasUnstagedChanges = NO;
 		file.hasCachedChanges = YES;
 	}
+	[self resumeTrackingIndex];
 }
 
 - (void) unstageFiles:(NSArray *)files
@@ -78,12 +80,14 @@
 		NSLog(@"Error when updating index. Retvalue: %i", ret);
 		return;
 	}
-	
+
+	[self stopTrackingIndex];
 	for (PBChangedFile *file in files)
 	{
 		file.hasUnstagedChanges = YES;
 		file.hasCachedChanges = NO;
 	}
+	[self resumeTrackingIndex];
 }
 
 - (void) ignoreFiles:(NSArray *)files
