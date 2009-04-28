@@ -12,6 +12,11 @@
 
 #define FileChangesTableViewType @"GitFileChangedType"
 
+@interface PBGitIndexController (PrivateMethods)
+- (void)stopTrackingIndex;
+- (void)resumeTrackingIndex;
+@end
+
 @implementation PBGitIndexController
 
 @synthesize contextSize;
@@ -386,4 +391,17 @@ writeRowsWithIndexes:(NSIndexSet *)rowIndexes
 	return NO;
 }
 
+#pragma mark Private Methods
+- (void)stopTrackingIndex
+{
+	[stagedFilesController setAutomaticallyRearrangesObjects:NO];
+	[unstagedFilesController setAutomaticallyRearrangesObjects:NO];
+}
+- (void)resumeTrackingIndex
+{
+	[stagedFilesController setAutomaticallyRearrangesObjects:YES];
+	[unstagedFilesController setAutomaticallyRearrangesObjects:YES];
+	[stagedFilesController rearrangeObjects];
+	[unstagedFilesController rearrangeObjects];
+}
 @end
