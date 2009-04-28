@@ -1,5 +1,5 @@
 //
-//  gitx.mm
+//  gitx.m
 //  GitX
 //
 //  Created by Ciarán Walsh on 15/08/2008.
@@ -31,7 +31,8 @@ NSDistantObject *createProxy()
 												launchIdentifier: nil];
 
 	// Now attempt to connect, allowing the app time to startup
-	for (int attempt = 0; proxy == nil && attempt < 50; ++attempt) {
+	int attempt;
+	for (attempt = 0; proxy == nil && attempt < 50; ++attempt) {
 		if (proxy = connect())
 			return proxy;
 
@@ -46,7 +47,7 @@ NSDistantObject *createProxy()
 
 void usage(char const *programName)
 {
-	
+
 	printf("Usage: %s (--help|--version)\n", programName);
 	printf("   or: %s (--commit|-h)\n", programName);
 	printf("   or: %s <revlist options>\n", programName);
@@ -155,4 +156,6 @@ int main(int argc, const char** argv)
 		if (error)
 			fprintf(stderr, "\t%s\n", [[error localizedFailureReason] UTF8String]);
 	}
+
+	return 0;
 }

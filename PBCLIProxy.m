@@ -1,5 +1,5 @@
 //
-//  PBCLIProxy.mm
+//  PBCLIProxy.m
 //  GitX
 //
 //  Created by Ciarán Walsh on 15/08/2008.
@@ -50,7 +50,7 @@
 		}
 		return NO;
 	}
-	
+
 	if ([arguments count] > 0 && ([[arguments objectAtIndex:0] isEqualToString:@"--commit"] ||
 		[[arguments objectAtIndex:0] isEqualToString:@"-c"]))
 		[((PBGitWindowController *)document.windowController) showCommitView:self];

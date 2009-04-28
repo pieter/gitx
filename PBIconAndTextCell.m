@@ -1,5 +1,5 @@
 //
-//  PBIconAndTextCell.mm
+//  PBIconAndTextCell.m
 //  GitX
 //
 //  Created by Ciarán Walsh on 23/09/2008.
@@ -108,7 +108,7 @@
 		theEvent = [[controlView window] nextEventMatchingMask:(NSLeftMouseUpMask | NSLeftMouseDraggedMask | NSMouseEnteredMask | NSMouseExitedMask)];
 	}
 
-	// Another way of implementing the above code would be to keep an NSButtonCell as an ivar, and simply call trackMouse:inRect:ofView:untilMouseUp: on it, if the tracking area was inside of it. 
+	// Another way of implementing the above code would be to keep an NSButtonCell as an ivar, and simply call trackMouse:inRect:ofView:untilMouseUp: on it, if the tracking area was inside of it.
 	if (mouseDownInButton) {
 		// Send the action, and redisplay
 		mouseDownInButton = NO;
