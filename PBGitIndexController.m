@@ -104,7 +104,7 @@
 	// Write to the file
 	NSString *gitIgnoreName = [commitController.repository gitIgnoreFilename];
 
-	NSStringEncoding enc;
+	NSStringEncoding enc = NSUTF8StringEncoding;
 	NSError *error = nil;
 	NSMutableString *ignoreFile;
 
