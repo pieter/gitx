@@ -197,18 +197,35 @@ var loadCommit = function(commitObject, currentRef) {
 
 var showDiff = function() {
 	var newfile = function(name1, name2, id, mode_change, old_mode, new_mode) {
+		var button = document.createElement("div");
+		var p = document.createElement("p");
+		var link = document.createElement("a");
+		link.setAttribute("href", "#" + id);
+		p.appendChild(link);
+		var buttonType = ""
 		if (name1 == name2) {
+			buttonType = "changed"
+			link.appendChild(document.createTextNode(name1));
 			if (mode_change)
-				$("files").innerHTML += "<div class='button changed'>mode changed</div><p><a href='#" + id + "'>" + name1 + "</a> mode " + old_mode + " &#8594; " + new_mode + "</p>";
-			else
-				$("files").innerHTML += "<div class='button changed'>changed</div><p><a href='#" + id + "'>" + name1 + "</a></p>";
+				p.appendChild(document.createTextNode("mode " + old_mode + " &#8594; " + new_mode));
 		}
-		else if (name1 == "/dev/null")
-			$("files").innerHTML += "<div class='button created'>created</div><p><a href='#" + id + "'>" + name2 + "</a></p>";
-		else if (name2 == "/dev/null")
-			$("files").innerHTML += "<div class='button deleted'>deleted</div><p><a href='#" + id + "'>" + name1 + "</a></p>";
-		else
-			$("files").innerHTML += "<div class='button renamed' alt='renamed''>renamed</div><p>" + name1 + " &#8594; <a href='#" + id + "'>" + name2 + "</a></p>";
+		else if (name1 == "/dev/null") {
+			buttonType = "created";
+			link.appendChild(document.createTextNode(name2));
+		}
+		else if (name2 == "/dev/null") {
+			buttonType = "deleted";
+			link.appendChild(document.createTextNode(name1));
+		}
+		else {
+			buttonType = "renamed";
+			link.appendChild(document.createTextNode(name2));
+			p.insertBefore(document.createTextNode(name1), link);
+		}
+		button.setAttribute("class", "button " + buttonType);
+		button.appendChild(document.createTextNode(buttonType));
+		$("files").appendChild(button);
+		$("files").appendChild(p);
 	}
 
 	var binaryDiff = function(filename) {
