@@ -309,14 +309,21 @@
 
 	if (ret || [commit length] != 40)
 		return [self commitFailedBecause:@"Could not create a commit object"];
-	
+
+	if (![repository executeHook:@"pre-commit" output:nil])
+		return [self commitFailedBecause:@"Pre-commit hook failed"];
+
 	[repository outputForArguments:[NSArray arrayWithObjects:@"update-ref", @"-m", commitSubject, @"HEAD", commit, nil]
 						  retValue: &ret];
 	if (ret)
 		return [self commitFailedBecause:@"Could not update HEAD"];
 
-	[webController setStateMessage:[NSString stringWithFormat:@"Successfully created commit %@", commit]];
-	
+
+	if (![repository executeHook:@"post-commit" output:nil])
+		[webController setStateMessage:[NSString stringWithFormat:@"Post-commit hook failed, however, successfully created commit %@", commit]];
+	else
+		[webController setStateMessage:[NSString stringWithFormat:@"Successfully created commit %@", commit]];
+
 	repository.hasChanged = YES;
 	self.busy--;
 	[commitMessageView setString:@""];
