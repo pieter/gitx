@@ -21,12 +21,12 @@
 	[self selectCurrentBranch];
 }
 
-- (void) observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(id)context
+- (void) observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
 {
-    if ([context isEqualToString: @"branchChange"]) {
+    if ([(NSString *)context isEqualToString: @"branchChange"]) {
 		[self updateBranchMenu];
 	}
-	else if ([context isEqualToString:@"currentBranchChange"]) {
+	else if ([(NSString *)context isEqualToString:@"currentBranchChange"]) {
 		[self selectCurrentBranch];
 	}
 	else {
@@ -119,7 +119,7 @@
 
 - (NSDragOperation)tableView:(NSTableView*)tv
 				validateDrop:(id <NSDraggingInfo>)info
-				 proposedRow:(int)row
+				 proposedRow:(NSInteger)row
 	   proposedDropOperation:(NSTableViewDropOperation)operation
 {
 	if (operation == NSTableViewDropAbove)
@@ -134,7 +134,7 @@
 
 - (BOOL)tableView:(NSTableView *)aTableView
 	   acceptDrop:(id <NSDraggingInfo>)info
-			  row:(int)row
+			  row:(NSInteger)row
 	dropOperation:(NSTableViewDropOperation)operation
 {
 	if (operation != NSTableViewDropOn)

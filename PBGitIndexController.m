@@ -12,6 +12,11 @@
 
 #define FileChangesTableViewType @"GitFileChangedType"
 
+@interface PBGitIndexController (PrivateMethods)
+- (void)stopTrackingIndex;
+- (void)resumeTrackingIndex;
+@end
+
 @implementation PBGitIndexController
 
 @synthesize contextSize;
@@ -49,11 +54,13 @@
 		return;
 	}
 
+	[self stopTrackingIndex];
 	for (PBChangedFile *file in files)
 	{
 		file.hasUnstagedChanges = NO;
 		file.hasCachedChanges = YES;
 	}
+	[self resumeTrackingIndex];
 }
 
 - (void) unstageFiles:(NSArray *)files
@@ -73,12 +80,14 @@
 		NSLog(@"Error when updating index. Retvalue: %i", ret);
 		return;
 	}
-	
+
+	[self stopTrackingIndex];
 	for (PBChangedFile *file in files)
 	{
 		file.hasUnstagedChanges = YES;
 		file.hasCachedChanges = NO;
 	}
+	[self resumeTrackingIndex];
 }
 
 - (void) ignoreFiles:(NSArray *)files
@@ -292,7 +301,7 @@
 
 
 # pragma mark TableView icon delegate
-- (void)tableView:(NSTableView*)tableView willDisplayCell:(id)cell forTableColumn:(NSTableColumn*)tableColumn row:(int)rowIndex
+- (void)tableView:(NSTableView*)tableView willDisplayCell:(id)cell forTableColumn:(NSTableColumn*)tableColumn row:(NSInteger)rowIndex
 {
 	id controller = [tableView tag] == 0 ? unstagedFilesController : stagedFilesController;
 	[[tableColumn dataCell] setImage:[[[controller arrangedObjects] objectAtIndex:rowIndex] icon]];
@@ -344,7 +353,7 @@ writeRowsWithIndexes:(NSIndexSet *)rowIndexes
 
 - (NSDragOperation)tableView:(NSTableView*)tableView
 				validateDrop:(id <NSDraggingInfo>)info
-				 proposedRow:(int)row
+				 proposedRow:(NSInteger)row
 	   proposedDropOperation:(NSTableViewDropOperation)operation
 {
 	if ([info draggingSource] == tableView)
@@ -356,7 +365,7 @@ writeRowsWithIndexes:(NSIndexSet *)rowIndexes
 
 - (BOOL)tableView:(NSTableView *)aTableView
 	   acceptDrop:(id <NSDraggingInfo>)info
-			  row:(int)row
+			  row:(NSInteger)row
 	dropOperation:(NSTableViewDropOperation)operation
 {
     NSPasteboard* pboard = [info draggingPasteboard];
@@ -386,4 +395,17 @@ writeRowsWithIndexes:(NSIndexSet *)rowIndexes
 	return NO;
 }
 
+#pragma mark Private Methods
+- (void)stopTrackingIndex
+{
+	[stagedFilesController setAutomaticallyRearrangesObjects:NO];
+	[unstagedFilesController setAutomaticallyRearrangesObjects:NO];
+}
+- (void)resumeTrackingIndex
+{
+	[stagedFilesController setAutomaticallyRearrangesObjects:YES];
+	[unstagedFilesController setAutomaticallyRearrangesObjects:YES];
+	[stagedFilesController rearrangeObjects];
+	[unstagedFilesController rearrangeObjects];
+}
 @end

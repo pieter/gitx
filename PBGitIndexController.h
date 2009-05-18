@@ -35,4 +35,6 @@
 
 - (NSString *) stagedChangesForFile:(PBChangedFile *)file;
 - (NSString *) unstagedChangesForFile:(PBChangedFile *)file;
+
+- (NSMenu *) menuForTable:(NSTableView *)table;
 @end

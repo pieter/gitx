@@ -7,6 +7,7 @@
 //
 
 #import "PBFileChangesTableView.h"
+#import "PBGitIndexController.h"
 
 @implementation PBFileChangesTableView
 
@@ -14,7 +15,7 @@
 - (NSMenu *)menuForEvent:(NSEvent *)theEvent
 {
 	if ([self delegate])
-		return [[self delegate] menuForTable: self];
+		return [(PBGitIndexController *)[self delegate] menuForTable: self];
 
 	return nil;
 }

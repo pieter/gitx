@@ -9,6 +9,7 @@
 #import "PBGitCommitController.h"
 #import "NSFileHandleExt.h"
 #import "PBChangedFile.h"
+#import "PBWebChangesController.h"
 
 @implementation PBGitCommitController
 
@@ -33,7 +34,7 @@
 }
 - (void) removeView
 {
-	[webController closeView];
+	[(PBWebChangesController *)webController closeView];
 	[super finalize];
 }
 
@@ -318,11 +319,10 @@
 	if (ret)
 		return [self commitFailedBecause:@"Could not update HEAD"];
 
-
 	if (![repository executeHook:@"post-commit" output:nil])
-		[webController setStateMessage:[NSString stringWithFormat:@"Post-commit hook failed, however, successfully created commit %@", commit]];
+		[(PBWebChangesController *)webController setStateMessage:[NSString stringWithFormat:@"Post-commit hook failed, however, successfully created commit %@", commit]];
 	else
-		[webController setStateMessage:[NSString stringWithFormat:@"Successfully created commit %@", commit]];
+		[(PBWebChangesController *)webController setStateMessage:[NSString stringWithFormat:@"Successfully created commit %@", commit]];
 
 	repository.hasChanged = YES;
 	self.busy--;
