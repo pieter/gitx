@@ -77,6 +77,10 @@ using namespace std;
 	PBGitRevPool *pool = [[PBGitRevPool alloc] initWithRepository:repository];
 	pool.delegate = self;
 	[pool loadRevisions:rev];
+	[self linearizeCommits: pool];
+	for (PBGitCommit *commit in commits)
+		[grapher decorateCommit: commit];
+
 	[self performSelectorOnMainThread:@selector(setCommits:) withObject:commits waitUntilDone:YES];
 }
 
@@ -84,7 +88,72 @@ using namespace std;
 - (void)revPool:(PBGitRevPool *)pool encounteredCommit:(PBGitCommit *)commit
 {
 	[commits addObject: commit];
-	[grapher decorateCommit: commit];
+}
+
+- (void)linearizeCommits:(PBGitRevPool *)pool
+{
+	NSDate *start = [NSDate date];
+
+	/* Mark them and clear the indegree */
+	for (PBGitCommit *commit in commits)
+		commit.inDegree = 1;
+
+	/* update the indegree */
+	for (PBGitCommit *commit in commits)
+	{
+		int pNum;
+		for (pNum = 0; pNum < commit.nParents; ++pNum) {
+			PBGitCommit *parent = [pool commitWithOid:commit.parentShas[pNum]];
+			if (parent.inDegree)
+				parent.inDegree++;
+		}
+	}
+
+	
+	/*
+	 * find the tips
+	 *
+	 * tips are nodes not reachable from any other node in the list
+	 *
+	 * the tips serve as a starting set for the work queue.
+	 */
+	NSMutableArray *tips = [NSMutableArray array];
+	for (PBGitCommit *commit in commits)
+	{
+		if (commit.inDegree == 1)
+			[tips insertObject:commit atIndex:0];
+	}
+
+	NSMutableArray *sortedCommits = [NSMutableArray array];
+	while ([tips count])
+	{
+		PBGitCommit *commit = [tips lastObject];
+		[tips removeLastObject];
+		int pNum;
+		int nParents = commit.nParents;
+		for (pNum = 0; pNum < nParents; ++pNum) {
+			PBGitCommit *parent = [pool commitWithOid:commit.parentShas[pNum]];
+			if (!parent.inDegree)
+				continue;
+			
+			/*
+			 * parents are only enqueued for emission
+			 * when all their children have been emitted thereby
+			 * guaranteeing topological order.
+			 */
+			if (--parent.inDegree == 1)
+				[tips addObject:parent];
+		}
+		/*
+		 * current item is a commit all of whose children
+		 * have already been emitted. we can emit it now.
+		 */
+		[sortedCommits addObject:commit];
+	}
+
+	commits = sortedCommits;
+	NSTimeInterval duration = [[NSDate date] timeIntervalSinceDate:start];
+	NSLog(@"Sorted %i commits in %f seconds", [commits count], duration);
 }
 
 @end

@@ -11,7 +11,7 @@
 
 @implementation PBGitCommit
 
-@synthesize repository, subject, timestamp, author, parentShas, nParents, sign, lineInfo;
+@synthesize repository, subject, timestamp, author, parentShas, nParents, sign, lineInfo, inDegree;
 
 - (NSArray *) parents
 {

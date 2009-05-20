@@ -15,6 +15,7 @@
 	git_oid *sha;
 	git_oid **parentShas;
 	int nParents;
+	int inDegree; // Used for topological sort
 
 	NSString* subject;
 	NSString* author;
@@ -41,7 +42,7 @@
 @property (readonly) NSArray* parents; // TODO: remove this and its uses
 
 @property (assign) git_oid **parentShas;
-@property (assign) int nParents, timestamp;
+@property (assign) int nParents, timestamp, inDegree;
 
 @property (retain) NSMutableArray* refs;
 @property (readonly) NSDate *date;
