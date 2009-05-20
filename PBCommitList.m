@@ -30,7 +30,7 @@
 			[webView scrollPageDown: self];
 	}
 	else if ([character rangeOfCharacterFromSet:[NSCharacterSet characterSetWithCharactersInString:@"jkcv"]].location == 0)
-		[((PBWebHistoryController *)webController) sendKey: character];
+		[webController sendKey: character];
 	else
 		[super keyDown: event];
 }

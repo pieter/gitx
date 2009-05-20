@@ -13,6 +13,8 @@
 
 extern NSString* PBGitRepositoryErrorDomain;
 
+@class PBGitWindowController;
+
 @interface PBGitRepository : NSDocument {
 	PBGitRevList* revisionList;
 	PBGitConfig *config;
@@ -58,7 +60,7 @@ extern NSString* PBGitRepositoryErrorDomain;
 - (void) setup;
 
 @property (assign) BOOL hasChanged;
-@property (readonly) NSWindowController *windowController;
+@property (readonly) PBGitWindowController *windowController;
 @property (readonly) PBGitConfig *config;
 @property (retain) PBGitRevList* revisionList;
 @property (assign) NSMutableArray* branches;

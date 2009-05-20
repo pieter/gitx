@@ -174,7 +174,7 @@ NSString* PBGitRepositoryErrorDomain = @"GitXErrorDomain";
 #endif
 }
 
-- (NSWindowController *)windowController
+- (PBGitWindowController *)windowController
 {
 	if ([[self windowControllers] count] == 0)
 		return NULL;

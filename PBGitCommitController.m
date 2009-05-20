@@ -34,7 +34,7 @@
 }
 - (void) removeView
 {
-	[(PBWebChangesController *)webController closeView];
+	[webController closeView];
 	[super finalize];
 }
 
@@ -325,8 +325,8 @@
 	if (ret)
 		return [self commitFailedBecause:@"Could not update HEAD"];
 
-	[(PBWebChangesController *)webController setStateMessage:[NSString stringWithFormat:@"Successfully created commit %@", commit]];
-	
+	[webController setStateMessage:[NSString stringWithFormat:@"Successfully created commit %@", commit]];
+
 	repository.hasChanged = YES;
 	self.busy--;
 	[commitMessageView setString:@""];
