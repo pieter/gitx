@@ -163,7 +163,11 @@ NSString* PBGitRepositoryErrorDomain = @"GitXErrorDomain";
 
 - (BOOL)isBareRepository
 {
-	return [PBGitRepository isBareRepository:[self fileURL].path];
+	if([self workingDirectory]) {
+		return [PBGitRepository isBareRepository:[self workingDirectory]];
+	} else {
+		return true;
+	}
 }
 
 // Overridden to create our custom window controller
