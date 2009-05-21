@@ -66,7 +66,7 @@
 - (NSString*) contents
 {
 	if (!leaf)
-		return [NSString stringWithFormat:@"This is a tree with path %@", self];
+		return [NSString stringWithFormat:@"This is a tree with path %@", [self fullPath]];
 
 	NSData* data = nil;
 	
