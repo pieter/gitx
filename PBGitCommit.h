@@ -13,9 +13,6 @@
 
 @interface PBGitCommit : NSObject {
 	git_oid *sha;
-	git_oid **parentShas;
-	int nParents;
-	int inDegree; // Used for topological sort
 
 	NSString* subject;
 	NSString* author;
@@ -27,6 +24,10 @@
 	char sign;
 	id lineInfo;
 	PBGitRepository *repository;
+	@public 
+	int inDegree; // Used for topological sort
+	git_oid **parentShas;
+	int nParents;
 }
 
 - initWithRepository:(PBGitRepository *)repo andSha:(git_oid *)sha;

@@ -7,7 +7,7 @@
 //
 
 #import "PBGitCommit.h"
-
+#import "PBGitRevPool.h"
 
 @implementation PBGitCommit
 
@@ -17,15 +17,21 @@
 {
 	if (nParents == 0)
 		return NULL;
+	if (parents != nil)
+	{
+		if ([parents count] == nParents)
+			return parents;
+		else
+			NSLog(@"Parent count did not match");
+	}
 
 	int i;
 	NSMutableArray *p = [NSMutableArray arrayWithCapacity:nParents];
 	for (i = 0; i < nParents; ++i)
 	{
-		char *s = git_oid_mkhex(parentShas[i]);
-		[p addObject:[NSString stringWithUTF8String:s]];
-		free(s);
+		[p addObject:[[repository commitPool] commitWithOid:parentShas[i]]];
 	}
+	parents = p;
 	return p;
 }
 

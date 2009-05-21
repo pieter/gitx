@@ -21,7 +21,12 @@
 #include <ext/stdio_filebuf.h>
 #include <iostream>
 #include <string>
+#include <list>
+
 using namespace std;
+
+static void linearizeCommits(PBGitRevPool *pool, NSArray **commits, PBGitRepository *repository);
+
 
 @implementation PBGitRevList
 
@@ -73,13 +78,15 @@ using namespace std;
 - (void) walkRevisionListWithSpecifier:(PBGitRevSpecifier *)rev
 {
 	commits = [NSMutableArray array];
-	grapher = [[PBGitGrapher alloc] initWithRepository:repository];
 	PBGitRevPool *pool = [[PBGitRevPool alloc] initWithRepository:repository];
+	repository.commitPool = pool;
 	pool.delegate = self;
 	[pool loadRevisions:rev];
-	[self linearizeCommits: pool];
-	for (PBGitCommit *commit in commits)
-		[grapher decorateCommit: commit];
+	
+
+	int i = 0;
+	for (i = 0; i < 10; ++i)
+		linearizeCommits(pool, &commits, repository);
 
 	[self performSelectorOnMainThread:@selector(setCommits:) withObject:commits waitUntilDone:YES];
 }
@@ -90,22 +97,21 @@ using namespace std;
 	[commits addObject: commit];
 }
 
-- (void)linearizeCommits:(PBGitRevPool *)pool
+static void linearizeCommits(PBGitRevPool *pool, NSArray **commits, PBGitRepository *repository)
 {
 	NSDate *start = [NSDate date];
+	PBGitGrapher *grapher = [[PBGitGrapher alloc] initWithRepository:repository];
 
 	/* Mark them and clear the indegree */
-	for (PBGitCommit *commit in commits)
-		commit.inDegree = 1;
+	for (PBGitCommit *commit in *commits)
+		commit->inDegree = 1;
 
 	/* update the indegree */
-	for (PBGitCommit *commit in commits)
+	for (PBGitCommit *commit in *commits)
 	{
-		int pNum;
-		for (pNum = 0; pNum < commit.nParents; ++pNum) {
-			PBGitCommit *parent = [pool commitWithOid:commit.parentShas[pNum]];
-			if (parent.inDegree)
-				parent.inDegree++;
+		for (PBGitCommit *parent in [commit parents]) {
+			if (parent->inDegree)
+				parent->inDegree++;
 		}
 	}
 
@@ -117,23 +123,21 @@ using namespace std;
 	 *
 	 * the tips serve as a starting set for the work queue.
 	 */
-	NSMutableArray *tips = [NSMutableArray array];
-	for (PBGitCommit *commit in commits)
+	std::list<PBGitCommit *> tips;
+	for (PBGitCommit *commit in *commits)
 	{
-		if (commit.inDegree == 1)
-			[tips insertObject:commit atIndex:0];
+		if (commit->inDegree == 1)
+			tips.push_back(commit);
 	}
 
 	NSMutableArray *sortedCommits = [NSMutableArray array];
-	while ([tips count])
+	while (tips.size())
 	{
-		PBGitCommit *commit = [tips lastObject];
-		[tips removeLastObject];
-		int pNum;
-		int nParents = commit.nParents;
-		for (pNum = 0; pNum < nParents; ++pNum) {
-			PBGitCommit *parent = [pool commitWithOid:commit.parentShas[pNum]];
-			if (!parent.inDegree)
+		PBGitCommit *commit = tips.front();
+		tips.pop_front();
+
+		for (PBGitCommit *parent in [commit parents]) {
+			if (!parent->inDegree)
 				continue;
 			
 			/*
@@ -141,19 +145,20 @@ using namespace std;
 			 * when all their children have been emitted thereby
 			 * guaranteeing topological order.
 			 */
-			if (--parent.inDegree == 1)
-				[tips addObject:parent];
+			if (--parent->inDegree == 1)
+				tips.push_front(parent);
 		}
 		/*
 		 * current item is a commit all of whose children
 		 * have already been emitted. we can emit it now.
 		 */
 		[sortedCommits addObject:commit];
+		[grapher decorateCommit: commit];
 	}
 
-	commits = sortedCommits;
+	*commits = sortedCommits;
 	NSTimeInterval duration = [[NSDate date] timeIntervalSinceDate:start];
-	NSLog(@"Sorted %i commits in %f seconds", [commits count], duration);
+	NSLog(@"Sorted %i commits in %f seconds", [*commits count], duration);
 }
 
 @end
