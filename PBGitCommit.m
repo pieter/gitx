@@ -21,15 +21,17 @@
 	{
 		if ([parents count] == nParents)
 			return parents;
-		else
-			NSLog(@"Parent count did not match");
+//		else
+//			NSLog(@"Parent count did not match");
 	}
 
 	int i;
 	NSMutableArray *p = [NSMutableArray arrayWithCapacity:nParents];
 	for (i = 0; i < nParents; ++i)
 	{
-		[p addObject:[[repository commitPool] commitWithOid:parentShas[i]]];
+		PBGitCommit *commit = [[repository commitPool] commitWithOid:parentShas[i]];
+		if (commit)
+			[p addObject:commit];
 	}
 	parents = p;
 	return p;

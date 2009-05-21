@@ -77,17 +77,18 @@ static void linearizeCommits(PBGitRevPool *pool, NSArray **commits, PBGitReposit
 
 - (void) walkRevisionListWithSpecifier:(PBGitRevSpecifier *)rev
 {
+	grapher = [[PBGitGrapher alloc] initWithRepository:repository];
 	commits = [NSMutableArray array];
 	PBGitRevPool *pool = [[PBGitRevPool alloc] initWithRepository:repository];
 	repository.commitPool = pool;
 	pool.delegate = self;
 	[pool loadRevisions:rev];
-	
+	commitsLoaded = 0;
 
-	int i = 0;
-	for (i = 0; i < 10; ++i)
-		linearizeCommits(pool, &commits, repository);
+	[self linearizeCommits];
 
+	for (PBGitCommit *commit in commits)
+		[grapher decorateCommit:commit];
 	[self performSelectorOnMainThread:@selector(setCommits:) withObject:commits waitUntilDone:YES];
 }
 
@@ -95,19 +96,22 @@ static void linearizeCommits(PBGitRevPool *pool, NSArray **commits, PBGitReposit
 - (void)revPool:(PBGitRevPool *)pool encounteredCommit:(PBGitCommit *)commit
 {
 	[commits addObject: commit];
+	if (++commitsLoaded % 1000 == 0)
+		[self linearizeCommits];
 }
 
-static void linearizeCommits(PBGitRevPool *pool, NSArray **commits, PBGitRepository *repository)
+-(void) linearizeCommits
 {
+	
 	NSDate *start = [NSDate date];
-	PBGitGrapher *grapher = [[PBGitGrapher alloc] initWithRepository:repository];
+	//bool tipChanged = false;
 
 	/* Mark them and clear the indegree */
-	for (PBGitCommit *commit in *commits)
+	for (PBGitCommit *commit in commits)
 		commit->inDegree = 1;
 
 	/* update the indegree */
-	for (PBGitCommit *commit in *commits)
+	for (PBGitCommit *commit in commits)
 	{
 		for (PBGitCommit *parent in [commit parents]) {
 			if (parent->inDegree)
@@ -124,13 +128,14 @@ static void linearizeCommits(PBGitRevPool *pool, NSArray **commits, PBGitReposit
 	 * the tips serve as a starting set for the work queue.
 	 */
 	std::list<PBGitCommit *> tips;
-	for (PBGitCommit *commit in *commits)
+	for (PBGitCommit *commit in commits)
 	{
 		if (commit->inDegree == 1)
 			tips.push_back(commit);
 	}
 
 	NSMutableArray *sortedCommits = [NSMutableArray array];
+//	int i = 0;
 	while (tips.size())
 	{
 		PBGitCommit *commit = tips.front();
@@ -152,13 +157,17 @@ static void linearizeCommits(PBGitRevPool *pool, NSArray **commits, PBGitReposit
 		 * current item is a commit all of whose children
 		 * have already been emitted. we can emit it now.
 		 */
+//		if (tipChanged || [*commits objectAtIndex: i++] != commit)
+//		{
+//			tipChanged = true;
+//			[grapher decorateCommit: commit];
+//		}
 		[sortedCommits addObject:commit];
-		[grapher decorateCommit: commit];
 	}
 
-	*commits = sortedCommits;
+	commits = sortedCommits;
 	NSTimeInterval duration = [[NSDate date] timeIntervalSinceDate:start];
-	NSLog(@"Sorted %i commits in %f seconds", [*commits count], duration);
+	NSLog(@"Sorted %i commits in %f seconds", [commits count], duration);
 }
 
 @end

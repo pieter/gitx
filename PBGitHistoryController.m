@@ -8,7 +8,7 @@
 
 #import "PBGitHistoryController.h"
 #import "CWQuickLook.h"
-#import "PBGitGrapher.h"
+@class PBGitGrapher;
 #import "PBGitRevList.h"
 #import "PBGitRevisionCell.h"
 #import "PBCommitList.h"

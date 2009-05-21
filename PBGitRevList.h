@@ -13,14 +13,17 @@
 
 @interface PBGitRevList : NSObject {
 	NSMutableArray *commits;
+	NSMutableArray *newCommits;
 	PBGitRepository *repository;
 	PBGitGrapher *grapher;
 	NSString* lastSha;
+	int commitsLoaded;
 }
 
 - initWithRepository:(PBGitRepository *)repo;
 - (void)readCommitsForce:(BOOL)force;
 - (void)reload;
+- (void)linearizeCommits;
 
 @property (retain) NSMutableArray *commits;
 

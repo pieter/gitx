@@ -7,16 +7,19 @@
 //
 
 #import <Cocoa/Cocoa.h>
+#include "list"
 
 #import "PBGitCommit.h"
 #import "PBGitGraphLine.h"
 #import "PBGraphCellInfo.h"
+#import "PBGitLane.h"
 
 @class PBGitRepository;
 
 @interface PBGitGrapher : NSObject {
 	PBGraphCellInfo *previous;
-	void *pl;
+	std::list<PBGitLane *> *previousLanes;
+	std::list<PBGitLane *> *currentLanes;
 	int curLane;
 }
 

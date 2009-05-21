@@ -22,13 +22,14 @@ using namespace std;
 
 - initWithRepository:(PBGitRepository *)repo
 {
-	pl = new std::list<PBGitLane *>;
+	previousLanes = new std::list<PBGitLane *>;
+	currentLanes = new std::list<PBGitLane *>;
 
 	PBGitLane::resetColors();
 	return self;
 }
 
-void add_line(struct PBGitGraphLine *lines, int *nLines, int upper, int from, int to, int index)
+inline void add_line(struct PBGitGraphLine *lines, int *nLines, int upper, int from, int to, int index)
 {
 	// TODO: put in one thing
 	struct PBGitGraphLine a = { upper, from, to, index };
@@ -38,9 +39,8 @@ void add_line(struct PBGitGraphLine *lines, int *nLines, int upper, int from, in
 - (void) decorateCommit: (PBGitCommit *) commit
 {
 	int i = 0, newPos = -1;
-	std::list<PBGitLane *> *currentLanes = new std::list<PBGitLane *>;
-	std::list<PBGitLane *> *previousLanes = (std::list<PBGitLane *> *)pl;
 
+	currentLanes->clear();
 	int maxLines = (previousLanes->size() + commit.nParents + 2) * 2;
 	struct PBGitGraphLine *lines = (struct PBGitGraphLine *)malloc(sizeof(struct PBGitGraphLine) * maxLines);
 	int currentLine = 0;
@@ -48,48 +48,46 @@ void add_line(struct PBGitGraphLine *lines, int *nLines, int upper, int from, in
 	PBGitLane *currentLane = NULL;
 	BOOL didFirst = NO;
 	
-	// First, iterate over earlier columns and pass through any that don't want this commit
-	if (previous != nil) {
-		// We can't count until numColumns here, as it's only used for the width of the cell.
-		std::list<PBGitLane *>::iterator it = previousLanes->begin();
-		for (; it != previousLanes->end(); ++it) {
-			i++;
-			// This is our commit! We should do a "merge": move the line from
-			// our upperMapping to their lowerMapping
-			if ((*it)->isCommit([commit sha])) {
-				if (!didFirst) {
-					didFirst = YES;
-					currentLanes->push_back(*it);
-					currentLane = currentLanes->back();
-					newPos = currentLanes->size();
-					add_line(lines, &currentLine, 1, i, newPos,(*it)->index());
-					if (commit.nParents)
-						add_line(lines, &currentLine, 0, newPos, newPos,(*it)->index());
-				}
-				else {
-					add_line(lines, &currentLine, 1, i, newPos,(*it)->index());
-					delete *it;
-				}
+	// We can't count until numColumns here, as it's only used for the width of the cell.
+	std::list<PBGitLane *>::iterator it = previousLanes->begin();
+	for (; it != previousLanes->end(); ++it) {
+		i++;
+		// This is our commit! We should do a "merge": move the line from
+		// our upperMapping to their lowerMapping
+		if ((*it)->commit == commit) {
+			if (!didFirst) {
+				didFirst = YES;
+				currentLanes->push_back(*it);
+				currentLane = currentLanes->back();
+				newPos = currentLanes->size();
+				add_line(lines, &currentLine, 1, i, newPos,(*it)->index);
+				if (commit.nParents)
+					add_line(lines, &currentLine, 0, newPos, newPos,(*it)->index);
 			}
 			else {
-				// We are not this commit.
-				currentLanes->push_back(*it);
-				add_line(lines, &currentLine, 1, i, currentLanes->size(),(*it)->index());
-				add_line(lines, &currentLine, 0, currentLanes->size(), currentLanes->size(), (*it)->index());
+				add_line(lines, &currentLine, 1, i, newPos,(*it)->index);
+				delete *it;
 			}
-			// For existing columns, we always just continue straight down
-			// ^^ I don't know what that means anymore :(
-
 		}
+		else {
+			// We are not this commit.
+			currentLanes->push_back(*it);
+			add_line(lines, &currentLine, 1, i, currentLanes->size(),(*it)->index);
+			add_line(lines, &currentLine, 0, currentLanes->size(), currentLanes->size(), (*it)->index);
+		}
+		// For existing columns, we always just continue straight down
+		// ^^ I don't know what that means anymore :(
+
 	}
+
 	//Add your own parents
 
 	// If we already did the first parent, don't do so again
 	if (!didFirst && currentLanes->size() < MAX_LANES && commit.nParents) {
-		PBGitLane *newLane = new PBGitLane(*commit.parentShas);
+		PBGitLane *newLane = new PBGitLane([[commit parents] objectAtIndex:0]);
 		currentLanes->push_back(newLane);
 		newPos = currentLanes->size();
-		add_line(lines, &currentLine, 0, newPos, newPos, newLane->index());
+		add_line(lines, &currentLine, 0, newPos, newPos, newLane->index);
 	}
 
 	// Add all other parents
@@ -98,16 +96,20 @@ void add_line(struct PBGitGraphLine *lines, int *nLines, int upper, int from, in
 	// This boolean will tell us if that happened
 	BOOL addedParent = NO;
 
-	int parentIndex;
-	for (parentIndex = 1; parentIndex < commit.nParents; ++parentIndex) {
-		git_oid *parent = commit.parentShas[parentIndex];
+	BOOL first = true;
+	for (PBGitCommit *parent in [commit parents]) {
+		if (first)
+		{
+			first = false;
+			continue;
+		}
 		int i = 0;
 		BOOL was_displayed = NO;
 		std::list<PBGitLane *>::iterator it = currentLanes->begin();
 		for (; it != currentLanes->end(); ++it) {
 			i++;
-			if ((*it)->isCommit(parent)) {
-				add_line(lines, &currentLine, 0, i, newPos,(*it)->index());
+			if ((*it)->commit == parent) {
+				add_line(lines, &currentLine, 0, i, newPos,(*it)->index);
 				was_displayed = YES;
 				break;
 			}
@@ -122,7 +124,7 @@ void add_line(struct PBGitGraphLine *lines, int *nLines, int upper, int from, in
 		addedParent = YES;
 		PBGitLane *newLane = new PBGitLane(parent);
 		currentLanes->push_back(newLane);
-		add_line(lines, &currentLine, 0, currentLanes->size(), newPos, newLane->index());
+		add_line(lines, &currentLine, 0, currentLanes->size(), newPos, newLane->index);
 	}
 
 	previous = [[PBGraphCellInfo alloc] initWithPosition:newPos andLines:lines];
@@ -139,25 +141,22 @@ void add_line(struct PBGitGraphLine *lines, int *nLines, int upper, int from, in
 		previous.numColumns = currentLanes->size();
 
 	// Update the current lane to point to the new parent
-	if (currentLane && commit.nParents > 0)
-		currentLane->setSha(*commit.parentShas[0]);
+	if (currentLane && [[commit parents] count] > 0)
+		currentLane->commit = [[commit parents] objectAtIndex: 0];
 	else
 		currentLanes->remove(currentLane);
 
-	delete previousLanes;
-
-	pl = currentLanes;
+	previousLanes->swap(*currentLanes);
 	commit.lineInfo = previous;
 }
 
 - (void) finalize
 {
-	std::list<PBGitLane *> *lanes = (std::list<PBGitLane *> *)pl;
-	std::list<PBGitLane *>::iterator it = lanes->begin();
-	for (; it != lanes->end(); ++it)
+	std::list<PBGitLane *>::iterator it = previousLanes->begin();
+	for (; it != previousLanes->end(); ++it)
 		delete *it;
 
-	delete lanes;
+	delete previousLanes;
 
 	[super finalize];
 }

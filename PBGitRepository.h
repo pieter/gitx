@@ -12,13 +12,15 @@
 @class PBGitRevList;
 @class PBGitRevSpecifier;
 @class PBGitRef;
+@class PBGitRevPool;
 
 extern NSString* PBGitRepositoryErrorDomain;
 
 @interface PBGitRepository : NSDocument {
 	PBGitRevList *revisionList;
 	PBGitConfig *config;
-
+	PBGitRevPool *commitPool;
+	
 	BOOL hasChanged;
 	NSMutableArray *branches;
 	PBGitRevSpecifier *currentBranch;
@@ -66,4 +68,5 @@ extern NSString* PBGitRepositoryErrorDomain;
 @property (assign) NSMutableArray *branches;
 @property (assign) PBGitRevSpecifier *currentBranch;
 @property (retain) NSMutableDictionary *refs;
+@property (retain) PBGitRevPool *commitPool;
 @end

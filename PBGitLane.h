@@ -8,44 +8,29 @@
 #import <Cocoa/Cocoa.h>
 #include "git/oid.h"
 
-class PBGitLane {
+@class PBGitCommit;
+
+struct PBGitLane {
 	static int s_colorIndex;
 
-	git_oid d_sha;
-	int d_index;
+	PBGitCommit *commit;
+	int index;
 
-public:
-
-	PBGitLane(git_oid *sha)
+	PBGitLane(PBGitCommit *commit)
 	{
-		d_index = s_colorIndex++;
-		d_sha = *sha;
+		index = s_colorIndex++;
+		this->commit = commit;
 	}
 
-	PBGitLane(NSString *sha)
-	{
-		git_oid_mkstr(&d_sha, [sha UTF8String]);
-		d_index = s_colorIndex++;
-	}
-	
 	PBGitLane()
 	{
-		d_index = s_colorIndex++;
+		commit = nil;
+		index = s_colorIndex++;
 	}
 	
-	bool isCommit(git_oid *sha) const
-	{
-		return !git_oid_cmp(&d_sha, sha);
-	}
-	
-	void setSha(git_oid sha);
-	
-	git_oid const *sha() const
-	{
-		return &d_sha;
-	}
-	
-	int index() const;
-
 	static void resetColors();
+	bool operator ==(PBGitLane const &other)
+	{
+		return commit == other.commit && index == other.index;
+	}
 };
