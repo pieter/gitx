@@ -378,14 +378,19 @@ NSString* PBGitRepositoryErrorDomain = @"GitXErrorDomain";
 
 - (BOOL)executeHook:(NSString *)name output:(NSString **)output
 {
+	return [self executeHook:name withArgs:[NSArray array] output:output];
+}
+
+- (BOOL)executeHook:(NSString *)name withArgs:(NSArray *)arguments output:(NSString **)output
+{
 	NSString* hookPath = [[[[self fileURL] path] stringByAppendingPathComponent:@"hooks"] stringByAppendingPathComponent:name];
 	if (![[NSFileManager defaultManager] isExecutableFileAtPath:hookPath])
 		return TRUE;
 	int ret = 1;
 	if (output)
-		*output = [PBEasyPipe outputForCommand:hookPath withArgs:[NSArray array] inDir:[self workingDirectory] retValue:&ret];
+		*output = [PBEasyPipe outputForCommand:hookPath withArgs:arguments inDir:[self workingDirectory] retValue:&ret];
 	else
-		[PBEasyPipe outputForCommand:hookPath withArgs:[NSArray array] inDir:[self workingDirectory] retValue:&ret];
+		[PBEasyPipe outputForCommand:hookPath withArgs:arguments inDir:[self workingDirectory] retValue:&ret];
 
 	return ret == 0;
 }
