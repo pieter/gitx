@@ -320,6 +320,9 @@
 	if (![repository executeHook:@"pre-commit" output:nil])
 		return [self commitFailedBecause:@"Pre-commit hook failed"];
 
+	if (![repository executeHook:@"commit-msg" withArgs:[NSArray arrayWithObject:commitMessageFile] output:nil])
+    return [self commitFailedBecause:@"Commit-msg hook failed"];
+
 	[repository outputForArguments:[NSArray arrayWithObjects:@"update-ref", @"-m", commitSubject, @"HEAD", commit, nil]
 						  retValue: &ret];
 	if (ret)
