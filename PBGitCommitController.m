@@ -289,6 +289,12 @@
 	
 	commitSubject = [@"commit: " stringByAppendingString:commitSubject];
 
+	NSString *commitMessageFile;
+	commitMessageFile = [repository.fileURL.path
+						 stringByAppendingPathComponent:@"COMMIT_EDITMSG"];
+
+	[commitMessage writeToFile:commitMessageFile atomically:YES encoding:NSUTF8StringEncoding error:nil];
+
 	self.busy++;
 	self.status = @"Creating tree..";
 	NSString *tree = [repository outputForCommand:@"write-tree"];
