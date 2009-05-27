@@ -77,7 +77,6 @@ static void linearizeCommits(PBGitRevPool *pool, NSArray **commits, PBGitReposit
 
 - (void) walkRevisionListWithSpecifier:(PBGitRevSpecifier *)rev
 {
-	grapher = [[PBGitGrapher alloc] initWithRepository:repository];
 	commits = [NSMutableArray array];
 	PBGitRevPool *pool = [[PBGitRevPool alloc] initWithRepository:repository];
 	repository.commitPool = pool;
@@ -87,8 +86,13 @@ static void linearizeCommits(PBGitRevPool *pool, NSArray **commits, PBGitReposit
 
 	[self linearizeCommits];
 
-	for (PBGitCommit *commit in commits)
-		[grapher decorateCommit:commit];
+	size_t i;
+	for	(i = 0; i < 100; ++i) {
+		grapher = [[PBGitGrapher alloc] initWithRepository:repository];
+
+		for (PBGitCommit *commit in commits)
+			[grapher decorateCommit:commit];
+	}
 	[self performSelectorOnMainThread:@selector(setCommits:) withObject:commits waitUntilDone:YES];
 }
 
@@ -96,8 +100,8 @@ static void linearizeCommits(PBGitRevPool *pool, NSArray **commits, PBGitReposit
 - (void)revPool:(PBGitRevPool *)pool encounteredCommit:(PBGitCommit *)commit
 {
 	[commits addObject: commit];
-	if (++commitsLoaded % 1000 == 0)
-		[self linearizeCommits];
+//	if (++commitsLoaded % 1000 == 0)
+//		[self linearizeCommits];
 }
 
 -(void) linearizeCommits
