@@ -61,7 +61,7 @@ inline void add_line(struct PBGitGraphLine *lines, int *nLines, int upper, int f
 				currentLane = currentLanes->back();
 				newPos = currentLanes->size();
 				add_line(lines, &currentLine, 1, i, newPos,(*it)->index);
-				if (commit.nParents)
+				if (commit.nParents) // continue straight down if the commit has parents
 					add_line(lines, &currentLine, 0, newPos, newPos,(*it)->index);
 			}
 			else {
@@ -70,20 +70,17 @@ inline void add_line(struct PBGitGraphLine *lines, int *nLines, int upper, int f
 			}
 		}
 		else {
-			// We are not this commit.
+			// We are not this commit. Continue down
 			currentLanes->push_back(*it);
 			add_line(lines, &currentLine, 1, i, currentLanes->size(),(*it)->index);
 			add_line(lines, &currentLine, 0, currentLanes->size(), currentLanes->size(), (*it)->index);
 		}
-		// For existing columns, we always just continue straight down
-		// ^^ I don't know what that means anymore :(
-
 	}
 
 	//Add your own parents
 
-	// If we already did the first parent, don't do so again
-	if (!didFirst && currentLanes->size() < MAX_LANES && commit.nParents) {
+	// Create a lane for our first parent, if we haven't done so.
+	if (!didFirst && currentLanes->size() < MAX_LANES && [[commit parents] count]) {
 		PBGitLane *newLane = new PBGitLane([[commit parents] objectAtIndex:0]);
 		currentLanes->push_back(newLane);
 		newPos = currentLanes->size();
