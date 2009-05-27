@@ -9,7 +9,9 @@
 #import <Cocoa/Cocoa.h>
 #import "PBViewController.h"
 
+@class PBGitIndexController;
 @class PBIconAndTextCell;
+@class PBWebChangesController;
 
 @interface PBGitCommitController : PBViewController {
 	NSMutableArray *files;
@@ -18,8 +20,8 @@
 	IBOutlet NSArrayController *unstagedFilesController;
 	IBOutlet NSArrayController *cachedFilesController;
 
-	IBOutlet id indexController;
-	IBOutlet id webController;
+	IBOutlet PBGitIndexController *indexController;
+	IBOutlet PBWebChangesController *webController;
 
 	NSString *status;
 

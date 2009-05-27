@@ -53,11 +53,11 @@
 
 	if ([arguments count] > 0 && ([[arguments objectAtIndex:0] isEqualToString:@"--commit"] ||
 		[[arguments objectAtIndex:0] isEqualToString:@"-c"]))
-		[((PBGitWindowController *)document.windowController) showCommitView:self];
+		[document.windowController showCommitView:self];
 	else {
 		PBGitRevSpecifier* rev = [[PBGitRevSpecifier alloc] initWithParameters:arguments];
 		document.currentBranch = [document addBranch: rev];
-		[(PBGitWindowController *)document.windowController showHistoryView:self];
+		[document.windowController showHistoryView:self];
 	}
 	[NSApp activateIgnoringOtherApps:YES];
 

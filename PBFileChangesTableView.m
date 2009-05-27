@@ -15,7 +15,7 @@
 - (NSMenu *)menuForEvent:(NSEvent *)theEvent
 {
 	if ([self delegate])
-		return [(PBGitIndexController *)[self delegate] menuForTable: self];
+		return [[self delegate] menuForTable: self];
 
 	return nil;
 }
