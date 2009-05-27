@@ -44,8 +44,17 @@
 		return;
 	amend = newAmend;
 
-	if (amend && [[commitMessageView string] length] <= 3)
-		commitMessageView.string = [repository outputForCommand:@"log -1 --pretty=format:%s%n%n%b HEAD"];
+	// Replace commit message with the old one if it's less than 3 characters long.
+	// This is just a random number.
+	if (amend && [[commitMessageView string] length] <= 3) {
+		NSString *message = [repository outputForCommand:@"cat-file commit HEAD"];
+		NSRange r = [message rangeOfString:@"\n\n"];
+		if (r.location != NSNotFound)
+			message = [message substringFromIndex:r.location + 2];
+
+		commitMessageView.string = message;
+	}
+
 
 	[self refresh:self];
 }
