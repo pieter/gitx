@@ -127,7 +127,7 @@ using namespace std;
 		NSStringEncoding encoding = NSUTF8StringEncoding;
 		if (encoding_str.length())
 		{
-			if (encodingMap.count(encoding_str)) {
+			if (encodingMap.find(encoding_str) != encodingMap.end()) {
 				encoding = encodingMap[encoding_str];
 			} else {
 				encoding = CFStringConvertEncodingToNSStringEncoding(CFStringConvertIANACharSetNameToEncoding((CFStringRef)[NSString stringWithUTF8String:encoding_str.c_str()]));
