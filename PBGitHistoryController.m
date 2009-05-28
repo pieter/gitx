@@ -39,7 +39,8 @@
 	// Set a sort descriptor for the subject column in the history list, as
 	// It can't be sorted by default (because it's bound to a PBGitCommit)
 	[[commitList tableColumnWithIdentifier:@"subject"] setSortDescriptorPrototype:[[NSSortDescriptor alloc] initWithKey:@"subject" ascending:YES]];
-
+	// Add a menu that allows a user to select which columns to view
+	[[commitList headerView] setMenu:[self tableColumnMenu]];
 	[super awakeFromNib];
 }
 
@@ -200,6 +201,21 @@
 	[repository removeObserver:self forKeyPath:@"currentBranch"];
 
 	[super removeView];
+}
+
+- (NSMenu *)tableColumnMenu
+{
+	NSMenu *menu = [[NSMenu alloc] initWithTitle:@"Table columns menu"];
+	for (NSTableColumn *column in [commitList tableColumns]) {
+		NSMenuItem *item = [[NSMenuItem alloc] init];
+		[item setTitle:[[column headerCell] stringValue]];
+		[item bind:@"value"
+		  toObject:column
+	   withKeyPath:@"hidden"
+		   options:[NSDictionary dictionaryWithObject:@"NSNegateBoolean" forKey:NSValueTransformerNameBindingOption]];
+		[menu addItem:item];
+	}
+	return menu;
 }
 
 @end

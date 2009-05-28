@@ -25,7 +25,6 @@
 	PBGitCommit* webCommit;
 	PBGitCommit* rawCommit;
 	PBGitCommit* realCommit;
-	
 }
 
 @property (assign) int selectedTab;
@@ -46,4 +45,6 @@
 - (void) copyCommitInfo;
 
 - (BOOL) hasNonlinearPath;
+
+- (NSMenu *)tableColumnMenu;
 @end
