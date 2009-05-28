@@ -130,7 +130,7 @@
 												<object class="NSMutableArray" key="NSTableColumns">
 													<bool key="EncodedWithXMLCoder">YES</bool>
 													<object class="NSTableColumn" id="1025472344">
-														<string key="NSIdentifier">subject</string>
+														<string key="NSIdentifier">SubjectColumn</string>
 														<double key="NSWidth">5.090000e+02</double>
 														<double key="NSMinWidth">4.000000e+01</double>
 														<double key="NSMaxWidth">1.000000e+03</double>
@@ -188,6 +188,7 @@
 														<reference key="NSTableView" ref="254268962"/>
 													</object>
 													<object class="NSTableColumn" id="792589327">
+														<string key="NSIdentifier">AuthorColumn</string>
 														<double key="NSWidth">1.900000e+02</double>
 														<double key="NSMinWidth">4.000000e+01</double>
 														<double key="NSMaxWidth">1.000000e+03</double>
@@ -213,6 +214,7 @@
 														<reference key="NSTableView" ref="254268962"/>
 													</object>
 													<object class="NSTableColumn" id="976830280">
+														<string key="NSIdentifier">DateColumn</string>
 														<double key="NSWidth">1.440000e+02</double>
 														<double key="NSMinWidth">1.000000e+01</double>
 														<double key="NSMaxWidth">3.402823e+38</double>
@@ -259,7 +261,7 @@
 													</object>
 												</object>
 												<double key="NSRowHeight">1.700000e+01</double>
-												<int key="NSTvFlags">-700448768</int>
+												<int key="NSTvFlags">-683671552</int>
 												<string key="NSAutosaveName">CommitView</string>
 												<int key="NSColumnAutoresizingStyle">5</int>
 												<int key="NSDraggingSourceMaskForLocal">15</int>
@@ -3059,13 +3061,11 @@
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<string>contextMenuDelegate</string>
 							<string>controller</string>
-							<string>objectValue</string>
 						</object>
 						<object class="NSMutableArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<string>id</string>
 							<string>PBGitHistoryController</string>
-							<string>id</string>
 						</object>
 					</object>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
