@@ -16,6 +16,7 @@
 #include <ext/stdio_filebuf.h>
 #include <iostream>
 #include <string>
+#include <map>
 
 using namespace std;
 
@@ -71,6 +72,7 @@ using namespace std;
 	NSDate *start = [NSDate date];
 	NSMutableArray* revisions = [NSMutableArray array];
 	PBGitGrapher* g = [[PBGitGrapher alloc] initWithRepository: repository];
+	std::map<string, NSStringEncoding> encodingMap;
 
 	NSMutableArray* arguments;
 	BOOL showSign = [rev hasLeftRight];
@@ -124,7 +126,14 @@ using namespace std;
 		getline(stream, encoding_str, '\1');
 		NSStringEncoding encoding = NSUTF8StringEncoding;
 		if (encoding_str.length())
-			encoding = CFStringConvertEncodingToNSStringEncoding(CFStringConvertIANACharSetNameToEncoding((CFStringRef)[NSString stringWithUTF8String:encoding_str.c_str()]));
+		{
+			if (encodingMap.count(encoding_str)) {
+				encoding = encodingMap[encoding_str];
+			} else {
+				encoding = CFStringConvertEncodingToNSStringEncoding(CFStringConvertIANACharSetNameToEncoding((CFStringRef)[NSString stringWithUTF8String:encoding_str.c_str()]));
+				encodingMap[encoding_str] = encoding;
+			}
+		}
 
 		git_oid oid;
 		git_oid_mkstr(&oid, sha.c_str());
