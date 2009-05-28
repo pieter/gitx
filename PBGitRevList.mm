@@ -111,7 +111,11 @@ using namespace std;
 			[self performSelectorOnMainThread:@selector(setCommits:) withObject:revisions waitUntilDone:NO];
 			g = [[PBGitGrapher alloc] initWithRepository: repository];
 			revisions = [NSMutableArray array];
-			
+
+			// If the length is < 40, then there are no commits.. quit now
+			if (sha.length() < 40)
+				break;
+
 			sha = sha.substr(sha.length() - 40, 40);
 		}
 
