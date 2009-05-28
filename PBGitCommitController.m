@@ -11,6 +11,14 @@
 #import "PBChangedFile.h"
 #import "PBWebChangesController.h"
 
+
+@interface PBGitCommitController (PrivateMethods)
+- (NSArray *) linesFromNotification:(NSNotification *)notification;
+- (void) doneProcessingIndex;
+- (NSMutableDictionary *)dictionaryForLines:(NSArray *)lines;
+- (void) addFilesFromDictionary:(NSMutableDictionary *)dictionary cached:(BOOL)cached tracked:(BOOL)tracked;
+@end
+
 @implementation PBGitCommitController
 
 @synthesize files, status, busy, amend;
@@ -94,10 +102,6 @@
 	if (![repository workingDirectory])
 		return;
 
-	// Mark all files for deletion. We'll undo the files we want to keep later
-	for (PBChangedFile *file in files)
-		file.shouldBeDeleted = YES;
-
 	self.status = @"Refreshing index…";
 
 	// If self.busy reaches 0, all tasks have finished
@@ -143,10 +147,11 @@
 	[self willChangeValueForKey:@"files"];
 	if (!--self.busy) {
 		self.status = @"Ready";
-		NSArray *filesToBeDeleted = [files filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"shouldBeDeleted == 1"]];
-		for (PBChangedFile *file in filesToBeDeleted) {
+		for (PBChangedFile *file in files) {
+			if (!file.hasCachedChanges && !file.hasUnstagedChanges) {
 				NSLog(@"Deleting file: %@", [file path]);
 				[files removeObject:file];
+			}
 		}
 	}
 	[self didChangeValueForKey:@"files"];
@@ -156,40 +161,19 @@
 {
 	[unstagedFilesController setAutomaticallyRearrangesObjects:NO];
 	NSArray *lines = [self linesFromNotification:notification];
-	for (NSString *line in lines) {
-		if ([line length] == 0)
+	NSMutableDictionary *dictionary = [[NSMutableDictionary alloc] initWithCapacity:[lines count]];
+	// We fake this files status as good as possible.
+	NSArray *fileStatus = [NSArray arrayWithObjects:@":000000", @"100644", @"0000000000000000000000000000000000000000", @"0000000000000000000000000000000000000000", @"A", nil];
+	for (NSString *path in lines) {
+		if ([path length] == 0)
 			continue;
-
-		BOOL added = NO;
-		// Check if file is already in our index
-		// FIXME: this is O(N^2)
-		for (PBChangedFile *file in files) {
-			if ([[file path] isEqualToString:line]) {
-				file.shouldBeDeleted = NO;
-				added = YES;
-				file.status = NEW;
-				file.hasCachedChanges = NO;
-				file.hasUnstagedChanges = YES;
-				break;
-			}
-		}
-
-		if (added)
-			continue;
-
-		// File does not exist yet, so add it
-		PBChangedFile *file =[[PBChangedFile alloc] initWithPath:line];
-		file.status = NEW;
-		file.hasCachedChanges = NO;
-		file.hasUnstagedChanges = YES;
-		[files addObject: file];
+		[dictionary setObject:fileStatus forKey:path];
 	}
-	[unstagedFilesController setAutomaticallyRearrangesObjects:YES];
-	[unstagedFilesController rearrangeObjects];
+	[self addFilesFromDictionary:dictionary cached:NO tracked:NO];
 	[self doneProcessingIndex];
 }
 
-- (void) addFilesFromLines:(NSArray *)lines cached:(BOOL) cached
+- (NSMutableDictionary *)dictionaryForLines:(NSArray *)lines
 {
 	NSMutableDictionary *dictionary = [NSMutableDictionary dictionaryWithCapacity:[lines count]/2];
 
@@ -206,28 +190,39 @@
 		even = FALSE;
 		[dictionary setObject:fileStatus forKey:line];
 	}
+	return dictionary;
+}
 
+- (void) addFilesFromDictionary:(NSMutableDictionary *)dictionary cached:(BOOL)cached tracked:(BOOL)tracked
+{
 	// Iterate over all existing files
 	for (PBChangedFile *file in files) {
 		NSArray *fileStatus = [dictionary objectForKey:file.path];
 		// Object found, this is still a cached / uncached thing
 		if (fileStatus) {
-			NSString *mode = [[fileStatus objectAtIndex:0] substringFromIndex:1];
-			NSString *sha = [fileStatus objectAtIndex:2];
-			file.shouldBeDeleted = NO;
+			if (tracked) {
+				NSString *mode = [[fileStatus objectAtIndex:0] substringFromIndex:1];
+				NSString *sha = [fileStatus objectAtIndex:2];
 
-			if (cached) {
-				file.hasCachedChanges = YES;
-				file.commitBlobSHA = sha;
-				file.commitBlobMode = mode;
-			} else
+				if (cached) {
+					file.hasCachedChanges = YES;
+					file.commitBlobSHA = sha;
+					file.commitBlobMode = mode;
+				} else
+					file.hasUnstagedChanges = YES;
+			} else {
+				// Untracked file, set status to NEW, only unstaged changes
+				file.hasCachedChanges = NO;
 				file.hasUnstagedChanges = YES;
-
+				file.status = NEW;
+			}
 			[dictionary removeObjectForKey:file.path];
 		} else { // Object not found, let's remove it from the changes
 			if (cached)
 				file.hasCachedChanges = NO;
-			else if (file.status != NEW)
+			else if (tracked && file.status != NEW) // Only remove it if it's not an untracked file. We handle that with the other thing
+				file.hasUnstagedChanges = NO;
+			else if (!tracked && file.status == NEW)
 				file.hasUnstagedChanges = NO;
 		}
 	}
@@ -235,8 +230,6 @@
 	// Do new files
 	for (NSString *path in [dictionary allKeys]) {
 		NSArray *fileStatus = [dictionary objectForKey:path];
-		NSString *mode = [[fileStatus objectAtIndex:0] substringFromIndex:1];
-		NSString *sha = [fileStatus objectAtIndex:2];
 
 		PBChangedFile *file = [[PBChangedFile alloc] initWithPath:path];
 		if ([[fileStatus objectAtIndex:4] isEqualToString:@"D"])
@@ -246,8 +239,10 @@
 		else
 			file.status = MODIFIED;
 
-		file.commitBlobSHA = sha;
-		file.commitBlobMode = mode;
+		if (cached) {
+			file.commitBlobSHA = [[fileStatus objectAtIndex:0] substringFromIndex:1];
+			file.commitBlobMode = [fileStatus objectAtIndex:2];
+		}
 
 		file.hasCachedChanges = cached;
 		file.hasUnstagedChanges = !cached;
@@ -259,14 +254,16 @@
 - (void) readUnstagedFiles:(NSNotification *)notification
 {
 	NSArray *lines = [self linesFromNotification:notification];
-	[self addFilesFromLines:lines cached:NO];
+	NSMutableDictionary *dic = [self dictionaryForLines:lines];
+	[self addFilesFromDictionary:dic cached:NO tracked:YES];
 	[self doneProcessingIndex];
 }
 
 - (void) readCachedFiles:(NSNotification *)notification
 {
 	NSArray *lines = [self linesFromNotification:notification];
-	[self addFilesFromLines:lines cached:YES];
+	NSMutableDictionary *dic = [self dictionaryForLines:lines];
+	[self addFilesFromDictionary:dic cached:YES tracked:YES];
 	[self doneProcessingIndex];
 }
 
