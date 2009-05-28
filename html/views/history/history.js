@@ -207,7 +207,7 @@ var showDiff = function() {
 			buttonType = "changed"
 			link.appendChild(document.createTextNode(name1));
 			if (mode_change)
-				p.appendChild(document.createTextNode("mode " + old_mode + " &#8594; " + new_mode));
+				p.appendChild(document.createTextNode(" mode " + old_mode + " -> " + new_mode));
 		}
 		else if (name1 == "/dev/null") {
 			buttonType = "created";
@@ -220,7 +220,7 @@ var showDiff = function() {
 		else {
 			buttonType = "renamed";
 			link.appendChild(document.createTextNode(name2));
-			p.insertBefore(document.createTextNode(name1), link);
+			p.insertBefore(document.createTextNode(name1 + " -> "), link);
 		}
 		button.setAttribute("class", "button " + buttonType);
 		button.appendChild(document.createTextNode(buttonType));
