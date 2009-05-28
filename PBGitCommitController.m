@@ -191,42 +191,54 @@
 
 - (void) addFilesFromLines:(NSArray *)lines cached:(BOOL) cached
 {
+	NSMutableDictionary *dictionary = [NSMutableDictionary dictionaryWithCapacity:[lines count]/2];
+
+	// Fill the dictionary with the new information
 	NSArray *fileStatus;
-	int even = 0;
+	BOOL even = FALSE;
 	for (NSString *line in lines) {
 		if (!even) {
-			even = 1;
+			even = TRUE;
 			fileStatus = [line componentsSeparatedByString:@" "];
 			continue;
 		}
-		even = 0;
 
+		even = FALSE;
+		[dictionary setObject:fileStatus forKey:line];
+	}
+
+	// Iterate over all existing files
+	for (PBChangedFile *file in files) {
+		NSArray *fileStatus = [dictionary objectForKey:file.path];
+		// Object found, this is still a cached / uncached thing
+		if (fileStatus) {
+			NSString *mode = [[fileStatus objectAtIndex:0] substringFromIndex:1];
+			NSString *sha = [fileStatus objectAtIndex:2];
+			file.shouldBeDeleted = NO;
+
+			if (cached) {
+				file.hasCachedChanges = YES;
+				file.commitBlobSHA = sha;
+				file.commitBlobMode = mode;
+			} else
+				file.hasUnstagedChanges = YES;
+
+			[dictionary removeObjectForKey:file.path];
+		} else { // Object not found, let's remove it from the changes
+			if (cached)
+				file.hasCachedChanges = NO;
+			else if (file.status != NEW)
+				file.hasUnstagedChanges = NO;
+		}
+	}
+
+	// Do new files
+	for (NSString *path in [dictionary allKeys]) {
+		NSArray *fileStatus = [dictionary objectForKey:path];
 		NSString *mode = [[fileStatus objectAtIndex:0] substringFromIndex:1];
 		NSString *sha = [fileStatus objectAtIndex:2];
 
-		BOOL isNew = YES;
-		// If the file is already added, we shouldn't add it again
-		// but rather update it to incorporate our changes
-		for (PBChangedFile *file in files) {
-			if ([file.path isEqualToString:line]) {
-				if (cached && file.hasCachedChanges) {			// if we're listing cached files
-					file.shouldBeDeleted = NO;			// and the matching file in files had cached changes
-					file.commitBlobSHA = sha;			// we don't delete it
-					file.commitBlobMode = mode;
-					isNew = NO;
-					break;
-				} else if ((!cached) && file.hasUnstagedChanges) {	// if we're listing unstaged files and the
-					file.shouldBeDeleted = NO;			// matching file in files had unstaged changes
-					isNew = NO;					// we don't delete it
-					break;
-				}
-			}
-		}
-
-		if (!isNew)
-			continue;
-
-		PBChangedFile *file = [[PBChangedFile alloc] initWithPath:line];
+		PBChangedFile *file = [[PBChangedFile alloc] initWithPath:path];
 		if ([[fileStatus objectAtIndex:4] isEqualToString:@"D"])
 			file.status = DELETED;
 		else if([[fileStatus objectAtIndex:0] isEqualToString:@":000000"])
@@ -242,7 +254,6 @@
 
 		[files addObject: file];
 	}
-
 }
 
 - (void) readUnstagedFiles:(NSNotification *)notification
