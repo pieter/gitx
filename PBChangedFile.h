@@ -17,7 +17,7 @@ typedef enum {
 
 @interface PBChangedFile : NSObject {
 	NSString *path;
-	BOOL hasCachedChanges;
+	BOOL hasStagedChanges;
 	BOOL hasUnstagedChanges;
 
 	// Index and HEAD stuff, to be used to revert changes
@@ -30,7 +30,7 @@ typedef enum {
 
 @property (copy) NSString *path, *commitBlobSHA, *commitBlobMode;
 @property (assign) PBChangedFileStatus status;
-@property (assign) BOOL hasCachedChanges, hasUnstagedChanges;
+@property (assign) BOOL hasStagedChanges, hasUnstagedChanges;
 
 - (NSImage *)icon;
 - (NSString *)indexInfo;

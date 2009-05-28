@@ -58,7 +58,7 @@
 	for (PBChangedFile *file in files)
 	{
 		file.hasUnstagedChanges = NO;
-		file.hasCachedChanges = YES;
+		file.hasStagedChanges = YES;
 	}
 	[self resumeTrackingIndex];
 }
@@ -85,7 +85,7 @@
 	for (PBChangedFile *file in files)
 	{
 		file.hasUnstagedChanges = YES;
-		file.hasCachedChanges = NO;
+		file.hasStagedChanges = NO;
 	}
 	[self resumeTrackingIndex];
 }

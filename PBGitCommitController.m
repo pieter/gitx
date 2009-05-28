@@ -16,7 +16,7 @@
 - (NSArray *) linesFromNotification:(NSNotification *)notification;
 - (void) doneProcessingIndex;
 - (NSMutableDictionary *)dictionaryForLines:(NSArray *)lines;
-- (void) addFilesFromDictionary:(NSMutableDictionary *)dictionary cached:(BOOL)cached tracked:(BOOL)tracked;
+- (void) addFilesFromDictionary:(NSMutableDictionary *)dictionary staged:(BOOL)staged tracked:(BOOL)tracked;
 @end
 
 @implementation PBGitCommitController
@@ -32,7 +32,7 @@
 	[commitMessageView setTypingAttributes:[NSDictionary dictionaryWithObject:[NSFont fontWithName:@"Monaco" size:12.0] forKey:NSFontAttributeName]];
 	
 	[unstagedFilesController setFilterPredicate:[NSPredicate predicateWithFormat:@"hasUnstagedChanges == 1"]];
-	[cachedFilesController setFilterPredicate:[NSPredicate predicateWithFormat:@"hasCachedChanges == 1"]];
+	[cachedFilesController setFilterPredicate:[NSPredicate predicateWithFormat:@"hasStagedChanges == 1"]];
 	
 	[unstagedFilesController setSortDescriptors:[NSArray arrayWithObjects:
 		[[NSSortDescriptor alloc] initWithKey:@"status" ascending:false],
@@ -148,7 +148,7 @@
 	if (!--self.busy) {
 		self.status = @"Ready";
 		for (PBChangedFile *file in files) {
-			if (!file.hasCachedChanges && !file.hasUnstagedChanges) {
+			if (!file.hasStagedChanges && !file.hasUnstagedChanges) {
 				NSLog(@"Deleting file: %@", [file path]);
 				[files removeObject:file];
 			}
@@ -169,7 +169,7 @@
 			continue;
 		[dictionary setObject:fileStatus forKey:path];
 	}
-	[self addFilesFromDictionary:dictionary cached:NO tracked:NO];
+	[self addFilesFromDictionary:dictionary staged:NO tracked:NO];
 	[self doneProcessingIndex];
 }
 
@@ -193,7 +193,7 @@
 	return dictionary;
 }
 
-- (void) addFilesFromDictionary:(NSMutableDictionary *)dictionary cached:(BOOL)cached tracked:(BOOL)tracked
+- (void) addFilesFromDictionary:(NSMutableDictionary *)dictionary staged:(BOOL)staged tracked:(BOOL)tracked
 {
 	// Iterate over all existing files
 	for (PBChangedFile *file in files) {
@@ -204,22 +204,22 @@
 				NSString *mode = [[fileStatus objectAtIndex:0] substringFromIndex:1];
 				NSString *sha = [fileStatus objectAtIndex:2];
 
-				if (cached) {
-					file.hasCachedChanges = YES;
+				if (staged) {
+					file.hasStagedChanges = YES;
 					file.commitBlobSHA = sha;
 					file.commitBlobMode = mode;
 				} else
 					file.hasUnstagedChanges = YES;
 			} else {
 				// Untracked file, set status to NEW, only unstaged changes
-				file.hasCachedChanges = NO;
+				file.hasStagedChanges = NO;
 				file.hasUnstagedChanges = YES;
 				file.status = NEW;
 			}
 			[dictionary removeObjectForKey:file.path];
 		} else { // Object not found, let's remove it from the changes
-			if (cached)
-				file.hasCachedChanges = NO;
+			if (staged)
+				file.hasStagedChanges = NO;
 			else if (tracked && file.status != NEW) // Only remove it if it's not an untracked file. We handle that with the other thing
 				file.hasUnstagedChanges = NO;
 			else if (!tracked && file.status == NEW)
@@ -239,13 +239,13 @@
 		else
 			file.status = MODIFIED;
 
-		if (cached) {
+		if (staged) {
 			file.commitBlobSHA = [[fileStatus objectAtIndex:0] substringFromIndex:1];
 			file.commitBlobMode = [fileStatus objectAtIndex:2];
 		}
 
-		file.hasCachedChanges = cached;
-		file.hasUnstagedChanges = !cached;
+		file.hasStagedChanges = staged;
+		file.hasUnstagedChanges = !staged;
 
 		[files addObject: file];
 	}
@@ -255,7 +255,7 @@
 {
 	NSArray *lines = [self linesFromNotification:notification];
 	NSMutableDictionary *dic = [self dictionaryForLines:lines];
-	[self addFilesFromDictionary:dic cached:NO tracked:YES];
+	[self addFilesFromDictionary:dic staged:NO tracked:YES];
 	[self doneProcessingIndex];
 }
 
@@ -263,7 +263,7 @@
 {
 	NSArray *lines = [self linesFromNotification:notification];
 	NSMutableDictionary *dic = [self dictionaryForLines:lines];
-	[self addFilesFromDictionary:dic cached:YES tracked:YES];
+	[self addFilesFromDictionary:dic staged:YES tracked:YES];
 	[self doneProcessingIndex];
 }
 

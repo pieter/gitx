@@ -11,7 +11,7 @@
 
 @implementation PBChangedFile
 
-@synthesize path, status, hasCachedChanges, hasUnstagedChanges, commitBlobSHA, commitBlobMode;
+@synthesize path, status, hasStagedChanges, hasUnstagedChanges, commitBlobSHA, commitBlobMode;
 
 - (id) initWithPath:(NSString *)p
 {
