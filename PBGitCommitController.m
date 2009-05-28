@@ -91,24 +91,26 @@
 
 - (void) refresh:(id) sender
 {
+	if (![repository workingDirectory])
+		return;
+
+	// Mark all files for deletion. We'll undo the files we want to keep later
 	for (PBChangedFile *file in files)
 		file.shouldBeDeleted = YES;
 
 	self.status = @"Refreshing index…";
-	if (![repository workingDirectory]) {
-	//if ([[repository outputForCommand:@"rev-parse --is-inside-work-tree"] isEqualToString:@"false"]) {
-		return;
-	}
 
-	self.busy++;
+	// If self.busy reaches 0, all tasks have finished
+	self.busy = 0;
 
+	// Refresh the index, necessary for the next methods (that's why it's blocking)
+	// FIXME: Make this non-blocking. This call can be expensive in large repositories
 	[repository outputInWorkdirForArguments:[NSArray arrayWithObjects:@"update-index", @"-q", @"--unmerged", @"--ignore-missing", @"--refresh", nil]];
-	self.busy--;
 
 	NSNotificationCenter *nc = [NSNotificationCenter defaultCenter]; 
 	[nc removeObserver:self]; 
 
-	// Other files
+	// Other files (not tracked, not ignored)
 	NSArray *arguments = [NSArray arrayWithObjects:@"ls-files", @"--others", @"--exclude-standard", @"-z", nil];
 	NSFileHandle *handle = [repository handleInWorkDirForArguments:arguments];
 	[nc addObserver:self selector:@selector(readOtherFiles:) name:NSFileHandleReadToEndOfFileCompletionNotification object:handle]; 
@@ -121,7 +123,7 @@
 	self.busy++;
 	[handle readToEndOfFileInBackgroundAndNotify];
 
-	// Cached files
+	// Staged files
 	handle = [repository handleInWorkDirForArguments:[NSArray arrayWithObjects:@"diff-index", @"--cached", @"-z", [self parentTree], nil]];
 	[nc addObserver:self selector:@selector(readCachedFiles:) name:NSFileHandleReadToEndOfFileCompletionNotification object:handle]; 
 	self.busy++;
@@ -133,6 +135,9 @@
 	[self refresh:nil];
 }
 
+// This method is called for each of the three processes from above.
+// If all three are finished (self.busy == 0), then we can delete
+// all files previously marked as deletable
 - (void) doneProcessingIndex
 {
 	[self willChangeValueForKey:@"files"];
@@ -157,6 +162,7 @@
 
 		BOOL added = NO;
 		// Check if file is already in our index
+		// FIXME: this is O(N^2)
 		for (PBChangedFile *file in files) {
 			if ([[file path] isEqualToString:line]) {
 				file.shouldBeDeleted = NO;
@@ -341,12 +347,16 @@
 	if (reverse)
 		[array addObject:@"--reverse"];
 
-	int ret;
+	int ret = 1;
 	NSString *error = [repository outputForArguments:array
 										 inputString:hunk
-											retValue: &ret];
+											retValue:&ret];
+
+	// FIXME: show this error, rather than just logging it
 	if (ret)
 		NSLog(@"Error: %@", error);
-	[self refresh:self]; // TODO: We should do this smarter by checking if the file diff is empty, which is faster.
+
+	// TODO: We should do this smarter by checking if the file diff is empty, which is faster.
+	[self refresh:self]; 
 }
 @end
