@@ -11,6 +11,14 @@
 #import "PBChangedFile.h"
 #import "PBWebChangesController.h"
 
+
+@interface PBGitCommitController (PrivateMethods)
+- (NSArray *) linesFromNotification:(NSNotification *)notification;
+- (void) doneProcessingIndex;
+- (NSMutableDictionary *)dictionaryForLines:(NSArray *)lines;
+- (void) addFilesFromDictionary:(NSMutableDictionary *)dictionary staged:(BOOL)staged tracked:(BOOL)tracked;
+@end
+
 @implementation PBGitCommitController
 
 @synthesize files, status, busy, amend;
@@ -24,7 +32,7 @@
 	[commitMessageView setTypingAttributes:[NSDictionary dictionaryWithObject:[NSFont fontWithName:@"Monaco" size:12.0] forKey:NSFontAttributeName]];
 	
 	[unstagedFilesController setFilterPredicate:[NSPredicate predicateWithFormat:@"hasUnstagedChanges == 1"]];
-	[cachedFilesController setFilterPredicate:[NSPredicate predicateWithFormat:@"hasCachedChanges == 1"]];
+	[cachedFilesController setFilterPredicate:[NSPredicate predicateWithFormat:@"hasStagedChanges == 1"]];
 	
 	[unstagedFilesController setSortDescriptors:[NSArray arrayWithObjects:
 		[[NSSortDescriptor alloc] initWithKey:@"status" ascending:false],
@@ -91,24 +99,22 @@
 
 - (void) refresh:(id) sender
 {
-	for (PBChangedFile *file in files)
-		file.shouldBeDeleted = YES;
+	if (![repository workingDirectory])
+		return;
 
 	self.status = @"Refreshing index…";
-	if (![repository workingDirectory]) {
-	//if ([[repository outputForCommand:@"rev-parse --is-inside-work-tree"] isEqualToString:@"false"]) {
-		return;
-	}
 
-	self.busy++;
+	// If self.busy reaches 0, all tasks have finished
+	self.busy = 0;
 
+	// Refresh the index, necessary for the next methods (that's why it's blocking)
+	// FIXME: Make this non-blocking. This call can be expensive in large repositories
 	[repository outputInWorkdirForArguments:[NSArray arrayWithObjects:@"update-index", @"-q", @"--unmerged", @"--ignore-missing", @"--refresh", nil]];
-	self.busy--;
 
 	NSNotificationCenter *nc = [NSNotificationCenter defaultCenter]; 
 	[nc removeObserver:self]; 
 
-	// Other files
+	// Other files (not tracked, not ignored)
 	NSArray *arguments = [NSArray arrayWithObjects:@"ls-files", @"--others", @"--exclude-standard", @"-z", nil];
 	NSFileHandle *handle = [repository handleInWorkDirForArguments:arguments];
 	[nc addObserver:self selector:@selector(readOtherFiles:) name:NSFileHandleReadToEndOfFileCompletionNotification object:handle]; 
@@ -121,7 +127,7 @@
 	self.busy++;
 	[handle readToEndOfFileInBackgroundAndNotify];
 
-	// Cached files
+	// Staged files
 	handle = [repository handleInWorkDirForArguments:[NSArray arrayWithObjects:@"diff-index", @"--cached", @"-z", [self parentTree], nil]];
 	[nc addObserver:self selector:@selector(readCachedFiles:) name:NSFileHandleReadToEndOfFileCompletionNotification object:handle]; 
 	self.busy++;
@@ -133,15 +139,19 @@
 	[self refresh:nil];
 }
 
+// This method is called for each of the three processes from above.
+// If all three are finished (self.busy == 0), then we can delete
+// all files previously marked as deletable
 - (void) doneProcessingIndex
 {
 	[self willChangeValueForKey:@"files"];
 	if (!--self.busy) {
 		self.status = @"Ready";
-		NSArray *filesToBeDeleted = [files filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"shouldBeDeleted == 1"]];
-		for (PBChangedFile *file in filesToBeDeleted) {
+		for (PBChangedFile *file in files) {
+			if (!file.hasStagedChanges && !file.hasUnstagedChanges) {
 				NSLog(@"Deleting file: %@", [file path]);
 				[files removeObject:file];
+			}
 		}
 	}
 	[self didChangeValueForKey:@"files"];
@@ -151,76 +161,77 @@
 {
 	[unstagedFilesController setAutomaticallyRearrangesObjects:NO];
 	NSArray *lines = [self linesFromNotification:notification];
-	for (NSString *line in lines) {
-		if ([line length] == 0)
+	NSMutableDictionary *dictionary = [[NSMutableDictionary alloc] initWithCapacity:[lines count]];
+	// We fake this files status as good as possible.
+	NSArray *fileStatus = [NSArray arrayWithObjects:@":000000", @"100644", @"0000000000000000000000000000000000000000", @"0000000000000000000000000000000000000000", @"A", nil];
+	for (NSString *path in lines) {
+		if ([path length] == 0)
 			continue;
-
-		BOOL added = NO;
-		// Check if file is already in our index
-		for (PBChangedFile *file in files) {
-			if ([[file path] isEqualToString:line]) {
-				file.shouldBeDeleted = NO;
-				added = YES;
-				file.status = NEW;
-				file.hasCachedChanges = NO;
-				file.hasUnstagedChanges = YES;
-				break;
-			}
-		}
-
-		if (added)
-			continue;
-
-		// File does not exist yet, so add it
-		PBChangedFile *file =[[PBChangedFile alloc] initWithPath:line];
-		file.status = NEW;
-		file.hasCachedChanges = NO;
-		file.hasUnstagedChanges = YES;
-		[files addObject: file];
+		[dictionary setObject:fileStatus forKey:path];
 	}
-	[unstagedFilesController setAutomaticallyRearrangesObjects:YES];
-	[unstagedFilesController rearrangeObjects];
+	[self addFilesFromDictionary:dictionary staged:NO tracked:NO];
 	[self doneProcessingIndex];
 }
 
-- (void) addFilesFromLines:(NSArray *)lines cached:(BOOL) cached
+- (NSMutableDictionary *)dictionaryForLines:(NSArray *)lines
 {
+	NSMutableDictionary *dictionary = [NSMutableDictionary dictionaryWithCapacity:[lines count]/2];
+
+	// Fill the dictionary with the new information
 	NSArray *fileStatus;
-	int even = 0;
+	BOOL even = FALSE;
 	for (NSString *line in lines) {
 		if (!even) {
-			even = 1;
+			even = TRUE;
 			fileStatus = [line componentsSeparatedByString:@" "];
 			continue;
 		}
-		even = 0;
 
-		NSString *mode = [[fileStatus objectAtIndex:0] substringFromIndex:1];
-		NSString *sha = [fileStatus objectAtIndex:2];
+		even = FALSE;
+		[dictionary setObject:fileStatus forKey:line];
+	}
+	return dictionary;
+}
 
-		BOOL isNew = YES;
-		// If the file is already added, we shouldn't add it again
-		// but rather update it to incorporate our changes
-		for (PBChangedFile *file in files) {
-			if ([file.path isEqualToString:line]) {
-				if (cached && file.hasCachedChanges) {			// if we're listing cached files
-					file.shouldBeDeleted = NO;			// and the matching file in files had cached changes
-					file.commitBlobSHA = sha;			// we don't delete it
+- (void) addFilesFromDictionary:(NSMutableDictionary *)dictionary staged:(BOOL)staged tracked:(BOOL)tracked
+{
+	// Iterate over all existing files
+	for (PBChangedFile *file in files) {
+		NSArray *fileStatus = [dictionary objectForKey:file.path];
+		// Object found, this is still a cached / uncached thing
+		if (fileStatus) {
+			if (tracked) {
+				NSString *mode = [[fileStatus objectAtIndex:0] substringFromIndex:1];
+				NSString *sha = [fileStatus objectAtIndex:2];
+
+				if (staged) {
+					file.hasStagedChanges = YES;
+					file.commitBlobSHA = sha;
 					file.commitBlobMode = mode;
-					isNew = NO;
-					break;
-				} else if ((!cached) && file.hasUnstagedChanges) {	// if we're listing unstaged files and the
-					file.shouldBeDeleted = NO;			// matching file in files had unstaged changes
-					isNew = NO;					// we don't delete it
-					break;
-				}
+				} else
+					file.hasUnstagedChanges = YES;
+			} else {
+				// Untracked file, set status to NEW, only unstaged changes
+				file.hasStagedChanges = NO;
+				file.hasUnstagedChanges = YES;
+				file.status = NEW;
 			}
+			[dictionary removeObjectForKey:file.path];
+		} else { // Object not found, let's remove it from the changes
+			if (staged)
+				file.hasStagedChanges = NO;
+			else if (tracked && file.status != NEW) // Only remove it if it's not an untracked file. We handle that with the other thing
+				file.hasUnstagedChanges = NO;
+			else if (!tracked && file.status == NEW)
+				file.hasUnstagedChanges = NO;
 		}
+	}
 
-		if (!isNew)
-			continue;
+	// Do new files
+	for (NSString *path in [dictionary allKeys]) {
+		NSArray *fileStatus = [dictionary objectForKey:path];
 
-		PBChangedFile *file = [[PBChangedFile alloc] initWithPath:line];
+		PBChangedFile *file = [[PBChangedFile alloc] initWithPath:path];
 		if ([[fileStatus objectAtIndex:4] isEqualToString:@"D"])
 			file.status = DELETED;
 		else if([[fileStatus objectAtIndex:0] isEqualToString:@":000000"])
@@ -228,28 +239,31 @@
 		else
 			file.status = MODIFIED;
 
-		file.commitBlobSHA = sha;
-		file.commitBlobMode = mode;
+		if (staged) {
+			file.commitBlobSHA = [[fileStatus objectAtIndex:0] substringFromIndex:1];
+			file.commitBlobMode = [fileStatus objectAtIndex:2];
+		}
 
-		file.hasCachedChanges = cached;
-		file.hasUnstagedChanges = !cached;
+		file.hasStagedChanges = staged;
+		file.hasUnstagedChanges = !staged;
 
 		[files addObject: file];
 	}
-
 }
 
 - (void) readUnstagedFiles:(NSNotification *)notification
 {
 	NSArray *lines = [self linesFromNotification:notification];
-	[self addFilesFromLines:lines cached:NO];
+	NSMutableDictionary *dic = [self dictionaryForLines:lines];
+	[self addFilesFromDictionary:dic staged:NO tracked:YES];
 	[self doneProcessingIndex];
 }
 
 - (void) readCachedFiles:(NSNotification *)notification
 {
 	NSArray *lines = [self linesFromNotification:notification];
-	[self addFilesFromLines:lines cached:YES];
+	NSMutableDictionary *dic = [self dictionaryForLines:lines];
+	[self addFilesFromDictionary:dic staged:YES tracked:YES];
 	[self doneProcessingIndex];
 }
 
@@ -356,12 +370,16 @@
 	if (reverse)
 		[array addObject:@"--reverse"];
 
-	int ret;
+	int ret = 1;
 	NSString *error = [repository outputForArguments:array
 										 inputString:hunk
-											retValue: &ret];
+											retValue:&ret];
+
+	// FIXME: show this error, rather than just logging it
 	if (ret)
 		NSLog(@"Error: %@", error);
-	[self refresh:self]; // TODO: We should do this smarter by checking if the file diff is empty, which is faster.
+
+	// TODO: We should do this smarter by checking if the file diff is empty, which is faster.
+	[self refresh:self]; 
 }
 @end
