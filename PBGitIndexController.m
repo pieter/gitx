@@ -237,6 +237,13 @@
 		[menu addItem:ignoreItem];
 	}
 
+	if ([selectedFiles count] == 1) {
+		NSMenuItem *showInFinderItem = [[NSMenuItem alloc] initWithTitle:@"Show in Finder" action:@selector(showInFinderAction:) keyEquivalent:@""];
+		[showInFinderItem setTarget:self];
+		[showInFinderItem setRepresentedObject:selectedFiles];
+		[menu addItem:showInFinderItem];
+    }
+
 	for (PBChangedFile *file in selectedFiles)
 		if (!file.hasUnstagedChanges)
 			return menu;
@@ -297,6 +304,17 @@
 	NSArray *selectedFiles = [sender representedObject];
 	if ([selectedFiles count] > 0)
 		[self forceRevertChangesForFiles:selectedFiles];
+}
+
+- (void) showInFinderAction:(id) sender
+{
+	NSArray *selectedFiles = [sender representedObject];
+	if ([selectedFiles count] == 0)
+		return;
+	NSString *workingDirectory = [[commitController.repository workingDirectory] stringByAppendingString:@"/"];
+	NSString *path = [workingDirectory stringByAppendingPathComponent:[[selectedFiles objectAtIndex:0] path]];
+	NSWorkspace *ws = [NSWorkspace sharedWorkspace];
+	[ws selectFile: path inFileViewerRootedAtPath:nil];
 }
 
 
