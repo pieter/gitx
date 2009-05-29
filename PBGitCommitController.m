@@ -17,6 +17,7 @@
 - (void) doneProcessingIndex;
 - (NSMutableDictionary *)dictionaryForLines:(NSArray *)lines;
 - (void) addFilesFromDictionary:(NSMutableDictionary *)dictionary staged:(BOOL)staged tracked:(BOOL)tracked;
+- (void)processHunk:(NSString *)hunk stage:(BOOL)stage reverse:(BOOL)reverse;
 @end
 
 @implementation PBGitCommitController
@@ -366,7 +367,19 @@
 
 - (void) stageHunk:(NSString *)hunk reverse:(BOOL)reverse
 {
-	NSMutableArray *array = [NSMutableArray arrayWithObjects:@"apply", @"--cached", nil];
+	[self processHunk:hunk stage:TRUE reverse:reverse];
+}
+
+- (void)discardHunk:(NSString *)hunk
+{
+	[self processHunk:hunk stage:FALSE reverse:TRUE];
+}
+
+- (void)processHunk:(NSString *)hunk stage:(BOOL)stage reverse:(BOOL)reverse
+{
+	NSMutableArray *array = [NSMutableArray arrayWithObjects:@"apply", nil];
+	if (stage)
+		[array addObject:@"--cached"];
 	if (reverse)
 		[array addObject:@"--reverse"];
 
@@ -382,4 +395,5 @@
 	// TODO: We should do this smarter by checking if the file diff is empty, which is faster.
 	[self refresh:self]; 
 }
+
 @end

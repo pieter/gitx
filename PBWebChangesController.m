@@ -87,6 +87,23 @@
 	[self refresh];
 }
 
+- (void)discardHunk:(NSString *)hunk altKey:(BOOL)altKey
+{
+	int ret = NSAlertDefaultReturn;
+	if (!altKey) {
+		ret = [[NSAlert alertWithMessageText:@"Discard hunk"
+			defaultButton:nil
+			alternateButton:@"Cancel"
+			otherButton:nil
+			informativeTextWithFormat:@"Are you sure you wish to discard the changes in this hunk?\n\n You cannot undo this operation."] runModal];
+	}
+
+	if (ret == NSAlertDefaultReturn) {
+		[controller discardHunk:hunk];
+		[self refresh];
+	}
+}
+
 - (void) setStateMessage:(NSString *)state
 {
 	id script = [view windowScriptObject];

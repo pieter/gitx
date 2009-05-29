@@ -42,6 +42,7 @@
 - (void) readOtherFiles:(NSNotification *)notification;
 - (void) readUnstagedFiles:(NSNotification *)notification;
 - (void) stageHunk: (NSString *)hunk reverse:(BOOL)reverse;
+- (void)discardHunk:(NSString *)hunk;
 
 - (NSString *)parentTree;
 

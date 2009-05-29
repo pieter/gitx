@@ -87,15 +87,28 @@ var displayDiff = function(diff, cached)
 	for (i = 0; i < hunkHeaders.length; ++i) {
 		var header = hunkHeaders[i];
 		if (cached)
-			header.innerHTML = "<a href='#' class='stagebutton' onclick='addHunk(this, true); return false'>Unstage</a>" + header.innerHTML;
-		else
-			header.innerHTML = "<a href='#' class='stagebutton' onclick='addHunk(this, false); return false'>Stage</a>" + header.innerHTML;
+			header.innerHTML = "<a href='#' class='hunkbutton' onclick='addHunk(this, true); return false'>Unstage</a>" + header.innerHTML;
+		else {
+			header.innerHTML = "<a href='#' class='hunkbutton' onclick='addHunk(this, false); return false'>Stage</a>" + header.innerHTML;
+			header.innerHTML = "<a href='#' class='hunkbutton' onclick='discardHunk(this, event); return false'>Discard</a>" + header.innerHTML;
+		}
 	}
 }
 
-var addHunk = function(hunk, reverse)
+var getNextText = function(element)
 {
-	hunkHeader = hunk.nextSibling.data.split("\n")[0];
+	// gets the next DOM sibling which has type "text" (e.g. our hunk-header)
+	next = element;
+	while (next.nodeType != 3) {
+		next = next.nextSibling;
+	}
+	return next;
+}
+
+var getHunkText = function(hunk)
+{
+	hunk = getNextText(hunk);
+	hunkHeader = hunk.data.split("\n")[0];
 	if (m = hunkHeader.match(/@@.*@@/))
 		hunkHeader = m;
 
@@ -108,11 +121,29 @@ var addHunk = function(hunk, reverse)
 	if (end == -1)
 		end = originalDiff.length;
 
-	hunkText = originalDiff.substring(start, end);
+	var hunkText = originalDiff.substring(start, end);
 	hunkText = diffHeader + "\n" + hunkText + "\n";
+
+	return hunkText;
+}
+
+var addHunk = function(hunk, reverse)
+{
+	var hunkText = getHunkText(hunk);
 
 	if (Controller.stageHunk_reverse_)
 		Controller.stageHunk_reverse_(hunkText, reverse);
 	else
 		alert(hunkText);
+}
+
+var discardHunk = function(hunk, event)
+{
+	var hunkText = getHunkText(hunk);
+
+	if (Controller.discardHunk_altKey_) {
+		Controller.discardHunk_altKey_(hunkText, event.altKey == true);
+	} else {
+		alert(hunkText);
+	}
 }
