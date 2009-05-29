@@ -240,8 +240,8 @@
 			file.status = MODIFIED;
 
 		if (staged) {
-			file.commitBlobSHA = [[fileStatus objectAtIndex:0] substringFromIndex:1];
-			file.commitBlobMode = [fileStatus objectAtIndex:2];
+			file.commitBlobMode = [[fileStatus objectAtIndex:0] substringFromIndex:1];
+			file.commitBlobSHA = [fileStatus objectAtIndex:2];
 		}
 
 		file.hasStagedChanges = staged;
