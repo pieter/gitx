@@ -294,6 +294,19 @@ NSString* PBGitRepositoryErrorDomain = @"GitXErrorDomain";
 	[self didChangeValueForKey:@"branches"];
 	return rev;
 }
+
+- (BOOL)removeBranch:(PBGitRevSpecifier *)rev
+{
+	for (PBGitRevSpecifier *r in branches) {
+		if ([rev isEqualTo:r]) {
+			[self willChangeValueForKey:@"branches"];
+			[branches removeObject:r];
+			[self didChangeValueForKey:@"branches"];
+			return TRUE;
+		}
+	}
+	return FALSE;
+}
 	
 - (void) readCurrentBranch
 {

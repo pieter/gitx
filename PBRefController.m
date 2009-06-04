@@ -49,7 +49,7 @@
 			NSLog(@"Removing ref failed!");
 			return;
 		}
-
+		[historyController.repository removeBranch:[[PBGitRevSpecifier alloc] initWithRef:[sender ref]]];
 		[[sender commit] removeRef:[sender ref]];
 		[commitController rearrangeObjects];
 	}
@@ -208,7 +208,7 @@
 		[errorMessage setStringValue:@"Branch exists"];
 		return;
 	}
-
+	[historyController.repository addBranch:[[PBGitRevSpecifier alloc] initWithRef:[PBGitRef refFromString:branchName]]];
 	[self closeSheet:sender];
 	[commit addRef:[PBGitRef refFromString:branchName]];
 	[commitController rearrangeObjects];

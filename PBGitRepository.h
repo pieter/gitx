@@ -51,6 +51,7 @@ extern NSString* PBGitRepositoryErrorDomain;
 
 - (void) readCurrentBranch;
 - (PBGitRevSpecifier*) addBranch: (PBGitRevSpecifier*) rev;
+- (BOOL)removeBranch:(PBGitRevSpecifier *)rev;
 
 - (NSString*) parseSymbolicReference:(NSString*) ref;
 - (NSString*) parseReference:(NSString*) ref;
