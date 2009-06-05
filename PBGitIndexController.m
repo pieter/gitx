@@ -113,7 +113,7 @@
 	} else {
 		ignoreFile = [NSMutableString stringWithContentsOfFile:gitIgnoreName usedEncoding:&enc error:&error];
 		if (error) {
-			[[NSAlert alertWithError:error] runModal];
+			[[commitController.repository windowController] showErrorSheet:error];
 			return;
 		}
 		// Add a newline if not yet present
@@ -124,7 +124,7 @@
 
 	[ignoreFile writeToFile:gitIgnoreName atomically:YES encoding:enc error:&error];
 	if (error)
-		[[NSAlert alertWithError:error] runModal];
+		[[commitController.repository windowController] showErrorSheet:error];
 }
 
 # pragma mark Displaying diffs
@@ -166,11 +166,7 @@
 	int ret = 1;
 	[commitController.repository outputForArguments:arguments inputString:input retValue:&ret];
 	if (ret) {
-		[[NSAlert alertWithMessageText:@"Reverting changes failed"
-						 defaultButton:nil
-					   alternateButton:nil
-						   otherButton:nil
-			 informativeTextWithFormat:@"Reverting changes failed with error code %i", ret] runModal];
+		[[commitController.repository windowController] showMessageSheet:@"Reverting changes failed" infoText:[NSString stringWithFormat:@"Reverting changes failed with error code %i", ret]];
 		return;
 	}
 

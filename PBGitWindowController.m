@@ -122,6 +122,21 @@
 		self.selectedViewIndex = 0;
 }
 
+- (void)showMessageSheet:(NSString *)messageText infoText:(NSString *)infoText
+{
+	[[NSAlert alertWithMessageText:messageText
+			 defaultButton:nil
+		       alternateButton:nil
+			   otherButton:nil
+	     informativeTextWithFormat:infoText] beginSheetModalForWindow: [self window] modalDelegate:self didEndSelector:nil contextInfo:nil];
+}
+
+- (void)showErrorSheet:(NSError *)error
+{
+	[[NSAlert alertWithError:error] beginSheetModalForWindow: [self window] modalDelegate:self didEndSelector:nil contextInfo:nil];
+}
+
+
 #pragma mark -
 #pragma mark Toolbar Delegates
 

@@ -272,32 +272,20 @@
 {
 	self.busy--;
 	self.status = [@"Commit failed: " stringByAppendingString:reason];
-	[[NSAlert alertWithMessageText:@"Commit failed"
-					 defaultButton:nil
-				   alternateButton:nil
-					   otherButton:nil
-		 informativeTextWithFormat:reason] runModal];
+	[[repository windowController] showMessageSheet:@"Commit failed" infoText:reason];
 	return;
 }
 
 - (IBAction) commit:(id) sender
 {
 	if ([[cachedFilesController arrangedObjects] count] == 0) {
-		[[NSAlert alertWithMessageText:@"No changes to commit"
-						 defaultButton:nil
-					   alternateButton:nil
-						   otherButton:nil
-			 informativeTextWithFormat:@"You must first stage some changes before committing"] runModal];
+		[[repository windowController] showMessageSheet:@"No changes to commit" infoText:@"You must first stage some changes before committing"];
 		return;
 	}		
 	
 	NSString *commitMessage = [commitMessageView string];
 	if ([commitMessage length] < 3) {
-		[[NSAlert alertWithMessageText:@"Commitmessage missing"
-						 defaultButton:nil
-					   alternateButton:nil
-						   otherButton:nil
-			 informativeTextWithFormat:@"Please enter a commit message before committing"] runModal];
+		[[repository windowController] showMessageSheet:@"Commitmessage missing" infoText:@"Please enter a commit message before committing"];
 		return;
 	}
 

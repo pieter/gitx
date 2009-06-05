@@ -60,11 +60,7 @@
 	int ret = 1;
 	[historyController.repository outputInWorkdirForArguments:[NSArray arrayWithObjects:@"checkout", [[sender ref] shortName], nil] retValue: &ret];
 	if (ret) {
-		[[NSAlert alertWithMessageText:@"Checking out branch failed"
-						 defaultButton:@"OK"
-					   alternateButton:nil
-						   otherButton:nil
-			 informativeTextWithFormat:@"There was an error checking out the branch. Perhaps your working directory is not clean?"] runModal];
+		[[historyController.repository windowController] showMessageSheet:@"Checking out branch failed" infoText:@"There was an error checking out the branch. Perhaps your working directory is not clean?"];
 		return;
 	}
 	[historyController.repository reloadRefs];
@@ -79,11 +75,7 @@
     NSString *info = [historyController.repository outputInWorkdirForArguments:[NSArray arrayWithObjects:@"tag", @"-n50", @"-l", [[sender ref] shortName], nil] retValue: &ret];
 
     if (!ret) {
-        [[NSAlert alertWithMessageText:message
-                         defaultButton:@"OK"
-                       alternateButton:nil
-                           otherButton:nil
-             informativeTextWithFormat:info] runModal];
+	    [[historyController.repository windowController] showMessageSheet:message infoText:info];
     }
     return;
 }
