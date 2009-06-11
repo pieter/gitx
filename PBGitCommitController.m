@@ -11,6 +11,7 @@
 #import "PBChangedFile.h"
 #import "PBWebChangesController.h"
 #import "NSString_RegEx.h"
+#import "PBGitRepositoryWatcher.h"
 
 
 @interface PBGitCommitController (PrivateMethods)
@@ -41,9 +42,22 @@
 		[[NSSortDescriptor alloc] initWithKey:@"path" ascending:true], nil]];
 	[cachedFilesController setSortDescriptors:[NSArray arrayWithObject:
 		[[NSSortDescriptor alloc] initWithKey:@"path" ascending:true]]];
+
+    // listen for updates
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_repositoryUpdatedNotification:) name:PBGitRepositoryEventNotification object:repository];
 }
+
+- (void) _repositoryUpdatedNotification:(NSNotification *)notification {
+	PBGitRepositoryWatcherEventType eventType = [(NSNumber *)[[notification userInfo] objectForKey:kPBGitRepositoryEventTypeUserInfoKey] unsignedIntValue];
+	if(eventType & (PBGitRepositoryWatcherEventTypeWorkingDirectory | PBGitRepositoryWatcherEventTypeIndex)){
+		// refresh if the working directory or index
+		[self refresh:NULL];
+	}
+}
+
 - (void) removeView
 {
+	[[NSNotificationCenter defaultCenter] removeObserver:self];
 	[webController closeView];
 	[super finalize];
 }
@@ -149,6 +163,7 @@
 
 	NSNotificationCenter *nc = [NSNotificationCenter defaultCenter]; 
 	[nc removeObserver:self]; 
+	[nc addObserver:self selector:@selector(_repositoryUpdatedNotification:) name:PBGitRepositoryEventNotification object:nil];
 
 	// Other files (not tracked, not ignored)
 	NSArray *arguments = [NSArray arrayWithObjects:@"ls-files", @"--others", @"--exclude-standard", @"-z", nil];
