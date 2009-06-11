@@ -30,6 +30,7 @@
 	// And decrease it after you have finished.
 	int busy;
 	BOOL amend;
+	NSDictionary *amendEnvironment;
 
 }
 
