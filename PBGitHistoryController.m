@@ -11,6 +11,7 @@
 #import "PBGitGrapher.h"
 #import "PBGitRevisionCell.h"
 #import "PBCommitList.h"
+#import "PBGitRepositoryWatcher.h"
 #define QLPreviewPanel NSClassFromString(@"QLPreviewPanel")
 
 
@@ -43,8 +44,20 @@
 	[[commitList headerView] setMenu:[self tableColumnMenu]];
 	[historySplitView setTopMin:33.0 andBottomMin:100.0];
 	[historySplitView uncollapse];
+    // listen for updates
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_repositoryUpdatedNotification:) name:PBGitRepositoryEventNotification object:repository];
+    
 	[super awakeFromNib];
 }
+
+- (void) _repositoryUpdatedNotification:(NSNotification *)notification {
+	PBGitRepositoryWatcherEventType eventType = [(NSNumber *)[[notification userInfo] objectForKey:kPBGitRepositoryEventTypeUserInfoKey] unsignedIntValue];
+	if(eventType & PBGitRepositoryWatcherEventTypeGitDirectory){
+		// refresh if the .git repository is modified
+		[self refresh:NULL];
+	}
+}
+
 
 - (void) updateKeys
 {
@@ -202,6 +215,7 @@
 
 - (void) removeView
 {
+	[[NSNotificationCenter defaultCenter] removeObserver:self];
 	[webView close];
 	[commitController removeObserver:self forKeyPath:@"selection"];
 	[treeController removeObserver:self forKeyPath:@"selection"];
