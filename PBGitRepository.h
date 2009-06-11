@@ -13,7 +13,7 @@
 
 extern NSString* PBGitRepositoryErrorDomain;
 
-@class PBGitWindowController;
+@class PBGitWindowController, PBGitRepositoryWatcher;
 
 @interface PBGitRepository : NSDocument {
 	PBGitRevList* revisionList;
@@ -24,6 +24,8 @@ extern NSString* PBGitRepositoryErrorDomain;
 	PBGitRevSpecifier *currentBranch;
 	NSMutableDictionary *refs;
 
+    PBGitRepositoryWatcher *watcher;
+    
 	PBGitRevSpecifier *_headRef; // Caching
 }
 

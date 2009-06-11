@@ -16,6 +16,8 @@
 #import "PBGitRef.h"
 #import "PBGitRevSpecifier.h"
 
+#import "PBGitRepositoryWatcher.h"
+
 NSString* PBGitRepositoryErrorDomain = @"GitXErrorDomain";
 
 @implementation PBGitRepository
@@ -113,6 +115,8 @@ NSString* PBGitRepositoryErrorDomain = @"GitXErrorDomain";
 	[self setFileURL:gitDirURL];
 	[self setup];
 	[self readCurrentBranch];
+	watcher = [[PBGitRepositoryWatcher alloc] initWithRepository:self];
+	[watcher start];
 	return YES;
 }
 
@@ -146,6 +150,9 @@ NSString* PBGitRepositoryErrorDomain = @"GitXErrorDomain";
 
 	[self showWindows];
 
+    // Setup the FSEvents watcher to fire notifications when things change
+    watcher = [[PBGitRepositoryWatcher alloc] initWithRepository:self];
+    
 	return self;
 }
 
@@ -455,6 +462,7 @@ NSString* PBGitRepositoryErrorDomain = @"GitXErrorDomain";
 - (void) finalize
 {
 	NSLog(@"Dealloc of repository");
+    [watcher stop]; // stop watching for changes
 	[super finalize];
 }
 @end
