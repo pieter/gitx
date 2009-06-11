@@ -160,17 +160,23 @@
 // all files previously marked as deletable
 - (void) doneProcessingIndex
 {
-	[self willChangeValueForKey:@"files"];
-	if (!--self.busy) {
-		self.status = @"Ready";
-		for (PBChangedFile *file in files) {
-			if (!file.hasStagedChanges && !file.hasUnstagedChanges) {
-				NSLog(@"Deleting file: %@", [file path]);
-				[files removeObject:file];
-			}
-		}
+	// if we're still busy, do nothing :)
+	if (--self.busy)
+		return;
+
+	NSMutableArray *deleteFiles = [NSMutableArray array];
+	for (PBChangedFile *file in files) {
+		if (!file.hasStagedChanges && !file.hasUnstagedChanges)
+			[deleteFiles addObject:file];
 	}
-	[self didChangeValueForKey:@"files"];
+
+	if ([deleteFiles count]) {
+		[self willChangeValueForKey:@"files"];
+		for (PBChangedFile *file in deleteFiles)
+			[files removeObject:file];
+		[self didChangeValueForKey:@"files"];
+	}
+	self.status = @"Ready";
 }
 
 - (void) readOtherFiles:(NSNotification *)notification;
