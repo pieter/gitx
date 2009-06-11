@@ -184,15 +184,18 @@ var loadCommit = function(commitObject, currentRef) {
 		}
 	}
 
+	// Scroll to top
+	scroll(0, 0);
+
+	if (!commit.parents)
+		return;
+
 	for (var i = 0; i < commit.parents.length; i++) {
 		var newRow = $("commit_header").insertRow(-1);
 		newRow.innerHTML = "<td class='property_name'>Parent:</td><td>" +
 			"<a href='' onclick='selectCommit(this.innerHTML); return false;'>" +
 			commit.parents[i] + "</a></td>";
 	}
-
-	// Scroll to top
-	scroll(0, 0);
 }
 
 var showDiff = function() {
