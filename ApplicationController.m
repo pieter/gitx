@@ -15,6 +15,7 @@
 #import "PBGitXProtocol.h"
 #import "PBPrefsWindowController.h"
 #import "PBNSURLPathUserDefaultsTransfomer.h"
+#import "PBGitDefaults.h"
 
 @implementation ApplicationController
 @synthesize cliProxy;
@@ -36,6 +37,8 @@
 	NSValueTransformer *transformer = [[PBNSURLPathUserDefaultsTransfomer alloc] init];
 	[NSValueTransformer setValueTransformer:transformer forName:@"PBNSURLPathUserDefaultsTransfomer"];
 	
+	// Make sure the PBGitDefaults is initialized, by calling a random method
+	[PBGitDefaults class];
 	return self;
 }
 

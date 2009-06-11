@@ -16,5 +16,6 @@
 + (BOOL) isGravatarEnabled;
 + (BOOL) confirmPublicGists;
 + (BOOL) isGistPublic;
++ (BOOL)showWhitespaceDifferences;
 
 @end

@@ -7,7 +7,7 @@
 //
 
 #import "PBGitCommit.h"
-
+#import "PBGitDefaults.h"
 
 @implementation PBGitCommit
 
@@ -73,8 +73,12 @@
 	if (details != nil)
 		return details;
 
-	details = [self.repository outputForArguments:[NSArray arrayWithObjects:@"show", @"--pretty=raw", @"-M", @"--no-color", [self realSha], nil]];
-	
+	NSMutableArray *arguments = [NSMutableArray arrayWithObjects:@"show", @"--pretty=raw", @"-M", @"--no-color", [self realSha], nil];
+	if (![PBGitDefaults showWhitespaceDifferences])
+		[arguments insertObject:@"-w" atIndex:1];
+
+	details = [self.repository outputForArguments:arguments];
+
 	return details;
 }
 

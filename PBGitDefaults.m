@@ -14,6 +14,7 @@
 #define kEnableGravatar @"PBEnableGravatar"
 #define kConfirmPublicGists @"PBConfirmPublicGists"
 #define kPublicGist @"PBGistPublic"
+#define kShowWhitespaceDifferences @"PBShowWhitespaceDifferences"
 
 @implementation PBGitDefaults
 
@@ -30,6 +31,8 @@
 			  forKey:kConfirmPublicGists];
 	[defaultValues setObject:[NSNumber numberWithBool:NO]
 			  forKey:kPublicGist];
+	[defaultValues setObject:[NSNumber numberWithBool:YES]
+			  forKey:kShowWhitespaceDifferences];
 	[[NSUserDefaults standardUserDefaults] registerDefaults:defaultValues];
 }
 
@@ -56,5 +59,11 @@
 + (BOOL) isGistPublic
 {
 	return [[NSUserDefaults standardUserDefaults] boolForKey:kPublicGist];
+}
+
+
++ (BOOL)showWhitespaceDifferences
+{
+	return [[NSUserDefaults standardUserDefaults] boolForKey:kShowWhitespaceDifferences];
 }
 @end
