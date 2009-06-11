@@ -48,6 +48,17 @@
 	[super finalize];
 }
 
+- (IBAction)signOff:(id)sender
+{
+	if (![repository.config valueForKeyPath:@"user.name"] || ![repository.config valueForKeyPath:@"user.email"])
+		return [[repository windowController] showMessageSheet:@"User's name not set" infoText:@"Signing off a commit requires setting user.name and user.email in your git config"];
+
+	commitMessageView.string = [NSString stringWithFormat:@"%@\n\nSigned-off-by: %@ <%@>",
+		commitMessageView.string,
+		[repository.config valueForKeyPath:@"user.name"],
+		[repository.config valueForKeyPath:@"user.email"]];
+}
+
 - (void) setAmend:(BOOL)newAmend
 {
 	if (newAmend == amend)

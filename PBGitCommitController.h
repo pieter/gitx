@@ -49,4 +49,5 @@
 
 - (IBAction) refresh:(id) sender;
 - (IBAction) commit:(id) sender;
+- (IBAction)signOff:(id)sender;
 @end

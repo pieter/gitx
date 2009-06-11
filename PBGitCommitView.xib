@@ -1,30 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<archive type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="7.03">
+<archive type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="7.02">
 	<data>
 		<int key="IBDocument.SystemTarget">1050</int>
-		<string key="IBDocument.SystemVersion">9G55</string>
-		<string key="IBDocument.InterfaceBuilderVersion">677</string>
-		<string key="IBDocument.AppKitVersion">949.43</string>
+		<string key="IBDocument.SystemVersion">9J61</string>
+		<string key="IBDocument.InterfaceBuilderVersion">672</string>
+		<string key="IBDocument.AppKitVersion">949.46</string>
 		<string key="IBDocument.HIToolboxVersion">353.00</string>
 		<object class="NSMutableArray" key="IBDocument.EditedObjectIDs">
 			<bool key="EncodedWithXMLCoder">YES</bool>
+			<integer value="207"/>
 			<integer value="226"/>
-			<integer value="1" id="9"/>
 		</object>
 		<object class="NSArray" key="IBDocument.PluginDependencies">
 			<bool key="EncodedWithXMLCoder">YES</bool>
 			<string>com.apple.WebKitIBPlugin</string>
 			<string>com.apple.InterfaceBuilderKit</string>
 			<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-		</object>
-		<object class="NSMutableDictionary" key="IBDocument.Metadata">
-			<bool key="EncodedWithXMLCoder">YES</bool>
-			<object class="NSArray" key="dict.sortedKeys">
-				<bool key="EncodedWithXMLCoder">YES</bool>
-			</object>
-			<object class="NSMutableArray" key="dict.values">
-				<bool key="EncodedWithXMLCoder">YES</bool>
-			</object>
 		</object>
 		<object class="NSMutableArray" key="IBDocument.RootObjects" id="1000">
 			<bool key="EncodedWithXMLCoder">YES</bool>
@@ -91,6 +82,7 @@
 									<object class="NSMutableArray" key="set.sortedObjects">
 										<bool key="EncodedWithXMLCoder">YES</bool>
 										<string>Apple HTML pasteboard type</string>
+										<string>Apple PDF pasteboard type</string>
 										<string>Apple PICT pasteboard type</string>
 										<string>Apple URL pasteboard type</string>
 										<string>Apple Web Archive pasteboard type</string>
@@ -101,6 +93,7 @@
 										<string>NeXT Rich Text Format v1.0 pasteboard type</string>
 										<string>NeXT TIFF v4.0 pasteboard type</string>
 										<string>WebURLsWithTitlesPboardType</string>
+										<string>public.png</string>
 										<string>public.url</string>
 										<string>public.url-name</string>
 									</object>
@@ -124,7 +117,7 @@
 											<bool key="EncodedWithXMLCoder">YES</bool>
 											<integer value="12" id="777559147"/>
 											<reference ref="777559147"/>
-											<reference ref="9"/>
+											<integer value="1" id="9"/>
 										</object>
 									</object>
 								</object>
@@ -503,6 +496,26 @@
 															<object class="NSButtonImageSource" key="NSAlternateImage">
 																<string key="NSImageName">NSSwitch</string>
 															</object>
+															<string key="NSAlternateContents"/>
+															<string key="NSKeyEquivalent"/>
+															<int key="NSPeriodicDelay">200</int>
+															<int key="NSPeriodicInterval">25</int>
+														</object>
+													</object>
+													<object class="NSButton" id="1042222292">
+														<reference key="NSNextResponder" ref="154221104"/>
+														<int key="NSvFlags">289</int>
+														<string key="NSFrame">{{243, 0}, {96, 32}}</string>
+														<reference key="NSSuperview" ref="154221104"/>
+														<bool key="NSEnabled">YES</bool>
+														<object class="NSButtonCell" key="NSCell" id="964972443">
+															<int key="NSCellFlags">67239424</int>
+															<int key="NSCellFlags2">134217728</int>
+															<string key="NSContents">Sign-Off</string>
+															<reference key="NSSupport" ref="554612341"/>
+															<reference key="NSControlView" ref="1042222292"/>
+															<int key="NSButtonFlags">-2038284033</int>
+															<int key="NSButtonFlags2">129</int>
 															<string key="NSAlternateContents"/>
 															<string key="NSKeyEquivalent"/>
 															<int key="NSPeriodicDelay">200</int>
@@ -1188,6 +1201,14 @@
 					</object>
 					<int key="connectionID">277</int>
 				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">signOff:</string>
+						<reference key="source" ref="1001"/>
+						<reference key="destination" ref="1042222292"/>
+					</object>
+					<int key="connectionID">280</int>
+				</object>
 			</object>
 			<object class="IBMutableOrderedSet" key="objectRecords">
 				<object class="NSArray" key="orderedObjects">
@@ -1310,6 +1331,7 @@
 							<reference ref="227052526"/>
 							<reference ref="792511503"/>
 							<reference ref="18874447"/>
+							<reference ref="1042222292"/>
 						</object>
 						<reference key="parent" ref="217294340"/>
 					</object>
@@ -1513,6 +1535,20 @@
 						<reference key="object" ref="446885874"/>
 						<reference key="parent" ref="1002"/>
 					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">278</int>
+						<reference key="object" ref="1042222292"/>
+						<object class="NSMutableArray" key="children">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+							<reference ref="964972443"/>
+						</object>
+						<reference key="parent" ref="635871052"/>
+					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">279</int>
+						<reference key="object" ref="964972443"/>
+						<reference key="parent" ref="1042222292"/>
+					</object>
 				</object>
 			</object>
 			<object class="NSMutableDictionary" key="flattenedProperties">
@@ -1548,6 +1584,8 @@
 					<string>247.IBPluginDependency</string>
 					<string>248.IBPluginDependency</string>
 					<string>254.IBPluginDependency</string>
+					<string>278.IBPluginDependency</string>
+					<string>279.IBPluginDependency</string>
 					<string>42.IBPluginDependency</string>
 					<string>45.IBPluginDependency</string>
 					<string>46.IBPluginDependency</string>
@@ -1568,7 +1606,7 @@
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilderKit</string>
 					<string>com.apple.InterfaceBuilderKit</string>
-					<string>{{312, 206}, {852, 432}}</string>
+					<string>{{59, 63}, {852, 432}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<integer value="0" id="8"/>
 					<reference ref="8"/>
@@ -1585,9 +1623,11 @@
 					<string>PBNiceSplitView</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<string>{{341, 587}, {616, 169}}</string>
+					<string>{{295, 587}, {616, 169}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>{{132, 614}, {616, 0}}</string>
+					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
+					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -1630,7 +1670,7 @@
 				</object>
 			</object>
 			<nil key="sourceID"/>
-			<int key="maxID">277</int>
+			<int key="maxID">280</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<object class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -1660,9 +1700,11 @@
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<string>commit:</string>
 							<string>refresh:</string>
+							<string>signOff:</string>
 						</object>
 						<object class="NSMutableArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
+							<string>id</string>
 							<string>id</string>
 							<string>id</string>
 						</object>
@@ -1681,9 +1723,9 @@
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<string>NSArrayController</string>
 							<string>NSTextView</string>
-							<string>id</string>
+							<string>PBGitIndexController</string>
 							<string>NSArrayController</string>
-							<string>id</string>
+							<string>PBWebChangesController</string>
 						</object>
 					</object>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
