@@ -384,11 +384,21 @@ NSString* PBGitRepositoryErrorDomain = @"GitXErrorDomain";
 	return [PBEasyPipe outputForCommand:[PBGitBinary path] withArgs:arguments inDir: self.fileURL.path retValue: ret];
 }
 
-- (NSString*) outputForArguments:(NSArray *)arguments inputString:(NSString *)input retValue:(int *)ret;
+- (NSString*) outputForArguments:(NSArray *)arguments inputString:(NSString *)input retValue:(int *)ret
 {
 	return [PBEasyPipe outputForCommand:[PBGitBinary path]
 							   withArgs:arguments
 								  inDir:[self workingDirectory]
+							inputString:input
+							   retValue: ret];
+}
+
+- (NSString *)outputForArguments:(NSArray *)arguments inputString:(NSString *)input byExtendingEnvironment:(NSDictionary *)dict retValue:(int *)ret
+{
+	return [PBEasyPipe outputForCommand:[PBGitBinary path]
+							   withArgs:arguments
+								  inDir:[self workingDirectory]
+				 byExtendingEnvironment:dict
 							inputString:input
 							   retValue: ret];
 }
