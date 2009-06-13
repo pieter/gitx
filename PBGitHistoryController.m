@@ -218,7 +218,7 @@
 	return menu;
 }
 
-- (void) showCommitsFromTree:(id) sender
+- (void)showCommitsFromTree:(id)sender
 {
 	// TODO: Enable this from webview as well!
 
@@ -229,5 +229,19 @@
 
 	repository.currentBranch = [repository addBranch:revSpec];
 }
+
+- (void)showInFinderAction:(id)sender
+{
+	NSString *workingDirectory = [[repository workingDirectory] stringByAppendingString:@"/"];
+	NSString *path;
+	NSWorkspace *ws = [NSWorkspace sharedWorkspace];
+
+	for (PBGitTree *tree in [treeController selectedObjects]) {
+		path = [workingDirectory stringByAppendingPathComponent:[tree fullPath]];
+		[ws selectFile: path inFileViewerRootedAtPath:path];
+	}
+
+}
+
 
 @end
