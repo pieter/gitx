@@ -66,7 +66,7 @@ static NSString* gitPath = nil;
 
 	// Try to find the path of the Git binary
 	char* path = getenv("GIT_PATH");
-	if (path && [self acceptBinary:[NSString stringWithCString:path]])
+	if (path && [self acceptBinary:[NSString stringWithUTF8String:path]])
 		return;
 
 	// No explicit path. Try it with "which"
