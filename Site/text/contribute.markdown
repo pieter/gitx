@@ -14,7 +14,7 @@ If you want to contribute to GitX, you can just clone the repository and start w
 	<code>git clone <a href="git://github.com/pieter/gitx.git">git://github.com/pieter/gitx.git</a></code>
 </pre>
 
-You can use the Github "pull" feature to send me a notification of your changes. Alternatively, you can <a href="mailto:frimmirf+gitx@gmail.com">email me</a> patches.
+The preferred way of contributing is by sending patches to the [Mailinglist](mailto:gitx@googlegroups.com).
 
 If you're not sure what to do, you can take a look at the [TODO list on
 Github](http://github.com/pieter/gitx/wikis/TODO). If you want to work on the
@@ -23,11 +23,9 @@ HTML side of GitX (such as the detailed view), you should take a look at the
 
 <h3>Bug Report</h3>
 
-
 If you find or want to fix bugs, you should take a look at our [Bug
 Tracker](http://gitx.lighthouseapp.com/projects/17830-gitx). If you can't
-reach Lighthouse or don't want to register for an account, you can also add
-bugs on the [Github Bugs page](http://github.com/pieter/gitx/wikis/bugs).
+reach Lighthouse or don't want to register for an account, you can also send the bugs to mailing list.
 	
 <h3>Donate</h3>
 <p>
