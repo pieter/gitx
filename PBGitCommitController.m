@@ -52,11 +52,14 @@
 {
 	if (![repository.config valueForKeyPath:@"user.name"] || ![repository.config valueForKeyPath:@"user.email"])
 		return [[repository windowController] showMessageSheet:@"User's name not set" infoText:@"Signing off a commit requires setting user.name and user.email in your git config"];
+	NSString *SOBline = [NSString stringWithFormat:@"Signed-off-by: %@ <%@>",
+				[repository.config valueForKeyPath:@"user.name"],
+				[repository.config valueForKeyPath:@"user.email"]];
 
-	commitMessageView.string = [NSString stringWithFormat:@"%@\n\nSigned-off-by: %@ <%@>",
-		commitMessageView.string,
-		[repository.config valueForKeyPath:@"user.name"],
-		[repository.config valueForKeyPath:@"user.email"]];
+	if([commitMessageView.string rangeOfString:SOBline].location == NSNotFound) {
+		commitMessageView.string = [NSString stringWithFormat:@"%@\n\n%@",
+				commitMessageView.string, SOBline];
+	}
 }
 
 - (void) setAmend:(BOOL)newAmend
