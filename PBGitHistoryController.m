@@ -203,6 +203,7 @@
 	[super removeView];
 }
 
+#pragma mark Table Column Methods
 - (NSMenu *)tableColumnMenu
 {
 	NSMenu *menu = [[NSMenu alloc] initWithTitle:@"Table columns menu"];
@@ -217,6 +218,8 @@
 	}
 	return menu;
 }
+
+#pragma mark Tree Context Menu Methods
 
 - (void)showCommitsFromTree:(id)sender
 {
