@@ -13,6 +13,7 @@ body {
 	background-color: #ECF3FD;
 	font-size: 100%;
 	position: fixed;
+	z-index: 2;
 	top: 0px;
 	width: 100%;
 }
@@ -66,6 +67,8 @@ table.diff {
 	margin-bottom: 4px;
 	margin-right: 1px;
 	float: right;
+	position: relative;
+	z-index: 1;
 
 	border: 1px solid #3465a4;
 	background-color: #cce5ff;
