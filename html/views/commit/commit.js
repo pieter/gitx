@@ -105,36 +105,45 @@ var getNextText = function(element)
 	return next;
 }
 
-var getHunkText = function(hunk)
-{
-	hunk = getNextText(hunk);
-	hunkHeader = hunk.data.split("\n")[0];
-	if (m = hunkHeader.match(/@@.*@@/))
-		hunkHeader = m;
 
-	start = originalDiff.indexOf(hunkHeader);
-	end = originalDiff.indexOf("\n@@", start + 1);
-	end2 = originalDiff.indexOf("\ndiff", start + 1);
+/* Get the original hunk lines attached to the given hunk header */
+var getLines = function (hunkHeader)
+{
+	var start = originalDiff.indexOf(hunkHeader);
+	var end = originalDiff.indexOf("\n@@", start + 1);
+	var end2 = originalDiff.indexOf("\ndiff", start + 1);
 	if (end2 < end && end2 > 0)
 		end = end2;
-
 	if (end == -1)
 		end = originalDiff.length;
-
-	var hunkText = originalDiff.substring(start, end);
-	hunkText = diffHeader + "\n" + hunkText + "\n";
-
+	var hunkText = originalDiff.substring(start, end)+'\n';
 	return hunkText;
 }
 
-var addHunk = function(hunk, reverse)
+/* Get the full hunk test, including diff top header */
+var getFullHunk = function(hunk)
 {
-	var hunkText = getHunkText(hunk);
+	hunk = getNextText(hunk);
+	var hunkHeader = hunk.data.split("\n")[0];
+	var m;
+	if (m = hunkHeader.match(/@@.*@@/))
+		hunkHeader = m;
+	return diffHeader + "\n" + getLines(hunkHeader);
+}
 
+var addHunkText = function(hunkText, reverse)
+{
+	//window.console.log((reverse?"Removing":"Adding")+" hunk: \n\t"+hunkText);
 	if (Controller.stageHunk_reverse_)
 		Controller.stageHunk_reverse_(hunkText, reverse);
 	else
 		alert(hunkText);
+}
+
+/* Add the hunk located below the current element */
+var addHunk = function(hunk, reverse)
+{
+	addHunkText(getFullHunk(hunk),reverse);
 }
 
 var discardHunk = function(hunk, event)
