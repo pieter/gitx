@@ -47,6 +47,7 @@
 - (NSArray *)menuItemsForPaths:(NSArray *)paths;
 - (void)showCommitsFromTree:(id)sender;
 - (void)showInFinderAction:(id)sender;
+- (void)openFilesAction:(id)sender;
 
 - (void) copyCommitInfo;
 
