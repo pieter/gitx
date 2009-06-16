@@ -88,6 +88,8 @@ contextMenuItemsForElement:(NSDictionary *)element
 			NSLog(@"Could not find selected ref!");
 			return defaultMenuItems;
 		}
+		if ([node hasAttributes] && [[node attributes] getNamedItem:@"representedFile"])
+			return [historyController menuItemsForPaths:[NSArray arrayWithObject:[[[node attributes] getNamedItem:@"representedFile"] value]]];
 
 		node = [node parentNode];
 	}
