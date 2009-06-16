@@ -264,6 +264,10 @@
 	}
 
 	// Do new files
+	if (![[dictionary allKeys] count])
+		return;
+
+	[self willChangeValueForKey:@"files"];
 	for (NSString *path in [dictionary allKeys]) {
 		NSArray *fileStatus = [dictionary objectForKey:path];
 
@@ -285,6 +289,7 @@
 
 		[files addObject: file];
 	}
+	[self didChangeValueForKey:@"files"];
 }
 
 - (void) readUnstagedFiles:(NSNotification *)notification
