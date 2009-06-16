@@ -41,6 +41,10 @@
 - (IBAction) toggleQuickView: sender;
 - (IBAction) openSelectedFile: sender;
 - (void) updateQuicklookForce: (BOOL) force;
+
+// Context menu methods
+- (NSMenu *)contextMenuForTreeView;
+- (NSArray *)menuItemsForPaths:(NSArray *)paths;
 - (void)showCommitsFromTree:(id)sender;
 - (void)showInFinderAction:(id)sender;
 

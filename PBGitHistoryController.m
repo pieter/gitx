@@ -226,8 +226,8 @@
 	// TODO: Enable this from webview as well!
 
 	NSMutableArray *filePaths = [NSMutableArray arrayWithObjects:@"HEAD", @"--", NULL];
-	for (PBGitTree *tree in [treeController selectedObjects])
-		[filePaths addObject:[tree fullPath]];
+	[filePaths addObjectsFromArray:[sender representedObject]];
+
 	PBGitRevSpecifier *revSpec = [[PBGitRevSpecifier alloc] initWithParameters:filePaths];
 
 	repository.currentBranch = [repository addBranch:revSpec];
@@ -239,12 +239,40 @@
 	NSString *path;
 	NSWorkspace *ws = [NSWorkspace sharedWorkspace];
 
-	for (PBGitTree *tree in [treeController selectedObjects]) {
-		path = [workingDirectory stringByAppendingPathComponent:[tree fullPath]];
+	for (NSString *filePath in [sender representedObject]) {
+		path = [workingDirectory stringByAppendingPathComponent:filePath];
 		[ws selectFile: path inFileViewerRootedAtPath:path];
 	}
 
 }
 
+- (NSMenu *)contextMenuForTreeView
+{
+	NSArray *filePaths = [[treeController selectedObjects] valueForKey:@"fullPath"];
+
+	NSMenu *menu = [[NSMenu alloc] init];
+	for (NSMenuItem *item in [self menuItemsForPaths:filePaths])
+		[menu addItem:item];
+	return menu;
+}
+
+- (NSArray *)menuItemsForPaths:(NSArray *)paths
+{
+	BOOL multiple = [paths count] != 1;
+	NSMenuItem *finderItem = [[NSMenuItem alloc] initWithTitle:multiple? @"Show items in Finder" : @"Show item in Finder"
+														action:@selector(showInFinderAction:)
+												 keyEquivalent:@""];
+	NSMenuItem *historyItem = [[NSMenuItem alloc] initWithTitle:multiple? @"Show history of files" : @"Show history of file"
+														 action:@selector(showCommitsFromTree:)
+												 keyEquivalent:@""];
+
+	NSArray *menuItems = [NSArray arrayWithObjects:historyItem, finderItem, nil];
+	for (NSMenuItem *item in menuItems) {
+		[item setTarget:self];
+		[item setRepresentedObject:paths];
+	}
+
+	return menuItems;
+}
 
 @end

@@ -8,9 +8,8 @@
 		<string key="IBDocument.HIToolboxVersion">353.00</string>
 		<object class="NSMutableArray" key="IBDocument.EditedObjectIDs">
 			<bool key="EncodedWithXMLCoder">YES</bool>
-			<integer value="276"/>
 			<integer value="237"/>
-			<integer value="9"/>
+			<integer value="2"/>
 		</object>
 		<object class="NSArray" key="IBDocument.PluginDependencies">
 			<bool key="EncodedWithXMLCoder">YES</bool>
@@ -1518,28 +1517,6 @@
 					<bool key="EncodedWithXMLCoder">YES</bool>
 				</object>
 			</object>
-			<object class="NSMenu" id="500542810">
-				<string key="NSTitle"/>
-				<object class="NSMutableArray" key="NSMenuItems">
-					<bool key="EncodedWithXMLCoder">YES</bool>
-					<object class="NSMenuItem" id="661418857">
-						<reference key="NSMenu" ref="500542810"/>
-						<string key="NSTitle">Show history of file(s)</string>
-						<string key="NSKeyEquiv"/>
-						<int key="NSMnemonicLoc">2147483647</int>
-						<reference key="NSOnImage" ref="908677745"/>
-						<reference key="NSMixedImage" ref="746375230"/>
-					</object>
-					<object class="NSMenuItem" id="85225954">
-						<reference key="NSMenu" ref="500542810"/>
-						<string key="NSTitle">Show in Finder</string>
-						<string key="NSKeyEquiv"/>
-						<int key="NSMnemonicLoc">2147483647</int>
-						<reference key="NSOnImage" ref="908677745"/>
-						<reference key="NSMixedImage" ref="746375230"/>
-					</object>
-				</object>
-			</object>
 		</object>
 		<object class="IBObjectContainer" key="IBDocument.Objects">
 			<object class="NSMutableArray" key="connectionRecords">
@@ -2129,30 +2106,6 @@
 						<reference key="destination" ref="27300806"/>
 					</object>
 					<int key="connectionID">274</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBActionConnection" key="connection">
-						<string key="label">showCommitsFromTree:</string>
-						<reference key="source" ref="1001"/>
-						<reference key="destination" ref="661418857"/>
-					</object>
-					<int key="connectionID">281</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBOutletConnection" key="connection">
-						<string key="label">menu</string>
-						<reference key="source" ref="216928480"/>
-						<reference key="destination" ref="500542810"/>
-					</object>
-					<int key="connectionID">282</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBActionConnection" key="connection">
-						<string key="label">showInFinderAction:</string>
-						<reference key="source" ref="1001"/>
-						<reference key="destination" ref="85225954"/>
-					</object>
-					<int key="connectionID">285</int>
 				</object>
 			</object>
 			<object class="IBMutableOrderedSet" key="objectRecords">
@@ -2784,26 +2737,6 @@
 						<reference key="object" ref="217429948"/>
 						<reference key="parent" ref="27300806"/>
 					</object>
-					<object class="IBObjectRecord">
-						<int key="objectID">276</int>
-						<reference key="object" ref="500542810"/>
-						<object class="NSMutableArray" key="children">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-							<reference ref="661418857"/>
-							<reference ref="85225954"/>
-						</object>
-						<reference key="parent" ref="1002"/>
-					</object>
-					<object class="IBObjectRecord">
-						<int key="objectID">275</int>
-						<reference key="object" ref="661418857"/>
-						<reference key="parent" ref="500542810"/>
-					</object>
-					<object class="IBObjectRecord">
-						<int key="objectID">284</int>
-						<reference key="object" ref="85225954"/>
-						<reference key="parent" ref="500542810"/>
-					</object>
 				</object>
 			</object>
 			<object class="NSMutableDictionary" key="flattenedProperties">
@@ -2883,12 +2816,8 @@
 					<string>27.ImportedFromIB2</string>
 					<string>272.IBPluginDependency</string>
 					<string>273.IBPluginDependency</string>
-					<string>275.IBPluginDependency</string>
-					<string>276.IBEditorWindowLastContentRect</string>
-					<string>276.IBPluginDependency</string>
 					<string>28.IBPluginDependency</string>
 					<string>28.IBShouldRemoveOnLegacySave</string>
-					<string>284.IBPluginDependency</string>
 					<string>29.IBPluginDependency</string>
 					<string>29.IBShouldRemoveOnLegacySave</string>
 					<string>3.IBPluginDependency</string>
@@ -3018,11 +2947,7 @@
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<string>{{225, 683}, {202, 43}}</string>
-					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<reference ref="9"/>
-					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<reference ref="9"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -3055,7 +2980,7 @@
 					</object>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<string>{{76, 44}, {852, 432}}</string>
+					<string>{{358, 67}, {852, 432}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -3090,7 +3015,7 @@
 				</object>
 			</object>
 			<nil key="sourceID"/>
-			<int key="maxID">285</int>
+			<int key="maxID">286</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<object class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -3154,6 +3079,7 @@
 							<string>commitList</string>
 							<string>fileBrowser</string>
 							<string>searchField</string>
+							<string>treeContextMenu</string>
 							<string>treeController</string>
 							<string>webView</string>
 						</object>
@@ -3163,6 +3089,7 @@
 							<string>NSTableView</string>
 							<string>NSOutlineView</string>
 							<string>NSSearchField</string>
+							<string>NSMenu</string>
 							<string>NSTreeController</string>
 							<string>id</string>
 						</object>

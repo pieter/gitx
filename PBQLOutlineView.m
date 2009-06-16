@@ -74,7 +74,7 @@
 			[self selectRow:row byExtendingSelection:NO];
 	}
 
-	return [super menuForEvent:theEvent];
+	return [controller contextMenuForTreeView];
 }
 
 /* Implemented to satisfy datasourcee protocol */
