@@ -12,6 +12,10 @@
 
 @implementation PBGitWindowController
 
+enum {
+	PBHistoryViewIndex = 0,
+	PBCommitViewIndex = 1
+};
 
 @synthesize repository, viewController, selectedViewIndex;
 
@@ -43,7 +47,12 @@
 
 - (BOOL)validateMenuItem:(NSMenuItem *)menuItem
 {
-	if ([menuItem action] == @selector(showCommitView:) || [menuItem action] == @selector(showHistoryView:)) {
+	SEL action = [menuItem action];
+	if (action == @selector(showCommitView:) || action == @selector(showHistoryView:)) {
+		if (action == @selector(showCommitView:))
+			[menuItem setState: selectedViewIndex == PBCommitViewIndex ? NSOnState : NSOffState];
+		else if (action == @selector(showHistoryView:))
+			[menuItem setState: selectedViewIndex == PBHistoryViewIndex ? NSOnState : NSOffState];
 		return ![repository isBareRepository];
 	}
 	return YES;
@@ -62,7 +71,7 @@
 		[[viewController view] removeFromSuperview];
 
 	if ([repository isBareRepository]) {	// in bare repository we don't want to view commit
-		whichViewTag = 0;		// even if it was selected by default
+		whichViewTag = PBHistoryViewIndex;		// even if it was selected by default
 	}
 
 	// Set our default here because we might have changed it (based on bare repo) before
@@ -71,14 +80,14 @@
 
 	switch (whichViewTag)
 	{
-		case 0:	// swap in the "CustomImageViewController - NSImageView"
+		case PBHistoryViewIndex:	// swap in the "CustomImageViewController - NSImageView"
 			if (!historyViewController)
 				historyViewController = [[PBGitHistoryController alloc] initWithRepository:repository superController:self];
 			else
 				[historyViewController updateView];
 			viewController = historyViewController;
 			break;
-		case 1:
+		case PBCommitViewIndex:
 			if (!commitViewController)
 				commitViewController = [[PBGitCommitController alloc] initWithRepository:repository superController:self];
 			else
@@ -113,14 +122,14 @@
 
 - (void) showCommitView:(id)sender
 {
-	if (self.selectedViewIndex != 1)
-		self.selectedViewIndex = 1;
+	if (self.selectedViewIndex != PBCommitViewIndex)
+		self.selectedViewIndex = PBCommitViewIndex;
 }
 
 - (void) showHistoryView:(id)sender
 {
-	if (self.selectedViewIndex != 0)
-		self.selectedViewIndex = 0;
+	if (self.selectedViewIndex != PBHistoryViewIndex)
+		self.selectedViewIndex = PBHistoryViewIndex;
 }
 
 - (void)showMessageSheet:(NSString *)messageText infoText:(NSString *)infoText
