@@ -437,3 +437,19 @@
 }
 
 @end
+
+@implementation PBGitCommitController (NSTextViewDelegate)
+
+- (BOOL)textView:(NSTextView *)textView doCommandBySelector:(SEL)commandSelector;
+{
+    if (commandSelector == @selector(insertTab:)) {
+        [[textView window] selectNextKeyView:self];
+        return YES;
+    } else if (commandSelector == @selector(insertBacktab:)) {
+		[[textView window] selectPreviousKeyView:self];
+		return YES;
+	}
+    return NO;
+}
+
+@end
