@@ -30,6 +30,9 @@
 - (void) stageFiles:(NSArray *)files;
 - (void) unstageFiles:(NSArray *)files;
 
+- (IBAction)stageSelectedFiles:(id)sender;
+- (IBAction)unstageSelectedFiles:(id)sender;
+
 - (IBAction) rowClicked:(NSCell *) sender;
 - (IBAction) tableClicked:(NSTableView *)tableView;
 

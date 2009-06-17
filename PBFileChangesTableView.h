@@ -10,6 +10,11 @@
 
 
 @interface PBFileChangesTableView : NSTableView {
+    IBOutlet NSButton *moveButton;
+    NSIndexSet *lastSelectedRowIndexes;
+    NSUInteger lastRowCount;
 }
+
+- (NSButton *)moveButton;
 
 @end
