@@ -47,6 +47,10 @@
 	[webController closeView];
 	[super finalize];
 }
+- (NSResponder *)firstResponder;
+{
+	return commitMessageView;
+}
 
 - (IBAction)signOff:(id)sender
 {

@@ -179,6 +179,11 @@
 	[self refresh:nil];
 }
 
+- (NSResponder *)firstResponder;
+{
+	return commitList;
+}
+
 - (void) selectCommit: (NSString*) commit
 {
 	NSPredicate* selection = [NSPredicate predicateWithFormat:@"realSha == %@", commit];
