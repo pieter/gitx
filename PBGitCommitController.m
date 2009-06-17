@@ -57,8 +57,10 @@
 				[repository.config valueForKeyPath:@"user.email"]];
 
 	if([commitMessageView.string rangeOfString:SOBline].location == NSNotFound) {
+		NSArray *selectedRanges = [commitMessageView selectedRanges];
 		commitMessageView.string = [NSString stringWithFormat:@"%@\n\n%@",
 				commitMessageView.string, SOBline];
+		[commitMessageView setSelectedRanges: selectedRanges];
 	}
 }
 
