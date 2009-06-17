@@ -49,7 +49,7 @@
 		imageFrame.size = imageSize;
 
 		if ([controlView isFlipped])
-			imageFrame.origin.y += ceil((cellFrame.size.height + imageFrame.size.height) / 2);
+			imageFrame.origin.y += floor((cellFrame.size.height + imageFrame.size.height) / 2);
 		else
 			imageFrame.origin.y += ceil((cellFrame.size.height - imageFrame.size.height) / 2);
 
