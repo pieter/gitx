@@ -157,8 +157,18 @@
 	return [commitController.repository outputInWorkdirForArguments:[NSArray arrayWithObjects:@"diff-files", [self contextParameter], @"--", file.path, nil]];
 }
 
-- (void) forceRevertChangesForFiles:(NSArray *)files
+- (void)discardChangesForFiles:(NSArray *)files force:(BOOL)force
 {
+	if(!force) {
+		int ret = [[NSAlert alertWithMessageText:@"Discard changes"
+					   defaultButton:nil
+					 alternateButton:@"Cancel"
+					     otherButton:nil
+			       informativeTextWithFormat:@"Are you sure you wish to discard the changes to this file?\n\nYou cannot undo this operation."] runModal];
+		if (ret != NSAlertDefaultReturn)
+			return;
+	}
+
 	NSArray *paths = [files valueForKey:@"path"];
 	NSString *input = [paths componentsJoinedByString:@"\0"];
 
@@ -166,24 +176,12 @@
 	int ret = 1;
 	[commitController.repository outputForArguments:arguments inputString:input retValue:&ret];
 	if (ret) {
-		[[commitController.repository windowController] showMessageSheet:@"Reverting changes failed" infoText:[NSString stringWithFormat:@"Reverting changes failed with error code %i", ret]];
+		[[commitController.repository windowController] showMessageSheet:@"Discarding changes failed" infoText:[NSString stringWithFormat:@"Discarding changes failed with error code %i", ret]];
 		return;
 	}
 
 	for (PBChangedFile *file in files)
 		file.hasUnstagedChanges = NO;
-}
-
-- (void) revertChangesForFiles:(NSArray *)files
-{
-	int ret = [[NSAlert alertWithMessageText:@"Revert changes"
-					 defaultButton:nil
-				   alternateButton:@"Cancel"
-					   otherButton:nil
-		 informativeTextWithFormat:@"Are you sure you wish to revert changes?\n\n You cannot undo this operation."] runModal];
-
-	if (ret == NSAlertDefaultReturn)
-		[self forceRevertChangesForFiles:files];
 }
 
 
@@ -244,19 +242,19 @@
 		if (!file.hasUnstagedChanges)
 			return menu;
 
-	NSMenuItem *revertItem = [[NSMenuItem alloc] initWithTitle:@"Revert Changes…" action:@selector(revertFilesAction:) keyEquivalent:@""];
-	[revertItem setTarget:self];
-	[revertItem setAlternate:NO];
-	[revertItem setRepresentedObject:selectedFiles];
+	NSMenuItem *discardItem = [[NSMenuItem alloc] initWithTitle:@"Discard changes" action:@selector(discardFilesAction:) keyEquivalent:@""];
+	[discardItem setTarget:self];
+	[discardItem setAlternate:NO];
+	[discardItem setRepresentedObject:selectedFiles];
 
-	[menu addItem:revertItem];
+	[menu addItem:discardItem];
 
-	NSMenuItem *revertForceItem = [[NSMenuItem alloc] initWithTitle:@"Revert Changes" action:@selector(forceRevertFilesAction:) keyEquivalent:@""];
-	[revertForceItem setTarget:self];
-	[revertForceItem setAlternate:YES];
-	[revertForceItem setRepresentedObject:selectedFiles];
-	[revertForceItem setKeyEquivalentModifierMask:NSAlternateKeyMask];
-	[menu addItem:revertForceItem];
+	NSMenuItem *discardForceItem = [[NSMenuItem alloc] initWithTitle:@"Discard changes" action:@selector(forceDiscardFilesAction:) keyEquivalent:@""];
+	[discardForceItem setTarget:self];
+	[discardForceItem setAlternate:YES];
+	[discardForceItem setRepresentedObject:selectedFiles];
+	[discardForceItem setKeyEquivalentModifierMask:NSAlternateKeyMask];
+	[menu addItem:discardForceItem];
 	
 	return menu;
 }
@@ -288,18 +286,18 @@
 	[commitController refresh:NULL];
 }
 
-- (void) revertFilesAction:(id) sender
+- (void)discardFilesAction:(id) sender
 {
 	NSArray *selectedFiles = [sender representedObject];
 	if ([selectedFiles count] > 0)
-		[self revertChangesForFiles:selectedFiles];
+		[self discardChangesForFiles:selectedFiles force:FALSE];
 }
 
-- (void) forceRevertFilesAction:(id) sender
+- (void)forceDiscardFilesAction:(id) sender
 {
 	NSArray *selectedFiles = [sender representedObject];
 	if ([selectedFiles count] > 0)
-		[self forceRevertChangesForFiles:selectedFiles];
+		[self discardChangesForFiles:selectedFiles force:TRUE];
 }
 
 - (void) showInFinderAction:(id) sender
