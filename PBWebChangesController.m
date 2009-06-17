@@ -95,7 +95,7 @@
 			defaultButton:nil
 			alternateButton:@"Cancel"
 			otherButton:nil
-			informativeTextWithFormat:@"Are you sure you wish to discard the changes in this hunk?\n\n You cannot undo this operation."] runModal];
+			informativeTextWithFormat:@"Are you sure you wish to discard the changes in this hunk?\n\nYou cannot undo this operation."] runModal];
 	}
 
 	if (ret == NSAlertDefaultReturn) {

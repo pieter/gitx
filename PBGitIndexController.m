@@ -180,7 +180,7 @@
 					 defaultButton:nil
 				   alternateButton:@"Cancel"
 					   otherButton:nil
-		 informativeTextWithFormat:@"Are you sure you wish to revert changes?\n\n You cannot undo this operation."] runModal];
+		 informativeTextWithFormat:@"Are you sure you wish to revert changes?\n\nYou cannot undo this operation."] runModal];
 
 	if (ret == NSAlertDefaultReturn)
 		[self forceRevertChangesForFiles:files];
