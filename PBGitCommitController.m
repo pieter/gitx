@@ -195,7 +195,6 @@
 
 - (void) readOtherFiles:(NSNotification *)notification;
 {
-	[unstagedFilesController setAutomaticallyRearrangesObjects:NO];
 	NSArray *lines = [self linesFromNotification:notification];
 	NSMutableDictionary *dictionary = [[NSMutableDictionary alloc] initWithCapacity:[lines count]];
 	// We fake this files status as good as possible.
