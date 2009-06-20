@@ -76,21 +76,23 @@ contextMenuItemsForElement:(NSDictionary *)element
 {
 	DOMNode *node = [element valueForKey:@"WebElementDOMNode"];
 
-	// If clicked on the text, select the containing div
-	if ([[node className] isEqualToString:@"DOMText"])
+	while (node) {
+		// Every ref has a class name of 'refs' and some other class. We check on that to see if we pressed on a ref.
+		if ([[node className] hasPrefix:@"refs "]) {
+			NSString *selectedRefString = [[[node childNodes] item:0] textContent];
+			for (PBGitRef *ref in historyController.webCommit.refs)
+			{
+				if ([[ref shortName] isEqualToString:selectedRefString])
+					return [contextMenuDelegate menuItemsForRef:ref commit:historyController.webCommit];
+			}
+			NSLog(@"Could not find selected ref!");
+			return defaultMenuItems;
+		}
+		if ([node hasAttributes] && [[node attributes] getNamedItem:@"representedFile"])
+			return [historyController menuItemsForPaths:[NSArray arrayWithObject:[[[node attributes] getNamedItem:@"representedFile"] value]]];
+
 		node = [node parentNode];
-
-	// Every ref has a class name of 'refs' and some other class. We check on that to see if we pressed on a ref.
-	if (![[node className] hasPrefix:@"refs "])
-		return defaultMenuItems;
-
-	NSString *selectedRefString = [[[node childNodes] item:0] textContent];
-	for (PBGitRef *ref in historyController.webCommit.refs)
-	{
-		if ([[ref shortName] isEqualToString:selectedRefString])
-			return [contextMenuDelegate menuItemsForRef:ref commit:historyController.webCommit];
 	}
-	NSLog(@"Could not find selected ref!");
 
 	return defaultMenuItems;
 }

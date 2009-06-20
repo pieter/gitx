@@ -2,14 +2,14 @@
 <archive type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="7.03">
 	<data>
 		<int key="IBDocument.SystemTarget">1050</int>
-		<string key="IBDocument.SystemVersion">9G55</string>
+		<string key="IBDocument.SystemVersion">9J61</string>
 		<string key="IBDocument.InterfaceBuilderVersion">677</string>
-		<string key="IBDocument.AppKitVersion">949.43</string>
+		<string key="IBDocument.AppKitVersion">949.46</string>
 		<string key="IBDocument.HIToolboxVersion">353.00</string>
 		<object class="NSMutableArray" key="IBDocument.EditedObjectIDs">
 			<bool key="EncodedWithXMLCoder">YES</bool>
 			<integer value="237"/>
-			<integer value="27"/>
+			<integer value="2"/>
 		</object>
 		<object class="NSArray" key="IBDocument.PluginDependencies">
 			<bool key="EncodedWithXMLCoder">YES</bool>
@@ -345,6 +345,7 @@
 														<object class="NSMutableArray" key="set.sortedObjects">
 															<bool key="EncodedWithXMLCoder">YES</bool>
 															<string>Apple HTML pasteboard type</string>
+															<string>Apple PDF pasteboard type</string>
 															<string>Apple PICT pasteboard type</string>
 															<string>Apple URL pasteboard type</string>
 															<string>Apple Web Archive pasteboard type</string>
@@ -355,6 +356,7 @@
 															<string>NeXT Rich Text Format v1.0 pasteboard type</string>
 															<string>NeXT TIFF v4.0 pasteboard type</string>
 															<string>WebURLsWithTitlesPboardType</string>
+															<string>public.png</string>
 															<string>public.url</string>
 															<string>public.url-name</string>
 														</object>
@@ -2978,7 +2980,7 @@
 					</object>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<string>{{321, 79}, {852, 432}}</string>
+					<string>{{358, 67}, {852, 432}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -3013,7 +3015,7 @@
 				</object>
 			</object>
 			<nil key="sourceID"/>
-			<int key="maxID">274</int>
+			<int key="maxID">286</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<object class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -3032,7 +3034,7 @@
 						<object class="NSMutableArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<string>PBGitHistoryController</string>
-							<string>id</string>
+							<string>PBWebHistoryController</string>
 							<string>WebView</string>
 						</object>
 					</object>
@@ -3053,10 +3055,14 @@
 							<string>setDetailedView:</string>
 							<string>setRawView:</string>
 							<string>setTreeView:</string>
+							<string>showCommitsFromTree:</string>
+							<string>showInFinderAction:</string>
 							<string>toggleQuickView:</string>
 						</object>
 						<object class="NSMutableArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
+							<string>id</string>
+							<string>id</string>
 							<string>id</string>
 							<string>id</string>
 							<string>id</string>
@@ -3073,6 +3079,7 @@
 							<string>commitList</string>
 							<string>fileBrowser</string>
 							<string>searchField</string>
+							<string>treeContextMenu</string>
 							<string>treeController</string>
 							<string>webView</string>
 						</object>
@@ -3082,6 +3089,7 @@
 							<string>NSTableView</string>
 							<string>NSOutlineView</string>
 							<string>NSSearchField</string>
+							<string>NSMenu</string>
 							<string>NSTreeController</string>
 							<string>id</string>
 						</object>
