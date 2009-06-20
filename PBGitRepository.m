@@ -78,8 +78,6 @@ NSString* PBGitRepositoryErrorDomain = @"GitXErrorDomain";
 //this works much better.
 - (BOOL)readFromURL:(NSURL *)absoluteURL ofType:(NSString *)typeName error:(NSError **)outError
 {
-	BOOL success = NO;
-
 	if (![PBGitBinary path])
 	{
 		if (outError) {
@@ -89,32 +87,33 @@ NSString* PBGitRepositoryErrorDomain = @"GitXErrorDomain";
 		}
 		return NO;
 	}
-	BOOL lIsDirectory = FALSE;
-	[[NSFileManager defaultManager] fileExistsAtPath:[absoluteURL path] isDirectory:&lIsDirectory];
-	if (!lIsDirectory) {
+
+	BOOL isDirectory = FALSE;
+	[[NSFileManager defaultManager] fileExistsAtPath:[absoluteURL path] isDirectory:&isDirectory];
+	if (!isDirectory) {
 		if (outError) {
 			NSDictionary* userInfo = [NSDictionary dictionaryWithObject:@"Reading files is not supported."
 																 forKey:NSLocalizedRecoverySuggestionErrorKey];
 			*outError = [NSError errorWithDomain:PBGitRepositoryErrorDomain code:0 userInfo:userInfo];
 		}
-	} else {
-		NSURL* gitDirURL = [PBGitRepository gitDirForURL:[self fileURL]];
-		if (gitDirURL) {
-			[self setFileURL:gitDirURL];
-			success = YES;
-		} else if (outError) {
+		return NO;
+	}
+
+
+	NSURL* gitDirURL = [PBGitRepository gitDirForURL:[self fileURL]];
+	if (!gitDirURL) {
+		if (outError) {
 			NSDictionary* userInfo = [NSDictionary dictionaryWithObject:[NSString stringWithFormat:@"%@ does not appear to be a git repository.", [self fileName]]
 																 forKey:NSLocalizedRecoverySuggestionErrorKey];
 			*outError = [NSError errorWithDomain:PBGitRepositoryErrorDomain code:0 userInfo:userInfo];
 		}
-
-		if (success) {
-			[self setup];
-			[self readCurrentBranch];
-		}
+		return NO;
 	}
 
-	return success;
+	[self setFileURL:gitDirURL];
+	[self setup];
+	[self readCurrentBranch];
+	return YES;
 }
 
 - (void) setup
