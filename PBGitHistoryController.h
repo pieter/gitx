@@ -10,6 +10,7 @@
 #import "PBGitCommit.h"
 #import "PBGitTree.h"
 #import "PBViewController.h"
+#import "PBCollapsibleSplitView.h"
 
 @interface PBGitHistoryController : PBViewController {
 	IBOutlet NSSearchField *searchField;
@@ -17,6 +18,7 @@
 	IBOutlet NSTreeController* treeController;
 	IBOutlet NSOutlineView* fileBrowser;
 	IBOutlet NSTableView* commitList;
+	IBOutlet PBCollapsibleSplitView *historySplitView;
 
 	IBOutlet id webView;
 	int selectedTab;
@@ -54,4 +56,10 @@
 - (BOOL) hasNonlinearPath;
 
 - (NSMenu *)tableColumnMenu;
+
+- (BOOL)splitView:(NSSplitView *)sender canCollapseSubview:(NSView *)subview;
+- (BOOL)splitView:(NSSplitView *)splitView shouldCollapseSubview:(NSView *)subview forDoubleClickOnDividerAtIndex:(NSInteger)dividerIndex;
+- (CGFloat)splitView:(NSSplitView *)sender constrainMinCoordinate:(CGFloat)proposedMin ofSubviewAt:(NSInteger)offset;
+- (CGFloat)splitView:(NSSplitView *)sender constrainMaxCoordinate:(CGFloat)proposedMax ofSubviewAt:(NSInteger)offset;
+
 @end

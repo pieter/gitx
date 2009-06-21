@@ -8,8 +8,8 @@
 		<string key="IBDocument.HIToolboxVersion">353.00</string>
 		<object class="NSMutableArray" key="IBDocument.EditedObjectIDs">
 			<bool key="EncodedWithXMLCoder">YES</bool>
+			<integer value="46"/>
 			<integer value="237"/>
-			<integer value="2"/>
 		</object>
 		<object class="NSArray" key="IBDocument.PluginDependencies">
 			<bool key="EncodedWithXMLCoder">YES</bool>
@@ -420,7 +420,7 @@
 																<object class="NSTextView" id="239018083">
 																	<reference key="NSNextResponder" ref="948090592"/>
 																	<int key="NSvFlags">2322</int>
-																	<string key="NSFrameSize">{835, 70}</string>
+																	<string key="NSFrameSize">{835, 0}</string>
 																	<reference key="NSSuperview" ref="948090592"/>
 																	<object class="NSTextContainer" key="NSTextContainer" id="53511606">
 																		<object class="NSLayoutManager" key="NSLayoutManager">
@@ -784,7 +784,7 @@
 																		<object class="NSTextView" id="75600241">
 																			<reference key="NSNextResponder" ref="321980917"/>
 																			<int key="NSvFlags">2322</int>
-																			<string key="NSFrameSize">{543, 112}</string>
+																			<string key="NSFrameSize">{543, 0}</string>
 																			<reference key="NSSuperview" ref="321980917"/>
 																			<object class="NSTextContainer" key="NSTextContainer" id="480935218">
 																				<object class="NSLayoutManager" key="NSLayoutManager">
@@ -2093,6 +2093,14 @@
 					</object>
 					<int key="connectionID">274</int>
 				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
+						<string key="label">historySplitView</string>
+						<reference key="source" ref="1001"/>
+						<reference key="destination" ref="202620420"/>
+					</object>
+					<int key="connectionID">275</int>
+				</object>
 			</object>
 			<object class="IBMutableOrderedSet" key="objectRecords">
 				<object class="NSArray" key="orderedObjects">
@@ -2859,7 +2867,7 @@
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<string>PBNiceSplitView</string>
+					<string>PBCollapsibleSplitView</string>
 					<string>{{312, 577}, {852, 384}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<reference ref="9"/>
@@ -2994,6 +3002,14 @@
 			<object class="NSMutableArray" key="referencedPartialClassDescriptions">
 				<bool key="EncodedWithXMLCoder">YES</bool>
 				<object class="IBPartialClassDescription">
+					<string key="className">PBCollapsibleSplitView</string>
+					<string key="superclassName">PBNiceSplitView</string>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<string key="majorKey">IBProjectSource</string>
+						<string key="minorKey">PBCollapsibleSplitView.h</string>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
 					<string key="className">PBCommitList</string>
 					<string key="superclassName">NSTableView</string>
 					<object class="NSMutableDictionary" key="outlets">
@@ -3051,6 +3067,7 @@
 							<string>commitController</string>
 							<string>commitList</string>
 							<string>fileBrowser</string>
+							<string>historySplitView</string>
 							<string>searchField</string>
 							<string>treeContextMenu</string>
 							<string>treeController</string>
@@ -3061,6 +3078,7 @@
 							<string>NSArrayController</string>
 							<string>NSTableView</string>
 							<string>NSOutlineView</string>
+							<string>PBCollapsibleSplitView</string>
 							<string>NSSearchField</string>
 							<string>NSMenu</string>
 							<string>NSTreeController</string>

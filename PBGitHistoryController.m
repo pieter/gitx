@@ -41,6 +41,8 @@
 	[[commitList tableColumnWithIdentifier:@"subject"] setSortDescriptorPrototype:[[NSSortDescriptor alloc] initWithKey:@"subject" ascending:YES]];
 	// Add a menu that allows a user to select which columns to view
 	[[commitList headerView] setMenu:[self tableColumnMenu]];
+	[historySplitView setTopMin:33.0 andBottomMin:100.0];
+	[historySplitView uncollapse];
 	[super awakeFromNib];
 }
 
@@ -294,6 +296,30 @@
 	}
 
 	return menuItems;
+}
+
+- (BOOL)splitView:(NSSplitView *)sender canCollapseSubview:(NSView *)subview {
+	return TRUE;
+}
+
+- (BOOL)splitView:(NSSplitView *)splitView shouldCollapseSubview:(NSView *)subview forDoubleClickOnDividerAtIndex:(NSInteger)dividerIndex {
+	int index = [[splitView subviews] indexOfObject:subview];
+	// this method (and canCollapse) are called by the splitView to decide how to collapse on double-click
+	// we compare our two subviews, so that always the smaller one is collapsed.
+	if([[[splitView subviews] objectAtIndex:index] frame].size.height < [[[splitView subviews] objectAtIndex:((index+1)%2)] frame].size.height) {
+		return TRUE;
+	}
+	return FALSE;
+}
+
+- (CGFloat)splitView:(NSSplitView *)sender constrainMinCoordinate:(CGFloat)proposedMin ofSubviewAt:(NSInteger)offset {
+	return proposedMin + historySplitView.topViewMin;
+}
+
+- (CGFloat)splitView:(NSSplitView *)sender constrainMaxCoordinate:(CGFloat)proposedMax ofSubviewAt:(NSInteger)offset {
+	if(offset = 1)
+		return proposedMax - historySplitView.bottomViewMin;
+	return [sender frame].size.height;
 }
 
 @end
