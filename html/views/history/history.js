@@ -184,15 +184,18 @@ var loadCommit = function(commitObject, currentRef) {
 		}
 	}
 
+	// Scroll to top
+	scroll(0, 0);
+
+	if (!commit.parents)
+		return;
+
 	for (var i = 0; i < commit.parents.length; i++) {
 		var newRow = $("commit_header").insertRow(-1);
 		newRow.innerHTML = "<td class='property_name'>Parent:</td><td>" +
 			"<a href='' onclick='selectCommit(this.innerHTML); return false;'>" +
 			commit.parents[i] + "</a></td>";
 	}
-
-	// Scroll to top
-	scroll(0, 0);
 }
 
 var showDiff = function() {
@@ -202,26 +205,32 @@ var showDiff = function() {
 		var link = document.createElement("a");
 		link.setAttribute("href", "#" + id);
 		p.appendChild(link);
-		var buttonType = ""
+		var buttonType = "";
+		var finalFile = "";
 		if (name1 == name2) {
 			buttonType = "changed"
-			link.appendChild(document.createTextNode(name1));
+			finalFile = name1;
 			if (mode_change)
 				p.appendChild(document.createTextNode(" mode " + old_mode + " -> " + new_mode));
 		}
 		else if (name1 == "/dev/null") {
 			buttonType = "created";
-			link.appendChild(document.createTextNode(name2));
+			finalFile = name2;
 		}
 		else if (name2 == "/dev/null") {
 			buttonType = "deleted";
-			link.appendChild(document.createTextNode(name1));
+			finalFile = name1;
 		}
 		else {
 			buttonType = "renamed";
-			link.appendChild(document.createTextNode(name2));
+			finalFile = name2;
 			p.insertBefore(document.createTextNode(name1 + " -> "), link);
 		}
+
+		link.appendChild(document.createTextNode(finalFile));
+		button.setAttribute("representedFile", finalFile);
+		link.setAttribute("representedFile", finalFile);
+
 		button.setAttribute("class", "button " + buttonType);
 		button.appendChild(document.createTextNode(buttonType));
 		$("files").appendChild(button);

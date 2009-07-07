@@ -72,10 +72,12 @@ NSString* PBGitRepositoryErrorDomain = @"GitXErrorDomain";
 	return repositoryURL;
 }
 
-- (BOOL)readFromFileWrapper:(NSFileWrapper *)fileWrapper ofType:(NSString *)typeName error:(NSError **)outError
+// NSFileWrapper is broken and doesn't work when called on a directory containing a large number of directories and files.
+//because of this it is safer to implement readFromURL than readFromFileWrapper.
+//Because NSFileManager does not attempt to recursively open all directories and file when fileExistsAtPath is called
+//this works much better.
+- (BOOL)readFromURL:(NSURL *)absoluteURL ofType:(NSString *)typeName error:(NSError **)outError
 {
-	BOOL success = NO;
-
 	if (![PBGitBinary path])
 	{
 		if (outError) {
@@ -86,30 +88,32 @@ NSString* PBGitRepositoryErrorDomain = @"GitXErrorDomain";
 		return NO;
 	}
 
-	if (![fileWrapper isDirectory]) {
+	BOOL isDirectory = FALSE;
+	[[NSFileManager defaultManager] fileExistsAtPath:[absoluteURL path] isDirectory:&isDirectory];
+	if (!isDirectory) {
 		if (outError) {
-			NSDictionary* userInfo = [NSDictionary dictionaryWithObject:[NSString stringWithFormat:@"Reading files is not supported.", [fileWrapper filename]]
-                                                              forKey:NSLocalizedRecoverySuggestionErrorKey];
+			NSDictionary* userInfo = [NSDictionary dictionaryWithObject:@"Reading files is not supported."
+																 forKey:NSLocalizedRecoverySuggestionErrorKey];
 			*outError = [NSError errorWithDomain:PBGitRepositoryErrorDomain code:0 userInfo:userInfo];
 		}
-	} else {
-		NSURL* gitDirURL = [PBGitRepository gitDirForURL:[self fileURL]];
-		if (gitDirURL) {
-			[self setFileURL:gitDirURL];
-			success = YES;
-		} else if (outError) {
-			NSDictionary* userInfo = [NSDictionary dictionaryWithObject:[NSString stringWithFormat:@"%@ does not appear to be a git repository.", [fileWrapper filename]]
-                                                              forKey:NSLocalizedRecoverySuggestionErrorKey];
-			*outError = [NSError errorWithDomain:PBGitRepositoryErrorDomain code:0 userInfo:userInfo];
-		}
-
-		if (success) {
-			[self setup];
-			[self readCurrentBranch];
-		}
+		return NO;
 	}
 
-	return success;
+
+	NSURL* gitDirURL = [PBGitRepository gitDirForURL:[self fileURL]];
+	if (!gitDirURL) {
+		if (outError) {
+			NSDictionary* userInfo = [NSDictionary dictionaryWithObject:[NSString stringWithFormat:@"%@ does not appear to be a git repository.", [self fileName]]
+																 forKey:NSLocalizedRecoverySuggestionErrorKey];
+			*outError = [NSError errorWithDomain:PBGitRepositoryErrorDomain code:0 userInfo:userInfo];
+		}
+		return NO;
+	}
+
+	[self setFileURL:gitDirURL];
+	[self setup];
+	[self readCurrentBranch];
+	return YES;
 }
 
 - (void) setup

@@ -201,7 +201,6 @@
 
 - (void) readOtherFiles:(NSNotification *)notification;
 {
-	[unstagedFilesController setAutomaticallyRearrangesObjects:NO];
 	NSArray *lines = [self linesFromNotification:notification];
 	NSMutableDictionary *dictionary = [[NSMutableDictionary alloc] initWithCapacity:[lines count]];
 	// We fake this files status as good as possible.
@@ -324,6 +323,11 @@
 
 - (IBAction) commit:(id) sender
 {
+	if ([[NSFileManager defaultManager] fileExistsAtPath:[repository.fileURL.path stringByAppendingPathComponent:@"MERGE_HEAD"]]) {
+		[[repository windowController] showMessageSheet:@"Cannot commit merges" infoText:@"GitX cannot commit merges yet. Please commit your changes from the command line."];
+		return;
+	}
+
 	if ([[cachedFilesController arrangedObjects] count] == 0) {
 		[[repository windowController] showMessageSheet:@"No changes to commit" infoText:@"You must first stage some changes before committing"];
 		return;

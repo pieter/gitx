@@ -208,6 +208,7 @@
 	[super removeView];
 }
 
+#pragma mark Table Column Methods
 - (NSMenu *)tableColumnMenu
 {
 	NSMenu *menu = [[NSMenu alloc] initWithTitle:@"Table columns menu"];
@@ -221,6 +222,78 @@
 		[menu addItem:item];
 	}
 	return menu;
+}
+
+#pragma mark Tree Context Menu Methods
+
+- (void)showCommitsFromTree:(id)sender
+{
+	// TODO: Enable this from webview as well!
+
+	NSMutableArray *filePaths = [NSMutableArray arrayWithObjects:@"HEAD", @"--", NULL];
+	[filePaths addObjectsFromArray:[sender representedObject]];
+
+	PBGitRevSpecifier *revSpec = [[PBGitRevSpecifier alloc] initWithParameters:filePaths];
+
+	repository.currentBranch = [repository addBranch:revSpec];
+}
+
+- (void)showInFinderAction:(id)sender
+{
+	NSString *workingDirectory = [[repository workingDirectory] stringByAppendingString:@"/"];
+	NSString *path;
+	NSWorkspace *ws = [NSWorkspace sharedWorkspace];
+
+	for (NSString *filePath in [sender representedObject]) {
+		path = [workingDirectory stringByAppendingPathComponent:filePath];
+		[ws selectFile: path inFileViewerRootedAtPath:path];
+	}
+
+}
+
+- (void)openFilesAction:(id)sender
+{
+	NSString *workingDirectory = [[repository workingDirectory] stringByAppendingString:@"/"];
+	NSString *path;
+	NSWorkspace *ws = [NSWorkspace sharedWorkspace];
+
+	for (NSString *filePath in [sender representedObject]) {
+		path = [workingDirectory stringByAppendingPathComponent:filePath];
+		[ws openFile:path];
+	}
+}
+
+
+- (NSMenu *)contextMenuForTreeView
+{
+	NSArray *filePaths = [[treeController selectedObjects] valueForKey:@"fullPath"];
+
+	NSMenu *menu = [[NSMenu alloc] init];
+	for (NSMenuItem *item in [self menuItemsForPaths:filePaths])
+		[menu addItem:item];
+	return menu;
+}
+
+- (NSArray *)menuItemsForPaths:(NSArray *)paths
+{
+	BOOL multiple = [paths count] != 1;
+	NSMenuItem *historyItem = [[NSMenuItem alloc] initWithTitle:multiple? @"Show history of files" : @"Show history of file"
+														 action:@selector(showCommitsFromTree:)
+												 keyEquivalent:@""];
+	NSMenuItem *finderItem = [[NSMenuItem alloc] initWithTitle:@"Show in Finder"
+														action:@selector(showInFinderAction:)
+												 keyEquivalent:@""];
+	NSMenuItem *openFilesItem = [[NSMenuItem alloc] initWithTitle:multiple? @"Open Files" : @"Open File"
+														   action:@selector(openFilesAction:)
+													keyEquivalent:@""];
+
+	NSArray *menuItems = [NSArray arrayWithObjects:historyItem, finderItem, openFilesItem, nil];
+	for (NSMenuItem *item in menuItems) {
+		[item setTarget:self];
+		[item setRepresentedObject:paths];
+	}
+
+	return menuItems;
 }
 
 @end
