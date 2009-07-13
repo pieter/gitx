@@ -34,11 +34,65 @@
 	return [NSDate dateWithTimeIntervalSince1970:timestamp];
 }
 
+#ifdef NormalDate
 - (NSString *) dateString
 {
 	NSDateFormatter* formatter = [[NSDateFormatter alloc] initWithDateFormat:@"%Y-%m-%d %H:%M:%S" allowNaturalLanguage:NO];
 	return [formatter stringFromDate: self.date];
 }
+#else
+
+// Code modified from Gilean ( http://stackoverflow.com/users/6305/gilean ).
+// Copied from stackoverflow's accepted answer for Objective C relative dates.
+// http://stackoverflow.com/questions/902950/iphone-convert-date-string-to-a-relative-time-stamp
+// Modified the seconds constants with compile time math to aid in ease of adjustment of "Majic" numbers.
+//
+-(NSString *)dateString {
+    NSDate *todayDate = [NSDate date];
+    double ti = [self.date timeIntervalSinceDate:todayDate];
+    ti = ti * -1;
+    if(ti < 1) {
+        return @"In the future!";
+    } else      if ( ti < 60 ) {
+        return @"less than a minute ago";
+    } else if ( ti < (60 * 60) ) {
+        int diff = round(ti / 60);
+		if ( diff < 2 ) {
+			return @"1 minute ago";
+		} else {
+			return [NSString stringWithFormat:@"%d minutes ago", diff];
+		}
+    } else if ( ti < ( 60 * 60 * 24 ) ) {
+        int diff = round(ti / 60 / 60);
+		if ( diff < 2 ) {
+			return @"1 hour ago";
+		} else {
+			return[NSString stringWithFormat:@"%d hours ago", diff];
+		}
+    } else if ( ti < ( 60 * 60 * 24 * 31.5 ) ) {
+        int diff = round(ti / 60 / 60 / 24);
+		if ( diff < 2 ) {
+			return @"1 day ago";
+		} else {
+			return[NSString stringWithFormat:@"%d days ago", diff];
+		}
+	} else if ( ti < ( 60 * 60 * 24 * 365 ) ) {
+        int diff = round(ti / 60 / 60 / 24 / 30);
+		if ( diff < 2 ) {
+			return @"1 month ago";
+		} else {
+			return[NSString stringWithFormat:@"%d months ago", diff];
+		}
+    } else {
+        float diff = round(ti / 60 / 60 / 24 / 365 * 4) / 4.0;
+		if ( diff < 1.25 ) {
+			return @"1 year ago";
+		} else {
+			return[NSString stringWithFormat:@"%g years ago", diff];
+		}
+    }
+}
+#endif
 
 - (NSArray*) treeContents
 {
