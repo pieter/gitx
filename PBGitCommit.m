@@ -69,12 +69,19 @@
 		} else {
 			return[NSString stringWithFormat:@"%d hours ago", diff];
 		}
-    } else if ( ti < ( 60 * 60 * 24 * 31.5 ) ) {
+    } else if ( ti < ( 60 * 60 * 24 * 7 ) ) {
         int diff = round(ti / 60 / 60 / 24);
 		if ( diff < 2 ) {
 			return @"1 day ago";
 		} else {
 			return[NSString stringWithFormat:@"%d days ago", diff];
+		}
+	} else if ( ti < ( 60 * 60 * 24 * 31.5 ) ) {
+        int diff = round(ti / 60 / 60 / 24 / 7);
+		if ( diff < 2 ) {
+			return @"1 week ago";
+		} else {
+			return[NSString stringWithFormat:@"%d weeks ago", diff];
 		}
 	} else if ( ti < ( 60 * 60 * 24 * 365 ) ) {
         int diff = round(ti / 60 / 60 / 24 / 30);
