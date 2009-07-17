@@ -45,4 +45,9 @@
 {
 	return nil;
 }
+
+- (IBAction) refresh:(id)sender
+{
+	return;
+}
 @end
