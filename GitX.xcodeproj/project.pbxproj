@@ -767,7 +767,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "export PATH=$PATH:$HOME/bin:$HOME/local/bin:/sw/bin:/opt/local/bin:`\"$TARGET_BUILD_DIR\"/gitx --git-path`\nVERSION=$(git describe)\nLONG_VERSION=$(echo $VERSION | sed -e \"s/\\-/\\./\" -e \"s/^v//\" -e \"s/-.*//\")\nSHORT_VERSION=$(echo $VERSION | sed -e \"s/\\-.*//\" -e \"s/^v//\")\n\necho -n \"#define LONG_VERSION $LONG_VERSION\n#define SHORT_VERSION $SHORT_VERSION\" > build/revision\ntouch Info.plist";
+			shellScript = "export PATH=$PATH:$HOME/bin:$HOME/local/bin:/sw/bin:/opt/local/bin:`\"$TARGET_BUILD_DIR\"/gitx --git-path`\nVERSION=$(cd \"$PROJECT_DIR\";git describe)\nLONG_VERSION=$(echo $VERSION | sed -e \"s/\\-/\\./\" -e \"s/^v//\" -e \"s/-.*//\")\nSHORT_VERSION=$(echo $VERSION | sed -e \"s/\\-.*//\" -e \"s/^v//\")\n\necho -n \"#define LONG_VERSION $LONG_VERSION\n#define SHORT_VERSION $SHORT_VERSION\" > \"$PROJECT_TEMP_DIR/revision\"\ntouch Info.plist";
 		};
 		F5792DFB0EDB570C001B0C31 /* Compile libgit2 */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -959,7 +959,7 @@
 				HEADER_SEARCH_PATHS = libgit2/src;
 				INFOPLIST_FILE = Info.plist;
 				INFOPLIST_OTHER_PREPROCESSOR_FLAGS = "-traditional";
-				INFOPLIST_PREFIX_HEADER = build/revision;
+				INFOPLIST_PREFIX_HEADER = $PROJECT_TEMP_DIR/revision;
 				INFOPLIST_PREPROCESS = YES;
 				INSTALL_PATH = "$(HOME)/Applications";
 				LIBRARY_SEARCH_PATHS = libgit2;
