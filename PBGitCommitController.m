@@ -244,12 +244,12 @@
 			if (tracked) {
 				NSString *mode = [[fileStatus objectAtIndex:0] substringFromIndex:1];
 				NSString *sha = [fileStatus objectAtIndex:2];
+				file.commitBlobSHA = sha;
+				file.commitBlobMode = mode;
 
-				if (staged) {
+				if (staged)
 					file.hasStagedChanges = YES;
-					file.commitBlobSHA = sha;
-					file.commitBlobMode = mode;
-				} else
+				else
 					file.hasUnstagedChanges = YES;
 			} else {
 				// Untracked file, set status to NEW, only unstaged changes
@@ -284,7 +284,7 @@
 		else
 			file.status = MODIFIED;
 
-		if (staged) {
+		if (tracked) {
 			file.commitBlobMode = [[fileStatus objectAtIndex:0] substringFromIndex:1];
 			file.commitBlobSHA = [fileStatus objectAtIndex:2];
 		}
