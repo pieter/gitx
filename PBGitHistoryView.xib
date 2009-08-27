@@ -2,9 +2,9 @@
 <archive type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="7.03">
 	<data>
 		<int key="IBDocument.SystemTarget">1050</int>
-		<string key="IBDocument.SystemVersion">9J61</string>
+		<string key="IBDocument.SystemVersion">9L30</string>
 		<string key="IBDocument.InterfaceBuilderVersion">677</string>
-		<string key="IBDocument.AppKitVersion">949.46</string>
+		<string key="IBDocument.AppKitVersion">949.54</string>
 		<string key="IBDocument.HIToolboxVersion">353.00</string>
 		<object class="NSMutableArray" key="IBDocument.EditedObjectIDs">
 			<bool key="EncodedWithXMLCoder">YES</bool>
@@ -93,6 +93,57 @@
 				<int key="NSvFlags">274</int>
 				<object class="NSMutableArray" key="NSSubviews">
 					<bool key="EncodedWithXMLCoder">YES</bool>
+					<object class="NSSegmentedControl" id="802449565">
+						<reference key="NSNextResponder" ref="319362431"/>
+						<int key="NSvFlags">293</int>
+						<string key="NSFrame">{{376, 6}, {99, 25}}</string>
+						<reference key="NSSuperview" ref="319362431"/>
+						<bool key="NSEnabled">YES</bool>
+						<object class="NSSegmentedCell" key="NSCell" id="534046869">
+							<int key="NSCellFlags">-2080244224</int>
+							<int key="NSCellFlags2">0</int>
+							<object class="NSFont" key="NSSupport" id="924107556">
+								<string key="NSName">LucidaGrande</string>
+								<double key="NSSize">1.300000e+01</double>
+								<int key="NSfFlags">1044</int>
+							</object>
+							<reference key="NSControlView" ref="802449565"/>
+							<object class="NSMutableArray" key="NSSegmentImages">
+								<bool key="EncodedWithXMLCoder">YES</bool>
+								<object class="NSSegmentItem">
+									<double key="NSSegmentItemWidth">3.200000e+01</double>
+									<object class="NSCustomResource" key="NSSegmentItemImage">
+										<string key="NSClassName">NSImage</string>
+										<string key="NSResourceName">DetailViewTemplate</string>
+									</object>
+									<string key="NSSegmentItemLabel"/>
+									<string key="NSSegmentItemTooltip">Detailed View</string>
+									<bool key="NSSegmentItemSelected">YES</bool>
+									<int key="NSSegmentItemImageScaling">2</int>
+								</object>
+								<object class="NSSegmentItem">
+									<object class="NSCustomResource" key="NSSegmentItemImage">
+										<string key="NSClassName">NSImage</string>
+										<string key="NSResourceName">NSListViewTemplate</string>
+									</object>
+									<string key="NSSegmentItemLabel"/>
+									<string key="NSSegmentItemTooltip">Raw View</string>
+									<int key="NSSegmentItemTag">1</int>
+									<int key="NSSegmentItemImageScaling">2</int>
+								</object>
+								<object class="NSSegmentItem">
+									<double key="NSSegmentItemWidth">3.200000e+01</double>
+									<object class="NSCustomResource" key="NSSegmentItemImage">
+										<string key="NSClassName">NSImage</string>
+										<string key="NSResourceName">NSPathTemplate</string>
+									</object>
+									<string key="NSSegmentItemTooltip">Tree View</string>
+									<int key="NSSegmentItemImageScaling">0</int>
+								</object>
+							</object>
+							<int key="NSSegmentStyle">2</int>
+						</object>
+					</object>
 					<object class="NSSplitView" id="202620420">
 						<reference key="NSNextResponder" ref="319362431"/>
 						<int key="NSvFlags">274</int>
@@ -161,11 +212,7 @@
 															<int key="NSCellFlags">337772096</int>
 															<int key="NSCellFlags2">2048</int>
 															<string key="NSContents">Text Cell</string>
-															<object class="NSFont" key="NSSupport" id="924107556">
-																<string key="NSName">LucidaGrande</string>
-																<double key="NSSize">1.300000e+01</double>
-																<int key="NSfFlags">1044</int>
-															</object>
+															<reference key="NSSupport" ref="924107556"/>
 															<reference key="NSControlView" ref="254268962"/>
 															<object class="NSColor" key="NSBackgroundColor" id="827363147">
 																<int key="NSColorSpace">6</int>
@@ -420,7 +467,7 @@
 																<object class="NSTextView" id="239018083">
 																	<reference key="NSNextResponder" ref="948090592"/>
 																	<int key="NSvFlags">2322</int>
-																	<string key="NSFrameSize">{835, 0}</string>
+																	<string key="NSFrameSize">{835, 70}</string>
 																	<reference key="NSSuperview" ref="948090592"/>
 																	<object class="NSTextContainer" key="NSTextContainer" id="53511606">
 																		<object class="NSLayoutManager" key="NSLayoutManager">
@@ -784,7 +831,7 @@
 																		<object class="NSTextView" id="75600241">
 																			<reference key="NSNextResponder" ref="321980917"/>
 																			<int key="NSvFlags">2322</int>
-																			<string key="NSFrameSize">{543, 0}</string>
+																			<string key="NSFrameSize">{543, 112}</string>
 																			<reference key="NSSuperview" ref="321980917"/>
 																			<object class="NSTextContainer" key="NSTextContainer" id="480935218">
 																				<object class="NSLayoutManager" key="NSLayoutManager">
@@ -927,53 +974,6 @@
 							<reference key="NSControlView" ref="555671215"/>
 							<reference key="NSBackgroundColor" ref="457244339"/>
 							<reference key="NSTextColor" ref="57062640"/>
-						</object>
-					</object>
-					<object class="NSSegmentedControl" id="802449565">
-						<reference key="NSNextResponder" ref="319362431"/>
-						<int key="NSvFlags">293</int>
-						<string key="NSFrame">{{376, 4}, {99, 25}}</string>
-						<reference key="NSSuperview" ref="319362431"/>
-						<bool key="NSEnabled">YES</bool>
-						<object class="NSSegmentedCell" key="NSCell" id="534046869">
-							<int key="NSCellFlags">-2080244224</int>
-							<int key="NSCellFlags2">0</int>
-							<reference key="NSSupport" ref="924107556"/>
-							<reference key="NSControlView" ref="802449565"/>
-							<object class="NSMutableArray" key="NSSegmentImages">
-								<bool key="EncodedWithXMLCoder">YES</bool>
-								<object class="NSSegmentItem">
-									<double key="NSSegmentItemWidth">3.200000e+01</double>
-									<object class="NSCustomResource" key="NSSegmentItemImage">
-										<string key="NSClassName">NSImage</string>
-										<string key="NSResourceName">DetailViewTemplate</string>
-									</object>
-									<string key="NSSegmentItemLabel"/>
-									<string key="NSSegmentItemTooltip">Detailed View</string>
-									<bool key="NSSegmentItemSelected">YES</bool>
-									<int key="NSSegmentItemImageScaling">2</int>
-								</object>
-								<object class="NSSegmentItem">
-									<object class="NSCustomResource" key="NSSegmentItemImage">
-										<string key="NSClassName">NSImage</string>
-										<string key="NSResourceName">NSListViewTemplate</string>
-									</object>
-									<string key="NSSegmentItemLabel"/>
-									<string key="NSSegmentItemTooltip">Raw View</string>
-									<int key="NSSegmentItemTag">1</int>
-									<int key="NSSegmentItemImageScaling">2</int>
-								</object>
-								<object class="NSSegmentItem">
-									<double key="NSSegmentItemWidth">3.200000e+01</double>
-									<object class="NSCustomResource" key="NSSegmentItemImage">
-										<string key="NSClassName">NSImage</string>
-										<string key="NSResourceName">NSPathTemplate</string>
-									</object>
-									<string key="NSSegmentItemTooltip">Tree View</string>
-									<int key="NSSegmentItemImageScaling">0</int>
-								</object>
-							</object>
-							<int key="NSSegmentStyle">2</int>
 						</object>
 					</object>
 					<object class="NSButton" id="16222431">
@@ -2961,7 +2961,7 @@
 					</object>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<string>{{358, 67}, {852, 432}}</string>
+					<string>{{59, 67}, {852, 432}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -3039,6 +3039,7 @@
 						<bool key="EncodedWithXMLCoder">YES</bool>
 						<object class="NSMutableArray" key="dict.sortedKeys">
 							<bool key="EncodedWithXMLCoder">YES</bool>
+							<string>openFilesAction:</string>
 							<string>openSelectedFile:</string>
 							<string>refresh:</string>
 							<string>setDetailedView:</string>
@@ -3058,6 +3059,7 @@
 							<string>id</string>
 							<string>id</string>
 							<string>id</string>
+							<string>id</string>
 						</object>
 					</object>
 					<object class="NSMutableDictionary" key="outlets">
@@ -3069,7 +3071,6 @@
 							<string>fileBrowser</string>
 							<string>historySplitView</string>
 							<string>searchField</string>
-							<string>treeContextMenu</string>
 							<string>treeController</string>
 							<string>webView</string>
 						</object>
@@ -3080,7 +3081,6 @@
 							<string>NSOutlineView</string>
 							<string>PBCollapsibleSplitView</string>
 							<string>NSSearchField</string>
-							<string>NSMenu</string>
 							<string>NSTreeController</string>
 							<string>id</string>
 						</object>
