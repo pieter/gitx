@@ -24,6 +24,7 @@
 
 - (NSString *)indexInfo
 {
+	NSAssert(status == NEW || self.commitBlobSHA, @"File is not new, but doesn't have an index entry!");
 	if (!self.commitBlobSHA)
 		return [NSString stringWithFormat:@"0 0000000000000000000000000000000000000000\t%@\0", self.path];
 	else
