@@ -229,4 +229,3 @@ var highlightDiff = function(diff, element, callbacks) {
 	if (false)
 		Controller.log_("Total time:" + (new Date().getTime() - start));
 }
-			diffContent += "<div " + sindex + "class='addline'>" + l + "</div>";
