@@ -241,7 +241,7 @@
 		if (!file.hasUnstagedChanges)
 			return menu;
 
-	NSMenuItem *discardItem = [[NSMenuItem alloc] initWithTitle:@"Discard changes" action:@selector(discardFilesAction:) keyEquivalent:@""];
+	NSMenuItem *discardItem = [[NSMenuItem alloc] initWithTitle:@"Discard changes…" action:@selector(discardFilesAction:) keyEquivalent:@""];
 	[discardItem setTarget:self];
 	[discardItem setAlternate:NO];
 	[discardItem setRepresentedObject:selectedFiles];
