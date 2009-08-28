@@ -43,6 +43,7 @@
 					<string>path</string>
 					<string>contents</string>
 					<string>selectedTab</string>
+					<string>textContents</string>
 				</object>
 				<string key="NSObjectClassName">PBGitTree</string>
 				<object class="_NSManagedProxy" key="_NSManagedProxy"/>
@@ -2048,35 +2049,6 @@
 					<int key="connectionID">264</int>
 				</object>
 				<object class="IBConnectionRecord">
-					<object class="IBBindingConnection" key="connection">
-						<string key="label">value: selection.contents</string>
-						<reference key="source" ref="75600241"/>
-						<reference key="destination" ref="69733037"/>
-						<object class="NSNibBindingConnector" key="connector">
-							<reference key="NSSource" ref="75600241"/>
-							<reference key="NSDestination" ref="69733037"/>
-							<string key="NSLabel">value: selection.contents</string>
-							<string key="NSBinding">value</string>
-							<string key="NSKeyPath">selection.contents</string>
-							<object class="NSDictionary" key="NSOptions">
-								<bool key="EncodedWithXMLCoder">YES</bool>
-								<object class="NSMutableArray" key="dict.sortedKeys">
-									<bool key="EncodedWithXMLCoder">YES</bool>
-									<string>NSAllowsEditingMultipleValuesSelection</string>
-									<string>NSConditionallySetsEditable</string>
-								</object>
-								<object class="NSMutableArray" key="dict.values">
-									<bool key="EncodedWithXMLCoder">YES</bool>
-									<integer value="0" id="8"/>
-									<reference ref="8"/>
-								</object>
-							</object>
-							<int key="NSNibBindingConnectorVersion">2</int>
-						</object>
-					</object>
-					<int key="connectionID">266</int>
-				</object>
-				<object class="IBConnectionRecord">
 					<object class="IBOutletConnection" key="connection">
 						<string key="label">branchPopUp</string>
 						<reference key="source" ref="892732705"/>
@@ -2145,6 +2117,35 @@
 						</object>
 					</object>
 					<int key="connectionID">290</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">value: selection.textContents</string>
+						<reference key="source" ref="75600241"/>
+						<reference key="destination" ref="69733037"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="75600241"/>
+							<reference key="NSDestination" ref="69733037"/>
+							<string key="NSLabel">value: selection.textContents</string>
+							<string key="NSBinding">value</string>
+							<string key="NSKeyPath">selection.textContents</string>
+							<object class="NSDictionary" key="NSOptions">
+								<bool key="EncodedWithXMLCoder">YES</bool>
+								<object class="NSMutableArray" key="dict.sortedKeys">
+									<bool key="EncodedWithXMLCoder">YES</bool>
+									<string>NSAllowsEditingMultipleValuesSelection</string>
+									<string>NSConditionallySetsEditable</string>
+								</object>
+								<object class="NSMutableArray" key="dict.values">
+									<bool key="EncodedWithXMLCoder">YES</bool>
+									<boolean value="NO" id="6"/>
+									<reference ref="6"/>
+								</object>
+							</object>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">291</int>
 				</object>
 			</object>
 			<object class="IBMutableOrderedSet" key="objectRecords">
@@ -2858,6 +2859,8 @@
 					<string>273.IBPluginDependency</string>
 					<string>28.IBPluginDependency</string>
 					<string>28.IBShouldRemoveOnLegacySave</string>
+					<string>287.IBPluginDependency</string>
+					<string>288.IBPluginDependency</string>
 					<string>29.IBPluginDependency</string>
 					<string>29.IBShouldRemoveOnLegacySave</string>
 					<string>3.IBPluginDependency</string>
@@ -2950,7 +2953,7 @@
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>{{504, 612}, {346, 102}}</string>
 					<string>{{504, 612}, {346, 102}}</string>
-					<reference ref="8"/>
+					<integer value="0" id="8"/>
 					<boolean value="YES" id="5"/>
 					<reference ref="5"/>
 					<string>{1000, 102}</string>
@@ -2990,6 +2993,8 @@
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<reference ref="9"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
+					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
+					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<reference ref="9"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<reference ref="9"/>
@@ -3021,7 +3026,7 @@
 					</object>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<string>{{59, 67}, {852, 432}}</string>
+					<string>{{321, 67}, {852, 432}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -3056,7 +3061,7 @@
 				</object>
 			</object>
 			<nil key="sourceID"/>
-			<int key="maxID">290</int>
+			<int key="maxID">291</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<object class="NSMutableArray" key="referencedPartialClassDescriptions">
