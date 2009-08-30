@@ -68,18 +68,30 @@
 	// Only try to open a default document if there are no documents open already.
 	// For example, the application might have been launched by double-clicking a .git repository,
 	// or by dragging a folder to the app icon
-	if ([[[PBRepositoryDocumentController sharedDocumentController] documents] count] == 0 && [[NSApplication sharedApplication] isActive]) {
-		// Try to open the current directory as a git repository
-		NSURL *url = nil;
-		if([[[NSProcessInfo processInfo] environment] objectForKey:@"PWD"])
-			url = [NSURL fileURLWithPath:[[[NSProcessInfo processInfo] environment] objectForKey:@"PWD"]];
-		NSError *error = nil;
-		if (!url || [[PBRepositoryDocumentController sharedDocumentController] openDocumentWithContentsOfURL:url display:YES error:&error] == NO) {
-			// The current directory could not be opened (most likely it’s not a git repository)
-			// so show an open panel for the user to select a repository to view
-			[[PBRepositoryDocumentController sharedDocumentController] openDocument:self];
-		}
+	if ([[[PBRepositoryDocumentController sharedDocumentController] documents] count])
+		return;
+
+	if (![[NSApplication sharedApplication] isActive])
+		return;
+
+	NSURL *url = nil;
+
+	// Try to find the current directory, to open that as a repository
+	if ([PBGitDefaults openCurDirOnLaunch]) {
+		NSString *curPath = [[[NSProcessInfo processInfo] environment] objectForKey:@"PWD"];
+		if (curPath)
+			url = [NSURL fileURLWithPath:curPath];
 	}
+
+	// Try to open the found URL
+	NSError *error = nil;
+	if (url && [[PBRepositoryDocumentController sharedDocumentController] openDocumentWithContentsOfURL:url display:YES error:&error])
+		return;
+
+	// The current directory was not enabled or could not be opened (most likely it’s not a git repository).
+	// show an open panel for the user to select a repository to view
+	if ([PBGitDefaults showOpenPanelOnLaunch])
+		[[PBRepositoryDocumentController sharedDocumentController] openDocument:self];
 }
 
 - (void) windowWillClose: sender
