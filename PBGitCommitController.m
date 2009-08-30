@@ -168,6 +168,9 @@
 	[nc addObserver:self selector:@selector(readCachedFiles:) name:NSFileHandleReadToEndOfFileCompletionNotification object:handle]; 
 	self.busy++;
 	[handle readToEndOfFileInBackgroundAndNotify];
+
+	// Reload refs (in case HEAD changed)
+	[repository reloadRefs];
 }
 
 - (void) updateView
