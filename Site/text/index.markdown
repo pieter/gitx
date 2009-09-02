@@ -20,7 +20,7 @@ then in silky smooth OS X style!</p>
 </h3>
 <ul>
 	<li>Detailed history viewer</li>
-	<li>Nice commit GUI, allowing per-commit staging</li>
+	<li>Nice commit GUI, allowing hunk- and line-wise staging</li>
 	<li>Fast</li>
 	<li>Nice Aqua interface</li>
 	<li>Paste commits to gist.github.com</li>
