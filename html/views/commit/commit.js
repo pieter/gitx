@@ -240,7 +240,7 @@ var addHunk = function(hunk, reverse)
 
 var discardHunk = function(hunk, event)
 {
-	var hunkText = getHunkText(hunk);
+	var hunkText = getFullHunk(hunk);
 
 	if (Controller.discardHunk_altKey_) {
 		Controller.discardHunk_altKey_(hunkText, event.altKey == true);
