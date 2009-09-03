@@ -18,4 +18,6 @@
 + (BOOL) isGistPublic;
 + (BOOL)showWhitespaceDifferences;
 
++ (BOOL)useRepositoryWatcher;
+
 @end

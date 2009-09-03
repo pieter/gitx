@@ -10,6 +10,7 @@
 #import "PBGitCommit.h"
 #import "PBGitWindowController.h"
 #import "PBGitBinary.h"
+#import "PBGitDefaults.h"
 
 #import "NSFileHandleExt.h"
 #import "PBEasyPipe.h"
@@ -115,8 +116,9 @@ NSString* PBGitRepositoryErrorDomain = @"GitXErrorDomain";
 	[self setFileURL:gitDirURL];
 	[self setup];
 	[self readCurrentBranch];
+
 	watcher = [[PBGitRepositoryWatcher alloc] initWithRepository:self];
-	[watcher start];
+
 	return YES;
 }
 
@@ -150,9 +152,9 @@ NSString* PBGitRepositoryErrorDomain = @"GitXErrorDomain";
 
 	[self showWindows];
 
-    // Setup the FSEvents watcher to fire notifications when things change
-    watcher = [[PBGitRepositoryWatcher alloc] initWithRepository:self];
-    
+	// Setup the FSEvents watcher to fire notifications when things change
+	watcher = [[PBGitRepositoryWatcher alloc] initWithRepository:self];
+
 	return self;
 }
 

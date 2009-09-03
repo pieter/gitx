@@ -15,6 +15,7 @@
 #define kConfirmPublicGists @"PBConfirmPublicGists"
 #define kPublicGist @"PBGistPublic"
 #define kShowWhitespaceDifferences @"PBShowWhitespaceDifferences"
+#define kUseRepositoryWatcher @"PBUseRepositoryWatcher"
 
 @implementation PBGitDefaults
 
@@ -33,6 +34,8 @@
 			  forKey:kPublicGist];
 	[defaultValues setObject:[NSNumber numberWithBool:YES]
 			  forKey:kShowWhitespaceDifferences];
+	[defaultValues setObject:[NSNumber numberWithBool:YES]
+			forKey:kUseRepositoryWatcher];
 	[[NSUserDefaults standardUserDefaults] registerDefaults:defaultValues];
 }
 
@@ -65,5 +68,9 @@
 + (BOOL)showWhitespaceDifferences
 {
 	return [[NSUserDefaults standardUserDefaults] boolForKey:kShowWhitespaceDifferences];
+}
++ (BOOL)useRepositoryWatcher
+{
+	return [[NSUserDefaults standardUserDefaults] boolForKey:kUseRepositoryWatcher];
 }
 @end

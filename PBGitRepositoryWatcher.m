@@ -58,7 +58,10 @@ static void PBGitRepositoryWatcherCallback(ConstFSEventStreamRef streamRef, void
 	eventStream = FSEventStreamCreate(kCFAllocatorDefault, &PBGitRepositoryWatcherCallback, &context, 
 									  (CFArrayRef)paths,
 									  kFSEventStreamEventIdSinceNow, 1.0, kFSEventStreamCreateFlagNone);
-	[self start];
+
+	if ([PBGitDefaults useRepositoryWatcher])
+		[self start];
+
     return self;
 }
 
