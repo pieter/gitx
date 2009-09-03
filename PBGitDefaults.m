@@ -27,6 +27,7 @@
 #define kBranchFilterState @"PBBranchFilter"
 #define kHistorySearchMode @"PBHistorySearchMode"
 #define kSuppressedDialogWarnings @"Suppressed Dialog Warnings"
+#define kUseRepositoryWatcher @"PBUseRepositoryWatcher"
 
 @implementation PBGitDefaults
 
@@ -57,6 +58,8 @@
                       forKey:kOpenPreviousDocumentsOnLaunch];
 	[defaultValues setObject:[NSNumber numberWithInteger:kGitXBasicSeachMode]
                       forKey:kHistorySearchMode];
+	[defaultValues setObject:[NSNumber numberWithBool:YES]
+                      forKey:kUseRepositoryWatcher];
 	[[NSUserDefaults standardUserDefaults] registerDefaults:defaultValues];
 }
 
@@ -208,5 +211,10 @@
 	[[NSUserDefaults standardUserDefaults] synchronize];
 }
 
+
++ (BOOL) useRepositoryWatcher
+{
+	return [[NSUserDefaults standardUserDefaults] boolForKey:kUseRepositoryWatcher];
+}
 
 @end

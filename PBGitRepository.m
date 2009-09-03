@@ -127,7 +127,6 @@ NSString* PBGitRepositoryErrorDomain = @"GitXErrorDomain";
 	[self setFileURL:gitDirURL];
 	[self setup];
   watcher = [[PBGitRepositoryWatcher alloc] initWithRepository:self];
-  [watcher start];
 	return YES;
 }
 

@@ -58,8 +58,9 @@ static void PBGitRepositoryWatcherCallback(ConstFSEventStreamRef streamRef, void
 	eventStream = FSEventStreamCreate(kCFAllocatorDefault, &PBGitRepositoryWatcherCallback, &context, 
 									  (CFArrayRef)paths,
 									  kFSEventStreamEventIdSinceNow, 1.0, kFSEventStreamCreateFlagNone);
-	[self start];
-    return self;
+  if ([PBGitDefaults useRepositoryWatcher])
+    [self start];
+  return self;
 }
 
 - (NSDate *) _fileModificationDateAtPath:(NSString *)path {
