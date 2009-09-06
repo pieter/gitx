@@ -32,6 +32,6 @@ reach Lighthouse or don't want to register for an account, you can also send the
 	If you don't want to or can't help with the code you can also support this project by making a donation using the button below.
 </p>
 <p>
-	<a href='http://www.pledgie.com/campaigns/1816'><img alt='Click here to lend your support to: gitx and make a donation at www.pledgie.com !' src='http://www.pledgie.com/campaigns/1816.png?skin_name=chrome' border='0' /></a>
+	<a href='http://www.pledgie.com/campaigns/1816'><img alt='Click here to lend your support to: gitx and make a donation at www.pledgie.com !' src='http://www.pledgie.com/campaigns/1816.png?skin_name=chrome' style="border:0px"></a>
 </p>
 
