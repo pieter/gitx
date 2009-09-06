@@ -77,6 +77,7 @@
 					<string>date</string>
 					<string>dateString</string>
 					<string>arran</string>
+					<string>realSha</string>
 				</object>
 				<string key="NSObjectClassName">PBGitCommit</string>
 				<object class="_NSManagedProxy" key="_NSManagedProxy"/>
@@ -270,7 +271,7 @@
 															<int key="NSCellFlags2">0</int>
 															<string key="NSContents">Date</string>
 															<reference key="NSSupport" ref="26"/>
-															<object class="NSColor" key="NSBackgroundColor">
+															<object class="NSColor" key="NSBackgroundColor" id="216155638">
 																<int key="NSColorSpace">6</int>
 																<string key="NSCatalogName">System</string>
 																<string key="NSColorName">headerColor</string>
@@ -293,6 +294,34 @@
 														<int key="NSResizingMask">3</int>
 														<bool key="NSIsResizeable">YES</bool>
 														<reference key="NSTableView" ref="254268962"/>
+													</object>
+													<object class="NSTableColumn" id="456964926">
+														<string key="NSIdentifier">SHAColumn</string>
+														<double key="NSWidth">6.400000e+01</double>
+														<double key="NSMinWidth">1.000000e+01</double>
+														<double key="NSMaxWidth">3.402823e+38</double>
+														<object class="NSTableHeaderCell" key="NSHeaderCell">
+															<int key="NSCellFlags">75628032</int>
+															<int key="NSCellFlags2">0</int>
+															<string key="NSContents">SHA</string>
+															<reference key="NSSupport" ref="26"/>
+															<reference key="NSBackgroundColor" ref="216155638"/>
+															<reference key="NSTextColor" ref="160578461"/>
+														</object>
+														<object class="NSTextFieldCell" key="NSDataCell" id="671609291">
+															<int key="NSCellFlags">338820672</int>
+															<int key="NSCellFlags2">1024</int>
+															<string key="NSContents">Text Cell</string>
+															<reference key="NSSupport" ref="924107556"/>
+															<reference key="NSControlView" ref="254268962"/>
+															<reference key="NSBackgroundColor" ref="827363147"/>
+															<reference key="NSTextColor" ref="57062640"/>
+														</object>
+														<int key="NSResizingMask">3</int>
+														<bool key="NSIsResizeable">YES</bool>
+														<bool key="NSIsEditable">NO</bool>
+														<reference key="NSTableView" ref="254268962"/>
+														<bool key="NSHidden">YES</bool>
 													</object>
 												</object>
 												<double key="NSIntercellSpacingWidth">3.000000e+00</double>
@@ -2101,6 +2130,22 @@
 					</object>
 					<int key="connectionID">275</int>
 				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">value: arrangedObjects.realSha</string>
+						<reference key="source" ref="456964926"/>
+						<reference key="destination" ref="391209158"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="456964926"/>
+							<reference key="NSDestination" ref="391209158"/>
+							<string key="NSLabel">value: arrangedObjects.realSha</string>
+							<string key="NSBinding">value</string>
+							<string key="NSKeyPath">arrangedObjects.realSha</string>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">290</int>
+				</object>
 			</object>
 			<object class="IBMutableOrderedSet" key="objectRecords">
 				<object class="NSArray" key="orderedObjects">
@@ -2494,6 +2539,7 @@
 							<reference ref="792589327"/>
 							<reference ref="1025472344"/>
 							<reference ref="976830280"/>
+							<reference ref="456964926"/>
 						</object>
 						<reference key="parent" ref="663765878"/>
 						<string key="objectName">Commit List</string>
@@ -2715,6 +2761,20 @@
 						<int key="objectID">273</int>
 						<reference key="object" ref="217429948"/>
 						<reference key="parent" ref="27300806"/>
+					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">287</int>
+						<reference key="object" ref="456964926"/>
+						<object class="NSMutableArray" key="children">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+							<reference ref="671609291"/>
+						</object>
+						<reference key="parent" ref="254268962"/>
+					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">288</int>
+						<reference key="object" ref="671609291"/>
+						<reference key="parent" ref="456964926"/>
 					</object>
 				</object>
 			</object>
@@ -2996,7 +3056,7 @@
 				</object>
 			</object>
 			<nil key="sourceID"/>
-			<int key="maxID">286</int>
+			<int key="maxID">290</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<object class="NSMutableArray" key="referencedPartialClassDescriptions">
