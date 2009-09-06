@@ -92,6 +92,20 @@
 	[[PBPrefsWindowController sharedPrefsWindowController] showWindow:nil];
 }
 
+- (IBAction)showAboutPanel:(id)sender
+{
+	NSString *gitversion = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleGitVersion"];
+	NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
+	if (gitversion)
+		[dict addEntriesFromDictionary:[[NSDictionary alloc] initWithObjectsAndKeys:gitversion, @"Version", nil]];
+
+	#ifdef DEBUG_BUILD
+		[dict addEntriesFromDictionary:[[NSDictionary alloc] initWithObjectsAndKeys:@"GitX (DEBUG)", @"ApplicationName", nil]];
+	#endif
+
+	[NSApp orderFrontStandardAboutPanelWithOptions:dict];
+}
+
 - (IBAction)installCliTool:(id)sender;
 {
 	BOOL success               = NO;
