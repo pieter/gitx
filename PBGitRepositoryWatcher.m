@@ -173,6 +173,7 @@ static void PBGitRepositoryWatcherCallback(ConstFSEventStreamRef streamRef, void
 - (void) finalize {
     // cleanup 
     [self stop];
+	// FIXME: FSEventStreamInvalidate should only be called after FSEventStreamScheduleWithRunLoop
     FSEventStreamInvalidate(eventStream);
     FSEventStreamRelease(eventStream);
 	
