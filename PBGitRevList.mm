@@ -87,8 +87,8 @@ using namespace std;
 	else
 		[arguments addObjectsFromArray:[rev parameters]];
 
-
-	NSTask *task = [PBEasyPipe taskForCommand:[PBGitBinary path] withArgs:arguments inDir:[repository fileURL].path];
+	NSString *directory = rev.workingDirectory ? rev.workingDirectory.path : repository.fileURL.path;
+	NSTask *task = [PBEasyPipe taskForCommand:[PBGitBinary path] withArgs:arguments inDir:directory];
 	[task launch];
 	NSFileHandle* handle = [task.standardOutput fileHandleForReading];
 	
