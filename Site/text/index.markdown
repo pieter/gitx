@@ -18,7 +18,7 @@ then in silky smooth OS X style!
 <ul>
 	<li>Detailed history viewer</li>
 	<li>Nice commit GUI, allowing hunk- and line-wise staging</li>
-	<li>Fast workflow, auto-refresh option</li>
+	<li>Fast workflow</li>
 	<li>Explore tree of any revision</li>
 	<li>Nice Aqua interface</li>
 	<li>Paste commits to <a href="http://gist.github.com/">gist.github.com</a></li>

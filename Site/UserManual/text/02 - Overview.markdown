@@ -14,10 +14,6 @@ commit-list.
 You can double-click the divider between these areas to collapse the smaller-one or you can use Command-Shift-Up and 
 Command-Shift-Down to do so.
 
-As of GitX 0.7 reloading the view manually should not be necessary anymore. GitX monitors the open repository by default 
-and automatically reloads itself when it has detected a change. If this is problematic you can deactivate that behaviour 
-in the _Preferences_.
-
 #### The commit list
 
 ![History View](images/UserManual/historyview.png)
