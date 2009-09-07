@@ -23,7 +23,7 @@ using namespace std;
 @implementation PBGitRevList
 
 @synthesize commits;
-- initWithRepository: (id) repo
+- (id)initWithRepository:(PBGitRepository *)repo
 {
 	repository = repo;
 	[repository addObserver:self forKeyPath:@"currentBranch" options:0 context:nil];
