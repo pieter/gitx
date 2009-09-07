@@ -5,9 +5,9 @@
 
 <ul>
 	<li><a href="http://github.com/pieter/gitx" title="GitX on Github">GitX on Github</a></li>
-		<ul>
-			<li><a href="http://github.com/pieter/gitx/wikis" title="GitX Wiki">Wiki on Github</a></li>
-		</ul>
+	<li style="list-style:none"><ul>
+		<li><a href="http://github.com/pieter/gitx/wikis" title="GitX Wiki">Wiki on Github</a></li>
+	</ul></li>
 	<li><a href="http://www.ohloh.net/projects/gitx" title="GitX on ohloh">GitX on ohloh</a></li>
 	<li><a href="http://cia.vc/stats/project/gitx" title="GitX on CIA.vc">GitX on CIA.vc</a></li>
 </ul>

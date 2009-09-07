@@ -1,0 +1,26 @@
+v0.7
+===
+
+This feature-release has the following new features and enhancements:
+
+* Line-wise staging by selecting lines from hunks (JD Smith)
+* Discarding hunks/changes to files (using git apply --reverse) (Johannes Gilger)
+* Show current HEAD in window-title (Johannes Gilger)
+* Show current branch in orange in history view (Steven Michalske)
+* Collapse commit-list/diff-view using Command-Shift-Up/Down (Johannes Gilger)
+* Sign-Off commits in commit view (Johannes Gilger, Nicolas Riley)
+* "Show in Finder" for files in commit view (Charles O'Rourke)
+* Commit hooks are executed when committing (Joe Fiorini, Pieter de Bie)
+* Branches can be deleted from the UI
+
+Small enhancements:
+
+* Show committer name if it differs from authors name (Benjamin Kramer)
+* Columns in history view can be toggled (Pieter de Bie)
+* Reuse author-information when amending a commit (Pieter de Bie)
+* Use modal alerts where possible
+* Don't display content of binary-files in tree-view
+
+In addition a lot of bugs were fixed and numerous tiny features introduced.
+
+Credits go to: Pieter de Bie, Johannes Gilger, Benjamin Kramer, Nicholas Riley, JD Smith, Joe Fiorini, Dave Grijalva, Charles O'Rourke, Gerd Knops, dbr, Mike Czepiel, Benoit Cerrina, Steven Michalske and Stonewall Ballard
