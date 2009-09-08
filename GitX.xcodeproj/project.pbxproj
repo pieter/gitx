@@ -52,6 +52,8 @@
 		F513085B0E0740F2000C8BCD /* PBQLOutlineView.m in Sources */ = {isa = PBXBuildFile; fileRef = F513085A0E0740F2000C8BCD /* PBQLOutlineView.m */; };
 		F5140DC90E8A8EB20091E9F3 /* RoundedRectangle.m in Sources */ = {isa = PBXBuildFile; fileRef = F5140DC80E8A8EB20091E9F3 /* RoundedRectangle.m */; };
 		F523CEB60ED3399200DDD714 /* PBGitIndexController.m in Sources */ = {isa = PBXBuildFile; fileRef = F523CEB50ED3399200DDD714 /* PBGitIndexController.m */; };
+		F528210A1056A7C1001D1511 /* PBSourceViewRemote.m in Sources */ = {isa = PBXBuildFile; fileRef = F52821091056A7C1001D1511 /* PBSourceViewRemote.m */; };
+		F528210D1056A7EB001D1511 /* PBSourceViewAction.m in Sources */ = {isa = PBXBuildFile; fileRef = F528210C1056A7EB001D1511 /* PBSourceViewAction.m */; };
 		F52BCE030E84208300AA3741 /* PBGitHistoryView.xib in Resources */ = {isa = PBXBuildFile; fileRef = F52BCE020E84208300AA3741 /* PBGitHistoryView.xib */; };
 		F52BCE070E84211300AA3741 /* PBGitHistoryController.m in Sources */ = {isa = PBXBuildFile; fileRef = F52BCE060E84211300AA3741 /* PBGitHistoryController.m */; };
 		F53C4DF70E97FC630022AD59 /* PBGitBinary.m in Sources */ = {isa = PBXBuildFile; fileRef = F53C4DF60E97FC630022AD59 /* PBGitBinary.m */; };
@@ -213,6 +215,10 @@
 		F5140DC80E8A8EB20091E9F3 /* RoundedRectangle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RoundedRectangle.m; sourceTree = "<group>"; };
 		F523CEB40ED3399100DDD714 /* PBGitIndexController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PBGitIndexController.h; sourceTree = "<group>"; };
 		F523CEB50ED3399200DDD714 /* PBGitIndexController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PBGitIndexController.m; sourceTree = "<group>"; };
+		F52821081056A7C1001D1511 /* PBSourceViewRemote.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PBSourceViewRemote.h; sourceTree = "<group>"; };
+		F52821091056A7C1001D1511 /* PBSourceViewRemote.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PBSourceViewRemote.m; sourceTree = "<group>"; };
+		F528210B1056A7EB001D1511 /* PBSourceViewAction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PBSourceViewAction.h; sourceTree = "<group>"; };
+		F528210C1056A7EB001D1511 /* PBSourceViewAction.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PBSourceViewAction.m; sourceTree = "<group>"; };
 		F52BCE020E84208300AA3741 /* PBGitHistoryView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PBGitHistoryView.xib; sourceTree = "<group>"; };
 		F52BCE050E84211300AA3741 /* PBGitHistoryController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PBGitHistoryController.h; sourceTree = "<group>"; };
 		F52BCE060E84211300AA3741 /* PBGitHistoryController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PBGitHistoryController.m; sourceTree = "<group>"; };
@@ -583,6 +589,10 @@
 				F58DB55810566D3500CFDF4A /* PBGitSidebarController.m */,
 				F58DB5E6105671B600CFDF4A /* PBSourceViewItem.h */,
 				F58DB5E7105671B600CFDF4A /* PBSourceViewItem.m */,
+				F52821081056A7C1001D1511 /* PBSourceViewRemote.h */,
+				F52821091056A7C1001D1511 /* PBSourceViewRemote.m */,
+				F528210B1056A7EB001D1511 /* PBSourceViewAction.h */,
+				F528210C1056A7EB001D1511 /* PBSourceViewAction.m */,
 			);
 			name = Sidebar;
 			sourceTree = "<group>";
@@ -900,6 +910,8 @@
 				F58DB55910566D3500CFDF4A /* PBGitSidebarController.m in Sources */,
 				F58DB5E8105671B600CFDF4A /* PBSourceViewItem.m in Sources */,
 				F567B88D1057FA9F000DB976 /* NSOutlineViewExt.m in Sources */,
+				F528210A1056A7C1001D1511 /* PBSourceViewRemote.m in Sources */,
+				F528210D1056A7EB001D1511 /* PBSourceViewAction.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

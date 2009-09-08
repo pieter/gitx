@@ -20,9 +20,9 @@
 	BOOL isGroupItem;
 }
 
-+ (PBSourceViewItem *)groupItemWithTitle:(NSString *)title;
-+ (PBSourceViewItem *)itemWithRevSpec:(PBGitRevSpecifier *)revSpecifier;
-+ (PBSourceViewItem *)itemWithTitle:(NSString *)title;
++ (id)groupItemWithTitle:(NSString *)title;
++ (id)itemWithRevSpec:(PBGitRevSpecifier *)revSpecifier;
++ (id)itemWithTitle:(NSString *)title;
 
 - (void)addChild:(PBSourceViewItem *)child;
 

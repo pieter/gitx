@@ -21,25 +21,25 @@
 	return self;
 }
 
-+ (PBSourceViewItem *)groupItemWithTitle:(NSString *)title
++ (id)groupItemWithTitle:(NSString *)title
 {
-	PBSourceViewItem *item = [[PBSourceViewItem alloc] init];
+	PBSourceViewItem *item = [[[self class] alloc] init];
 	item.title = title;
 	item.isGroupItem = YES;
 	return item;
 }
 
-+ (PBSourceViewItem *)itemWithRevSpec:(PBGitRevSpecifier *)revSpecifier
++ (id)itemWithRevSpec:(PBGitRevSpecifier *)revSpecifier
 {
-	PBSourceViewItem *item = [[PBSourceViewItem alloc] init];
+	PBSourceViewItem *item = [[[self class] alloc] init];
 	item.revSpecifier = revSpecifier;
 
 	return item;	
 }
 
-+ (PBSourceViewItem *)itemWithTitle:(NSString *)title;
++ (id)itemWithTitle:(NSString *)title;
 {
-	PBSourceViewItem *item = [[PBSourceViewItem alloc] init];
+	PBSourceViewItem *item = [[[self class] alloc] init];
 	item.title = title;
 	return item;
 }
