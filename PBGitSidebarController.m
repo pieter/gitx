@@ -78,14 +78,17 @@
 
 	for (PBGitRevSpecifier *rev in repository.branches)
 	{
-		if (![rev isSimpleRef])
+		if (![rev isSimpleRef]) {
 			[custom addChild:[PBSourceViewItem itemWithRevSpec:rev]];
-		else if ([[rev simpleRef] hasPrefix:@"refs/heads/"])
-			[branches addChild:[PBSourceViewItem itemWithRevSpec:rev]];
+			continue;
+		}
+		NSArray *pathComponents = [[rev simpleRef] componentsSeparatedByString:@"/"];
+		if ([[pathComponents objectAtIndex:1] isEqualToString:@"heads"])
+			[branches addRev:rev toPath:[pathComponents subarrayWithRange:NSMakeRange(2, [pathComponents count] - 2)]];
 		else if ([[rev simpleRef] hasPrefix:@"refs/tags/"])
-			[tags addChild:[PBSourceViewItem itemWithRevSpec:rev]];
+			[tags addRev:rev toPath:[pathComponents subarrayWithRange:NSMakeRange(2, [pathComponents count] - 2)]];
 		else if ([[rev simpleRef] hasPrefix:@"refs/remotes/"])
-			[remotes addChild:[PBSourceViewItem itemWithRevSpec:rev]];
+			[remotes addRev:rev toPath:[pathComponents subarrayWithRange:NSMakeRange(2, [pathComponents count] - 2)]];
 		
 	}
 
