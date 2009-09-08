@@ -27,7 +27,7 @@ then in silky smooth OS X style!
 
 <h3>Requirements</h3>
 <p>
-	GitX runs on Mac OS X 10.5 Leopard and Mac OS X 10.6 Snow Leopard. Because it uses features like Garbage Collection, you can't compile it on earlier systems. GitX also requires a fairly recent Git -- version 1.5.6 and higher are all supported. 
+	GitX runs on Mac OS X 10.5 Leopard and Mac OS X 10.6 Snow Leopard. Because it uses features like Garbage Collection, you can't compile it on earlier systems. GitX also requires a fairly recent Git -- version 1.6.0 and higher are all supported. 
 </p>
 
 <h3>Download</h3>
