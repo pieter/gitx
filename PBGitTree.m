@@ -63,18 +63,12 @@
 	return NO;
 }
 
-- (BOOL)hasBinaryHeader:(NSString *)fileHeader
+- (BOOL)hasBinaryHeader:(NSString*)contents
 {
-	if (!fileHeader)
+	if(!contents)
 		return NO;
 
-	NSString *filetype = [PBEasyPipe outputForCommand:@"/usr/bin/file"
-											 withArgs:[NSArray arrayWithObjects:@"-b", @"-N", @"-", nil]
-												inDir:[repository workingDirectory]
-										  inputString:fileHeader
-											 retValue:nil];
-
-	return [filetype rangeOfString:@"text"].location == NSNotFound;
+	return [contents rangeOfString:@"\0" options:0 range:NSMakeRange(0, ([contents length] >= 8000) ? 7999 : [contents length])].location != NSNotFound;
 }
 
 - (BOOL)hasBinaryAttributes
@@ -143,14 +137,13 @@
 	if ([self hasBinaryAttributes])
 		return [NSString stringWithFormat:@"%@ appears to be a binary file of %d bytes", [self fullPath], [self fileSize]];
 
-	long long fileSize = [self fileSize];
-	if (fileSize > 52428800) // ~50MB
-		return [NSString stringWithFormat:@"%@ is too big to be displayed (%d bytes)", [self fullPath], fileSize];
+	if ([self fileSize] > 52428800) // ~50MB
+		return [NSString stringWithFormat:@"%@ is too big to be displayed (%d bytes)", [self fullPath], [self fileSize]];
 
-	NSString *contents = [self contents];
+	NSString* contents = [self contents];
 
-	if ([self hasBinaryHeader:([contents length] >= 100) ? [contents substringToIndex:99] : contents])
-		return [NSString stringWithFormat:@"%@ appears to be a binary file of %d bytes", [self fullPath], fileSize];
+	if ([self hasBinaryHeader:contents])
+		return [NSString stringWithFormat:@"%@ appears to be a binary file of %d bytes", [self fullPath], [self fileSize]];
 
 	return contents;
 }
