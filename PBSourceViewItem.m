@@ -7,23 +7,47 @@
 //
 
 #import "PBSourceViewItem.h"
-
+#import "PBGitRevSpecifier.h"
 
 @implementation PBSourceViewItem
-@synthesize name;
-@dynamic children;
+@synthesize title, isGroupItem, children, revSpecifier;
 
-- (id)initWithName:(NSString *)aName
+- (id)init
 {
 	if (!(self = [super init]))
 		return nil;
 
-	name = aName;
+	children = [NSMutableArray array];
 	return self;
 }
 
-- (NSArray *)children
++ (PBSourceViewItem *)groupItemWithTitle:(NSString *)title
 {
-	return [NSArray array];
+	PBSourceViewItem *item = [[PBSourceViewItem alloc] init];
+	item.title = title;
+	item.isGroupItem = YES;
+	return item;
 }
+
++ (PBSourceViewItem *)itemWithRevSpec:(PBGitRevSpecifier *)revSpecifier
+{
+	PBSourceViewItem *item = [[PBSourceViewItem alloc] init];
+	item.revSpecifier = revSpecifier;
+
+	return item;	
+}
+
+- (void)addChild:(PBSourceViewItem *)child
+{
+	[self.children addObject:child];
+}
+
+- (NSString *)title
+{
+	if (title)
+		return title;
+	
+	return [revSpecifier description];
+}
+
 @end

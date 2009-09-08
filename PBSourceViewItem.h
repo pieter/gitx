@@ -8,13 +8,25 @@
 
 #import <Cocoa/Cocoa.h>
 
+@class PBGitRevSpecifier;
 
 @interface PBSourceViewItem : NSObject {
-	NSString *name;
+	NSMutableArray *children;
+
+	NSString *title;
+	PBGitRevSpecifier *revSpecifier;
+
+	BOOL isGroupItem;
 }
 
-- (id)initWithName:(NSString *)name;
++ (PBSourceViewItem *)groupItemWithTitle:(NSString *)title;
++ (PBSourceViewItem *)itemWithRevSpec:(PBGitRevSpecifier *)revSpecifier;
 
-@property(retain) NSString *name;
-@property(readonly) NSArray *children;
+- (void)addChild:(PBSourceViewItem *)child;
+
+@property(retain) NSString *title;
+@property(readonly) NSMutableArray *children;
+@property(assign) BOOL isGroupItem;
+@property(retain) PBGitRevSpecifier *revSpecifier;
+
 @end
