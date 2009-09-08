@@ -31,9 +31,9 @@ changes will be staged. Clicking the 'Discard' button will irreversibly throw aw
 confirmation can be silenced using Alt-Click.
 
 GitX 0.7 introduced a new way of staging lines: Simply drag-select a few of the lines you want to stage/unstage and a 
-'Stage lines' button will appear next to it. This allows for much finer granularity than the hunks determined by diff. 
-Double-clicking a line selects the sub-part of this hunk which isn't separated by blank lines. Selecting lines across 
-hunks is currently not possible.
+'Stage lines' button will appear next to it. This allows for much finer granularity than the hunks determined by diff.
+Double-clicking a changed line selects the entire surrounding block of changes. Selecting lines across hunks is not
+possible.
 
 #### Committing
 
