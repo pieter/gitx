@@ -10,7 +10,7 @@
 #import "PBGitRevSpecifier.h"
 
 @implementation PBSourceViewItem
-@synthesize title, isGroupItem, children, revSpecifier;
+@synthesize parent, title, isGroupItem, children, revSpecifier;
 
 - (id)init
 {
@@ -47,6 +47,7 @@
 - (void)addChild:(PBSourceViewItem *)child
 {
 	[self.children addObject:child];
+	child.parent = self;
 }
 
 - (void)addRev:(PBGitRevSpecifier *)theRevSpecifier toPath:(NSArray *)path
@@ -77,6 +78,23 @@
 		return title;
 	
 	return [[revSpecifier description] lastPathComponent];
+}
+
+- (NSImage *)icon
+{
+	if ([self isGroupItem])
+		return nil;
+
+	if (self.parent && !self.parent.parent && [self.parent.title isEqualToString:@"Remotes"])
+		return [NSImage imageNamed:@"remote"];
+
+	if (self.parent && !self.parent.parent && [self.parent.title isEqualToString:@"Tags"])
+		return [NSImage imageNamed:@"tag"];
+
+	if ([[self children] count])
+		return [NSImage imageNamed:@"folder"];
+
+	return [NSImage imageNamed:@"branch"];
 }
 
 @end

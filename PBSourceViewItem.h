@@ -15,6 +15,7 @@
 
 	NSString *title;
 	PBGitRevSpecifier *revSpecifier;
+	PBSourceViewItem *parent;
 
 	BOOL isGroupItem;
 }
@@ -30,9 +31,11 @@
 // to the 'local' branch thing
 - (void)addRev:(PBGitRevSpecifier *)revSpecifier toPath:(NSArray *)path;
 
+- (NSImage *)icon;
+
 @property(retain) NSString *title;
 @property(readonly) NSMutableArray *children;
 @property(assign) BOOL isGroupItem;
 @property(retain) PBGitRevSpecifier *revSpecifier;
-
+@property(retain) PBSourceViewItem *parent;
 @end

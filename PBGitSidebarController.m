@@ -42,10 +42,7 @@
 
 - (void)outlineView:(NSOutlineView *)outlineView willDisplayCell:(id)cell forTableColumn:(NSTableColumn *)tableColumn item:(id)item
 {
-	if ([item isGroupItem])
-		[cell setImage:nil];
-	else
-		[cell setImage:[NSImage imageNamed:@"new_file"]];
+	[cell setImage:[item icon]];
 }
 
 - (BOOL)outlineView:(NSOutlineView *)outlineView shouldSelectItem:(id)item

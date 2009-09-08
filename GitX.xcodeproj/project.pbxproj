@@ -96,6 +96,10 @@
 		F58DB55910566D3500CFDF4A /* PBGitSidebarController.m in Sources */ = {isa = PBXBuildFile; fileRef = F58DB55810566D3500CFDF4A /* PBGitSidebarController.m */; };
 		F58DB56010566E3900CFDF4A /* PBGitSidebarView.xib in Resources */ = {isa = PBXBuildFile; fileRef = F58DB55F10566E3900CFDF4A /* PBGitSidebarView.xib */; };
 		F58DB5E8105671B600CFDF4A /* PBSourceViewItem.m in Sources */ = {isa = PBXBuildFile; fileRef = F58DB5E7105671B600CFDF4A /* PBSourceViewItem.m */; };
+		F58DB7711056860900CFDF4A /* branch.tiff in Resources */ = {isa = PBXBuildFile; fileRef = F58DB76D1056860900CFDF4A /* branch.tiff */; };
+		F58DB7721056860900CFDF4A /* remote.tiff in Resources */ = {isa = PBXBuildFile; fileRef = F58DB76E1056860900CFDF4A /* remote.tiff */; };
+		F58DB7731056860900CFDF4A /* folder.tiff in Resources */ = {isa = PBXBuildFile; fileRef = F58DB76F1056860900CFDF4A /* folder.tiff */; };
+		F58DB7741056860900CFDF4A /* tag.tiff in Resources */ = {isa = PBXBuildFile; fileRef = F58DB7701056860900CFDF4A /* tag.tiff */; };
 		F59116E60E843BB50072CCB1 /* PBGitCommitView.xib in Resources */ = {isa = PBXBuildFile; fileRef = F59116E50E843BB50072CCB1 /* PBGitCommitView.xib */; };
 		F59116E90E843BCB0072CCB1 /* PBGitCommitController.m in Sources */ = {isa = PBXBuildFile; fileRef = F59116E80E843BCB0072CCB1 /* PBGitCommitController.m */; };
 		F593DF780E9E636C003A8559 /* PBFileChangesTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = F593DF770E9E636C003A8559 /* PBFileChangesTableView.m */; };
@@ -251,6 +255,10 @@
 		F58DB55F10566E3900CFDF4A /* PBGitSidebarView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PBGitSidebarView.xib; sourceTree = "<group>"; };
 		F58DB5E6105671B600CFDF4A /* PBSourceViewItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PBSourceViewItem.h; sourceTree = "<group>"; };
 		F58DB5E7105671B600CFDF4A /* PBSourceViewItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PBSourceViewItem.m; sourceTree = "<group>"; };
+		F58DB76D1056860900CFDF4A /* branch.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; name = branch.tiff; path = Images/branch.tiff; sourceTree = "<group>"; };
+		F58DB76E1056860900CFDF4A /* remote.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; name = remote.tiff; path = Images/remote.tiff; sourceTree = "<group>"; };
+		F58DB76F1056860900CFDF4A /* folder.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; name = folder.tiff; path = Images/folder.tiff; sourceTree = "<group>"; };
+		F58DB7701056860900CFDF4A /* tag.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; name = tag.tiff; path = Images/tag.tiff; sourceTree = "<group>"; };
 		F59116E50E843BB50072CCB1 /* PBGitCommitView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PBGitCommitView.xib; sourceTree = "<group>"; };
 		F59116E70E843BCB0072CCB1 /* PBGitCommitController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PBGitCommitController.h; sourceTree = "<group>"; };
 		F59116E80E843BCB0072CCB1 /* PBGitCommitController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PBGitCommitController.m; sourceTree = "<group>"; };
@@ -394,6 +402,10 @@
 		29B97315FDCFA39411CA2CEA /* Other Sources */ = {
 			isa = PBXGroup;
 			children = (
+				F58DB76D1056860900CFDF4A /* branch.tiff */,
+				F58DB76E1056860900CFDF4A /* remote.tiff */,
+				F58DB76F1056860900CFDF4A /* folder.tiff */,
+				F58DB7701056860900CFDF4A /* tag.tiff */,
 				3BC07F4A0ED5A5C5009A7768 /* HistoryViewTemplate.png */,
 				3BC07F4B0ED5A5C5009A7768 /* CommitViewTemplate.png */,
 				F56ADDD70ED19F9E002AC78F /* AddBranchTemplate.png */,
@@ -765,6 +777,10 @@
 				47DBDBB10E94F6CA00671A1E /* Updates.png in Resources */,
 				F569AE930F2CBD7C00C2FFA7 /* Credits.html in Resources */,
 				F58DB56010566E3900CFDF4A /* PBGitSidebarView.xib in Resources */,
+				F58DB7711056860900CFDF4A /* branch.tiff in Resources */,
+				F58DB7721056860900CFDF4A /* remote.tiff in Resources */,
+				F58DB7731056860900CFDF4A /* folder.tiff in Resources */,
+				F58DB7741056860900CFDF4A /* tag.tiff in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
