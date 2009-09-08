@@ -93,6 +93,9 @@
 		F5886A330ED5D5580066E74C /* PBGitRevSpecifier.m in Sources */ = {isa = PBXBuildFile; fileRef = F53FF2040E7ABB5300389171 /* PBGitRevSpecifier.m */; };
 		F5886A340ED5D55D0066E74C /* PBGitBinary.m in Sources */ = {isa = PBXBuildFile; fileRef = F53C4DF60E97FC630022AD59 /* PBGitBinary.m */; };
 		F5886A360ED5D56E0066E74C /* PBGitTree.m in Sources */ = {isa = PBXBuildFile; fileRef = F56174560E058893001DCD79 /* PBGitTree.m */; };
+		F58DB55910566D3500CFDF4A /* PBGitSidebarController.m in Sources */ = {isa = PBXBuildFile; fileRef = F58DB55810566D3500CFDF4A /* PBGitSidebarController.m */; };
+		F58DB56010566E3900CFDF4A /* PBGitSidebarView.xib in Resources */ = {isa = PBXBuildFile; fileRef = F58DB55F10566E3900CFDF4A /* PBGitSidebarView.xib */; };
+		F58DB5E8105671B600CFDF4A /* PBSourceViewItem.m in Sources */ = {isa = PBXBuildFile; fileRef = F58DB5E7105671B600CFDF4A /* PBSourceViewItem.m */; };
 		F59116E60E843BB50072CCB1 /* PBGitCommitView.xib in Resources */ = {isa = PBXBuildFile; fileRef = F59116E50E843BB50072CCB1 /* PBGitCommitView.xib */; };
 		F59116E90E843BCB0072CCB1 /* PBGitCommitController.m in Sources */ = {isa = PBXBuildFile; fileRef = F59116E80E843BCB0072CCB1 /* PBGitCommitController.m */; };
 		F593DF780E9E636C003A8559 /* PBFileChangesTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = F593DF770E9E636C003A8559 /* PBFileChangesTableView.m */; };
@@ -243,6 +246,11 @@
 		F5886A0A0ED5D27A0066E74C /* speedtest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = speedtest.m; sourceTree = "<group>"; };
 		F5886A100ED5D33D0066E74C /* SpeedTest.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SpeedTest.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F5886A120ED5D33D0066E74C /* SpeedTest-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "SpeedTest-Info.plist"; sourceTree = "<group>"; };
+		F58DB55710566D3500CFDF4A /* PBGitSidebarController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PBGitSidebarController.h; sourceTree = "<group>"; };
+		F58DB55810566D3500CFDF4A /* PBGitSidebarController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PBGitSidebarController.m; sourceTree = "<group>"; };
+		F58DB55F10566E3900CFDF4A /* PBGitSidebarView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PBGitSidebarView.xib; sourceTree = "<group>"; };
+		F58DB5E6105671B600CFDF4A /* PBSourceViewItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PBSourceViewItem.h; sourceTree = "<group>"; };
+		F58DB5E7105671B600CFDF4A /* PBSourceViewItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PBSourceViewItem.m; sourceTree = "<group>"; };
 		F59116E50E843BB50072CCB1 /* PBGitCommitView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PBGitCommitView.xib; sourceTree = "<group>"; };
 		F59116E70E843BCB0072CCB1 /* PBGitCommitController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PBGitCommitController.h; sourceTree = "<group>"; };
 		F59116E80E843BCB0072CCB1 /* PBGitCommitController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PBGitCommitController.m; sourceTree = "<group>"; };
@@ -415,6 +423,7 @@
 				F59116E50E843BB50072CCB1 /* PBGitCommitView.xib */,
 				47DBDB680E94EF6500671A1E /* Preferences.xib */,
 				F569AE920F2CBD7C00C2FFA7 /* Credits.html */,
+				F58DB55F10566E3900CFDF4A /* PBGitSidebarView.xib */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -482,6 +491,7 @@
 		F57CC3850E05DDC1000472E2 /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				F58DB55610566D1F00CFDF4A /* Sidebar */,
 				F5B161BB0EAB6E0C005A1DE1 /* Diff */,
 				F5EF8C880E9D498F0050906B /* History */,
 				F5E927F90E883EF600056E75 /* Commit */,
@@ -547,6 +557,17 @@
 				F5886A0A0ED5D27A0066E74C /* speedtest.m */,
 			);
 			name = SpeedTest;
+			sourceTree = "<group>";
+		};
+		F58DB55610566D1F00CFDF4A /* Sidebar */ = {
+			isa = PBXGroup;
+			children = (
+				F58DB55710566D3500CFDF4A /* PBGitSidebarController.h */,
+				F58DB55810566D3500CFDF4A /* PBGitSidebarController.m */,
+				F58DB5E6105671B600CFDF4A /* PBSourceViewItem.h */,
+				F58DB5E7105671B600CFDF4A /* PBSourceViewItem.m */,
+			);
+			name = Sidebar;
 			sourceTree = "<group>";
 		};
 		F5B161BB0EAB6E0C005A1DE1 /* Diff */ = {
@@ -743,6 +764,7 @@
 				47DBDB6A0E94EF6500671A1E /* Preferences.xib in Resources */,
 				47DBDBB10E94F6CA00671A1E /* Updates.png in Resources */,
 				F569AE930F2CBD7C00C2FFA7 /* Credits.html in Resources */,
+				F58DB56010566E3900CFDF4A /* PBGitSidebarView.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -854,6 +876,8 @@
 				47DBDBCA0E95016F00671A1E /* PBNSURLPathUserDefaultsTransfomer.m in Sources */,
 				F562C8870FE1766C000EC528 /* NSString_RegEx.m in Sources */,
 				EB2A734A0FEE3F09006601CF /* PBCollapsibleSplitView.m in Sources */,
+				F58DB55910566D3500CFDF4A /* PBGitSidebarController.m in Sources */,
+				F58DB5E8105671B600CFDF4A /* PBSourceViewItem.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
