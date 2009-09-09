@@ -18,6 +18,7 @@
 	PBSourceViewItem *parent;
 
 	BOOL isGroupItem;
+	BOOL isUncollapsible;
 }
 
 + (id)groupItemWithTitle:(NSString *)title;
@@ -36,7 +37,7 @@
 
 @property(retain) NSString *title;
 @property(readonly) NSMutableArray *children;
-@property(assign) BOOL isGroupItem;
+@property(assign) BOOL isGroupItem, isUncollapsible;
 @property(retain) PBGitRevSpecifier *revSpecifier;
 @property(retain) PBSourceViewItem *parent;
 @end

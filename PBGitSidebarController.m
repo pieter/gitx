@@ -9,6 +9,7 @@
 #import "PBGitSidebarController.h"
 #import "PBSourceViewItem.h"
 #import "NSOutlineViewExt.h"
+#import "PBSourceViewAction.h"
 
 @interface PBGitSidebarController ()
 
@@ -82,7 +83,13 @@
 		return;
 	}
 
-	/* Handle Remotes etc */
+	if (item == commitAction)
+		[[repository windowController] showCommitView:self];
+
+	/* ... */
+
+	
+	/* Handle Remotes */
 }
 
 #pragma mark NSOutlineView delegate methods
@@ -119,6 +126,12 @@
 {
 	PBSourceViewItem *actions = [PBSourceViewItem groupItemWithTitle:@"Actions"];
 
+	actions.isUncollapsible = YES;
+
+	commitAction = [PBSourceViewAction itemWithTitle:@"Index / Commit"];
+	commitAction.icon = [NSImage imageNamed:@"CommitViewTemplate"];
+	[actions addChild:commitAction];
+	
 	PBSourceViewItem *branches = [PBSourceViewItem groupItemWithTitle:@"Branches"];
 	PBSourceViewItem *remotes = [PBSourceViewItem groupItemWithTitle:@"Remotes"];
 	PBSourceViewItem *tags = [PBSourceViewItem groupItemWithTitle:@"Tags"];

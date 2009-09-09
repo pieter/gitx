@@ -10,7 +10,7 @@
 #import "PBGitRevSpecifier.h"
 
 @implementation PBSourceViewItem
-@synthesize parent, title, isGroupItem, children, revSpecifier;
+@synthesize parent, title, isGroupItem, children, revSpecifier, isUncollapsible;
 
 - (id)init
 {

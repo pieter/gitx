@@ -9,11 +9,16 @@
 #import <Cocoa/Cocoa.h>
 #import "PBViewController.h"
 
+@class PBSourceViewAction;
+
 @interface PBGitSidebarController : PBViewController {
 	IBOutlet NSWindow *window;
 	IBOutlet NSOutlineView *sourceView;
 
 	NSMutableArray *items;
+
+	/* Specific things */
+	PBSourceViewAction *commitAction;
 }
 
 @property(readonly) NSMutableArray *items;
