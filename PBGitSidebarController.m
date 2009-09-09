@@ -69,6 +69,21 @@
 	[sourceView selectRow:index byExtendingSelection:NO];
 }
 
+#pragma mark NSOutlineView delegate methods
+
+- (void)outlineViewSelectionDidChange:(NSNotification *)notification
+{
+	NSInteger index = [sourceView selectedRow];
+	PBSourceViewItem *item = [sourceView itemAtRow:index];
+
+	if ([item revSpecifier]) {
+		[[repository windowController] showHistoryView:self];
+		repository.currentBranch = [item revSpecifier];
+		return;
+	}
+
+	/* Handle Remotes etc */
+}
 
 #pragma mark NSOutlineView delegate methods
 - (BOOL)outlineView:(NSOutlineView *)outlineView isGroupItem:(id)item
