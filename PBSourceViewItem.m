@@ -72,6 +72,19 @@
 	[node addRev:theRevSpecifier toPath:[path subarrayWithRange:NSMakeRange(1, [path count] - 1)]];
 }
 
+- (PBSourceViewItem *)findRev:(PBGitRevSpecifier *)rev
+{
+	if (rev == revSpecifier)
+		return self;
+
+	PBSourceViewItem *item = nil;
+	for (PBSourceViewItem *child in children)
+		if (item = [child findRev:rev])
+			return item;
+
+	return nil;
+}
+
 - (NSString *)title
 {
 	if (title)

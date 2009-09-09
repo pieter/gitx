@@ -8,10 +8,12 @@
 
 #import "PBGitSidebarController.h"
 #import "PBSourceViewItem.h"
+#import "NSOutlineViewExt.h"
 
 @interface PBGitSidebarController ()
 
 - (void)populateList;
+- (void)updateSelection;
 
 @end
 
@@ -32,7 +34,41 @@
 	[super awakeFromNib];
 	window.contentView = self.view;
 	[self populateList];
+
+	[repository addObserver:self forKeyPath:@"currentBranch" options:0 context:@"currentBranchChange"];
+	[self updateSelection];
 }
+
+- (void) observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
+{
+	if ([@"currentBranchChange" isEqualTo:context])
+		[self updateSelection];		
+}
+
+- (void)updateSelection
+{
+	PBGitRevSpecifier *rev = repository.currentBranch;
+	if (!rev)
+		return;
+	
+	PBSourceViewItem *item = nil;
+	for (PBSourceViewItem *it in items)
+		if (item = [it findRev:rev])
+			break;
+	
+	// TODO: We should add the current branch, or something :)
+	
+	if (!item) {
+		[sourceView deselectAll:self];
+		return;
+	}
+	
+	[sourceView PBExpandItem:item expandParents:YES];
+	NSInteger index = [sourceView rowForItem:item];
+	
+	[sourceView selectRow:index byExtendingSelection:NO];
+}
+
 
 #pragma mark NSOutlineView delegate methods
 - (BOOL)outlineView:(NSOutlineView *)outlineView isGroupItem:(id)item

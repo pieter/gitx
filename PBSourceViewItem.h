@@ -30,6 +30,7 @@
 // so "refs/heads/pu/pb/sidebar" would have the path [@"pu", @"pb", @"sidebare"]
 // to the 'local' branch thing
 - (void)addRev:(PBGitRevSpecifier *)revSpecifier toPath:(NSArray *)path;
+- (PBSourceViewItem *)findRev:(PBGitRevSpecifier *)rev;
 
 - (NSImage *)icon;
 
