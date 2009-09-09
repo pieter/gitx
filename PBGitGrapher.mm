@@ -55,6 +55,7 @@ void add_line(struct PBGitGraphLine *lines, int *nLines, int upper, int from, in
 			i++;
 			if(*it == (PBGitLane *)endLane) {
 				delete *it;
+				endLane = NULL;
 				continue;
 			}
 			// This is our commit! We should do a "merge": move the line from
