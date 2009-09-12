@@ -2,15 +2,14 @@
 <archive type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="7.03">
 	<data>
 		<int key="IBDocument.SystemTarget">1050</int>
-		<string key="IBDocument.SystemVersion">9J61</string>
+		<string key="IBDocument.SystemVersion">9L31a</string>
 		<string key="IBDocument.InterfaceBuilderVersion">677</string>
-		<string key="IBDocument.AppKitVersion">949.46</string>
+		<string key="IBDocument.AppKitVersion">949.54</string>
 		<string key="IBDocument.HIToolboxVersion">353.00</string>
 		<object class="NSMutableArray" key="IBDocument.EditedObjectIDs">
 			<bool key="EncodedWithXMLCoder">YES</bool>
+			<integer value="207"/>
 			<integer value="225"/>
-			<integer value="113"/>
-			<integer value="1" id="9"/>
 		</object>
 		<object class="NSArray" key="IBDocument.PluginDependencies">
 			<bool key="EncodedWithXMLCoder">YES</bool>
@@ -127,7 +126,7 @@
 											<bool key="EncodedWithXMLCoder">YES</bool>
 											<integer value="12" id="777559147"/>
 											<reference ref="777559147"/>
-											<reference ref="9"/>
+											<integer value="1" id="9"/>
 										</object>
 									</object>
 								</object>
@@ -964,38 +963,6 @@
 					<int key="connectionID">139</int>
 				</object>
 				<object class="IBConnectionRecord">
-					<object class="IBBindingConnection" key="connection">
-						<string key="label">contentArray: files</string>
-						<reference key="source" ref="667905213"/>
-						<reference key="destination" ref="1001"/>
-						<object class="NSNibBindingConnector" key="connector">
-							<reference key="NSSource" ref="667905213"/>
-							<reference key="NSDestination" ref="1001"/>
-							<string key="NSLabel">contentArray: files</string>
-							<string key="NSBinding">contentArray</string>
-							<string key="NSKeyPath">files</string>
-							<int key="NSNibBindingConnectorVersion">2</int>
-						</object>
-					</object>
-					<int key="connectionID">149</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBBindingConnection" key="connection">
-						<string key="label">contentArray: files</string>
-						<reference key="source" ref="128809524"/>
-						<reference key="destination" ref="1001"/>
-						<object class="NSNibBindingConnector" key="connector">
-							<reference key="NSSource" ref="128809524"/>
-							<reference key="NSDestination" ref="1001"/>
-							<string key="NSLabel">contentArray: files</string>
-							<string key="NSBinding">contentArray</string>
-							<string key="NSKeyPath">files</string>
-							<int key="NSNibBindingConnectorVersion">2</int>
-						</object>
-					</object>
-					<int key="connectionID">150</int>
-				</object>
-				<object class="IBConnectionRecord">
 					<object class="IBOutletConnection" key="connection">
 						<string key="label">cachedFilesController</string>
 						<reference key="source" ref="1001"/>
@@ -1066,22 +1033,6 @@
 						<reference key="destination" ref="570289088"/>
 					</object>
 					<int key="connectionID">241</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBBindingConnection" key="connection">
-						<string key="label">value: amend</string>
-						<reference key="source" ref="18874447"/>
-						<reference key="destination" ref="1001"/>
-						<object class="NSNibBindingConnector" key="connector">
-							<reference key="NSSource" ref="18874447"/>
-							<reference key="NSDestination" ref="1001"/>
-							<string key="NSLabel">value: amend</string>
-							<string key="NSBinding">value</string>
-							<string key="NSKeyPath">amend</string>
-							<int key="NSNibBindingConnectorVersion">2</int>
-						</object>
-					</object>
-					<int key="connectionID">252</int>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBOutletConnection" key="connection">
@@ -1218,6 +1169,54 @@
 						<reference key="destination" ref="1042222292"/>
 					</object>
 					<int key="connectionID">280</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">contentArray: index.indexChanges</string>
+						<reference key="source" ref="128809524"/>
+						<reference key="destination" ref="1001"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="128809524"/>
+							<reference key="NSDestination" ref="1001"/>
+							<string key="NSLabel">contentArray: index.indexChanges</string>
+							<string key="NSBinding">contentArray</string>
+							<string key="NSKeyPath">index.indexChanges</string>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">281</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">contentArray: index.indexChanges</string>
+						<reference key="source" ref="667905213"/>
+						<reference key="destination" ref="1001"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="667905213"/>
+							<reference key="NSDestination" ref="1001"/>
+							<string key="NSLabel">contentArray: index.indexChanges</string>
+							<string key="NSBinding">contentArray</string>
+							<string key="NSKeyPath">index.indexChanges</string>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">282</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">value: index.amend</string>
+						<reference key="source" ref="18874447"/>
+						<reference key="destination" ref="1001"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="18874447"/>
+							<reference key="NSDestination" ref="1001"/>
+							<string key="NSLabel">value: index.amend</string>
+							<string key="NSBinding">value</string>
+							<string key="NSKeyPath">index.amend</string>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">283</int>
 				</object>
 			</object>
 			<object class="IBMutableOrderedSet" key="objectRecords">
@@ -1616,7 +1615,7 @@
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilderKit</string>
 					<string>com.apple.InterfaceBuilderKit</string>
-					<string>{{59, 63}, {852, 432}}</string>
+					<string>{{428, 510}, {852, 432}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<integer value="0" id="8"/>
 					<reference ref="8"/>
@@ -1680,7 +1679,7 @@
 				</object>
 			</object>
 			<nil key="sourceID"/>
-			<int key="maxID">280</int>
+			<int key="maxID">283</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<object class="NSMutableArray" key="referencedPartialClassDescriptions">

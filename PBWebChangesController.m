@@ -8,6 +8,7 @@
 
 #import "PBWebChangesController.h"
 #import "PBGitIndexController.h"
+#import "PBGitIndex.h"
 
 @implementation PBWebChangesController
 
@@ -31,7 +32,7 @@
 
 - (BOOL) amend
 {
-	return controller.amend;
+	return controller.index.amend;
 }
 
 - (void)observeValueForKeyPath:(NSString *)keyPath
@@ -83,7 +84,8 @@
 
 - (void) stageHunk:(NSString *)hunk reverse:(BOOL)reverse
 {
-	[controller stageHunk: hunk reverse:reverse];
+	//[controller stageHunk: hunk reverse:reverse];
+	// FIXME: Don't need a hard refresh
 	[self refresh];
 }
 
@@ -99,7 +101,7 @@
 	}
 
 	if (ret == NSAlertDefaultReturn) {
-		[controller discardHunk:hunk];
+		// [controller discardHunk:hunk];
 		[self refresh];
 	}
 }
