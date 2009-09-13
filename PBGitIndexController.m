@@ -129,33 +129,6 @@
 
 # pragma mark Displaying diffs
 
-- (NSString *) stagedChangesForFile:(PBChangedFile *)file
-{
-	NSString *indexPath = [@":0:" stringByAppendingString:file.path];
-
-	if (file.status == NEW)
-		return [commitController.repository outputForArguments:[NSArray arrayWithObjects:@"show", indexPath, nil]];
-
-	return [commitController.repository outputInWorkdirForArguments:[NSArray arrayWithObjects:@"diff-index", [self contextParameter], @"--cached", [commitController.index parentTree], @"--", file.path, nil]];
-}
-
-- (NSString *)unstagedChangesForFile:(PBChangedFile *)file
-{
-	if (file.status == NEW) {
-		NSStringEncoding encoding;
-		NSError *error = nil;
-		NSString *path = [[commitController.repository workingDirectory] stringByAppendingPathComponent:file.path];
-		NSString *contents = [NSString stringWithContentsOfFile:path
-												   usedEncoding:&encoding
-														  error:&error];
-		if (error)
-			return nil;
-
-		return contents;
-	}
-
-	return [commitController.repository outputInWorkdirForArguments:[NSArray arrayWithObjects:@"diff-files", [self contextParameter], @"--", file.path, nil]];
-}
 
 - (void)discardChangesForFiles:(NSArray *)files force:(BOOL)force
 {

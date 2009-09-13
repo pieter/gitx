@@ -26,7 +26,7 @@
 
 - (void) didLoad
 {
-	[[self script] setValue:indexController forKey:@"IndexController"];
+	[[self script] setValue:controller.index forKey:@"Index"];
 	[self refresh];
 }
 

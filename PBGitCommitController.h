@@ -12,6 +12,8 @@
 @class PBGitIndexController, PBIconAndTextCell, PBWebChangesController, PBGitIndex;
 
 @interface PBGitCommitController : PBViewController {
+	// This might have to transfer over to the PBGitRepository
+	// object sometime
 	PBGitIndex *index;
 	
 	IBOutlet NSTextView *commitMessageView;

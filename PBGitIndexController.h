@@ -33,8 +33,5 @@
 - (IBAction) rowClicked:(NSCell *) sender;
 - (IBAction) tableClicked:(NSTableView *)tableView;
 
-- (NSString *) stagedChangesForFile:(PBChangedFile *)file;
-- (NSString *) unstagedChangesForFile:(PBChangedFile *)file;
-
 - (NSMenu *) menuForTable:(NSTableView *)table;
 @end

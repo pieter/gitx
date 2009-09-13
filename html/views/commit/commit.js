@@ -1,11 +1,13 @@
 /* Commit: Interface for selecting, staging, discarding, and unstaging
    hunks, individual lines, or ranges of lines.  */
 
+var contextLines = 5;
+
 var showNewFile = function(file)
 {
 	setTitle("New file: " + file.path);
 
-	var contents = IndexController.unstagedChangesForFile_(file);
+	var contents = Index.diffForFile_staged_contextLines_(file, false, contextLines);
 	if (!contents) {
 		notify("Can not display changes (Binary file?)", -1);
 		diff.innerHTML = "";
@@ -49,23 +51,16 @@ var showFileChanges = function(file, cached) {
 	hideState();
 
 	$("contextSize").oninput = function(element) {
-		Controller.setContextSize_($("contextSize").value);
+		contextSize = $("contextSize").value;
 	}
 
 	if (file.status == 0) // New file?
 		return showNewFile(file);
 
-	var changes;
-	if (cached) {
-		setTitle("Staged changes for " + file.path);
-		displayContext();
-		changes = IndexController.stagedChangesForFile_(file);
-	}
-	else {
-		setTitle("Unstaged changes for " + file.path);
-		displayContext();
-		changes = IndexController.unstagedChangesForFile_(file);
-	}
+	setTitle((cached ? "Staged": "Unstaged") + " changes for" + file.path);
+	displayContext();
+	var changes = Index.diffForFile_staged_contextLines_(file, cached, contextLines);
+	
 
 	if (changes == "") {
 		notify("This file has no more changes", 1);
