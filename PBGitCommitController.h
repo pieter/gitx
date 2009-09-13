@@ -25,9 +25,6 @@
 
 	NSString *status;
 	BOOL busy;
-
-	NSDictionary *amendEnvironment;
-
 }
 
 @property(copy) NSString *status;

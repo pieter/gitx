@@ -23,10 +23,6 @@
 	IBOutlet NSTableView *stagedTable;	
 }
 
-@property (assign) int contextSize;
-
-- (NSString *) contextParameter;
-
 - (IBAction) rowClicked:(NSCell *) sender;
 - (IBAction) tableClicked:(NSTableView *)tableView;
 

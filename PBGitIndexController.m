@@ -20,12 +20,8 @@
 
 @implementation PBGitIndexController
 
-@synthesize contextSize;
-
 - (void)awakeFromNib
 {
-	contextSize = 3;
-
 	[unstagedTable setDoubleAction:@selector(tableClicked:)];
 	[stagedTable setDoubleAction:@selector(tableClicked:)];
 
@@ -313,11 +309,6 @@ writeRowsWithIndexes:(NSIndexSet *)rowIndexes
 		[commitController.index stageFiles:files];
 
 	return YES;
-}
-
-- (NSString *) contextParameter
-{
-	return [[NSString alloc] initWithFormat:@"-U%i", contextSize];
 }
 
 # pragma mark WebKit Accessibility
