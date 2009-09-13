@@ -14,13 +14,13 @@
 #import "NSString_RegEx.h"
 
 
-@interface PBGitCommitController (PrivateMethods)
-- (void)processHunk:(NSString *)hunk stage:(BOOL)stage reverse:(BOOL)reverse;
+@interface PBGitCommitController ()
+- (void)refreshFinished:(NSNotification *)notification;
 @end
 
 @implementation PBGitCommitController
 
-@synthesize status, index;
+@synthesize status, index, busy;
 
 - (id)initWithRepository:(PBGitRepository *)theRepository superController:(PBGitWindowController *)controller
 {
@@ -29,12 +29,8 @@
 
 	index = [[PBGitIndex alloc] initWithRepository:theRepository workingDirectory:[NSURL fileURLWithPath:[theRepository workingDirectory]]];
 	[index refresh];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refreshFinished:) name:PBGitIndexFinishedIndexRefresh object:index];
 	return self;
-}
-
-- (BOOL)busy
-{
-	return NO;
 }
 
 - (void)awakeFromNib
@@ -80,6 +76,8 @@
 
 - (void) refresh:(id) sender
 {
+	self.busy = YES;
+	self.status = @"Refreshing index…";
 	[index refresh];
 
 	// Reload refs (in case HEAD changed)
@@ -128,4 +126,9 @@
 }
 
 
+- (void)refreshFinished:(NSNotification *)notification
+{
+	self.busy = NO;
+	self.status = @"Index refresh finished";
+}
 @end
