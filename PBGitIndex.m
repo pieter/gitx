@@ -246,6 +246,31 @@
 	return YES;
 }
 
+- (BOOL)applyPatch:(NSString *)hunk stage:(BOOL)stage reverse:(BOOL)reverse;
+{
+	NSMutableArray *array = [NSMutableArray arrayWithObjects:@"apply", nil];
+	if (stage)
+		[array addObject:@"--cached"];
+	if (reverse)
+		[array addObject:@"--reverse"];
+
+	int ret = 1;
+	NSString *error = [repository outputForArguments:array
+										 inputString:hunk
+											retValue:&ret];
+
+	// FIXME: show this error, rather than just logging it
+	if (ret) {
+		NSLog(@"Error: %@", error);
+		return NO;
+	}
+
+	// TODO: Try to be smarter about what to refresh
+	[self refresh];
+	return YES;
+}
+
+
 - (NSString *)diffForFile:(PBChangedFile *)file staged:(BOOL)staged contextLines:(NSUInteger)context
 {
 	NSString *parameter = [NSString stringWithFormat:@"-U%u", context];

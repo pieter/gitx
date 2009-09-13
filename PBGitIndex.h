@@ -48,7 +48,7 @@
 - (BOOL)unstageFiles:(NSArray *)unstageFiles;
 
 // Intra-file changes
-//- (void)applyPatch:(NSString *)hunk stage:(BOOL)stage reverse:(BOOL)reverse;
+- (BOOL)applyPatch:(NSString *)hunk stage:(BOOL)stage reverse:(BOOL)reverse;
 - (NSString *)diffForFile:(PBChangedFile *)file staged:(BOOL)staged contextLines:(NSUInteger)context;
 
 @end
