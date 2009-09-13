@@ -144,7 +144,9 @@
 			continue;
 		}
 		NSArray *pathComponents = [[rev simpleRef] componentsSeparatedByString:@"/"];
-		if ([[pathComponents objectAtIndex:1] isEqualToString:@"heads"])
+		if ([pathComponents count] < 2)
+			[branches addChild:[PBSourceViewItem itemWithRevSpec:rev]];
+		else if ([[pathComponents objectAtIndex:1] isEqualToString:@"heads"])
 			[branches addRev:rev toPath:[pathComponents subarrayWithRange:NSMakeRange(2, [pathComponents count] - 2)]];
 		else if ([[rev simpleRef] hasPrefix:@"refs/tags/"])
 			[tags addRev:rev toPath:[pathComponents subarrayWithRange:NSMakeRange(2, [pathComponents count] - 2)]];
