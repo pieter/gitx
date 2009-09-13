@@ -41,7 +41,7 @@
 // Refresh the index
 - (void)refresh;
 
-//- (void)commit;
+- (void)commitWithMessage:(NSString *)commitMessage;
 
 // Inter-file changes:
 - (BOOL)stageFiles:(NSArray *)stageFiles;

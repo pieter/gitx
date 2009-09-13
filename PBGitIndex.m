@@ -118,6 +118,69 @@
 	return parent;
 }
 
+- (void)commitWithMessage:(NSString *)commitMessage
+{
+	NSMutableString *commitSubject = [@"commit: " mutableCopy];
+	NSRange newLine = [commitMessage rangeOfString:@"\n"];
+	if (newLine.location == NSNotFound)
+		[commitSubject appendString:commitMessage];
+	else
+		[commitSubject appendString:[commitMessage substringToIndex:newLine.location]];
+	
+	NSString *commitMessageFile;
+	commitMessageFile = [repository.fileURL.path stringByAppendingPathComponent:@"COMMIT_EDITMSG"];
+	
+	[commitMessage writeToFile:commitMessageFile atomically:YES encoding:NSUTF8StringEncoding error:nil];
+	
+	// TODO: Notification: @"Creating tree..";
+	NSString *tree = [repository outputForCommand:@"write-tree"];
+	if ([tree length] != 40)
+		return; //TODO: commitFailedBecause:@"Could not create a tree";
+	
+	
+	NSMutableArray *arguments = [NSMutableArray arrayWithObjects:@"commit-tree", tree, nil];
+	NSString *parent = amend ? @"HEAD^" : @"HEAD";
+	if ([repository parseReference:parent]) {
+		[arguments addObject:@"-p"];
+		[arguments addObject:parent];
+	}
+
+	int ret = 1;
+	NSString *commit = [repository outputForArguments:arguments
+										  inputString:commitMessage
+							   byExtendingEnvironment:amendEnvironment
+											 retValue: &ret];
+	
+	if (ret || [commit length] != 40)
+		return; // TODO: [self commitFailedBecause:@"Could not create a commit object"];
+	
+	if (![repository executeHook:@"pre-commit" output:nil])
+		return; // TODO: [self commitFailedBecause:@"Pre-commit hook failed"];
+	
+	if (![repository executeHook:@"commit-msg" withArgs:[NSArray arrayWithObject:commitMessageFile] output:nil])
+		return; // TODO: [self commitFailedBecause:@"Commit-msg hook failed"];
+	
+	[repository outputForArguments:[NSArray arrayWithObjects:@"update-ref", @"-m", commitSubject, @"HEAD", commit, nil]
+						  retValue: &ret];
+	if (ret)
+		return; // TODO: [self commitFailedBecause:@"Could not update HEAD"];
+	
+	if (![repository executeHook:@"post-commit" output:nil])
+		return; // [webController setStateMessage:[NSString stringWithFormat:@"Post-commit hook failed, however, successfully created commit %@", commit]];
+	else
+		//[webController setStateMessage:[NSString stringWithFormat:@"Successfully created commit %@", commit]];
+		;
+	
+	repository.hasChanged = YES;
+
+	amendEnvironment = nil;
+	if (amend)
+		self.amend = NO;
+	else
+		[self refresh];
+	
+}
+
 - (BOOL)stageFiles:(NSArray *)stageFiles
 {
 	// Input string for update-index
