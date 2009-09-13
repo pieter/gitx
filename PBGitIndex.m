@@ -142,6 +142,7 @@ NSString *PBGitIndexAmendMessageAvailable = @"PBGitIndexAmendMessageAvailable";
 	return parent;
 }
 
+// TODO: make Asynchronous
 - (void)commitWithMessage:(NSString *)commitMessage
 {
 	NSMutableString *commitSubject = [@"commit: " mutableCopy];
@@ -419,8 +420,7 @@ NSString *PBGitIndexAmendMessageAvailable = @"PBGitIndexAmendMessageAvailable";
 	NSArray *lines = [self linesFromNotification:notification];
 	NSMutableDictionary *dictionary = [[NSMutableDictionary alloc] initWithCapacity:[lines count]];
 	// Other files are untracked, so we don't have any real index information. Instead, we can just fake it.
-	// The line below is used to add the file to the index
-	// FIXME: request the real file mode
+	// The line below is not used at all, as for these files the commitBlob isn't set
 	NSArray *fileStatus = [NSArray arrayWithObjects:@":000000", @"100644", @"0000000000000000000000000000000000000000", @"0000000000000000000000000000000000000000", @"A", nil];
 	for (NSString *path in lines) {
 		if ([path length] == 0)
@@ -450,7 +450,6 @@ NSString *PBGitIndexAmendMessageAvailable = @"PBGitIndexAmendMessageAvailable";
 
 - (void) addFilesFromDictionary:(NSMutableDictionary *)dictionary staged:(BOOL)staged tracked:(BOOL)tracked
 {
-	// TODO: Stop tracking files
 	// Iterate over all existing files
 	for (PBChangedFile *file in files) {
 		NSArray *fileStatus = [dictionary objectForKey:file.path];
@@ -494,7 +493,6 @@ NSString *PBGitIndexAmendMessageAvailable = @"PBGitIndexAmendMessageAvailable";
 				file.hasUnstagedChanges = NO;
 		}
 	}
-	// TODO: Finish tracking files
 
 	// Do new files only if necessary
 	if (![[dictionary allKeys] count])
@@ -535,7 +533,7 @@ NSString *PBGitIndexAmendMessageAvailable = @"PBGitIndexAmendMessageAvailable";
 		return [NSArray array];
 
 	NSString *string = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-	// FIXME: Return an error?
+	// FIXME: throw an error?
 	if (!string)
 		return [NSArray array];
 
