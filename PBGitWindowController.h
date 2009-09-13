@@ -20,8 +20,6 @@
 	PBViewController *commitViewController;
 
 	PBViewController* viewController;
-
-	PBGitSidebarController *sidebarController;
 }
 
 @property (assign) __weak PBGitRepository *repository;

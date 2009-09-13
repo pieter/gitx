@@ -29,10 +29,6 @@
 	else
 		self.selectedViewIndex = -1;
 
-	// Sidebar
-	sidebarController = [[PBGitSidebarController alloc] initWithRepository:repository superController:self];
-	// Hack for now
-	[sidebarController view];
 	return self;
 }
 
