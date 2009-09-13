@@ -31,7 +31,6 @@
 @property(readonly) PBGitIndex *index;
 @property(assign) BOOL busy;
 
-// FIXME: redo 0823ff859dc65db238951c16e49293ea411c2b5a
 - (IBAction) refresh:(id) sender;
 - (IBAction) commit:(id) sender;
 - (IBAction)signOff:(id)sender;

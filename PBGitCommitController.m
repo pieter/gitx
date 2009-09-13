@@ -11,8 +11,6 @@
 #import "PBChangedFile.h"
 #import "PBWebChangesController.h"
 #import "PBGitIndex.h"
-#import "NSString_RegEx.h"
-
 
 @interface PBGitCommitController ()
 - (void)refreshFinished:(NSNotification *)notification;

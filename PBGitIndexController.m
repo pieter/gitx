@@ -30,9 +30,7 @@
 
 	[unstagedTable registerForDraggedTypes: [NSArray arrayWithObject:FileChangesTableViewType]];
 	[stagedTable registerForDraggedTypes: [NSArray arrayWithObject:FileChangesTableViewType]];
-
 }
-
 
 - (void) ignoreFiles:(NSArray *)files
 {
