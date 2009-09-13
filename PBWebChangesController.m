@@ -82,10 +82,11 @@
 				     [NSNumber numberWithBool:selectedFileIsCached], nil]];
 }
 
-- (void) stageHunk:(NSString *)hunk reverse:(BOOL)reverse
+- (void)stageHunk:(NSString *)hunk reverse:(BOOL)reverse
 {
-	//[controller stageHunk: hunk reverse:reverse];
+	[controller.index applyPatch:hunk stage:YES reverse:reverse];
 	// FIXME: Don't need a hard refresh
+
 	[self refresh];
 }
 
@@ -101,7 +102,7 @@
 	}
 
 	if (ret == NSAlertDefaultReturn) {
-		// [controller discardHunk:hunk];
+		[controller.index applyPatch:hunk stage:NO reverse:YES];
 		[self refresh];
 	}
 }

@@ -127,35 +127,5 @@
 	[commitMessageView setString:@""];
 }
 
-- (void) stageHunk:(NSString *)hunk reverse:(BOOL)reverse
-{
-	[self processHunk:hunk stage:TRUE reverse:reverse];
-}
-
-- (void)discardHunk:(NSString *)hunk
-{
-	[self processHunk:hunk stage:FALSE reverse:TRUE];
-}
-
-- (void)processHunk:(NSString *)hunk stage:(BOOL)stage reverse:(BOOL)reverse
-{
-	NSMutableArray *array = [NSMutableArray arrayWithObjects:@"apply", nil];
-	if (stage)
-		[array addObject:@"--cached"];
-	if (reverse)
-		[array addObject:@"--reverse"];
-
-	int ret = 1;
-	NSString *error = [repository outputForArguments:array
-										 inputString:hunk
-											retValue:&ret];
-
-	// FIXME: show this error, rather than just logging it
-	if (ret)
-		NSLog(@"Error: %@", error);
-
-	// TODO: We should do this smarter by checking if the file diff is empty, which is faster.
-	[self refresh:self]; 
-}
 
 @end
