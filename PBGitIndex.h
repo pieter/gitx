@@ -19,6 +19,7 @@ extern NSString *PBGitIndexCommitStatus;
 extern NSString *PBGitIndexCommitFailed;
 extern NSString *PBGitIndexFinishedCommit;
 
+extern NSString *PBGitIndexAmendMessageAvailable;
 // Represents a git index for a given work tree.
 // As a single git repository can have multiple trees,
 // the tree has to be given explicitly, even though

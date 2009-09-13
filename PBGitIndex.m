@@ -21,6 +21,7 @@ NSString *PBGitIndexCommitStatus = @"PBGitIndexCommitStatus";
 NSString *PBGitIndexCommitFailed = @"PBGitIndexCommitFailed";
 NSString *PBGitIndexFinishedCommit = @"PBGitIndexFinishedCommit";
 
+NSString *PBGitIndexAmendMessageAvailable = @"PBGitIndexAmendMessageAvailable";
 
 @interface PBGitIndex (IndexRefreshMethods)
 
@@ -93,6 +94,16 @@ NSString *PBGitIndexFinishedCommit = @"PBGitIndexFinishedCommit";
 							[match objectAtIndex:2], @"GIT_AUTHOR_EMAIL",
 							[match objectAtIndex:3], @"GIT_AUTHOR_DATE",
 							nil];
+
+	// Find the commit message
+	NSRange r = [message rangeOfString:@"\n\n"];
+	if (r.location != NSNotFound) {
+		NSString *commitMessage = [message substringFromIndex:r.location + 2];
+		[[NSNotificationCenter defaultCenter] postNotificationName:PBGitIndexAmendMessageAvailable
+															object: self
+														  userInfo:[NSDictionary dictionaryWithObject:commitMessage forKey:@"message"]];
+	}
+	
 }
 
 - (void)refresh

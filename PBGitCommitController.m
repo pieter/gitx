@@ -19,6 +19,7 @@
 - (void)commitStatusUpdated:(NSNotification *)notification;
 - (void)commitFinished:(NSNotification *)notification;
 - (void)commitFailed:(NSNotification *)notification;
+- (void)amendCommit:(NSNotification *)notification;
 @end
 
 @implementation PBGitCommitController
@@ -37,6 +38,7 @@
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(commitStatusUpdated:) name:PBGitIndexCommitStatus object:index];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(commitFinished:) name:PBGitIndexFinishedCommit object:index];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(commitFailed:) name:PBGitIndexCommitFailed object:index];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(amendCommit:) name:PBGitIndexAmendMessageAvailable object:index];
 
 	return self;
 }
@@ -56,11 +58,13 @@
 	[cachedFilesController setSortDescriptors:[NSArray arrayWithObject:
 		[[NSSortDescriptor alloc] initWithKey:@"path" ascending:true]]];
 }
+
 - (void) removeView
 {
 	[webController closeView];
 	[super finalize];
 }
+
 - (NSResponder *)firstResponder;
 {
 	return commitMessageView;
@@ -149,6 +153,17 @@
 	NSString *reason = [[notification userInfo] objectForKey:@"description"];
 	self.status = [@"Commit failed: " stringByAppendingString:reason];
 	[[repository windowController] showMessageSheet:@"Commit failed" infoText:reason];
+}
+
+- (void)amendCommit:(NSNotification *)notification
+{
+	// Replace commit message with the old one if it's less than 3 characters long.
+	// This is just a random number.
+	if ([[commitMessageView string] length] > 3)
+		return;
+	
+	NSString *message = [[notification userInfo] objectForKey:@"message"];
+	commitMessageView.string = message;
 }
 
 
