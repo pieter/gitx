@@ -18,6 +18,7 @@
 - (void)refreshFinished:(NSNotification *)notification;
 - (void)commitStatusUpdated:(NSNotification *)notification;
 - (void)commitFinished:(NSNotification *)notification;
+- (void)commitFailed:(NSNotification *)notification;
 @end
 
 @implementation PBGitCommitController
@@ -35,6 +36,7 @@
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refreshFinished:) name:PBGitIndexFinishedIndexRefresh object:index];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(commitStatusUpdated:) name:PBGitIndexCommitStatus object:index];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(commitFinished:) name:PBGitIndexFinishedCommit object:index];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(commitFailed:) name:PBGitIndexCommitFailed object:index];
 
 	return self;
 }
@@ -95,14 +97,6 @@
 	[self refresh:nil];
 }
 
-- (void) commitFailedBecause:(NSString *)reason
-{
-	//self.busy--;
-	self.status = [@"Commit failed: " stringByAppendingString:reason];
-	[[repository windowController] showMessageSheet:@"Commit failed" infoText:reason];
-	return;
-}
-
 - (IBAction) commit:(id) sender
 {
 	if ([[NSFileManager defaultManager] fileExistsAtPath:[repository.fileURL.path stringByAppendingPathComponent:@"MERGE_HEAD"]]) {
@@ -145,10 +139,16 @@
 - (void)commitFinished:(NSNotification *)notification
 {
 	[webController setStateMessage:[NSString stringWithFormat:[[notification userInfo] objectForKey:@"description"]]];
-
-	BOOL success = [[[notification userInfo] objectForKey:@"success"] boolValue];
-	if (success)
-		[commitMessageView setString:@""];
 	[commitMessageView setEditable:YES];
 }	
+
+- (void)commitFailed:(NSNotification *)notification
+{
+	self.busy = NO;
+	NSString *reason = [[notification userInfo] objectForKey:@"description"];
+	self.status = [@"Commit failed: " stringByAppendingString:reason];
+	[[repository windowController] showMessageSheet:@"Commit failed" infoText:reason];
+}
+
+
 @end

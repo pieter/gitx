@@ -43,7 +43,7 @@ NSString *PBGitIndexFinishedCommit = @"PBGitIndexFinishedCommit";
 // on whether amend is set or not.
 - (NSString *) parentTree;
 - (void)postCommitUpdate:(NSString *)update;
-
+- (void)postCommitFailure:(NSString *)reason;
 @end
 
 @implementation PBGitIndex
@@ -146,7 +146,7 @@ NSString *PBGitIndexFinishedCommit = @"PBGitIndexFinishedCommit";
 	[self postCommitUpdate:@"Creating tree"];
 	NSString *tree = [repository outputForCommand:@"write-tree"];
 	if ([tree length] != 40)
-		return; //TODO: commitFailedBecause:@"Could not create a tree";
+		return [self postCommitFailure:@"Creating tree failed"];
 	
 	
 	NSMutableArray *arguments = [NSMutableArray arrayWithObjects:@"commit-tree", tree, nil];
@@ -164,20 +164,20 @@ NSString *PBGitIndexFinishedCommit = @"PBGitIndexFinishedCommit";
 											 retValue: &ret];
 	
 	if (ret || [commit length] != 40)
-		return; // TODO: [self commitFailedBecause:@"Could not create a commit object"];
+		return [self postCommitFailure:@"Could not create a commit object"];
 	
 	[self postCommitUpdate:@"Running hooks"];
 	if (![repository executeHook:@"pre-commit" output:nil])
-		return; // TODO: [self commitFailedBecause:@"Pre-commit hook failed"];
+		return [self postCommitFailure:@"Pre-commit hook failed"];
 	
 	if (![repository executeHook:@"commit-msg" withArgs:[NSArray arrayWithObject:commitMessageFile] output:nil])
-		return; // TODO: [self commitFailedBecause:@"Commit-msg hook failed"];
+		return [self postCommitFailure:@"Commit-msg hook failed"];
 	
 	[self postCommitUpdate:@"Updating HEAD"];
 	[repository outputForArguments:[NSArray arrayWithObjects:@"update-ref", @"-m", commitSubject, @"HEAD", commit, nil]
 						  retValue: &ret];
 	if (ret)
-		return; // TODO: [self commitFailedBecause:@"Could not update HEAD"];
+		return [self postCommitFailure:@"Could not update HEAD"];
 	
 	[self postCommitUpdate:@"Running post-commit hook"];
 	
@@ -214,6 +214,14 @@ NSString *PBGitIndexFinishedCommit = @"PBGitIndexFinishedCommit";
 													object:self
 													  userInfo:[NSDictionary dictionaryWithObject:update forKey:@"description"]];
 }
+
+- (void)postCommitFailure:(NSString *)reason
+{
+	[[NSNotificationCenter defaultCenter] postNotificationName:PBGitIndexCommitFailed
+														object:self
+													  userInfo:[NSDictionary dictionaryWithObject:reason forKey:@"description"]];
+}
+
 
 - (BOOL)stageFiles:(NSArray *)stageFiles
 {
