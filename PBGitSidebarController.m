@@ -153,7 +153,7 @@
 		
 	}
 
-	[items addObject:actions];
+	//[items addObject:actions];
 
 	[items addObject:branches];
 	[items addObject:remotes];
@@ -164,7 +164,7 @@
 	[sourceView expandItem:branches expandChildren:YES];
 	[sourceView expandItem:actions];
 
-	NSAssert(actions == [sourceView itemAtRow:0], @"First item is not the Action");
+	NSAssert(branches == [sourceView itemAtRow:0], @"First item is not the Branches");
 	[sourceView reloadItem:nil reloadChildren:YES];
 
 }
