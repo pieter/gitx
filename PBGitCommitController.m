@@ -138,6 +138,7 @@
 
 - (void)commitFinished:(NSNotification *)notification
 {
+	[commitMessageView setString:@""];
 	[webController setStateMessage:[NSString stringWithFormat:[[notification userInfo] objectForKey:@"description"]]];
 	[commitMessageView setEditable:YES];
 }	
