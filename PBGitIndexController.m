@@ -13,11 +13,6 @@
 
 #define FileChangesTableViewType @"GitFileChangedType"
 
-@interface PBGitIndexController (PrivateMethods)
-- (void)stopTrackingIndex;
-- (void)resumeTrackingIndex;
-@end
-
 @implementation PBGitIndexController
 
 - (void)awakeFromNib
@@ -67,6 +62,8 @@
 	[ignoreFile writeToFile:gitIgnoreName atomically:YES encoding:enc error:&error];
 	if (error)
 		[[commitController.repository windowController] showErrorSheet:error];
+	
+	// TODO: Post index change
 }
 
 # pragma mark Displaying diffs
@@ -97,6 +94,8 @@
 
 	for (PBChangedFile *file in files)
 		file.hasUnstagedChanges = NO;
+
+	// TODO: Post index update
 }
 
 # pragma mark Context Menu methods
@@ -316,17 +315,4 @@ writeRowsWithIndexes:(NSIndexSet *)rowIndexes
 	return NO;
 }
 
-#pragma mark Private Methods
-- (void)stopTrackingIndex
-{
-	[stagedFilesController setAutomaticallyRearrangesObjects:NO];
-	[unstagedFilesController setAutomaticallyRearrangesObjects:NO];
-}
-- (void)resumeTrackingIndex
-{
-	[stagedFilesController setAutomaticallyRearrangesObjects:YES];
-	[unstagedFilesController setAutomaticallyRearrangesObjects:YES];
-	[stagedFilesController rearrangeObjects];
-	[unstagedFilesController rearrangeObjects];
-}
 @end

@@ -18,6 +18,7 @@
 - (void)commitFinished:(NSNotification *)notification;
 - (void)commitFailed:(NSNotification *)notification;
 - (void)amendCommit:(NSNotification *)notification;
+- (void)indexChanged:(NSNotification *)notification;
 @end
 
 @implementation PBGitCommitController
@@ -37,6 +38,7 @@
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(commitFinished:) name:PBGitIndexFinishedCommit object:index];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(commitFailed:) name:PBGitIndexCommitFailed object:index];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(amendCommit:) name:PBGitIndexAmendMessageAvailable object:index];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(indexChanged:) name:PBGitIndexIndexUpdated object:index];
 
 	return self;
 }
@@ -55,6 +57,9 @@
 		[[NSSortDescriptor alloc] initWithKey:@"path" ascending:true], nil]];
 	[cachedFilesController setSortDescriptors:[NSArray arrayWithObject:
 		[[NSSortDescriptor alloc] initWithKey:@"path" ascending:true]]];
+
+	[cachedFilesController setAutomaticallyRearrangesObjects:NO];
+	[unstagedFilesController setAutomaticallyRearrangesObjects:NO];
 }
 
 - (void) removeView
@@ -164,5 +169,9 @@
 	commitMessageView.string = message;
 }
 
-
+- (void)indexChanged:(NSNotification *)notification
+{
+	[cachedFilesController rearrangeObjects];
+	[unstagedFilesController rearrangeObjects];
+}
 @end

@@ -17,6 +17,8 @@ NSString *PBGitIndexIndexRefreshStatus = @"PBGitIndexIndexRefreshStatus";
 NSString *PBGitIndexIndexRefreshFailed = @"PBGitIndexIndexRefreshFailed";
 NSString *PBGitIndexFinishedIndexRefresh = @"PBGitIndexFinishedIndexRefresh";
 
+NSString *PBGitIndexIndexUpdated = @"GBGitIndexIndexUpdated";
+
 NSString *PBGitIndexCommitStatus = @"PBGitIndexCommitStatus";
 NSString *PBGitIndexCommitFailed = @"PBGitIndexCommitFailed";
 NSString *PBGitIndexFinishedCommit = @"PBGitIndexFinishedCommit";
@@ -45,6 +47,7 @@ NSString *PBGitIndexAmendMessageAvailable = @"PBGitIndexAmendMessageAvailable";
 - (NSString *) parentTree;
 - (void)postCommitUpdate:(NSString *)update;
 - (void)postCommitFailure:(NSString *)reason;
+- (void)postIndexChange;
 @end
 
 @implementation PBGitIndex
@@ -257,13 +260,13 @@ NSString *PBGitIndexAmendMessageAvailable = @"PBGitIndexAmendMessageAvailable";
 		return NO;
 	}
 
-	// TODO: Stop Tracking
 	for (PBChangedFile *file in stageFiles)
 	{
 		file.hasUnstagedChanges = NO;
 		file.hasStagedChanges = YES;
 	}
-	// TODO: Resume tracking
+
+	[self postIndexChange];
 	return YES;
 }
 
@@ -288,14 +291,13 @@ NSString *PBGitIndexAmendMessageAvailable = @"PBGitIndexAmendMessageAvailable";
 		return NO;
 	}
 
-	// TODO: stop tracking
 	for (PBChangedFile *file in unstageFiles)
 	{
 		file.hasUnstagedChanges = YES;
 		file.hasStagedChanges = NO;
 	}
-	// TODO: resume tracking
 
+	[self postIndexChange];
 	return YES;
 }
 
@@ -353,6 +355,11 @@ NSString *PBGitIndexAmendMessageAvailable = @"PBGitIndexAmendMessageAvailable";
 	return [repository outputInWorkdirForArguments:[NSArray arrayWithObjects:@"diff-files", parameter, @"--", file.path, nil]];
 }
 
+- (void)postIndexChange
+{
+	[[NSNotificationCenter defaultCenter] postNotificationName:PBGitIndexIndexUpdated
+														object:self];
+}
 
 # pragma mark WebKit Accessibility
 
@@ -568,8 +575,10 @@ NSString *PBGitIndexAmendMessageAvailable = @"PBGitIndexAmendMessageAvailable";
 - (void)indexStepComplete
 {
 	// if we're still busy, do nothing :)
-	if (--refreshStatus)
+	if (--refreshStatus) {
+		[self postIndexChange];
 		return;
+	}
 
 	// At this point, all index operations have finished.
 	// We need to find all files that don't have either
@@ -590,6 +599,8 @@ NSString *PBGitIndexAmendMessageAvailable = @"PBGitIndexAmendMessageAvailable";
 
 	[[NSNotificationCenter defaultCenter] postNotificationName:PBGitIndexFinishedIndexRefresh
 														object:self];
+	[self postIndexChange];
+
 }
 
 @end
