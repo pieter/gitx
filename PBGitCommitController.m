@@ -19,6 +19,7 @@
 - (void)commitFailed:(NSNotification *)notification;
 - (void)amendCommit:(NSNotification *)notification;
 - (void)indexChanged:(NSNotification *)notification;
+- (void)indexOperationFailed:(NSNotification *)notification;
 @end
 
 @implementation PBGitCommitController
@@ -39,6 +40,7 @@
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(commitFailed:) name:PBGitIndexCommitFailed object:index];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(amendCommit:) name:PBGitIndexAmendMessageAvailable object:index];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(indexChanged:) name:PBGitIndexIndexUpdated object:index];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(indexOperationFailed:) name:PBGitIndexOperationFailed object:index];
 
 	return self;
 }
@@ -132,6 +134,7 @@
 }
 
 
+# pragma mark PBGitIndex Notification handling
 - (void)refreshFinished:(NSNotification *)notification
 {
 	self.busy = NO;
@@ -175,4 +178,10 @@
 	[cachedFilesController rearrangeObjects];
 	[unstagedFilesController rearrangeObjects];
 }
+
+- (void)indexOperationFailed:(NSNotification *)notification
+{
+	[[repository windowController] showMessageSheet:@"Index operation failed" infoText:[[notification userInfo] objectForKey:@"description"]];
+}
+
 @end

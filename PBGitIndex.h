@@ -11,18 +11,29 @@
 @class PBGitRepository;
 @class PBChangedFile;
 
+/*
+ * Notifications this class will send
+ */
+
+// Refreshing index
 extern NSString *PBGitIndexIndexRefreshStatus;
 extern NSString *PBGitIndexIndexRefreshFailed;
 extern NSString *PBGitIndexFinishedIndexRefresh;
 
-// The "Files" array has changed
+// The "indexChanges" array has changed
 extern NSString *PBGitIndexIndexUpdated;
 
+// Committing files
 extern NSString *PBGitIndexCommitStatus;
 extern NSString *PBGitIndexCommitFailed;
 extern NSString *PBGitIndexFinishedCommit;
 
+// Changing to amend
 extern NSString *PBGitIndexAmendMessageAvailable;
+
+// This is for general operations, like applying a patch
+extern NSString *PBGitIndexOperationFailed;
+
 
 
 // Represents a git index for a given work tree.

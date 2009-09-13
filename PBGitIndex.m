@@ -24,6 +24,7 @@ NSString *PBGitIndexCommitFailed = @"PBGitIndexCommitFailed";
 NSString *PBGitIndexFinishedCommit = @"PBGitIndexFinishedCommit";
 
 NSString *PBGitIndexAmendMessageAvailable = @"PBGitIndexAmendMessageAvailable";
+NSString *PBGitIndexOperationFailed = @"PBGitIndexOperationFailed";
 
 @interface PBGitIndex (IndexRefreshMethods)
 
@@ -48,6 +49,7 @@ NSString *PBGitIndexAmendMessageAvailable = @"PBGitIndexAmendMessageAvailable";
 - (void)postCommitUpdate:(NSString *)update;
 - (void)postCommitFailure:(NSString *)reason;
 - (void)postIndexChange;
+- (void)postOperationFailed:(NSString *)description;
 @end
 
 @implementation PBGitIndex
@@ -237,6 +239,12 @@ NSString *PBGitIndexAmendMessageAvailable = @"PBGitIndexAmendMessageAvailable";
 													  userInfo:[NSDictionary dictionaryWithObject:reason forKey:@"description"]];
 }
 
+- (void)postOperationFailed:(NSString *)description
+{
+	[[NSNotificationCenter defaultCenter] postNotificationName:PBGitIndexOperationFailed
+														object:self
+													  userInfo:[NSDictionary dictionaryWithObject:description forKey:@"description"]];	
+}
 
 - (BOOL)stageFiles:(NSArray *)stageFiles
 {
@@ -256,8 +264,7 @@ NSString *PBGitIndexAmendMessageAvailable = @"PBGitIndexAmendMessageAvailable";
 						  retValue:&ret];
 
 	if (ret) {
-		// FIXME: failed notification?
-		NSLog(@"Error when updating index. Retvalue: %i", ret);
+		[self postOperationFailed:[NSString stringWithFormat:@"Error in staging files. Return value: %i", ret]];
 		return NO;
 	}
 
@@ -287,8 +294,7 @@ NSString *PBGitIndexAmendMessageAvailable = @"PBGitIndexAmendMessageAvailable";
 
 	if (ret)
 	{
-		// FIXME: Failed notification
-		NSLog(@"Error when updating index. Retvalue: %i", ret);
+		[self postOperationFailed:[NSString stringWithFormat:@"Error in unstaging files. Return value: %i", ret]];
 		return NO;
 	}
 
@@ -313,8 +319,7 @@ NSString *PBGitIndexAmendMessageAvailable = @"PBGitIndexAmendMessageAvailable";
 	[PBEasyPipe outputForCommand:[PBGitBinary path]	withArgs:arguments inDir:[workingDirectory path] inputString:input retValue:&ret];
 
 	if (ret) {
-		// TODO: Post failed notification
-		// [[commitController.repository windowController] showMessageSheet:@"Discarding changes failed" infoText:[NSString stringWithFormat:@"Discarding changes failed with error code %i", ret]];
+		[self postOperationFailed:[NSString stringWithFormat:@"Discarding changes failed with return value %i", ret]];
 		return;
 	}
 
@@ -337,9 +342,8 @@ NSString *PBGitIndexAmendMessageAvailable = @"PBGitIndexAmendMessageAvailable";
 										 inputString:hunk
 											retValue:&ret];
 
-	// FIXME: show this error, rather than just logging it
 	if (ret) {
-		NSLog(@"Error: %@", error);
+		[self postOperationFailed:[NSString stringWithFormat:@"Applying patch failed with return value %i. Error: %@", ret, error]];
 		return NO;
 	}
 
