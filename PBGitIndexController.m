@@ -71,7 +71,7 @@
 
 - (void)discardChangesForFiles:(NSArray *)files force:(BOOL)force
 {
-	if(!force) {
+	if (!force) {
 		int ret = [[NSAlert alertWithMessageText:@"Discard changes"
 					   defaultButton:nil
 					 alternateButton:@"Cancel"
@@ -81,21 +81,7 @@
 			return;
 	}
 
-	NSArray *paths = [files valueForKey:@"path"];
-	NSString *input = [paths componentsJoinedByString:@"\0"];
-
-	NSArray *arguments = [NSArray arrayWithObjects:@"checkout-index", @"--index", @"--quiet", @"--force", @"-z", @"--stdin", nil];
-	int ret = 1;
-	[commitController.repository outputForArguments:arguments inputString:input retValue:&ret];
-	if (ret) {
-		[[commitController.repository windowController] showMessageSheet:@"Discarding changes failed" infoText:[NSString stringWithFormat:@"Discarding changes failed with error code %i", ret]];
-		return;
-	}
-
-	for (PBChangedFile *file in files)
-		file.hasUnstagedChanges = NO;
-
-	// TODO: Post index update
+	[commitController.index discardChangesForFiles:files];
 }
 
 # pragma mark Context Menu methods

@@ -60,6 +60,7 @@ extern NSString *PBGitIndexAmendMessageAvailable;
 // Inter-file changes:
 - (BOOL)stageFiles:(NSArray *)stageFiles;
 - (BOOL)unstageFiles:(NSArray *)unstageFiles;
+- (void)discardChangesForFiles:(NSArray *)discardFiles;
 
 // Intra-file changes
 - (BOOL)applyPatch:(NSString *)hunk stage:(BOOL)stage reverse:(BOOL)reverse;

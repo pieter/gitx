@@ -302,6 +302,28 @@ NSString *PBGitIndexAmendMessageAvailable = @"PBGitIndexAmendMessageAvailable";
 	return YES;
 }
 
+- (void)discardChangesForFiles:(NSArray *)discardFiles
+{
+	NSArray *paths = [discardFiles valueForKey:@"path"];
+	NSString *input = [paths componentsJoinedByString:@"\0"];
+
+	NSArray *arguments = [NSArray arrayWithObjects:@"checkout-index", @"--index", @"--quiet", @"--force", @"-z", @"--stdin", nil];
+
+	int ret = 1;
+	[PBEasyPipe outputForCommand:[PBGitBinary path]	withArgs:arguments inDir:[workingDirectory path] inputString:input retValue:&ret];
+
+	if (ret) {
+		// TODO: Post failed notification
+		// [[commitController.repository windowController] showMessageSheet:@"Discarding changes failed" infoText:[NSString stringWithFormat:@"Discarding changes failed with error code %i", ret]];
+		return;
+	}
+
+	for (PBChangedFile *file in discardFiles)
+		file.hasUnstagedChanges = NO;
+
+	[self postIndexChange];
+}
+
 - (BOOL)applyPatch:(NSString *)hunk stage:(BOOL)stage reverse:(BOOL)reverse;
 {
 	NSMutableArray *array = [NSMutableArray arrayWithObjects:@"apply", nil];
