@@ -118,6 +118,71 @@
 	return parent;
 }
 
+- (BOOL)stageFiles:(NSArray *)stageFiles
+{
+	// Input string for update-index
+	// This will be a list of filenames that
+	// should be updated. It's similar to
+	// "git add -- <files>
+	NSMutableString *input = [NSMutableString string];
+
+	for (PBChangedFile *file in stageFiles) {
+		[input appendFormat:@"%@\0", file.path];
+	}
+	
+	int ret = 1;
+	[repository outputForArguments:[NSArray arrayWithObjects:@"update-index", @"--add", @"--remove", @"-z", @"--stdin", nil]
+					   inputString:input
+						  retValue:&ret];
+
+	if (ret) {
+		// FIXME: failed notification?
+		NSLog(@"Error when updating index. Retvalue: %i", ret);
+		return NO;
+	}
+
+	// TODO: Stop Tracking
+	for (PBChangedFile *file in stageFiles)
+	{
+		file.hasUnstagedChanges = NO;
+		file.hasStagedChanges = YES;
+	}
+	// TODO: Resume tracking
+	return YES;
+}
+
+// TODO: Refactor with above. What's a better name for this?
+- (BOOL)unstageFiles:(NSArray *)unstageFiles
+{
+	NSMutableString *input = [NSMutableString string];
+
+	for (PBChangedFile *file in unstageFiles) {
+		[input appendString:[file indexInfo]];
+	}
+
+	int ret = 1;
+	[repository outputForArguments:[NSArray arrayWithObjects:@"update-index", @"-z", @"--index-info", nil]
+					   inputString:input 
+						  retValue:&ret];
+
+	if (ret)
+	{
+		// FIXME: Failed notification
+		NSLog(@"Error when updating index. Retvalue: %i", ret);
+		return NO;
+	}
+
+	// TODO: stop tracking
+	for (PBChangedFile *file in unstageFiles)
+	{
+		file.hasUnstagedChanges = YES;
+		file.hasStagedChanges = NO;
+	}
+	// TODO: resume tracking
+
+	return YES;
+}
+
 - (NSString *)diffForFile:(PBChangedFile *)file staged:(BOOL)staged contextLines:(NSUInteger)context
 {
 	NSString *parameter = [NSString stringWithFormat:@"-U%u", context];
@@ -146,6 +211,7 @@
 
 	return [repository outputInWorkdirForArguments:[NSArray arrayWithObjects:@"diff-files", parameter, @"--", file.path, nil]];
 }
+
 
 # pragma mark WebKit Accessibility
 

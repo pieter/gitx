@@ -44,8 +44,8 @@
 //- (void)commit;
 
 // Inter-file changes:
-//- (void)stageFiles:(NSArray *)files;
-//- (void)unstageFiles:(NSArray *)files;
+- (BOOL)stageFiles:(NSArray *)stageFiles;
+- (BOOL)unstageFiles:(NSArray *)unstageFiles;
 
 // Intra-file changes
 //- (void)applyPatch:(NSString *)hunk stage:(BOOL)stage reverse:(BOOL)reverse;
