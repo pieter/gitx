@@ -120,65 +120,11 @@
 	[cachedFilesController setSelectionIndexes:[NSIndexSet indexSet]];
 	[unstagedFilesController setSelectionIndexes:[NSIndexSet indexSet]];
 
-	NSString *commitSubject;
-	NSRange newLine = [commitMessage rangeOfString:@"\n"];
-	if (newLine.location == NSNotFound)
-		commitSubject = commitMessage;
-	else
-		commitSubject = [commitMessage substringToIndex:newLine.location];
-	
-	commitSubject = [@"commit: " stringByAppendingString:commitSubject];
+	[index commitWithMessage:commitMessage];
 
-	NSString *commitMessageFile;
-	commitMessageFile = [repository.fileURL.path
-						 stringByAppendingPathComponent:@"COMMIT_EDITMSG"];
+	[webController setStateMessage:[NSString stringWithFormat:@"Successfully created commit"]];
 
-	[commitMessage writeToFile:commitMessageFile atomically:YES encoding:NSUTF8StringEncoding error:nil];
-
-	//self.busy++;
-	self.status = @"Creating tree..";
-	NSString *tree = [repository outputForCommand:@"write-tree"];
-	if ([tree length] != 40)
-		return [self commitFailedBecause:@"Could not create a tree"];
-
-	int ret;
-
-	NSMutableArray *arguments = [NSMutableArray arrayWithObjects:@"commit-tree", tree, nil];
-	NSString *parent = index.amend ? @"HEAD^" : @"HEAD";
-	if ([repository parseReference:parent]) {
-		[arguments addObject:@"-p"];
-		[arguments addObject:parent];
-	}
-
-	NSString *commit = [repository outputForArguments:arguments
-										  inputString:commitMessage
-							   byExtendingEnvironment:amendEnvironment
-											 retValue: &ret];
-
-	if (ret || [commit length] != 40)
-		return [self commitFailedBecause:@"Could not create a commit object"];
-
-	if (![repository executeHook:@"pre-commit" output:nil])
-		return [self commitFailedBecause:@"Pre-commit hook failed"];
-
-	if (![repository executeHook:@"commit-msg" withArgs:[NSArray arrayWithObject:commitMessageFile] output:nil])
-    return [self commitFailedBecause:@"Commit-msg hook failed"];
-
-	[repository outputForArguments:[NSArray arrayWithObjects:@"update-ref", @"-m", commitSubject, @"HEAD", commit, nil]
-						  retValue: &ret];
-	if (ret)
-		return [self commitFailedBecause:@"Could not update HEAD"];
-
-	if (![repository executeHook:@"post-commit" output:nil])
-		[webController setStateMessage:[NSString stringWithFormat:@"Post-commit hook failed, however, successfully created commit %@", commit]];
-	else
-		[webController setStateMessage:[NSString stringWithFormat:@"Successfully created commit %@", commit]];
-
-	repository.hasChanged = YES;
-	//self.busy--;
 	[commitMessageView setString:@""];
-	amendEnvironment = nil;
-	index.amend = NO;
 }
 
 - (void) stageHunk:(NSString *)hunk reverse:(BOOL)reverse
