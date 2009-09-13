@@ -118,6 +118,42 @@
 	return parent;
 }
 
+- (NSString *)diffForFile:(PBChangedFile *)file staged:(BOOL)staged contextLines:(NSUInteger)context
+{
+	NSString *parameter = [NSString stringWithFormat:@"-U%u", context];
+	if (staged) {
+		NSString *indexPath = [@":0:" stringByAppendingString:file.path];
+
+		if (file.status == NEW)
+			return [repository outputForArguments:[NSArray arrayWithObjects:@"show", indexPath, nil]];
+
+		return [repository outputInWorkdirForArguments:[NSArray arrayWithObjects:@"diff-index", parameter, @"--cached", [self parentTree], @"--", file.path, nil]];
+	}
+
+	// unstaged
+	if (file.status == NEW) {
+		NSStringEncoding encoding;
+		NSError *error = nil;
+		NSString *path = [[repository workingDirectory] stringByAppendingPathComponent:file.path];
+		NSString *contents = [NSString stringWithContentsOfFile:path
+												   usedEncoding:&encoding
+														  error:&error];
+		if (error)
+			return nil;
+
+		return contents;
+	}
+
+	return [repository outputInWorkdirForArguments:[NSArray arrayWithObjects:@"diff-files", parameter, @"--", file.path, nil]];
+}
+
+# pragma mark WebKit Accessibility
+
++ (BOOL)isSelectorExcludedFromWebScript:(SEL)aSelector
+{
+	return NO;
+}
+
 @end
 
 @implementation PBGitIndex (IndexRefreshMethods)

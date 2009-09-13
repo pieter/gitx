@@ -9,6 +9,7 @@
 #import <Cocoa/Cocoa.h>
 
 @class PBGitRepository;
+@class PBChangedFile;
 
 // Represents a git index for a given work tree.
 // As a single git repository can have multiple trees,
@@ -48,5 +49,6 @@
 
 // Intra-file changes
 //- (void)applyPatch:(NSString *)hunk stage:(BOOL)stage reverse:(BOOL)reverse;
+- (NSString *)diffForFile:(PBChangedFile *)file staged:(BOOL)staged contextLines:(NSUInteger)context;
 
 @end
