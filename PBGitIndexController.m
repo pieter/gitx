@@ -13,6 +13,10 @@
 
 #define FileChangesTableViewType @"GitFileChangedType"
 
+@interface PBGitIndexController ()
+- (void)discardChangesForFiles:(NSArray *)files force:(BOOL)force;
+@end
+
 @implementation PBGitIndexController
 
 - (void)awakeFromNib
@@ -27,7 +31,8 @@
 	[stagedTable registerForDraggedTypes: [NSArray arrayWithObject:FileChangesTableViewType]];
 }
 
-- (void) ignoreFiles:(NSArray *)files
+// FIXME: Find a proper place for this method -- this is not it.
+- (void)ignoreFiles:(NSArray *)files
 {
 	// Build output string
 	NSMutableArray *fileList = [NSMutableArray array];
@@ -62,26 +67,6 @@
 	[ignoreFile writeToFile:gitIgnoreName atomically:YES encoding:enc error:&error];
 	if (error)
 		[[commitController.repository windowController] showErrorSheet:error];
-	
-	// TODO: Post index change
-}
-
-# pragma mark Displaying diffs
-
-
-- (void)discardChangesForFiles:(NSArray *)files force:(BOOL)force
-{
-	if (!force) {
-		int ret = [[NSAlert alertWithMessageText:@"Discard changes"
-					   defaultButton:nil
-					 alternateButton:@"Cancel"
-					     otherButton:nil
-			       informativeTextWithFormat:@"Are you sure you wish to discard the changes to this file?\n\nYou cannot undo this operation."] runModal];
-		if (ret != NSAlertDefaultReturn)
-			return;
-	}
-
-	[commitController.index discardChangesForFiles:files];
 }
 
 # pragma mark Context Menu methods
@@ -179,10 +164,11 @@
 - (void) ignoreFilesAction:(id) sender
 {
 	NSArray *selectedFiles = [sender representedObject];
-	if ([selectedFiles count] > 0) {
-		[self ignoreFiles:selectedFiles];
-	}
-	[commitController refresh:NULL];
+	if ([selectedFiles count] == 0)
+		return;
+
+	[self ignoreFiles:selectedFiles];
+	[commitController.index refresh];
 }
 
 - (void)discardFilesAction:(id) sender
@@ -210,6 +196,20 @@
 	[ws selectFile: path inFileViewerRootedAtPath:nil];
 }
 
+- (void)discardChangesForFiles:(NSArray *)files force:(BOOL)force
+{
+	if (!force) {
+		int ret = [[NSAlert alertWithMessageText:@"Discard changes"
+								   defaultButton:nil
+								 alternateButton:@"Cancel"
+									 otherButton:nil
+					   informativeTextWithFormat:@"Are you sure you wish to discard the changes to this file?\n\nYou cannot undo this operation."] runModal];
+		if (ret != NSAlertDefaultReturn)
+			return;
+	}
+	
+	[commitController.index discardChangesForFiles:files];
+}
 
 # pragma mark TableView icon delegate
 - (void)tableView:(NSTableView*)tableView willDisplayCell:(id)cell forTableColumn:(NSTableColumn*)tableColumn row:(NSInteger)rowIndex
@@ -292,13 +292,6 @@ writeRowsWithIndexes:(NSIndexSet *)rowIndexes
 		[commitController.index stageFiles:files];
 
 	return YES;
-}
-
-# pragma mark WebKit Accessibility
-
-+ (BOOL)isSelectorExcludedFromWebScript:(SEL)aSelector
-{
-	return NO;
 }
 
 @end

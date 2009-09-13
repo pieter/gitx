@@ -14,9 +14,6 @@
 	IBOutlet NSArrayController *stagedFilesController, *unstagedFilesController;
 	IBOutlet PBGitCommitController *commitController;
 
-	IBOutlet PBIconAndTextCell* unstagedButtonCell;
-	IBOutlet PBIconAndTextCell* stagedButtonCell;
-	
 	IBOutlet NSTableView *unstagedTable;
 	IBOutlet NSTableView *stagedTable;	
 }
