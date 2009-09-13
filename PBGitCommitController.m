@@ -126,9 +126,9 @@
 	[unstagedFilesController setSelectionIndexes:[NSIndexSet indexSet]];
 
 	self.busy = YES;
+	[commitMessageView setEditable:NO];
 
 	[index commitWithMessage:commitMessage];
-	[commitMessageView setEditable:NO];
 }
 
 
@@ -145,9 +145,9 @@
 
 - (void)commitFinished:(NSNotification *)notification
 {
+	[commitMessageView setEditable:YES];
 	[commitMessageView setString:@""];
 	[webController setStateMessage:[NSString stringWithFormat:[[notification userInfo] objectForKey:@"description"]]];
-	[commitMessageView setEditable:YES];
 }	
 
 - (void)commitFailed:(NSNotification *)notification
@@ -155,6 +155,7 @@
 	self.busy = NO;
 	NSString *reason = [[notification userInfo] objectForKey:@"description"];
 	self.status = [@"Commit failed: " stringByAppendingString:reason];
+	[commitMessageView setEditable:YES];
 	[[repository windowController] showMessageSheet:@"Commit failed" infoText:reason];
 }
 
