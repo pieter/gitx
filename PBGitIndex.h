@@ -14,6 +14,8 @@
 extern NSString *PBGitIndexIndexRefreshStatus;
 extern NSString *PBGitIndexIndexRefreshFailed;
 extern NSString *PBGitIndexFinishedIndexRefresh;
+
+extern NSString *PBGitIndexCommitStatus;
 extern NSString *PBGitIndexCommitFailed;
 extern NSString *PBGitIndexFinishedCommit;
 

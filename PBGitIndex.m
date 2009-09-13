@@ -16,6 +16,8 @@
 NSString *PBGitIndexIndexRefreshStatus = @"PBGitIndexIndexRefreshStatus";
 NSString *PBGitIndexIndexRefreshFailed = @"PBGitIndexIndexRefreshFailed";
 NSString *PBGitIndexFinishedIndexRefresh = @"PBGitIndexFinishedIndexRefresh";
+
+NSString *PBGitIndexCommitStatus = @"PBGitIndexCommitStatus";
 NSString *PBGitIndexCommitFailed = @"PBGitIndexCommitFailed";
 NSString *PBGitIndexFinishedCommit = @"PBGitIndexFinishedCommit";
 
@@ -40,6 +42,7 @@ NSString *PBGitIndexFinishedCommit = @"PBGitIndexFinishedCommit";
 // Returns the tree to compare the index to, based
 // on whether amend is set or not.
 - (NSString *) parentTree;
+- (void)postCommitUpdate:(NSString *)update;
 
 @end
 
@@ -138,8 +141,9 @@ NSString *PBGitIndexFinishedCommit = @"PBGitIndexFinishedCommit";
 	commitMessageFile = [repository.fileURL.path stringByAppendingPathComponent:@"COMMIT_EDITMSG"];
 	
 	[commitMessage writeToFile:commitMessageFile atomically:YES encoding:NSUTF8StringEncoding error:nil];
+
 	
-	// TODO: Notification: @"Creating tree..";
+	[self postCommitUpdate:@"Creating tree"];
 	NSString *tree = [repository outputForCommand:@"write-tree"];
 	if ([tree length] != 40)
 		return; //TODO: commitFailedBecause:@"Could not create a tree";
@@ -152,6 +156,7 @@ NSString *PBGitIndexFinishedCommit = @"PBGitIndexFinishedCommit";
 		[arguments addObject:parent];
 	}
 
+	[self postCommitUpdate:@"Creating commit"];
 	int ret = 1;
 	NSString *commit = [repository outputForArguments:arguments
 										  inputString:commitMessage
@@ -161,23 +166,38 @@ NSString *PBGitIndexFinishedCommit = @"PBGitIndexFinishedCommit";
 	if (ret || [commit length] != 40)
 		return; // TODO: [self commitFailedBecause:@"Could not create a commit object"];
 	
+	[self postCommitUpdate:@"Running hooks"];
 	if (![repository executeHook:@"pre-commit" output:nil])
 		return; // TODO: [self commitFailedBecause:@"Pre-commit hook failed"];
 	
 	if (![repository executeHook:@"commit-msg" withArgs:[NSArray arrayWithObject:commitMessageFile] output:nil])
 		return; // TODO: [self commitFailedBecause:@"Commit-msg hook failed"];
 	
+	[self postCommitUpdate:@"Updating HEAD"];
 	[repository outputForArguments:[NSArray arrayWithObjects:@"update-ref", @"-m", commitSubject, @"HEAD", commit, nil]
 						  retValue: &ret];
 	if (ret)
 		return; // TODO: [self commitFailedBecause:@"Could not update HEAD"];
 	
-	if (![repository executeHook:@"post-commit" output:nil])
-		return; // [webController setStateMessage:[NSString stringWithFormat:@"Post-commit hook failed, however, successfully created commit %@", commit]];
-	else
-		//[webController setStateMessage:[NSString stringWithFormat:@"Successfully created commit %@", commit]];
-		;
+	[self postCommitUpdate:@"Running post-commit hook"];
 	
+	BOOL success = [repository executeHook:@"post-commit" output:nil];
+	NSMutableDictionary *userInfo = [NSMutableDictionary dictionaryWithObject:[NSNumber numberWithBool:success] forKey:@"success"];
+	NSString *description;  
+	if (success)
+		description = [NSString stringWithFormat:@"Successfull created commit %@", commit];
+	else
+		description = [NSString stringWithFormat:@"Post-commit hook failed, but successfully created commit %@", commit];
+	
+	[userInfo setObject:description forKey:@"description"];
+	[userInfo setObject:commit forKey:@"sha"];
+
+	[[NSNotificationCenter defaultCenter] postNotificationName:PBGitIndexFinishedCommit
+														object:self
+													  userInfo:userInfo];
+	if (!success)
+		return;
+
 	repository.hasChanged = YES;
 
 	amendEnvironment = nil;
@@ -186,6 +206,13 @@ NSString *PBGitIndexFinishedCommit = @"PBGitIndexFinishedCommit";
 	else
 		[self refresh];
 	
+}
+
+- (void)postCommitUpdate:(NSString *)update
+{
+	[[NSNotificationCenter defaultCenter] postNotificationName:PBGitIndexCommitStatus
+													object:self
+													  userInfo:[NSDictionary dictionaryWithObject:update forKey:@"description"]];
 }
 
 - (BOOL)stageFiles:(NSArray *)stageFiles

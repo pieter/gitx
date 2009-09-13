@@ -16,6 +16,8 @@
 
 @interface PBGitCommitController ()
 - (void)refreshFinished:(NSNotification *)notification;
+- (void)commitStatusUpdated:(NSNotification *)notification;
+- (void)commitFinished:(NSNotification *)notification;
 @end
 
 @implementation PBGitCommitController
@@ -29,7 +31,11 @@
 
 	index = [[PBGitIndex alloc] initWithRepository:theRepository workingDirectory:[NSURL fileURLWithPath:[theRepository workingDirectory]]];
 	[index refresh];
+
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refreshFinished:) name:PBGitIndexFinishedIndexRefresh object:index];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(commitStatusUpdated:) name:PBGitIndexCommitStatus object:index];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(commitFinished:) name:PBGitIndexFinishedCommit object:index];
+
 	return self;
 }
 
@@ -118,11 +124,10 @@
 	[cachedFilesController setSelectionIndexes:[NSIndexSet indexSet]];
 	[unstagedFilesController setSelectionIndexes:[NSIndexSet indexSet]];
 
+	self.busy = YES;
+
 	[index commitWithMessage:commitMessage];
-
-	[webController setStateMessage:[NSString stringWithFormat:@"Successfully created commit"]];
-
-	[commitMessageView setString:@""];
+	[commitMessageView setEditable:NO];
 }
 
 
@@ -131,4 +136,19 @@
 	self.busy = NO;
 	self.status = @"Index refresh finished";
 }
+
+- (void)commitStatusUpdated:(NSNotification *)notification
+{
+	self.status = [[notification userInfo] objectForKey:@"description"];
+}
+
+- (void)commitFinished:(NSNotification *)notification
+{
+	[webController setStateMessage:[NSString stringWithFormat:[[notification userInfo] objectForKey:@"description"]]];
+
+	BOOL success = [[[notification userInfo] objectForKey:@"success"] boolValue];
+	if (success)
+		[commitMessageView setString:@""];
+	[commitMessageView setEditable:YES];
+}	
 @end
