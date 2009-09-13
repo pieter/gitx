@@ -27,9 +27,6 @@
 
 - (NSString *) contextParameter;
 
-- (void) stageFiles:(NSArray *)files;
-- (void) unstageFiles:(NSArray *)files;
-
 - (IBAction) rowClicked:(NSCell *) sender;
 - (IBAction) tableClicked:(NSTableView *)tableView;
 

@@ -9,6 +9,7 @@
 #import "PBGitIndexController.h"
 #import "PBChangedFile.h"
 #import "PBGitRepository.h"
+#import "PBGitIndex.h"
 
 #define FileChangesTableViewType @"GitFileChangedType"
 
@@ -36,59 +37,6 @@
 
 }
 
-- (void) stageFiles:(NSArray *)files
-{
-	NSMutableString *input = [NSMutableString string];
-
-	for (PBChangedFile *file in files) {
-		[input appendFormat:@"%@\0", file.path];
-	}
-
-	int ret = 1;
-	[commitController.repository outputForArguments:[NSArray arrayWithObjects:@"update-index", @"--add", @"--remove", @"-z", @"--stdin", nil]
-	 inputString:input retValue:&ret];
-
-	if (ret)
-	{
-		NSLog(@"Error when updating index. Retvalue: %i", ret);
-		return;
-	}
-
-	[self stopTrackingIndex];
-	for (PBChangedFile *file in files)
-	{
-		file.hasUnstagedChanges = NO;
-		file.hasStagedChanges = YES;
-	}
-	[self resumeTrackingIndex];
-}
-
-- (void) unstageFiles:(NSArray *)files
-{
-	NSMutableString *input = [NSMutableString string];
-	
-	for (PBChangedFile *file in files) {
-		[input appendString:[file indexInfo]];
-	}
-
-	int ret = 1;
-	[commitController.repository outputForArguments:[NSArray arrayWithObjects:@"update-index", @"-z", @"--index-info", nil]
-	 inputString:input retValue:&ret];
-	
-	if (ret)
-	{
-		NSLog(@"Error when updating index. Retvalue: %i", ret);
-		return;
-	}
-
-	[self stopTrackingIndex];
-	for (PBChangedFile *file in files)
-	{
-		file.hasUnstagedChanges = YES;
-		file.hasStagedChanges = NO;
-	}
-	[self resumeTrackingIndex];
-}
 
 - (void) ignoreFiles:(NSArray *)files
 {
@@ -233,12 +181,12 @@
 
 - (void) stageFilesAction:(id) sender
 {
-	[self stageFiles:[sender representedObject]];
+	[commitController.index stageFiles:[sender representedObject]];
 }
 
 - (void) unstageFilesAction:(id) sender
 {
-	[self unstageFiles:[sender representedObject]];
+	[commitController.index unstageFiles:[sender representedObject]];
 }
 
 - (void) openFilesAction:(id) sender
@@ -298,9 +246,9 @@
 	NSIndexSet *selectionIndexes = [tableView selectedRowIndexes];
 	NSArray *files = [[controller arrangedObjects] objectsAtIndexes:selectionIndexes];
 	if ([tableView tag] == 0)
-		[self stageFiles:files];
+		[commitController.index stageFiles:files];
 	else
-		[self unstageFiles:files];
+		[commitController.index unstageFiles:files];
 }
 
 - (void) rowClicked:(NSCell *)sender
@@ -360,9 +308,9 @@ writeRowsWithIndexes:(NSIndexSet *)rowIndexes
 	NSArray *files = [[controller arrangedObjects] objectsAtIndexes:rowIndexes];
 
 	if ([aTableView tag] == 0)
-		[self unstageFiles:files];
+		[commitController.index unstageFiles:files];
 	else
-		[self stageFiles:files];
+		[commitController.index stageFiles:files];
 
 	return YES;
 }
