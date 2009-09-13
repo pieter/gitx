@@ -11,6 +11,12 @@
 @class PBGitRepository;
 @class PBChangedFile;
 
+extern NSString *PBGitIndexIndexRefreshStatus;
+extern NSString *PBGitIndexIndexRefreshFailed;
+extern NSString *PBGitIndexFinishedIndexRefresh;
+extern NSString *PBGitIndexCommitFailed;
+extern NSString *PBGitIndexFinishedCommit;
+
 // Represents a git index for a given work tree.
 // As a single git repository can have multiple trees,
 // the tree has to be given explicitly, even though

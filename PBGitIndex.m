@@ -13,6 +13,13 @@
 #import "NSString_RegEx.h"
 #import "PBChangedFile.h"
 
+NSString *PBGitIndexIndexRefreshStatus = @"PBGitIndexIndexRefreshStatus";
+NSString *PBGitIndexIndexRefreshFailed = @"PBGitIndexIndexRefreshFailed";
+NSString *PBGitIndexFinishedIndexRefresh = @"PBGitIndexFinishedIndexRefresh";
+NSString *PBGitIndexCommitFailed = @"PBGitIndexCommitFailed";
+NSString *PBGitIndexFinishedCommit = @"PBGitIndexFinishedCommit";
+
+
 @interface PBGitIndex (IndexRefreshMethods)
 
 - (NSArray *)linesFromNotification:(NSNotification *)notification;
@@ -316,9 +323,15 @@
 {
 	if ([(NSNumber *)[(NSDictionary *)[notification userInfo] objectForKey:@"NSFileHandleError"] intValue])
 	{
-		// TODO: send updatefailed notification?
+		[[NSNotificationCenter defaultCenter] postNotificationName:PBGitIndexIndexRefreshFailed
+															object:self
+														  userInfo:[NSDictionary dictionaryWithObject:@"update-index failed" forKey:@"description"]];
 		return;
 	}
+
+	[[NSNotificationCenter defaultCenter] postNotificationName:PBGitIndexIndexRefreshStatus
+														object:self
+													  userInfo:[NSDictionary dictionaryWithObject:@"update-index success" forKey:@"description"]];
 
 	// Now that the index is refreshed, we need to read the information from the index
 	NSNotificationCenter *nc = [NSNotificationCenter defaultCenter]; 
@@ -529,7 +542,8 @@
 		[self didChangeValueForKey:@"indexChanges"];
 	}
 
-	// TODO: Sent index refresh finished operation
+	[[NSNotificationCenter defaultCenter] postNotificationName:PBGitIndexFinishedIndexRefresh
+														object:self];
 }
 
 @end
