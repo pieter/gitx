@@ -15,7 +15,7 @@
 
 - (void)populateList;
 - (void)updateSelection;
-
+- (void)addRevSpec:(PBGitRevSpecifier *)revSpec;
 @end
 
 @implementation PBGitSidebarController
@@ -57,17 +57,37 @@
 		if (item = [it findRev:rev])
 			break;
 	
-	// TODO: We should add the current branch, or something :)
-	
 	if (!item) {
-		[sourceView deselectAll:self];
-		return;
+		[self addRevSpec:rev];
+		// Try to find the just added item again.
+		// TODO: refactor with above.
+		for (PBSourceViewItem *it in items)
+			if (item = [it findRev:rev])
+				break;
 	}
 	
 	[sourceView PBExpandItem:item expandParents:YES];
 	NSInteger index = [sourceView rowForItem:item];
 	
 	[sourceView selectRow:index byExtendingSelection:NO];
+}
+
+- (void)addRevSpec:(PBGitRevSpecifier *)rev
+{
+	if (![rev isSimpleRef]) {
+		[custom addChild:[PBSourceViewItem itemWithRevSpec:rev]];
+		return;
+	}
+
+	NSArray *pathComponents = [[rev simpleRef] componentsSeparatedByString:@"/"];
+	if ([pathComponents count] < 2)
+		[branches addChild:[PBSourceViewItem itemWithRevSpec:rev]];
+	else if ([[pathComponents objectAtIndex:1] isEqualToString:@"heads"])
+		[branches addRev:rev toPath:[pathComponents subarrayWithRange:NSMakeRange(2, [pathComponents count] - 2)]];
+	else if ([[rev simpleRef] hasPrefix:@"refs/tags/"])
+		[tags addRev:rev toPath:[pathComponents subarrayWithRange:NSMakeRange(2, [pathComponents count] - 2)]];
+	else if ([[rev simpleRef] hasPrefix:@"refs/remotes/"])
+		[remotes addRev:rev toPath:[pathComponents subarrayWithRange:NSMakeRange(2, [pathComponents count] - 2)]];
 }
 
 #pragma mark NSOutlineView delegate methods
@@ -132,28 +152,13 @@
 	commitAction.icon = [NSImage imageNamed:@"CommitViewTemplate"];
 	[actions addChild:commitAction];
 	
-	PBSourceViewItem *branches = [PBSourceViewItem groupItemWithTitle:@"Branches"];
-	PBSourceViewItem *remotes = [PBSourceViewItem groupItemWithTitle:@"Remotes"];
-	PBSourceViewItem *tags = [PBSourceViewItem groupItemWithTitle:@"Tags"];
-	PBSourceViewItem *custom = [PBSourceViewItem groupItemWithTitle:@"Custom"];
+	branches = [PBSourceViewItem groupItemWithTitle:@"Branches"];
+	remotes = [PBSourceViewItem groupItemWithTitle:@"Remotes"];
+	tags = [PBSourceViewItem groupItemWithTitle:@"Tags"];
+	custom = [PBSourceViewItem groupItemWithTitle:@"Custom"];
 
 	for (PBGitRevSpecifier *rev in repository.branches)
-	{
-		if (![rev isSimpleRef]) {
-			[custom addChild:[PBSourceViewItem itemWithRevSpec:rev]];
-			continue;
-		}
-		NSArray *pathComponents = [[rev simpleRef] componentsSeparatedByString:@"/"];
-		if ([pathComponents count] < 2)
-			[branches addChild:[PBSourceViewItem itemWithRevSpec:rev]];
-		else if ([[pathComponents objectAtIndex:1] isEqualToString:@"heads"])
-			[branches addRev:rev toPath:[pathComponents subarrayWithRange:NSMakeRange(2, [pathComponents count] - 2)]];
-		else if ([[rev simpleRef] hasPrefix:@"refs/tags/"])
-			[tags addRev:rev toPath:[pathComponents subarrayWithRange:NSMakeRange(2, [pathComponents count] - 2)]];
-		else if ([[rev simpleRef] hasPrefix:@"refs/remotes/"])
-			[remotes addRev:rev toPath:[pathComponents subarrayWithRange:NSMakeRange(2, [pathComponents count] - 2)]];
-		
-	}
+		[self addRevSpec:rev];
 
 	//[items addObject:actions];
 
