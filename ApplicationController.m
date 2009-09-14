@@ -9,6 +9,7 @@
 #import "ApplicationController.h"
 #import "PBGitRevisionCell.h"
 #import "PBGitWindowController.h"
+#import "PBGitWelcomeWindowController.h"
 #import "PBRepositoryDocumentController.h"
 #import "PBCLIProxy.h"
 #import "PBServicesController.h"
@@ -76,6 +77,9 @@
 
 	NSURL *url = nil;
 
+	PBGitWelcomeWindowController *welcomeController = [[PBGitWelcomeWindowController alloc] init];
+	[welcomeController showWindow:self];
+	return;
 	// Try to find the current directory, to open that as a repository
 	if ([PBGitDefaults openCurDirOnLaunch]) {
 		NSString *curPath = [[[NSProcessInfo processInfo] environment] objectForKey:@"PWD"];
@@ -87,11 +91,6 @@
 	NSError *error = nil;
 	if (url && [[PBRepositoryDocumentController sharedDocumentController] openDocumentWithContentsOfURL:url display:YES error:&error])
 		return;
-
-	// The current directory was not enabled or could not be opened (most likely it’s not a git repository).
-	// show an open panel for the user to select a repository to view
-	if ([PBGitDefaults showOpenPanelOnLaunch])
-		[[PBRepositoryDocumentController sharedDocumentController] openDocument:self];
 }
 
 - (void) windowWillClose: sender

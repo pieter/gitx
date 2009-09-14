@@ -52,6 +52,9 @@
 		F513085B0E0740F2000C8BCD /* PBQLOutlineView.m in Sources */ = {isa = PBXBuildFile; fileRef = F513085A0E0740F2000C8BCD /* PBQLOutlineView.m */; };
 		F5140DC90E8A8EB20091E9F3 /* RoundedRectangle.m in Sources */ = {isa = PBXBuildFile; fileRef = F5140DC80E8A8EB20091E9F3 /* RoundedRectangle.m */; };
 		F523CEB60ED3399200DDD714 /* PBGitIndexController.m in Sources */ = {isa = PBXBuildFile; fileRef = F523CEB50ED3399200DDD714 /* PBGitIndexController.m */; };
+		F524E86E105EC0EF0038EC54 /* PBGitWelcomeWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = F524E86D105EC0EF0038EC54 /* PBGitWelcomeWindowController.m */; };
+		F524E870105EC1650038EC54 /* PBGitWelcomeWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = F524E86F105EC1650038EC54 /* PBGitWelcomeWindow.xib */; };
+		F524E9FD105EDCD00038EC54 /* PBRepositoryCell.m in Sources */ = {isa = PBXBuildFile; fileRef = F524E9FC105EDCD00038EC54 /* PBRepositoryCell.m */; };
 		F52BCE030E84208300AA3741 /* PBGitHistoryView.xib in Resources */ = {isa = PBXBuildFile; fileRef = F52BCE020E84208300AA3741 /* PBGitHistoryView.xib */; };
 		F52BCE070E84211300AA3741 /* PBGitHistoryController.m in Sources */ = {isa = PBXBuildFile; fileRef = F52BCE060E84211300AA3741 /* PBGitHistoryController.m */; };
 		F53C4DF70E97FC630022AD59 /* PBGitBinary.m in Sources */ = {isa = PBXBuildFile; fileRef = F53C4DF60E97FC630022AD59 /* PBGitBinary.m */; };
@@ -205,6 +208,11 @@
 		F5140DC80E8A8EB20091E9F3 /* RoundedRectangle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RoundedRectangle.m; sourceTree = "<group>"; };
 		F523CEB40ED3399100DDD714 /* PBGitIndexController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PBGitIndexController.h; sourceTree = "<group>"; };
 		F523CEB50ED3399200DDD714 /* PBGitIndexController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PBGitIndexController.m; sourceTree = "<group>"; };
+		F524E86C105EC0EF0038EC54 /* PBGitWelcomeWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PBGitWelcomeWindowController.h; sourceTree = "<group>"; };
+		F524E86D105EC0EF0038EC54 /* PBGitWelcomeWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PBGitWelcomeWindowController.m; sourceTree = "<group>"; };
+		F524E86F105EC1650038EC54 /* PBGitWelcomeWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PBGitWelcomeWindow.xib; sourceTree = "<group>"; };
+		F524E9FB105EDCD00038EC54 /* PBRepositoryCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PBRepositoryCell.h; sourceTree = "<group>"; };
+		F524E9FC105EDCD00038EC54 /* PBRepositoryCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PBRepositoryCell.m; sourceTree = "<group>"; };
 		F52BCE020E84208300AA3741 /* PBGitHistoryView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PBGitHistoryView.xib; sourceTree = "<group>"; };
 		F52BCE050E84211300AA3741 /* PBGitHistoryController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PBGitHistoryController.h; sourceTree = "<group>"; };
 		F52BCE060E84211300AA3741 /* PBGitHistoryController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PBGitHistoryController.m; sourceTree = "<group>"; };
@@ -415,6 +423,7 @@
 				F59116E50E843BB50072CCB1 /* PBGitCommitView.xib */,
 				47DBDB680E94EF6500671A1E /* Preferences.xib */,
 				F569AE920F2CBD7C00C2FFA7 /* Credits.html */,
+				F524E86F105EC1650038EC54 /* PBGitWelcomeWindow.xib */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -464,6 +473,17 @@
 			name = Widgets;
 			sourceTree = "<group>";
 		};
+		F524E86B105EC0DD0038EC54 /* Welcome */ = {
+			isa = PBXGroup;
+			children = (
+				F524E86C105EC0EF0038EC54 /* PBGitWelcomeWindowController.h */,
+				F524E86D105EC0EF0038EC54 /* PBGitWelcomeWindowController.m */,
+				F524E9FB105EDCD00038EC54 /* PBRepositoryCell.h */,
+				F524E9FC105EDCD00038EC54 /* PBRepositoryCell.m */,
+			);
+			name = Welcome;
+			sourceTree = "<group>";
+		};
 		F56174540E05887E001DCD79 /* Git */ = {
 			isa = PBXGroup;
 			children = (
@@ -482,6 +502,7 @@
 		F57CC3850E05DDC1000472E2 /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				F524E86B105EC0DD0038EC54 /* Welcome */,
 				F5B161BB0EAB6E0C005A1DE1 /* Diff */,
 				F5EF8C880E9D498F0050906B /* History */,
 				F5E927F90E883EF600056E75 /* Commit */,
@@ -743,6 +764,7 @@
 				47DBDB6A0E94EF6500671A1E /* Preferences.xib in Resources */,
 				47DBDBB10E94F6CA00671A1E /* Updates.png in Resources */,
 				F569AE930F2CBD7C00C2FFA7 /* Credits.html in Resources */,
+				F524E870105EC1650038EC54 /* PBGitWelcomeWindow.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -854,6 +876,8 @@
 				47DBDBCA0E95016F00671A1E /* PBNSURLPathUserDefaultsTransfomer.m in Sources */,
 				F562C8870FE1766C000EC528 /* NSString_RegEx.m in Sources */,
 				EB2A734A0FEE3F09006601CF /* PBCollapsibleSplitView.m in Sources */,
+				F524E86E105EC0EF0038EC54 /* PBGitWelcomeWindowController.m in Sources */,
+				F524E9FD105EDCD00038EC54 /* PBRepositoryCell.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
