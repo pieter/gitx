@@ -36,5 +36,8 @@
 - (NSString *) stagedChangesForFile:(PBChangedFile *)file;
 - (NSString *) unstagedChangesForFile:(PBChangedFile *)file;
 
+- (void)stopTrackingIndex;
+- (void)resumeTrackingIndex;
+
 - (NSMenu *) menuForTable:(NSTableView *)table;
 @end

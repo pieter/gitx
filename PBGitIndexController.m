@@ -12,11 +12,6 @@
 
 #define FileChangesTableViewType @"GitFileChangedType"
 
-@interface PBGitIndexController (PrivateMethods)
-- (void)stopTrackingIndex;
-- (void)resumeTrackingIndex;
-@end
-
 @implementation PBGitIndexController
 
 @synthesize contextSize;
