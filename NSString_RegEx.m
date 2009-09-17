@@ -57,7 +57,9 @@
 			break;
 
 		NSRange range = NSMakeRange(pmatch[i].rm_so, pmatch[i].rm_eo - pmatch[i].rm_so);
-		NSString * substring = [self substringWithRange:range];
+		NSString * substring = [[[NSString alloc] initWithBytes:[self UTF8String] + range.location
+														 length:range.length
+													   encoding:NSUTF8StringEncoding] autorelease];
 		[outMatches addObject:substring];
 
 		if (ranges)

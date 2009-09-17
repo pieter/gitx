@@ -1,4 +1,7 @@
 var commit;
+
+// Create a new Commit object
+// obj: PBGitCommit object
 var Commit = function(obj) {
 	this.object = obj;
 
@@ -7,12 +10,14 @@ var Commit = function(obj) {
 	this.sha = obj.realSha();
 	this.parents = obj.parents;
 	this.subject = obj.subject;
+	this.notificationID = null;
 
 	// TODO:
 	// this.author_date instant
 
-	// This all needs to be async
-	this.loadedRaw = function(details) {
+	// This can be called later with the output of
+	// 'git show' to fill in missing commit details (such as a diff)
+	this.parseDetails = function(details) {
 		this.raw = details;
 
 		var diffStart = this.raw.indexOf("\ndiff ");
@@ -138,6 +143,7 @@ var selectCommit = function(a) {
 	Controller.selectCommit_(a);
 }
 
+// Relead only refs
 var reload = function() {
 	$("notification").style.display = "none";
 	commit.reloadRefs();
@@ -159,13 +165,15 @@ var showRefs = function() {
 
 var loadCommit = function(commitObject, currentRef) {
 	// These are only the things we can do instantly.
-	// Other information will be loaded later by loadExtendedCommit
-	commit = new Commit(commitObject);
-	Controller.callSelector_onObject_callBack_("details", commitObject,
-		function(data) { commit.loadedRaw(data); loadExtendedCommit(commit); });
-	commit.currentRef = currentRef;
+	// Other information will be loaded later by loadCommitDetails,
+	// Which will be called from the controller once
+	// the commit details are in.
 
-	notify("Loading commit…", 0);
+	if (commit && commit.notificationID)
+		clearTimeout(commit.notificationID);
+
+	commit = new Commit(commitObject);
+	commit.currentRef = currentRef;
 
 	$("commitID").innerHTML = commit.sha;
 	$("authorID").innerHTML = commit.author_name;
@@ -196,9 +204,18 @@ var loadCommit = function(commitObject, currentRef) {
 			"<a href='' onclick='selectCommit(this.innerHTML); return false;'>" +
 			commit.parents[i] + "</a></td>";
 	}
+
+	commit.notificationID = setTimeout(function() { 
+		if (!commit.fullyLoaded)
+			notify("Loading commit…", 0);
+		commit.notificationID = null;
+	}, 500);
+
 }
 
 var showDiff = function() {
+
+	// Callback for the diff highlighter. Used to generate a filelist
 	var newfile = function(name1, name2, id, mode_change, old_mode, new_mode) {
 		var button = document.createElement("div");
 		var p = document.createElement("p");
@@ -270,8 +287,15 @@ var enableFeatures = function()
 	enableFeature("gravatar", $("gravatar"))
 }
 
-var loadExtendedCommit = function(commit)
+var loadCommitDetails = function(data)
 {
+	commit.parseDetails(data);
+
+	if (commit.notificationID)
+		clearTimeout(commit.notificationID)
+	else
+		$("notification").style.display = "none";
+
 	var formatEmail = function(name, email) {
 		return email ? name + " &lt;<a href='mailto:" + email + "'>" + email + "</a>&gt;" : name;
 	}

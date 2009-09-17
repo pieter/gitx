@@ -11,7 +11,7 @@
 #import "PBChangedFile.h"
 #import "PBWebChangesController.h"
 #import "NSString_RegEx.h"
-
+#import "PBGitIndexController.h"
 
 @interface PBGitCommitController (PrivateMethods)
 - (NSArray *) linesFromNotification:(NSNotification *)notification;
@@ -240,6 +240,7 @@
 - (void) addFilesFromDictionary:(NSMutableDictionary *)dictionary staged:(BOOL)staged tracked:(BOOL)tracked
 {
 	// Iterate over all existing files
+	[indexController stopTrackingIndex];
 	for (PBChangedFile *file in files) {
 		NSArray *fileStatus = [dictionary objectForKey:file.path];
 		// Object found, this is still a cached / uncached thing
@@ -270,6 +271,7 @@
 				file.hasUnstagedChanges = NO;
 		}
 	}
+	[indexController resumeTrackingIndex];
 
 	// Do new files
 	if (![[dictionary allKeys] count])
