@@ -10,6 +10,7 @@ var Commit = function(obj) {
 	this.sha = obj.realSha();
 	this.parents = obj.parents;
 	this.subject = obj.subject;
+	this.notificationID = null;
 
 	// TODO:
 	// this.author_date instant
@@ -168,10 +169,11 @@ var loadCommit = function(commitObject, currentRef) {
 	// Which will be called from the controller once
 	// the commit details are in.
 
+	if (commit && commit.notificationID)
+		clearTimeout(commit.notificationID);
+
 	commit = new Commit(commitObject);
 	commit.currentRef = currentRef;
-
-	notify("Loading commit…", 0);
 
 	$("commitID").innerHTML = commit.sha;
 	$("authorID").innerHTML = commit.author_name;
@@ -202,6 +204,13 @@ var loadCommit = function(commitObject, currentRef) {
 			"<a href='' onclick='selectCommit(this.innerHTML); return false;'>" +
 			commit.parents[i] + "</a></td>";
 	}
+
+	commit.notificationID = setTimeout(function() { 
+		if (!commit.fullyLoaded)
+			notify("Loading commit…", 0);
+		commit.notificationID = null;
+	}, 500);
+
 }
 
 var showDiff = function() {
@@ -281,6 +290,11 @@ var enableFeatures = function()
 var loadCommitDetails = function(data)
 {
 	commit.parseDetails(data);
+
+	if (commit.notificationID)
+		clearTimeout(commit.notificationID)
+	else
+		$("notification").style.display = "none";
 
 	var formatEmail = function(name, email) {
 		return email ? name + " &lt;<a href='mailto:" + email + "'>" + email + "</a>&gt;" : name;
