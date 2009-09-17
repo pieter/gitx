@@ -97,6 +97,7 @@
 		F59116E90E843BCB0072CCB1 /* PBGitCommitController.m in Sources */ = {isa = PBXBuildFile; fileRef = F59116E80E843BCB0072CCB1 /* PBGitCommitController.m */; };
 		F593DF780E9E636C003A8559 /* PBFileChangesTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = F593DF770E9E636C003A8559 /* PBFileChangesTableView.m */; };
 		F5945E170E02B0C200706420 /* PBGitRepository.m in Sources */ = {isa = PBXBuildFile; fileRef = F5945E160E02B0C200706420 /* PBGitRepository.m */; };
+		F59F1DD5105C4FF300115F88 /* PBGitIndex.m in Sources */ = {isa = PBXBuildFile; fileRef = F59F1DD4105C4FF300115F88 /* PBGitIndex.m */; };
 		F5AD56790E79B78100EDAAFE /* PBCommitList.m in Sources */ = {isa = PBXBuildFile; fileRef = F5AD56780E79B78100EDAAFE /* PBCommitList.m */; };
 		F5B721C40E05CF7E00AF29DC /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = F5B721C20E05CF7E00AF29DC /* MainMenu.xib */; };
 		F5C007750E731B48007B84B2 /* PBGitRef.m in Sources */ = {isa = PBXBuildFile; fileRef = F5C007740E731B48007B84B2 /* PBGitRef.m */; };
@@ -250,6 +251,8 @@
 		F593DF770E9E636C003A8559 /* PBFileChangesTableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PBFileChangesTableView.m; sourceTree = "<group>"; };
 		F5945E150E02B0C200706420 /* PBGitRepository.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PBGitRepository.h; sourceTree = "<group>"; };
 		F5945E160E02B0C200706420 /* PBGitRepository.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PBGitRepository.m; sourceTree = "<group>"; };
+		F59F1DD3105C4FF300115F88 /* PBGitIndex.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PBGitIndex.h; sourceTree = "<group>"; };
+		F59F1DD4105C4FF300115F88 /* PBGitIndex.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PBGitIndex.m; sourceTree = "<group>"; };
 		F5AD56770E79B78100EDAAFE /* PBCommitList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PBCommitList.h; sourceTree = "<group>"; };
 		F5AD56780E79B78100EDAAFE /* PBCommitList.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PBCommitList.m; sourceTree = "<group>"; };
 		F5B721C30E05CF7E00AF29DC /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/MainMenu.xib; sourceTree = "<group>"; };
@@ -467,6 +470,7 @@
 		F56174540E05887E001DCD79 /* Git */ = {
 			isa = PBXGroup;
 			children = (
+				F59F1DD2105C4FDE00115F88 /* Index */,
 				F5E927E30E883D6800056E75 /* Commit */,
 				F5E927E10E883D2E00056E75 /* History */,
 				F5945E150E02B0C200706420 /* PBGitRepository.h */,
@@ -549,6 +553,17 @@
 			name = SpeedTest;
 			sourceTree = "<group>";
 		};
+		F59F1DD2105C4FDE00115F88 /* Index */ = {
+			isa = PBXGroup;
+			children = (
+				F5E927F60E883E7200056E75 /* PBChangedFile.h */,
+				F5E927F70E883E7200056E75 /* PBChangedFile.m */,
+				F59F1DD3105C4FF300115F88 /* PBGitIndex.h */,
+				F59F1DD4105C4FF300115F88 /* PBGitIndex.m */,
+			);
+			name = Index;
+			sourceTree = "<group>";
+		};
 		F5B161BB0EAB6E0C005A1DE1 /* Diff */ = {
 			isa = PBXGroup;
 			children = (
@@ -604,8 +619,6 @@
 			children = (
 				93F7857D0EA3ABF100C1F443 /* PBCommitMessageView.h */,
 				93F7857E0EA3ABF100C1F443 /* PBCommitMessageView.m */,
-				F5E927F60E883E7200056E75 /* PBChangedFile.h */,
-				F5E927F70E883E7200056E75 /* PBChangedFile.m */,
 				F593DF760E9E636C003A8559 /* PBFileChangesTableView.h */,
 				F593DF770E9E636C003A8559 /* PBFileChangesTableView.m */,
 			);
@@ -854,6 +867,7 @@
 				47DBDBCA0E95016F00671A1E /* PBNSURLPathUserDefaultsTransfomer.m in Sources */,
 				F562C8870FE1766C000EC528 /* NSString_RegEx.m in Sources */,
 				EB2A734A0FEE3F09006601CF /* PBCollapsibleSplitView.m in Sources */,
+				F59F1DD5105C4FF300115F88 /* PBGitIndex.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -8,6 +8,7 @@
 
 #import "PBWebChangesController.h"
 #import "PBGitIndexController.h"
+#import "PBGitIndex.h"
 
 @implementation PBWebChangesController
 
@@ -25,13 +26,8 @@
 
 - (void) didLoad
 {
-	[[self script] setValue:indexController forKey:@"IndexController"];
+	[[self script] setValue:controller.index forKey:@"Index"];
 	[self refresh];
-}
-
-- (BOOL) amend
-{
-	return controller.amend;
 }
 
 - (void)observeValueForKeyPath:(NSString *)keyPath
@@ -81,9 +77,11 @@
 				     [NSNumber numberWithBool:selectedFileIsCached], nil]];
 }
 
-- (void) stageHunk:(NSString *)hunk reverse:(BOOL)reverse
+- (void)stageHunk:(NSString *)hunk reverse:(BOOL)reverse
 {
-	[controller stageHunk: hunk reverse:reverse];
+	[controller.index applyPatch:hunk stage:YES reverse:reverse];
+	// FIXME: Don't need a hard refresh
+
 	[self refresh];
 }
 
@@ -99,7 +97,7 @@
 	}
 
 	if (ret == NSAlertDefaultReturn) {
-		[controller discardHunk:hunk];
+		[controller.index applyPatch:hunk stage:NO reverse:YES];
 		[self refresh];
 	}
 }
@@ -110,12 +108,4 @@
 	[script callWebScriptMethod:@"setState" withArguments: [NSArray arrayWithObject:state]];
 }
 
-- (void) setContextSize:(int)size
-{
-	if (size == indexController.contextSize)
-		return;
-
-	indexController.contextSize = size;
-	[self refresh];
-}
 @end
