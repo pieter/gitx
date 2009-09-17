@@ -66,8 +66,7 @@
 	
 	switch (self.selectedTab) {
 		case 0:	self.webCommit = realCommit;			break;
-		case 1:	self.rawCommit = realCommit;			break;
-		case 2:	self.gitTree   = realCommit.tree;	break;
+		case 1:	self.gitTree   = realCommit.tree;	break;
 	}
 }	
 
