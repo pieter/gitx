@@ -1,4 +1,7 @@
 var commit;
+
+// Create a new Commit object
+// obj: PBGitCommit object
 var Commit = function(obj) {
 	this.object = obj;
 
@@ -11,8 +14,9 @@ var Commit = function(obj) {
 	// TODO:
 	// this.author_date instant
 
-	// This all needs to be async
-	this.loadedRaw = function(details) {
+	// This can be called later with the output of
+	// 'git show' to fill in missing commit details (such as a diff)
+	this.parseDetails = function(details) {
 		this.raw = details;
 
 		var diffStart = this.raw.indexOf("\ndiff ");
@@ -138,6 +142,7 @@ var selectCommit = function(a) {
 	Controller.selectCommit_(a);
 }
 
+// Relead only refs
 var reload = function() {
 	$("notification").style.display = "none";
 	commit.reloadRefs();
@@ -159,10 +164,11 @@ var showRefs = function() {
 
 var loadCommit = function(commitObject, currentRef) {
 	// These are only the things we can do instantly.
-	// Other information will be loaded later by loadExtendedCommit
+	// Other information will be loaded later by loadCommitDetails,
+	// Which will be called from the controller once
+	// the commit details are in.
+
 	commit = new Commit(commitObject);
-	Controller.callSelector_onObject_callBack_("details", commitObject,
-		function(data) { commit.loadedRaw(data); loadExtendedCommit(commit); });
 	commit.currentRef = currentRef;
 
 	notify("Loading commit…", 0);
@@ -199,6 +205,8 @@ var loadCommit = function(commitObject, currentRef) {
 }
 
 var showDiff = function() {
+
+	// Callback for the diff highlighter. Used to generate a filelist
 	var newfile = function(name1, name2, id, mode_change, old_mode, new_mode) {
 		var button = document.createElement("div");
 		var p = document.createElement("p");
@@ -270,8 +278,10 @@ var enableFeatures = function()
 	enableFeature("gravatar", $("gravatar"))
 }
 
-var loadExtendedCommit = function(commit)
+var loadCommitDetails = function(data)
 {
+	commit.parseDetails(data);
+
 	var formatEmail = function(name, email) {
 		return email ? name + " &lt;<a href='mailto:" + email + "'>" + email + "</a>&gt;" : name;
 	}

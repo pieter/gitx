@@ -7,6 +7,7 @@
 //
 
 #import "PBWebHistoryController.h"
+#import "PBGitDefaults.h"
 
 @implementation PBWebHistoryController
 
@@ -49,6 +50,37 @@
 
 	NSArray *arguments = [NSArray arrayWithObjects:content, [[[historyController repository] headRef] simpleRef], nil];
 	[[self script] callWebScriptMethod:@"loadCommit" withArguments: arguments];
+
+	// Now we load the extended details. We used to do this in a separate thread,
+	// but this caused some funny behaviour because NSTask's and NSThread's don't really
+	// like each other. Instead, just do it async.
+
+	NSMutableArray *taskArguments = [NSMutableArray arrayWithObjects:@"show", @"--pretty=raw", @"-M", @"--no-color", currentSha, nil];
+	if (![PBGitDefaults showWhitespaceDifferences])
+		[taskArguments insertObject:@"-w" atIndex:1];
+
+	NSFileHandle *handle = [repository handleForArguments:taskArguments];
+	NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
+	// Remove notification, in case we have another one running
+	[nc removeObserver:self];
+	[nc addObserver:self selector:@selector(commitDetailsLoaded:) name:NSFileHandleReadToEndOfFileCompletionNotification object:handle]; 
+	[handle readToEndOfFileInBackgroundAndNotify];
+}
+
+- (void)commitDetailsLoaded:(NSNotification *)notification
+{
+	NSData *data = [[notification userInfo] valueForKey:NSFileHandleNotificationDataItem];
+	if (!data)
+		return;
+
+	NSString *details = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+	if (!details)
+		details = [[NSString alloc] initWithData:data encoding:NSISOLatin1StringEncoding];
+
+	if (!details)
+		return;
+
+	[[view windowScriptObject] callWebScriptMethod:@"loadCommitDetails" withArguments:[NSArray arrayWithObject:details]];
 }
 
 - (void) selectCommit: (NSString*) sha
