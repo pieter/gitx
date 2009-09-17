@@ -16,6 +16,7 @@
 #import "PBPrefsWindowController.h"
 #import "PBNSURLPathUserDefaultsTransfomer.h"
 #import "PBGitDefaults.h"
+#import "Sparkle/SUUpdater.h"
 
 @implementation ApplicationController
 @synthesize cliProxy;
@@ -63,6 +64,10 @@
 
 - (void)applicationDidFinishLaunching:(NSNotification*)notification
 {
+	[[SUUpdater sharedUpdater] setSendsSystemProfile:YES];
+#ifdef DEBUG_BUILD
+	[[SUUpdater sharedUpdater] setFeedURL:[NSURL URLWithString:@"http://gitx.frim.nl/Downloads/appcast_DEBUG.xml"]];
+#endif
 	[self registerServices];
 
 	// Only try to open a default document if there are no documents open already.
