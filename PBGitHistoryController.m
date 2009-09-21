@@ -180,6 +180,13 @@
 	[self refresh:nil];
 }
 
+- (void)viewLoaded
+{
+	float position = [[NSUserDefaults standardUserDefaults] floatForKey:@"PBGitSplitViewPosition"];
+	if (position)
+		[historySplitView setPosition:position ofDividerAtIndex:0];
+}
+
 - (NSResponder *)firstResponder;
 {
 	return commitList;
@@ -201,6 +208,9 @@
 
 - (void) removeView
 {
+	float position = [[[historySplitView subviews] objectAtIndex:0] frame].size.height;
+	[[NSUserDefaults standardUserDefaults] setFloat:position forKey:@"PBGitSplitViewPosition"];
+	[[NSUserDefaults standardUserDefaults] synchronize];
 	[webView close];
 	[commitController removeObserver:self forKeyPath:@"selection"];
 	[treeController removeObserver:self forKeyPath:@"selection"];
