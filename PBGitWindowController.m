@@ -69,28 +69,32 @@
 	selectedViewIndex = whichViewTag;
 	[[NSUserDefaults standardUserDefaults] setInteger:whichViewTag forKey:@"selectedViewIndex"];
 
+	BOOL justLoaded = NO;
 	switch (whichViewTag)
 	{
-		case 0:	// swap in the "CustomImageViewController - NSImageView"
-			if (!historyViewController)
+		case 0:
+			if (!historyViewController) {
 				historyViewController = [[PBGitHistoryController alloc] initWithRepository:repository superController:self];
-			else
-				[historyViewController updateView];
+				justLoaded = YES;
+			}
 			viewController = historyViewController;
 			break;
 		case 1:
-			if (!commitViewController)
+			if (!commitViewController) {
 				commitViewController = [[PBGitCommitController alloc] initWithRepository:repository superController:self];
-			else
-				[commitViewController updateView];
-
+				justLoaded = YES;
+			}
 			viewController = commitViewController;
 			break;
 	}
 
 	// make sure we automatically resize the controller's view to the current window size
 	[[viewController view] setFrame: [contentView bounds]];
-	
+	if (justLoaded)
+		[viewController viewLoaded];
+	else
+		[viewController updateView];
+
 	//// embed the current view to our host view
 	[contentView addSubview: [viewController view]];
 
