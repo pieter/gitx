@@ -244,7 +244,7 @@ var showDiff = function() {
 			p.insertBefore(document.createTextNode(name1 + " -> "), link);
 		}
 
-		link.appendChild(document.createTextNode(finalFile));
+		link.appendChild(document.createTextNode(finalFile.unEscapeHTML()));
 		button.setAttribute("representedFile", finalFile);
 		link.setAttribute("representedFile", finalFile);
 
