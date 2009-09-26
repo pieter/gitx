@@ -12,6 +12,7 @@
 #import "PBGitGraphLine.h"
 #import <list>
 #import "git/oid.h"
+#include <algorithm>
 
 using namespace std;
 
@@ -53,6 +54,9 @@ void add_line(struct PBGitGraphLine *lines, int *nLines, int upper, int from, in
 		std::list<PBGitLane *>::iterator it = previousLanes->begin();
 		for (; it != previousLanes->end(); ++it) {
 			i++;
+			if (!*it) // This is an empty lane, created when the lane previously had a parentless(root) commit
+				continue;
+
 			// This is our commit! We should do a "merge": move the line from
 			// our upperMapping to their lowerMapping
 			if ((*it)->isCommit([commit sha])) {
@@ -138,10 +142,20 @@ void add_line(struct PBGitGraphLine *lines, int *nLines, int upper, int from, in
 		previous.numColumns = currentLanes->size();
 
 	// Update the current lane to point to the new parent
-	if (currentLane && commit.nParents > 0)
-		currentLane->setSha(commit.parentShas[0]);
-	else
-		currentLanes->remove(currentLane);
+	if (currentLane) {
+		if (commit.nParents > 0)
+			currentLane->setSha(commit.parentShas[0]);
+		else {
+			// The current lane's commit does not have any parents
+			// AKA, this is a first commit
+			// Empty the entry and free the lane.
+			// We empty the lane in the case of a subtree merge, where
+			// multiple first commits can be present. By emptying the lane,
+			// we allow room to create a nice merge line.
+			std::replace(currentLanes->begin(), currentLanes->end(), currentLane, (PBGitLane *)0);
+			delete currentLane;
+		}
+	}
 
 	delete previousLanes;
 
