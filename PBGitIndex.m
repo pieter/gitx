@@ -417,28 +417,28 @@ NSString *PBGitIndexOperationFailed = @"PBGitIndexOperationFailed";
 	NSNotificationCenter *nc = [NSNotificationCenter defaultCenter]; 
 
 	// Other files (not tracked, not ignored)
+	refreshStatus++;
 	NSFileHandle *handle = [PBEasyPipe handleForCommand:[PBGitBinary path] 
 											   withArgs:[NSArray arrayWithObjects:@"ls-files", @"--others", @"--exclude-standard", @"-z", nil]
 												  inDir:[workingDirectory path]];
 	[nc addObserver:self selector:@selector(readOtherFiles:) name:NSFileHandleReadToEndOfFileCompletionNotification object:handle]; 
 	[handle readToEndOfFileInBackgroundAndNotify];
-	refreshStatus++;
 
 	// Unstaged files
+	refreshStatus++;
 	handle = [PBEasyPipe handleForCommand:[PBGitBinary path] 
 											   withArgs:[NSArray arrayWithObjects:@"diff-files", @"-z", nil]
 												  inDir:[workingDirectory path]];
 	[nc addObserver:self selector:@selector(readUnstagedFiles:) name:NSFileHandleReadToEndOfFileCompletionNotification object:handle]; 
 	[handle readToEndOfFileInBackgroundAndNotify];
-	refreshStatus++;
 
 	// Staged files
+	refreshStatus++;
 	handle = [PBEasyPipe handleForCommand:[PBGitBinary path] 
 								 withArgs:[NSArray arrayWithObjects:@"diff-index", @"--cached", @"-z", [self parentTree], nil]
 									inDir:[workingDirectory path]];
 	[nc addObserver:self selector:@selector(readStagedFiles:) name:NSFileHandleReadToEndOfFileCompletionNotification object:handle]; 
 	[handle readToEndOfFileInBackgroundAndNotify];
-	refreshStatus++;
 }
 
 - (void)readOtherFiles:(NSNotification *)notification
