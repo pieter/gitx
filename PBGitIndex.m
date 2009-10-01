@@ -491,6 +491,8 @@ NSString *PBGitIndexOperationFailed = @"PBGitIndexOperationFailed";
 					file.hasStagedChanges = YES;
 				else
 					file.hasUnstagedChanges = YES;
+				if ([[fileStatus objectAtIndex:4] isEqualToString:@"D"])
+					file.status = DELETED;
 			} else {
 				// Untracked file, set status to NEW, only unstaged changes
 				file.hasStagedChanges = NO;
