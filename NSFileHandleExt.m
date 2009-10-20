@@ -13,9 +13,12 @@
 #define CONN_TIMEOUT 5
 #define BUFFER_SIZE 256
 
+#import <objc/objc-auto.h> /* for objc_collect */
+
 @implementation NSFileHandle(NSFileHandleExt)
 
 -(NSString*)readLine {
+    
 	// If the socket is closed, return an empty string
 	if ([self fileDescriptor] <= 0)
 		return @"";
@@ -62,6 +65,8 @@
 		retVal = [NSString stringWithCString: buffer encoding: NSISOLatin1StringEncoding];
 	
 	free(buffer);
+    
+    [[NSGarbageCollector defaultCollector] collectExhaustively];
 	return retVal;
 }
 
