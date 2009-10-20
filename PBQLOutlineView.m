@@ -79,7 +79,7 @@
 
 /* Implemented to satisfy datasourcee protocol */
 - (BOOL) outlineView: (NSOutlineView *)ov
-         isItemExpandable: (id)item { return NO; }
+         isItemExpandable: (id)item { return YES; }
 
 - (NSInteger)  outlineView: (NSOutlineView *)ov
          numberOfChildrenOfItem:(id)item { return 0; }

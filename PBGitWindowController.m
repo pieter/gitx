@@ -34,7 +34,7 @@
 
 - (void)windowWillClose:(NSNotification *)notification
 {
-	NSLog(@"Window will close!");
+	//NSLog(@"Window will close!");
 	if (historyViewController)
 		[historyViewController removeView];
 	if (commitViewController)

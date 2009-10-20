@@ -11,10 +11,37 @@
 #import "NSFileHandleExt.h"
 #import "PBEasyPipe.h"
 #import "PBEasyFS.h"
+//#import "PBGitTreePreviewItem.h"
+
+#define ICON_SIZE 48.0
+
+static NSDictionary* quickLookOptions = nil;
+static NSOperationQueue* treeIconQueue = nil;
+
+
+@interface PBGitTree (QLPreviewItemProtocol) <QLPreviewItem>
+- (NSURL *) previewItemURL;
+- (NSString *) previewItemTitle;
+@end
+
+@implementation PBGitTree (QLPreviewItemProtocol)
+
+- (NSURL *) previewItemURL {
+    NSString * absPath = self.absolutePath;
+    if ([absPath isEqualToString:[PBGitRepository basePath]]) {
+        absPath = [absPath stringByAppendingFormat:@"/%@", [self fullPath]];
+    }
+    return [NSURL fileURLWithPath:absPath];
+}
+
+- (NSString *) previewItemTitle {
+    return [self fullPath];
+}
+@end
 
 @implementation PBGitTree
 
-@synthesize sha, path, repository, leaf, parent;
+@synthesize sha, path, repository, leaf, parent, iconImage, absolutePath;
 
 + (PBGitTree*) rootForCommit:(id) commit
 {
@@ -40,10 +67,37 @@
 
 - init
 {
-	children = nil;
-	localFileName = nil;
-	leaf = YES;
+    if (self = [super init]) {
+        children = nil;
+        localFileName = nil;
+        leaf = YES;
+        absolutePath = [PBGitRepository basePath];
+    }
 	return self;
+}
+
+- (NSImage *) iconImage {
+    if (!iconImage) {
+        iconImage = [[NSWorkspace sharedWorkspace] iconForFile:self.absolutePath ];
+        [iconImage setSize:NSMakeSize(ICON_SIZE, ICON_SIZE)];
+        
+        if (!treeIconQueue) {
+            treeIconQueue = [[NSOperationQueue alloc] init];
+            [treeIconQueue setMaxConcurrentOperationCount:2];
+            quickLookOptions = [[NSDictionary alloc] initWithObjectsAndKeys:
+                                (id)kCFBooleanTrue, (id)kQLThumbnailOptionIconModeKey,
+                                nil];
+        }
+        [treeIconQueue addOperationWithBlock:^{
+            CGImageRef quickLookIcon = QLThumbnailImageCreate(NULL, (CFURLRef)[NSURL fileURLWithPath:self.absolutePath], CGSizeMake(ICON_SIZE, ICON_SIZE), (CFDictionaryRef)quickLookOptions);
+            if (quickLookIcon != NULL) {
+                NSImage* betterIcon = [[NSImage alloc] initWithCGImage:quickLookIcon size:NSMakeSize(ICON_SIZE, ICON_SIZE)];
+                [self performSelectorOnMainThread:@selector(setIconImage:) withObject:betterIcon waitUntilDone:NO];
+                CFRelease(quickLookIcon);
+            }
+        }];
+    }
+    return iconImage;
 }
 
 - (NSString*) refSpec
@@ -157,7 +211,7 @@
 		NSData* data = [handle readDataToEndOfFile];
 		[data writeToFile:newName atomically:YES];
 	} else { // Directory
-		[[NSFileManager defaultManager] createDirectoryAtPath:newName attributes:nil];
+		[[NSFileManager defaultManager] createDirectoryAtPath:newName withIntermediateDirectories:YES attributes:nil error:nil];
 		for (PBGitTree* child in [self children])
 			[child saveToFolder: newName];
 	}
@@ -215,10 +269,10 @@
 	NSMutableArray* c = [NSMutableArray array];
 	
 	NSString* p = [handle readLine];
-	while (p.length > 0) {
-		BOOL isLeaf = ([p characterAtIndex:p.length - 1] != '/');
+	while ([p length] > 0) {
+		BOOL isLeaf = ([p characterAtIndex:[p length]- 1] != '/');
 		if (!isLeaf)
-			p = [p substringToIndex:p.length -1];
+			p = [p substringToIndex:[p length]-1];
 
 		PBGitTree* child = [PBGitTree treeForTree:self andPath:p];
 		child.leaf = isLeaf;
@@ -235,16 +289,16 @@
 	if (!parent)
 		return @"";
 	
-	if ([parent.fullPath isEqualToString:@""])
+	if ([[parent fullPath] isEqualToString:@""])
 		return self.path;
 	
-	return [parent.fullPath stringByAppendingPathComponent: self.path];
+	return [[parent fullPath] stringByAppendingPathComponent: self.path];
 }
 
 - (void) finalize
 {
 	if (localFileName)
-		[[NSFileManager defaultManager] removeFileAtPath:localFileName handler:nil];
+		[[NSFileManager defaultManager] removeItemAtPath:localFileName error:nil];
 	[super finalize];
 }
 @end

@@ -17,6 +17,7 @@
 #import "PBGitRevSpecifier.h"
 
 NSString* PBGitRepositoryErrorDomain = @"GitXErrorDomain";
+static NSString * repositoryBasePath = nil;
 
 @implementation PBGitRepository
 
@@ -37,12 +38,23 @@ NSString* PBGitRepositoryErrorDomain = @"GitXErrorDomain";
 	return [[PBEasyPipe outputForCommand:[PBGitBinary path] withArgs:[NSArray arrayWithObjects:@"rev-parse", @"--is-bare-repository", nil] inDir:path] isEqualToString:@"true"];
 }
 
++ (NSString *) basePath {
+    if (repositoryBasePath) {
+        return repositoryBasePath;
+    }
+    return nil;
+}
+
+
 + (NSURL*)gitDirForURL:(NSURL*)repositoryURL;
 {
 	if (![PBGitBinary path])
 		return nil;
 
 	NSString* repositoryPath = [repositoryURL path];
+    
+    // save base path
+    repositoryBasePath = [repositoryPath stringByDeletingLastPathComponent];
 
 	if ([self isBareRepository:repositoryPath])
 		return repositoryURL;
@@ -103,7 +115,7 @@ NSString* PBGitRepositoryErrorDomain = @"GitXErrorDomain";
 	NSURL* gitDirURL = [PBGitRepository gitDirForURL:[self fileURL]];
 	if (!gitDirURL) {
 		if (outError) {
-			NSDictionary* userInfo = [NSDictionary dictionaryWithObject:[NSString stringWithFormat:@"%@ does not appear to be a git repository.", [self fileName]]
+			NSDictionary* userInfo = [NSDictionary dictionaryWithObject:[NSString stringWithFormat:@"%@ does not appear to be a git repository.", [[self fileURL] path]]
 																 forKey:NSLocalizedRecoverySuggestionErrorKey];
 			*outError = [NSError errorWithDomain:PBGitRepositoryErrorDomain code:0 userInfo:userInfo];
 		}
@@ -118,7 +130,7 @@ NSString* PBGitRepositoryErrorDomain = @"GitXErrorDomain";
 
 - (void) setup
 {
-	config = [[PBGitConfig alloc] initWithRepository:self.fileURL.path];
+	config = [[PBGitConfig alloc] initWithRepository:[[self fileURL] path]];
 	self.branches = [NSMutableArray array];
 	[self reloadRefs];
 	revisionList = [[PBGitRevList alloc] initWithRepository:self];
@@ -133,20 +145,20 @@ NSString* PBGitRepositoryErrorDomain = @"GitXErrorDomain";
 	if (!gitDirURL)
 		return nil;
 
-	self = [self init];
-	[self setFileURL: gitDirURL];
-
-	[self setup];
-	
-	// We don't want the window controller to display anything yet..
-	// We'll leave that to the caller of this method.
-#ifndef CLI
-	[self addWindowController:[[PBGitWindowController alloc] initWithRepository:self displayDefault:NO]];
-#endif
-
-	[self showWindows];
-
-	return self;
+	if (self = [super init]) {
+        [self setFileURL: gitDirURL];
+        
+        [self setup];
+        
+        // We don't want the window controller to display anything yet..
+        // We'll leave that to the caller of this method.
+        #ifndef CLI
+            [self addWindowController:[[PBGitWindowController alloc] initWithRepository:self displayDefault:NO]];
+        #endif
+        
+        [self showWindows];
+    }
+    return self;
 }
 
 // The fileURL the document keeps is to the .git dir, but that’s pretty

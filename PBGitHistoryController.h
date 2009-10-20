@@ -11,22 +11,25 @@
 #import "PBGitTree.h"
 #import "PBViewController.h"
 #import "PBCollapsibleSplitView.h"
+#import <Quartz/Quartz.h> /* for the QLPreviewPanelDataSource et al. stuff */
 
-@interface PBGitHistoryController : PBViewController {
-	IBOutlet NSSearchField *searchField;
-	IBOutlet NSArrayController* commitController;
-	IBOutlet NSTreeController* treeController;
-	IBOutlet NSOutlineView* fileBrowser;
-	IBOutlet NSTableView* commitList;
-	IBOutlet PBCollapsibleSplitView *historySplitView;
+@interface PBGitHistoryController : PBViewController <QLPreviewPanelDataSource, QLPreviewPanelDelegate> {
+    IBOutlet NSSearchField *searchField;
+    IBOutlet NSArrayController* commitController;
+    IBOutlet NSTreeController* treeController;
+    IBOutlet NSOutlineView* fileBrowser;
+    IBOutlet NSTableView* commitList;
+    IBOutlet PBCollapsibleSplitView *historySplitView;
 
-	IBOutlet id webView;
-	int selectedTab;
-	
-	PBGitTree* gitTree;
-	PBGitCommit* webCommit;
-	PBGitCommit* rawCommit;
-	PBGitCommit* realCommit;
+    IBOutlet id webView;
+    int selectedTab;
+    
+    PBGitTree* gitTree;
+    PBGitCommit* webCommit;
+    PBGitCommit* rawCommit;
+    PBGitCommit* realCommit;
+    
+    QLPreviewPanel * previewPanel;
 }
 
 @property (assign) int selectedTab;

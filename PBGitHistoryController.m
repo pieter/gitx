@@ -7,15 +7,95 @@
 //
 
 #import "PBGitHistoryController.h"
-#import "CWQuickLook.h"
 #import "PBGitGrapher.h"
 #import "PBGitRevisionCell.h"
 #import "PBCommitList.h"
-#define QLPreviewPanel NSClassFromString(@"QLPreviewPanel")
-
+#import "ApplicationController.h"
 
 @implementation PBGitHistoryController
 @synthesize selectedTab, webCommit, rawCommit, gitTree, commitController;
+
+// MARK: Quick Look panel support
+
+- (BOOL)acceptsPreviewPanelControl:(QLPreviewPanel *)panel;
+{
+    return YES;
+}
+
+- (void)beginPreviewPanelControl:(QLPreviewPanel *)panel
+{
+    // This document is now responsible of the preview panel
+    // It is allowed to set the delegate, data source and refresh panel.
+    previewPanel = panel;
+    panel.delegate = self;
+    panel.dataSource = self;
+}
+
+- (void)endPreviewPanelControl:(QLPreviewPanel *)panel
+{
+    // This document loses its responsisibility on the preview panel
+    // Until the next call to -beginPreviewPanelControl: it must not
+    // change the panel's delegate, data source or refresh it.
+    [previewPanel release];
+    previewPanel = nil;
+}
+
+// MARK: Quick Look panel data source
+
+- (NSInteger)numberOfPreviewItemsInPreviewPanel:(QLPreviewPanel *)panel
+{
+    return [[fileBrowser selectedRowIndexes] count];
+}
+
+- (id <QLPreviewItem>)previewPanel:(QLPreviewPanel *)panel previewItemAtIndex:(NSInteger)index
+{
+    return [[treeController selectedObjects] objectAtIndex:index];
+}
+
+// MARK: Quick Look panel delegate
+
+- (BOOL)previewPanel:(QLPreviewPanel *)panel handleEvent:(NSEvent *)event
+{
+    // redirect all key down events to the table view
+    if ([event type] == NSKeyDown) {
+        [fileBrowser keyDown:event];
+        return YES;
+    }
+    return NO;
+}
+
+// This delegate method provides the rect on screen from which the panel will zoom.
+- (NSRect)previewPanel:(QLPreviewPanel *)panel sourceFrameOnScreenForPreviewItem:(id <QLPreviewItem>)item
+{
+    NSInteger index = [[treeController selectedObjects] indexOfObject:item];
+    if (index == NSNotFound) {
+        return NSZeroRect;
+    }
+    
+    NSRect iconRect = [fileBrowser frameOfOutlineCellAtRow:index];
+    
+    // check that the icon rect is visible on screen
+//     NSRect visibleRect = [fileBrowser visibleRect];
+//     
+//     if (!NSIntersectsRect(visibleRect, iconRect)) {
+//         return NSZeroRect;
+//     }
+    
+    // convert icon rect to screen coordinates
+    iconRect = [fileBrowser convertRectToBase:iconRect];
+    iconRect.origin = [[fileBrowser window] convertBaseToScreen:iconRect.origin];
+    
+    return iconRect;
+}
+
+// This delegate method provides a transition image between the table view and the preview panel
+- (id)previewPanel:(QLPreviewPanel *)panel transitionImageForPreviewItem:(id <QLPreviewItem>)item contentRect:(NSRect *)contentRect
+{
+    PBGitTree * treeItem = (PBGitTree *)item;
+    return treeItem.iconImage;
+}
+
+// MARK: PBGitHistoryController
 
 - (void)awakeFromNib
 {
@@ -28,14 +108,14 @@
 	[commitList setIntercellSpacing:cellSpacing];
 	[fileBrowser setTarget:self];
 	[fileBrowser setDoubleAction:@selector(openSelectedFile:)];
-
+    
 	if (!repository.currentBranch) {
 		[repository reloadRefs];
 		[repository readCurrentBranch];
 	}
 	else
 		[repository lazyReload];
-
+    
 	// Set a sort descriptor for the subject column in the history list, as
 	// It can't be sorted by default (because it's bound to a PBGitCommit)
 	[[commitList tableColumnWithIdentifier:@"subject"] setSortDescriptorPrototype:[[NSSortDescriptor alloc] initWithKey:@"subject" ascending:YES]];
@@ -103,7 +183,7 @@
 		return;
 	PBGitTree* tree = [selectedFiles objectAtIndex:0];
 	NSString* name = [tree tmpFileNameForContents];
-	[[NSWorkspace sharedWorkspace] openTempFile:name];
+	[[NSWorkspace sharedWorkspace] openFile:name];
 }
 
 - (IBAction) setDetailedView: sender {
@@ -118,10 +198,22 @@
 
 - (void)keyDown:(NSEvent*)event
 {
-	if ([[event charactersIgnoringModifiers] isEqualToString: @"f"] && [event modifierFlags] & NSAlternateKeyMask && [event modifierFlags] & NSCommandKeyMask)
-		[superController.window makeFirstResponder: searchField];
-	else
-		[super keyDown: event];
+	if ([[event charactersIgnoringModifiers] isEqualToString: @"f"] 
+        && [event modifierFlags] & NSAlternateKeyMask 
+        && [event modifierFlags] & NSCommandKeyMask) 
+    {
+        // command+alt+f
+        [superController.window makeFirstResponder: searchField];
+    }
+    else if ([[event charactersIgnoringModifiers] isEqualToString: @" "]) 
+    {
+        // space
+        [[NSApp delegate] togglePreviewPanel:self];
+    }
+	else 
+    {
+        [super keyDown: event];
+    }
 }
 
 - (void) copyCommitInfo
@@ -130,7 +222,7 @@
 	if (!commit)
 		return;
 	NSString *info = [NSString stringWithFormat:@"%@ (%@)", [[commit realSha] substringToIndex:10], [commit subject]];
-
+    
 	NSPasteboard *a =[NSPasteboard generalPasteboard];
 	[a declareTypes:[NSArray arrayWithObject:NSStringPboardType] owner:self];
 	[a setString:info forType: NSStringPboardType];
@@ -139,34 +231,29 @@
 
 - (IBAction) toggleQuickView: sender
 {
-	id panel = [QLPreviewPanel sharedPreviewPanel];
-	if ([panel isOpen]) {
-		[panel closePanel];
-	} else {
-		[[QLPreviewPanel sharedPreviewPanel] makeKeyAndOrderFrontWithEffect:1];
-		[self updateQuicklookForce: YES];
-	}
+    [[NSApp delegate] togglePreviewPanel:sender];
 }
 
 - (void) updateQuicklookForce: (BOOL) force
 {
-	if (!force && ![[QLPreviewPanel sharedPreviewPanel] isOpen])
-		return;
+	if ((!force && ![[QLPreviewPanel sharedPreviewPanel] isVisible]) 
+        || ![QLPreviewPanel sharedPreviewPanelExists])
+    {
+        return;
+    }
 	
-	NSArray* selectedFiles = [treeController selectedObjects];
-	
-	if ([selectedFiles count] == 0)
-		return;
-	
-	NSMutableArray* fileNames = [NSMutableArray array];
-	for (PBGitTree* tree in selectedFiles) {
-		NSString* s = [tree tmpFileNameForContents];
-		if (s)
-			[fileNames addObject:[NSURL fileURLWithPath: s]];
-	}
-	
-	[[QLPreviewPanel sharedPreviewPanel] setURLs:fileNames currentIndex:0 preservingDisplayState:YES];
-	
+// 	NSArray* selectedFiles = [treeController selectedObjects];
+// 	
+// 	if ([selectedFiles count] == 0)
+// 		return;
+// 	
+// 	NSMutableArray* fileNames = [NSMutableArray array];
+// 	for (PBGitTree* tree in selectedFiles) {
+// 		NSString* s = [tree tmpFileNameForContents];
+// 		if (s)
+// 			[fileNames addObject:[NSURL fileURLWithPath: s]];
+// 	}
+    [[QLPreviewPanel sharedPreviewPanel] reloadData];    
 }
 
 - (IBAction) refresh: sender
@@ -205,7 +292,7 @@
 	[commitController removeObserver:self forKeyPath:@"selection"];
 	[treeController removeObserver:self forKeyPath:@"selection"];
 	[repository removeObserver:self forKeyPath:@"currentBranch"];
-
+    
 	[super removeView];
 }
 
@@ -230,12 +317,12 @@
 - (void)showCommitsFromTree:(id)sender
 {
 	// TODO: Enable this from webview as well!
-
+    
 	NSMutableArray *filePaths = [NSMutableArray arrayWithObjects:@"HEAD", @"--", NULL];
 	[filePaths addObjectsFromArray:[sender representedObject]];
-
+    
 	PBGitRevSpecifier *revSpec = [[PBGitRevSpecifier alloc] initWithParameters:filePaths];
-
+    
 	repository.currentBranch = [repository addBranch:revSpec];
 }
 
@@ -244,12 +331,12 @@
 	NSString *workingDirectory = [[repository workingDirectory] stringByAppendingString:@"/"];
 	NSString *path;
 	NSWorkspace *ws = [NSWorkspace sharedWorkspace];
-
+    
 	for (NSString *filePath in [sender representedObject]) {
 		path = [workingDirectory stringByAppendingPathComponent:filePath];
 		[ws selectFile: path inFileViewerRootedAtPath:path];
 	}
-
+    
 }
 
 - (void)openFilesAction:(id)sender
@@ -257,7 +344,7 @@
 	NSString *workingDirectory = [[repository workingDirectory] stringByAppendingString:@"/"];
 	NSString *path;
 	NSWorkspace *ws = [NSWorkspace sharedWorkspace];
-
+    
 	for (NSString *filePath in [sender representedObject]) {
 		path = [workingDirectory stringByAppendingPathComponent:filePath];
 		[ws openFile:path];
@@ -268,7 +355,7 @@
 - (NSMenu *)contextMenuForTreeView
 {
 	NSArray *filePaths = [[treeController selectedObjects] valueForKey:@"fullPath"];
-
+    
 	NSMenu *menu = [[NSMenu alloc] init];
 	for (NSMenuItem *item in [self menuItemsForPaths:filePaths])
 		[menu addItem:item];
@@ -280,20 +367,20 @@
 	BOOL multiple = [paths count] != 1;
 	NSMenuItem *historyItem = [[NSMenuItem alloc] initWithTitle:multiple? @"Show history of files" : @"Show history of file"
 														 action:@selector(showCommitsFromTree:)
-												 keyEquivalent:@""];
+                                                  keyEquivalent:@""];
 	NSMenuItem *finderItem = [[NSMenuItem alloc] initWithTitle:@"Show in Finder"
 														action:@selector(showInFinderAction:)
 												 keyEquivalent:@""];
 	NSMenuItem *openFilesItem = [[NSMenuItem alloc] initWithTitle:multiple? @"Open Files" : @"Open File"
 														   action:@selector(openFilesAction:)
 													keyEquivalent:@""];
-
+    
 	NSArray *menuItems = [NSArray arrayWithObjects:historyItem, finderItem, openFilesItem, nil];
 	for (NSMenuItem *item in menuItems) {
 		[item setTarget:self];
 		[item setRepresentedObject:paths];
 	}
-
+    
 	return menuItems;
 }
 
@@ -322,3 +409,4 @@
 }
 
 @end
+

@@ -61,6 +61,7 @@ extern NSString* PBGitRepositoryErrorDomain;
 
 + (NSURL*)gitDirForURL:(NSURL*)repositoryURL;
 + (NSURL*)baseDirForURL:(NSURL*)repositoryURL;
++ (NSString *) basePath;
 
 - (id) initWithURL: (NSURL*) path;
 - (void) setup;
@@ -72,4 +73,5 @@ extern NSString* PBGitRepositoryErrorDomain;
 @property (assign) NSMutableArray* branches;
 @property (assign) PBGitRevSpecifier *currentBranch;
 @property (retain) NSMutableDictionary* refs;
+
 @end
