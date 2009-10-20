@@ -35,11 +35,10 @@ function strcont() {
 if [[ $(strcont $BUILD_STYLE "Install") == 1 ]]; then
     echo "Installing to ${CUSTOM_INSTALL_DIR}... (switch to build config other than Install to avoid)"
     if [[ -e /opt/local/bin/rsync ]]; then
-        /opt/local/bin/rsync -rlHEptog --xattrs --acls "$BUILT_PRODUCTS_DIR/$FULL_PRODUCT_NAME" "$CUSTOM_INSTALL_DIR/$FULL_PRODUCT_NAME"
+        /opt/local/bin/rsync -rlHEptog --xattrs --acls "$BUILT_PRODUCTS_DIR/$FULL_PRODUCT_NAME" "$CUSTOM_INSTALL_DIR/"
     else
-        rsync -rlHEptog "$BUILT_PRODUCTS_DIR/$FULL_PRODUCT_NAME" "$CUSTOM_INSTALL_DIR/$FULL_PRODUCT_NAME"
+        /usr/bin/rsync -rlHEptog "$BUILT_PRODUCTS_DIR/$FULL_PRODUCT_NAME" "$CUSTOM_INSTALL_DIR/"
     fi
-    
 else
     echo '$BUILD_STYLE does not contain "Install"... nothing to copy'
 fi
