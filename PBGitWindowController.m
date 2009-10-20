@@ -153,7 +153,7 @@
 	[item bind:@"selectedIndex" toObject:self withKeyPath:@"selectedViewIndex" options:0];
 	[item setEnabled: ![repository isBareRepository]];
 
-	[self.window setToolbar:toolbar];
+	[[self window] setToolbar:toolbar];
 }
 
 @end

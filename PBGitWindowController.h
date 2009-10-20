@@ -10,7 +10,7 @@
 #import "PBGitRepository.h"
 
 @class PBViewController;
-@interface PBGitWindowController : NSWindowController {
+@interface PBGitWindowController : NSWindowController <NSWindowDelegate> {
 	__weak PBGitRepository* repository;
 	int selectedViewIndex;
 	IBOutlet NSView* contentView;

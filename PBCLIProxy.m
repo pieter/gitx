@@ -20,12 +20,11 @@
 - (id)init
 {
 	if (self = [super init]) {
-		self.connection = [NSConnection new];
-		[self.connection setRootObject:self];
+		connection = [NSConnection new];
+		[connection setRootObject:self];
 
-		if ([self.connection registerName:ConnectionName] == NO)
+		if ([connection registerName:ConnectionName] == NO)
 			NSBeep();
-
 	}
 	return self;
 }

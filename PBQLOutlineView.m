@@ -71,24 +71,26 @@
 
 		// figure out if the row that was just clicked on is currently selected
 		if ([selectedRowIndexes containsIndex:row] == NO)
-			[self selectRow:row byExtendingSelection:NO];
+			[self selectRowIndexes:[NSIndexSet indexSetWithIndex:row] byExtendingSelection:NO];
 	}
 
 	return [controller contextMenuForTreeView];
 }
 
 /* Implemented to satisfy datasourcee protocol */
-- (BOOL) outlineView: (NSOutlineView *)ov
-         isItemExpandable: (id)item { return YES; }
+- (BOOL) outlineView:(NSOutlineView *)ov isItemExpandable:(id)item {
+    return YES;
+}
 
-- (NSInteger)  outlineView: (NSOutlineView *)ov
-         numberOfChildrenOfItem:(id)item { return 0; }
+- (NSInteger) outlineView:(NSOutlineView *)ov numberOfChildrenOfItem:(id)item {
+    return 0;
+}
 
-- (id)   outlineView: (NSOutlineView *)ov
-         child:(NSInteger)index
-         ofItem:(id)item { return nil; }
+- (id) outlineView:(NSOutlineView *)ov child:(NSInteger)index ofItem:(id)item {
+    return nil;
+}
 
-- (id)   outlineView: (NSOutlineView *)ov
-         objectValueForTableColumn:(NSTableColumn*)col
-         byItem:(id)item { return nil; }
+- (id) outlineView:(NSOutlineView *)ov objectValueForTableColumn:(NSTableColumn *)col byItem:(id)item {
+    return nil;
+}
 @end

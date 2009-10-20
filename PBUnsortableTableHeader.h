@@ -8,7 +8,6 @@
 
 #import <Cocoa/Cocoa.h>
 
-
 @interface PBUnsortableTableHeader : NSTableHeaderView {
 	IBOutlet NSArrayController *controller;
 	int clickCount;
