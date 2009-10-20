@@ -1,8 +1,7 @@
 /* Commit: Interface for selecting, staging, discarding, and unstaging
    hunks, individual lines, or ranges of lines.  */
 
-var contextLines = 5;
-
+contextLines = getCookie("GitXContextLines");
 var showNewFile = function(file)
 {
 	setTitle("New file: " + file.path);
