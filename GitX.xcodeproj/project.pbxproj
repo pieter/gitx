@@ -29,6 +29,8 @@
 		47DBDB6A0E94EF6500671A1E /* Preferences.xib in Resources */ = {isa = PBXBuildFile; fileRef = 47DBDB680E94EF6500671A1E /* Preferences.xib */; };
 		47DBDBB10E94F6CA00671A1E /* Updates.png in Resources */ = {isa = PBXBuildFile; fileRef = 47DBDBB00E94F6CA00671A1E /* Updates.png */; };
 		47DBDBCA0E95016F00671A1E /* PBNSURLPathUserDefaultsTransfomer.m in Sources */ = {isa = PBXBuildFile; fileRef = 47DBDBC90E95016F00671A1E /* PBNSURLPathUserDefaultsTransfomer.m */; };
+		654D16E8108C6CA6008D960C /* PBQLOutlineView.m in Sources */ = {isa = PBXBuildFile; fileRef = F513085A0E0740F2000C8BCD /* PBQLOutlineView.m */; };
+		65C77FA0108BF560003BD3B5 /* Quartz.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 65C77F9F108BF560003BD3B5 /* Quartz.framework */; };
 		770B37ED0679A11B001EADE2 /* GitTest_DataModel.xcdatamodel in Sources */ = {isa = PBXBuildFile; fileRef = 770B37EC0679A11B001EADE2 /* GitTest_DataModel.xcdatamodel */; };
 		77C8280E06725ACE000B614F /* ApplicationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 77C8280C06725ACE000B614F /* ApplicationController.m */; };
 		8D11072B0486CEB800E47090 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C165CFE840E0CC02AAC07 /* InfoPlist.strings */; };
@@ -49,7 +51,6 @@
 		F50A41200EBB874C00208746 /* mainSplitterDimple.tiff in Resources */ = {isa = PBXBuildFile; fileRef = F50A411E0EBB874C00208746 /* mainSplitterDimple.tiff */; };
 		F50A41230EBB875D00208746 /* PBNiceSplitView.m in Sources */ = {isa = PBXBuildFile; fileRef = F50A41220EBB875D00208746 /* PBNiceSplitView.m */; };
 		F50FE0E30E07BE9600854FCD /* PBGitRevisionCell.m in Sources */ = {isa = PBXBuildFile; fileRef = F50FE0E20E07BE9600854FCD /* PBGitRevisionCell.m */; };
-		F513085B0E0740F2000C8BCD /* PBQLOutlineView.m in Sources */ = {isa = PBXBuildFile; fileRef = F513085A0E0740F2000C8BCD /* PBQLOutlineView.m */; };
 		F5140DC90E8A8EB20091E9F3 /* RoundedRectangle.m in Sources */ = {isa = PBXBuildFile; fileRef = F5140DC80E8A8EB20091E9F3 /* RoundedRectangle.m */; };
 		F523CEB60ED3399200DDD714 /* PBGitIndexController.m in Sources */ = {isa = PBXBuildFile; fileRef = F523CEB50ED3399200DDD714 /* PBGitIndexController.m */; };
 		F52BCE030E84208300AA3741 /* PBGitHistoryView.xib in Resources */ = {isa = PBXBuildFile; fileRef = F52BCE020E84208300AA3741 /* PBGitHistoryView.xib */; };
@@ -186,6 +187,10 @@
 		47DBDBB00E94F6CA00671A1E /* Updates.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Updates.png; path = Images/Preferences/Updates.png; sourceTree = "<group>"; };
 		47DBDBC80E95016F00671A1E /* PBNSURLPathUserDefaultsTransfomer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PBNSURLPathUserDefaultsTransfomer.h; sourceTree = "<group>"; };
 		47DBDBC90E95016F00671A1E /* PBNSURLPathUserDefaultsTransfomer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PBNSURLPathUserDefaultsTransfomer.m; sourceTree = "<group>"; };
+		654D17E7108C90E8008D960C /* html */ = {isa = PBXFileReference; lastKnownFileType = folder; path = html; sourceTree = "<group>"; };
+		654D18EF108C9597008D960C /* Install.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Install.xcconfig; sourceTree = "<group>"; };
+		654D18F6108C96CB008D960C /* install.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = install.sh; sourceTree = "<group>"; };
+		65C77F9F108BF560003BD3B5 /* Quartz.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Quartz.framework; path = System/Library/Frameworks/Quartz.framework; sourceTree = SDKROOT; };
 		770B37EC0679A11B001EADE2 /* GitTest_DataModel.xcdatamodel */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = wrapper.xcdatamodel; path = GitTest_DataModel.xcdatamodel; sourceTree = "<group>"; };
 		77C82804067257F0000B614F /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = /System/Library/Frameworks/CoreData.framework; sourceTree = "<absolute>"; };
 		77C8280B06725ACE000B614F /* ApplicationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ApplicationController.h; sourceTree = "<group>"; };
@@ -227,7 +232,6 @@
 		F52BCE060E84211300AA3741 /* PBGitHistoryController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PBGitHistoryController.m; sourceTree = "<group>"; };
 		F53C4DF50E97FC630022AD59 /* PBGitBinary.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PBGitBinary.h; sourceTree = "<group>"; };
 		F53C4DF60E97FC630022AD59 /* PBGitBinary.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PBGitBinary.m; sourceTree = "<group>"; };
-		F53EE3590E06BBA00022B925 /* CWQuickLook.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CWQuickLook.h; sourceTree = "<group>"; };
 		F53FF2030E7ABB5300389171 /* PBGitRevSpecifier.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PBGitRevSpecifier.h; sourceTree = "<group>"; };
 		F53FF2040E7ABB5300389171 /* PBGitRevSpecifier.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PBGitRevSpecifier.m; sourceTree = "<group>"; };
 		F56174550E058893001DCD79 /* PBGitTree.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PBGitTree.h; sourceTree = "<group>"; };
@@ -280,7 +284,6 @@
 		F5C6F68B0E65FF9300478D97 /* PBGitLane.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PBGitLane.h; sourceTree = "<group>"; };
 		F5C6F68C0E65FF9300478D97 /* PBGitLane.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PBGitLane.mm; sourceTree = "<group>"; };
 		F5D2DC850EA401A80034AD24 /* PBGitConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PBGitConfig.h; sourceTree = "<group>"; };
-		F5D619ED0EAE62EA00341D73 /* html */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = folder; path = html; sourceTree = "<group>"; };
 		F5DFFA6A0E075D8800617813 /* PBEasyFS.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PBEasyFS.h; sourceTree = "<group>"; };
 		F5DFFA6B0E075D8800617813 /* PBEasyFS.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PBEasyFS.m; sourceTree = "<group>"; };
 		F5E424100EA3E4D60046E362 /* PBDiffWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PBDiffWindow.xib; sourceTree = "<group>"; };
@@ -323,6 +326,7 @@
 				F580E6AE0E733276009E2D3F /* Sparkle.framework in Frameworks */,
 				F5E4DBFB0EAB58D90013FAFC /* SystemConfiguration.framework in Frameworks */,
 				F5C580E50EDA250900995434 /* libgit2.a in Frameworks */,
+				65C77FA0108BF560003BD3B5 /* Quartz.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -363,6 +367,7 @@
 		1058C7A0FEA54F0111CA2CBB /* Linked Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				65C77F9F108BF560003BD3B5 /* Quartz.framework */,
 				F5E4DBFA0EAB58D90013FAFC /* SystemConfiguration.framework */,
 				F580E6AD0E733276009E2D3F /* Sparkle.framework */,
 				F56526230E03D85900F03B52 /* WebKit.framework */,
@@ -396,12 +401,14 @@
 		29B97314FDCFA39411CA2CEA /* GitTest */ = {
 			isa = PBXGroup;
 			children = (
+				654D18EE108C9589008D960C /* Config */,
+				654D18F5108C96BC008D960C /* Scripts */,
 				F5886A080ED5D26B0066E74C /* SpeedTest */,
 				913D5E420E5563FD00CECEA2 /* cli */,
 				F57CC43E0E05E472000472E2 /* Aux */,
 				F57CC3850E05DDC1000472E2 /* Controllers */,
 				F56174540E05887E001DCD79 /* Git */,
-				F5D619ED0EAE62EA00341D73 /* html */,
+				654D17E7108C90E8008D960C /* html */,
 				7756732906782D8800D1FEB8 /* Models */,
 				080E96DDFE201D6D7F000001 /* Classes */,
 				29B97315FDCFA39411CA2CEA /* Other Sources */,
@@ -466,6 +473,23 @@
 				47DBDBB00E94F6CA00671A1E /* Updates.png */,
 			);
 			name = "Preference Icons";
+			sourceTree = "<group>";
+		};
+		654D18EE108C9589008D960C /* Config */ = {
+			isa = PBXGroup;
+			children = (
+				654D18EF108C9597008D960C /* Install.xcconfig */,
+			);
+			name = Config;
+			sourceTree = "<group>";
+		};
+		654D18F5108C96BC008D960C /* Scripts */ = {
+			isa = PBXGroup;
+			children = (
+				654D18F6108C96CB008D960C /* install.sh */,
+			);
+			name = Scripts;
+			path = scripts;
 			sourceTree = "<group>";
 		};
 		7756732906782D8800D1FEB8 /* Models */ = {
@@ -554,7 +578,6 @@
 				F57CC3900E05DDF2000472E2 /* PBEasyPipe.m */,
 				F5DFFA6A0E075D8800617813 /* PBEasyFS.h */,
 				F5DFFA6B0E075D8800617813 /* PBEasyFS.m */,
-				F53EE3590E06BBA00022B925 /* CWQuickLook.h */,
 				F51308590E0740F2000C8BCD /* PBQLOutlineView.h */,
 				F513085A0E0740F2000C8BCD /* PBQLOutlineView.m */,
 				91B103CA0E898EC300C84364 /* PBIconAndTextCell.h */,
@@ -708,6 +731,7 @@
 				8D11072E0486CEB800E47090 /* Frameworks */,
 				F580E6BD0E73329C009E2D3F /* CopyFiles */,
 				F5CF04A20EAE696C00D75C81 /* Copy HTML files */,
+				654D18DF108C950E008D960C /* Run Install Script */,
 			);
 			buildRules = (
 			);
@@ -839,6 +863,20 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		654D18DF108C950E008D960C /* Run Install Script */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 12;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Run Install Script";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "echo \"Running install script...\" \n\"${PROJECT_DIR}/scripts/install.sh\"\n";
+		};
 		F56439F60F792B2100A579C2 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -900,7 +938,6 @@
 				F56174570E058893001DCD79 /* PBGitTree.m in Sources */,
 				F57CC3910E05DDF2000472E2 /* PBEasyPipe.m in Sources */,
 				F57CC4410E05E496000472E2 /* PBGitWindowController.m in Sources */,
-				F513085B0E0740F2000C8BCD /* PBQLOutlineView.m in Sources */,
 				F5DFFA6C0E075D8800617813 /* PBEasyFS.m in Sources */,
 				F50FE0E30E07BE9600854FCD /* PBGitRevisionCell.m in Sources */,
 				F5FF4E180E0829C20006317A /* PBGitRevList.mm in Sources */,
@@ -938,6 +975,7 @@
 				F562C8870FE1766C000EC528 /* NSString_RegEx.m in Sources */,
 				EB2A734A0FEE3F09006601CF /* PBCollapsibleSplitView.m in Sources */,
 				F59F1DD5105C4FF300115F88 /* PBGitIndex.m in Sources */,
+				654D16E8108C6CA6008D960C /* PBQLOutlineView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1064,8 +1102,9 @@
 				INSTALL_PATH = "$(HOME)/Applications";
 				LIBRARY_SEARCH_PATHS = libgit2;
 				PRODUCT_NAME = GitX;
+				WARNING_CFLAGS = "-Wno-deprecated-declarations";
 				WRAPPER_EXTENSION = app;
-				ZERO_LINK = YES;
+				ZERO_LINK = NO;
 			};
 			name = Debug;
 		};
@@ -1099,11 +1138,12 @@
 			buildSettings = {
 				GCC_ENABLE_OBJC_GC = required;
 				GCC_PREPROCESSOR_DEFINITIONS_NOT_USED_IN_PRECOMPS = DEBUG_BUILD;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				INFOPLIST_PREPROCESS = YES;
 				PREBINDING = NO;
-				SDKROOT = "$(DEVELOPER_SDK_DIR)/MacOSX10.5.sdk";
+				SDKROOT = macosx10.6;
 			};
 			name = Debug;
 		};
@@ -1115,14 +1155,154 @@
 					i386,
 				);
 				GCC_ENABLE_OBJC_GC = required;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				INFOPLIST_PREFIX_HEADER = $PROJECT_TEMP_DIR/revision;
 				INFOPLIST_PREPROCESS = YES;
 				PREBINDING = NO;
-				SDKROOT = "$(DEVELOPER_SDK_DIR)/MacOSX10.5.sdk";
+				SDKROOT = macosx10.6;
 			};
 			name = Release;
+		};
+		654D1896108C9293008D960C /* Install */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = (
+					ppc,
+					i386,
+				);
+				GCC_ENABLE_OBJC_GC = required;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				INFOPLIST_PREFIX_HEADER = $PROJECT_TEMP_DIR/revision;
+				INFOPLIST_PREPROCESS = YES;
+				PREBINDING = NO;
+				SDKROOT = macosx10.6;
+			};
+			name = Install;
+		};
+		654D1897108C9293008D960C /* Install */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 654D18EF108C9597008D960C /* Install.xcconfig */;
+			buildSettings = {
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEPLOYMENT_LOCATION = NO;
+				DEPLOYMENT_POSTPROCESSING = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)\"",
+				);
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_MODEL_TUNING = G5;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = GitX_Prefix.pch;
+				GCC_PREPROCESSOR_DEFINITIONS_NOT_USED_IN_PRECOMPS = "";
+				HEADER_SEARCH_PATHS = libgit2/src;
+				INFOPLIST_FILE = Info.plist;
+				INFOPLIST_OTHER_PREPROCESSOR_FLAGS = "-traditional";
+				INFOPLIST_PREFIX_HEADER = $PROJECT_TEMP_DIR/revision;
+				INFOPLIST_PREPROCESS = YES;
+				LIBRARY_SEARCH_PATHS = libgit2;
+				LLVM_LTO = YES;
+				PRODUCT_NAME = GitX;
+				STRIP_INSTALLED_PRODUCT = YES;
+				WRAPPER_EXTENSION = app;
+			};
+			name = Install;
+		};
+		654D1898108C9293008D960C /* Install */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				GCC_MODEL_TUNING = G5;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/AppKit.framework/Headers/AppKit.h";
+				INSTALL_PATH = /usr/local/bin;
+				LIBRARY_SEARCH_PATHS = libgit2;
+				OTHER_LDFLAGS = (
+					"-framework",
+					Foundation,
+					"-framework",
+					AppKit,
+				);
+				PREBINDING = NO;
+				PRODUCT_NAME = gitx;
+				ZERO_LINK = NO;
+			};
+			name = Install;
+		};
+		654D1899108C9293008D960C /* Install */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/UIKit.framework/Headers/UIKit.h";
+				INFOPLIST_FILE = "SpeedTest-Info.plist";
+				INSTALL_PATH = "$(HOME)/Applications";
+				LIBRARY_SEARCH_PATHS = libgit2;
+				OTHER_LDFLAGS = (
+					"-framework",
+					Foundation,
+					"-framework",
+					UIKit,
+				);
+				PREBINDING = NO;
+				PRODUCT_NAME = SpeedTest;
+				SDKROOT = iphoneos2.0;
+				ZERO_LINK = NO;
+			};
+			name = Install;
+		};
+		654D189A108C9293008D960C /* Install */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				INFOPLIST_PREPROCESS = YES;
+				PRODUCT_NAME = "Generate PList Prefix";
+				ZERO_LINK = NO;
+			};
+			name = Install;
+		};
+		654D189B108C9293008D960C /* Install */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				FRAMEWORK_VERSION = A;
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				GCC_MODEL_TUNING = G5;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/AppKit.framework/Headers/AppKit.h";
+				INFOPLIST_FILE = "GitXTesting-Info.plist";
+				INSTALL_PATH = "$(HOME)/Library/Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/libgit2\"",
+				);
+				OTHER_LDFLAGS = (
+					"-framework",
+					Foundation,
+					"-framework",
+					AppKit,
+				);
+				PREBINDING = NO;
+				PRODUCT_NAME = GitXTesting;
+				ZERO_LINK = NO;
+			};
+			name = Install;
 		};
 		913D5E4B0E55644600CECEA2 /* Debug */ = {
 			isa = XCBuildConfiguration;
@@ -1322,6 +1502,7 @@
 			buildConfigurations = (
 				26FC0A850875C7B200E6366F /* Debug */,
 				26FC0A860875C7B200E6366F /* Release */,
+				654D1897108C9293008D960C /* Install */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -1331,6 +1512,7 @@
 			buildConfigurations = (
 				26FC0A890875C7B200E6366F /* Debug */,
 				26FC0A8A0875C7B200E6366F /* Release */,
+				654D1896108C9293008D960C /* Install */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -1340,6 +1522,7 @@
 			buildConfigurations = (
 				913D5E4B0E55644600CECEA2 /* Debug */,
 				913D5E4C0E55644600CECEA2 /* Release */,
+				654D1898108C9293008D960C /* Install */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -1349,6 +1532,7 @@
 			buildConfigurations = (
 				F56439F80F792B2100A579C2 /* Debug */,
 				F56439F90F792B2100A579C2 /* Release */,
+				654D189A108C9293008D960C /* Install */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -1358,6 +1542,7 @@
 			buildConfigurations = (
 				F567CC3B106E6B920059BB9D /* Debug */,
 				F567CC3C106E6B920059BB9D /* Release */,
+				654D189B108C9293008D960C /* Install */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -1367,6 +1552,7 @@
 			buildConfigurations = (
 				F5886A130ED5D33E0066E74C /* Debug */,
 				F5886A140ED5D33E0066E74C /* Release */,
+				654D1899108C9293008D960C /* Install */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
