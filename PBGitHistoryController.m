@@ -11,6 +11,7 @@
 #import "PBGitRevisionCell.h"
 #import "PBCommitList.h"
 #import "ApplicationController.h"
+#import "PBQLOutlineView.h"
 
 @implementation PBGitHistoryController
 @synthesize selectedTab, webCommit, rawCommit, gitTree, commitController;
@@ -67,20 +68,20 @@
 // This delegate method provides the rect on screen from which the panel will zoom.
 - (NSRect)previewPanel:(QLPreviewPanel *)panel sourceFrameOnScreenForPreviewItem:(id <QLPreviewItem>)item
 {
-    NSInteger index = [[treeController selectedObjects] indexOfObject:item];
+    NSInteger index = [fileBrowser rowForItem:[[treeController selectedNodes] objectAtIndex:0]];
     if (index == NSNotFound) {
         return NSZeroRect;
     }
     
-    NSRect iconRect = [fileBrowser frameOfOutlineCellAtRow:index];
+    NSRect iconRect = [fileBrowser frameOfCellAtColumn:0 row:index];
     
     // check that the icon rect is visible on screen
-//     NSRect visibleRect = [fileBrowser visibleRect];
-//     
-//     if (!NSIntersectsRect(visibleRect, iconRect)) {
-//         return NSZeroRect;
-//     }
+    NSRect visibleRect = [fileBrowser visibleRect];
     
+    if (!NSIntersectsRect(visibleRect, iconRect)) {
+        return NSZeroRect;
+    }
+
     // convert icon rect to screen coordinates
     iconRect = [fileBrowser convertRectToBase:iconRect];
     iconRect.origin = [[fileBrowser window] convertBaseToScreen:iconRect.origin];
