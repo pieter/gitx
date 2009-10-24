@@ -28,7 +28,12 @@
 		[array addObject:[[PBRefMenuItem alloc] initWithTitle:@"Checkout branch"
 													   action:@selector(checkoutRef:)
 												keyEquivalent: @""]];
-
+	
+	if ([type isEqualToString:@"branch"])
+		[array addObject:[[PBRefMenuItem alloc] initWithTitle:@"Push branch"
+													   action:@selector(pushRef:)
+												keyEquivalent: @""]];
+	
     if ([type isEqualToString:@"tag"])
 		[array addObject:[[PBRefMenuItem alloc] initWithTitle:@"View tag info"
 													   action:@selector(tagInfo:)

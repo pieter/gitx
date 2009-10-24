@@ -60,7 +60,21 @@
 	int ret = 1;
 	[historyController.repository outputInWorkdirForArguments:[NSArray arrayWithObjects:@"checkout", [[sender ref] shortName], nil] retValue: &ret];
 	if (ret) {
-		[[historyController.repository windowController] showMessageSheet:@"Checking out branch failed" infoText:@"There was an error checking out the branch. Perhaps your working directory is not clean?"];
+		NSString *info = [NSString stringWithFormat:@"There was an error checking out the branch. Perhaps your working directory is not clean?"];
+		[[historyController.repository windowController] showMessageSheet:@"Checking out branch failed" infoText:info];
+		return;
+	}
+	[historyController.repository reloadRefs];
+	[commitController rearrangeObjects];
+}
+
+- (void) pushRef:(PBRefMenuItem *)sender
+{
+	int ret = 1;
+	NSString *rval = [historyController.repository outputInWorkdirForArguments:[NSArray arrayWithObjects:@"push", @"origin", [[sender ref] shortName], nil] retValue: &ret];
+	if (ret) {
+		NSString *info = [NSString stringWithFormat:@"There was an error pushing the branch to the origin.\n\n%d\n%@", ret, rval];
+		[[historyController.repository windowController] showMessageSheet:@"Pushing branch failed" infoText:info];
 		return;
 	}
 	[historyController.repository reloadRefs];
