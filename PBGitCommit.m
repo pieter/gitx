@@ -22,11 +22,9 @@
 	NSMutableArray *p = [NSMutableArray arrayWithCapacity:nParents];
 	for (i = 0; i < nParents; ++i)
 	{
-		char s[41];
-		git_oid_fmt(s, parentShas + i);
-		s[40] = 0;
+		char *s = git_oid_allocfmt(parentShas + i);
 		[p addObject:[NSString stringWithUTF8String:s]];
-//		free(s);
+		free(s);
 	}
 	return p;
 }
@@ -123,12 +121,9 @@
 
 - (NSString *)realSha
 {
-	char hex[41];
-	git_oid_fmt(hex, &sha);
-	hex[40] = 0;
-//	char *hex = git_oid_mkhex(&sha);
+	char *hex = git_oid_allocfmt(&sha);
 	NSString *str = [NSString stringWithUTF8String:hex];
-//	free(hex);
+	free(hex);
 	return str;
 }
 
