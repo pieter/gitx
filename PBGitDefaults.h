@@ -16,7 +16,8 @@
 + (BOOL) isGravatarEnabled;
 + (BOOL) confirmPublicGists;
 + (BOOL) isGistPublic;
-+ (BOOL)showWhitespaceDifferences;
++ (BOOL) showWhitespaceDifferences;
++ (BOOL) refreshAutomatically;
 + (BOOL)openCurDirOnLaunch;
 + (BOOL)showOpenPanelOnLaunch;
 
