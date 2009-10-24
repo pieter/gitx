@@ -15,6 +15,7 @@
 #define kConfirmPublicGists @"PBConfirmPublicGists"
 #define kPublicGist @"PBGistPublic"
 #define kShowWhitespaceDifferences @"PBShowWhitespaceDifferences"
+#define kRefreshAutomatically @"PBRefreshAutomatically"
 #define kOpenCurDirOnLaunch @"PBOpenCurDirOnLaunch"
 #define kShowOpenPanelOnLaunch @"PBShowOpenPanelOnLaunch"
 
@@ -65,6 +66,11 @@
 + (BOOL) isGistPublic
 {
 	return [[NSUserDefaults standardUserDefaults] boolForKey:kPublicGist];
+}
+
++ (BOOL) refreshAutomatically
+{
+   return [[NSUserDefaults standardUserDefaults] boolForKey:kRefreshAutomatically];
 }
 
 + (BOOL)showWhitespaceDifferences
