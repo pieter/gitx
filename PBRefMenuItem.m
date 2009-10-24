@@ -21,19 +21,25 @@
 	else if ([type isEqualToString:@"head"])
 		type = @"branch";
 
-	[array addObject:[[PBRefMenuItem alloc] initWithTitle:[@"Delete " stringByAppendingString:type]
-												   action:@selector(removeRef:)
-											keyEquivalent: @""]];
+	NSString *remote = [[[commit repository] config] valueForKeyPath:[NSString stringWithFormat:@"branch.%@.remote", [ref shortName]]];
+	bool has_remote = remote != NULL;
+
+	if ([type isEqualToString:@"branch"]) {
+		PBRefMenuItem *push = [[PBRefMenuItem alloc] initWithTitle:@"Push branch"
+															action:@selector(pushRef:)
+													 keyEquivalent: @""];
+		if(!has_remote) [push setEnabled:NO];
+		[array addObject:push];
+	}
+
 	if ([type isEqualToString:@"branch"])
 		[array addObject:[[PBRefMenuItem alloc] initWithTitle:@"Checkout branch"
 													   action:@selector(checkoutRef:)
 												keyEquivalent: @""]];
-	
-	if ([type isEqualToString:@"branch"])
-		[array addObject:[[PBRefMenuItem alloc] initWithTitle:@"Push branch"
-													   action:@selector(pushRef:)
-												keyEquivalent: @""]];
-	
+
+	[array addObject:[[PBRefMenuItem alloc] initWithTitle:[@"Delete " stringByAppendingString:type]
+												   action:@selector(removeRef:)
+											keyEquivalent: @""]];
     if ([type isEqualToString:@"tag"])
 		[array addObject:[[PBRefMenuItem alloc] initWithTitle:@"View tag info"
 													   action:@selector(tagInfo:)
