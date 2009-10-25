@@ -71,10 +71,39 @@
 - (void) pushRef:(PBRefMenuItem *)sender
 {
 	int ret = 1;
-	NSString *rval = [historyController.repository outputInWorkdirForArguments:[NSArray arrayWithObjects:@"push", @"origin", [[sender ref] shortName], nil] retValue: &ret];
+	NSString *remote = [[historyController.repository config] valueForKeyPath:[NSString stringWithFormat:@"branch.%@.remote", [[sender ref] shortName]]];
+	NSString *rval = [historyController.repository outputInWorkdirForArguments:[NSArray arrayWithObjects:@"push", remote, [[sender ref] shortName], nil] retValue: &ret];
 	if (ret) {
-		NSString *info = [NSString stringWithFormat:@"There was an error pushing the branch to the origin.\n\n%d\n%@", ret, rval];
+		NSString *info = [NSString stringWithFormat:@"There was an error pushing the branch to the remote repository.\n\n%d\n%@", ret, rval];
 		[[historyController.repository windowController] showMessageSheet:@"Pushing branch failed" infoText:info];
+		return;
+	}
+	[historyController.repository reloadRefs];
+	[commitController rearrangeObjects];
+}
+
+- (void) pullRef:(PBRefMenuItem *)sender
+{
+	int ret = 1;
+	NSString *remote = [[historyController.repository config] valueForKeyPath:[NSString stringWithFormat:@"branch.%@.remote", [[sender ref] shortName]]];
+	NSString *rval = [historyController.repository outputInWorkdirForArguments:[NSArray arrayWithObjects:@"pull", remote, [[sender ref] shortName], nil] retValue: &ret];
+	if (ret) {
+		NSString *info = [NSString stringWithFormat:@"There was an error pulling from the remote repository.\n\n%d\n%@", ret, rval];
+		[[historyController.repository windowController] showMessageSheet:@"Pulling from remote failed" infoText:info];
+		return;
+	}
+	[historyController.repository reloadRefs];
+	[commitController rearrangeObjects];
+}
+
+- (void) rebaseRef:(PBRefMenuItem *)sender
+{
+	int ret = 1;
+	NSString *remote = [[historyController.repository config] valueForKeyPath:[NSString stringWithFormat:@"branch.%@.remote", [[sender ref] shortName]]];
+	NSString *rval = [historyController.repository outputInWorkdirForArguments:[NSArray arrayWithObjects:@"pull", @"--rebase", remote, [[sender ref] shortName], nil] retValue: &ret];
+	if (ret) {
+		NSString *info = [NSString stringWithFormat:@"There was an error rebasing from the remote repository.\n\n%d\n%@", ret, rval];
+		[[historyController.repository windowController] showMessageSheet:@"Rebasing from remote failed" infoText:info];
 		return;
 	}
 	[historyController.repository reloadRefs];
