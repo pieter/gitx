@@ -26,6 +26,39 @@
 	return [super documentForURL:[PBGitRepository gitDirForURL:URL]];
 }
 
+- (IBAction) showClone:(id)sender {
+	[cloneWindow makeKeyAndOrderFront:sender];
+}
+
+- (IBAction) cloneURL:(id)sender {
+	NSString *remoteRepo = [cloneURLField stringValue];
+	[cloneWindow close];
+
+	NSOpenPanel *op = [NSOpenPanel openPanel];
+
+	[op setCanChooseFiles:NO];
+	[op setCanChooseDirectories:YES];
+	[op setAllowsMultipleSelection:NO];
+	[op setCanCreateDirectories:YES];
+	[op setMessage:@"Clone the repository here:"];
+	[op setTitle:@"Clone Repository Location"];
+	if ([op runModal] == NSFileHandlingPanelOKButton)
+	{
+		NSString *path = [op filename];
+		int terminationStatus;
+		NSString *result = [PBEasyPipe outputForCommand:[PBGitBinary path] withArgs:[NSArray arrayWithObjects:@"clone", remoteRepo, path, nil] inDir:path inputString:nil retValue:&terminationStatus];
+
+		if (terminationStatus == 0)
+			[self openDocumentWithContentsOfURL:[op URL] display:YES error:NULL];
+		else
+			NSRunAlertPanel(@"Failed to clone Git repository", @"Git returned the following error when trying to clone the repository: %@", nil, nil, nil, result);
+	}
+}
+
+- (IBAction) hideClone:(id)sender {
+	[cloneWindow close];
+}
+
 - (void)noteNewRecentDocumentURL:(NSURL*)url
 {
 	[super noteNewRecentDocumentURL:[PBGitRepository baseDirForURL:url]];
