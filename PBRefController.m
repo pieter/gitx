@@ -252,22 +252,28 @@
 
 -(void)rebaseButton:(id)sender
 {
+	[sender setEnabled:NO];
 	NSString *refName =[historyController.repository.currentBranch simpleRef];
 	[self rebaseImpl:refName];
+	[sender setEnabled:YES];
 //	NSLog([NSString stringWithFormat:@"Rebase hit for %@!", refName]);
 }
 
 -(void)pushButton:(id)sender
 {
+	[sender setEnabled:NO];
 	NSString *refName =[historyController.repository.currentBranch simpleRef];
 	[self pushImpl:refName];
+	[sender setEnabled:YES];
 //	NSLog([NSString stringWithFormat:@"Push hit for %@!", refName]);
 }
 
 -(void)fetchButton:(id)sender
 {
+	[sender setEnabled:NO];
 	NSString *refName =[historyController.repository.currentBranch simpleRef];
 	[self fetchImpl:refName];
+	[sender setEnabled:YES];
 //	NSLog([NSString stringWithFormat:@"Fetch hit for %@!", refName]);
 }
 
