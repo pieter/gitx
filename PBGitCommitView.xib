@@ -22,7 +22,6 @@
 		<object class="NSMutableArray" key="IBDocument.EditedObjectIDs">
 			<bool key="EncodedWithXMLCoder">YES</bool>
 			<integer value="1"/>
-			<integer value="225"/>
 		</object>
 		<object class="NSArray" key="IBDocument.PluginDependencies">
 			<bool key="EncodedWithXMLCoder">YES</bool>
@@ -800,6 +799,7 @@
 								<int key="NSvFlags">268</int>
 								<string key="NSFrame">{{0, 14}, {87, 25}}</string>
 								<reference key="NSSuperview"/>
+								<reference key="NSWindow"/>
 								<int key="NSTag">3</int>
 								<bool key="NSEnabled">YES</bool>
 								<object class="NSSegmentedCell" key="NSCell" id="796615469">
@@ -1647,7 +1647,7 @@
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<string>{{513, 251}, {616, 169}}</string>
+					<string>{{441, 278}, {616, 169}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>{{132, 614}, {616, 0}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -1689,7 +1689,7 @@
 				</object>
 			</object>
 			<nil key="sourceID"/>
-			<int key="maxID">283</int>
+			<int key="maxID">290</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<object class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -1811,6 +1811,10 @@
 				<object class="IBPartialClassDescription">
 					<string key="className">PBViewController</string>
 					<string key="superclassName">NSViewController</string>
+					<object class="NSMutableDictionary" key="actions">
+						<string key="NS.key.0">refresh:</string>
+						<string key="NS.object.0">id</string>
+					</object>
 					<object class="NSMutableDictionary" key="outlets">
 						<string key="NS.key.0">viewToolbar</string>
 						<string key="NS.object.0">NSToolbar</string>
