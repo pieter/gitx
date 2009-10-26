@@ -29,10 +29,19 @@
 - (IBAction)closeSheet:(id) sender;
 - (IBAction)saveSheet:(id) sender;
 
+- (IBAction)rebaseButton:(id)sender;
+- (IBAction)pushButton:(id)sender;
+- (IBAction)fetchButton:(id)sender;
+
 - (NSArray *) menuItemsForRef:(PBGitRef *)ref commit:(PBGitCommit *)commit;
 
 - (void) changeBranch:(NSMenuItem *)sender;
 - (void) selectCurrentBranch;
 - (void) updateBranchMenu;
+
+- (void) pullImpl:(NSString *)refName;
+- (void) pushImpl:(NSString *)refName;
+- (void) rebaseImpl:(NSString *)refName;
+
 
 @end

@@ -70,44 +70,17 @@
 
 - (void) pushRef:(PBRefMenuItem *)sender
 {
-	int ret = 1;
-	NSString *remote = [[historyController.repository config] valueForKeyPath:[NSString stringWithFormat:@"branch.%@.remote", [[sender ref] shortName]]];
-	NSString *rval = [historyController.repository outputInWorkdirForArguments:[NSArray arrayWithObjects:@"push", remote, [[sender ref] shortName], nil] retValue: &ret];
-	if (ret) {
-		NSString *info = [NSString stringWithFormat:@"There was an error pushing the branch to the remote repository.\n\n%d\n%@", ret, rval];
-		[[historyController.repository windowController] showMessageSheet:@"Pushing branch failed" infoText:info];
-		return;
-	}
-	[historyController.repository reloadRefs];
-	[commitController rearrangeObjects];
+	[self pushImpl:[[sender ref] shortName]];
 }
 
 - (void) pullRef:(PBRefMenuItem *)sender
 {
-	int ret = 1;
-	NSString *remote = [[historyController.repository config] valueForKeyPath:[NSString stringWithFormat:@"branch.%@.remote", [[sender ref] shortName]]];
-	NSString *rval = [historyController.repository outputInWorkdirForArguments:[NSArray arrayWithObjects:@"pull", remote, [[sender ref] shortName], nil] retValue: &ret];
-	if (ret) {
-		NSString *info = [NSString stringWithFormat:@"There was an error pulling from the remote repository.\n\n%d\n%@", ret, rval];
-		[[historyController.repository windowController] showMessageSheet:@"Pulling from remote failed" infoText:info];
-		return;
-	}
-	[historyController.repository reloadRefs];
-	[commitController rearrangeObjects];
+	[self pullImpl:[[sender ref] shortName]];
 }
 
 - (void) rebaseRef:(PBRefMenuItem *)sender
 {
-	int ret = 1;
-	NSString *remote = [[historyController.repository config] valueForKeyPath:[NSString stringWithFormat:@"branch.%@.remote", [[sender ref] shortName]]];
-	NSString *rval = [historyController.repository outputInWorkdirForArguments:[NSArray arrayWithObjects:@"pull", @"--rebase", remote, [[sender ref] shortName], nil] retValue: &ret];
-	if (ret) {
-		NSString *info = [NSString stringWithFormat:@"There was an error rebasing from the remote repository.\n\n%d\n%@", ret, rval];
-		[[historyController.repository windowController] showMessageSheet:@"Rebasing from remote failed" infoText:info];
-		return;
-	}
-	[historyController.repository reloadRefs];
-	[commitController rearrangeObjects];
+	[self rebaseImpl:[[sender ref] shortName]];
 }
 
 - (void) tagInfo:(PBRefMenuItem *)sender
@@ -126,6 +99,63 @@
 - (NSArray *) menuItemsForRef:(PBGitRef *)ref commit:(PBGitCommit *)commit
 {
 	return [PBRefMenuItem defaultMenuItemsForRef:ref commit:commit target:self];
+}
+
+- (void) pushImpl:(NSString *)refName
+{
+	int ret = 1;
+	NSString *remote = [[historyController.repository config] valueForKeyPath:[NSString stringWithFormat:@"branch.%@.remote", refName]];
+	NSString *rval = [historyController.repository outputInWorkdirForArguments:[NSArray arrayWithObjects:@"push", remote, refName, nil] retValue: &ret];
+	if (ret) {
+		NSString *info = [NSString stringWithFormat:@"There was an error pushing the branch to the remote repository.\n\n%d\n%@", ret, rval];
+		[[historyController.repository windowController] showMessageSheet:@"Pushing branch failed" infoText:info];
+		return;
+	}
+	[historyController.repository reloadRefs];
+	[commitController rearrangeObjects];
+}
+
+- (void) pullImpl:(NSString *)refName
+{
+	int ret = 1;
+	NSString *remote = [[historyController.repository config] valueForKeyPath:[NSString stringWithFormat:@"branch.%@.remote", refName]];
+	NSString *rval = [historyController.repository outputInWorkdirForArguments:[NSArray arrayWithObjects:@"pull", remote, refName, nil] retValue: &ret];
+	if (ret) {
+		NSString *info = [NSString stringWithFormat:@"There was an error pulling from the remote repository.\n\n%d\n%@", ret, rval];
+		[[historyController.repository windowController] showMessageSheet:@"Pulling from remote failed" infoText:info];
+		return;
+	}
+	[historyController.repository reloadRefs];
+	[commitController rearrangeObjects];
+}
+
+- (void) rebaseImpl:(NSString *)refName
+{
+	int ret = 1;
+	NSString *remote = [[historyController.repository config] valueForKeyPath:[NSString stringWithFormat:@"branch.%@.remote", refName]];
+	NSString *rval = [historyController.repository outputInWorkdirForArguments:[NSArray arrayWithObjects:@"pull", @"--rebase", remote, refName, nil] retValue: &ret];
+	if (ret) {
+		NSString *info = [NSString stringWithFormat:@"There was an error rebasing from the remote repository.\n\n%d\n%@", ret, rval];
+		[[historyController.repository windowController] showMessageSheet:@"Rebasing from remote failed" infoText:info];
+		return;
+	}
+	[historyController.repository reloadRefs];
+	[commitController rearrangeObjects];
+}
+
+- (void) fetchImpl:(NSString *)refName
+{
+	int ret = 1;
+	NSString *remote = nil;
+	if(refName != nil) remote = [[historyController.repository config] valueForKeyPath:[NSString stringWithFormat:@"branch.%@.remote", refName]];
+	NSString *rval = [historyController.repository outputInWorkdirForArguments:[NSArray arrayWithObjects:@"fetch", remote, refName, nil] retValue: &ret];
+	if (ret) {
+		NSString *info = [NSString stringWithFormat:@"There was an error fetching from the remote repository.\n\n%d\n%@", ret, rval];
+		[[historyController.repository windowController] showMessageSheet:@"Rebasing from remote failed" infoText:info];
+		return;
+	}
+	[historyController.repository reloadRefs];
+	[commitController rearrangeObjects];
 }
 
 # pragma mark Tableview delegate methods
@@ -218,6 +248,27 @@
 		modalDelegate:NULL
 	   didEndSelector:NULL
 		  contextInfo:NULL];
+}
+
+-(void)rebaseButton:(id)sender
+{
+	NSString *refName =[historyController.repository.currentBranch simpleRef];
+	[self rebaseImpl:refName];
+//	NSLog([NSString stringWithFormat:@"Rebase hit for %@!", refName]);
+}
+
+-(void)pushButton:(id)sender
+{
+	NSString *refName =[historyController.repository.currentBranch simpleRef];
+	[self pushImpl:refName];
+//	NSLog([NSString stringWithFormat:@"Push hit for %@!", refName]);
+}
+
+-(void)fetchButton:(id)sender
+{
+	NSString *refName =[historyController.repository.currentBranch simpleRef];
+	[self fetchImpl:refName];
+//	NSLog([NSString stringWithFormat:@"Fetch hit for %@!", refName]);
 }
 
 -(void)saveSheet:(id) sender
