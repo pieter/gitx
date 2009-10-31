@@ -270,13 +270,11 @@
  */
  
 - (IBAction) saveAction:(id)sender {
-
     NSError *error = nil;
     if (![[self managedObjectContext] save:&error]) {
         [[NSApplication sharedApplication] presentError:error];
     }
 }
-
 
 /**
     Implementation of the applicationShouldTerminate: method, used here to
@@ -337,6 +335,14 @@
     }
 }
 
+- (BOOL) validateMenuItem:(NSMenuItem *)item {
+    if ([item action] == @selector(saveAction:)) {
+        // disable the Save menu item if there is no repository document open
+        return ([[PBRepositoryDocumentController sharedDocumentController] currentDocument] != nil);
+    } else {
+        return [NSApp validateMenuItem:item];
+    }
+}
 
 /**
     Implementation of dealloc, to release the retained variables.
