@@ -11,7 +11,7 @@
 #import "NSFileHandleExt.h"
 #import "PBEasyPipe.h"
 #import "PBEasyFS.h"
-//#import "PBGitTreePreviewItem.h"
+#import "PBRepositoryDocumentController.h"
 
 #define ICON_SIZE 48.0
 
@@ -27,8 +27,15 @@ static NSOperationQueue* treeIconQueue = nil;
 @implementation PBGitTree (QLPreviewItemProtocol)
 
 - (NSURL *) previewItemURL {
+    NSDocument * curDoc = [[PBRepositoryDocumentController sharedDocumentController] currentDocument];
     NSString * absPath = self.absolutePath;
-    if ([absPath isEqualToString:[PBGitRepository basePath]]) {
+    NSString * basePath = nil;
+    if (curDoc) {
+        basePath = [[[curDoc fileURL] path] stringByDeletingLastPathComponent];
+    } else {
+        basePath = [PBGitRepository basePath];
+    }
+    if ([absPath isEqualToString:basePath]) {
         absPath = [absPath stringByAppendingFormat:@"/%@", [self fullPath]];
     }
     return [NSURL fileURLWithPath:absPath];
