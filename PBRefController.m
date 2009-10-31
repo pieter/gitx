@@ -268,6 +268,15 @@
 //	NSLog([NSString stringWithFormat:@"Push hit for %@!", refName]);
 }
 
+-(void)pullButton:(id)sender
+{
+	[sender setEnabled:NO];
+	NSString *refName =[historyController.repository.currentBranch simpleRef];
+	[self pullImpl:refName];
+	[sender setEnabled:YES];
+    //	NSLog([NSString stringWithFormat:@"Pull hit for %@!", refName]);
+}
+
 -(void)fetchButton:(id)sender
 {
 	[sender setEnabled:NO];

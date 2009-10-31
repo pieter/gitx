@@ -31,6 +31,7 @@
 
 - (IBAction)rebaseButton:(id)sender;
 - (IBAction)pushButton:(id)sender;
+- (IBAction)pullButton:(id)sender;
 - (IBAction)fetchButton:(id)sender;
 
 - (NSArray *) menuItemsForRef:(PBGitRef *)ref commit:(PBGitCommit *)commit;
