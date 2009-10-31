@@ -192,7 +192,9 @@ using namespace std;
 	}
 	
 	NSTimeInterval duration = [[NSDate date] timeIntervalSinceDate:start];
-	NSLog(@"Loaded %i commits in %f seconds", num, duration);
+#ifdef DEBUG_BUILD
+    NSLog(@"Loaded %i commits in %f seconds", num, duration);
+#endif
 	// Make sure the commits are stored before exiting.
 	[self performSelectorOnMainThread:@selector(setCommits:) withObject:revisions waitUntilDone:YES];
 	[task waitUntilExit];
