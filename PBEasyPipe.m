@@ -30,8 +30,13 @@
 	NSTask* task = [[NSTask alloc] init];
 	[task setLaunchPath:cmd];
 	[task setArguments:args];
-	if (dir)
-		[task setCurrentDirectoryPath:dir];
+	if (dir) {
+        // check if the dir exists and is really a folder
+        BOOL isDir = NO;
+        if ([[NSFileManager defaultManager] fileExistsAtPath:dir isDirectory:&isDir] && isDir) {
+            [task setCurrentDirectoryPath:dir];
+        }
+    }
     
 	if ([[NSUserDefaults standardUserDefaults] boolForKey:@"Show Debug Messages"])
 		NSLog(@"Starting command `%@ %@` in dir %@", cmd, [args componentsJoinedByString:@" "], dir);
