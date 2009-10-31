@@ -10,8 +10,7 @@
 #import "PBGitRevList.h"
 #import "PBGitRevSpecifier.h"
 #import "PBGitConfig.h"
-
-extern NSString* PBGitRepositoryErrorDomain;
+#import "PBGitXErrors.h"
 
 @class PBGitWindowController;
 

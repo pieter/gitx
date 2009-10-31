@@ -40,12 +40,20 @@
 	PBGitRepository *document = [[PBRepositoryDocumentController sharedDocumentController] documentForLocation:url];
 	if (!document) {
 		if (error) {
-			NSString *suggestion = [PBGitBinary path] ? @"this isn't a git repository" : @"GitX can't find your git binary";
-
+            NSString *suggestion = nil;
+            NSInteger errCode = -1;
+            
+            if ([PBGitBinary path]) {
+                suggestion = @"this isn't a git repository";
+                errCode = PBNotAGitRepositoryErrorCode;
+            } else {
+                suggestion = @"GitX can't find your git binary";
+                errCode = PBGitBinaryNotFoundErrorCode;
+            }
 			NSDictionary *userInfo = [NSDictionary dictionaryWithObject:[NSString stringWithFormat:@"Could not create document. Perhaps %@", suggestion]
 																 forKey:NSLocalizedFailureReasonErrorKey];
 
-			*error = [NSError errorWithDomain:PBGitRepositoryErrorDomain code:2 userInfo:userInfo];
+			*error = [NSError errorWithDomain:PBCLIProxyErrorDomain code:errCode userInfo:userInfo];
 		}
 		return NO;
 	}

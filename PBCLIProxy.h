@@ -7,7 +7,7 @@
 //
 
 #import <Cocoa/Cocoa.h>
-
+#import "PBGitXErrors.h"
 
 @interface PBCLIProxy : NSObject
 {
