@@ -10,6 +10,7 @@
 
 
 @implementation PBGitConfig
+@synthesize repositoryPath;
 
 - init
 {
