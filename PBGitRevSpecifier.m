@@ -23,7 +23,7 @@
 - (id) initWithRef: (PBGitRef*) ref
 {
 	parameters = [NSArray arrayWithObject: ref.ref];
-	description = ref.shortName;
+	description = [ref shortName];
 	return self;
 }
 
