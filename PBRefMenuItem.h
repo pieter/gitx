@@ -18,7 +18,7 @@
 @property (retain) PBGitCommit *commit;
 @property (retain) PBGitRef *ref;
 
-+ (PBRefMenuItem *)addRemoteMethod:(bool)isRemote title:(NSString *)title action:(SEL)selector;
++ (PBRefMenuItem *)addRemoteMethod:(BOOL)isRemote title:(NSString *)title action:(SEL)selector;
 + (NSArray *)defaultMenuItemsForRef:(PBGitRef *)ref commit:(PBGitCommit *)commit target:(id)target;
 
 @end

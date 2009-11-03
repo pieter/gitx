@@ -12,10 +12,10 @@
 @implementation PBRefMenuItem
 @synthesize ref, commit;
 
-+ (PBRefMenuItem *)addRemoteMethod:(bool)isRemote title:(NSString *)title action:(SEL)selector
++ (PBRefMenuItem *)addRemoteMethod:(BOOL)hasRemote title:(NSString *)title action:(SEL)selector
 {
 	PBRefMenuItem *item = [[PBRefMenuItem alloc] initWithTitle:title action:selector keyEquivalent:@""];
-	[item setEnabled:isRemote];
+	[item setEnabled:hasRemote];
 	return item;
 }
 
@@ -29,12 +29,12 @@
 		type = @"branch";
 
 	NSString *remote = [[[commit repository] config] valueForKeyPath:[NSString stringWithFormat:@"branch.%@.remote", [ref shortName]]];
-	bool has_remote = (remote != NULL) ? YES : NO;
+	BOOL hasRemote = (remote ? YES : NO);
 
 	if ([type isEqualToString:@"branch"]) {
-		[array addObject:[self addRemoteMethod:has_remote title:@"Push branch to remote" action:@selector(pushRef:)]];
-		[array addObject:[self addRemoteMethod:has_remote title:@"Pull down latest" action:@selector(pullRef:)]];
-		[array addObject:[self addRemoteMethod:has_remote title:@"Rebase local changes with latest" action:@selector(rebaseRef:)]];
+		[array addObject:[self addRemoteMethod:hasRemote title:@"Push branch to remote" action:@selector(pushRef:)]];
+		[array addObject:[self addRemoteMethod:hasRemote title:@"Pull down latest" action:@selector(pullRef:)]];
+		[array addObject:[self addRemoteMethod:hasRemote title:@"Rebase local changes with latest" action:@selector(rebaseRef:)]];
 	}
 
 	if ([type isEqualToString:@"branch"])

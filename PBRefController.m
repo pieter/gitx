@@ -101,61 +101,73 @@
 	return [PBRefMenuItem defaultMenuItemsForRef:ref commit:commit target:self];
 }
 
-- (void) pushImpl:(NSString *)refName
+- (BOOL) pushImpl:(NSString *)refName
 {
 	int ret = 1;
+    BOOL success = NO;
 	NSString *remote = [[historyController.repository config] valueForKeyPath:[NSString stringWithFormat:@"branch.%@.remote", refName]];
 	NSString *rval = [historyController.repository outputInWorkdirForArguments:[NSArray arrayWithObjects:@"push", remote, refName, nil] retValue: &ret];
 	if (ret) {
 		NSString *info = [NSString stringWithFormat:@"There was an error pushing the branch to the remote repository.\n\n%d\n%@", ret, rval];
 		[[historyController.repository windowController] showMessageSheet:@"Pushing branch failed" infoText:info];
-		return;
+		return success;
 	}
 	[historyController.repository reloadRefs];
 	[commitController rearrangeObjects];
+    success = YES;
+    return success;
 }
 
-- (void) pullImpl:(NSString *)refName
+- (BOOL) pullImpl:(NSString *)refName
 {
 	int ret = 1;
+    BOOL success = NO;
 	NSString *remote = [[historyController.repository config] valueForKeyPath:[NSString stringWithFormat:@"branch.%@.remote", refName]];
 	NSString *rval = [historyController.repository outputInWorkdirForArguments:[NSArray arrayWithObjects:@"pull", remote, refName, nil] retValue: &ret];
 	if (ret) {
 		NSString *info = [NSString stringWithFormat:@"There was an error pulling from the remote repository.\n\n%d\n%@", ret, rval];
 		[[historyController.repository windowController] showMessageSheet:@"Pulling from remote failed" infoText:info];
-		return;
+		return success;
 	}
 	[historyController.repository reloadRefs];
 	[commitController rearrangeObjects];
+    success = YES;
+    return success;
 }
 
-- (void) rebaseImpl:(NSString *)refName
+- (BOOL) rebaseImpl:(NSString *)refName
 {
 	int ret = 1;
-	NSString *remote = [[historyController.repository config] valueForKeyPath:[NSString stringWithFormat:@"branch.%@.remote", refName]];
-	NSString *rval = [historyController.repository outputInWorkdirForArguments:[NSArray arrayWithObjects:@"pull", @"--rebase", remote, refName, nil] retValue: &ret];
+    BOOL success = NO;
+	NSString *remote = [[[historyController repository] config] valueForKeyPath:[NSString stringWithFormat:@"branch.%@.remote", refName]];
+	NSString *rval = [[historyController repository] outputInWorkdirForArguments:[NSArray arrayWithObjects:@"pull", @"--rebase", remote, refName, nil] retValue: &ret];
 	if (ret) {
 		NSString *info = [NSString stringWithFormat:@"There was an error rebasing from the remote repository.\n\n%d\n%@", ret, rval];
-		[[historyController.repository windowController] showMessageSheet:@"Rebasing from remote failed" infoText:info];
-		return;
+		[[[historyController repository] windowController] showMessageSheet:@"Rebasing from remote failed" infoText:info];
+		return success;
 	}
-	[historyController.repository reloadRefs];
+	[[historyController repository] reloadRefs];
 	[commitController rearrangeObjects];
+    success = YES;
+    return success;
 }
 
-- (void) fetchImpl:(NSString *)refName
+- (BOOL) fetchImpl:(NSString *)refName
 {
 	int ret = 1;
+    BOOL success = NO;
 	NSString *remote = nil;
 	if(refName != nil) remote = [[historyController.repository config] valueForKeyPath:[NSString stringWithFormat:@"branch.%@.remote", refName]];
 	NSString *rval = [historyController.repository outputInWorkdirForArguments:[NSArray arrayWithObjects:@"fetch", remote, refName, nil] retValue: &ret];
 	if (ret) {
 		NSString *info = [NSString stringWithFormat:@"There was an error fetching from the remote repository.\n\n%d\n%@", ret, rval];
-		[[historyController.repository windowController] showMessageSheet:@"Rebasing from remote failed" infoText:info];
-		return;
+		[[historyController.repository windowController] showMessageSheet:@"Fetching from remote failed" infoText:info];
+		return success;
 	}
 	[historyController.repository reloadRefs];
 	[commitController rearrangeObjects];
+    success = YES;
+    return success;
 }
 
 # pragma mark Tableview delegate methods
@@ -253,8 +265,9 @@
 -(void)rebaseButton:(id)sender
 {
 	[sender setEnabled:NO];
-	NSString *refName =[historyController.repository.currentBranch simpleRef];
-	[self rebaseImpl:refName];
+	NSString *refName = [[historyController.repository.currentBranch simpleRef] refForSpec];
+    if (refName) 
+        [self rebaseImpl:refName];
 	[sender setEnabled:YES];
 //	NSLog([NSString stringWithFormat:@"Rebase hit for %@!", refName]);
 }
@@ -262,8 +275,9 @@
 -(void)pushButton:(id)sender
 {
 	[sender setEnabled:NO];
-	NSString *refName =[historyController.repository.currentBranch simpleRef];
-	[self pushImpl:refName];
+	NSString *refName = [[historyController.repository.currentBranch simpleRef] refForSpec];
+    if (refName)
+        [self pushImpl:refName];
 	[sender setEnabled:YES];
 //	NSLog([NSString stringWithFormat:@"Push hit for %@!", refName]);
 }
@@ -271,8 +285,9 @@
 -(void)pullButton:(id)sender
 {
 	[sender setEnabled:NO];
-	NSString *refName =[historyController.repository.currentBranch simpleRef];
-	[self pullImpl:refName];
+	NSString *refName = [[historyController.repository.currentBranch simpleRef] refForSpec];
+    if (refName) 
+        [self pullImpl:refName];
 	[sender setEnabled:YES];
     //	NSLog([NSString stringWithFormat:@"Pull hit for %@!", refName]);
 }
@@ -280,8 +295,9 @@
 -(void)fetchButton:(id)sender
 {
 	[sender setEnabled:NO];
-	NSString *refName =[historyController.repository.currentBranch simpleRef];
-	[self fetchImpl:refName];
+	NSString *refName = [[historyController.repository.currentBranch simpleRef] refForSpec];
+    if (refName)
+        [self fetchImpl:refName];
 	[sender setEnabled:YES];
 //	NSLog([NSString stringWithFormat:@"Fetch hit for %@!", refName]);
 }
@@ -435,3 +451,17 @@
 }
 
 @end
+
+@implementation NSString (PBRefSpecAdditions)
+
+/* convenience method to get the last part of a simple refspec like refs/heads/master -> master*/
+- (NSString *) refForSpec {
+    if ([self hasPrefix:@"refs/"]) {
+        NSArray * parts = [self componentsSeparatedByString:@"/"];
+        return [parts lastObject];
+    }
+    return self;
+}
+
+@end
+

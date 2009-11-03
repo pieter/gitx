@@ -40,9 +40,13 @@
 - (void) selectCurrentBranch;
 - (void) updateBranchMenu;
 
-- (void) pullImpl:(NSString *)refName;
-- (void) pushImpl:(NSString *)refName;
-- (void) rebaseImpl:(NSString *)refName;
+- (BOOL) pullImpl:(NSString *)refName;
+- (BOOL) pushImpl:(NSString *)refName;
+- (BOOL) rebaseImpl:(NSString *)refName;
+- (BOOL) fetchImpl:(NSString *)refName;
 
+@end
 
+@interface NSString (PBRefSpecAdditions)
+- (NSString *) refForSpec;
 @end
