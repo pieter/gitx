@@ -38,15 +38,20 @@
         }
     }
     
-	if ([[NSUserDefaults standardUserDefaults] boolForKey:@"Show Debug Messages"])
-		NSLog(@"Starting command `%@ %@` in dir %@", cmd, [args componentsJoinedByString:@" "], dir);
+   /* use getenv too so we can easily use Xcodes executable environment */
+	if (([[NSUserDefaults standardUserDefaults] boolForKey:@"Show Debug Messages"]) || (getenv("PBDebugEnabled"))) 
+   {
+      NSLog(@"Starting command `%@ %@` in dir %@", cmd, [args componentsJoinedByString:@" "], dir);
+   }
+   
 #ifdef CLI
 	NSLog(@"Starting command `%@ %@` in dir %@", cmd, [args componentsJoinedByString:@" "], dir);
 #endif
     
 	NSPipe* pipe = [NSPipe pipe];
 	[task setStandardOutput:pipe];
-    [task setStandardError:pipe];
+   [task setStandardError:pipe];
+   
 	return task;
 }
 
