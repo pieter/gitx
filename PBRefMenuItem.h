@@ -20,5 +20,6 @@
 
 + (PBRefMenuItem *)addRemoteMethod:(BOOL)isRemote title:(NSString *)title action:(SEL)selector;
 + (NSArray *)defaultMenuItemsForRef:(PBGitRef *)ref commit:(PBGitCommit *)commit target:(id)target;
++ (PBRefMenuItem *)separatorItem;
 
 @end

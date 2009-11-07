@@ -12,7 +12,7 @@
 		</object>
 		<object class="NSMutableArray" key="IBDocument.EditedObjectIDs">
 			<bool key="EncodedWithXMLCoder">YES</bool>
-			<integer value="3"/>
+			<integer value="5"/>
 		</object>
 		<object class="NSArray" key="IBDocument.PluginDependencies">
 			<bool key="EncodedWithXMLCoder">YES</bool>
@@ -81,11 +81,9 @@
 								<string key="NSToolbarItemPaletteLabel">View selector</string>
 								<nil key="NSToolbarItemToolTip"/>
 								<object class="NSSegmentedControl" key="NSToolbarItemView" id="680923877">
-									<reference key="NSNextResponder"/>
+									<nil key="NSNextResponder"/>
 									<int key="NSvFlags">268</int>
 									<string key="NSFrame">{{0, 14}, {87, 25}}</string>
-									<reference key="NSSuperview"/>
-									<reference key="NSWindow"/>
 									<int key="NSTag">3</int>
 									<bool key="NSEnabled">YES</bool>
 									<object class="NSSegmentedCell" key="NSCell" id="485405534">
@@ -143,11 +141,9 @@
 								<string key="NSToolbarItemPaletteLabel">Clone</string>
 								<string key="NSToolbarItemToolTip">Clone a repository</string>
 								<object class="NSButton" key="NSToolbarItemView" id="142028164">
-									<reference key="NSNextResponder"/>
+									<nil key="NSNextResponder"/>
 									<int key="NSvFlags">268</int>
 									<string key="NSFrame">{{1, 14}, {36, 25}}</string>
-									<reference key="NSSuperview"/>
-									<reference key="NSWindow"/>
 									<bool key="NSEnabled">YES</bool>
 									<object class="NSButtonCell" key="NSCell" id="737146655">
 										<int key="NSCellFlags">-2080244224</int>
@@ -188,11 +184,9 @@
 								</object>
 								<nil key="NSToolbarItemToolTip"/>
 								<object class="NSSearchField" key="NSToolbarItemView" id="956449339">
-									<reference key="NSNextResponder"/>
+									<nil key="NSNextResponder"/>
 									<int key="NSvFlags">265</int>
 									<string key="NSFrame">{{0, 14}, {183, 22}}</string>
-									<reference key="NSSuperview"/>
-									<reference key="NSWindow"/>
 									<bool key="NSEnabled">YES</bool>
 									<object class="NSSearchFieldCell" key="NSCell" id="63687217">
 										<int key="NSCellFlags">343014976</int>
@@ -285,11 +279,9 @@
 								<string key="NSToolbarItemPaletteLabel">Create Branch</string>
 								<nil key="NSToolbarItemToolTip"/>
 								<object class="NSButton" key="NSToolbarItemView" id="452659168">
-									<reference key="NSNextResponder"/>
+									<nil key="NSNextResponder"/>
 									<int key="NSvFlags">268</int>
 									<string key="NSFrame">{{21, 14}, {40, 25}}</string>
-									<reference key="NSSuperview"/>
-									<reference key="NSWindow"/>
 									<bool key="NSEnabled">YES</bool>
 									<object class="NSButtonCell" key="NSCell" id="913477460">
 										<int key="NSCellFlags">-2080244224</int>
@@ -328,11 +320,9 @@
 								<string key="NSToolbarItemPaletteLabel">Branch</string>
 								<nil key="NSToolbarItemToolTip"/>
 								<object class="NSPopUpButton" key="NSToolbarItemView" id="940778637">
-									<reference key="NSNextResponder"/>
+									<nil key="NSNextResponder"/>
 									<int key="NSvFlags">268</int>
 									<string key="NSFrame">{{0, 14}, {134, 26}}</string>
-									<reference key="NSSuperview"/>
-									<reference key="NSWindow"/>
 									<bool key="NSEnabled">YES</bool>
 									<object class="NSPopUpButtonCell" key="NSCell" id="973289212">
 										<int key="NSCellFlags">-2076049856</int>
@@ -416,13 +406,14 @@
 								</object>
 								<string key="NSToolbarItemLabel">Push</string>
 								<string key="NSToolbarItemPaletteLabel">Push</string>
-								<string key="NSToolbarItemToolTip">Push local changes to remote</string>
+								<string type="base64-UTF8" key="NSToolbarItemToolTip">J2dpdCBwdXNoIDxyZW1vdGU+PGxvY2FsIGJyYW5jaD4nCgo8cmVtb3RlPiBpcyB0aGUgZGVmYXVsdCBy
+ZW1vdGUgY29uZmlndXJlZCBmb3IgdGhlIGN1cnJlbnRseSBzZWxlY3RlZCBicmFuY2ggZnJvbSB0aGUg
+YnJhbmNoIHBvcHVwIG1lbnUuIAoKTm90ZTogdGhlIGJyYW5jaCBoYXMgdG8gYmUgc3BlY2lmaWMuIAon
+QWxsIGJyYW5jaGVzJyBvciAnTG9jYWwgYnJhbmNoZXMnIHdpbGwgbm90IHdvcmsuA</string>
 								<object class="NSButton" key="NSToolbarItemView" id="281743283">
-									<reference key="NSNextResponder"/>
+									<nil key="NSNextResponder"/>
 									<int key="NSvFlags">268</int>
 									<string key="NSFrame">{{0, 14}, {35, 25}}</string>
-									<reference key="NSSuperview"/>
-									<reference key="NSWindow"/>
 									<bool key="NSEnabled">YES</bool>
 									<object class="NSButtonCell" key="NSCell" id="886733819">
 										<int key="NSCellFlags">-2080244224</int>
@@ -459,13 +450,15 @@
 								</object>
 								<string key="NSToolbarItemLabel">Pull</string>
 								<string key="NSToolbarItemPaletteLabel">Pull</string>
-								<string key="NSToolbarItemToolTip">Pull latest changes from remote</string>
+								<string type="base64-UTF8" key="NSToolbarItemToolTip">J2dpdCBwdWxsIDxyZW1vdGU+PGxvY2FsIGJyYW5jaD4nCgo8cmVtb3RlPiBpcyB0aGUgZGVmYXVsdCBy
+ZW1vdGUgY29uZmlndXJlZCBmb3IgPGxvY2FsIGJyYW5jaD4KPGxvY2FsIGJyYW5jaD4gaXMgdGhlIHNl
+bGVjdGVkIGJyYW5jaCBmcm9tIHRoZSBicmFuY2ggcG9wdXAgbWVudQoKTm90ZTogdGhlIGJyYW5jaCBo
+YXMgdG8gYmUgc3BlY2lmaWMuIAonQWxsIGJyYW5jaGVzJyBvciAnTG9jYWwgYnJhbmNoZXMnIHdpbGwg
+bm90IHdvcms</string>
 								<object class="NSButton" key="NSToolbarItemView" id="737301086">
-									<reference key="NSNextResponder"/>
+									<nil key="NSNextResponder"/>
 									<int key="NSvFlags">268</int>
 									<string key="NSFrame">{{0, 14}, {35, 25}}</string>
-									<reference key="NSSuperview"/>
-									<reference key="NSWindow"/>
 									<bool key="NSEnabled">YES</bool>
 									<object class="NSButtonCell" key="NSCell" id="606560874">
 										<int key="NSCellFlags">-2080244224</int>
@@ -502,13 +495,19 @@
 								</object>
 								<string key="NSToolbarItemLabel">Rebase</string>
 								<string key="NSToolbarItemPaletteLabel">Rebase</string>
-								<string key="NSToolbarItemToolTip">Rebase local changes with latest</string>
+								<string type="base64-UTF8" key="NSToolbarItemToolTip">J2dpdCBwdWxsIC0tcmViYXNlIDxyZW1vdGU+IDxyZW1vdGUgYnJhbmNoPicKCkluc3RlYWQgb2YgYSBt
+ZXJnZSwgcGVyZm9ybSBhIHJlYmFzZSBhZnRlciBmZXRjaGluZwoKPHJlbW90ZT4gd2lsbCBiZSB0aGUg
+ZGVmYXVsdCByZW1vdGUgY29uZmlndXJlZCBmb3IgdGhlIGN1cnJlbnRseSBzZWxlY3RlZCBicmFuY2gg
+aW4gdGhlIGJyYW5jaCBwb3B1cCBtZW51LiAKCjxyZW1vdGUgYnJhbmNoPiB3aWxsIGJlIHRoZSByZW1v
+dGUgSEVBRAoKSWYgdGhlcmUgaXMgYSByZW1vdGUgcmVmIGZvciB0aGUgdXBzdHJlYW0gYnJhbmNoLCBh
+bmQgdGhpcyBicmFuY2ggd2FzIHJlYmFzZWQgc2luY2UgbGFzdCBmZXRjaGVkLCB0aGUgcmViYXNlIHVz
+ZXMgdGhhdCBpbmZvcm1hdGlvbiB0byBhdm9pZCByZWJhc2luZyBub24tbG9jYWwgY2hhbmdlcwoKTm90
+ZTogdGhlIGxvY2FsIGJyYW5jaCBoYXMgdG8gYmUgc3BlY2lmaWMuIAonQWxsIGJyYW5jaGVzJyBvciAn
+TG9jYWwgYnJhbmNoZXMnIHdpbGwgbm90IHdvcmsuA</string>
 								<object class="NSButton" key="NSToolbarItemView" id="143566961">
-									<reference key="NSNextResponder"/>
+									<nil key="NSNextResponder"/>
 									<int key="NSvFlags">268</int>
 									<string key="NSFrame">{{5, 14}, {35, 25}}</string>
-									<reference key="NSSuperview"/>
-									<reference key="NSWindow"/>
 									<bool key="NSEnabled">YES</bool>
 									<object class="NSButtonCell" key="NSCell" id="739572861">
 										<int key="NSCellFlags">-2080244224</int>
@@ -603,9 +602,9 @@
 						<reference ref="316966217"/>
 						<reference ref="962098313"/>
 						<reference ref="260461289"/>
-						<reference ref="758114283"/>
-						<reference ref="689957692"/>
 						<reference ref="672507329"/>
+						<reference ref="689957692"/>
+						<reference ref="758114283"/>
 						<reference ref="887126387"/>
 					</object>
 					<object class="NSMutableArray" key="NSToolbarIBDefaultItems">
@@ -615,9 +614,9 @@
 						<reference ref="811510833"/>
 						<reference ref="260461289"/>
 						<reference ref="455236631"/>
-						<reference ref="758114283"/>
-						<reference ref="689957692"/>
 						<reference ref="672507329"/>
+						<reference ref="689957692"/>
+						<reference ref="758114283"/>
 						<reference ref="316966217"/>
 						<reference ref="962098313"/>
 					</object>
@@ -1007,9 +1006,9 @@
 				<object class="NSMutableArray" key="dict.values">
 					<bool key="EncodedWithXMLCoder">YES</bool>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<string>{{702, 557}, {850, 550}}</string>
+					<string>{{180, 303}, {850, 550}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<string>{{702, 557}, {850, 550}}</string>
+					<string>{{180, 303}, {850, 550}}</string>
 					<integer value="1"/>
 					<integer value="1"/>
 					<string>{{15, 196}, {850, 418}}</string>
@@ -1017,7 +1016,7 @@
 					<integer value="1"/>
 					<string>{3.40282e+38, 3.40282e+38}</string>
 					<string>{213, 107}</string>
-					<string>{{819, 1107}, {616, 0}}</string>
+					<string>{{297, 853}, {616, 0}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>{{132, 614}, {616, 0}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
