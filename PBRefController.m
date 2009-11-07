@@ -104,9 +104,13 @@
 - (BOOL) pushImpl:(NSString *)refName
 {
 	int ret = 1;
-    BOOL success = NO;
+   BOOL success = NO;
 	NSString *remote = [[historyController.repository config] valueForKeyPath:[NSString stringWithFormat:@"branch.%@.remote", refName]];
 	NSString *rval = [historyController.repository outputInWorkdirForArguments:[NSArray arrayWithObjects:@"push", remote, refName, nil] retValue: &ret];
+    if (!remote) {
+        [self showMessageSheet:@"Push to Remote" message:PBMissingRemoteErrMsg];
+        return success;
+    }
 	if (ret) {
 		NSString *info = [NSString stringWithFormat:@"There was an error pushing the branch to the remote repository.\n\n%d\n%@", ret, rval];
 		[[historyController.repository windowController] showMessageSheet:@"Pushing branch failed" infoText:info];
@@ -123,6 +127,10 @@
 	int ret = 1;
     BOOL success = NO;
 	NSString *remote = [[historyController.repository config] valueForKeyPath:[NSString stringWithFormat:@"branch.%@.remote", refName]];
+    if (!remote) {
+        [self showMessageSheet:@"Pull from Remote" message:PBMissingRemoteErrMsg];
+        return success;
+    }
 	NSString *rval = [historyController.repository outputInWorkdirForArguments:[NSArray arrayWithObjects:@"pull", remote, refName, nil] retValue: &ret];
 	if (ret) {
 		NSString *info = [NSString stringWithFormat:@"There was an error pulling from the remote repository.\n\n%d\n%@", ret, rval];
@@ -140,6 +148,10 @@
 	int ret = 1;
     BOOL success = NO;
 	NSString *remote = [[[historyController repository] config] valueForKeyPath:[NSString stringWithFormat:@"branch.%@.remote", refName]];
+    if (!remote) {
+        [self showMessageSheet:@"Pull Rebase from Remote" message:PBMissingRemoteErrMsg];
+        return success;
+    }
 	NSString *rval = [[historyController repository] outputInWorkdirForArguments:[NSArray arrayWithObjects:@"pull", @"--rebase", remote, refName, nil] retValue: &ret];
 	if (ret) {
 		NSString *info = [NSString stringWithFormat:@"There was an error rebasing from the remote repository.\n\n%d\n%@", ret, rval];
@@ -254,52 +266,73 @@
 # pragma mark Add ref methods
 -(void)addRef:(id)sender
 {
-	[errorMessage setStringValue:@""];
-	[NSApp beginSheet:newBranchSheet
-	   modalForWindow:[[historyController view] window]
-		modalDelegate:NULL
-	   didEndSelector:NULL
-		  contextInfo:NULL];
+   [errorMessage setStringValue:@""];
+  [NSApp beginSheet:newBranchSheet
+      modalForWindow:[[historyController view] window]
+       modalDelegate:NULL
+      didEndSelector:NULL
+         contextInfo:NULL];
+}
+
+- (void) showMessageSheet:(NSString *)title message:(NSString *)msg {
+
+    [[NSAlert alertWithMessageText:title
+                     defaultButton:@"OK"
+                   alternateButton:nil
+                       otherButton:nil
+         informativeTextWithFormat:msg] 
+                 beginSheetModalForWindow:[[historyController view] window] 
+                            modalDelegate:self 
+                           didEndSelector:nil 
+                              contextInfo:nil];
+    
+    return;
 }
 
 -(void)rebaseButton:(id)sender
 {
-	[sender setEnabled:NO];
-	NSString *refName = [[historyController.repository.currentBranch simpleRef] refForSpec];
-    if (refName) 
+	NSString *refName = [[[[historyController repository] currentBranch] simpleRef] refForSpec];
+    if (refName) {
         [self rebaseImpl:refName];
-	[sender setEnabled:YES];
-//	NSLog([NSString stringWithFormat:@"Rebase hit for %@!", refName]);
+    } else {        
+        [self showMessageSheet:@"Pull Rebase from Remote" message:PBInvalidBranchErrMsg];
+    }
+    //	NSLog([NSString stringWithFormat:@"Rebase hit for %@!", refName]);
 }
 
 -(void)pushButton:(id)sender
 {
-	[sender setEnabled:NO];
-	NSString *refName = [[historyController.repository.currentBranch simpleRef] refForSpec];
-    if (refName)
+	NSString *refName = [[[[historyController repository] currentBranch] simpleRef] refForSpec];
+    if (refName) {
         [self pushImpl:refName];
-	[sender setEnabled:YES];
-//	NSLog([NSString stringWithFormat:@"Push hit for %@!", refName]);
+    } else {
+        [self showMessageSheet:@"Push to Remote" message:PBInvalidBranchErrMsg];
+    }
+    //	NSLog([NSString stringWithFormat:@"Push hit for %@!", refName]);
 }
 
--(void)pullButton:(id)sender
+- (void) pullButton:(id)sender 
 {
-	[sender setEnabled:NO];
-	NSString *refName = [[historyController.repository.currentBranch simpleRef] refForSpec];
-    if (refName) 
+    NSString * refName = [[[[historyController repository] currentBranch] simpleRef] refForSpec];
+    if (refName) {
         [self pullImpl:refName];
-	[sender setEnabled:YES];
+    } else {
+        [sender setEnabled:YES];
+        [self showMessageSheet:@"Pull from Remote" message:PBInvalidBranchErrMsg];
+    }
     //	NSLog([NSString stringWithFormat:@"Pull hit for %@!", refName]);
 }
 
 -(void)fetchButton:(id)sender
 {
-	[sender setEnabled:NO];
-	NSString *refName = [[historyController.repository.currentBranch simpleRef] refForSpec];
-    if (refName)
+	NSString *refName = [[[[historyController repository] currentBranch] simpleRef] refForSpec];
+    if (refName) {
         [self fetchImpl:refName];
-	[sender setEnabled:YES];
-//	NSLog([NSString stringWithFormat:@"Fetch hit for %@!", refName]);
+    } else {
+        [sender setEnabled:YES];
+        [self showMessageSheet:@"Fetch from Remote" message:PBInvalidBranchErrMsg];
+    }
+    //	NSLog([NSString stringWithFormat:@"Fetch hit for %@!", refName]);
 }
 
 -(void)saveSheet:(id) sender

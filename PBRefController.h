@@ -45,6 +45,8 @@
 - (BOOL) rebaseImpl:(NSString *)refName;
 - (BOOL) fetchImpl:(NSString *)refName;
 
+- (void) showMessageSheet:(NSString *)title message:(NSString *)msg;
+
 @end
 
 @interface NSString (PBRefSpecAdditions)

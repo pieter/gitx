@@ -19,9 +19,13 @@
 
 #import "PBGitXErrors.h"
 
-NSString * const PBGitXErrorDomain = @"GitXErrorDomain";
-NSString * const PBCLIProxyErrorDomain = @"CLIProxyErrorDomain";
+NSString * const PBGitXErrorDomain      = @"GitXErrorDomain";
+NSString * const PBCLIProxyErrorDomain  = @"CLIProxyErrorDomain";
 
+NSString * const PBInvalidBranchErrMsg  = @"Please select a local branch from the branch popup menu, which has a corresponding remote tracking branch set up.\n\n"
+                                          @"You can also use the context menu to choose a branch by right clicking on its label in the history view.";
+
+NSString * const PBMissingRemoteErrMsg  = @"This branch does not appear to have a remote tracking branch associated in its config file section.";
 
 const NSInteger PBNotAGitRepositoryErrorCode        = 1;
 const NSInteger PBFileReadingUnsupportedErrorCode   = 2;
