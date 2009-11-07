@@ -22,8 +22,8 @@
 OBJC_EXTERN NSString * const PBGitXErrorDomain;
 OBJC_EXTERN NSString * const PBCLIProxyErrorDomain;
 
-OBJC_EXTERN NSString * const PBInvalidBranchErrMsg;
-OBJC_EXTERN NSString * const PBMissingRemoteErrMsg;
+OBJC_EXTERN NSString * const PBInvalidBranchErrorMessage;
+OBJC_EXTERN NSString * const PBMissingRemoteErrorMessage;
 
 OBJC_EXTERN const NSInteger PBFileReadingUnsupportedErrorCode;   /* @"Reading files is not supported." */
 OBJC_EXTERN const NSInteger PBNotAGitRepositoryErrorCode;        /* @"%@ does not appear to be a git repository." */

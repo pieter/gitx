@@ -108,7 +108,7 @@
 	NSString *remote = [[historyController.repository config] valueForKeyPath:[NSString stringWithFormat:@"branch.%@.remote", refName]];
 	NSString *rval = [historyController.repository outputInWorkdirForArguments:[NSArray arrayWithObjects:@"push", remote, refName, nil] retValue: &ret];
     if (!remote) {
-        [self showMessageSheet:@"Push to Remote" message:PBMissingRemoteErrMsg];
+        [self showMessageSheet:@"Push to Remote" message:PBMissingRemoteErrorMessage];
         return success;
     }
 	if (ret) {
@@ -128,7 +128,7 @@
     BOOL success = NO;
 	NSString *remote = [[historyController.repository config] valueForKeyPath:[NSString stringWithFormat:@"branch.%@.remote", refName]];
     if (!remote) {
-        [self showMessageSheet:@"Pull from Remote" message:PBMissingRemoteErrMsg];
+        [self showMessageSheet:@"Pull from Remote" message:PBMissingRemoteErrorMessage];
         return success;
     }
 	NSString *rval = [historyController.repository outputInWorkdirForArguments:[NSArray arrayWithObjects:@"pull", remote, refName, nil] retValue: &ret];
@@ -149,7 +149,7 @@
     BOOL success = NO;
 	NSString *remote = [[[historyController repository] config] valueForKeyPath:[NSString stringWithFormat:@"branch.%@.remote", refName]];
     if (!remote) {
-        [self showMessageSheet:@"Pull Rebase from Remote" message:PBMissingRemoteErrMsg];
+        [self showMessageSheet:@"Pull Rebase from Remote" message:PBMissingRemoteErrorMessage];
         return success;
     }
 	NSString *rval = [[historyController repository] outputInWorkdirForArguments:[NSArray arrayWithObjects:@"pull", @"--rebase", remote, refName, nil] retValue: &ret];
@@ -295,7 +295,7 @@
     if (refName) {
         [self rebaseImpl:refName];
     } else {        
-        [self showMessageSheet:@"Pull Rebase from Remote" message:PBInvalidBranchErrMsg];
+        [self showMessageSheet:@"Pull Rebase from Remote" message:PBInvalidBranchErrorMessage];
     }
     //	NSLog([NSString stringWithFormat:@"Rebase hit for %@!", refName]);
 }
@@ -306,7 +306,7 @@
     if (refName) {
         [self pushImpl:refName];
     } else {
-        [self showMessageSheet:@"Push to Remote" message:PBInvalidBranchErrMsg];
+        [self showMessageSheet:@"Push to Remote" message:PBInvalidBranchErrorMessage];
     }
     //	NSLog([NSString stringWithFormat:@"Push hit for %@!", refName]);
 }
@@ -318,7 +318,7 @@
         [self pullImpl:refName];
     } else {
         [sender setEnabled:YES];
-        [self showMessageSheet:@"Pull from Remote" message:PBInvalidBranchErrMsg];
+        [self showMessageSheet:@"Pull from Remote" message:PBInvalidBranchErrorMessage];
     }
     //	NSLog([NSString stringWithFormat:@"Pull hit for %@!", refName]);
 }
@@ -330,7 +330,7 @@
         [self fetchImpl:refName];
     } else {
         [sender setEnabled:YES];
-        [self showMessageSheet:@"Fetch from Remote" message:PBInvalidBranchErrMsg];
+        [self showMessageSheet:@"Fetch from Remote" message:PBInvalidBranchErrorMessage];
     }
     //	NSLog([NSString stringWithFormat:@"Fetch hit for %@!", refName]);
 }
