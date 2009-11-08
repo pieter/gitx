@@ -21,6 +21,11 @@
 	IBOutlet NSWindow *newBranchSheet;
 	IBOutlet NSTextField *newBranchName;
 	IBOutlet NSTextField *errorMessage;
+    
+	IBOutlet NSWindow *addRemoteSheet;
+	IBOutlet NSTextField *addRemoteName;
+	IBOutlet NSTextField *addRemoteURL;
+	IBOutlet NSTextField *addRemoteErrorMessage;    
 
 	IBOutlet NSPopUpButton *branchPopUp;
 }
@@ -34,6 +39,10 @@
 - (IBAction)pullButton:(id)sender;
 - (IBAction)fetchButton:(id)sender;
 
+- (IBAction)addRemoteButton:(id)sender;
+- (IBAction)addRemoteSheet:(id)sender;
+- (IBAction)closeAddRemoteSheet:(id)sender;
+
 - (NSArray *) menuItemsForRef:(PBGitRef *)ref commit:(PBGitCommit *)commit;
 
 - (void) changeBranch:(NSMenuItem *)sender;
@@ -44,6 +53,7 @@
 - (BOOL) pushImpl:(NSString *)refName;
 - (BOOL) rebaseImpl:(NSString *)refName;
 - (BOOL) fetchImpl:(NSString *)refName;
+- (BOOL) addRemoteImplWithName:(NSString *)remoteName forURL:(NSString *)remoteURL;
 
 - (void) showMessageSheet:(NSString *)title message:(NSString *)msg;
 

@@ -185,6 +185,25 @@
     return success;
 }
 
+- (BOOL) addRemoteImplWithName:(NSString *)remoteName forURL:(NSString *)remoteURL
+{
+	int ret = 1;
+    BOOL success = NO;
+    if (!remoteName || !remoteURL) {
+        return success;
+    }
+	NSString *rval = [historyController.repository outputInWorkdirForArguments:[NSArray arrayWithObjects:@"remote",  @"add", @"-f", remoteName, remoteURL, nil] retValue: &ret];
+	if (ret) {
+		NSString *info = [NSString stringWithFormat:@"There was an error adding the remote.\n\n%d\n%@", ret, rval];
+		[[historyController.repository windowController] showMessageSheet:@"Adding Remote failed" infoText:info];
+		return success;
+	}
+	[historyController.repository reloadRefs];
+	[commitController rearrangeObjects];
+    success = YES;
+    return success;
+}
+
 # pragma mark Tableview delegate methods
 
 - (BOOL)tableView:(NSTableView *)tv writeRowsWithIndexes:(NSIndexSet *)rowIndexes toPasteboard:(NSPasteboard*)pboard
@@ -372,6 +391,61 @@
 	[NSApp endSheet:newBranchSheet];
 	[newBranchName setStringValue:@""];
 	[newBranchSheet orderOut:self];
+}
+
+- (void) addRemoteButton:(id)sender
+{
+    [addRemoteErrorMessage setStringValue:@""];
+	[addRemoteName setStringValue:@""];
+    [addRemoteName setTextColor:[NSColor blackColor]];
+	[addRemoteURL setStringValue:@""];
+    [NSApp beginSheet:addRemoteSheet
+       modalForWindow:[[historyController view] window]
+        modalDelegate:NULL
+       didEndSelector:NULL
+          contextInfo:NULL];
+}
+
+- (void) addRemoteSheet:(id)sender
+{
+    NSString *remoteName = [addRemoteName stringValue];
+    NSString *remoteURL = [addRemoteURL stringValue];
+    NSLog(@"%s  remoteName = %@  remoteURL = %@", _cmd, remoteName, remoteURL);
+    
+    if ([remoteName isEqualToString:@""]) {
+        [addRemoteErrorMessage setStringValue:@"Remote name is required"];
+        return;
+    }
+    
+    NSRange range = [remoteName rangeOfCharacterFromSet:[NSCharacterSet whitespaceCharacterSet]];
+    if (range.location != NSNotFound) {
+        [addRemoteErrorMessage setStringValue:@"Whitespace is not allowed"];
+        [addRemoteName setTextColor:[NSColor redColor]];
+        return;
+    }
+    
+    [addRemoteName setTextColor:[NSColor blackColor]];
+    
+    if ([remoteURL isEqualToString:@""]) {
+        [addRemoteErrorMessage setStringValue:@"Remote URL is required"];
+        return;
+    }
+    
+    [addRemoteURL setTextColor:[NSColor blackColor]];
+    
+    [self closeAddRemoteSheet:sender];
+    
+    [self addRemoteImplWithName:remoteName forURL:remoteURL];
+}
+
+- (void) closeAddRemoteSheet:(id)sender
+{	
+	[NSApp endSheet:addRemoteSheet];
+    [addRemoteErrorMessage setStringValue:@""];
+	[addRemoteName setStringValue:@""];
+    [addRemoteName setTextColor:[NSColor blackColor]];
+	[addRemoteURL setStringValue:@""];
+	[addRemoteSheet orderOut:self];
 }
 
 # pragma mark Branches menu
