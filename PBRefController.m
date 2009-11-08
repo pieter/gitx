@@ -448,6 +448,82 @@
 	[addRemoteSheet orderOut:self];
 }
 
+- (void) newTagButton:(id)sender
+{
+    [newTagErrorMessage setStringValue:@""];
+	[newTagName setStringValue:@""];
+    
+	if ([[commitController selectedObjects] count] != 0) {
+		PBGitCommit *commit = [[commitController selectedObjects] objectAtIndex:0];
+        [newTagCommit setStringValue:[commit subject]];
+        [newTagSHA	setStringValue:[commit realSha]];
+        [newTagSHALabel setHidden:NO];
+    } else {
+        [newTagCommit setStringValue:historyController.repository.currentBranch.description];
+        [newTagSHA	setStringValue:@""];
+        [newTagSHALabel setHidden:YES];
+    }
+
+    
+    [NSApp beginSheet:newTagSheet
+       modalForWindow:[[historyController view] window]
+        modalDelegate:NULL
+       didEndSelector:NULL
+          contextInfo:NULL];
+}
+
+- (void) newTagSheet:(id)sender
+{
+    NSString *tagName = [newTagName stringValue];
+
+    if ([tagName isEqualToString:@""]) {
+		[newTagErrorMessage setStringValue:@"Invalid name"];
+		return;
+	}
+
+    PBGitCommit *commit = nil;
+	if ([[commitController selectedObjects] count] != 0)
+		commit = [[commitController selectedObjects] objectAtIndex:0];
+    
+	NSString *refName = [@"refs/tags/" stringByAppendingString:tagName];
+	int retValue = 1;
+	[historyController.repository outputForArguments:[NSArray arrayWithObjects:@"check-ref-format", refName, nil] retValue:&retValue];
+	if (retValue != 0) {
+		[newTagErrorMessage setStringValue:@"Invalid name"];
+		return;
+	}
+
+	NSString *message = [newTagMessage string];
+    NSMutableArray *arguments = [NSMutableArray arrayWithObject:@"tag"];
+    if (![message isEqualToString:@""]) {
+        [arguments addObject:[@"-m" stringByAppendingString:message]];
+    }
+    [arguments addObject:tagName];
+    if (commit) {
+        [arguments addObject:[commit realSha]];
+    }
+    NSLog(@"arguments = %@", arguments);
+	retValue = 1;
+	[historyController.repository outputForArguments:arguments retValue:&retValue];
+	if (retValue)
+	{
+		[newTagErrorMessage setStringValue:@"Tag exists"];
+		return;
+	}
+    
+    [self closeNewTagSheet:sender];
+	[historyController.repository reloadRefs];
+	[commitController rearrangeObjects];
+}
+
+- (void) closeNewTagSheet:(id)sender
+{	
+	[NSApp endSheet:newTagSheet];
+    [newTagErrorMessage setStringValue:@""];
+	[newTagName setStringValue:@""];
+	[newTagSheet orderOut:self];
+}
+
 # pragma mark Branches menu
 
 - (void) updateBranchMenu

@@ -27,6 +27,14 @@
 	IBOutlet NSTextField *addRemoteURL;
 	IBOutlet NSTextField *addRemoteErrorMessage;    
 
+	IBOutlet NSWindow *newTagSheet;
+	IBOutlet NSTextField *newTagName;
+    IBOutlet NSTextView *newTagMessage;
+	IBOutlet NSTextField *newTagErrorMessage;
+	IBOutlet NSTextField *newTagCommit;
+	IBOutlet NSTextField *newTagSHA;
+	IBOutlet NSTextField *newTagSHALabel;
+
 	IBOutlet NSPopUpButton *branchPopUp;
 }
 
@@ -42,6 +50,10 @@
 - (IBAction)addRemoteButton:(id)sender;
 - (IBAction)addRemoteSheet:(id)sender;
 - (IBAction)closeAddRemoteSheet:(id)sender;
+
+- (IBAction)newTagButton:(id)sender;
+- (IBAction)newTagSheet:(id)sender;
+- (IBAction)closeNewTagSheet:(id)sender;
 
 - (NSArray *) menuItemsForRef:(PBGitRef *)ref commit:(PBGitCommit *)commit;
 
