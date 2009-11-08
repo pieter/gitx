@@ -47,11 +47,11 @@
 	}
 
 	if ([type isEqualToString:@"branch"])
-		[array addObject:[[PBRefMenuItem alloc] initWithTitle:@"Checkout branch"
+		[array addObject:[[PBRefMenuItem alloc] initWithTitle:[@"Checkout " stringByAppendingString:targetRef]
 													   action:@selector(checkoutRef:)
 												keyEquivalent: @""]];
 
-	[array addObject:[[PBRefMenuItem alloc] initWithTitle:[@"Delete " stringByAppendingString:type]
+	[array addObject:[[PBRefMenuItem alloc] initWithTitle:[@"Delete " stringByAppendingString:targetRef]
 												   action:@selector(removeRef:)
 											keyEquivalent: @""]];
     if ([type isEqualToString:@"tag"])
