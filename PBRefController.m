@@ -182,6 +182,25 @@
     return success;
 }
 
+- (void) toggleToolbarItems:(NSToolbar *)tb matchingLabels:(NSArray *)labels enabledState:(BOOL)state  {
+    NSArray * tbItems = [tb items];
+    
+    /* if labels is nil, assume all toolbar items */
+    if (!labels) {
+        for (NSToolbarItem * curItem in tbItems) {
+            [curItem setEnabled:state];
+        }
+    } else {
+        for (NSToolbarItem * curItem in tbItems) {
+            for (NSString * curLabel in labels) {
+                if ([[curItem label] isEqualToString:curLabel]) {
+                    [curItem setEnabled:state];
+                }
+            }
+        }
+    }
+}
+
 # pragma mark Tableview delegate methods
 
 - (BOOL)tableView:(NSTableView *)tv writeRowsWithIndexes:(NSIndexSet *)rowIndexes toPasteboard:(NSPasteboard*)pboard
@@ -479,8 +498,23 @@
 - (void) selectCurrentBranch
 {
 	PBGitRevSpecifier *rev = historyController.repository.currentBranch;
-	if (rev)
-		[branchPopUp setTitle:[rev description]];
+    NSToolbar * tb = historyController.viewToolbar;
+    NSArray * tbLabels = [NSArray arrayWithObjects:@"Push", @"Pull", @"Rebase", nil];
+    
+	if (rev) {
+        [branchPopUp setTitle:[rev description]];
+        
+        if ([[rev description] isEqualToString:@"All branches"] ||
+            [[rev description] isEqualToString:@"Local branches"]) 
+        {
+            [self toggleToolbarItems:tb matchingLabels:tbLabels enabledState:NO];
+        } else {
+            [self toggleToolbarItems:tb matchingLabels:tbLabels enabledState:YES];
+        }
+    } else {
+        /* just in case, re-enable all toolbar buttons */
+        [self toggleToolbarItems:tb matchingLabels:nil enabledState:YES];
+    }
 }
 
 @end
