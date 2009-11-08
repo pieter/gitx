@@ -269,7 +269,6 @@ static NSString * repositoryBasePath = nil;
 	// Add an "All branches" option in the branches list
 	[self addBranch:[PBGitRevSpecifier allBranchesRevSpec]];
 	[self addBranch:[PBGitRevSpecifier localBranchesRevSpec]];
-    [self readCurrentBranch];
 
 	[[[self windowController] window] setTitle:[self displayName]];
 

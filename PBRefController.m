@@ -67,6 +67,7 @@
 		return;
 	}
 	[historyController.repository reloadRefs];
+	[historyController.repository readCurrentBranch];
 	[commitController rearrangeObjects];
 }
 
