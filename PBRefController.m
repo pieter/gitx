@@ -52,6 +52,7 @@
 		[historyController.repository removeBranch:[[PBGitRevSpecifier alloc] initWithRef:[sender ref]]];
 		[[sender commit] removeRef:[sender ref]];
 		[commitController rearrangeObjects];
+        [self updateBranchMenu];
 	}
 }
 
