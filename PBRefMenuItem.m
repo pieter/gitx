@@ -44,12 +44,15 @@
         [array addObject:[self addRemoteMethod:hasRemote title:[NSString stringWithFormat:@"Push %@ to remote", targetRef] action:@selector(pushRef:)]];
 		[array addObject:[self addRemoteMethod:hasRemote title:[NSString stringWithFormat:@"Pull down latest"] action:@selector(pullRef:)]];
 		[array addObject:[self addRemoteMethod:hasRemote title:[NSString stringWithFormat:@"Rebase local changes with latest"] action:@selector(rebaseRef:)]];
-	}
-
-	if ([type isEqualToString:@"branch"])
-		[array addObject:[[PBRefMenuItem alloc] initWithTitle:[@"Checkout " stringByAppendingString:targetRef]
-													   action:@selector(checkoutRef:)
-												keyEquivalent: @""]];
+		
+        PBRefMenuItem *item = [[PBRefMenuItem alloc] initWithTitle:[@"Checkout " stringByAppendingString:targetRef]
+                                                            action:@selector(checkoutRef:)
+                                                     keyEquivalent: @""];
+        if ([targetRef isEqualToString:[[commit repository] currentBranch].description])
+            [item setEnabled:NO];
+        
+		[array addObject:item];
+    }
 
 	[array addObject:[[PBRefMenuItem alloc] initWithTitle:[@"Delete " stringByAppendingString:targetRef]
 												   action:@selector(removeRef:)
