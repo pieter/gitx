@@ -283,7 +283,7 @@
 	if (!contextMenuDelegate)
 		return [self menu];
 
-	int i = [self indexAtX:[view convertPointFromBase:[event locationInWindow]].x];
+	int i = [self indexAtX:[view convertPointFromBase:[event locationInWindow]].x - rect.origin.x];
 	if (i < 0)
 		return [self menu];
 
