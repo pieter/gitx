@@ -40,8 +40,7 @@
 	NSString *ref_desc = [NSString stringWithFormat:@"%@ %@", [[sender ref] type], [[sender ref] shortName]];
 	NSString *question = [NSString stringWithFormat:@"Are you sure you want to remove the %@?", ref_desc];
 	int choice = NSRunAlertPanel([NSString stringWithFormat:@"Delete %@?", ref_desc], question, @"Delete", @"Cancel", nil);
-	// TODO: Use a non-modal alert here, so we don't block all the GitX windows
-
+    
 	if(choice) {
 		int ret = 1;
 		[historyController.repository outputForArguments:[NSArray arrayWithObjects:@"update-ref", @"-d", [[sender ref] ref], nil] retValue: &ret];
