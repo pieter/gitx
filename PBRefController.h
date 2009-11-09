@@ -68,6 +68,7 @@
 - (BOOL) addRemoteImplWithName:(NSString *)remoteName forURL:(NSString *)remoteURL;
 
 - (void) showMessageSheet:(NSString *)title message:(NSString *)msg;
+- (void) toggleToolbarItems:(NSToolbar *)tb matchingLabels:(NSArray *)labels enabledState:(BOOL)state;
 
 @end
 

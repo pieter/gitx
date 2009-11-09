@@ -47,6 +47,7 @@
 		[historyController.repository removeBranch:[[PBGitRevSpecifier alloc] initWithRef:[refMenuItem ref]]];
 		[[refMenuItem commit] removeRef:[refMenuItem ref]];
 		[commitController rearrangeObjects];
+        [self updateBranchMenu];
 	}
 }
 
@@ -134,7 +135,8 @@
         [self showMessageSheet:@"Pull from Remote" message:PBMissingRemoteErrorMessage];
         return success;
     }
-	NSString *rval = [historyController.repository outputInWorkdirForArguments:[NSArray arrayWithObjects:@"pull", remote, refName, nil] retValue: &ret];
+    NSArray * args = [NSArray arrayWithObjects:@"pull", remote, refName, nil];    
+	NSString *rval = [historyController.repository outputInWorkdirForArguments:args retValue: &ret];
 	if (ret) {
 		NSString *info = [NSString stringWithFormat:@"There was an error pulling from the remote repository.\n\n%d\n%@", ret, rval];
 		[[historyController.repository windowController] showMessageSheet:@"Pulling from remote failed" infoText:info];
@@ -152,7 +154,7 @@
     BOOL success = NO;
 	NSString *remote = [[[historyController repository] config] valueForKeyPath:[NSString stringWithFormat:@"branch.%@.remote", refName]];
     if (!remote) {
-        [self showMessageSheet:@"Pull Rebase from Remote" message:PBMissingRemoteErrorMessage];
+        [self showMessageSheet:@"Pull from Remote and Rebase" message:PBMissingRemoteErrorMessage];
         return success;
     }
 	NSString *rval = [[historyController repository] outputInWorkdirForArguments:[NSArray arrayWithObjects:@"pull", @"--rebase", remote, refName, nil] retValue: &ret];
@@ -202,6 +204,25 @@
 	[commitController rearrangeObjects];
     success = YES;
     return success;
+}
+
+- (void) toggleToolbarItems:(NSToolbar *)tb matchingLabels:(NSArray *)labels enabledState:(BOOL)state  {
+    NSArray * tbItems = [tb items];
+    
+    /* if labels is nil, assume all toolbar items */
+    if (!labels) {
+        for (NSToolbarItem * curItem in tbItems) {
+            [curItem setEnabled:state];
+        }
+    } else {
+        for (NSToolbarItem * curItem in tbItems) {
+            for (NSString * curLabel in labels) {
+                if ([[curItem label] isEqualToString:curLabel]) {
+                    [curItem setEnabled:state];
+                }
+            }
+        }
+    }
 }
 
 # pragma mark Tableview delegate methods
@@ -286,6 +307,8 @@
 }
 
 # pragma mark Add ref methods
+
+
 -(void)addRef:(id)sender
 {
    [errorMessage setStringValue:@""];
@@ -296,21 +319,7 @@
          contextInfo:NULL];
 }
 
-- (void) showMessageSheet:(NSString *)title message:(NSString *)msg {
-
-    [[NSAlert alertWithMessageText:title
-                     defaultButton:@"OK"
-                   alternateButton:nil
-                       otherButton:nil
-         informativeTextWithFormat:msg] 
-                 beginSheetModalForWindow:[[historyController view] window] 
-                            modalDelegate:self 
-                           didEndSelector:nil 
-                              contextInfo:nil];
-    
-    return;
-}
-
+// MARK: Buttons
 -(void)rebaseButton:(id)sender
 {
 	NSString *refName = [[[[historyController repository] currentBranch] simpleRef] refForSpec];
@@ -355,6 +364,23 @@
         [self showMessageSheet:@"Fetch from Remote" message:PBInvalidBranchErrorMessage];
     }
     //	NSLog([NSString stringWithFormat:@"Fetch hit for %@!", refName]);
+}
+
+// MARK: Sheets
+
+- (void) showMessageSheet:(NSString *)title message:(NSString *)msg {
+
+    [[NSAlert alertWithMessageText:title
+                     defaultButton:@"OK"
+                   alternateButton:nil
+                       otherButton:nil
+         informativeTextWithFormat:msg] 
+                 beginSheetModalForWindow:[[historyController view] window] 
+                            modalDelegate:self 
+                           didEndSelector:nil 
+                              contextInfo:nil];
+    
+    return;
 }
 
 -(void)saveSheet:(id) sender
@@ -632,8 +658,23 @@
 - (void) selectCurrentBranch
 {
 	PBGitRevSpecifier *rev = historyController.repository.currentBranch;
-	if (rev)
-		[branchPopUp setTitle:[rev description]];
+    NSToolbar * tb = historyController.viewToolbar;
+    NSArray * tbLabels = [NSArray arrayWithObjects:@"Push", @"Pull", @"Rebase", nil];
+    
+	if (rev) {
+        [branchPopUp setTitle:[rev description]];
+        
+        if ([[rev description] isEqualToString:@"All branches"] ||
+            [[rev description] isEqualToString:@"Local branches"]) 
+        {
+            [self toggleToolbarItems:tb matchingLabels:tbLabels enabledState:NO];
+        } else {
+            [self toggleToolbarItems:tb matchingLabels:tbLabels enabledState:YES];
+        }
+    } else {
+        /* just in case, re-enable all toolbar buttons */
+        [self toggleToolbarItems:tb matchingLabels:nil enabledState:YES];
+    }
 }
 
 @end
