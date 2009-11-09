@@ -13,6 +13,8 @@
 #import "PBGitCommit.h"
 #import "PBRefContextDelegate.h"
 
+@class KBPopUpToolbarItem;
+
 @interface PBRefController : NSObject <PBRefContextDelegate> {
 	IBOutlet __weak PBGitHistoryController *historyController;
 	IBOutlet NSArrayController *commitController;
@@ -36,6 +38,8 @@
 	IBOutlet NSTextField *newTagSHALabel;
 
 	IBOutlet NSPopUpButton *branchPopUp;
+    IBOutlet KBPopUpToolbarItem *pullItem;
+    IBOutlet KBPopUpToolbarItem *pushItem;
 }
 
 - (IBAction)addRef:(id)sender;
@@ -59,7 +63,11 @@
 
 - (void) changeBranch:(NSMenuItem *)sender;
 - (void) selectCurrentBranch;
-- (void) updateBranchMenu;
+- (void) updateBranchMenus;
+- (void) updateAllBranchesMenuWithLocal:(NSMutableArray *)localBranches remote:(NSMutableArray *)remoteBranches tag:(NSMutableArray *)tags other:(NSMutableArray *)other;
+
+- (void) pullMenuAction:(NSMenuItem *)sender;
+- (void) pushMenuAction:(NSMenuItem *)sender;
 
 - (BOOL) pullImpl:(NSString *)refName;
 - (BOOL) pushImpl:(NSString *)refName;

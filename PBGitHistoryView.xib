@@ -21,12 +21,11 @@
 		</object>
 		<object class="NSMutableArray" key="IBDocument.EditedObjectIDs">
 			<bool key="EncodedWithXMLCoder">YES</bool>
-			<integer value="236"/>
 			<integer value="4"/>
 			<integer value="427"/>
-			<integer value="459"/>
-			<integer value="354"/>
 			<integer value="237"/>
+			<integer value="459"/>
+			<integer value="478"/>
 		</object>
 		<object class="NSArray" key="IBDocument.PluginDependencies">
 			<bool key="EncodedWithXMLCoder">YES</bool>
@@ -376,7 +375,6 @@
 										<int key="NSvFlags">-2147483392</int>
 										<string key="NSFrame">{{0, 310}, {852, 15}}</string>
 										<reference key="NSSuperview" ref="663765878"/>
-										<bool key="NSEnabled">YES</bool>
 										<int key="NSsFlags">1</int>
 										<reference key="NSTarget" ref="663765878"/>
 										<string key="NSAction">_doScroller:</string>
@@ -401,7 +399,7 @@
 								<string key="NSFrameSize">{852, 325}</string>
 								<reference key="NSSuperview" ref="202620420"/>
 								<reference key="NSNextKeyView" ref="546023969"/>
-								<int key="NSsFlags">688</int>
+								<int key="NSsFlags">560</int>
 								<reference key="NSVScroller" ref="152625445"/>
 								<reference key="NSHScroller" ref="452331733"/>
 								<reference key="NSContentView" ref="546023969"/>
@@ -2011,7 +2009,7 @@ TG9jYWwgYnJhbmNoZXMnIHdpbGwgbm90IHdvcmsuA</string>
 													<string>public.url</string>
 												</object>
 											</object>
-											<string key="NSFrameSize">{311, 66}</string>
+											<string key="NSFrameSize">{311, 14}</string>
 											<reference key="NSSuperview" ref="410453893"/>
 											<object class="NSTextContainer" key="NSTextContainer" id="894245073">
 												<object class="NSLayoutManager" key="NSLayoutManager">
@@ -2072,8 +2070,8 @@ TG9jYWwgYnJhbmNoZXMnIHdpbGwgbm90IHdvcmsuA</string>
 												<nil key="NSDefaultParagraphStyle"/>
 											</object>
 											<int key="NSTVFlags">6</int>
-											<string key="NSMaxSize">{463, 1e+07}</string>
-											<string key="NSMinize">{223, 66}</string>
+											<string key="NSMaxSize">{624, 1e+07}</string>
+											<string key="NSMinize">{223, 0}</string>
 											<nil key="NSDelegate"/>
 										</object>
 									</object>
@@ -2972,6 +2970,22 @@ TG9jYWwgYnJhbmNoZXMnIHdpbGwgbm90IHdvcmsuA</string>
 						<reference key="destination" ref="772376592"/>
 					</object>
 					<int key="connectionID">510</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
+						<string key="label">pushItem</string>
+						<reference key="source" ref="892732705"/>
+						<reference key="destination" ref="425122427"/>
+					</object>
+					<int key="connectionID">511</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
+						<string key="label">pullItem</string>
+						<reference key="source" ref="892732705"/>
+						<reference key="destination" ref="412717087"/>
+					</object>
+					<int key="connectionID">512</int>
 				</object>
 			</object>
 			<object class="IBMutableOrderedSet" key="objectRecords">
@@ -4113,7 +4127,9 @@ TG9jYWwgYnJhbmNoZXMnIHdpbGwgbm90IHdvcmsuA</string>
 					<string>354.IBPluginDependency</string>
 					<string>354.editorWindowContentRectSynchronizationRect</string>
 					<string>355.IBPluginDependency</string>
+					<string>356.CustomClassName</string>
 					<string>356.IBPluginDependency</string>
+					<string>357.CustomClassName</string>
 					<string>357.IBPluginDependency</string>
 					<string>358.IBPluginDependency</string>
 					<string>36.IBPluginDependency</string>
@@ -4140,10 +4156,14 @@ TG9jYWwgYnJhbmNoZXMnIHdpbGwgbm90IHdvcmsuA</string>
 					<string>376.IBPluginDependency</string>
 					<string>377.IBPluginDependency</string>
 					<string>378.IBPluginDependency</string>
+					<string>379.CustomClassName</string>
 					<string>379.IBPluginDependency</string>
 					<string>38.IBPluginDependency</string>
+					<string>380.CustomClassName</string>
 					<string>380.IBPluginDependency</string>
+					<string>381.CustomClassName</string>
 					<string>381.IBPluginDependency</string>
+					<string>382.CustomClassName</string>
 					<string>382.IBPluginDependency</string>
 					<string>383.IBPluginDependency</string>
 					<string>384.IBPluginDependency</string>
@@ -4308,7 +4328,9 @@ TG9jYWwgYnJhbmNoZXMnIHdpbGwgbm90IHdvcmsuA</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>{{132, 614}, {616, 0}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
+					<string>KBPopUpToolbarItem</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
+					<string>KBPopUpToolbarItem</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -4342,10 +4364,14 @@ TG9jYWwgYnJhbmNoZXMnIHdpbGwgbm90IHdvcmsuA</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
+					<string>KBDelayedPopUpButton</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
+					<string>KBDelayedPopUpButtonCell</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
+					<string>KBDelayedPopUpButton</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
+					<string>KBDelayedPopUpButtonCell</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -4468,11 +4494,24 @@ TG9jYWwgYnJhbmNoZXMnIHdpbGwgbm90IHdvcmsuA</string>
 				</object>
 			</object>
 			<nil key="sourceID"/>
-			<int key="maxID">510</int>
+			<int key="maxID">512</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<object class="NSMutableArray" key="referencedPartialClassDescriptions">
 				<bool key="EncodedWithXMLCoder">YES</bool>
+				<object class="IBPartialClassDescription">
+					<string key="className">KBDelayedPopUpButtonCell</string>
+					<string key="superclassName">NSButtonCell</string>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier" id="369721441">
+						<string key="majorKey">IBProjectSource</string>
+						<string key="minorKey">KBPopUpToolbarItem.h</string>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
+					<string key="className">KBPopUpToolbarItem</string>
+					<string key="superclassName">NSToolbarItem</string>
+					<reference key="sourceIdentifier" ref="369721441"/>
+				</object>
 				<object class="IBPartialClassDescription">
 					<string key="className">NSToolbarItem</string>
 					<string key="superclassName">NSObject</string>
@@ -4637,7 +4676,9 @@ TG9jYWwgYnJhbmNoZXMnIHdpbGwgbm90IHdvcmsuA</string>
 							<string>newTagButton:</string>
 							<string>newTagSheet:</string>
 							<string>pullButton:</string>
+							<string>pullMenuAction:</string>
 							<string>pushButton:</string>
+							<string>pushMenuAction:</string>
 							<string>rebaseButton:</string>
 							<string>saveSheet:</string>
 						</object>
@@ -4654,7 +4695,9 @@ TG9jYWwgYnJhbmNoZXMnIHdpbGwgbm90IHdvcmsuA</string>
 							<string>id</string>
 							<string>id</string>
 							<string>id</string>
+							<string>NSMenuItem</string>
 							<string>id</string>
+							<string>NSMenuItem</string>
 							<string>id</string>
 							<string>id</string>
 						</object>
@@ -4681,6 +4724,8 @@ TG9jYWwgYnJhbmNoZXMnIHdpbGwgbm90IHdvcmsuA</string>
 							<string>newTagSHA</string>
 							<string>newTagSHALabel</string>
 							<string>newTagSheet</string>
+							<string>pullItem</string>
+							<string>pushItem</string>
 						</object>
 						<object class="NSMutableArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
@@ -4702,6 +4747,8 @@ TG9jYWwgYnJhbmNoZXMnIHdpbGwgbm90IHdvcmsuA</string>
 							<string>NSTextField</string>
 							<string>NSTextField</string>
 							<string>NSWindow</string>
+							<string>KBPopUpToolbarItem</string>
+							<string>KBPopUpToolbarItem</string>
 						</object>
 					</object>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">

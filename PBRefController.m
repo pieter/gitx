@@ -9,6 +9,7 @@
 #import "PBRefController.h"
 #import "PBGitRevisionCell.h"
 #import "PBRefMenuItem.h"
+#import "KBPopUpToolbarItem.h"
 
 @implementation PBRefController
 
@@ -17,14 +18,14 @@
 	[commitList registerForDraggedTypes:[NSArray arrayWithObject:@"PBGitRef"]];
 	[historyController addObserver:self forKeyPath:@"repository.branches" options:0 context:@"branchChange"];
 	[historyController addObserver:self forKeyPath:@"repository.currentBranch" options:0 context:@"currentBranchChange"];
-	[self updateBranchMenu];
+	[self updateBranchMenus];
 	[self selectCurrentBranch];
 }
 
 - (void) observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
 {
     if ([(NSString *)context isEqualToString: @"branchChange"]) {
-		[self updateBranchMenu];
+		[self updateBranchMenus];
 	}
 	else if ([(NSString *)context isEqualToString:@"currentBranchChange"]) {
 		[self selectCurrentBranch];
@@ -47,7 +48,7 @@
 		[historyController.repository removeBranch:[[PBGitRevSpecifier alloc] initWithRef:[refMenuItem ref]]];
 		[[refMenuItem commit] removeRef:[refMenuItem ref]];
 		[commitController rearrangeObjects];
-        [self updateBranchMenu];
+        [self updateBranchMenus];
 	}
 }
 
@@ -105,11 +106,10 @@
 	return [PBRefMenuItem defaultMenuItemsForRef:ref commit:commit target:self];
 }
 
-- (BOOL) pushImpl:(NSString *)refName
+- (BOOL) pushRef:(NSString *)refName toRemote:(NSString *)remote
 {
 	int ret = 1;
-   BOOL success = NO;
-	NSString *remote = [[historyController.repository config] valueForKeyPath:[NSString stringWithFormat:@"branch.%@.remote", refName]];
+    BOOL success = NO;
 	NSString *rval = [historyController.repository outputInWorkdirForArguments:[NSArray arrayWithObjects:@"push", remote, refName, nil] retValue: &ret];
     if (!remote) {
         [self showMessageSheet:@"Push to Remote" message:PBMissingRemoteErrorMessage];
@@ -126,15 +126,20 @@
     return success;
 }
 
-- (BOOL) pullImpl:(NSString *)refName
+- (BOOL) pushImpl:(NSString *)refName
+{
+	NSString *remote = [[historyController.repository config] valueForKeyPath:[NSString stringWithFormat:@"branch.%@.remote", refName]];
+    if (!remote) {
+        [self showMessageSheet:@"Push to Remote" message:PBMissingRemoteErrorMessage];
+        return NO;
+    }
+    return [self pushRef:refName toRemote:remote];
+}
+
+- (BOOL) pullRef:(NSString *)refName fromRemote:(NSString *)remote
 {
 	int ret = 1;
     BOOL success = NO;
-	NSString *remote = [[historyController.repository config] valueForKeyPath:[NSString stringWithFormat:@"branch.%@.remote", refName]];
-    if (!remote) {
-        [self showMessageSheet:@"Pull from Remote" message:PBMissingRemoteErrorMessage];
-        return success;
-    }
     NSArray * args = [NSArray arrayWithObjects:@"pull", remote, refName, nil];    
 	NSString *rval = [historyController.repository outputInWorkdirForArguments:args retValue: &ret];
 	if (ret) {
@@ -146,6 +151,16 @@
 	[commitController rearrangeObjects];
     success = YES;
     return success;
+}
+
+- (BOOL) pullImpl:(NSString *)refName
+{
+	NSString *remote = [[historyController.repository config] valueForKeyPath:[NSString stringWithFormat:@"branch.%@.remote", refName]];
+    if (!remote) {
+        [self showMessageSheet:@"Pull from Remote" message:PBMissingRemoteErrorMessage];
+        return NO;
+    }
+    return [self pullRef:refName fromRemote:remote];
 }
 
 - (BOOL) rebaseImpl:(NSString *)refName
@@ -550,37 +565,16 @@
 	[newTagSheet orderOut:self];
 }
 
-# pragma mark Branches menu
+# pragma mark Branch menus
 
-- (void) updateBranchMenu
+- (void) updateAllBranchesMenuWithLocal:(NSMutableArray *)localBranches remote:(NSMutableArray *)remoteBranches tag:(NSMutableArray *)tags other:(NSMutableArray *)other
 {
 	if (!branchPopUp)
-		return;
-
-	NSMutableArray *localBranches = [NSMutableArray array];
-	NSMutableArray *remoteBranches = [NSMutableArray array];
-	NSMutableArray *tags = [NSMutableArray array];
-	NSMutableArray *other = [NSMutableArray array];
+        return;
 
 	NSMenu *menu = [[NSMenu alloc] initWithTitle:@"Branch menu"];
-	for (PBGitRevSpecifier *rev in historyController.repository.branches)
-	{
-		if (![rev isSimpleRef])
-		{
-			[other addObject:rev];
-			continue;
-		}
 
-		NSString *ref = [rev simpleRef];
-
-		if ([ref hasPrefix:@"refs/heads"])
-			[localBranches addObject:rev];
-		else if ([ref hasPrefix:@"refs/tags"])
-			[tags addObject:rev];
-		else if ([ref hasPrefix:@"refs/remote"])
-			[remoteBranches addObject:rev];
-	}
-
+    // Local
 	for (PBGitRevSpecifier *rev in localBranches)
 	{
 		NSMenuItem *item = [[NSMenuItem alloc] initWithTitle:[rev description] action:@selector(changeBranch:) keyEquivalent:@""];
@@ -593,7 +587,7 @@
 
 	// Remotes
 	NSMenu *remoteMenu = [[NSMenu alloc] initWithTitle:@"Remotes"];
-	NSMenu *currentMenu = NULL;
+	NSMenu *currentMenu = nil;
 	for (PBGitRevSpecifier *rev in remoteBranches)
 	{
 		NSString *ref = [rev simpleRef];
@@ -634,7 +628,6 @@
 	[tagItem setSubmenu:tagMenu];
 	[menu addItem:tagItem];
 
-
 	// Others
 	[menu addItem:[NSMenuItem separatorItem]];
 
@@ -647,6 +640,106 @@
 	}
 	
 	[[branchPopUp cell] setMenu: menu];
+}
+
+- (void) updatePullMenuWithRemotes:(NSMutableArray *)remoteBranches
+{
+    if (!pullItem)
+        return;
+
+	NSMenu *remoteMenu = [[NSMenu alloc] initWithTitle:@"Pull menu"];
+
+    // Remotes
+	NSMenu *currentMenu = nil;
+	for (PBGitRevSpecifier *rev in remoteBranches)
+	{
+		NSString *ref = [rev simpleRef];
+		NSArray *components = [ref componentsSeparatedByString:@"/"];
+
+		NSString *remoteName = [components objectAtIndex:2];
+		NSString *branchName = [[components subarrayWithRange:NSMakeRange(3, [components count] - 3)] componentsJoinedByString:@"/"];
+
+		if (![[currentMenu title] isEqualToString:remoteName])
+		{
+			currentMenu = [[NSMenu alloc] initWithTitle:remoteName];
+			NSMenuItem *item = [[NSMenuItem alloc] initWithTitle:remoteName action:NULL keyEquivalent:@""];
+			[item setSubmenu:currentMenu];
+			[remoteMenu addItem:item];
+		}
+
+		NSMenuItem *item = [[NSMenuItem alloc] initWithTitle:branchName action:@selector(pullMenuAction:) keyEquivalent:@""];
+		[item setTarget:self];
+		[item setRepresentedObject:rev];
+		[currentMenu addItem:item];
+	}
+
+    [pullItem setMenu: remoteMenu];
+}
+
+- (void) updatePushMenuWithRemotes:(NSMutableArray *)remoteBranches
+{
+    if (!pushItem)
+        return;
+
+	NSMenu *remoteMenu = [[NSMenu alloc] initWithTitle:@"Push menu"];
+
+    // Remotes
+	NSMenu *currentMenu = nil;
+	for (PBGitRevSpecifier *rev in remoteBranches)
+	{
+		NSString *ref = [rev simpleRef];
+		NSArray *components = [ref componentsSeparatedByString:@"/"];
+
+		NSString *remoteName = [components objectAtIndex:2];
+		NSString *branchName = [[components subarrayWithRange:NSMakeRange(3, [components count] - 3)] componentsJoinedByString:@"/"];
+
+		if (![[currentMenu title] isEqualToString:remoteName])
+		{
+			currentMenu = [[NSMenu alloc] initWithTitle:remoteName];
+			NSMenuItem *item = [[NSMenuItem alloc] initWithTitle:remoteName action:NULL keyEquivalent:@""];
+			[item setSubmenu:currentMenu];
+			[remoteMenu addItem:item];
+		}
+
+		NSMenuItem *item = [[NSMenuItem alloc] initWithTitle:branchName action:@selector(pushMenuAction:) keyEquivalent:@""];
+		[item setTarget:self];
+		[item setRepresentedObject:rev];
+		[currentMenu addItem:item];
+	}
+
+    [pushItem setMenu: remoteMenu];
+}
+
+- (void) updateBranchMenus
+{
+	NSMutableArray *localBranches = [NSMutableArray array];
+	NSMutableArray *remoteBranches = [NSMutableArray array];
+	NSMutableArray *tags = [NSMutableArray array];
+	NSMutableArray *other = [NSMutableArray array];
+
+	for (PBGitRevSpecifier *rev in historyController.repository.branches)
+	{
+		if (![rev isSimpleRef])
+		{
+			[other addObject:rev];
+			continue;
+		}
+
+		NSString *ref = [rev simpleRef];
+
+		if ([ref hasPrefix:@"refs/heads"])
+			[localBranches addObject:rev];
+		else if ([ref hasPrefix:@"refs/tags"])
+			[tags addObject:rev];
+		else if ([ref hasPrefix:@"refs/remote"])
+			[remoteBranches addObject:rev];
+	}
+
+    [self updateAllBranchesMenuWithLocal:localBranches remote:remoteBranches tag:tags other:other];
+
+	[self updatePullMenuWithRemotes:remoteBranches];
+
+	[self updatePushMenuWithRemotes:remoteBranches];
 }
 
 - (void) changeBranch:(NSMenuItem *)sender
@@ -675,6 +768,24 @@
         /* just in case, re-enable all toolbar buttons */
         [self toggleToolbarItems:tb matchingLabels:nil enabledState:YES];
     }
+}
+
+- (void) pullMenuAction:(NSMenuItem *)sender
+{
+    NSString *ref = [(PBGitRevSpecifier *)[sender representedObject] description];
+    NSArray *refComponents = [ref componentsSeparatedByString:@"/"];
+    if ([refComponents count] != 2)
+        return;
+    [self pullRef:[refComponents objectAtIndex:1] fromRemote:[refComponents objectAtIndex:0]];
+}
+
+- (void) pushMenuAction:(NSMenuItem *)sender
+{
+    NSString *ref = [(PBGitRevSpecifier *)[sender representedObject] description];
+    NSArray *refComponents = [ref componentsSeparatedByString:@"/"];
+    if ([refComponents count] != 2)
+        return;
+    [self pushRef:[refComponents objectAtIndex:1] toRemote:[refComponents objectAtIndex:0]];
 }
 
 @end
