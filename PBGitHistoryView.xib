@@ -1020,7 +1020,7 @@
 							</object>
 							<string key="NSToolbarItemLabel">Add Remote</string>
 							<string key="NSToolbarItemPaletteLabel">Add Remote</string>
-							<string key="NSToolbarItemToolTip">Add Remote branches</string>
+							<string key="NSToolbarItemToolTip">Add Remote branch</string>
 							<object class="NSButton" key="NSToolbarItemView" id="165790808">
 								<reference key="NSNextResponder"/>
 								<int key="NSvFlags">268</int>
@@ -1191,7 +1191,7 @@
 							</object>
 							<string key="NSToolbarItemLabel">Create Branch</string>
 							<string key="NSToolbarItemPaletteLabel">Create Branch</string>
-							<nil key="NSToolbarItemToolTip"/>
+							<string key="NSToolbarItemToolTip">Create a bew branch</string>
 							<object class="NSButton" key="NSToolbarItemView" id="773908116">
 								<reference key="NSNextResponder"/>
 								<int key="NSvFlags">268</int>
@@ -1322,10 +1322,7 @@
 							</object>
 							<string key="NSToolbarItemLabel">Push</string>
 							<string key="NSToolbarItemPaletteLabel">Push</string>
-							<string type="base64-UTF8" key="NSToolbarItemToolTip">J2dpdCBwdXNoIDxyZW1vdGU+PGxvY2FsIGJyYW5jaD4nCgo8cmVtb3RlPiBpcyB0aGUgZGVmYXVsdCBy
-ZW1vdGUgY29uZmlndXJlZCBmb3IgdGhlIGN1cnJlbnRseSBzZWxlY3RlZCBicmFuY2ggZnJvbSB0aGUg
-YnJhbmNoIHBvcHVwIG1lbnUuIAoKTm90ZTogdGhlIGJyYW5jaCBoYXMgdG8gYmUgc3BlY2lmaWMuIAon
-QWxsIGJyYW5jaGVzJyBvciAnTG9jYWwgYnJhbmNoZXMnIHdpbGwgbm90IHdvcmsuA</string>
+							<string key="NSToolbarItemToolTip"/>
 							<object class="NSButton" key="NSToolbarItemView" id="1070051133">
 								<reference key="NSNextResponder"/>
 								<int key="NSvFlags">268</int>
@@ -1367,11 +1364,7 @@ QWxsIGJyYW5jaGVzJyBvciAnTG9jYWwgYnJhbmNoZXMnIHdpbGwgbm90IHdvcmsuA</string>
 							</object>
 							<string key="NSToolbarItemLabel">Pull</string>
 							<string key="NSToolbarItemPaletteLabel">Pull</string>
-							<string type="base64-UTF8" key="NSToolbarItemToolTip">J2dpdCBwdWxsIDxyZW1vdGU+PGxvY2FsIGJyYW5jaD4nCgo8cmVtb3RlPiBpcyB0aGUgZGVmYXVsdCBy
-ZW1vdGUgY29uZmlndXJlZCBmb3IgPGxvY2FsIGJyYW5jaD4KPGxvY2FsIGJyYW5jaD4gaXMgdGhlIHNl
-bGVjdGVkIGJyYW5jaCBmcm9tIHRoZSBicmFuY2ggcG9wdXAgbWVudQoKTm90ZTogdGhlIGJyYW5jaCBo
-YXMgdG8gYmUgc3BlY2lmaWMuIAonQWxsIGJyYW5jaGVzJyBvciAnTG9jYWwgYnJhbmNoZXMnIHdpbGwg
-bm90IHdvcms</string>
+							<string key="NSToolbarItemToolTip"/>
 							<object class="NSButton" key="NSToolbarItemView" id="665398151">
 								<reference key="NSNextResponder"/>
 								<int key="NSvFlags">268</int>
@@ -1386,7 +1379,7 @@ bm90IHdvcms</string>
 									<reference key="NSControlView" ref="665398151"/>
 									<int key="NSButtonFlags">-2033434369</int>
 									<int key="NSButtonFlags2">163</int>
-									<object class="NSCustomResource" key="NSNormalImage" id="134687511">
+									<object class="NSCustomResource" key="NSNormalImage" id="26301302">
 										<string key="NSClassName">NSImage</string>
 										<string key="NSResourceName">PullPopUpTemplate</string>
 									</object>
@@ -1396,7 +1389,7 @@ bm90IHdvcms</string>
 									<int key="NSPeriodicInterval">75</int>
 								</object>
 							</object>
-							<reference key="NSToolbarItemImage" ref="134687511"/>
+							<reference key="NSToolbarItemImage" ref="26301302"/>
 							<nil key="NSToolbarItemTarget"/>
 							<nil key="NSToolbarItemAction"/>
 							<string key="NSToolbarItemMinSize">{25, 25}</string>
@@ -1413,15 +1406,7 @@ bm90IHdvcms</string>
 							</object>
 							<string key="NSToolbarItemLabel">Rebase</string>
 							<string key="NSToolbarItemPaletteLabel">Rebase</string>
-							<string type="base64-UTF8" key="NSToolbarItemToolTip">J2dpdCBwdWxsIC0tcmViYXNlIDxyZW1vdGU+IDxyZW1vdGUgYnJhbmNoPicKCkluc3RlYWQgb2YgYSBt
-ZXJnZSwgcGVyZm9ybSBhIHJlYmFzZSBhZnRlciBmZXRjaGluZwoKPHJlbW90ZT4gd2lsbCBiZSB0aGUg
-ZGVmYXVsdCByZW1vdGUgY29uZmlndXJlZCBmb3IgdGhlIGN1cnJlbnRseSBzZWxlY3RlZCBicmFuY2gg
-aW4gdGhlIGJyYW5jaCBwb3B1cCBtZW51LiAKCjxyZW1vdGUgYnJhbmNoPiB3aWxsIGJlIHRoZSByZW1v
-dGUgSEVBRAoKSWYgdGhlcmUgaXMgYSByZW1vdGUgcmVmIGZvciB0aGUgdXBzdHJlYW0gYnJhbmNoLCBh
-bmQgdGhpcyBicmFuY2ggd2FzIHJlYmFzZWQgc2luY2UgbGFzdCBmZXRjaGVkLCB0aGUgcmViYXNlIHVz
-ZXMgdGhhdCBpbmZvcm1hdGlvbiB0byBhdm9pZCByZWJhc2luZyBub24tbG9jYWwgY2hhbmdlcwoKTm90
-ZTogdGhlIGxvY2FsIGJyYW5jaCBoYXMgdG8gYmUgc3BlY2lmaWMuIAonQWxsIGJyYW5jaGVzJyBvciAn
-TG9jYWwgYnJhbmNoZXMnIHdpbGwgbm90IHdvcmsuA</string>
+							<string key="NSToolbarItemToolTip"/>
 							<object class="NSButton" key="NSToolbarItemView" id="166309462">
 								<reference key="NSNextResponder"/>
 								<int key="NSvFlags">268</int>
@@ -4176,15 +4161,18 @@ TG9jYWwgYnJhbmNoZXMnIHdpbGwgbm90IHdvcmsuA</string>
 					<string>375.IBPluginDependency</string>
 					<string>376.IBPluginDependency</string>
 					<string>377.CustomClassName</string>
+					<string>377.IBAttributePlaceholdersKey</string>
 					<string>377.IBPluginDependency</string>
 					<string>378.CustomClassName</string>
 					<string>378.IBPluginDependency</string>
 					<string>379.CustomClassName</string>
+					<string>379.IBAttributePlaceholdersKey</string>
 					<string>379.IBPluginDependency</string>
 					<string>38.IBPluginDependency</string>
 					<string>380.CustomClassName</string>
 					<string>380.IBPluginDependency</string>
 					<string>381.CustomClassName</string>
+					<string>381.IBAttributePlaceholdersKey</string>
 					<string>381.IBPluginDependency</string>
 					<string>382.CustomClassName</string>
 					<string>382.IBPluginDependency</string>
@@ -4387,15 +4375,58 @@ TG9jYWwgYnJhbmNoZXMnIHdpbGwgbm90IHdvcmsuA</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>KBDelayedPopUpButton</string>
+					<object class="NSMutableDictionary">
+						<string key="NS.key.0">ToolTip</string>
+						<object class="IBToolTipAttribute" key="NS.object.0">
+							<string key="name">ToolTip</string>
+							<reference key="object" ref="166309462"/>
+							<string type="base64-UTF8" key="toolTip">Z2l0IHB1bGwgLS1yZWJhc2UgPHJlbW90ZT4gPHJlbW90ZSBicmFuY2g+CgpUaGlzIHdpbGwgZmV0Y2gg
+YWxsIGNoYW5nZXMgZnJvbSA8cmVtb3RlPiBhbmQgaW5zdGVhZCBvZiBhIG1lcmdlLCBwZXJmb3JtIGEg
+cmViYXNlIGFmdGVyIGZldGNoaW5nLgoKPHJlbW90ZT4gd2lsbCBiZSB0aGUgZGVmYXVsdCByZW1vdGUg
+Y29uZmlndXJlZCBmb3IgdGhlIGN1cnJlbnRseSBzZWxlY3RlZCBicmFuY2ggaW4gdGhlIGJyYW5jaCBw
+b3B1cCBtZW51LiBPciBob2xkIGRvd24gTE1CIGZvciAyIHNlY29uZHMgYW5kIGNob29zZSBhIHJlbW90
+ZSBmcm9tIHRoZSBwb3B1cCBtZW51LgoKPHJlbW90ZSBicmFuY2g+IHdpbGwgYmUgdGhlIHJlbW90ZSdz
+IGN1cnJlbnQgSEVBRC4KCk5vdGU6IHRoZSBjdXJyZW50bHkgc2VsZWN0ZWQgYnJhbmNoIGhhcyB0byBi
+ZSBzcGVjaWZpYy4gJ0FsbCBicmFuY2hlcycgb3IgJ0xvY2FsIGJyYW5jaGVzJyB3aWxsIG5vdCB3b3Jr
+Lg</string>
+						</object>
+					</object>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>KBDelayedPopUpButtonCell</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>KBDelayedPopUpButton</string>
+					<object class="NSMutableDictionary">
+						<string key="NS.key.0">ToolTip</string>
+						<object class="IBToolTipAttribute" key="NS.object.0">
+							<string key="name">ToolTip</string>
+							<reference key="object" ref="665398151"/>
+							<string type="base64-UTF8" key="toolTip">Z2l0IHB1bGwgPHJlbW90ZT48bG9jYWwgYnJhbmNoPgoKPGxvY2FsIGJyYW5jaD4gcmVwcmVzZW50cyB0
+aGUgY3VycmVudGx5IHNlbGVjdGVkIGJyYW5jaCBmcm9tIHRoZSBicmFuY2ggcG9wdXAgbWVudS4KCjxy
+ZW1vdGU+IHdpbGwgYmUgdGhlIGRlZmF1bHQgcmVtb3RlIGNvbmZpZ3VyZWQgZm9yIHRoZSBjdXJyZW50
+bHkgc2VsZWN0ZWQgYnJhbmNoIGluIHRoZSBicmFuY2ggcG9wdXAgbWVudS4gT3IgaG9sZCBkb3duIExN
+QiBmb3IgMiBzZWNvbmRzIGFuZCBjaG9vc2UgYSByZW1vdGUgZnJvbSB0aGUgcG9wdXAgbWVudS4KCk5v
+dGU6IHRoZSBjdXJyZW50bHkgc2VsZWN0ZWQgYnJhbmNoIGhhcyB0byBiZSBzcGVjaWZpYy4gJ0FsbCBi
+cmFuY2hlcycgb3IgJ0xvY2FsIGJyYW5jaGVzJyB3aWxsIG5vdCB3b3JrLg</string>
+						</object>
+					</object>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>KBDelayedPopUpButtonCell</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>KBDelayedPopUpButton</string>
+					<object class="NSMutableDictionary">
+						<string key="NS.key.0">ToolTip</string>
+						<object class="IBToolTipAttribute" key="NS.object.0">
+							<string key="name">ToolTip</string>
+							<reference key="object" ref="1070051133"/>
+							<string type="base64-UTF8" key="toolTip">Z2l0IHB1c2ggPHJlbW90ZT4KClRoaXMgd2lsbCBwdXNoIHRoZSBjdXJyZW50bHkgc2VsZWN0ZWQgYnJh
+bmNoIGZyb20gdGhlIGJyYW5jaCBwb3B1cCBtZW51IHRvIDxyZW1vdGU+LgoKPHJlbW90ZT4gaXMgdGhl
+IGRlZmF1bHQgcmVtb3RlIGNvbmZpZ3VyZWQgZm9yIHRoZSBjdXJyZW50bHkgc2VsZWN0ZWQgYnJhbmNo
+LiBPciBob2xkIGRvd24gTE1CIGZvciAyIHNlY29uZHMgYW5kIGNob29zZSBhIHJlbW90ZSBmcm9tIHRo
+ZSBwb3B1cCBtZW51LgoKTm90ZTogdGhlIGN1cnJlbnRseSBzZWxlY3RlZCBicmFuY2ggaGFzIHRvIGJl
+IHNwZWNpZmljLiAnQWxsIGJyYW5jaGVzJyBvciAnTG9jYWwgYnJhbmNoZXMnIHdpbGwgbm90IHdvcms</string>
+						</object>
+					</object>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>KBDelayedPopUpButtonCell</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
