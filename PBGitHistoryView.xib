@@ -21,11 +21,11 @@
 		</object>
 		<object class="NSMutableArray" key="IBDocument.EditedObjectIDs">
 			<bool key="EncodedWithXMLCoder">YES</bool>
-			<integer value="354"/>
+			<integer value="237"/>
 			<integer value="4"/>
 			<integer value="427"/>
-			<integer value="237"/>
 			<integer value="459"/>
+			<integer value="354"/>
 		</object>
 		<object class="NSArray" key="IBDocument.PluginDependencies">
 			<bool key="EncodedWithXMLCoder">YES</bool>
@@ -612,7 +612,7 @@
 																		<object class="NSTextView" id="75600241">
 																			<reference key="NSNextResponder" ref="321980917"/>
 																			<int key="NSvFlags">2322</int>
-																			<string key="NSFrameSize">{610, 0}</string>
+																			<string key="NSFrameSize">{610, 98}</string>
 																			<reference key="NSSuperview" ref="321980917"/>
 																			<object class="NSTextContainer" key="NSTextContainer" id="480935218">
 																				<object class="NSLayoutManager" key="NSLayoutManager">
@@ -820,6 +820,7 @@
 																	<int key="NSvFlags">256</int>
 																	<string key="NSFrame">{{694, 1}, {15, 72}}</string>
 																	<reference key="NSSuperview" ref="630571485"/>
+																	<bool key="NSEnabled">YES</bool>
 																	<reference key="NSTarget" ref="630571485"/>
 																	<string key="NSAction">_doScroller:</string>
 																	<double key="NSPercent">0.73469387755102045</double>
@@ -839,7 +840,7 @@
 															<string key="NSFrame">{{142, 0}, {710, 74}}</string>
 															<reference key="NSSuperview" ref="626906425"/>
 															<reference key="NSNextKeyView" ref="321980917"/>
-															<int key="NSsFlags">18</int>
+															<int key="NSsFlags">82</int>
 															<reference key="NSVScroller" ref="802032705"/>
 															<reference key="NSHScroller" ref="667376581"/>
 															<reference key="NSContentView" ref="321980917"/>
@@ -1385,14 +1386,17 @@ bm90IHdvcms</string>
 									<reference key="NSControlView" ref="665398151"/>
 									<int key="NSButtonFlags">-2033434369</int>
 									<int key="NSButtonFlags2">163</int>
-									<reference key="NSNormalImage" ref="753171580"/>
+									<object class="NSCustomResource" key="NSNormalImage" id="134687511">
+										<string key="NSClassName">NSImage</string>
+										<string key="NSResourceName">PullPopUpTemplate</string>
+									</object>
 									<string key="NSAlternateContents"/>
 									<string key="NSKeyEquivalent"/>
 									<int key="NSPeriodicDelay">400</int>
 									<int key="NSPeriodicInterval">75</int>
 								</object>
 							</object>
-							<reference key="NSToolbarItemImage" ref="753171580"/>
+							<reference key="NSToolbarItemImage" ref="134687511"/>
 							<nil key="NSToolbarItemTarget"/>
 							<nil key="NSToolbarItemAction"/>
 							<string key="NSToolbarItemMinSize">{25, 25}</string>
