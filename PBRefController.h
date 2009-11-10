@@ -40,6 +40,7 @@
 	IBOutlet NSPopUpButton *branchPopUp;
     IBOutlet KBPopUpToolbarItem *pullItem;
     IBOutlet KBPopUpToolbarItem *pushItem;
+    IBOutlet KBPopUpToolbarItem *rebaseItem;
 }
 
 - (IBAction)addRef:(id)sender;
@@ -65,9 +66,11 @@
 - (void) selectCurrentBranch;
 - (void) updateBranchMenus;
 - (void) updateAllBranchesMenuWithLocal:(NSMutableArray *)localBranches remote:(NSMutableArray *)remoteBranches tag:(NSMutableArray *)tags other:(NSMutableArray *)other;
+- (void) updatePopUpToolbarItemMenu:(KBPopUpToolbarItem *)item remotes:(NSMutableArray *)remoteBranches action:(SEL)action title:(NSString *)menuTitle;
 
 - (void) pullMenuAction:(NSMenuItem *)sender;
 - (void) pushMenuAction:(NSMenuItem *)sender;
+- (void) rebaseMenuAction:(NSMenuItem *)sender;
 
 - (BOOL) pullImpl:(NSString *)refName;
 - (BOOL) pushImpl:(NSString *)refName;
@@ -77,6 +80,7 @@
 
 - (void) showMessageSheet:(NSString *)title message:(NSString *)msg;
 - (void) toggleToolbarItems:(NSToolbar *)tb matchingLabels:(NSArray *)labels enabledState:(BOOL)state;
+- (BOOL) validateToolbarItem:(NSToolbarItem *)theItem;
 
 @end
 

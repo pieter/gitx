@@ -88,22 +88,9 @@
 	[self rebaseImpl:[[sender ref] shortName]];
 }
 
-- (void) tagInfo:(PBRefMenuItem *)sender
+- (BOOL) fetchRef:(PBRefMenuItem *)sender
 {
-    NSString *message = [NSString stringWithFormat:@"Info for tag: %@", [[sender ref] shortName]];
-
-    int ret = 1;
-    NSString *info = [historyController.repository outputInWorkdirForArguments:[NSArray arrayWithObjects:@"tag", @"-n50", @"-l", [[sender ref] shortName], nil] retValue: &ret];
-
-    if (!ret) {
-	    [[historyController.repository windowController] showMessageSheet:message infoText:info];
-    }
-    return;
-}
-
-- (NSArray *) menuItemsForRef:(PBGitRef *)ref commit:(PBGitCommit *)commit
-{
-	return [PBRefMenuItem defaultMenuItemsForRef:ref commit:commit target:self];
+	[self fetchImpl:[[sender ref] shortName]];
 }
 
 - (BOOL) pushRef:(NSString *)refName toRemote:(NSString *)remote
@@ -126,16 +113,6 @@
     return success;
 }
 
-- (BOOL) pushImpl:(NSString *)refName
-{
-	NSString *remote = [[historyController.repository config] valueForKeyPath:[NSString stringWithFormat:@"branch.%@.remote", refName]];
-    if (!remote) {
-        [self showMessageSheet:@"Push to Remote" message:PBMissingRemoteErrorMessage];
-        return NO;
-    }
-    return [self pushRef:refName toRemote:remote];
-}
-
 - (BOOL) pullRef:(NSString *)refName fromRemote:(NSString *)remote
 {
 	int ret = 1;
@@ -153,6 +130,50 @@
     return success;
 }
 
+- (BOOL) rebaseRef:(NSString *)refName fromRemote:(NSString *)remote
+{
+	int ret = 1;
+    BOOL success = NO;
+    NSArray * args = [NSArray arrayWithObjects:@"pull", @"--rebase", remote, refName, nil];    
+	NSString *rval = [historyController.repository outputInWorkdirForArguments:args retValue: &ret];
+	if (ret) {
+		NSString *info = [NSString stringWithFormat:@"There was an error pulling from the remote repository.\n\n%d\n%@", ret, rval];
+		[[historyController.repository windowController] showMessageSheet:@"Pulling from remote failed" infoText:info];
+		return success;
+	}
+	[historyController.repository reloadRefs];
+	[commitController rearrangeObjects];
+    success = YES;
+    return success;
+}
+
+- (BOOL) fetchRef:(NSString *)refName fromRemote:(NSString *)remote
+{
+	int ret = 1;
+    BOOL success = NO;
+    NSArray * args = [NSArray arrayWithObjects:@"pull", @"--rebase", remote, refName, nil];    
+	NSString *rval = [historyController.repository outputInWorkdirForArguments:args retValue: &ret];
+	if (ret) {
+		NSString *info = [NSString stringWithFormat:@"There was an error pulling from the remote repository.\n\n%d\n%@", ret, rval];
+		[[historyController.repository windowController] showMessageSheet:@"Pulling from remote failed" infoText:info];
+		return success;
+	}
+	[historyController.repository reloadRefs];
+	[commitController rearrangeObjects];
+    success = YES;
+    return success;
+}
+
+- (BOOL) pushImpl:(NSString *)refName
+{
+	NSString *remote = [[historyController.repository config] valueForKeyPath:[NSString stringWithFormat:@"branch.%@.remote", refName]];
+    if (!remote) {
+        [self showMessageSheet:@"Push to Remote" message:PBMissingRemoteErrorMessage];
+        return NO;
+    }
+    return [self pushRef:refName toRemote:remote];
+}
+
 - (BOOL) pullImpl:(NSString *)refName
 {
 	NSString *remote = [[historyController.repository config] valueForKeyPath:[NSString stringWithFormat:@"branch.%@.remote", refName]];
@@ -165,41 +186,40 @@
 
 - (BOOL) rebaseImpl:(NSString *)refName
 {
-	int ret = 1;
-    BOOL success = NO;
 	NSString *remote = [[[historyController repository] config] valueForKeyPath:[NSString stringWithFormat:@"branch.%@.remote", refName]];
     if (!remote) {
         [self showMessageSheet:@"Pull from Remote and Rebase" message:PBMissingRemoteErrorMessage];
-        return success;
+        return NO;
     }
-	NSString *rval = [[historyController repository] outputInWorkdirForArguments:[NSArray arrayWithObjects:@"pull", @"--rebase", remote, refName, nil] retValue: &ret];
-	if (ret) {
-		NSString *info = [NSString stringWithFormat:@"There was an error rebasing from the remote repository.\n\n%d\n%@", ret, rval];
-		[[[historyController repository] windowController] showMessageSheet:@"Rebasing from remote failed" infoText:info];
-		return success;
-	}
-	[[historyController repository] reloadRefs];
-	[commitController rearrangeObjects];
-    success = YES;
-    return success;
+    return [self rebaseRef:refName fromRemote:remote];
 }
 
 - (BOOL) fetchImpl:(NSString *)refName
 {
-	int ret = 1;
-    BOOL success = NO;
-	NSString *remote = nil;
-	if(refName != nil) remote = [[historyController.repository config] valueForKeyPath:[NSString stringWithFormat:@"branch.%@.remote", refName]];
-	NSString *rval = [historyController.repository outputInWorkdirForArguments:[NSArray arrayWithObjects:@"fetch", remote, refName, nil] retValue: &ret];
-	if (ret) {
-		NSString *info = [NSString stringWithFormat:@"There was an error fetching from the remote repository.\n\n%d\n%@", ret, rval];
-		[[historyController.repository windowController] showMessageSheet:@"Fetching from remote failed" infoText:info];
-		return success;
-	}
-	[historyController.repository reloadRefs];
-	[commitController rearrangeObjects];
-    success = YES;
-    return success;
+	NSString *remote = [[historyController.repository config] valueForKeyPath:[NSString stringWithFormat:@"branch.%@.remote", refName]];
+    if (!remote) {
+        [self showMessageSheet:@"Fetch from Remote" message:PBMissingRemoteErrorMessage];
+        return NO;
+    }
+    return [self fetchRef:refName fromRemote:remote];
+}
+
+- (void) tagInfo:(PBRefMenuItem *)sender
+{
+    NSString *message = [NSString stringWithFormat:@"Info for tag: %@", [[sender ref] shortName]];
+    
+    int ret = 1;
+    NSString *info = [historyController.repository outputInWorkdirForArguments:[NSArray arrayWithObjects:@"tag", @"-n50", @"-l", [[sender ref] shortName], nil] retValue: &ret];
+    
+    if (!ret) {
+	    [[historyController.repository windowController] showMessageSheet:message infoText:info];
+    }
+    return;
+}
+
+- (NSArray *) menuItemsForRef:(PBGitRef *)ref commit:(PBGitCommit *)commit
+{
+	return [PBRefMenuItem defaultMenuItemsForRef:ref commit:commit target:self];
 }
 
 - (BOOL) addRemoteImplWithName:(NSString *)remoteName forURL:(NSString *)remoteURL
@@ -642,6 +662,44 @@
 	[[branchPopUp cell] setMenu: menu];
 }
 
+- (void) updatePopUpToolbarItemMenu:(KBPopUpToolbarItem *)item remotes:(NSMutableArray *)remoteBranches action:(SEL)action title:(NSString *)menuTitle
+{
+    if (!item)
+        return;
+    
+	NSMenu *remoteMenu = [[NSMenu alloc] initWithTitle:menuTitle];
+    
+    // Remotes
+	NSMenu *currentMenu = nil;
+	for (PBGitRevSpecifier *rev in remoteBranches)
+	{
+		NSString *ref = [rev simpleRef];
+		NSArray *components = [ref componentsSeparatedByString:@"/"];
+        
+		NSString *remoteName = [components objectAtIndex:2];
+		NSString *branchName = [[components subarrayWithRange:NSMakeRange(3, [components count] - 3)] componentsJoinedByString:@"/"];
+        
+		if (![[currentMenu title] isEqualToString:remoteName])
+		{
+			currentMenu = [[NSMenu alloc] initWithTitle:remoteName];
+			NSMenuItem *item = [[NSMenuItem alloc] initWithTitle:remoteName action:NULL keyEquivalent:@""];
+			[item setSubmenu:currentMenu];
+			[remoteMenu addItem:item];
+		}
+        
+		NSMenuItem *item = [[NSMenuItem alloc] initWithTitle:branchName action:action keyEquivalent:@""];
+		[item setTarget:self];
+		[item setRepresentedObject:rev];
+		[currentMenu addItem:item];
+	}
+    
+    [item setMenu: remoteMenu];
+}
+
+// !!! Andre Berg 20091110: The two methods below have been replaced with a more generic one (see above).
+// Need to remove this at a later time...
+
+/*
 - (void) updatePullMenuWithRemotes:(NSMutableArray *)remoteBranches
 {
     if (!pullItem)
@@ -708,7 +766,7 @@
 	}
 
     [pushItem setMenu: remoteMenu];
-}
+}*/
 
 - (void) updateBranchMenus
 {
@@ -736,10 +794,14 @@
 	}
 
     [self updateAllBranchesMenuWithLocal:localBranches remote:remoteBranches tag:tags other:other];
+    
+    [self updatePopUpToolbarItemMenu:pushItem remotes:remoteBranches action:@selector(pushMenuAction:) title:@"Push menu"];
+    [self updatePopUpToolbarItemMenu:pullItem remotes:remoteBranches action:@selector(pullMenuAction:) title:@"Push menu"];
+    [self updatePopUpToolbarItemMenu:rebaseItem remotes:remoteBranches action:@selector(rebaseMenuAction:) title:@"Push menu"];
 
-	[self updatePullMenuWithRemotes:remoteBranches];
-
-	[self updatePushMenuWithRemotes:remoteBranches];
+// 	[self updatePullMenuWithRemotes:remoteBranches];
+// 
+// 	[self updatePushMenuWithRemotes:remoteBranches];
 }
 
 - (void) changeBranch:(NSMenuItem *)sender
@@ -751,23 +813,29 @@
 - (void) selectCurrentBranch
 {
 	PBGitRevSpecifier *rev = historyController.repository.currentBranch;
-    NSToolbar * tb = historyController.viewToolbar;
-    NSArray * tbLabels = [NSArray arrayWithObjects:@"Push", @"Pull", @"Rebase", nil];
-    
-	if (rev) {
-        [branchPopUp setTitle:[rev description]];
-        
-        if ([[rev description] isEqualToString:@"All branches"] ||
-            [[rev description] isEqualToString:@"Local branches"]) 
-        {
-            [self toggleToolbarItems:tb matchingLabels:tbLabels enabledState:NO];
-        } else {
-            [self toggleToolbarItems:tb matchingLabels:tbLabels enabledState:YES];
-        }
-    } else {
-        /* just in case, re-enable all toolbar buttons */
-        [self toggleToolbarItems:tb matchingLabels:nil enabledState:YES];
-    }
+    [branchPopUp setTitle:[rev description]];
+
+    // !!! Andre Berg 20091110: I don't think this is needed any more since the Push, Pull 
+    // and Rebase toolbar items are now popup buttons it makes no sense to disable them 
+    // when switching to "All branches" or "Local branches" since you can choose the remote
+    // from the popup menus.
+
+    //     NSToolbar * tb = historyController.viewToolbar;
+    //     NSArray * tbLabels = [NSArray arrayWithObjects:@"Push", @"Pull", @"Rebase", nil];
+    // 	if (rev) {
+    //         [branchPopUp setTitle:[rev description]];
+    //         
+    //         if ([[rev description] isEqualToString:@"All branches"] ||
+    //             [[rev description] isEqualToString:@"Local branches"]) 
+    //         {
+    //             [self toggleToolbarItems:tb matchingLabels:tbLabels enabledState:NO];
+    //         } else {
+    //             [self toggleToolbarItems:tb matchingLabels:tbLabels enabledState:YES];
+    //         }
+    //     } else {
+    //         /* just in case, re-enable all toolbar buttons */
+    //         [self toggleToolbarItems:tb matchingLabels:nil enabledState:YES];
+    //     }
 }
 
 - (void) pullMenuAction:(NSMenuItem *)sender
@@ -786,6 +854,15 @@
     if ([refComponents count] != 2)
         return;
     [self pushRef:[refComponents objectAtIndex:1] toRemote:[refComponents objectAtIndex:0]];
+}
+
+- (void) rebaseMenuAction:(NSMenuItem *)sender
+{
+    NSString *ref = [(PBGitRevSpecifier *)[sender representedObject] description];
+    NSArray *refComponents = [ref componentsSeparatedByString:@"/"];
+    if ([refComponents count] != 2)
+        return;
+    [self rebaseRef:[refComponents objectAtIndex:1] fromRemote:[refComponents objectAtIndex:0]];
 }
 
 @end
