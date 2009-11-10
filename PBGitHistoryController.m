@@ -98,27 +98,23 @@
 
 // MARK: NSToolbarItemValidation Methods
 
-// !!! Andre Berg 20091110: I don't think this is needed any more since the Push, Pull 
-// and Rebase toolbar items are now popup buttons it makes no sense to disable them 
-// when switching to "All branches" or "Local branches" since you can choose the remote
-// from the popup menus.
-// - (BOOL) validateToolbarItem:(NSToolbarItem *)theItem {
-//     
-//     NSString * curBranchDesc = [[repository currentBranch] description];
-//     NSArray * candidates = [NSArray arrayWithObjects:@"Push", @"Pull", @"Rebase", nil];
-//     BOOL res;
-//     
-//     if (([candidates containsObject:[theItem label]]) && 
-//         (([curBranchDesc isEqualToString:@"All branches"]) || 
-//          ([curBranchDesc isEqualToString:@"Local branches"])))
-//     {
-//         res = NO;
-//     } else {
-//         res = YES;
-//     }
-//     
-//     return res;
-// }
+- (BOOL) validateToolbarItem:(NSToolbarItem *)theItem {
+    
+    NSString * curBranchDesc = [[repository currentBranch] description];
+    NSArray * candidates = [NSArray arrayWithObjects:@"Push", @"Pull", @"Rebase", nil];
+    BOOL res;
+    
+    if (([candidates containsObject:[theItem label]]) && 
+        (([curBranchDesc isEqualToString:@"All branches"]) || 
+         ([curBranchDesc isEqualToString:@"Local branches"])))
+    {
+        res = NO;
+    } else {
+        res = YES;
+    }
+    
+    return res;
+}
 
 // MARK: PBGitHistoryController
 
