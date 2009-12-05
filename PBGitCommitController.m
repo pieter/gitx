@@ -177,6 +177,12 @@
 {
 	[cachedFilesController rearrangeObjects];
 	[unstagedFilesController rearrangeObjects];
+    if ([[cachedFilesController arrangedObjects] count]) {
+        [commitButton setEnabled:YES];
+    } else {
+        [commitButton setEnabled:NO];
+    }
+
 }
 
 - (void)indexOperationFailed:(NSNotification *)notification

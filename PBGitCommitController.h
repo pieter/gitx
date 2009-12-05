@@ -19,6 +19,7 @@
 	IBOutlet NSTextView *commitMessageView;
 	IBOutlet NSArrayController *unstagedFilesController;
 	IBOutlet NSArrayController *cachedFilesController;
+	IBOutlet NSButton *commitButton;
 
 	IBOutlet PBGitIndexController *indexController;
 	IBOutlet PBWebChangesController *webController;
