@@ -9,6 +9,11 @@
 #import "PBGitRef.h"
 
 
+NSString * const kGitXTagRefPrefix    = @"refs/tags/";
+NSString * const kGitXBranchRefPrefix = @"refs/heads/";
+NSString * const kGitXRemoteRefPrefix = @"refs/remotes/";
+
+
 @implementation PBGitRef
 
 @synthesize ref;
@@ -19,15 +24,83 @@
 	return ref;
 }
 
+- (NSString *) tagName
+{
+	if (![self isTag])
+		return nil;
+
+	return [self shortName];
+}
+
+- (NSString *) branchName
+{
+	if (![self isBranch])
+		return nil;
+
+	return [self shortName];
+}
+
+- (NSString *) remoteName
+{
+	if (![self isRemote])
+		return nil;
+
+	return (NSString *)[[ref componentsSeparatedByString:@"/"] objectAtIndex:2];
+}
+
+- (NSString *) remoteBranchName
+{
+	if (![self isRemoteBranch])
+		return nil;
+
+	return [[self shortName] substringFromIndex:[[self remoteName] length] + 1];;
+}
+
 - (NSString*) type
 {
-	if ([ref hasPrefix:@"refs/heads"])
+	if ([self isBranch])
 		return @"head";
-	if ([ref hasPrefix:@"refs/tags"])
+	if ([self isTag])
 		return @"tag";
-	if ([ref hasPrefix:@"refs/remotes"])
+	if ([self isRemote])
 		return @"remote";
 	return nil;
+}
+
+- (BOOL) isBranch
+{
+	return [ref hasPrefix:kGitXBranchRefPrefix];
+}
+
+- (BOOL) isTag
+{
+	return [ref hasPrefix:kGitXTagRefPrefix];
+}
+
+- (BOOL) isRemote
+{
+	return [ref hasPrefix:kGitXRemoteRefPrefix];
+}
+
+- (BOOL) isRemoteBranch
+{
+	if (![self isRemote])
+		return NO;
+
+	return ([[ref componentsSeparatedByString:@"/"] count] > 3);
+}
+
+- (BOOL) isEqualToRef:(PBGitRef *)otherRef
+{
+	return [ref isEqualToString:[otherRef ref]];
+}
+
+- (PBGitRef *) remoteRef
+{
+	if (![self isRemote])
+		return nil;
+
+	return [PBGitRef refFromString:[@"refs/remotes/" stringByAppendingString:[self remoteName]]];
 }
 
 + (PBGitRef*) refFromString: (NSString*) s
