@@ -54,6 +54,11 @@ NSString * const kGitXCommitType = @"commit";
 	return &sha;
 }
 
++ commitWithRepository:(PBGitRepository*)repo andSha:(git_oid)newSha
+{
+	return [[[self alloc] initWithRepository:repo andSha:newSha] autorelease];
+}
+
 - initWithRepository:(PBGitRepository*) repo andSha:(git_oid)newSha
 {
 	details = nil;
@@ -64,10 +69,42 @@ NSString * const kGitXCommitType = @"commit";
 
 - (NSString *)realSha
 {
-	char *hex = git_oid_mkhex(&sha);
-	NSString *str = [NSString stringWithUTF8String:hex];
-	free(hex);
-	return str;
+	if (!realSHA) {
+		char *hex = git_oid_mkhex(&sha);
+		realSHA = [NSString stringWithUTF8String:hex];
+		free(hex);
+	}
+
+	return realSHA;
+}
+
+- (BOOL) isOnSameBranchAs:(PBGitCommit *)other
+{
+	if (!other)
+		return NO;
+
+	NSString *mySHA = [self realSha];
+	NSString *otherSHA = [other realSha];
+
+	if ([otherSHA isEqualToString:mySHA])
+		return YES;
+
+	NSString *commitRange = [NSString stringWithFormat:@"%@..%@", mySHA, otherSHA];
+	NSString *parentsOutput = [repository outputForArguments:[NSArray arrayWithObjects:@"rev-list", @"--parents", @"-1", commitRange, nil]];
+	if ([parentsOutput isEqualToString:@""]) {
+		return NO;
+	}
+
+	NSString *mergeSHA = [repository outputForArguments:[NSArray arrayWithObjects:@"merge-base", mySHA, otherSHA, nil]];
+	if ([mergeSHA isEqualToString:mySHA] || [mergeSHA isEqualToString:otherSHA])
+		return YES;
+
+	return NO;
+}
+
+- (BOOL) isOnHeadBranch
+{
+	return [self isOnSameBranchAs:[repository headCommit]];
 }
 
 // FIXME: Remove this method once it's unused.
@@ -106,6 +143,18 @@ NSString * const kGitXCommitType = @"commit";
 		return;
 
 	[self.refs removeObject:ref];
+}
+
+- (BOOL) hasRef:(PBGitRef *)ref
+{
+	if (!self.refs)
+		return NO;
+
+	for (PBGitRef *existingRef in self.refs)
+		if ([existingRef isEqualToRef:ref])
+			return YES;
+
+	return NO;
 }
 
 - (NSMutableArray *)refs

@@ -281,6 +281,105 @@ NSString* PBGitRepositoryErrorDomain = @"GitXErrorDomain";
 
 	return _headRef;
 }
+
+- (NSString *) headSHA
+{
+	return [self shaForRef:[[self headRef] ref]];
+}
+
+- (PBGitCommit *) headCommit
+{
+	return [self commitForSHA:[self headSHA]];
+}
+
+- (NSString *) shaForRef:(PBGitRef *)ref
+{
+	if (!ref)
+		return nil;
+
+	for (NSString *sha in refs)
+		for (PBGitRef *existingRef in [refs objectForKey:sha])
+			if ([existingRef isEqualToRef:ref])
+				return sha;
+
+	int retValue = 1;
+	NSArray *args = [NSArray arrayWithObjects:@"rev-list", @"-1", [ref ref], nil];
+	NSString *shaForRef = [self outputInWorkdirForArguments:args retValue:&retValue];
+	if (retValue || [shaForRef isEqualToString:@""])
+		return nil;
+
+	return shaForRef;
+}
+
+- (PBGitCommit *) commitForRef:(PBGitRef *)ref
+{
+	if (!ref)
+		return nil;
+
+	return [self commitForSHA:[self shaForRef:ref]];
+}
+
+- (PBGitCommit *) commitForSHA:(NSString *)sha
+{
+	if (!sha)
+		return nil;
+	NSArray *revList = [self.revisionList.commits copy];
+
+	for (PBGitCommit *commit in revList)
+		if ([[commit realSha] isEqualToString:sha])
+			return commit;
+
+	return nil;
+}
+
+- (BOOL) isSHAOnHeadBranch:(NSString *)testSHA
+{
+	if (!testSHA)
+		return NO;
+
+	NSString *headSHA = [self headSHA];
+
+	if ([testSHA isEqualToString:headSHA])
+		return YES;
+
+	NSString *commitRange = [NSString stringWithFormat:@"%@..%@", testSHA, headSHA];
+	NSString *parentsOutput = [self outputForArguments:[NSArray arrayWithObjects:@"rev-list", @"--parents", @"-1", commitRange, nil]];
+	if ([parentsOutput isEqualToString:@""]) {
+		return NO;
+	}
+
+	NSString *mergeSHA = [self outputForArguments:[NSArray arrayWithObjects:@"merge-base", testSHA, headSHA, nil]];
+	if ([mergeSHA isEqualToString:testSHA] || [mergeSHA isEqualToString:headSHA])
+		return YES;
+
+	return NO;
+}
+
+- (BOOL) isRefOnHeadBranch:(PBGitRef *)testRef
+{
+	if (!testRef)
+		return NO;
+
+	return [self isSHAOnHeadBranch:[self shaForRef:testRef]];
+}
+
+- (BOOL) checkRefFormat:(NSString *)refName
+{
+	int retValue = 1;
+	[self outputInWorkdirForArguments:[NSArray arrayWithObjects:@"check-ref-format", refName, nil] retValue:&retValue];
+	if (retValue)
+		return NO;
+	return YES;
+}
+
+- (BOOL) refExists:(PBGitRef *)ref
+{
+	int retValue = 1;
+    NSString *output = [self outputInWorkdirForArguments:[NSArray arrayWithObjects:@"for-each-ref", [ref ref], nil] retValue:&retValue];
+    if (retValue || [output isEqualToString:@""])
+        return NO;
+    return YES;
+}
 		
 // Returns either this object, or an existing, equal object
 - (PBGitRevSpecifier*) addBranch: (PBGitRevSpecifier*) rev

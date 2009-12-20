@@ -59,6 +59,14 @@
 	return [parameters objectAtIndex:0];
 }
 
+- (PBGitRef *) ref
+{
+	if (![self isSimpleRef])
+		return nil;
+
+	return [PBGitRef refFromString:[self simpleRef]];
+}
+
 - (NSString*) description
 {
 	if (description)
@@ -93,6 +101,16 @@
 
 	return ([[parameters componentsJoinedByString:@" "] isEqualToString: [other.parameters componentsJoinedByString:@" "]] &&
 			 (!description  || [description isEqualToString:other.description]));
+}
+
+- (BOOL) isAllBranchesRev
+{
+	return [self isEqualTo:[PBGitRevSpecifier allBranchesRevSpec]];
+}
+
+- (BOOL) isLocalBranchesRev
+{
+	return [self isEqualTo:[PBGitRevSpecifier localBranchesRevSpec]];
 }
 
 - (void) encodeWithCoder:(NSCoder *)coder

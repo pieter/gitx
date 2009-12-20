@@ -14,6 +14,7 @@
 extern NSString* PBGitRepositoryErrorDomain;
 
 @class PBGitWindowController;
+@class PBGitCommit;
 
 @interface PBGitRepository : NSDocument {
 	PBGitRevList* revisionList;
@@ -51,6 +52,15 @@ extern NSString* PBGitRepositoryErrorDomain;
 - (void) addRef:(PBGitRef *)ref fromParameters:(NSArray *)params;
 - (void) lazyReload;
 - (PBGitRevSpecifier*) headRef;
+- (NSString *) headSHA;
+- (PBGitCommit *) headCommit;
+- (NSString *) shaForRef:(PBGitRef *)ref;
+- (PBGitCommit *) commitForRef:(PBGitRef *)ref;
+- (PBGitCommit *) commitForSHA:(NSString *)sha;
+- (BOOL) isSHAOnHeadBranch:(NSString *)testSHA;
+- (BOOL) isRefOnHeadBranch:(PBGitRef *)testRef;
+- (BOOL) checkRefFormat:(NSString *)refName;
+- (BOOL) refExists:(PBGitRef *)ref;
 
 - (void) readCurrentBranch;
 - (PBGitRevSpecifier*) addBranch: (PBGitRevSpecifier*) rev;

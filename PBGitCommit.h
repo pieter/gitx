@@ -26,6 +26,7 @@ extern NSString * const kGitXCommitType;
 	NSString* details;
 	NSString *_patch;
 	NSArray* parents;
+	NSString *realSHA;
 
 	int timestamp;
 	char sign;
@@ -33,12 +34,16 @@ extern NSString * const kGitXCommitType;
 	PBGitRepository* repository;
 }
 
++ commitWithRepository:(PBGitRepository*)repo andSha:(git_oid)newSha;
 - initWithRepository:(PBGitRepository *)repo andSha:(git_oid)sha;
 
 - (void)addRef:(PBGitRef *)ref;
 - (void)removeRef:(id)ref;
+- (BOOL) hasRef:(PBGitRef *)ref;
 
 - (NSString *)realSha;
+- (BOOL) isOnSameBranchAs:(PBGitCommit *)other;
+- (BOOL) isOnHeadBranch;
 
 // <PBGitRefish>
 - (NSString *) refishName;
