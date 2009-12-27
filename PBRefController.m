@@ -57,6 +57,15 @@
 }
 
 
+#pragma mark Cherry Pick
+
+- (void) cherryPick:(PBRefMenuItem *)sender
+{
+	id <PBGitRefish> refish = [sender refish];
+	[historyController.repository cherryPickRefish:refish];
+}
+
+
 #pragma mark Create Branch
 
 - (void) createBranch:(PBRefMenuItem *)sender
