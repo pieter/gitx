@@ -137,6 +137,18 @@
 	[[NSAlert alertWithError:error] beginSheetModalForWindow: [self window] modalDelegate:self didEndSelector:nil contextInfo:nil];
 }
 
+- (void)showErrorSheetTitle:(NSString *)title message:(NSString *)message arguments:(NSArray *)arguments output:(NSString *)output
+{
+	NSString *command = [arguments componentsJoinedByString:@" "];
+	NSString *reason = [NSString stringWithFormat:@"%@\n\ncommand: git %@\n%@", message, command, output];
+	NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:
+							  title, NSLocalizedDescriptionKey,
+							  reason, NSLocalizedRecoverySuggestionErrorKey,
+							  nil];
+	NSError *error = [NSError errorWithDomain:PBGitRepositoryErrorDomain code:0 userInfo:userInfo];
+	[self showErrorSheet:error];
+}
+
 
 #pragma mark -
 #pragma mark Toolbar Delegates

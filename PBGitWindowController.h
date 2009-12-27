@@ -31,6 +31,7 @@
 - (void)useToolbar:(NSToolbar *)toolbar;
 - (void)showMessageSheet:(NSString *)messageText infoText:(NSString *)infoText;
 - (void)showErrorSheet:(NSError *)error;
+- (void)showErrorSheetTitle:(NSString *)title message:(NSString *)message arguments:(NSArray *)arguments output:(NSString *)output;
 
 - (IBAction) showCommitView:(id)sender;
 - (IBAction) showHistoryView:(id)sender;
