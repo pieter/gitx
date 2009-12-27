@@ -150,6 +150,11 @@
 	[self showErrorSheet:error];
 }
 
+- (IBAction) revealInFinder:(id)sender
+{
+	[[NSWorkspace sharedWorkspace] openFile:[repository workingDirectory]];
+}
+
 - (IBAction) openInTerminal:(id)sender
 {
 	TerminalApplication *term = [SBApplication applicationWithBundleIdentifier: @"com.apple.Terminal"];
