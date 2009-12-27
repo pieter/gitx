@@ -284,19 +284,21 @@
 		return [self menu];
 
 	int i = [self indexAtX:[view convertPointFromBase:[event locationInWindow]].x - rect.origin.x];
-	if (i < 0)
-		return [self menu];
 
-	id ref = [[[self objectValue] refs] objectAtIndex:i];
-	if (!ref)
-		return [self menu];
+	id ref = nil;
+	if (i >= 0)
+		ref = [[[self objectValue] refs] objectAtIndex:i];
 
-	NSArray *items = [contextMenuDelegate menuItemsForRef:ref];
+	NSArray *items = nil;
+	if (ref)
+		items = [contextMenuDelegate menuItemsForRef:ref];
+	else
+		items = [contextMenuDelegate menuItemsForCommit:[self objectValue]];
+
 	NSMenu *menu = [[NSMenu alloc] init];
+	[menu setAutoenablesItems:NO];
 	for (NSMenuItem *item in items)
 		[menu addItem:item];
 	return menu;
-
-	return [self menu];
 }
 @end
