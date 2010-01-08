@@ -9,6 +9,7 @@
 #import <Cocoa/Cocoa.h>
 
 @class PBGitRevSpecifier;
+@class PBGitRef;
 
 @interface PBSourceViewItem : NSObject {
 	NSMutableArray *children;
@@ -26,6 +27,7 @@
 + (id)itemWithTitle:(NSString *)title;
 
 - (void)addChild:(PBSourceViewItem *)child;
+- (void)removeChild:(PBSourceViewItem *)child;
 
 // This adds the ref to the path, which should match the item's title,
 // so "refs/heads/pu/pb/sidebar" would have the path [@"pu", @"pb", @"sidebare"]
@@ -33,11 +35,12 @@
 - (void)addRev:(PBGitRevSpecifier *)revSpecifier toPath:(NSArray *)path;
 - (PBSourceViewItem *)findRev:(PBGitRevSpecifier *)rev;
 
-- (NSImage *)icon;
+- (PBGitRef *) ref;
 
 @property(retain) NSString *title;
 @property(readonly) NSMutableArray *children;
 @property(assign) BOOL isGroupItem, isUncollapsible;
 @property(retain) PBGitRevSpecifier *revSpecifier;
 @property(retain) PBSourceViewItem *parent;
+@property(readonly) NSImage *icon;
 @end

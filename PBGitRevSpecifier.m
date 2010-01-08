@@ -85,6 +85,28 @@
 	return [parameters componentsJoinedByString:@" "];
 }
 
+- (NSString *) title
+{
+	NSString *title = nil;
+	
+	if ([self.description isEqualToString:@"HEAD"])
+		title = @"detached HEAD";
+	else if ([self isSimpleRef])
+		title = [[self ref] shortName];
+	else if ([self.description hasPrefix:@"-S"])
+		title = [self.description substringFromIndex:[@"-S" length]];
+	else if ([self.description hasPrefix:@"HEAD -- "])
+		title = [self.description substringFromIndex:[@"HEAD -- " length]];
+	else if ([self.description hasPrefix:@"-- "])
+		title = [self.description substringFromIndex:[@"-- " length]];
+	else if ([self.description hasPrefix:@"--left-right "])
+		title = [self.description substringFromIndex:[@"--left-right " length]];
+	else
+		title = self.description;
+	
+	return [NSString stringWithFormat:@"\"%@\"", title];
+}
+
 - (BOOL) hasPathLimiter;
 {
 	for (NSString* param in parameters)

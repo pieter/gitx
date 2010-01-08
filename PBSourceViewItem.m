@@ -7,10 +7,12 @@
 //
 
 #import "PBSourceViewItem.h"
-#import "PBGitRevSpecifier.h"
+#import "PBSourceViewItems.h"
+#import "PBGitRef.h"
 
 @implementation PBSourceViewItem
 @synthesize parent, title, isGroupItem, children, revSpecifier, isUncollapsible;
+@dynamic icon;
 
 - (id)init
 {
@@ -21,33 +23,52 @@
 	return self;
 }
 
-+ (id)groupItemWithTitle:(NSString *)title
++ (id)itemWithTitle:(NSString *)title
 {
 	PBSourceViewItem *item = [[[self class] alloc] init];
 	item.title = title;
+	return item;
+}
+
++ (id)groupItemWithTitle:(NSString *)title
+{
+	PBSourceViewItem *item = [self itemWithTitle:[title uppercaseString]];
 	item.isGroupItem = YES;
 	return item;
 }
 
 + (id)itemWithRevSpec:(PBGitRevSpecifier *)revSpecifier
 {
-	PBSourceViewItem *item = [[[self class] alloc] init];
-	item.revSpecifier = revSpecifier;
+	PBGitRef *ref = [revSpecifier ref];
 
-	return item;	
-}
+	if ([ref isTag])
+		return [PBGitSVTagItem tagItemWithRevSpec:revSpecifier];
+	else if ([ref isBranch])
+		return [PBGitSVBranchItem branchItemWithRevSpec:revSpecifier];
+	else if ([ref isRemoteBranch])
+		return [PBGitSVRemoteBranchItem remoteBranchItemWithRevSpec:revSpecifier];
 
-+ (id)itemWithTitle:(NSString *)title;
-{
-	PBSourceViewItem *item = [[[self class] alloc] init];
-	item.title = title;
-	return item;
+	return [PBGitSVOtherRevItem otherItemWithRevSpec:revSpecifier];
 }
 
 - (void)addChild:(PBSourceViewItem *)child
 {
+	if (!child)
+		return;
+
 	[self.children addObject:child];
 	child.parent = self;
+	[self.children sortUsingDescriptors:[NSArray arrayWithObject:[[NSSortDescriptor alloc] initWithKey:@"title" ascending:YES selector:@selector(localizedCaseInsensitiveCompare:)]]];
+}
+
+- (void)removeChild:(PBSourceViewItem *)child
+{
+	if (!child)
+		return;
+
+	[self.children removeObject:child];
+	if (!self.isGroupItem && ([self.children count] == 0))
+		[self.parent removeChild:self];
 }
 
 - (void)addRev:(PBGitRevSpecifier *)theRevSpecifier toPath:(NSArray *)path
@@ -65,7 +86,10 @@
 			node = child;
 
 	if (!node) {
-		node = [PBSourceViewItem itemWithTitle:firstTitle];
+		if ([firstTitle isEqualToString:[[theRevSpecifier ref] remoteName]])
+			node = [PBGitSVRemoteItem remoteItemWithTitle:firstTitle];
+		else
+			node = [PBGitSVFolderItem folderItemWithTitle:firstTitle];
 		[self addChild:node];
 	}
 
@@ -85,6 +109,11 @@
 	return nil;
 }
 
+- (NSImage *) icon
+{
+	return nil;
+}
+
 - (NSString *)title
 {
 	if (title)
@@ -93,21 +122,17 @@
 	return [[revSpecifier description] lastPathComponent];
 }
 
-- (NSImage *)icon
+- (NSString *) stringValue
 {
-	if ([self isGroupItem])
-		return nil;
+	return self.title;
+}
 
-	if (self.parent && !self.parent.parent && [self.parent.title isEqualToString:@"Remotes"])
-		return [NSImage imageNamed:@"remote"];
+- (PBGitRef *) ref
+{
+	if (self.revSpecifier)
+		return [self.revSpecifier ref];
 
-	if (self.parent && !self.parent.parent && [self.parent.title isEqualToString:@"Tags"])
-		return [NSImage imageNamed:@"tag"];
-
-	if ([[self children] count])
-		return [NSImage imageNamed:@"folder"];
-
-	return [NSImage imageNamed:@"branch"];
+	return nil;
 }
 
 @end

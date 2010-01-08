@@ -7,9 +7,8 @@
 //
 
 #import "PBGitSidebarController.h"
-#import "PBSourceViewItem.h"
+#import "PBSourceViewItems.h"
 #import "NSOutlineViewExt.h"
-#import "PBSourceViewAction.h"
 
 @interface PBGitSidebarController ()
 
@@ -75,7 +74,7 @@
 - (void)addRevSpec:(PBGitRevSpecifier *)rev
 {
 	if (![rev isSimpleRef]) {
-		[custom addChild:[PBSourceViewItem itemWithRevSpec:rev]];
+		[others addChild:[PBSourceViewItem itemWithRevSpec:rev]];
 		return;
 	}
 
@@ -103,7 +102,7 @@
 		return;
 	}
 
-	if (item == commitAction)
+	if (item == stage)
 		[[repository windowController] showCommitView:self];
 
 	/* ... */
@@ -129,51 +128,42 @@
 }
 
 //
-// The next two methods are necessary to hide the triangle for uncollapsible items
-// That is, items which should always be displayed, such as the action items.
-//
-- (BOOL)outlineView:(NSOutlineView *)outlineView shouldCollapseItem:(id)item
+// The next method is necessary to hide the triangle for uncollapsible items
+// That is, items which should always be displayed, such as the Project group.
+// This also moves the group item to the left edge.
+- (BOOL) outlineView:(NSOutlineView *)outlineView shouldShowOutlineCellForItem:(id)item
 {
-	return !([item isUncollapsible]);
+	return ![item isUncollapsible];
 }
-
-- (void)outlineView:(NSOutlineView *)outlineView willDisplayOutlineCell:(id)cell forTableColumn:(NSTableColumn *)tableColumn item:(id)item
-{
-	[cell setTransparent:[item isUncollapsible]];
-} 
 
 - (void)populateList
 {
-	PBSourceViewItem *actions = [PBSourceViewItem groupItemWithTitle:@"Actions"];
+	PBSourceViewItem *project = [PBSourceViewItem groupItemWithTitle:[repository projectName]];
+	project.isUncollapsible = YES;
 
-	actions.isUncollapsible = YES;
-
-	commitAction = [PBSourceViewAction itemWithTitle:@"Index / Commit"];
-	commitAction.icon = [NSImage imageNamed:@"CommitViewTemplate"];
-	[actions addChild:commitAction];
+	stage = [PBGitSVStageItem stageItem];
+	[project addChild:stage];
 	
 	branches = [PBSourceViewItem groupItemWithTitle:@"Branches"];
 	remotes = [PBSourceViewItem groupItemWithTitle:@"Remotes"];
 	tags = [PBSourceViewItem groupItemWithTitle:@"Tags"];
-	custom = [PBSourceViewItem groupItemWithTitle:@"Custom"];
+	others = [PBSourceViewItem groupItemWithTitle:@"Other"];
 
 	for (PBGitRevSpecifier *rev in repository.branches)
 		[self addRevSpec:rev];
 
-	//[items addObject:actions];
-
+	[items addObject:project];
 	[items addObject:branches];
 	[items addObject:remotes];
 	[items addObject:tags];
-	[items addObject:custom];
+	[items addObject:others];
 
 	[sourceView reloadData];
+	[sourceView expandItem:project];
 	[sourceView expandItem:branches expandChildren:YES];
-	[sourceView expandItem:actions];
+	[sourceView expandItem:remotes];
 
-	NSAssert(branches == [sourceView itemAtRow:0], @"First item is not the Branches");
 	[sourceView reloadItem:nil reloadChildren:YES];
-
 }
 
 #pragma mark NSOutlineView Datasource methods

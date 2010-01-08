@@ -19,18 +19,14 @@
 	[commitList registerForDraggedTypes:[NSArray arrayWithObject:@"PBGitRef"]];
 	[historyController addObserver:self forKeyPath:@"repository.branches" options:0 context:@"branchChange"];
 	[historyController addObserver:self forKeyPath:@"repository.currentBranch" options:0 context:@"currentBranchChange"];
-	[self updateBranchMenu];
-	[self selectCurrentBranch];
 }
 
 - (void) observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
 {
     if ([(NSString *)context isEqualToString: @"branchChange"]) {
 		[commitController rearrangeObjects];
-		[self updateBranchMenu];
 	}
 	else if ([(NSString *)context isEqualToString:@"currentBranchChange"]) {
-		[self selectCurrentBranch];
 		[commitController rearrangeObjects];
 	}
 	else {
@@ -361,118 +357,6 @@
 	[commitController rearrangeObjects];
 	[aTableView needsToDrawRect:[aTableView rectOfRow:oldRow]];
 	return YES;
-}
-
-# pragma mark Branches menu
-
-- (void) updateBranchMenu
-{
-	if (!branchPopUp)
-		return;
-
-	NSMutableArray *localBranches = [NSMutableArray array];
-	NSMutableArray *remoteBranches = [NSMutableArray array];
-	NSMutableArray *tags = [NSMutableArray array];
-	NSMutableArray *other = [NSMutableArray array];
-
-	NSMenu *menu = [[NSMenu alloc] initWithTitle:@"Branch menu"];
-	for (PBGitRevSpecifier *rev in historyController.repository.branches)
-	{
-		if (![rev isSimpleRef])
-		{
-			[other addObject:rev];
-			continue;
-		}
-
-		NSString *ref = [rev simpleRef];
-
-		if ([ref hasPrefix:@"refs/heads"])
-			[localBranches addObject:rev];
-		else if ([ref hasPrefix:@"refs/tags"])
-			[tags addObject:rev];
-		else if ([ref hasPrefix:@"refs/remote"])
-			[remoteBranches addObject:rev];
-	}
-
-	for (PBGitRevSpecifier *rev in localBranches)
-	{
-		NSMenuItem *item = [[NSMenuItem alloc] initWithTitle:[rev description] action:@selector(changeBranch:) keyEquivalent:@""];
-		[item setRepresentedObject:rev];
-		[item setTarget:self];
-		[menu addItem:item];
-	}
-
-	[menu addItem:[NSMenuItem separatorItem]];
-
-	// Remotes
-	NSMenu *remoteMenu = [[NSMenu alloc] initWithTitle:@"Remotes"];
-	NSMenu *currentMenu = NULL;
-	for (PBGitRevSpecifier *rev in remoteBranches)
-	{
-		NSString *ref = [rev simpleRef];
-		NSArray *components = [ref componentsSeparatedByString:@"/"];
-		
-		NSString *remoteName = [components objectAtIndex:2];
-		NSString *branchName = [[components subarrayWithRange:NSMakeRange(3, [components count] - 3)] componentsJoinedByString:@"/"];
-
-		if (![[currentMenu title] isEqualToString:remoteName])
-		{
-			currentMenu = [[NSMenu alloc] initWithTitle:remoteName];
-			NSMenuItem *item = [[NSMenuItem alloc] initWithTitle:remoteName action:NULL keyEquivalent:@""];
-			[item setSubmenu:currentMenu];
-			[remoteMenu addItem:item];
-		}
-
-		NSMenuItem *item = [[NSMenuItem alloc] initWithTitle:branchName action:@selector(changeBranch:) keyEquivalent:@""];
-		[item setTarget:self];
-		[item setRepresentedObject:rev];
-		[currentMenu addItem:item];
-	}
-
-	NSMenuItem *remoteItem = [[NSMenuItem alloc] initWithTitle:@"Remotes" action:NULL keyEquivalent:@""];
-	[remoteItem setSubmenu:remoteMenu];
-	[menu addItem:remoteItem];
-
-	// Tags
-	NSMenu *tagMenu = [[NSMenu alloc] initWithTitle:@"Tags"];
-	for (PBGitRevSpecifier *rev in tags)
-	{
-		NSMenuItem *item = [[NSMenuItem alloc] initWithTitle:[rev description] action:@selector(changeBranch:) keyEquivalent:@""];
-		[item setTarget:self];
-		[item setRepresentedObject:rev];
-		[tagMenu addItem:item];
-	}		
-	
-	NSMenuItem *tagItem = [[NSMenuItem alloc] initWithTitle:@"Tags" action:NULL keyEquivalent:@""];
-	[tagItem setSubmenu:tagMenu];
-	[menu addItem:tagItem];
-
-
-	// Others
-	[menu addItem:[NSMenuItem separatorItem]];
-
-	for (PBGitRevSpecifier *rev in other)
-	{
-		NSMenuItem *item = [[NSMenuItem alloc] initWithTitle:[rev description] action:@selector(changeBranch:) keyEquivalent:@""];
-		[item setRepresentedObject:rev];
-		[item setTarget:self];
-		[menu addItem:item];
-	}
-	
-	[[branchPopUp cell] setMenu: menu];
-}
-
-- (void) changeBranch:(NSMenuItem *)sender
-{
-	PBGitRevSpecifier *rev = [sender representedObject];
-	historyController.repository.currentBranch = rev;
-}
-
-- (void) selectCurrentBranch
-{
-	PBGitRevSpecifier *rev = historyController.repository.currentBranch;
-	if (rev)
-		[branchPopUp setTitle:[rev description]];
 }
 
 @end

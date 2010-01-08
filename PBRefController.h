@@ -42,8 +42,5 @@
 - (NSArray *) menuItemsForRef:(PBGitRef *)ref;
 - (NSArray *) menuItemsForCommit:(PBGitCommit *)commit;
 
-- (void) changeBranch:(NSMenuItem *)sender;
-- (void) selectCurrentBranch;
-- (void) updateBranchMenu;
 
 @end

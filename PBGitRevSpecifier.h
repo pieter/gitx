@@ -23,6 +23,7 @@
 - (PBGitRef *) ref;
 - (BOOL) hasPathLimiter;
 - (BOOL) hasLeftRight;
+- (NSString *) title;
 
 - (BOOL) isEqualTo: (PBGitRevSpecifier*) other;
 - (BOOL) isAllBranchesRev;
