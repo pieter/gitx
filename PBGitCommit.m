@@ -9,6 +9,10 @@
 #import "PBGitCommit.h"
 #import "PBGitDefaults.h"
 
+
+NSString * const kGitXCommitType = @"commit";
+
+
 @implementation PBGitCommit
 
 @synthesize repository, subject, timestamp, author, parentShas, nParents, sign, lineInfo;
@@ -128,4 +132,23 @@
 + (BOOL)isKeyExcludedFromWebScript:(const char *)name {
 	return NO;
 }
+
+
+#pragma mark <PBGitRefish>
+
+- (NSString *) refishName
+{
+	return [self realSha];
+}
+
+- (NSString *) shortName
+{
+	return [[self realSha] substringToIndex:10];
+}
+
+- (NSString *) refishType
+{
+	return kGitXCommitType;
+}
+
 @end

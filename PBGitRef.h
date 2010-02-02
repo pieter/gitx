@@ -7,24 +7,34 @@
 //
 
 #import <Cocoa/Cocoa.h>
+#import "PBGitRefish.h"
 
+
+extern NSString * const kGitXTagType;
+extern NSString * const kGitXBranchType;
+extern NSString * const kGitXRemoteType;
+extern NSString * const kGitXRemoteBranchType;
 
 extern NSString * const kGitXTagRefPrefix;
 extern NSString * const kGitXBranchRefPrefix;
 extern NSString * const kGitXRemoteRefPrefix;
 
 
-@interface PBGitRef : NSObject {
+@interface PBGitRef : NSObject <PBGitRefish> {
 	NSString* ref;
 }
 
-- (NSString*) shortName;
+// <PBGitRefish>
+- (NSString *) refishName;
+- (NSString *) shortName;
+- (NSString *) refishType;
+
 - (NSString *) tagName;
 - (NSString *) branchName;
 - (NSString *) remoteName;
 - (NSString *) remoteBranchName;
 
-- (NSString*) type;
+- (NSString *) type;
 - (BOOL) isBranch;
 - (BOOL) isTag;
 - (BOOL) isRemote;
