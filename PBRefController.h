@@ -13,6 +13,8 @@
 #import "PBGitCommit.h"
 #import "PBRefContextDelegate.h"
 
+@class PBRefMenuItem;
+
 @interface PBRefController : NSObject <PBRefContextDelegate> {
 	IBOutlet __weak PBGitHistoryController *historyController;
 	IBOutlet NSArrayController *commitController;
@@ -29,7 +31,8 @@
 - (IBAction)closeSheet:(id) sender;
 - (IBAction)saveSheet:(id) sender;
 
-- (NSArray *) menuItemsForRef:(PBGitRef *)ref commit:(PBGitCommit *)commit;
+- (NSArray *) menuItemsForRef:(PBGitRef *)ref;
+- (NSArray *) menuItemsForCommit:(PBGitCommit *)commit;
 
 - (void) changeBranch:(NSMenuItem *)sender;
 - (void) selectCurrentBranch;

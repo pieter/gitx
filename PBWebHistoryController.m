@@ -115,7 +115,7 @@ contextMenuItemsForElement:(NSDictionary *)element
 			for (PBGitRef *ref in historyController.webCommit.refs)
 			{
 				if ([[ref shortName] isEqualToString:selectedRefString])
-					return [contextMenuDelegate menuItemsForRef:ref commit:historyController.webCommit];
+					return [contextMenuDelegate menuItemsForRef:ref];
 			}
 			NSLog(@"Could not find selected ref!");
 			return defaultMenuItems;

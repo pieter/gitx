@@ -10,37 +10,72 @@
 
 
 @implementation PBRefMenuItem
-@synthesize ref, commit;
+@synthesize refish;
 
-+ (NSArray *)defaultMenuItemsForRef:(PBGitRef *)ref commit:(PBGitCommit *)commit target:(id)target
++ (PBRefMenuItem *) itemWithTitle:(NSString *)title action:(SEL)selector enabled:(BOOL)isEnabled
 {
-	NSMutableArray *array = [NSMutableArray array];
-	NSString *type = [ref type];
-	if ([type isEqualToString:@"remote"])
-		type = @"remote branch";
-	else if ([type isEqualToString:@"head"])
-		type = @"branch";
+	if (!isEnabled)
+		selector = nil;
 
-	[array addObject:[[PBRefMenuItem alloc] initWithTitle:[@"Delete " stringByAppendingString:type]
-												   action:@selector(removeRef:)
-											keyEquivalent: @""]];
-	if ([type isEqualToString:@"branch"])
-		[array addObject:[[PBRefMenuItem alloc] initWithTitle:@"Checkout branch"
-													   action:@selector(checkoutRef:)
-												keyEquivalent: @""]];
+	PBRefMenuItem *item = [[PBRefMenuItem alloc] initWithTitle:title action:selector keyEquivalent:@""];
+	[item setEnabled:isEnabled];
+	return item;
+}
 
-    if ([type isEqualToString:@"tag"])
-		[array addObject:[[PBRefMenuItem alloc] initWithTitle:@"View tag info"
-													   action:@selector(tagInfo:)
-												keyEquivalent: @""]];    
-	
-	for (PBRefMenuItem *item in array)
-	{
-		[item setTarget: target];
-		[item setRef: ref];
-		[item setCommit:commit];
+
++ (PBRefMenuItem *) separatorItem
+{
+	PBRefMenuItem *item = (PBRefMenuItem *)[super separatorItem];
+	return item;
+}
+
+
++ (NSArray *) defaultMenuItemsForRef:(PBGitRef *)ref inRepository:(PBGitRepository *)repo target:(id)target
+{
+	if (!ref || !repo || !target) {
+		return nil;
 	}
 
-	return array;
+	NSMutableArray *items = [NSMutableArray array];
+
+	NSString *targetRefName = [ref shortName];
+
+	PBGitRef *headRef = [[repo headRef] ref];
+	BOOL isHead = [ref isEqualToRef:headRef];
+
+	// checkout ref
+	NSString *checkoutTitle = [@"Checkout " stringByAppendingString:targetRefName];
+	[items addObject:[PBRefMenuItem itemWithTitle:checkoutTitle action:@selector(checkoutRef:) enabled:!isHead]];
+
+	// view tag info
+	if ([ref isTag])
+		[items addObject:[PBRefMenuItem itemWithTitle:@"View tag info" action:@selector(tagInfo:) enabled:YES]];
+
+	// delete ref
+	[items addObject:[PBRefMenuItem separatorItem]];
+	NSString *deleteTitle = [NSString stringWithFormat:@"Delete %@…", targetRefName];
+	[items addObject:[PBRefMenuItem itemWithTitle:deleteTitle action:@selector(removeRef:) enabled:YES]];
+
+	for (PBRefMenuItem *item in items) {
+		[item setTarget:target];
+		[item setRefish:ref];
+	}
+
+	return items;
 }
+
+
++ (NSArray *) defaultMenuItemsForCommit:(PBGitCommit *)commit target:(id)target
+{
+	NSMutableArray *items = [NSMutableArray array];
+
+	for (PBRefMenuItem *item in items) {
+		[item setTarget:target];
+		[item setRefish:commit];
+	}
+
+	return items;
+}
+
+
 @end

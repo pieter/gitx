@@ -39,20 +39,21 @@
 	if (returnCode == NSAlertDefaultReturn) {
 		int ret = 1;
         PBRefMenuItem *refMenuItem = contextInfo;
-		[historyController.repository outputForArguments:[NSArray arrayWithObjects:@"update-ref", @"-d", [[refMenuItem ref] ref], nil] retValue: &ret];
+		[historyController.repository outputForArguments:[NSArray arrayWithObjects:@"update-ref", @"-d", [[refMenuItem refish] refishName], nil] retValue: &ret];
 		if (ret) {
 			NSLog(@"Removing ref failed!");
 			return;
 		}
-		[historyController.repository removeBranch:[[PBGitRevSpecifier alloc] initWithRef:[refMenuItem ref]]];
-		[[refMenuItem commit] removeRef:[refMenuItem ref]];
+		[historyController.repository removeBranch:[[PBGitRevSpecifier alloc] initWithRef:[refMenuItem refish]]];
+		PBGitCommit *commitForRef = [historyController.repository commitForRef:[refMenuItem refish]];
+		[commitForRef removeRef:[refMenuItem refish]];
 		[commitController rearrangeObjects];
 	}
 }
 
 - (void) removeRef:(PBRefMenuItem *)sender
 {
-	NSString *ref_desc = [NSString stringWithFormat:@"%@ %@", [[sender ref] type], [[sender ref] shortName]];
+	NSString *ref_desc = [NSString stringWithFormat:@"%@ %@", [(PBGitRef *)[sender refish] type], [[sender refish] shortName]];
 	NSString *question = [NSString stringWithFormat:@"Are you sure you want to remove the %@?", ref_desc];
     NSBeginAlertSheet([NSString stringWithFormat:@"Delete %@?", ref_desc], @"Delete", @"Cancel", nil, [[historyController view] window], self, @selector(removeRefSheetDidEnd:returnCode:contextInfo:), NULL, sender, question);
 }
@@ -60,7 +61,7 @@
 - (void) checkoutRef:(PBRefMenuItem *)sender
 {
 	int ret = 1;
-	[historyController.repository outputInWorkdirForArguments:[NSArray arrayWithObjects:@"checkout", [[sender ref] shortName], nil] retValue: &ret];
+	[historyController.repository outputInWorkdirForArguments:[NSArray arrayWithObjects:@"checkout", [[sender refish] shortName], nil] retValue: &ret];
 	if (ret) {
 		[[historyController.repository windowController] showMessageSheet:@"Checking out branch failed" infoText:@"There was an error checking out the branch. Perhaps your working directory is not clean?"];
 		return;
@@ -71,10 +72,10 @@
 
 - (void) tagInfo:(PBRefMenuItem *)sender
 {
-    NSString *message = [NSString stringWithFormat:@"Info for tag: %@", [[sender ref] shortName]];
+    NSString *message = [NSString stringWithFormat:@"Info for tag: %@", [[sender refish] shortName]];
 
     int ret = 1;
-    NSString *info = [historyController.repository outputInWorkdirForArguments:[NSArray arrayWithObjects:@"tag", @"-n50", @"-l", [[sender ref] shortName], nil] retValue: &ret];
+    NSString *info = [historyController.repository outputInWorkdirForArguments:[NSArray arrayWithObjects:@"tag", @"-n50", @"-l", [[sender refish] shortName], nil] retValue: &ret];
 
     if (!ret) {
 	    [[historyController.repository windowController] showMessageSheet:message infoText:info];
@@ -82,10 +83,18 @@
     return;
 }
 
-- (NSArray *) menuItemsForRef:(PBGitRef *)ref commit:(PBGitCommit *)commit
+#pragma mark Contextual menus
+
+- (NSArray *) menuItemsForRef:(PBGitRef *)ref
 {
-	return [PBRefMenuItem defaultMenuItemsForRef:ref commit:commit target:self];
+	return [PBRefMenuItem defaultMenuItemsForRef:ref inRepository:historyController.repository target:self];
 }
+
+- (NSArray *) menuItemsForCommit:(PBGitCommit *)commit
+{
+	return [PBRefMenuItem defaultMenuItemsForCommit:commit target:self];
+}
+
 
 # pragma mark Tableview delegate methods
 

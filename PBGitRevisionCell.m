@@ -291,7 +291,7 @@
 	if (!ref)
 		return [self menu];
 
-	NSArray *items = [contextMenuDelegate menuItemsForRef:ref commit:[self objectValue]];
+	NSArray *items = [contextMenuDelegate menuItemsForRef:ref];
 	NSMenu *menu = [[NSMenu alloc] init];
 	for (NSMenuItem *item in items)
 		[menu addItem:item];
