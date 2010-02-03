@@ -20,16 +20,10 @@
 	IBOutlet NSArrayController *commitController;
 	IBOutlet PBCommitList *commitList;
 
-	IBOutlet NSWindow *newBranchSheet;
-	IBOutlet NSTextField *newBranchName;
-	IBOutlet NSTextField *errorMessage;
-
 	IBOutlet NSPopUpButton *branchPopUp;
 }
 
-- (IBAction)addRef:(id)sender;
-- (IBAction)closeSheet:(id) sender;
-- (IBAction)saveSheet:(id) sender;
+- (void) createBranch:(PBRefMenuItem *)sender;
 
 - (NSArray *) menuItemsForRef:(PBGitRef *)ref;
 - (NSArray *) menuItemsForCommit:(PBGitCommit *)commit;

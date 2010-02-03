@@ -11,6 +11,7 @@
 #import "PBGitGrapher.h"
 #import "PBGitRevisionCell.h"
 #import "PBCommitList.h"
+#import "PBCreateBranchSheet.h"
 #define QLPreviewPanel NSClassFromString(@"QLPreviewPanel")
 
 
@@ -319,6 +320,19 @@
 	if(offset == 1)
 		return proposedMax - historySplitView.bottomViewMin;
 	return [sender frame].size.height;
+}
+
+
+#pragma mark Repository Methods
+
+- (IBAction) createBranch:(id)sender
+{
+	PBGitRef *currentRef = [repository.currentBranch ref];
+
+	if (!realCommit || [realCommit hasRef:currentRef])
+		[PBCreateBranchSheet beginCreateBranchSheetAtRefish:currentRef inRepository:self.repository];
+	else
+		[PBCreateBranchSheet beginCreateBranchSheetAtRefish:realCommit inRepository:self.repository];
 }
 
 @end

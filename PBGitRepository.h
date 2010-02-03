@@ -10,6 +10,7 @@
 #import "PBGitRevList.h"
 #import "PBGitRevSpecifier.h"
 #import "PBGitConfig.h"
+#import "PBGitRefish.h"
 
 extern NSString* PBGitRepositoryErrorDomain;
 
@@ -27,6 +28,8 @@ extern NSString* PBGitRepositoryErrorDomain;
 
 	PBGitRevSpecifier *_headRef; // Caching
 }
+
+- (BOOL) createBranch:(NSString *)branchName atRefish:(id <PBGitRefish>)ref;
 
 - (NSFileHandle*) handleForCommand:(NSString*) cmd;
 - (NSFileHandle*) handleForArguments:(NSArray*) args;

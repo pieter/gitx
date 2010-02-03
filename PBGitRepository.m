@@ -424,7 +424,29 @@ NSString* PBGitRepositoryErrorDomain = @"GitXErrorDomain";
 		return [PBGitBinary path];
 	
 	return nil;
-}		
+}
+
+#pragma mark Repository commands
+
+- (BOOL) createBranch:(NSString *)branchName atRefish:(id <PBGitRefish>)ref
+{
+	if (!branchName || !ref)
+		return NO;
+
+	int retValue = 1;
+	NSArray *arguments = [NSArray arrayWithObjects:@"branch", branchName, [ref refishName], nil];
+	NSString *output = [self outputInWorkdirForArguments:arguments retValue:&retValue];
+	if (retValue) {
+		NSString *message = [NSString stringWithFormat:@"There was an error creating the branch '%@' at %@ '%@'.", branchName, [ref refishType], [ref shortName]];
+		[self.windowController showErrorSheetTitle:@"Create Branch failed!" message:message arguments:arguments output:output];
+		return NO;
+	}
+
+	[self reloadRefs];
+	return YES;
+}
+
+#pragma mark low level
 
 - (int) returnValueForCommand:(NSString *)cmd
 {

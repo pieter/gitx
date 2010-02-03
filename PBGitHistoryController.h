@@ -51,6 +51,9 @@
 - (void)showInFinderAction:(id)sender;
 - (void)openFilesAction:(id)sender;
 
+// Repository Methods
+- (IBAction) createBranch:(id)sender;
+
 - (void) copyCommitInfo;
 
 - (BOOL) hasNonlinearPath;
