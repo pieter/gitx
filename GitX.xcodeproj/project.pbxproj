@@ -46,6 +46,7 @@
 		D26DC6450E782C9000C777B2 /* gitx.icns in Resources */ = {isa = PBXBuildFile; fileRef = D26DC6440E782C9000C777B2 /* gitx.icns */; };
 		D854948610D5C01B0083B917 /* PBCreateBranchSheet.m in Sources */ = {isa = PBXBuildFile; fileRef = D854948510D5C01B0083B917 /* PBCreateBranchSheet.m */; };
 		D85B939310E3D8B4007F3C28 /* PBCreateBranchSheet.xib in Resources */ = {isa = PBXBuildFile; fileRef = D85B939210E3D8B4007F3C28 /* PBCreateBranchSheet.xib */; };
+		D8E3B2B810DC9FB2001096A3 /* ScriptingBridge.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D8E3B2B710DC9FB2001096A3 /* ScriptingBridge.framework */; };
 		EB2A734A0FEE3F09006601CF /* PBCollapsibleSplitView.m in Sources */ = {isa = PBXBuildFile; fileRef = EB2A73490FEE3F09006601CF /* PBCollapsibleSplitView.m */; };
 		F50A411F0EBB874C00208746 /* mainSplitterBar.tiff in Resources */ = {isa = PBXBuildFile; fileRef = F50A411D0EBB874C00208746 /* mainSplitterBar.tiff */; };
 		F50A41200EBB874C00208746 /* mainSplitterDimple.tiff in Resources */ = {isa = PBXBuildFile; fileRef = F50A411E0EBB874C00208746 /* mainSplitterDimple.tiff */; };
@@ -210,10 +211,12 @@
 		93F7857E0EA3ABF100C1F443 /* PBCommitMessageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PBCommitMessageView.m; sourceTree = "<group>"; };
 		93FCCBA80EA8AF450061B02B /* PBGitConfig.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PBGitConfig.m; sourceTree = "<group>"; };
 		D26DC6440E782C9000C777B2 /* gitx.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = gitx.icns; sourceTree = "<group>"; };
+		D823487410CB382C00944BDE /* Terminal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Terminal.h; sourceTree = "<group>"; };
 		D854948410D5C01B0083B917 /* PBCreateBranchSheet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PBCreateBranchSheet.h; sourceTree = "<group>"; };
 		D854948510D5C01B0083B917 /* PBCreateBranchSheet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PBCreateBranchSheet.m; sourceTree = "<group>"; };
 		D854949310D5C3E20083B917 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/PBCreateBranchSheet.xib; sourceTree = "<group>"; };
 		D85B93F610E51279007F3C28 /* PBGitRefish.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PBGitRefish.h; sourceTree = "<group>"; };
+		D8E3B2B710DC9FB2001096A3 /* ScriptingBridge.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ScriptingBridge.framework; path = /System/Library/Frameworks/ScriptingBridge.framework; sourceTree = "<absolute>"; };
 		EB2A73480FEE3F09006601CF /* PBCollapsibleSplitView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PBCollapsibleSplitView.h; sourceTree = "<group>"; };
 		EB2A73490FEE3F09006601CF /* PBCollapsibleSplitView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PBCollapsibleSplitView.m; sourceTree = "<group>"; };
 		F50A411D0EBB874C00208746 /* mainSplitterBar.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; name = mainSplitterBar.tiff; path = Images/mainSplitterBar.tiff; sourceTree = "<group>"; };
@@ -329,6 +332,7 @@
 				F580E6AE0E733276009E2D3F /* Sparkle.framework in Frameworks */,
 				F5E4DBFB0EAB58D90013FAFC /* SystemConfiguration.framework in Frameworks */,
 				F5C580E50EDA250900995434 /* libgit2.a in Frameworks */,
+				D8E3B2B810DC9FB2001096A3 /* ScriptingBridge.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -384,6 +388,7 @@
 				77C82804067257F0000B614F /* CoreData.framework */,
 				29B97325FDCFA39411CA2CEA /* Foundation.framework */,
 				29B97324FDCFA39411CA2CEA /* AppKit.framework */,
+				D8E3B2B710DC9FB2001096A3 /* ScriptingBridge.framework */,
 			);
 			name = "Other Frameworks";
 			sourceTree = "<group>";
@@ -586,6 +591,7 @@
 				EB2A73490FEE3F09006601CF /* PBCollapsibleSplitView.m */,
 				F5FC41F20EBCBD4300191D80 /* PBGitXProtocol.h */,
 				F5FC41F30EBCBD4300191D80 /* PBGitXProtocol.m */,
+				D823487410CB382C00944BDE /* Terminal.h */,
 			);
 			name = Aux;
 			sourceTree = "<group>";

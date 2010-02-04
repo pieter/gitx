@@ -35,4 +35,5 @@
 
 - (IBAction) showCommitView:(id)sender;
 - (IBAction) showHistoryView:(id)sender;
+- (IBAction) openInTerminal:(id)sender;
 @end

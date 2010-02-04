@@ -9,6 +9,7 @@
 #import "PBGitWindowController.h"
 #import "PBGitHistoryController.h"
 #import "PBGitCommitController.h"
+#import "Terminal.h"
 
 @implementation PBGitWindowController
 
@@ -147,6 +148,16 @@
 							  nil];
 	NSError *error = [NSError errorWithDomain:PBGitRepositoryErrorDomain code:0 userInfo:userInfo];
 	[self showErrorSheet:error];
+}
+
+- (IBAction) openInTerminal:(id)sender
+{
+	TerminalApplication *term = [SBApplication applicationWithBundleIdentifier: @"com.apple.Terminal"];
+	NSString *workingDirectory = [[repository workingDirectory] stringByAppendingString:@"/"];
+	NSString *cmd = [NSString stringWithFormat: @"cd \"%@\"; clear; echo '# Opened by GitX:'; git status", workingDirectory];
+	[term doScript: cmd in: nil];
+	[NSThread sleepForTimeInterval: 0.1];
+	[term activate];
 }
 
 
