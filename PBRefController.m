@@ -111,29 +111,39 @@
 }
 
 
-- (void) removeRefSheetDidEnd:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void  *)contextInfo
+#pragma mark Remove a branch, remote or tag
+
+- (void) showDeleteRefSheet:(PBRefMenuItem *)sender
 {
+	if ([[sender refish] refishType] == kGitXCommitType)
+		return;
+
+	PBGitRef *ref = (PBGitRef *)[sender refish];
+	NSString *ref_desc = [NSString stringWithFormat:@"%@ '%@'", [ref refishType], [ref shortName]];
+
+	NSAlert *alert = [NSAlert alertWithMessageText:[NSString stringWithFormat:@"Delete %@?", ref_desc]
+									 defaultButton:@"Delete"
+								   alternateButton:@"Cancel"
+									   otherButton:nil
+						 informativeTextWithFormat:@"Are you sure you want to remove the %@?", ref_desc];
+	
+	[alert beginSheetModalForWindow:[historyController.repository.windowController window]
+					  modalDelegate:self
+					 didEndSelector:@selector(deleteRefSheetDidEnd:returnCode:contextInfo:)
+						contextInfo:ref];
+}
+
+- (void) deleteRefSheetDidEnd:(NSAlert *)sheet returnCode:(int)returnCode contextInfo:(void  *)contextInfo
+{
+    [[sheet window] orderOut:nil];
+
 	if (returnCode == NSAlertDefaultReturn) {
-		int ret = 1;
-        PBRefMenuItem *refMenuItem = contextInfo;
-		[historyController.repository outputForArguments:[NSArray arrayWithObjects:@"update-ref", @"-d", [[refMenuItem refish] refishName], nil] retValue: &ret];
-		if (ret) {
-			NSLog(@"Removing ref failed!");
-			return;
-		}
-		[historyController.repository removeBranch:[[PBGitRevSpecifier alloc] initWithRef:[refMenuItem refish]]];
-		PBGitCommit *commitForRef = [historyController.repository commitForRef:[refMenuItem refish]];
-		[commitForRef removeRef:[refMenuItem refish]];
+		PBGitRef *ref = (PBGitRef *)contextInfo;
+		[historyController.repository deleteRef:ref];
 		[commitController rearrangeObjects];
 	}
 }
 
-- (void) removeRef:(PBRefMenuItem *)sender
-{
-	NSString *ref_desc = [NSString stringWithFormat:@"%@ %@", [(PBGitRef *)[sender refish] type], [[sender refish] shortName]];
-	NSString *question = [NSString stringWithFormat:@"Are you sure you want to remove the %@?", ref_desc];
-    NSBeginAlertSheet([NSString stringWithFormat:@"Delete %@?", ref_desc], @"Delete", @"Cancel", nil, [[historyController view] window], self, @selector(removeRefSheetDidEnd:returnCode:contextInfo:), NULL, sender, question);
-}
 
 
 #pragma mark Contextual menus

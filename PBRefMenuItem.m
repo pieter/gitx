@@ -61,7 +61,7 @@
 	// delete ref
 	[items addObject:[PBRefMenuItem separatorItem]];
 	NSString *deleteTitle = [NSString stringWithFormat:@"Delete %@…", targetRefName];
-	[items addObject:[PBRefMenuItem itemWithTitle:deleteTitle action:@selector(removeRef:) enabled:YES]];
+	[items addObject:[PBRefMenuItem itemWithTitle:deleteTitle action:@selector(showDeleteRefSheet:) enabled:YES]];
 
 	for (PBRefMenuItem *item in items) {
 		[item setTarget:target];

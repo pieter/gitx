@@ -526,6 +526,28 @@ NSString* PBGitRepositoryErrorDomain = @"GitXErrorDomain";
 	return YES;
 }
 
+- (BOOL) deleteRef:(PBGitRef *)ref
+{
+	if (!ref)
+		return NO;
+
+	int retValue = 1;
+	NSArray *arguments = [NSArray arrayWithObjects:@"update-ref", @"-d", [ref ref], nil];
+	NSString * output = [self outputForArguments:arguments retValue:&retValue];
+	if (retValue) {
+		NSString *message = [NSString stringWithFormat:@"There was an error deleting the ref: %@\n\n", [ref shortName]];
+		[self.windowController showErrorSheetTitle:@"Delete ref failed!" message:message arguments:arguments output:output];
+		return NO;
+	}
+
+	[self removeBranch:[[PBGitRevSpecifier alloc] initWithRef:ref]];
+	PBGitCommit *commit = [self commitForRef:ref];
+	[commit removeRef:ref];
+
+	[self reloadRefs];
+	return YES;
+}
+
 
 #pragma mark low level
 
