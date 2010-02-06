@@ -515,6 +515,32 @@ NSString* PBGitRepositoryErrorDomain = @"GitXErrorDomain";
 	return YES;
 }
 
+- (BOOL) rebaseBranch:(id <PBGitRefish>)branch onRefish:(id <PBGitRefish>)upstream
+{
+	if (!upstream)
+		return NO;
+
+	NSMutableArray *arguments = [NSMutableArray arrayWithObjects:@"rebase", [upstream refishName], nil];
+
+	if (branch)
+		[arguments addObject:[branch refishName]];
+
+	int retValue = 1;
+	NSString *output = [self outputInWorkdirForArguments:arguments retValue:&retValue];
+	if (retValue) {
+		NSString *branchName = @"HEAD";
+		if (branch)
+			branchName = [NSString stringWithFormat:@"%@ '%@'", [branch refishType], [branch shortName]];
+		NSString *message = [NSString stringWithFormat:@"There was an error rebasing %@ with %@ '%@'.", branchName, [upstream refishType], [upstream shortName]];
+		[self.windowController showErrorSheetTitle:@"Rebase failed!" message:message arguments:arguments output:output];
+		return NO;
+	}
+
+	[self reloadRefs];
+	[self readCurrentBranch];
+	return YES;
+}
+
 - (BOOL) createBranch:(NSString *)branchName atRefish:(id <PBGitRefish>)ref
 {
 	if (!branchName || !ref)

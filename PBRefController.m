@@ -66,6 +66,17 @@
 }
 
 
+#pragma mark Rebase
+
+- (void) rebaseHeadBranch:(PBRefMenuItem *)sender
+{
+	id <PBGitRefish> refish = [sender refish];
+	PBGitRef *headRef = [[historyController.repository headRef] ref];
+
+	[historyController.repository rebaseBranch:headRef onRefish:refish];
+}
+
+
 #pragma mark Create Branch
 
 - (void) createBranch:(PBRefMenuItem *)sender
