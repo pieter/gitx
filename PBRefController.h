@@ -25,6 +25,9 @@
 
 - (void) fetchRemote:(PBRefMenuItem *)sender;
 - (void) pullRemote:(PBRefMenuItem *)sender;
+- (void) pushUpdatesToRemote:(PBRefMenuItem *)sender;
+- (void) pushDefaultRemoteForRef:(PBRefMenuItem *)sender;
+- (void) pushToRemote:(PBRefMenuItem *)sender;
 
 - (void) checkout:(PBRefMenuItem *)sender;
 - (void) merge:(PBRefMenuItem *)sender;

@@ -543,6 +543,42 @@ NSString* PBGitRepositoryErrorDomain = @"GitXErrorDomain";
 	[PBRemoteProgressSheet beginRemoteProgressSheetForArguments:arguments title:title description:description inRepository:self];
 }
 
+- (void) beginPushRef:(PBGitRef *)ref toRemote:(PBGitRef *)remoteRef
+{
+	NSMutableArray *arguments = [NSMutableArray arrayWithObject:@"push"];
+
+	// a nil remoteRef means lookup the ref's default remote
+	if (!remoteRef || ![remoteRef isRemote]) {
+		NSError *error = nil;
+		remoteRef = [self remoteRefForBranch:ref error:&error];
+		if (!remoteRef) {
+			if (error)
+				[self.windowController showErrorSheet:error];
+			return;
+		}
+	}
+	NSString *remoteName = [remoteRef remoteName];
+	[arguments addObject:remoteName];
+
+	NSString *branchName = nil;
+	if ([ref isRemote] || !ref) {
+		branchName = @"all updates";
+	}
+	else if ([ref isTag]) {
+		branchName = [NSString stringWithFormat:@"tag '%@'", [ref tagName]];
+		[arguments addObject:@"tag"];
+		[arguments addObject:[ref tagName]];
+	}
+	else {
+		branchName = [ref shortName];
+		[arguments addObject:branchName];
+	}
+
+	NSString *description = [NSString stringWithFormat:@"Pushing %@ to %@", branchName, remoteName];
+	NSString *title = @"Pushing to remote";
+	[PBRemoteProgressSheet beginRemoteProgressSheetForArguments:arguments title:title description:description inRepository:self];
+}
+
 - (BOOL) checkoutRefish:(id <PBGitRefish>)ref
 {
 	NSString *refName = nil;

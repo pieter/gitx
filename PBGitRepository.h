@@ -31,6 +31,7 @@ extern NSString* PBGitRepositoryErrorDomain;
 
 - (void) beginFetchFromRemoteForRef:(PBGitRef *)ref;
 - (void) beginPullFromRemote:(PBGitRef *)remoteRef forRef:(PBGitRef *)ref;
+- (void) beginPushRef:(PBGitRef *)ref toRemote:(PBGitRef *)remoteRef;
 - (BOOL) checkoutRefish:(id <PBGitRefish>)ref;
 - (BOOL) checkoutFiles:(NSArray *)files fromRefish:(id <PBGitRefish>)ref;
 - (BOOL) mergeWithRefish:(id <PBGitRefish>)ref;

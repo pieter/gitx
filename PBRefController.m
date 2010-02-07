@@ -60,6 +60,77 @@
 }
 
 
+#pragma mark Push
+
+- (void) showConfirmPushRefSheet:(PBGitRef *)ref remote:(PBGitRef *)remoteRef
+{
+	if ((!ref && !remoteRef)
+		|| (ref && ![ref isBranch] && ![ref isRemoteBranch])
+		|| (remoteRef && !([remoteRef refishType] == kGitXRemoteType)))
+		return;
+
+	NSString *description = nil;
+	if (ref && remoteRef)
+		description = [NSString stringWithFormat:@"Push %@ '%@' to remote %@", [ref refishType], [ref shortName], [remoteRef remoteName]];
+	else if (ref)
+		description = [NSString stringWithFormat:@"Push %@ '%@' to default remote", [ref refishType], [ref shortName]];
+	else
+		description = [NSString stringWithFormat:@"Push updates to remote %@", [remoteRef remoteName]];
+
+	NSAlert *alert = [NSAlert alertWithMessageText:description
+									 defaultButton:@"Push"
+								   alternateButton:@"Cancel"
+									   otherButton:nil
+						 informativeTextWithFormat:@"Are you sure you want to %@?", description];
+
+	NSMutableDictionary *info = [NSMutableDictionary dictionary];
+	if (ref)
+		[info setObject:ref forKey:kGitXBranchType];
+	if (remoteRef)
+		[info setObject:remoteRef forKey:kGitXRemoteType];
+
+	[alert beginSheetModalForWindow:[historyController.repository.windowController window]
+					  modalDelegate:self
+					 didEndSelector:@selector(confirmPushRefSheetDidEnd:returnCode:contextInfo:)
+						contextInfo:info];
+}
+
+- (void) confirmPushRefSheetDidEnd:(NSAlert *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo
+{
+    [[sheet window] orderOut:nil];
+
+	if (returnCode == NSAlertDefaultReturn) {
+		PBGitRef *ref = [(NSDictionary *)contextInfo objectForKey:kGitXBranchType];
+		PBGitRef *remoteRef = [(NSDictionary *)contextInfo objectForKey:kGitXRemoteType];
+
+		[historyController.repository beginPushRef:ref toRemote:remoteRef];
+	}
+}
+
+- (void) pushUpdatesToRemote:(PBRefMenuItem *)sender
+{
+	PBGitRef *remoteRef = [(PBGitRef *)[sender refish] remoteRef];
+
+	[self showConfirmPushRefSheet:nil remote:remoteRef];
+}
+
+- (void) pushDefaultRemoteForRef:(PBRefMenuItem *)sender
+{
+	PBGitRef *ref = (PBGitRef *)[sender refish];
+
+	[self showConfirmPushRefSheet:ref remote:nil];
+}
+
+- (void) pushToRemote:(PBRefMenuItem *)sender
+{
+	PBGitRef *ref = (PBGitRef *)[sender refish];
+	NSString *remoteName = [sender representedObject];
+	PBGitRef *remoteRef = [PBGitRef refFromString:[kGitXRemoteRefPrefix stringByAppendingString:remoteName]];
+
+	[self showConfirmPushRefSheet:ref remote:remoteRef];
+}
+
+
 #pragma mark Merge
 
 - (void) merge:(PBRefMenuItem *)sender
