@@ -450,6 +450,30 @@ NSString* PBGitRepositoryErrorDomain = @"GitXErrorDomain";
 	return YES;
 }
 
+- (BOOL) checkoutFiles:(NSArray *)files fromRefish:(id <PBGitRefish>)ref
+{
+	if (!files || ([files count] == 0))
+		return NO;
+
+	NSString *refName = nil;
+	if ([ref refishType] == kGitXBranchType)
+		refName = [ref shortName];
+	else
+		refName = [ref refishName];
+
+	int retValue = 1;
+	NSMutableArray *arguments = [NSMutableArray arrayWithObjects:@"checkout", refName, @"--", nil];
+	[arguments addObjectsFromArray:files];
+	NSString *output = [self outputInWorkdirForArguments:arguments retValue:&retValue];
+	if (retValue) {
+		NSString *message = [NSString stringWithFormat:@"There was an error checking out the file(s) from the %@ '%@'.\n\nPerhaps your working directory is not clean?", [ref refishType], [ref shortName]];
+		[self.windowController showErrorSheetTitle:@"Checkout failed!" message:message arguments:arguments output:output];
+		return NO;
+	}
+
+	return YES;
+}
+
 - (BOOL) createBranch:(NSString *)branchName atRefish:(id <PBGitRefish>)ref
 {
 	if (!branchName || !ref)

@@ -266,6 +266,15 @@
 	}
 }
 
+- (void) checkoutFiles:(id)sender
+{
+	NSMutableArray *files = [NSMutableArray array];
+	for (NSString *filePath in [sender representedObject])
+		[files addObject:[filePath stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]]];
+
+	[repository checkoutFiles:files fromRefish:realCommit];
+}
+
 
 - (NSMenu *)contextMenuForTreeView
 {
@@ -286,7 +295,10 @@
 	BOOL multiple = [filePaths count] != 1;
 	NSMenuItem *historyItem = [[NSMenuItem alloc] initWithTitle:multiple? @"Show history of files" : @"Show history of file"
 														 action:@selector(showCommitsFromTree:)
-												 keyEquivalent:@""];
+												  keyEquivalent:@""];
+	NSMenuItem *checkoutItem = [[NSMenuItem alloc] initWithTitle:multiple ? @"Checkout files" : @"Checkout file"
+														  action:@selector(checkoutFiles:)
+												   keyEquivalent:@""];
 	NSMenuItem *finderItem = [[NSMenuItem alloc] initWithTitle:@"Show in Finder"
 														action:@selector(showInFinderAction:)
 												 keyEquivalent:@""];
@@ -294,7 +306,7 @@
 														   action:@selector(openFilesAction:)
 													keyEquivalent:@""];
 
-	NSArray *menuItems = [NSArray arrayWithObjects:historyItem, finderItem, openFilesItem, nil];
+	NSArray *menuItems = [NSArray arrayWithObjects:historyItem, checkoutItem, finderItem, openFilesItem, nil];
 	for (NSMenuItem *item in menuItems) {
 		[item setTarget:self];
 		[item setRepresentedObject:filePaths];
