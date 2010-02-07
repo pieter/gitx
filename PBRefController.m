@@ -51,6 +51,15 @@
 }
 
 
+#pragma mark Pull
+
+- (void) pullRemote:(PBRefMenuItem *)sender
+{
+	id <PBGitRefish> refish = [sender refish];
+	[historyController.repository beginPullFromRemote:nil forRef:refish];
+}
+
+
 #pragma mark Merge
 
 - (void) merge:(PBRefMenuItem *)sender

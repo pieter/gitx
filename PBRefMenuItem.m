@@ -83,6 +83,11 @@
 	NSString *fetchTitle = hasRemote ? [NSString stringWithFormat:@"Fetch %@", remoteName] : @"Fetch";
 	[items addObject:[PBRefMenuItem itemWithTitle:fetchTitle action:@selector(fetchRemote:) enabled:hasRemote]];
 
+	// pull
+	NSString *pullRemoteName = [ref isRemoteBranch] ? [ref shortName] : remoteName;
+	NSString *pullTitle = hasRemote ? [NSString stringWithFormat:@"Pull %@ and update %@", pullRemoteName, headRefName] : @"Pull";
+	[items addObject:[PBRefMenuItem itemWithTitle:pullTitle action:@selector(pullRemote:) enabled:hasRemote]];
+
 	// delete ref
 	[items addObject:[PBRefMenuItem separatorItem]];
 	NSString *deleteTitle = [NSString stringWithFormat:@"Delete %@…", targetRefName];

@@ -504,6 +504,45 @@ NSString* PBGitRepositoryErrorDomain = @"GitXErrorDomain";
 	[PBRemoteProgressSheet beginRemoteProgressSheetForArguments:arguments title:title description:description inRepository:self];
 }
 
+- (void) beginPullFromRemote:(PBGitRef *)remoteRef forRef:(PBGitRef *)ref
+{
+	NSMutableArray *arguments = [NSMutableArray arrayWithObject:@"pull"];
+
+	// a nil remoteRef means lookup the ref's default remote
+	if (!remoteRef || ![remoteRef isRemote]) {
+		NSError *error = nil;
+		remoteRef = [self remoteRefForBranch:ref error:&error];
+		if (!remoteRef) {
+			if (error)
+				[self.windowController showErrorSheet:error];
+			return;
+		}
+	}
+	NSString *remoteName = [remoteRef remoteName];
+	[arguments addObject:remoteName];
+
+	NSString *branchName = nil;
+	NSString *refSpec = nil;
+	if ([ref isRemoteBranch]) {
+		branchName = [ref shortName];
+		refSpec = [ref remoteBranchName];
+	}
+	else if ([ref isRemote] || !ref) {
+		branchName = @"all tracking branches";
+	}
+	else {
+		branchName = [ref shortName];
+		refSpec = [NSString stringWithFormat:@"%@:%@", branchName, branchName];
+	}
+	if (refSpec)
+		[arguments addObject:refSpec];
+
+	NSString *headRefName = [[[self headRef] ref] shortName];
+	NSString *description = [NSString stringWithFormat:@"Pulling %@ from %@ and updating %@", branchName, remoteName, headRefName];
+	NSString *title = @"Pulling from remote";
+	[PBRemoteProgressSheet beginRemoteProgressSheetForArguments:arguments title:title description:description inRepository:self];
+}
+
 - (BOOL) checkoutRefish:(id <PBGitRefish>)ref
 {
 	NSString *refName = nil;
