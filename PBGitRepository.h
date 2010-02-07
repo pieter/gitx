@@ -29,6 +29,7 @@ extern NSString* PBGitRepositoryErrorDomain;
 	PBGitRevSpecifier *_headRef; // Caching
 }
 
+- (void) beginFetchFromRemoteForRef:(PBGitRef *)ref;
 - (BOOL) checkoutRefish:(id <PBGitRefish>)ref;
 - (BOOL) checkoutFiles:(NSArray *)files fromRefish:(id <PBGitRefish>)ref;
 - (BOOL) mergeWithRefish:(id <PBGitRefish>)ref;

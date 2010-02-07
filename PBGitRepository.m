@@ -15,6 +15,7 @@
 #import "PBEasyPipe.h"
 #import "PBGitRef.h"
 #import "PBGitRevSpecifier.h"
+#import "PBRemoteProgressSheet.h"
 
 NSString* PBGitRepositoryErrorDomain = @"GitXErrorDomain";
 
@@ -481,6 +482,27 @@ NSString* PBGitRepositoryErrorDomain = @"GitXErrorDomain";
 }
 
 #pragma mark Repository commands
+
+- (void) beginFetchFromRemoteForRef:(PBGitRef *)ref
+{
+	NSMutableArray *arguments = [NSMutableArray arrayWithObject:@"fetch"];
+
+	if (![ref isRemote]) {
+		NSError *error = nil;
+		ref = [self remoteRefForBranch:ref error:&error];
+		if (!ref) {
+			if (error)
+				[self.windowController showErrorSheet:error];
+			return;
+		}
+	}
+	NSString *remoteName = [ref remoteName];
+	[arguments addObject:remoteName];
+
+	NSString *description = [NSString stringWithFormat:@"Fetching all tracking branches from %@", remoteName];
+	NSString *title = @"Fetching from remote";
+	[PBRemoteProgressSheet beginRemoteProgressSheetForArguments:arguments title:title description:description inRepository:self];
+}
 
 - (BOOL) checkoutRefish:(id <PBGitRefish>)ref
 {

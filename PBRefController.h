@@ -23,6 +23,8 @@
 	IBOutlet NSPopUpButton *branchPopUp;
 }
 
+- (void) fetchRemote:(PBRefMenuItem *)sender;
+
 - (void) checkout:(PBRefMenuItem *)sender;
 - (void) merge:(PBRefMenuItem *)sender;
 - (void) cherryPick:(PBRefMenuItem *)sender;

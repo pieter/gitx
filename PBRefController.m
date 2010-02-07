@@ -39,6 +39,18 @@
 }
 
 
+#pragma mark Fetch
+
+- (void) fetchRemote:(PBRefMenuItem *)sender
+{
+	id <PBGitRefish> refish = [sender refish];
+	if ([refish refishType] == kGitXCommitType)
+		return;
+
+	[historyController.repository beginFetchFromRemoteForRef:refish];
+}
+
+
 #pragma mark Merge
 
 - (void) merge:(PBRefMenuItem *)sender
