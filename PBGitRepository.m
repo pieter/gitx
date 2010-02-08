@@ -152,20 +152,22 @@ NSString* PBGitRepositoryErrorDomain = @"GitXErrorDomain";
 
 // The fileURL the document keeps is to the .git dir, but that’s pretty
 // useless for display in the window title bar, so we show the directory above
-- (NSString*)displayName
+- (NSString *) displayName
 {
-	NSString* dirName = self.fileURL.path.lastPathComponent;
-	if ([dirName isEqualToString:@".git"])
-		dirName = [self.fileURL.path stringByDeletingLastPathComponent].lastPathComponent;
-	NSString* displayName;
-	if (![[PBGitRef refFromString:[[self headRef] simpleRef]] type]) {
-		displayName = [NSString stringWithFormat:@"%@ (detached HEAD)", dirName];
-	} else {
-		displayName = [NSString stringWithFormat:@"%@ (branch: %@)", dirName,
-					 [[self headRef] description]];
-	}
+	if (![[PBGitRef refFromString:[[self headRef] simpleRef]] type])
+		return [NSString stringWithFormat:@"%@ (detached HEAD)", [self projectName]];
 
-	return displayName;
+	return [NSString stringWithFormat:@"%@ (branch: %@)", [self projectName], [[self headRef] description]];
+}
+
+- (NSString *) projectName
+{
+	NSString *projectPath = [[self fileURL] path];
+
+	if ([[projectPath lastPathComponent] isEqualToString:@".git"])
+		projectPath = [projectPath stringByDeletingLastPathComponent];
+
+	return [projectPath lastPathComponent];
 }
 
 // Get the .gitignore file at the root of the repository

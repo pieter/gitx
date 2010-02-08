@@ -60,6 +60,7 @@ extern NSString* PBGitRepositoryErrorDomain;
 - (BOOL)executeHook:(NSString *)name withArgs:(NSArray*) arguments output:(NSString **)output;
 
 - (NSString *)workingDirectory;
+- (NSString *) projectName;
 - (NSString *)gitIgnoreFilename;
 - (BOOL)isBareRepository;
 
