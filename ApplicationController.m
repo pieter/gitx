@@ -16,6 +16,7 @@
 #import "PBPrefsWindowController.h"
 #import "PBNSURLPathUserDefaultsTransfomer.h"
 #import "PBGitDefaults.h"
+#import "PBCloneRepositoryPanel.h"
 
 @implementation ApplicationController
 @synthesize cliProxy;
@@ -116,6 +117,14 @@
 	#endif
 
 	[NSApp orderFrontStandardAboutPanelWithOptions:dict];
+}
+
+- (IBAction) showCloneRepository:(id)sender
+{
+	if (!cloneRepositoryPanel)
+		cloneRepositoryPanel = [PBCloneRepositoryPanel panel];
+
+	[cloneRepositoryPanel showWindow:self];
 }
 
 - (IBAction)installCliTool:(id)sender;

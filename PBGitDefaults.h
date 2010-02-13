@@ -21,5 +21,7 @@
 + (BOOL)showOpenPanelOnLaunch;
 + (BOOL) shouldCheckoutBranch;
 + (void) setShouldCheckoutBranch:(BOOL)shouldCheckout;
++ (NSString *) recentCloneDestination;
++ (void) setRecentCloneDestination:(NSString *)path;
 
 @end

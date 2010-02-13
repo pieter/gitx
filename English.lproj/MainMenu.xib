@@ -233,6 +233,14 @@
 									<reference key="NSOnImage" ref="889736156"/>
 									<reference key="NSMixedImage" ref="37108609"/>
 								</object>
+								<object class="NSMenuItem" id="936887448">
+									<reference key="NSMenu" ref="310195297"/>
+									<string key="NSTitle">Clone…</string>
+									<string key="NSKeyEquiv"/>
+									<int key="NSMnemonicLoc">2147483647</int>
+									<reference key="NSOnImage" ref="889736156"/>
+									<reference key="NSMixedImage" ref="37108609"/>
+								</object>
 								<object class="NSMenuItem" id="255451250">
 									<reference key="NSMenu" ref="310195297"/>
 									<string key="NSTitle">Open Recent</string>
@@ -1348,6 +1356,14 @@
 					</object>
 					<int key="connectionID">955</int>
 				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">showCloneRepository:</string>
+						<reference key="source" ref="954860085"/>
+						<reference key="destination" ref="936887448"/>
+					</object>
+					<int key="connectionID">958</int>
+				</object>
 			</object>
 			<object class="IBMutableOrderedSet" key="objectRecords">
 				<object class="NSArray" key="orderedObjects">
@@ -1512,6 +1528,7 @@
 							<reference ref="656100832"/>
 							<reference ref="255451250"/>
 							<reference ref="231313974"/>
+							<reference ref="936887448"/>
 						</object>
 						<reference key="parent" ref="19371157"/>
 					</object>
@@ -2051,6 +2068,11 @@
 						<reference key="object" ref="231313974"/>
 						<reference key="parent" ref="310195297"/>
 					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">956</int>
+						<reference key="object" ref="936887448"/>
+						<reference key="parent" ref="310195297"/>
+					</object>
 				</object>
 			</object>
 			<object class="NSMutableDictionary" key="flattenedProperties">
@@ -2251,6 +2273,7 @@
 					<string>949.IBPluginDependency</string>
 					<string>951.IBPluginDependency</string>
 					<string>954.IBPluginDependency</string>
+					<string>956.IBPluginDependency</string>
 				</object>
 				<object class="NSMutableArray" key="dict.values">
 					<bool key="EncodedWithXMLCoder">YES</bool>
@@ -2418,7 +2441,7 @@
 					<integer value="1"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<integer value="1"/>
-					<string>{{582, 513}, {196, 223}}</string>
+					<string>{{582, 493}, {196, 243}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<integer value="1"/>
 					<string>{{358, 536}, {199, 203}}</string>
@@ -2448,6 +2471,7 @@
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
+					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 				</object>
 			</object>
 			<object class="NSMutableDictionary" key="unlocalizedProperties">
@@ -2466,7 +2490,7 @@
 				</object>
 			</object>
 			<nil key="sourceID"/>
-			<int key="maxID">955</int>
+			<int key="maxID">958</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<object class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -2482,10 +2506,14 @@
 							<string>openPreferencesWindow:</string>
 							<string>saveAction:</string>
 							<string>showAboutPanel:</string>
+							<string>showCloneRepository:</string>
 							<string>showHelp:</string>
+							<string>showRepositoryListWindow:</string>
 						</object>
 						<object class="NSMutableArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
+							<string>id</string>
+							<string>id</string>
 							<string>id</string>
 							<string>id</string>
 							<string>id</string>
