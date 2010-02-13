@@ -29,6 +29,7 @@ extern NSString* PBGitRepositoryErrorDomain;
 	PBGitRevSpecifier *_headRef; // Caching
 }
 
+- (void) cloneRepositoryToPath:(NSString *)path bare:(BOOL)isBare;
 - (void) beginAddRemote:(NSString *)remoteName forURL:(NSString *)remoteURL;
 - (void) beginFetchFromRemoteForRef:(PBGitRef *)ref;
 - (void) beginPullFromRemote:(PBGitRef *)remoteRef forRef:(PBGitRef *)ref;

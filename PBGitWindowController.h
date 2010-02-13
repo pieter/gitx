@@ -37,4 +37,5 @@
 - (IBAction) showHistoryView:(id)sender;
 - (IBAction) revealInFinder:(id)sender;
 - (IBAction) openInTerminal:(id)sender;
+- (IBAction) cloneTo:(id)sender;
 @end

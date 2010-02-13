@@ -10,6 +10,7 @@
 #import "PBGitHistoryController.h"
 #import "PBGitCommitController.h"
 #import "Terminal.h"
+#import "PBCloneRepsitoryToSheet.h"
 
 @implementation PBGitWindowController
 
@@ -163,6 +164,11 @@
 	[term doScript: cmd in: nil];
 	[NSThread sleepForTimeInterval: 0.1];
 	[term activate];
+}
+
+- (IBAction) cloneTo:(id)sender
+{
+	[PBCloneRepsitoryToSheet beginCloneRepsitoryToSheetForRepository:repository];
 }
 
 
