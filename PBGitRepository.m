@@ -483,6 +483,15 @@ NSString* PBGitRepositoryErrorDomain = @"GitXErrorDomain";
 
 #pragma mark Repository commands
 
+- (void) beginAddRemote:(NSString *)remoteName forURL:(NSString *)remoteURL
+{
+	NSArray *arguments = [NSArray arrayWithObjects:@"remote",  @"add", @"-f", remoteName, remoteURL, nil];
+
+	NSString *description = [NSString stringWithFormat:@"Adding the remote %@ and fetching tracking branches", remoteName];
+	NSString *title = @"Adding a remote";
+	[PBRemoteProgressSheet beginRemoteProgressSheetForArguments:arguments title:title description:description inRepository:self];
+}
+
 - (void) beginFetchFromRemoteForRef:(PBGitRef *)ref
 {
 	NSMutableArray *arguments = [NSMutableArray arrayWithObject:@"fetch"];

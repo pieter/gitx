@@ -666,6 +666,15 @@
 									<reference key="NSOnImage" ref="889736156"/>
 									<reference key="NSMixedImage" ref="37108609"/>
 								</object>
+								<object class="NSMenuItem" id="173376826">
+									<reference key="NSMenu" ref="944982980"/>
+									<string key="NSTitle">Add Remote</string>
+									<string key="NSKeyEquiv">r</string>
+									<int key="NSKeyEquivModMask">1572864</int>
+									<int key="NSMnemonicLoc">2147483647</int>
+									<reference key="NSOnImage" ref="889736156"/>
+									<reference key="NSMixedImage" ref="37108609"/>
+								</object>
 								<object class="NSMenuItem" id="255856917">
 									<reference key="NSMenu" ref="944982980"/>
 									<bool key="NSIsDisabled">YES</bool>
@@ -1314,6 +1323,14 @@
 						<reference key="destination" ref="416044880"/>
 					</object>
 					<int key="connectionID">950</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">showAddRemoteSheet:</string>
+						<reference key="source" ref="954860085"/>
+						<reference key="destination" ref="173376826"/>
+					</object>
+					<int key="connectionID">953</int>
 				</object>
 			</object>
 			<object class="IBMutableOrderedSet" key="objectRecords">
@@ -1978,6 +1995,7 @@
 							<reference ref="255856917"/>
 							<reference ref="950917510"/>
 							<reference ref="416044880"/>
+							<reference ref="173376826"/>
 						</object>
 						<reference key="parent" ref="571164270"/>
 					</object>
@@ -2004,6 +2022,11 @@
 					<object class="IBObjectRecord">
 						<int key="objectID">949</int>
 						<reference key="object" ref="416044880"/>
+						<reference key="parent" ref="944982980"/>
+					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">951</int>
+						<reference key="object" ref="173376826"/>
 						<reference key="parent" ref="944982980"/>
 					</object>
 				</object>
@@ -2204,6 +2227,7 @@
 					<string>943.IBPluginDependency</string>
 					<string>947.IBPluginDependency</string>
 					<string>949.IBPluginDependency</string>
+					<string>951.IBPluginDependency</string>
 				</object>
 				<object class="NSMutableArray" key="dict.values">
 					<bool key="EncodedWithXMLCoder">YES</bool>
@@ -2392,7 +2416,8 @@
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<string>{{668, 643}, {192, 93}}</string>
+					<string>{{668, 623}, {206, 113}}</string>
+					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -2417,7 +2442,7 @@
 				</object>
 			</object>
 			<nil key="sourceID"/>
-			<int key="maxID">950</int>
+			<int key="maxID">953</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<object class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -2650,13 +2675,13 @@
 						<object class="NSArray" key="dict.sortedKeys">
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<string>createBranch:</string>
-							<string>createTag:</string>
 							<string>openFilesAction:</string>
 							<string>openSelectedFile:</string>
 							<string>refresh:</string>
 							<string>setDetailedView:</string>
 							<string>setRawView:</string>
 							<string>setTreeView:</string>
+							<string>showAddRemoteSheet:</string>
 							<string>showCommitsFromTree:</string>
 							<string>showInFinderAction:</string>
 							<string>toggleQuickView:</string>
@@ -2835,15 +2860,35 @@
 						<object class="NSArray" key="dict.sortedKeys">
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<string>changeBranch:</string>
+							<string>checkout:</string>
+							<string>cherryPick:</string>
 							<string>copyPatch:</string>
 							<string>copySHA:</string>
 							<string>createBranch:</string>
 							<string>createTag:</string>
+							<string>fetchRemote:</string>
+							<string>merge:</string>
+							<string>pullRemote:</string>
+							<string>pushDefaultRemoteForRef:</string>
+							<string>pushToRemote:</string>
+							<string>pushUpdatesToRemote:</string>
+							<string>rebaseActiveBranch:</string>
+							<string>rebaseHeadBranch:</string>
 							<string>showTagInfoSheet:</string>
 						</object>
 						<object class="NSMutableArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<string>NSMenuItem</string>
+							<string>PBRefMenuItem</string>
+							<string>PBRefMenuItem</string>
+							<string>PBRefMenuItem</string>
+							<string>PBRefMenuItem</string>
+							<string>PBRefMenuItem</string>
+							<string>PBRefMenuItem</string>
+							<string>PBRefMenuItem</string>
+							<string>PBRefMenuItem</string>
+							<string>PBRefMenuItem</string>
+							<string>PBRefMenuItem</string>
 							<string>PBRefMenuItem</string>
 							<string>PBRefMenuItem</string>
 							<string>PBRefMenuItem</string>

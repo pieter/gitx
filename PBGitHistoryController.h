@@ -54,6 +54,7 @@
 // Repository Methods
 - (IBAction) createBranch:(id)sender;
 - (IBAction) createTag:(id)sender;
+- (IBAction) showAddRemoteSheet:(id)sender;
 
 - (void) copyCommitInfo;
 

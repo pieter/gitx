@@ -13,6 +13,7 @@
 #import "PBCommitList.h"
 #import "PBCreateBranchSheet.h"
 #import "PBCreateTagSheet.h"
+#import "PBAddRemoteSheet.h"
 #define QLPreviewPanel NSClassFromString(@"QLPreviewPanel")
 
 
@@ -358,6 +359,11 @@
 		[PBCreateTagSheet beginCreateTagSheetAtRefish:[repository.currentBranch ref] inRepository:repository];
 	else
 		[PBCreateTagSheet beginCreateTagSheetAtRefish:realCommit inRepository:repository];
+}
+
+- (IBAction) showAddRemoteSheet:(id)sender
+{
+	[PBAddRemoteSheet beginAddRemoteSheetForRepository:self.repository];
 }
 
 @end
