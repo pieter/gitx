@@ -67,9 +67,9 @@
 	}
 	
 	[sourceView PBExpandItem:item expandParents:YES];
-	NSInteger index = [sourceView rowForItem:item];
+	NSIndexSet *index = [NSIndexSet indexSetWithIndex:[sourceView rowForItem:item]];
 	
-	[sourceView selectRow:index byExtendingSelection:NO];
+	[sourceView selectRowIndexes:index byExtendingSelection:NO];
 }
 
 - (void)addRevSpec:(PBGitRevSpecifier *)rev

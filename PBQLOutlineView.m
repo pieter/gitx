@@ -70,8 +70,10 @@
 		int row = [self rowAtPoint:mousePoint];
 
 		// figure out if the row that was just clicked on is currently selected
-		if ([selectedRowIndexes containsIndex:row] == NO)
-			[self selectRow:row byExtendingSelection:NO];
+		if ([selectedRowIndexes containsIndex:row] == NO) {
+			NSIndexSet *index = [NSIndexSet indexSetWithIndex:row];
+			[self selectRowIndexes:index byExtendingSelection:NO];
+		}
 	}
 
 	return [controller contextMenuForTreeView];
