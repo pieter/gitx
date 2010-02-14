@@ -18,6 +18,8 @@
 
 - (void)populateList;
 - (void)addRevSpec:(PBGitRevSpecifier *)revSpec;
+- (PBSourceViewItem *) itemForRev:(PBGitRevSpecifier *)rev;
+- (void) removeRevSpec:(PBGitRevSpecifier *)rev;
 @end
 
 @implementation PBGitSidebarController
@@ -42,13 +44,38 @@
 	commitViewController = [[PBGitCommitController alloc] initWithRepository:repository superController:superController];
 
 	[repository addObserver:self forKeyPath:@"currentBranch" options:0 context:@"currentBranchChange"];
+	[repository addObserver:self forKeyPath:@"branches" options:(NSKeyValueObservingOptionOld | NSKeyValueObservingOptionNew) context:@"branchesModified"];
 	[self selectCurrentBranch];
 }
 
 - (void) observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
 {
-	if ([@"currentBranchChange" isEqualTo:context])
+	if ([@"currentBranchChange" isEqualToString:context]) {
+		[sourceView reloadData];
 		[self selectCurrentBranch];
+		return;
+	}
+
+	if ([@"branchesModified" isEqualToString:context]) {
+		NSInteger changeKind = [(NSNumber *)[change objectForKey:NSKeyValueChangeKindKey] intValue];
+
+		if (changeKind == NSKeyValueChangeInsertion) {
+			NSArray *newRevSpecs = [change objectForKey:NSKeyValueChangeNewKey];
+			for (PBGitRevSpecifier *rev in newRevSpecs) {
+				[self addRevSpec:rev];
+				PBSourceViewItem *item = [self itemForRev:rev];
+				[sourceView PBExpandItem:item expandParents:YES];
+			}
+		}
+		else if (changeKind == NSKeyValueChangeRemoval) {
+			NSArray *removedRevSpecs = [change objectForKey:NSKeyValueChangeOldKey];
+			for (PBGitRevSpecifier *rev in removedRevSpecs)
+				[self removeRevSpec:rev];
+		}
+		return;
+	}
+
+	[super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
 }
 
 - (void) selectStage
@@ -83,10 +110,20 @@
 	[sourceView selectRowIndexes:index byExtendingSelection:NO];
 }
 
+- (PBSourceViewItem *) itemForRev:(PBGitRevSpecifier *)rev
+{
+	PBSourceViewItem *foundItem = nil;
+	for (PBSourceViewItem *item in items)
+		if (foundItem = [item findRev:rev])
+			return foundItem;
+	return nil;
+}
+
 - (void)addRevSpec:(PBGitRevSpecifier *)rev
 {
 	if (![rev isSimpleRef]) {
 		[others addChild:[PBSourceViewItem itemWithRevSpec:rev]];
+		[sourceView reloadData];
 		return;
 	}
 
@@ -99,6 +136,19 @@
 		[tags addRev:rev toPath:[pathComponents subarrayWithRange:NSMakeRange(2, [pathComponents count] - 2)]];
 	else if ([[rev simpleRef] hasPrefix:@"refs/remotes/"])
 		[remotes addRev:rev toPath:[pathComponents subarrayWithRange:NSMakeRange(2, [pathComponents count] - 2)]];
+	[sourceView reloadData];
+}
+
+- (void) removeRevSpec:(PBGitRevSpecifier *)rev
+{
+	PBSourceViewItem *item = [self itemForRev:rev];
+
+	if (!item)
+		return;
+
+	PBSourceViewItem *parent = item.parent;
+	[parent removeChild:item];
+	[sourceView reloadData];
 }
 
 #pragma mark NSOutlineView delegate methods

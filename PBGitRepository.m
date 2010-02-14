@@ -385,33 +385,39 @@ NSString* PBGitRepositoryErrorDomain = @"GitXErrorDomain";
 }
 		
 // Returns either this object, or an existing, equal object
-- (PBGitRevSpecifier*) addBranch: (PBGitRevSpecifier*) rev
+- (PBGitRevSpecifier*) addBranch:(PBGitRevSpecifier*)branch
 {
-	if ([[rev parameters] count] == 0)
-		rev = [self headRef];
+	if ([[branch parameters] count] == 0)
+		branch = [self headRef];
 
 	// First check if the branch doesn't exist already
-	for (PBGitRevSpecifier* r in branches)
-		if ([rev isEqualTo: r])
-			return r;
+	for (PBGitRevSpecifier *rev in branches)
+		if ([branch isEqualTo: rev])
+			return rev;
 
-	[self willChangeValueForKey:@"branches"];
-	[branches addObject: rev];
-	[self didChangeValueForKey:@"branches"];
-	return rev;
+	NSIndexSet *newIndex = [NSIndexSet indexSetWithIndex:[branches count]];
+	[self willChange:NSKeyValueChangeInsertion valuesAtIndexes:newIndex forKey:@"branches"];
+
+	[branches addObject:branch];
+
+	[self didChange:NSKeyValueChangeInsertion valuesAtIndexes:newIndex forKey:@"branches"];
+	return branch;
 }
 
-- (BOOL)removeBranch:(PBGitRevSpecifier *)rev
+- (BOOL) removeBranch:(PBGitRevSpecifier *)branch
 {
-	for (PBGitRevSpecifier *r in branches) {
-		if ([rev isEqualTo:r]) {
-			[self willChangeValueForKey:@"branches"];
-			[branches removeObject:r];
-			[self didChangeValueForKey:@"branches"];
-			return TRUE;
+	for (PBGitRevSpecifier *rev in branches) {
+		if ([branch isEqualTo:rev]) {
+			NSIndexSet *oldIndex = [NSIndexSet indexSetWithIndex:[branches indexOfObject:rev]];
+			[self willChange:NSKeyValueChangeRemoval valuesAtIndexes:oldIndex forKey:@"branches"];
+
+			[branches removeObject:rev];
+
+			[self didChange:NSKeyValueChangeRemoval valuesAtIndexes:oldIndex forKey:@"branches"];
+			return YES;
 		}
 	}
-	return FALSE;
+	return NO;
 }
 	
 - (void) readCurrentBranch
