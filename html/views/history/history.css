@@ -66,17 +66,28 @@ body {
 
 #files {
 	margin-top: 1em;
+	margin-left: 0.5em;
 }
 
 #files a {
 	color: #666666;
+	text-decoration: none;
+}
+
+#files a:hover {
+	color: #4444ff;
+	border-bottom: 1px solid #4444ff;
+}
+
+#files img {
+	float: left;
+	margin-right: 0.5em;
+	margin-top: 1px;
 }
 
 #files p {
-	margin: 4px;
-}
-#files a:hover {
-	color: #4444ff;
+	margin-top: 0.25em;
+	margin-bottom: 0.25em;
 }
 
 .clear_both {
@@ -136,6 +147,7 @@ a.showdiff {
 	background-color: #fca64f;
 }
 
+/*
 div.button
 {
 	color: #666666;
@@ -176,5 +188,6 @@ div.deleted
 
 div.renamed
 {
-	/*No colour needed right now.*/
+	// No colour needed right now.
 }
+*/

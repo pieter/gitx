@@ -217,40 +217,44 @@ var showDiff = function() {
 
 	// Callback for the diff highlighter. Used to generate a filelist
 	var newfile = function(name1, name2, id, mode_change, old_mode, new_mode) {
-		var button = document.createElement("div");
+		var img = document.createElement("img");
 		var p = document.createElement("p");
 		var link = document.createElement("a");
 		link.setAttribute("href", "#" + id);
 		p.appendChild(link);
-		var buttonType = "";
 		var finalFile = "";
 		if (name1 == name2) {
-			buttonType = "changed"
 			finalFile = name1;
+			img.src = "../../images/modified.png";
+			img.title = "Modified file";
+			p.title = "Modified file";
 			if (mode_change)
 				p.appendChild(document.createTextNode(" mode " + old_mode + " -> " + new_mode));
 		}
 		else if (name1 == "/dev/null") {
-			buttonType = "created";
+			img.src = "../../images/added.png";
+			img.title = "Added file";
+			p.title = "Added file";
 			finalFile = name2;
 		}
 		else if (name2 == "/dev/null") {
-			buttonType = "deleted";
+			img.src = "../../images/removed.png";
+			img.title = "Removed file";
+			p.title = "Removed file";
 			finalFile = name1;
 		}
 		else {
-			buttonType = "renamed";
+			img.src = "../../images/renamed.png";
+			img.title = "Renamed file";
+			p.title = "Renamed file";
 			finalFile = name2;
 			p.insertBefore(document.createTextNode(name1 + " -> "), link);
 		}
 
 		link.appendChild(document.createTextNode(finalFile));
-		button.setAttribute("representedFile", finalFile);
 		link.setAttribute("representedFile", finalFile);
 
-		button.setAttribute("class", "button " + buttonType);
-		button.appendChild(document.createTextNode(buttonType));
-		$("files").appendChild(button);
+		p.insertBefore(img, link);
 		$("files").appendChild(p);
 	}
 
