@@ -67,6 +67,11 @@
 - (void)applicationDidFinishLaunching:(NSNotification*)notification
 {
 	[[SUUpdater sharedUpdater] setSendsSystemProfile:YES];
+
+	// Make sure Git's SSH password requests get forwarded to our little UI tool:
+	setenv( "SSH_ASKPASS", [[[NSBundle mainBundle] pathForResource: @"gitx_askpasswd" ofType: @""] UTF8String], 1 );
+	setenv( "DISPLAY", "localhost:0", 1 );
+
 	[self registerServices];
 
     BOOL hasOpenedDocuments = NO;
