@@ -47,10 +47,16 @@
 - (void) awakeFromNib
 {
 	[[self window] setDelegate:self];
+	[[self window] setAutorecalculatesContentBorderThickness:NO forEdge:NSMinYEdge];
+	[[self window] setContentBorderThickness:31.0f forEdge:NSMinYEdge];
 
 	sidebarController = [[PBGitSidebarController alloc] initWithRepository:repository superController:self];
 	[[sidebarController view] setFrame:[sourceSplitView bounds]];
 	[sourceSplitView addSubview:[sidebarController view]];
+	[sourceListControlsView addSubview:sidebarController.sourceListControlsView];
+
+	[[statusField cell] setBackgroundStyle:NSBackgroundStyleRaised];
+	[progressIndicator setUsesThreadedAnimation:YES];
 
 	[self showWindow:nil];
 }
@@ -67,6 +73,9 @@
 	if (!controller || (contentController == controller))
 		return;
 
+	if (contentController)
+		[contentController removeObserver:self forKeyPath:@"status"];
+
 	[self removeAllContentSubViews];
 
 	contentController = controller;
@@ -77,6 +86,7 @@
 	[self setNextResponder: contentController];
 	[[self window] makeFirstResponder:[contentController firstResponder]];
 	[contentController updateView];
+	[contentController addObserver:self forKeyPath:@"status" options:NSKeyValueObservingOptionInitial context:@"statusChange"];
 }
 
 - (void) showCommitView:(id)sender
@@ -134,6 +144,39 @@
 {
 	[PBCloneRepsitoryToSheet beginCloneRepsitoryToSheetForRepository:repository];
 }
+
+- (void) updateStatus
+{
+	NSString *status = contentController.status;
+	BOOL isBusy = contentController.isBusy;
+
+	if (!status) {
+		status = @"";
+		isBusy = NO;
+	}
+
+	[statusField setStringValue:status];
+
+	if (isBusy) {
+		[progressIndicator startAnimation:self];
+		[progressIndicator setHidden:NO];
+	}
+	else {
+		[progressIndicator stopAnimation:self];
+		[progressIndicator setHidden:YES];
+	}
+}
+
+- (void) observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
+{
+    if ([(NSString *)context isEqualToString:@"statusChange"]) {
+		[self updateStatus];
+		return;
+	}
+
+	[super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
+}
+
 
 
 #pragma mark -

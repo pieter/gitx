@@ -52,6 +52,9 @@
 		D8083E03111FA33700337480 /* PBCloneRepositoryPanel.m in Sources */ = {isa = PBXBuildFile; fileRef = D8083E02111FA33700337480 /* PBCloneRepositoryPanel.m */; };
 		D828A40D1127B18700F09D11 /* PBSourceViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D828A40C1127B18700F09D11 /* PBSourceViewCell.m */; };
 		D828A4111127B1C400F09D11 /* PBSourceViewBadge.m in Sources */ = {isa = PBXBuildFile; fileRef = D828A4101127B1C400F09D11 /* PBSourceViewBadge.m */; };
+		D828A5F21128AE7200F09D11 /* FetchTemplate.png in Resources */ = {isa = PBXBuildFile; fileRef = D828A5EF1128AE7200F09D11 /* FetchTemplate.png */; };
+		D828A5F31128AE7200F09D11 /* PullTemplate.png in Resources */ = {isa = PBXBuildFile; fileRef = D828A5F01128AE7200F09D11 /* PullTemplate.png */; };
+		D828A5F41128AE7200F09D11 /* PushTemplate.png in Resources */ = {isa = PBXBuildFile; fileRef = D828A5F11128AE7200F09D11 /* PushTemplate.png */; };
 		D8357535112640F100DE249D /* PBRemoteProgressSheet.xib in Resources */ = {isa = PBXBuildFile; fileRef = D8C1B77110E875CF009B7F8B /* PBRemoteProgressSheet.xib */; };
 		D854948610D5C01B0083B917 /* PBCreateBranchSheet.m in Sources */ = {isa = PBXBuildFile; fileRef = D854948510D5C01B0083B917 /* PBCreateBranchSheet.m */; };
 		D85810551127476E007F254B /* StageView.png in Resources */ = {isa = PBXBuildFile; fileRef = D85810541127476E007F254B /* StageView.png */; };
@@ -71,6 +74,7 @@
 		D8FDDA6E114335E8005647F6 /* PBGitSVRemoteItem.m in Sources */ = {isa = PBXBuildFile; fileRef = D8FDDA65114335E8005647F6 /* PBGitSVRemoteItem.m */; };
 		D8FDDA6F114335E8005647F6 /* PBGitSVStageItem.m in Sources */ = {isa = PBXBuildFile; fileRef = D8FDDA67114335E8005647F6 /* PBGitSVStageItem.m */; };
 		D8FDDA70114335E8005647F6 /* PBGitSVTagItem.m in Sources */ = {isa = PBXBuildFile; fileRef = D8FDDA69114335E8005647F6 /* PBGitSVTagItem.m */; };
+		D8FDDBF41143F318005647F6 /* AddRemote.png in Resources */ = {isa = PBXBuildFile; fileRef = D8FDDBF31143F318005647F6 /* AddRemote.png */; };
 		EB2A734A0FEE3F09006601CF /* PBCollapsibleSplitView.m in Sources */ = {isa = PBXBuildFile; fileRef = EB2A73490FEE3F09006601CF /* PBCollapsibleSplitView.m */; };
 		F50A411F0EBB874C00208746 /* mainSplitterBar.tiff in Resources */ = {isa = PBXBuildFile; fileRef = F50A411D0EBB874C00208746 /* mainSplitterBar.tiff */; };
 		F50A41200EBB874C00208746 /* mainSplitterDimple.tiff in Resources */ = {isa = PBXBuildFile; fileRef = F50A411E0EBB874C00208746 /* mainSplitterDimple.tiff */; };
@@ -254,6 +258,9 @@
 		D828A40C1127B18700F09D11 /* PBSourceViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PBSourceViewCell.m; sourceTree = "<group>"; };
 		D828A40F1127B1C400F09D11 /* PBSourceViewBadge.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PBSourceViewBadge.h; sourceTree = "<group>"; };
 		D828A4101127B1C400F09D11 /* PBSourceViewBadge.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PBSourceViewBadge.m; sourceTree = "<group>"; };
+		D828A5EF1128AE7200F09D11 /* FetchTemplate.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = FetchTemplate.png; path = Images/FetchTemplate.png; sourceTree = "<group>"; };
+		D828A5F01128AE7200F09D11 /* PullTemplate.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = PullTemplate.png; path = Images/PullTemplate.png; sourceTree = "<group>"; };
+		D828A5F11128AE7200F09D11 /* PushTemplate.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = PushTemplate.png; path = Images/PushTemplate.png; sourceTree = "<group>"; };
 		D854948410D5C01B0083B917 /* PBCreateBranchSheet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PBCreateBranchSheet.h; sourceTree = "<group>"; };
 		D854948510D5C01B0083B917 /* PBCreateBranchSheet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PBCreateBranchSheet.m; sourceTree = "<group>"; };
 		D854949310D5C3E20083B917 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/PBCreateBranchSheet.xib; sourceTree = "<group>"; };
@@ -285,6 +292,7 @@
 		D8FDDA68114335E8005647F6 /* PBGitSVTagItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PBGitSVTagItem.h; sourceTree = "<group>"; };
 		D8FDDA69114335E8005647F6 /* PBGitSVTagItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PBGitSVTagItem.m; sourceTree = "<group>"; };
 		D8FDDA7311433634005647F6 /* PBSourceViewItems.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PBSourceViewItems.h; sourceTree = "<group>"; };
+		D8FDDBF31143F318005647F6 /* AddRemote.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = AddRemote.png; path = Images/AddRemote.png; sourceTree = "<group>"; };
 		EB2A73480FEE3F09006601CF /* PBCollapsibleSplitView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PBCollapsibleSplitView.h; sourceTree = "<group>"; };
 		EB2A73490FEE3F09006601CF /* PBCollapsibleSplitView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PBCollapsibleSplitView.m; sourceTree = "<group>"; };
 		F50A411D0EBB874C00208746 /* mainSplitterBar.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; name = mainSplitterBar.tiff; path = Images/mainSplitterBar.tiff; sourceTree = "<group>"; };
@@ -507,6 +515,10 @@
 				D858108111274D28007F254B /* RemoteBranch.png */,
 				D858108211274D28007F254B /* Tag.png */,
 				D85810541127476E007F254B /* StageView.png */,
+				D8FDDBF31143F318005647F6 /* AddRemote.png */,
+				D828A5EF1128AE7200F09D11 /* FetchTemplate.png */,
+				D828A5F01128AE7200F09D11 /* PullTemplate.png */,
+				D828A5F11128AE7200F09D11 /* PushTemplate.png */,
 				3BC07F4A0ED5A5C5009A7768 /* HistoryViewTemplate.png */,
 				3BC07F4B0ED5A5C5009A7768 /* CommitViewTemplate.png */,
 				F56ADDD70ED19F9E002AC78F /* AddBranchTemplate.png */,
@@ -993,6 +1005,10 @@
 				D858108311274D28007F254B /* Branch.png in Resources */,
 				D858108411274D28007F254B /* RemoteBranch.png in Resources */,
 				D858108511274D28007F254B /* Tag.png in Resources */,
+				D828A5F21128AE7200F09D11 /* FetchTemplate.png in Resources */,
+				D828A5F31128AE7200F09D11 /* PullTemplate.png in Resources */,
+				D828A5F41128AE7200F09D11 /* PushTemplate.png in Resources */,
+				D8FDDBF41143F318005647F6 /* AddRemote.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

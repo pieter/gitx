@@ -17,9 +17,13 @@
 	PBViewController *contentController;
 
 	PBGitSidebarController *sidebarController;
+	IBOutlet NSView *sourceListControlsView;
 	IBOutlet NSSplitView *splitView;
 	IBOutlet NSView *sourceSplitView;
 	IBOutlet NSView *contentSplitView;
+
+	IBOutlet NSTextField *statusField;
+	IBOutlet NSProgressIndicator *progressIndicator;
 
 	PBViewController* viewController;
 }

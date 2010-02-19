@@ -12,6 +12,8 @@
 @implementation PBViewController
 
 @synthesize repository;
+@synthesize status;
+@synthesize isBusy;
 
 - (id)initWithRepository:(PBGitRepository *)theRepository superController:(PBGitWindowController *)controller
 {

@@ -16,6 +16,9 @@
 @interface PBGitSidebarController : PBViewController {
 	IBOutlet NSWindow *window;
 	IBOutlet NSOutlineView *sourceView;
+	IBOutlet NSView *sourceListControlsView;
+	IBOutlet NSPopUpButton *actionButton;
+	IBOutlet NSSegmentedControl *remoteControls;
 
 	NSMutableArray *items;
 
@@ -33,5 +36,8 @@
 
 - (NSMenu *) menuForRow:(NSInteger)row;
 
+- (IBAction) fetchPullPushAction:(id)sender;
+
 @property(readonly) NSMutableArray *items;
+@property(readonly) NSView *sourceListControlsView;
 @end

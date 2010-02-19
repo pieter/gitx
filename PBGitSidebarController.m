@@ -13,6 +13,7 @@
 #import "PBRefController.h"
 #import "PBSourceViewCell.h"
 #import "NSOutlineViewExt.h"
+#import "PBAddRemoteSheet.h"
 
 @interface PBGitSidebarController ()
 
@@ -20,10 +21,13 @@
 - (void)addRevSpec:(PBGitRevSpecifier *)revSpec;
 - (PBSourceViewItem *) itemForRev:(PBGitRevSpecifier *)rev;
 - (void) removeRevSpec:(PBGitRevSpecifier *)rev;
+- (void) updateActionMenu;
+- (void) updateRemoteControls;
 @end
 
 @implementation PBGitSidebarController
 @synthesize items;
+@synthesize sourceListControlsView;
 
 - (id)initWithRepository:(PBGitRepository *)theRepository superController:(PBGitWindowController *)controller
 {
@@ -45,6 +49,9 @@
 
 	[repository addObserver:self forKeyPath:@"currentBranch" options:0 context:@"currentBranchChange"];
 	[repository addObserver:self forKeyPath:@"branches" options:(NSKeyValueObservingOptionOld | NSKeyValueObservingOptionNew) context:@"branchesModified"];
+
+	[self menuNeedsUpdate:[actionButton menu]];
+
 	[self selectCurrentBranch];
 }
 
@@ -76,6 +83,14 @@
 	}
 
 	[super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
+}
+
+- (PBSourceViewItem *) selectedItem
+{
+	NSInteger index = [sourceView selectedRow];
+	PBSourceViewItem *item = [sourceView itemAtRow:index];
+
+	return item;
 }
 
 - (void) selectStage
@@ -161,16 +176,14 @@
 	if ([item revSpecifier]) {
 		repository.currentBranch = [item revSpecifier];
 		[superController changeContentController:historyViewController];
-		return;
 	}
 
-	if (item == stage)
+	if (item == stage) {
 		[superController changeContentController:commitViewController];
+	}
 
-	/* ... */
-
-	
-	/* Handle Remotes */
+	[self updateActionMenu];
+	[self updateRemoteControls];
 }
 
 #pragma mark NSOutlineView delegate methods
@@ -261,29 +274,112 @@
 
 #pragma mark Menus
 
+- (void) updateActionMenu
+{
+	[actionButton setEnabled:([[self selectedItem] ref] != nil)];
+}
+
+- (void) addMenuItemsForRef:(PBGitRef *)ref toMenu:(NSMenu *)menu
+{
+	if (!ref)
+		return;
+
+	for (NSMenuItem *menuItem in [historyViewController.refController menuItemsForRef:ref])
+		[menu addItem:menuItem];
+}
+
+- (NSMenuItem *) actionIconItem
+{
+	NSMenuItem *actionIconItem = [[NSMenuItem alloc] initWithTitle:@"" action:NULL keyEquivalent:@""];
+	NSImage *actionIcon = [NSImage imageNamed:@"NSActionTemplate"];
+	[actionIcon setSize:NSMakeSize(12, 12)];
+	[actionIconItem setImage:actionIcon];
+
+	return actionIconItem;
+}
+
 - (NSMenu *) menuForRow:(NSInteger)row
 {
 	PBSourceViewItem *viewItem = [sourceView itemAtRow:row];
 
-	PBGitRef *ref = nil;
-
-	// create a ref for a remote because they don't store one
-	if ([self outlineView:sourceView isItemExpandable:viewItem] && (viewItem.parent == remotes))
-		ref = [PBGitRef refFromString:[kGitXRemoteRefPrefix stringByAppendingString:[viewItem title]]];
-	else
-		ref = [[viewItem revSpecifier] ref];
-
+	PBGitRef *ref = [viewItem ref];
 	if (!ref)
 		return nil;
 
-	NSArray *menuItems = [historyViewController.refController menuItemsForRef:ref];
-
 	NSMenu *menu = [[NSMenu alloc] init];
 	[menu setAutoenablesItems:NO];
-	for (NSMenuItem *item in menuItems)
-		[menu addItem:item];
+	[self addMenuItemsForRef:ref toMenu:menu];
 
 	return menu;
 }
+
+// delegate of the action menu
+- (void) menuNeedsUpdate:(NSMenu *)menu
+{
+	[actionButton removeAllItems];
+	[menu addItem:[self actionIconItem]];
+
+	PBGitRef *ref = [[self selectedItem] ref];
+	[self addMenuItemsForRef:ref toMenu:menu];
+}
+
+
+#pragma mark Remote controls
+
+enum  {
+	kAddRemoteSegment = 0,
+	kFetchSegment,
+	kPullSegment,
+	kPushSegment
+};
+
+- (void) updateRemoteControls
+{
+	BOOL hasRemote = NO;
+
+	PBGitRef *ref = [[self selectedItem] ref];
+	if ([ref isRemote] || ([ref isBranch] && [[repository remoteRefForBranch:ref error:NULL] remoteName]))
+		hasRemote = YES;
+
+	[remoteControls setEnabled:hasRemote forSegment:kFetchSegment];
+	[remoteControls setEnabled:hasRemote forSegment:kPullSegment];
+	[remoteControls setEnabled:hasRemote forSegment:kPushSegment];
+}
+
+- (IBAction) fetchPullPushAction:(id)sender
+{
+	NSInteger selectedSegment = [sender selectedSegment];
+
+	if (selectedSegment == kAddRemoteSegment) {
+		[PBAddRemoteSheet beginAddRemoteSheetForRepository:repository];
+		return;
+	}
+
+	NSInteger index = [sourceView selectedRow];
+	PBSourceViewItem *item = [sourceView itemAtRow:index];
+	PBGitRef *ref = [[item revSpecifier] ref];
+
+	if (!ref && (item.parent == remotes))
+		ref = [PBGitRef refFromString:[kGitXRemoteRefPrefix stringByAppendingString:[item title]]];
+
+	if (![ref isRemote] && ![ref isBranch])
+		return;
+
+	PBGitRef *remoteRef = [repository remoteRefForBranch:ref error:NULL];
+	if (!remoteRef)
+		return;
+
+	if (selectedSegment == kFetchSegment)
+		[repository beginFetchFromRemoteForRef:ref];
+	else if (selectedSegment == kPullSegment)
+		[repository beginPullFromRemote:remoteRef forRef:ref];
+	else if (selectedSegment == kPushSegment) {
+		if ([ref isRemote])
+			[historyViewController.refController showConfirmPushRefSheet:nil remote:remoteRef];
+		else if ([ref isBranch])
+			[historyViewController.refController showConfirmPushRefSheet:ref remote:remoteRef];
+	}
+}
+
 
 @end
