@@ -14,11 +14,8 @@
 <body style="padding: 0px; border: 0px">
 	<div id="rightcontent">
 		<div id="buttons">
-			<a class="servicebutton" id="gist" onClick="confirm_gist();return false" href='#'>
-				Gist&nbsp;it
-			</a>
+			<button id="gist" onClick="confirm_gist();return false" style="display:none">Gist&nbsp;it</button>
 		</div>
-		<img id="gravatar" src="">
 	</div>
 	<table id="commit_header">
 	<tr>
@@ -26,24 +23,35 @@
 		<td id="commitID"></td>
 	</tr>
 	<tr>
-		<td class="property_name">Author:</td>
-		<td id="authorID">Pieter de Bie</td>
-	</tr>
-	<tr>
-		<td class="property_name">Date:</td>
-		<td id="date">Pieter de Bie</td>
-	</tr>
-	<tr style="display:none">
-		<td class="property_name">Committer:</td>
-		<td id="committerID">Pieter de Bie</td>
-	</tr>
-	<tr style="display:none">
-		<td class="property_name">Commit Date:</td>
-		<td id="committerDate">Pieter de Bie</td>
+		<td colspan="2">
+			<table id="authorTable">
+				<tr>
+					<td class="property_name">Author:</td>
+					<td class="gravatar" rowspan="2" align="center" style="display:none">
+						<img id="author_gravatar" src=""></img>
+					</td>
+					<td id="authorID"></td>
+				</tr>
+				<tr>
+					<td class="property_name">Date:</td>
+					<td id="date"></td>
+				</tr>
+				<tr style="display:none">
+					<td class="property_name">Commiter:</td>
+					<td class="gravatar" rowspan="2" align="center" style="display:none">
+						<img id="committer_gravatar" src=""></img>
+					</td>
+					<td id="committerID"></td>
+				<tr style="display:none">
+					<td class="property_name">Date:</td>
+					<td id="committerDate"></td>
+				</tr>
+			</table>
+		</td>
 	</tr>
 	<tr>
 		<td class="property_name">Subject:</td>
-		<td id="subjectID" style="font-weight:bold">Pieter de Bie</td>
+		<td id="subjectID" style="font-weight:bold"></td>
 	</tr>
 	<tr style="display:none">
 		<td class="property_name">Refs:</td>
