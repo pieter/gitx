@@ -24,6 +24,8 @@
 }
 
 - (void) createBranch:(PBRefMenuItem *)sender;
+- (void) copySHA:(PBRefMenuItem *)sender;
+- (void) copyPatch:(PBRefMenuItem *)sender;
 
 - (NSArray *) menuItemsForRef:(PBGitRef *)ref;
 - (NSArray *) menuItemsForCommit:(PBGitCommit *)commit;

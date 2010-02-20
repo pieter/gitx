@@ -46,6 +46,35 @@
 }
 
 
+#pragma mark Copy info
+
+- (void) copySHA:(PBRefMenuItem *)sender
+{
+	PBGitCommit *commit = nil;
+	if ([[sender refish] refishType] == kGitXCommitType)
+		commit = (PBGitCommit *)[sender refish];
+	else
+		commit = [historyController.repository commitForRef:[sender refish]];
+
+	NSPasteboard *pasteboard = [NSPasteboard generalPasteboard];
+	[pasteboard declareTypes:[NSArray arrayWithObject:NSStringPboardType] owner:nil];
+	[pasteboard setString:[commit realSha] forType:NSStringPboardType];
+}
+
+- (void) copyPatch:(PBRefMenuItem *)sender
+{
+	PBGitCommit *commit = nil;
+	if ([[sender refish] refishType] == kGitXCommitType)
+		commit = (PBGitCommit *)[sender refish];
+	else
+		commit = [historyController.repository commitForRef:[sender refish]];
+
+	NSPasteboard *pasteboard = [NSPasteboard generalPasteboard];
+	[pasteboard declareTypes:[NSArray arrayWithObject:NSStringPboardType] owner:nil];
+	[pasteboard setString:[commit patch] forType:NSStringPboardType];
+}
+
+
 - (void) removeRefSheetDidEnd:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void  *)contextInfo
 {
 	if (returnCode == NSAlertDefaultReturn) {

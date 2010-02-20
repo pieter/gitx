@@ -74,6 +74,10 @@
 	NSMutableArray *items = [NSMutableArray array];
 
     [items addObject:[PBRefMenuItem itemWithTitle:@"Create Branch…" action:@selector(createBranch:) enabled:YES]];
+	[items addObject:[PBRefMenuItem separatorItem]];
+
+	[items addObject:[PBRefMenuItem itemWithTitle:@"Copy SHA" action:@selector(copySHA:) enabled:YES]];
+	[items addObject:[PBRefMenuItem itemWithTitle:@"Copy Patch" action:@selector(copyPatch:) enabled:YES]];
 
 	for (PBRefMenuItem *item in items) {
 		[item setTarget:target];
