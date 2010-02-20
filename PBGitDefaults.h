@@ -23,5 +23,7 @@
 + (void) setShouldCheckoutBranch:(BOOL)shouldCheckout;
 + (NSString *) recentCloneDestination;
 + (void) setRecentCloneDestination:(NSString *)path;
++ (BOOL) suppressAcceptDropRef;
++ (void) setSuppressAcceptDropRef:(BOOL)suppress;
 
 @end

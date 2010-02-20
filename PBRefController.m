@@ -11,6 +11,7 @@
 #import "PBRefMenuItem.h"
 #import "PBCreateBranchSheet.h"
 #import "PBCreateTagSheet.h"
+#import "PBGitDefaults.h"
 
 @implementation PBRefController
 
@@ -317,6 +318,25 @@
 	return NSDragOperationNone;
 }
 
+- (void) dropRef:(NSDictionary *)dropInfo
+{
+	PBGitRef *ref = [dropInfo objectForKey:@"dragRef"];
+	PBGitCommit *oldCommit = [dropInfo objectForKey:@"oldCommit"];
+	PBGitCommit *dropCommit = [dropInfo objectForKey:@"dropCommit"];
+	if (!ref || ! oldCommit || !dropCommit)
+		return;
+
+	int retValue = 1;
+	[historyController.repository outputForArguments:[NSArray arrayWithObjects:@"update-ref", @"-mUpdate from GitX", [ref ref], [dropCommit realSha], NULL] retValue:&retValue];
+	if (retValue)
+		return;
+
+	[dropCommit addRef:ref];
+	[oldCommit removeRef:ref];
+
+	[commitController rearrangeObjects];
+}
+
 - (BOOL)tableView:(NSTableView *)aTableView
 	   acceptDrop:(id <NSDraggingInfo>)info
 			  row:(NSInteger)row
@@ -332,31 +352,55 @@
 	
 	NSArray *numbers = [NSKeyedUnarchiver unarchiveObjectWithData:data];
 	int oldRow = [[numbers objectAtIndex:0] intValue];
+	if (oldRow == row)
+		return NO;
+
 	int oldRefIndex = [[numbers objectAtIndex:1] intValue];
-	PBGitCommit *oldCommit = [[commitController arrangedObjects] objectAtIndex: oldRow];
+	PBGitCommit *oldCommit = [[commitController arrangedObjects] objectAtIndex:oldRow];
 	PBGitRef *ref = [[oldCommit refs] objectAtIndex:oldRefIndex];
-	
+
 	PBGitCommit *dropCommit = [[commitController arrangedObjects] objectAtIndex:row];
-	
-	int a = [[NSAlert alertWithMessageText:@"Change branch"
-							 defaultButton:@"Change"
-						   alternateButton:@"Cancel"
-							   otherButton:nil
-				 informativeTextWithFormat:@"Do you want to change branch\n\n\t'%@'\n\n to point to commit\n\n\t'%@'", [ref shortName], [dropCommit subject]] runModal];
-	if (a != NSAlertDefaultReturn)
-		return NO;
-	
-	int retValue = 1;
-	[historyController.repository outputForArguments:[NSArray arrayWithObjects:@"update-ref", @"-mUpdate from GitX", [ref ref], [dropCommit realSha], NULL] retValue:&retValue];
-	if (retValue)
-		return NO;
-	
-	[dropCommit addRef:ref];
-	[oldCommit removeRef:ref];
-	
-	[commitController rearrangeObjects];
-	[aTableView needsToDrawRect:[aTableView rectOfRow:oldRow]];
+
+	NSDictionary *dropInfo = [NSDictionary dictionaryWithObjectsAndKeys:
+							  ref, @"dragRef",
+							  oldCommit, @"oldCommit",
+							  dropCommit, @"dropCommit",
+							  nil];
+
+	if ([PBGitDefaults suppressAcceptDropRef]) {
+		[self dropRef:dropInfo];
+		return YES;
+	}
+
+	NSString *subject = [dropCommit subject];
+	if ([subject length] > 99)
+		subject = [[subject substringToIndex:99] stringByAppendingString:@"…"];
+	NSString *infoText = [NSString stringWithFormat:@"Move the %@ to point to the commit: %@", [ref refishType], subject];
+
+	NSAlert *alert = [NSAlert alertWithMessageText:[NSString stringWithFormat:@"Move %@: %@", [ref refishType], [ref shortName]]
+									 defaultButton:@"Move"
+								   alternateButton:@"Cancel"
+									   otherButton:nil
+						 informativeTextWithFormat:infoText];
+    [alert setShowsSuppressionButton:YES];
+
+	[alert beginSheetModalForWindow:[historyController.repository.windowController window]
+					  modalDelegate:self
+					 didEndSelector:@selector(acceptDropInfoAlertDidEnd:returnCode:contextInfo:)
+						contextInfo:dropInfo];
+
 	return YES;
+}
+
+- (void) acceptDropInfoAlertDidEnd:(NSAlert *)alert returnCode:(NSInteger)returnCode contextInfo:(void *)contextInfo
+{
+    [[alert window] orderOut:nil];
+
+	if (returnCode == NSAlertDefaultReturn)
+		[self dropRef:contextInfo];
+
+	if ([[alert suppressionButton] state] == NSOnState)
+        [PBGitDefaults setSuppressAcceptDropRef:YES];
 }
 
 @end

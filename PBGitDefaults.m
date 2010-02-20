@@ -19,6 +19,7 @@
 #define kShowOpenPanelOnLaunch @"PBShowOpenPanelOnLaunch"
 #define kShouldCheckoutBranch @"PBShouldCheckoutBranch"
 #define kRecentCloneDestination @"PBRecentCloneDestination"
+#define kSuppressAcceptDropRef @"PBSuppressAcceptDropRef"
 
 @implementation PBGitDefaults
 
@@ -104,6 +105,16 @@
 + (void) setRecentCloneDestination:(NSString *)path
 {
 	[[NSUserDefaults standardUserDefaults] setObject:path forKey:kRecentCloneDestination];
+}
+
++ (BOOL) suppressAcceptDropRef
+{
+	return [[NSUserDefaults standardUserDefaults] boolForKey:kSuppressAcceptDropRef];
+}
+
++ (void) setSuppressAcceptDropRef:(BOOL)suppress
+{
+	return [[NSUserDefaults standardUserDefaults] setBool:suppress forKey:kSuppressAcceptDropRef];
 }
 
 @end
