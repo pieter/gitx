@@ -21,6 +21,8 @@
 #define kRecentCloneDestination @"PBRecentCloneDestination"
 #define kSuppressAcceptDropRef @"PBSuppressAcceptDropRef"
 #define kShowStageView @"PBShowStageView"
+#define kOpenPreviousDocumentsOnLaunch @"PBOpenPreviousDocumentsOnLaunch"
+#define kPreviousDocumentPaths @"PBPreviousDocumentPaths"
 
 @implementation PBGitDefaults
 
@@ -45,6 +47,8 @@
 			  forKey:kShowOpenPanelOnLaunch];
 	[defaultValues setObject:[NSNumber numberWithBool:YES]
 					  forKey:kShouldCheckoutBranch];
+	[defaultValues setObject:[NSNumber numberWithBool:NO]
+                      forKey:kOpenPreviousDocumentsOnLaunch];
 	[[NSUserDefaults standardUserDefaults] registerDefaults:defaultValues];
 }
 
@@ -128,5 +132,24 @@
 	return [[NSUserDefaults standardUserDefaults] setBool:suppress forKey:kShowStageView];
 }
 
++ (BOOL) openPreviousDocumentsOnLaunch
+{
+	return [[NSUserDefaults standardUserDefaults] boolForKey:kOpenPreviousDocumentsOnLaunch];
+}
+
++ (void) setPreviousDocumentPaths:(NSArray *)documentPaths
+{
+	[[NSUserDefaults standardUserDefaults] setObject:documentPaths forKey:kPreviousDocumentPaths];
+}
+
++ (NSArray *) previousDocumentPaths
+{
+	return [[NSUserDefaults standardUserDefaults] arrayForKey:kPreviousDocumentPaths];
+}
+
++ (void) removePreviousDocumentPaths
+{
+	[[NSUserDefaults standardUserDefaults] removeObjectForKey:kPreviousDocumentPaths];
+}
 
 @end

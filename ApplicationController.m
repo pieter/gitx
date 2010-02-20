@@ -66,32 +66,47 @@
 {
 	[self registerServices];
 
+    BOOL hasOpenedDocuments = NO;
+    NSArray *launchedDocuments = [[[PBRepositoryDocumentController sharedDocumentController] documents] copy];
+
 	// Only try to open a default document if there are no documents open already.
 	// For example, the application might have been launched by double-clicking a .git repository,
 	// or by dragging a folder to the app icon
-	if ([[[PBRepositoryDocumentController sharedDocumentController] documents] count])
-		return;
+	if ([launchedDocuments count])
+		hasOpenedDocuments = YES;
+
+    // open any documents that were open the last time the app quit
+    if ([PBGitDefaults openPreviousDocumentsOnLaunch]) {
+        for (NSString *path in [PBGitDefaults previousDocumentPaths]) {
+            NSURL *url = [NSURL fileURLWithPath:path isDirectory:YES];
+            NSError *error = nil;
+            if (url && [[PBRepositoryDocumentController sharedDocumentController] openDocumentWithContentsOfURL:url display:YES error:&error])
+                hasOpenedDocuments = YES;
+        }
+    }
+
+	// Try to find the current directory, to open that as a repository
+	if ([PBGitDefaults openCurDirOnLaunch] && !hasOpenedDocuments) {
+		NSString *curPath = [[[NSProcessInfo processInfo] environment] objectForKey:@"PWD"];
+        NSURL *url = nil;
+		if (curPath)
+			url = [NSURL fileURLWithPath:curPath];
+        // Try to open the found URL
+        NSError *error = nil;
+        if (url && [[PBRepositoryDocumentController sharedDocumentController] openDocumentWithContentsOfURL:url display:YES error:&error])
+            hasOpenedDocuments = YES;
+	}
+
+    // to bring the launched documents to the front
+    for (PBGitRepository *document in launchedDocuments)
+        [document showWindows];
 
 	if (![[NSApplication sharedApplication] isActive])
 		return;
 
-	NSURL *url = nil;
-
-	// Try to find the current directory, to open that as a repository
-	if ([PBGitDefaults openCurDirOnLaunch]) {
-		NSString *curPath = [[[NSProcessInfo processInfo] environment] objectForKey:@"PWD"];
-		if (curPath)
-			url = [NSURL fileURLWithPath:curPath];
-	}
-
-	// Try to open the found URL
-	NSError *error = nil;
-	if (url && [[PBRepositoryDocumentController sharedDocumentController] openDocumentWithContentsOfURL:url display:YES error:&error])
-		return;
-
 	// The current directory was not enabled or could not be opened (most likely it’s not a git repository).
 	// show an open panel for the user to select a repository to view
-	if ([PBGitDefaults showOpenPanelOnLaunch])
+	if ([PBGitDefaults showOpenPanelOnLaunch] && !hasOpenedDocuments)
 		[[PBRepositoryDocumentController sharedDocumentController] openDocument:self];
 }
 
@@ -333,6 +348,21 @@
     return reply;
 }
 
+- (void)applicationWillTerminate:(NSNotification *)aNotification
+{
+	[PBGitDefaults removePreviousDocumentPaths];
+
+	if ([PBGitDefaults openPreviousDocumentsOnLaunch]) {
+		NSArray *documents = [[PBRepositoryDocumentController sharedDocumentController] documents];
+		if ([documents count] > 0) {
+			NSMutableArray *paths = [NSMutableArray array];
+			for (PBGitRepository *repository in documents)
+				[paths addObject:[repository workingDirectory]];
+
+			[PBGitDefaults setPreviousDocumentPaths:paths];
+		}
+	}
+}
 
 /**
     Implementation of dealloc, to release the retained variables.

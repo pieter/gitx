@@ -27,5 +27,9 @@
 + (void) setSuppressAcceptDropRef:(BOOL)suppress;
 + (BOOL) showStageView;
 + (void) setShowStageView:(BOOL)suppress;
++ (BOOL) openPreviousDocumentsOnLaunch;
++ (void) setPreviousDocumentPaths:(NSArray *)documentPaths;
++ (NSArray *) previousDocumentPaths;
++ (void) removePreviousDocumentPaths;
 
 @end
