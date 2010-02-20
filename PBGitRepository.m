@@ -426,6 +426,60 @@ NSString* PBGitRepositoryErrorDomain = @"GitXErrorDomain";
 	return nil;
 }
 
+#pragma mark Remotes
+
+- (NSArray *) remotes
+{
+	int retValue = 1;
+	NSString *remotes = [self outputInWorkdirForArguments:[NSArray arrayWithObject:@"remote"] retValue:&retValue];
+	if (retValue || [remotes isEqualToString:@""])
+		return nil;
+
+	return [remotes componentsSeparatedByCharactersInSet:[NSCharacterSet newlineCharacterSet]];
+}
+
+- (BOOL) hasRemotes
+{
+	return ([self remotes] != nil);
+}
+
+- (PBGitRef *) remoteRefForBranch:(PBGitRef *)branch error:(NSError **)error
+{
+	if ([branch isRemote])
+		return [branch remoteRef];
+
+	NSString *branchName = [branch branchName];
+	if (branchName) {
+		NSString *remoteName = [[self config] valueForKeyPath:[NSString stringWithFormat:@"branch.%@.remote", branchName]];
+		if (remoteName && ([remoteName isKindOfClass:[NSString class]] && ![remoteName isEqualToString:@""])) {
+			PBGitRef *remoteRef = [PBGitRef refFromString:[kGitXRemoteRefPrefix stringByAppendingString:remoteName]];
+			// check that the remote is a valid ref and exists
+			if ([self checkRefFormat:[remoteRef ref]] && [self refExists:remoteRef])
+				return remoteRef;
+		}
+	}
+
+	if (error != NULL) {
+		NSString *info = [NSString stringWithFormat:@"There is no remote configured for the %@ '%@'.\n\nPlease select a branch from the popup menu, which has a corresponding remote tracking branch set up.\n\nYou can also use a contextual menu to choose a branch by right clicking on its label in the commit history list.", [branch refishType], [branch shortName]];
+		*error = [NSError errorWithDomain:PBGitRepositoryErrorDomain code:0
+								 userInfo:[NSDictionary dictionaryWithObjectsAndKeys:
+										   @"No remote configured for branch", NSLocalizedDescriptionKey,
+										   info, NSLocalizedRecoverySuggestionErrorKey,
+										   nil]];
+	}
+	return nil;
+}
+
+- (NSString *) infoForRemote:(NSString *)remoteName
+{
+	int retValue = 1;
+	NSString *output = [self outputInWorkdirForArguments:[NSArray arrayWithObjects:@"remote", @"show", remoteName, nil] retValue:&retValue];
+	if (retValue)
+		return nil;
+
+	return output;
+}
+
 #pragma mark Repository commands
 
 - (BOOL) checkoutRefish:(id <PBGitRefish>)ref
@@ -593,10 +647,42 @@ NSString* PBGitRepositoryErrorDomain = @"GitXErrorDomain";
 	return YES;
 }
 
+- (BOOL) deleteRemote:(PBGitRef *)ref
+{
+	if (!ref || ([ref refishType] != kGitXRemoteType))
+		return NO;
+
+	int retValue = 1;
+	NSArray *arguments = [NSArray arrayWithObjects:@"remote", @"rm", [ref remoteName], nil];
+	NSString * output = [self outputForArguments:arguments retValue:&retValue];
+	if (retValue) {
+		NSString *message = [NSString stringWithFormat:@"There was an error deleting the remote: %@\n\n", [ref remoteName]];
+		[self.windowController showErrorSheetTitle:@"Delete remote failed!" message:message arguments:arguments output:output];
+		return NO;
+	}
+
+	// remove the remote's branches
+	NSString *remoteRef = [kGitXRemoteRefPrefix stringByAppendingString:[ref remoteName]];
+	for (PBGitRevSpecifier *rev in [branches copy]) {
+		PBGitRef *branch = [rev ref];
+		if ([[branch ref] hasPrefix:remoteRef]) {
+			[self removeBranch:rev];
+			PBGitCommit *commit = [self commitForRef:branch];
+			[commit removeRef:branch];
+		}
+	}
+
+	[self reloadRefs];
+	return YES;
+}
+
 - (BOOL) deleteRef:(PBGitRef *)ref
 {
 	if (!ref)
 		return NO;
+
+	if ([ref refishType] == kGitXRemoteType)
+		return [self deleteRemote:ref];
 
 	int retValue = 1;
 	NSArray *arguments = [NSArray arrayWithObjects:@"update-ref", @"-d", [ref ref], nil];

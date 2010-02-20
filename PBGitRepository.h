@@ -36,6 +36,7 @@ extern NSString* PBGitRepositoryErrorDomain;
 - (BOOL) rebaseBranch:(id <PBGitRefish>)branch onRefish:(id <PBGitRefish>)upstream;
 - (BOOL) createBranch:(NSString *)branchName atRefish:(id <PBGitRefish>)ref;
 - (BOOL) createTag:(NSString *)tagName message:(NSString *)message atRefish:(id <PBGitRefish>)commitSHA;
+- (BOOL) deleteRemote:(PBGitRef *)ref;
 - (BOOL) deleteRef:(PBGitRef *)ref;
 
 - (NSFileHandle*) handleForCommand:(NSString*) cmd;
@@ -71,6 +72,11 @@ extern NSString* PBGitRepositoryErrorDomain;
 - (BOOL) isRefOnHeadBranch:(PBGitRef *)testRef;
 - (BOOL) checkRefFormat:(NSString *)refName;
 - (BOOL) refExists:(PBGitRef *)ref;
+
+- (NSArray *) remotes;
+- (BOOL) hasRemotes;
+- (PBGitRef *) remoteRefForBranch:(PBGitRef *)branch error:(NSError **)error;
+- (NSString *) infoForRemote:(NSString *)remoteName;
 
 - (void) readCurrentBranch;
 - (PBGitRevSpecifier*) addBranch: (PBGitRevSpecifier*) rev;

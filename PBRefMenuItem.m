@@ -39,36 +39,43 @@
 	NSMutableArray *items = [NSMutableArray array];
 
 	NSString *targetRefName = [ref shortName];
-	PBGitCommit *commit = [repo commitForRef:ref];
-	BOOL isOnHeadBranch = [commit isOnHeadBranch];
 
 	PBGitRef *headRef = [[repo headRef] ref];
 	NSString *headRefName = [headRef shortName];
 	BOOL isHead = [ref isEqualToRef:headRef];
+	BOOL isOnHeadBranch = isHead ? YES : [repo isRefOnHeadBranch:ref];
 
-	// checkout ref
-	NSString *checkoutTitle = [@"Checkout " stringByAppendingString:targetRefName];
-	[items addObject:[PBRefMenuItem itemWithTitle:checkoutTitle action:@selector(checkout:) enabled:!isHead]];
-	[items addObject:[PBRefMenuItem separatorItem]];
+	NSString *remoteName = [ref remoteName];
+	if (!remoteName && [ref isBranch])
+		remoteName = [[repo remoteRefForBranch:ref error:NULL] remoteName];
+	BOOL hasRemote = (remoteName ? YES : NO);
+	BOOL isRemote = ([ref isRemote] && ![ref isRemoteBranch]);
 
-	// create branch
-	[items addObject:[PBRefMenuItem itemWithTitle:@"Create branch…" action:@selector(createBranch:) enabled:YES]];
+	if (!isRemote) {
+		// checkout ref
+		NSString *checkoutTitle = [@"Checkout " stringByAppendingString:targetRefName];
+		[items addObject:[PBRefMenuItem itemWithTitle:checkoutTitle action:@selector(checkout:) enabled:!isHead]];
+		[items addObject:[PBRefMenuItem separatorItem]];
 
-	// create tag
-	[items addObject:[PBRefMenuItem itemWithTitle:@"Create Tag…" action:@selector(createTag:) enabled:YES]];
+		// create branch
+		[items addObject:[PBRefMenuItem itemWithTitle:@"Create branch…" action:@selector(createBranch:) enabled:YES]];
 
-	// view tag info
-	if ([ref isTag])
-		[items addObject:[PBRefMenuItem itemWithTitle:@"View tag info…" action:@selector(showTagInfoSheet:) enabled:YES]];
-	[items addObject:[PBRefMenuItem separatorItem]];
+		// create tag
+		[items addObject:[PBRefMenuItem itemWithTitle:@"Create Tag…" action:@selector(createTag:) enabled:YES]];
 
-    // merge ref
-	NSString *mergeTitle = isOnHeadBranch ? @"Merge" : [NSString stringWithFormat:@"Merge %@ into %@", targetRefName, headRefName];
-    [items addObject:[PBRefMenuItem itemWithTitle:mergeTitle action:@selector(merge:) enabled:!isOnHeadBranch]];
+		// view tag info
+		if ([ref isTag])
+			[items addObject:[PBRefMenuItem itemWithTitle:@"View tag info…" action:@selector(showTagInfoSheet:) enabled:YES]];
+		[items addObject:[PBRefMenuItem separatorItem]];
 
-    // rebase
-	NSString *rebaseTitle = isOnHeadBranch ? @"Rebase" : [NSString stringWithFormat:@"Rebase %@ on %@", headRefName, targetRefName];
-    [items addObject:[PBRefMenuItem itemWithTitle:rebaseTitle action:@selector(rebaseHeadBranch:) enabled:!isOnHeadBranch]];
+		// merge ref
+		NSString *mergeTitle = isOnHeadBranch ? @"Merge" : [NSString stringWithFormat:@"Merge %@ into %@", targetRefName, headRefName];
+		[items addObject:[PBRefMenuItem itemWithTitle:mergeTitle action:@selector(merge:) enabled:!isOnHeadBranch]];
+
+		// rebase
+		NSString *rebaseTitle = isOnHeadBranch ? @"Rebase" : [NSString stringWithFormat:@"Rebase %@ on %@", headRefName, targetRefName];
+		[items addObject:[PBRefMenuItem itemWithTitle:rebaseTitle action:@selector(rebaseHeadBranch:) enabled:!isOnHeadBranch]];
+	}
 
 	// delete ref
 	[items addObject:[PBRefMenuItem separatorItem]];
