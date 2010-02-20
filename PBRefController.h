@@ -24,6 +24,7 @@
 }
 
 - (void) checkout:(PBRefMenuItem *)sender;
+- (void) merge:(PBRefMenuItem *)sender;
 - (void) createBranch:(PBRefMenuItem *)sender;
 - (void) copySHA:(PBRefMenuItem *)sender;
 - (void) copyPatch:(PBRefMenuItem *)sender;

@@ -39,6 +39,15 @@
 }
 
 
+#pragma mark Merge
+
+- (void) merge:(PBRefMenuItem *)sender
+{
+	id <PBGitRefish> refish = [sender refish];
+	[historyController.repository mergeWithRefish:refish];
+}
+
+
 #pragma mark Checkout
 
 - (void) checkout:(PBRefMenuItem *)sender

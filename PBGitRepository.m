@@ -474,6 +474,26 @@ NSString* PBGitRepositoryErrorDomain = @"GitXErrorDomain";
 	return YES;
 }
 
+
+- (BOOL) mergeWithRefish:(id <PBGitRefish>)ref
+{
+	NSString *refName = [ref refishName];
+
+	int retValue = 1;
+	NSArray *arguments = [NSArray arrayWithObjects:@"merge", refName, nil];
+	NSString *output = [self outputInWorkdirForArguments:arguments retValue:&retValue];
+	if (retValue) {
+		NSString *headName = [[[self headRef] ref] shortName];
+		NSString *message = [NSString stringWithFormat:@"There was an error merging %@ into %@.", refName, headName];
+		[self.windowController showErrorSheetTitle:@"Merge failed!" message:message arguments:arguments output:output];
+		return NO;
+	}
+
+	[self reloadRefs];
+	[self readCurrentBranch];
+	return YES;
+}
+
 - (BOOL) createBranch:(NSString *)branchName atRefish:(id <PBGitRefish>)ref
 {
 	if (!branchName || !ref)

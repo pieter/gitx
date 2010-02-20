@@ -39,8 +39,11 @@
 	NSMutableArray *items = [NSMutableArray array];
 
 	NSString *targetRefName = [ref shortName];
+	PBGitCommit *commit = [repo commitForRef:ref];
+	BOOL isOnHeadBranch = [commit isOnHeadBranch];
 
 	PBGitRef *headRef = [[repo headRef] ref];
+	NSString *headRefName = [headRef shortName];
 	BOOL isHead = [ref isEqualToRef:headRef];
 
 	// checkout ref
@@ -57,6 +60,11 @@
 	// view tag info
 	if ([ref isTag])
 		[items addObject:[PBRefMenuItem itemWithTitle:@"View tag info…" action:@selector(showTagInfoSheet:) enabled:YES]];
+	[items addObject:[PBRefMenuItem separatorItem]];
+
+    // merge ref
+	NSString *mergeTitle = isOnHeadBranch ? @"Merge" : [NSString stringWithFormat:@"Merge %@ into %@", targetRefName, headRefName];
+    [items addObject:[PBRefMenuItem itemWithTitle:mergeTitle action:@selector(merge:) enabled:!isOnHeadBranch]];
 
 	// delete ref
 	[items addObject:[PBRefMenuItem separatorItem]];
@@ -76,6 +84,9 @@
 {
 	NSMutableArray *items = [NSMutableArray array];
 
+	NSString *headBranchName = [[[commit.repository headRef] ref] shortName];
+	BOOL isOnHeadBranch = [commit isOnHeadBranch];
+
 	[items addObject:[PBRefMenuItem itemWithTitle:@"Checkout Commit" action:@selector(checkout:) enabled:YES]];
 	[items addObject:[PBRefMenuItem separatorItem]];
 
@@ -85,6 +96,11 @@
 
 	[items addObject:[PBRefMenuItem itemWithTitle:@"Copy SHA" action:@selector(copySHA:) enabled:YES]];
 	[items addObject:[PBRefMenuItem itemWithTitle:@"Copy Patch" action:@selector(copyPatch:) enabled:YES]];
+	[items addObject:[PBRefMenuItem separatorItem]];
+
+	// merge commit
+	NSString *mergeTitle = isOnHeadBranch ? @"Merge commit" : [NSString stringWithFormat:@"Merge commit into %@", headBranchName];
+	[items addObject:[PBRefMenuItem itemWithTitle:mergeTitle action:@selector(merge:) enabled:!isOnHeadBranch]];
 
 	for (PBRefMenuItem *item in items) {
 		[item setTarget:target];

@@ -31,6 +31,7 @@ extern NSString* PBGitRepositoryErrorDomain;
 
 - (BOOL) checkoutRefish:(id <PBGitRefish>)ref;
 - (BOOL) checkoutFiles:(NSArray *)files fromRefish:(id <PBGitRefish>)ref;
+- (BOOL) mergeWithRefish:(id <PBGitRefish>)ref;
 - (BOOL) createBranch:(NSString *)branchName atRefish:(id <PBGitRefish>)ref;
 - (BOOL) createTag:(NSString *)tagName message:(NSString *)message atRefish:(id <PBGitRefish>)commitSHA;
 - (BOOL) deleteRef:(PBGitRef *)ref;
