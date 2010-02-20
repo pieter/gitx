@@ -34,25 +34,27 @@
 	}
 }
 
-
-- (void) removeRef:(PBRefMenuItem *) sender
+- (void) removeRefSheetDidEnd:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void  *)contextInfo
 {
-	NSString *ref_desc = [NSString stringWithFormat:@"%@ %@", [[sender ref] type], [[sender ref] shortName]];
-	NSString *question = [NSString stringWithFormat:@"Are you sure you want to remove the %@?", ref_desc];
-	int choice = NSRunAlertPanel([NSString stringWithFormat:@"Delete %@?", ref_desc], question, @"Delete", @"Cancel", nil);
-	// TODO: Use a non-modal alert here, so we don't block all the GitX windows
-
-	if(choice) {
+	if (returnCode == NSAlertDefaultReturn) {
 		int ret = 1;
-		[historyController.repository outputForArguments:[NSArray arrayWithObjects:@"update-ref", @"-d", [[sender ref] ref], nil] retValue: &ret];
+        PBRefMenuItem *refMenuItem = contextInfo;
+		[historyController.repository outputForArguments:[NSArray arrayWithObjects:@"update-ref", @"-d", [[refMenuItem ref] ref], nil] retValue: &ret];
 		if (ret) {
 			NSLog(@"Removing ref failed!");
 			return;
 		}
-		[historyController.repository removeBranch:[[PBGitRevSpecifier alloc] initWithRef:[sender ref]]];
-		[[sender commit] removeRef:[sender ref]];
+		[historyController.repository removeBranch:[[PBGitRevSpecifier alloc] initWithRef:[refMenuItem ref]]];
+		[[refMenuItem commit] removeRef:[refMenuItem ref]];
 		[commitController rearrangeObjects];
 	}
+}
+
+- (void) removeRef:(PBRefMenuItem *)sender
+{
+	NSString *ref_desc = [NSString stringWithFormat:@"%@ %@", [[sender ref] type], [[sender ref] shortName]];
+	NSString *question = [NSString stringWithFormat:@"Are you sure you want to remove the %@?", ref_desc];
+    NSBeginAlertSheet([NSString stringWithFormat:@"Delete %@?", ref_desc], @"Delete", @"Cancel", nil, [[historyController view] window], self, @selector(removeRefSheetDidEnd:returnCode:contextInfo:), NULL, sender, question);
 }
 
 - (void) checkoutRef:(PBRefMenuItem *)sender
