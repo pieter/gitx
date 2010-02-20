@@ -61,8 +61,9 @@
 	int row = [self rowAtPoint:location];
 	int column = [self columnAtPoint:location];
 	PBGitRevisionCell *cell = (PBGitRevisionCell *)[self preparedCellAtColumn:column row:row];
+	NSRect cellFrame = [self frameOfCellAtColumn:column row:row];
 
-	int index = [cell indexAtX:location.x];
+	int index = [cell indexAtX:(location.x - cellFrame.origin.x)];
 	if (index == -1)
 		return [super dragImageForRowsWithIndexes:dragRows tableColumns:tableColumns event:dragEvent offset:dragImageOffset];
 
