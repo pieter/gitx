@@ -92,12 +92,14 @@
 	NSPoint location = [tv convertPointFromBase:[(PBCommitList *)tv mouseDownPoint]];
 	int row = [tv rowAtPoint:location];
 	int column = [tv columnAtPoint:location];
-	if (column != 0)
+	int subjectColumn = [tv columnWithIdentifier:@"SubjectColumn"];
+	if (column != subjectColumn)
 		return NO;
 	
 	PBGitRevisionCell *cell = (PBGitRevisionCell *)[tv preparedCellAtColumn:column row:row];
+	NSRect cellFrame = [tv frameOfCellAtColumn:column row:row];
 	
-	int index = [cell indexAtX:location.x];
+	int index = [cell indexAtX:(location.x - cellFrame.origin.x)];
 	
 	if (index == -1)
 		return NO;
