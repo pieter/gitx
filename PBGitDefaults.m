@@ -17,6 +17,7 @@
 #define kShowWhitespaceDifferences @"PBShowWhitespaceDifferences"
 #define kOpenCurDirOnLaunch @"PBOpenCurDirOnLaunch"
 #define kShowOpenPanelOnLaunch @"PBShowOpenPanelOnLaunch"
+#define kShouldCheckoutBranch @"PBShouldCheckoutBranch"
 
 @implementation PBGitDefaults
 
@@ -39,6 +40,8 @@
 			  forKey:kOpenCurDirOnLaunch];
 	[defaultValues setObject:[NSNumber numberWithBool:YES]
 			  forKey:kShowOpenPanelOnLaunch];
+	[defaultValues setObject:[NSNumber numberWithBool:YES]
+					  forKey:kShouldCheckoutBranch];
 	[[NSUserDefaults standardUserDefaults] registerDefaults:defaultValues];
 }
 
@@ -80,6 +83,16 @@
 + (BOOL)showOpenPanelOnLaunch
 {
 	return [[NSUserDefaults standardUserDefaults] boolForKey:kShowOpenPanelOnLaunch];
+}
+
++ (BOOL) shouldCheckoutBranch
+{
+	return [[NSUserDefaults standardUserDefaults] boolForKey:kShouldCheckoutBranch];
+}
+
++ (void) setShouldCheckoutBranch:(BOOL)shouldCheckout
+{
+	[[NSUserDefaults standardUserDefaults] setBool:shouldCheckout forKey:kShouldCheckoutBranch];
 }
 
 @end

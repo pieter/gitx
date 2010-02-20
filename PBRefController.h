@@ -23,6 +23,7 @@
 	IBOutlet NSPopUpButton *branchPopUp;
 }
 
+- (void) checkout:(PBRefMenuItem *)sender;
 - (void) createBranch:(PBRefMenuItem *)sender;
 - (void) copySHA:(PBRefMenuItem *)sender;
 - (void) copyPatch:(PBRefMenuItem *)sender;

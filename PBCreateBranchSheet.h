@@ -17,6 +17,8 @@
 	PBGitRepository *repository;
 	id <PBGitRefish> startRefish;
 
+	BOOL shouldCheckoutBranch;
+
 	NSTextField *branchNameField;
 	NSTextField *errorMessageField;
 }
@@ -30,6 +32,8 @@
 
 @property (retain) PBGitRepository *repository;
 @property (retain) id <PBGitRefish> startRefish;
+
+@property (assign) BOOL shouldCheckoutBranch;
 
 @property (assign) IBOutlet NSTextField *branchNameField;
 @property (assign) IBOutlet NSTextField *errorMessageField;

@@ -19,5 +19,7 @@
 + (BOOL)showWhitespaceDifferences;
 + (BOOL)openCurDirOnLaunch;
 + (BOOL)showOpenPanelOnLaunch;
++ (BOOL) shouldCheckoutBranch;
++ (void) setShouldCheckoutBranch:(BOOL)shouldCheckout;
 
 @end

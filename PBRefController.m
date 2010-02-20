@@ -31,10 +31,20 @@
 	}
 	else if ([(NSString *)context isEqualToString:@"currentBranchChange"]) {
 		[self selectCurrentBranch];
+		[commitController rearrangeObjects];
 	}
 	else {
 		[super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
 	}
+}
+
+
+#pragma mark Checkout
+
+- (void) checkout:(PBRefMenuItem *)sender
+{
+	id <PBGitRefish> refish = [sender refish];
+	[historyController.repository checkoutRefish:refish];
 }
 
 
@@ -123,18 +133,6 @@
 	NSString *ref_desc = [NSString stringWithFormat:@"%@ %@", [(PBGitRef *)[sender refish] type], [[sender refish] shortName]];
 	NSString *question = [NSString stringWithFormat:@"Are you sure you want to remove the %@?", ref_desc];
     NSBeginAlertSheet([NSString stringWithFormat:@"Delete %@?", ref_desc], @"Delete", @"Cancel", nil, [[historyController view] window], self, @selector(removeRefSheetDidEnd:returnCode:contextInfo:), NULL, sender, question);
-}
-
-- (void) checkoutRef:(PBRefMenuItem *)sender
-{
-	int ret = 1;
-	[historyController.repository outputInWorkdirForArguments:[NSArray arrayWithObjects:@"checkout", [[sender refish] shortName], nil] retValue: &ret];
-	if (ret) {
-		[[historyController.repository windowController] showMessageSheet:@"Checking out branch failed" infoText:@"There was an error checking out the branch. Perhaps your working directory is not clean?"];
-		return;
-	}
-	[historyController.repository reloadRefs];
-	[commitController rearrangeObjects];
 }
 
 

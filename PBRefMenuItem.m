@@ -45,7 +45,7 @@
 
 	// checkout ref
 	NSString *checkoutTitle = [@"Checkout " stringByAppendingString:targetRefName];
-	[items addObject:[PBRefMenuItem itemWithTitle:checkoutTitle action:@selector(checkoutRef:) enabled:!isHead]];
+	[items addObject:[PBRefMenuItem itemWithTitle:checkoutTitle action:@selector(checkout:) enabled:!isHead]];
 	[items addObject:[PBRefMenuItem separatorItem]];
 
 	// create branch
@@ -75,6 +75,9 @@
 + (NSArray *) defaultMenuItemsForCommit:(PBGitCommit *)commit target:(id)target
 {
 	NSMutableArray *items = [NSMutableArray array];
+
+	[items addObject:[PBRefMenuItem itemWithTitle:@"Checkout Commit" action:@selector(checkout:) enabled:YES]];
+	[items addObject:[PBRefMenuItem separatorItem]];
 
     [items addObject:[PBRefMenuItem itemWithTitle:@"Create Branch…" action:@selector(createBranch:) enabled:YES]];
 	[items addObject:[PBRefMenuItem itemWithTitle:@"Create Tag…" action:@selector(createTag:) enabled:YES]];

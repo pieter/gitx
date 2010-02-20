@@ -29,6 +29,7 @@ extern NSString* PBGitRepositoryErrorDomain;
 	PBGitRevSpecifier *_headRef; // Caching
 }
 
+- (BOOL) checkoutRefish:(id <PBGitRefish>)ref;
 - (BOOL) createBranch:(NSString *)branchName atRefish:(id <PBGitRefish>)ref;
 - (BOOL) createTag:(NSString *)tagName message:(NSString *)message atRefish:(id <PBGitRefish>)commitSHA;
 

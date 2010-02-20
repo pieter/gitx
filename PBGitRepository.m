@@ -428,6 +428,28 @@ NSString* PBGitRepositoryErrorDomain = @"GitXErrorDomain";
 
 #pragma mark Repository commands
 
+- (BOOL) checkoutRefish:(id <PBGitRefish>)ref
+{
+	NSString *refName = nil;
+	if ([ref refishType] == kGitXBranchType)
+		refName = [ref shortName];
+	else
+		refName = [ref refishName];
+
+	int retValue = 1;
+	NSArray *arguments = [NSArray arrayWithObjects:@"checkout", refName, nil];
+	NSString *output = [self outputInWorkdirForArguments:arguments retValue:&retValue];
+	if (retValue) {
+		NSString *message = [NSString stringWithFormat:@"There was an error checking out the %@ '%@'.\n\nPerhaps your working directory is not clean?", [ref refishType], [ref shortName]];
+		[self.windowController showErrorSheetTitle:@"Checkout failed!" message:message arguments:arguments output:output];
+		return NO;
+	}
+
+	[self reloadRefs];
+	[self readCurrentBranch];
+	return YES;
+}
+
 - (BOOL) createBranch:(NSString *)branchName atRefish:(id <PBGitRefish>)ref
 {
 	if (!branchName || !ref)
