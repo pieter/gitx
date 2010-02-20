@@ -446,6 +446,41 @@ NSString* PBGitRepositoryErrorDomain = @"GitXErrorDomain";
 	return YES;
 }
 
+- (BOOL) createTag:(NSString *)tagName message:(NSString *)message atRefish:(id <PBGitRefish>)target
+{
+	if (!tagName)
+		return NO;
+
+	NSMutableArray *arguments = [NSMutableArray arrayWithObject:@"tag"];
+
+	// if there is a message then make this an annotated tag
+	if (message && ![message isEqualToString:@""] && ([message length] > 3)) {
+		[arguments addObject:@"-a"];
+		[arguments addObject:[@"-m" stringByAppendingString:message]];
+	}
+
+	[arguments addObject:tagName];
+
+	// if no refish then git will add it to HEAD
+	if (target)
+		[arguments addObject:[target refishName]];
+
+	int retValue = 1;
+	NSString *output = [self outputInWorkdirForArguments:arguments retValue:&retValue];
+	if (retValue) {
+		NSString *targetName = @"HEAD";
+		if (target)
+			targetName = [NSString stringWithFormat:@"%@ '%@'", [target refishType], [target shortName]];
+		NSString *message = [NSString stringWithFormat:@"There was an error creating the tag '%@' at %@.", tagName, targetName];
+		[self.windowController showErrorSheetTitle:@"Create Tag failed!" message:message arguments:arguments output:output];
+		return NO;
+	}
+
+	[self reloadRefs];
+	return YES;
+}
+
+
 #pragma mark low level
 
 - (int) returnValueForCommand:(NSString *)cmd

@@ -10,6 +10,7 @@
 #import "PBGitRevisionCell.h"
 #import "PBRefMenuItem.h"
 #import "PBCreateBranchSheet.h"
+#import "PBCreateTagSheet.h"
 
 @implementation PBRefController
 
@@ -75,6 +76,31 @@
 }
 
 
+#pragma mark Tags
+
+- (void) createTag:(PBRefMenuItem *)sender
+{
+	id <PBGitRefish> refish = [sender refish];
+	[PBCreateTagSheet beginCreateTagSheetAtRefish:refish inRepository:historyController.repository];
+}
+
+- (void) showTagInfoSheet:(PBRefMenuItem *)sender
+{
+	if ([[sender refish] refishType] != kGitXTagType)
+		return;
+
+	NSString *tagName = [(PBGitRef *)[sender refish] tagName];
+
+	int retValue = 1;
+	NSArray *args = [NSArray arrayWithObjects:@"tag", @"-n50", @"-l", tagName, nil];
+	NSString *info = [historyController.repository outputInWorkdirForArguments:args retValue:&retValue];
+	if (!retValue) {
+		NSString *message = [NSString stringWithFormat:@"Info for tag: %@", tagName];
+		[historyController.repository.windowController showMessageSheet:message infoText:info];
+	}
+}
+
+
 - (void) removeRefSheetDidEnd:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void  *)contextInfo
 {
 	if (returnCode == NSAlertDefaultReturn) {
@@ -111,18 +137,6 @@
 	[commitController rearrangeObjects];
 }
 
-- (void) tagInfo:(PBRefMenuItem *)sender
-{
-    NSString *message = [NSString stringWithFormat:@"Info for tag: %@", [[sender refish] shortName]];
-
-    int ret = 1;
-    NSString *info = [historyController.repository outputInWorkdirForArguments:[NSArray arrayWithObjects:@"tag", @"-n50", @"-l", [[sender refish] shortName], nil] retValue: &ret];
-
-    if (!ret) {
-	    [[historyController.repository windowController] showMessageSheet:message infoText:info];
-    }
-    return;
-}
 
 #pragma mark Contextual menus
 

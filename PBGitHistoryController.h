@@ -53,6 +53,7 @@
 
 // Repository Methods
 - (IBAction) createBranch:(id)sender;
+- (IBAction) createTag:(id)sender;
 
 - (void) copyCommitInfo;
 

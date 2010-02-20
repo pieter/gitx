@@ -12,6 +12,7 @@
 #import "PBGitRevisionCell.h"
 #import "PBCommitList.h"
 #import "PBCreateBranchSheet.h"
+#import "PBCreateTagSheet.h"
 #define QLPreviewPanel NSClassFromString(@"QLPreviewPanel")
 
 
@@ -333,6 +334,14 @@
 		[PBCreateBranchSheet beginCreateBranchSheetAtRefish:currentRef inRepository:self.repository];
 	else
 		[PBCreateBranchSheet beginCreateBranchSheetAtRefish:realCommit inRepository:self.repository];
+}
+
+- (IBAction) createTag:(id)sender
+{
+	if (!realCommit)
+		[PBCreateTagSheet beginCreateTagSheetAtRefish:[repository.currentBranch ref] inRepository:repository];
+	else
+		[PBCreateTagSheet beginCreateTagSheetAtRefish:realCommit inRepository:repository];
 }
 
 @end

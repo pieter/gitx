@@ -30,6 +30,7 @@ extern NSString* PBGitRepositoryErrorDomain;
 }
 
 - (BOOL) createBranch:(NSString *)branchName atRefish:(id <PBGitRefish>)ref;
+- (BOOL) createTag:(NSString *)tagName message:(NSString *)message atRefish:(id <PBGitRefish>)commitSHA;
 
 - (NSFileHandle*) handleForCommand:(NSString*) cmd;
 - (NSFileHandle*) handleForArguments:(NSArray*) args;

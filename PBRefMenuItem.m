@@ -51,9 +51,12 @@
 	// create branch
 	[items addObject:[PBRefMenuItem itemWithTitle:@"Create branch…" action:@selector(createBranch:) enabled:YES]];
 
+	// create tag
+	[items addObject:[PBRefMenuItem itemWithTitle:@"Create Tag…" action:@selector(createTag:) enabled:YES]];
+
 	// view tag info
 	if ([ref isTag])
-		[items addObject:[PBRefMenuItem itemWithTitle:@"View tag info" action:@selector(tagInfo:) enabled:YES]];
+		[items addObject:[PBRefMenuItem itemWithTitle:@"View tag info…" action:@selector(showTagInfoSheet:) enabled:YES]];
 
 	// delete ref
 	[items addObject:[PBRefMenuItem separatorItem]];
@@ -74,6 +77,7 @@
 	NSMutableArray *items = [NSMutableArray array];
 
     [items addObject:[PBRefMenuItem itemWithTitle:@"Create Branch…" action:@selector(createBranch:) enabled:YES]];
+	[items addObject:[PBRefMenuItem itemWithTitle:@"Create Tag…" action:@selector(createTag:) enabled:YES]];
 	[items addObject:[PBRefMenuItem separatorItem]];
 
 	[items addObject:[PBRefMenuItem itemWithTitle:@"Copy SHA" action:@selector(copySHA:) enabled:YES]];
