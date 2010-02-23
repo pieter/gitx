@@ -37,6 +37,11 @@ a.servicebutton{
 	-webkit-border-radius: 2px;
 }
 
+a.servicebutton:hover{
+	padding: 1px;
+	border: 2px solid #3465a4;
+}
+
 #gravatar {
 	margin-left: 5px;
 	padding: 2px;
@@ -120,6 +125,12 @@ a.showdiff {
 	margin-right: 5px;
 	padding: 1px 3px 1px 3px;
 	-webkit-border-radius: 2px;
+}
+
+.refs:hover{
+	border: 2px solid black;
+	padding: 0px 2px 0px 2px;
+	cursor: pointer;
 }
 
 .refs.head {
