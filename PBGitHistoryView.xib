@@ -21,7 +21,7 @@
 		</object>
 		<object class="NSMutableArray" key="IBDocument.EditedObjectIDs">
 			<bool key="EncodedWithXMLCoder">YES</bool>
-			<integer value="316"/>
+			<integer value="3"/>
 		</object>
 		<object class="NSArray" key="IBDocument.PluginDependencies">
 			<bool key="EncodedWithXMLCoder">YES</bool>
@@ -439,7 +439,7 @@
 															<bool key="EncodedWithXMLCoder">YES</bool>
 															<object class="NSTableColumn" id="1025472344">
 																<string key="NSIdentifier">SubjectColumn</string>
-																<double key="NSWidth">509</double>
+																<double key="NSWidth">549</double>
 																<double key="NSMinWidth">40</double>
 																<double key="NSMaxWidth">1000</double>
 																<object class="NSTableHeaderCell" key="NSHeaderCell">
@@ -469,7 +469,11 @@
 																	<int key="NSCellFlags">337772096</int>
 																	<int key="NSCellFlags2">2048</int>
 																	<string key="NSContents">Text Cell</string>
-																	<reference key="NSSupport" ref="924107556"/>
+																	<object class="NSFont" key="NSSupport" id="324419606">
+																		<string key="NSName">LucidaGrande</string>
+																		<double key="NSSize">12</double>
+																		<int key="NSfFlags">16</int>
+																	</object>
 																	<reference key="NSControlView" ref="254268962"/>
 																	<object class="NSColor" key="NSBackgroundColor" id="827363147">
 																		<int key="NSColorSpace">6</int>
@@ -493,7 +497,7 @@
 															</object>
 															<object class="NSTableColumn" id="792589327">
 																<string key="NSIdentifier">AuthorColumn</string>
-																<double key="NSWidth">190</double>
+																<double key="NSWidth">129</double>
 																<double key="NSMinWidth">40</double>
 																<double key="NSMaxWidth">1000</double>
 																<object class="NSTableHeaderCell" key="NSHeaderCell">
@@ -508,7 +512,7 @@
 																	<int key="NSCellFlags">337772096</int>
 																	<int key="NSCellFlags2">2048</int>
 																	<string key="NSContents">Text Cell</string>
-																	<reference key="NSSupport" ref="924107556"/>
+																	<reference key="NSSupport" ref="324419606"/>
 																	<reference key="NSControlView" ref="254268962"/>
 																	<reference key="NSBackgroundColor" ref="827363147"/>
 																	<reference key="NSTextColor" ref="57062640"/>
@@ -519,7 +523,7 @@
 															</object>
 															<object class="NSTableColumn" id="976830280">
 																<string key="NSIdentifier">DateColumn</string>
-																<double key="NSWidth">144</double>
+																<double key="NSWidth">165</double>
 																<double key="NSMinWidth">10</double>
 																<double key="NSMaxWidth">3.4028229999999999e+38</double>
 																<object class="NSTableHeaderCell" key="NSHeaderCell">
@@ -539,7 +543,7 @@
 																	<int key="NSCellFlags">337772096</int>
 																	<int key="NSCellFlags2">2048</int>
 																	<string key="NSContents">Text Cell</string>
-																	<reference key="NSSupport" ref="924107556"/>
+																	<reference key="NSSupport" ref="324419606"/>
 																	<reference key="NSControlView" ref="254268962"/>
 																	<reference key="NSBackgroundColor" ref="827363147"/>
 																	<reference key="NSTextColor" ref="57062640"/>
@@ -550,7 +554,7 @@
 															</object>
 															<object class="NSTableColumn" id="456964926">
 																<string key="NSIdentifier">SHAColumn</string>
-																<double key="NSWidth">64</double>
+																<double key="NSWidth">30</double>
 																<double key="NSMinWidth">10</double>
 																<double key="NSMaxWidth">3.4028229999999999e+38</double>
 																<object class="NSTableHeaderCell" key="NSHeaderCell">
@@ -565,7 +569,7 @@
 																	<int key="NSCellFlags">338820672</int>
 																	<int key="NSCellFlags2">1024</int>
 																	<string key="NSContents">Text Cell</string>
-																	<reference key="NSSupport" ref="924107556"/>
+																	<reference key="NSSupport" ref="324419606"/>
 																	<reference key="NSControlView" ref="254268962"/>
 																	<reference key="NSBackgroundColor" ref="827363147"/>
 																	<reference key="NSTextColor" ref="57062640"/>
@@ -589,7 +593,7 @@
 															</object>
 														</object>
 														<double key="NSRowHeight">17</double>
-														<int key="NSTvFlags">-683671552</int>
+														<int key="NSTvFlags">-1019215872</int>
 														<reference key="NSDelegate"/>
 														<reference key="NSDataSource"/>
 														<string key="NSAutosaveName">CommitView</string>
@@ -614,17 +618,17 @@
 												<reference key="NSSuperview" ref="663765878"/>
 												<reference key="NSTarget" ref="663765878"/>
 												<string key="NSAction">_doScroller:</string>
-												<double key="NSPercent">0.9494949494949495</double>
+												<double key="NSPercent">0.87603305785123964</double>
 											</object>
 											<object class="NSScroller" id="452331733">
 												<reference key="NSNextResponder" ref="663765878"/>
 												<int key="NSvFlags">-2147483392</int>
-												<string key="NSFrame">{{0, 196}, {837, 15}}</string>
+												<string key="NSFrame">{{0, 123}, {852, 15}}</string>
 												<reference key="NSSuperview" ref="663765878"/>
 												<int key="NSsFlags">1</int>
 												<reference key="NSTarget" ref="663765878"/>
 												<string key="NSAction">_doScroller:</string>
-												<double key="NSPercent">0.21932109999999999</double>
+												<double key="NSPercent">0.9988276670574443</double>
 											</object>
 											<object class="NSClipView" id="906093892">
 												<reference key="NSNextResponder" ref="663765878"/>
