@@ -24,7 +24,12 @@
 	IBOutlet NSOutlineView* fileBrowser;
 	IBOutlet NSTableView* commitList;
 	IBOutlet PBCollapsibleSplitView *historySplitView;
+
 	IBOutlet PBGitGradientBarView *upperToolbarView;
+	IBOutlet NSButton *mergeButton;
+	IBOutlet NSButton *cherryPickButton;
+	IBOutlet NSButton *rebaseButton;
+
 	IBOutlet PBGitGradientBarView *scopeBarView;
 
 	IBOutlet id webView;
@@ -63,6 +68,9 @@
 - (IBAction) createBranch:(id)sender;
 - (IBAction) createTag:(id)sender;
 - (IBAction) showAddRemoteSheet:(id)sender;
+- (IBAction) merge:(id)sender;
+- (IBAction) cherryPick:(id)sender;
+- (IBAction) rebase:(id)sender;
 
 - (void) copyCommitInfo;
 

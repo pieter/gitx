@@ -80,7 +80,12 @@
 		case 0:	self.webCommit = realCommit;			break;
 		case 1:	self.gitTree   = realCommit.tree;	break;
 	}
-}	
+
+	BOOL isOnHeadBranch = [realCommit isOnHeadBranch];
+	[mergeButton setEnabled:!isOnHeadBranch];
+	[cherryPickButton setEnabled:!isOnHeadBranch];
+	[rebaseButton setEnabled:!isOnHeadBranch];
+}
 
 
 - (void) setSelectedTab: (int) number
@@ -378,5 +383,26 @@
 {
 	[PBAddRemoteSheet beginAddRemoteSheetForRepository:self.repository];
 }
+
+- (IBAction) merge:(id)sender
+{
+	if (realCommit)
+		[repository mergeWithRefish:realCommit];
+}
+
+- (IBAction) cherryPick:(id)sender
+{
+	if (realCommit)
+		[repository cherryPickRefish:realCommit];
+}
+
+- (IBAction) rebase:(id)sender
+{
+	if (realCommit) {
+		PBGitRef *headRef = [[repository headRef] ref];
+		[repository rebaseBranch:headRef onRefish:realCommit];
+	}
+}
+	
 
 @end

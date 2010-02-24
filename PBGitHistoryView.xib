@@ -21,7 +21,7 @@
 		</object>
 		<object class="NSMutableArray" key="IBDocument.EditedObjectIDs">
 			<bool key="EncodedWithXMLCoder">YES</bool>
-			<integer value="312"/>
+			<integer value="316"/>
 		</object>
 		<object class="NSArray" key="IBDocument.PluginDependencies">
 			<bool key="EncodedWithXMLCoder">YES</bool>
@@ -217,6 +217,136 @@
 						<int key="NSvFlags">266</int>
 						<object class="NSMutableArray" key="NSSubviews">
 							<bool key="EncodedWithXMLCoder">YES</bool>
+							<object class="NSCustomView" id="564066926">
+								<reference key="NSNextResponder" ref="172148644"/>
+								<int key="NSvFlags">269</int>
+								<object class="NSMutableArray" key="NSSubviews">
+									<bool key="EncodedWithXMLCoder">YES</bool>
+									<object class="NSButton" id="258088911">
+										<reference key="NSNextResponder" ref="564066926"/>
+										<int key="NSvFlags">268</int>
+										<string key="NSFrame">{{110, 3}, {37, 25}}</string>
+										<reference key="NSSuperview" ref="564066926"/>
+										<bool key="NSEnabled">YES</bool>
+										<object class="NSButtonCell" key="NSCell" id="760195759">
+											<int key="NSCellFlags">-2080244224</int>
+											<int key="NSCellFlags2">134217728</int>
+											<string key="NSContents">Rebase</string>
+											<reference key="NSSupport" ref="924107556"/>
+											<reference key="NSControlView" ref="258088911"/>
+											<int key="NSButtonFlags">-2033958657</int>
+											<int key="NSButtonFlags2">163</int>
+											<object class="NSCustomResource" key="NSNormalImage">
+												<string key="NSClassName">NSImage</string>
+												<string key="NSResourceName">RebaseTemplate</string>
+											</object>
+											<string key="NSAlternateContents"/>
+											<string key="NSKeyEquivalent"/>
+											<int key="NSPeriodicDelay">400</int>
+											<int key="NSPeriodicInterval">75</int>
+										</object>
+									</object>
+									<object class="NSButton" id="1006113529">
+										<reference key="NSNextResponder" ref="564066926"/>
+										<int key="NSvFlags">268</int>
+										<string key="NSFrame">{{65, 3}, {37, 25}}</string>
+										<reference key="NSSuperview" ref="564066926"/>
+										<bool key="NSEnabled">YES</bool>
+										<object class="NSButtonCell" key="NSCell" id="772225018">
+											<int key="NSCellFlags">-2080244224</int>
+											<int key="NSCellFlags2">134217728</int>
+											<string key="NSContents">Cherry Pick</string>
+											<reference key="NSSupport" ref="924107556"/>
+											<reference key="NSControlView" ref="1006113529"/>
+											<int key="NSButtonFlags">-2033958657</int>
+											<int key="NSButtonFlags2">163</int>
+											<object class="NSCustomResource" key="NSNormalImage">
+												<string key="NSClassName">NSImage</string>
+												<string key="NSResourceName">CherryPickTemplate</string>
+											</object>
+											<string key="NSAlternateContents"/>
+											<string key="NSKeyEquivalent"/>
+											<int key="NSPeriodicDelay">400</int>
+											<int key="NSPeriodicInterval">75</int>
+										</object>
+									</object>
+									<object class="NSButton" id="502319102">
+										<reference key="NSNextResponder" ref="564066926"/>
+										<int key="NSvFlags">268</int>
+										<string key="NSFrame">{{20, 3}, {37, 25}}</string>
+										<reference key="NSSuperview" ref="564066926"/>
+										<bool key="NSEnabled">YES</bool>
+										<object class="NSButtonCell" key="NSCell" id="934102630">
+											<int key="NSCellFlags">-2080244224</int>
+											<int key="NSCellFlags2">134217728</int>
+											<string key="NSContents">Merge</string>
+											<reference key="NSSupport" ref="924107556"/>
+											<reference key="NSControlView" ref="502319102"/>
+											<int key="NSButtonFlags">-2033958657</int>
+											<int key="NSButtonFlags2">163</int>
+											<object class="NSCustomResource" key="NSNormalImage">
+												<string key="NSClassName">NSImage</string>
+												<string key="NSResourceName">MergeTemplate</string>
+											</object>
+											<string key="NSAlternateContents"/>
+											<string key="NSKeyEquivalent"/>
+											<int key="NSPeriodicDelay">400</int>
+											<int key="NSPeriodicInterval">75</int>
+										</object>
+									</object>
+								</object>
+								<string key="NSFrame">{{342, 0}, {167, 30}}</string>
+								<reference key="NSSuperview" ref="172148644"/>
+								<string key="NSClassName">NSView</string>
+							</object>
+							<object class="NSButton" id="107487665">
+								<reference key="NSNextResponder" ref="172148644"/>
+								<int key="NSvFlags">268</int>
+								<string key="NSFrame">{{55, 3}, {37, 25}}</string>
+								<reference key="NSSuperview" ref="172148644"/>
+								<bool key="NSEnabled">YES</bool>
+								<object class="NSButtonCell" key="NSCell" id="794901717">
+									<int key="NSCellFlags">-2080244224</int>
+									<int key="NSCellFlags2">134217728</int>
+									<string key="NSContents">Create Tag</string>
+									<reference key="NSSupport" ref="924107556"/>
+									<reference key="NSControlView" ref="107487665"/>
+									<int key="NSButtonFlags">-2033958657</int>
+									<int key="NSButtonFlags2">163</int>
+									<object class="NSCustomResource" key="NSNormalImage">
+										<string key="NSClassName">NSImage</string>
+										<string key="NSResourceName">AddLabelTemplate</string>
+									</object>
+									<string key="NSAlternateContents"/>
+									<string key="NSKeyEquivalent"/>
+									<int key="NSPeriodicDelay">400</int>
+									<int key="NSPeriodicInterval">75</int>
+								</object>
+							</object>
+							<object class="NSButton" id="1051155594">
+								<reference key="NSNextResponder" ref="172148644"/>
+								<int key="NSvFlags">268</int>
+								<string key="NSFrame">{{10, 3}, {37, 25}}</string>
+								<reference key="NSSuperview" ref="172148644"/>
+								<bool key="NSEnabled">YES</bool>
+								<object class="NSButtonCell" key="NSCell" id="870128015">
+									<int key="NSCellFlags">-2080244224</int>
+									<int key="NSCellFlags2">134217728</int>
+									<string key="NSContents">Create Branch</string>
+									<reference key="NSSupport" ref="924107556"/>
+									<reference key="NSControlView" ref="1051155594"/>
+									<int key="NSButtonFlags">-2033958657</int>
+									<int key="NSButtonFlags2">163</int>
+									<object class="NSCustomResource" key="NSNormalImage">
+										<string key="NSClassName">NSImage</string>
+										<string key="NSResourceName">AddBranchTemplate</string>
+									</object>
+									<string key="NSAlternateContents"/>
+									<string key="NSKeyEquivalent"/>
+									<int key="NSPeriodicDelay">400</int>
+									<int key="NSPeriodicInterval">75</int>
+								</object>
+							</object>
 							<object class="NSBox" id="923983319">
 								<reference key="NSNextResponder" ref="172148644"/>
 								<int key="NSvFlags">10</int>
@@ -1615,6 +1745,70 @@
 					</object>
 					<int key="connectionID">329</int>
 				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">createTag:</string>
+						<reference key="source" ref="1001"/>
+						<reference key="destination" ref="107487665"/>
+					</object>
+					<int key="connectionID">334</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">createBranch:</string>
+						<reference key="source" ref="1001"/>
+						<reference key="destination" ref="1051155594"/>
+					</object>
+					<int key="connectionID">335</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">merge:</string>
+						<reference key="source" ref="1001"/>
+						<reference key="destination" ref="502319102"/>
+					</object>
+					<int key="connectionID">349</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">cherryPick:</string>
+						<reference key="source" ref="1001"/>
+						<reference key="destination" ref="1006113529"/>
+					</object>
+					<int key="connectionID">350</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">rebase:</string>
+						<reference key="source" ref="1001"/>
+						<reference key="destination" ref="258088911"/>
+					</object>
+					<int key="connectionID">351</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
+						<string key="label">mergeButton</string>
+						<reference key="source" ref="1001"/>
+						<reference key="destination" ref="502319102"/>
+					</object>
+					<int key="connectionID">352</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
+						<string key="label">cherryPickButton</string>
+						<reference key="source" ref="1001"/>
+						<reference key="destination" ref="1006113529"/>
+					</object>
+					<int key="connectionID">353</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
+						<string key="label">rebaseButton</string>
+						<reference key="source" ref="1001"/>
+						<reference key="destination" ref="258088911"/>
+					</object>
+					<int key="connectionID">354</int>
+				</object>
 			</object>
 			<object class="IBMutableOrderedSet" key="objectRecords">
 				<object class="NSArray" key="orderedObjects">
@@ -2017,6 +2211,9 @@
 						<object class="NSMutableArray" key="children">
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<reference ref="923983319"/>
+							<reference ref="1051155594"/>
+							<reference ref="107487665"/>
+							<reference ref="564066926"/>
 						</object>
 						<reference key="parent" ref="319362431"/>
 						<string key="objectName">History Upper Toolbar</string>
@@ -2030,6 +2227,87 @@
 						<int key="objectID">327</int>
 						<reference key="object" ref="147470634"/>
 						<reference key="parent" ref="24227530"/>
+					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">330</int>
+						<reference key="object" ref="1051155594"/>
+						<object class="NSMutableArray" key="children">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+							<reference ref="870128015"/>
+						</object>
+						<reference key="parent" ref="172148644"/>
+					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">331</int>
+						<reference key="object" ref="870128015"/>
+						<reference key="parent" ref="1051155594"/>
+					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">332</int>
+						<reference key="object" ref="107487665"/>
+						<object class="NSMutableArray" key="children">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+							<reference ref="794901717"/>
+						</object>
+						<reference key="parent" ref="172148644"/>
+					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">333</int>
+						<reference key="object" ref="794901717"/>
+						<reference key="parent" ref="107487665"/>
+					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">336</int>
+						<reference key="object" ref="564066926"/>
+						<object class="NSMutableArray" key="children">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+							<reference ref="502319102"/>
+							<reference ref="1006113529"/>
+							<reference ref="258088911"/>
+						</object>
+						<reference key="parent" ref="172148644"/>
+					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">337</int>
+						<reference key="object" ref="502319102"/>
+						<object class="NSMutableArray" key="children">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+							<reference ref="934102630"/>
+						</object>
+						<reference key="parent" ref="564066926"/>
+					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">338</int>
+						<reference key="object" ref="934102630"/>
+						<reference key="parent" ref="502319102"/>
+					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">340</int>
+						<reference key="object" ref="1006113529"/>
+						<object class="NSMutableArray" key="children">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+							<reference ref="772225018"/>
+						</object>
+						<reference key="parent" ref="564066926"/>
+					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">341</int>
+						<reference key="object" ref="772225018"/>
+						<reference key="parent" ref="1006113529"/>
+					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">343</int>
+						<reference key="object" ref="258088911"/>
+						<object class="NSMutableArray" key="children">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+							<reference ref="760195759"/>
+						</object>
+						<reference key="parent" ref="564066926"/>
+					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">344</int>
+						<reference key="object" ref="760195759"/>
+						<reference key="parent" ref="258088911"/>
 					</object>
 				</object>
 			</object>
@@ -2089,7 +2367,23 @@
 					<string>32.ImportedFromIB2</string>
 					<string>327.IBPluginDependency</string>
 					<string>33.IBPluginDependency</string>
+					<string>330.IBAttributePlaceholdersKey</string>
+					<string>330.IBPluginDependency</string>
+					<string>331.IBPluginDependency</string>
+					<string>332.IBAttributePlaceholdersKey</string>
+					<string>332.IBPluginDependency</string>
+					<string>333.IBPluginDependency</string>
+					<string>336.IBPluginDependency</string>
+					<string>337.IBAttributePlaceholdersKey</string>
+					<string>337.IBPluginDependency</string>
+					<string>338.IBPluginDependency</string>
 					<string>34.IBPluginDependency</string>
+					<string>340.IBAttributePlaceholdersKey</string>
+					<string>340.IBPluginDependency</string>
+					<string>341.IBPluginDependency</string>
+					<string>343.IBAttributePlaceholdersKey</string>
+					<string>343.IBPluginDependency</string>
+					<string>344.IBPluginDependency</string>
 					<string>35.CustomClassName</string>
 					<string>35.IBPluginDependency</string>
 					<string>35.ImportedFromIB2</string>
@@ -2171,6 +2465,57 @@
 					<integer value="1"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
+					<object class="NSMutableDictionary">
+						<string key="NS.key.0">ToolTip</string>
+						<object class="IBToolTipAttribute" key="NS.object.0">
+							<string key="name">ToolTip</string>
+							<reference key="object" ref="1051155594"/>
+							<string key="toolTip">Create Branch</string>
+						</object>
+					</object>
+					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
+					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
+					<object class="NSMutableDictionary">
+						<string key="NS.key.0">ToolTip</string>
+						<object class="IBToolTipAttribute" key="NS.object.0">
+							<string key="name">ToolTip</string>
+							<reference key="object" ref="107487665"/>
+							<string key="toolTip">Create Tag</string>
+						</object>
+					</object>
+					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
+					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
+					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
+					<object class="NSMutableDictionary">
+						<string key="NS.key.0">ToolTip</string>
+						<object class="IBToolTipAttribute" key="NS.object.0">
+							<string key="name">ToolTip</string>
+							<reference key="object" ref="502319102"/>
+							<string key="toolTip">Merge</string>
+						</object>
+					</object>
+					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
+					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
+					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
+					<object class="NSMutableDictionary">
+						<string key="NS.key.0">ToolTip</string>
+						<object class="IBToolTipAttribute" key="NS.object.0">
+							<string key="name">ToolTip</string>
+							<reference key="object" ref="1006113529"/>
+							<string key="toolTip">Cherry Pick</string>
+						</object>
+					</object>
+					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
+					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
+					<object class="NSMutableDictionary">
+						<string key="NS.key.0">ToolTip</string>
+						<object class="IBToolTipAttribute" key="NS.object.0">
+							<string key="name">ToolTip</string>
+							<reference key="object" ref="258088911"/>
+							<string key="toolTip">Rebase</string>
+						</object>
+					</object>
+					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>PBGitRevisionCell</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -2216,7 +2561,7 @@
 				</object>
 			</object>
 			<nil key="sourceID"/>
-			<int key="maxID">329</int>
+			<int key="maxID">354</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<object class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -2282,10 +2627,13 @@
 						<bool key="EncodedWithXMLCoder">YES</bool>
 						<object class="NSArray" key="dict.sortedKeys">
 							<bool key="EncodedWithXMLCoder">YES</bool>
+							<string>cherryPick:</string>
 							<string>createBranch:</string>
 							<string>createTag:</string>
+							<string>merge:</string>
 							<string>openFilesAction:</string>
 							<string>openSelectedFile:</string>
+							<string>rebase:</string>
 							<string>refresh:</string>
 							<string>setDetailedView:</string>
 							<string>setRawView:</string>
@@ -2309,16 +2657,22 @@
 							<string>id</string>
 							<string>id</string>
 							<string>id</string>
+							<string>id</string>
+							<string>id</string>
+							<string>id</string>
 						</object>
 					</object>
 					<object class="NSMutableDictionary" key="outlets">
 						<bool key="EncodedWithXMLCoder">YES</bool>
 						<object class="NSArray" key="dict.sortedKeys">
 							<bool key="EncodedWithXMLCoder">YES</bool>
+							<string>cherryPickButton</string>
 							<string>commitController</string>
 							<string>commitList</string>
 							<string>fileBrowser</string>
 							<string>historySplitView</string>
+							<string>mergeButton</string>
+							<string>rebaseButton</string>
 							<string>refController</string>
 							<string>scopeBarView</string>
 							<string>searchField</string>
@@ -2328,10 +2682,13 @@
 						</object>
 						<object class="NSMutableArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
+							<string>NSButton</string>
 							<string>NSArrayController</string>
 							<string>NSTableView</string>
 							<string>NSOutlineView</string>
 							<string>PBCollapsibleSplitView</string>
+							<string>NSButton</string>
+							<string>NSButton</string>
 							<string>PBRefController</string>
 							<string>PBGitGradientBarView</string>
 							<string>NSSearchField</string>
@@ -3275,8 +3632,25 @@
 		<string key="IBDocument.LastKnownRelativeProjectPath">GitX.xcodeproj</string>
 		<int key="IBDocument.defaultPropertyAccessControl">3</int>
 		<object class="NSMutableDictionary" key="IBDocument.LastKnownImageSizes">
-			<string key="NS.key.0">NSQuickLookTemplate</string>
-			<string key="NS.object.0">{19, 11}</string>
+			<bool key="EncodedWithXMLCoder">YES</bool>
+			<object class="NSArray" key="dict.sortedKeys">
+				<bool key="EncodedWithXMLCoder">YES</bool>
+				<string>AddBranchTemplate</string>
+				<string>AddLabelTemplate</string>
+				<string>CherryPickTemplate</string>
+				<string>MergeTemplate</string>
+				<string>NSQuickLookTemplate</string>
+				<string>RebaseTemplate</string>
+			</object>
+			<object class="NSMutableArray" key="dict.values">
+				<bool key="EncodedWithXMLCoder">YES</bool>
+				<string>{20, 12}</string>
+				<string>{23, 12}</string>
+				<string>{18.5143, 12.3429}</string>
+				<string>{16.4571, 12.3429}</string>
+				<string>{19, 11}</string>
+				<string>{16.4571, 13.3714}</string>
+			</object>
 		</object>
 	</data>
 </archive>
