@@ -19,21 +19,6 @@
 - (void)awakeFromNib
 {
 	[commitList registerForDraggedTypes:[NSArray arrayWithObject:@"PBGitRef"]];
-	[historyController addObserver:self forKeyPath:@"repository.branches" options:0 context:@"branchChange"];
-	[historyController addObserver:self forKeyPath:@"repository.currentBranch" options:0 context:@"currentBranchChange"];
-}
-
-- (void) observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
-{
-    if ([(NSString *)context isEqualToString: @"branchChange"]) {
-		[commitController rearrangeObjects];
-	}
-	else if ([(NSString *)context isEqualToString:@"currentBranchChange"]) {
-		[commitController rearrangeObjects];
-	}
-	else {
-		[super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
-	}
 }
 
 
@@ -272,7 +257,6 @@
 	if (returnCode == NSAlertDefaultReturn) {
 		PBGitRef *ref = (PBGitRef *)contextInfo;
 		[historyController.repository deleteRef:ref];
-		[commitController rearrangeObjects];
 	}
 }
 
@@ -347,8 +331,6 @@
 
 	[dropCommit addRef:ref];
 	[oldCommit removeRef:ref];
-
-	[commitController rearrangeObjects];
 }
 
 - (BOOL)tableView:(NSTableView *)aTableView
