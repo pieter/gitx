@@ -16,6 +16,7 @@
 #import "PBAddRemoteSheet.h"
 #import "PBGitSidebarController.h"
 #import "PBGitGradientBarView.h"
+#import "PBDiffWindowController.h"
 #define QLPreviewPanel NSClassFromString(@"QLPreviewPanel")
 
 
@@ -294,6 +295,10 @@
 	[repository checkoutFiles:files fromRefish:realCommit];
 }
 
+- (void) diffFilesAction:(id)sender
+{
+	[PBDiffWindowController showDiffWindowWithFiles:[sender representedObject] fromCommit:realCommit diffCommit:nil];
+}
 
 - (NSMenu *)contextMenuForTreeView
 {
@@ -315,6 +320,15 @@
 	NSMenuItem *historyItem = [[NSMenuItem alloc] initWithTitle:multiple? @"Show history of files" : @"Show history of file"
 														 action:@selector(showCommitsFromTree:)
 												  keyEquivalent:@""];
+
+	PBGitRef *headRef = [[repository headRef] ref];
+	NSString *headRefName = [headRef shortName];
+	NSString *diffTitle = [NSString stringWithFormat:@"Diff %@ with %@", multiple ? @"files" : @"file", headRefName];
+	BOOL isHead = [[realCommit realSha] isEqualToString:[repository headSHA]];
+	NSMenuItem *diffItem = [[NSMenuItem alloc] initWithTitle:diffTitle
+													  action:isHead ? nil : @selector(diffFilesAction:)
+											   keyEquivalent:@""];
+
 	NSMenuItem *checkoutItem = [[NSMenuItem alloc] initWithTitle:multiple ? @"Checkout files" : @"Checkout file"
 														  action:@selector(checkoutFiles:)
 												   keyEquivalent:@""];
@@ -325,7 +339,7 @@
 														   action:@selector(openFilesAction:)
 													keyEquivalent:@""];
 
-	NSArray *menuItems = [NSArray arrayWithObjects:historyItem, checkoutItem, finderItem, openFilesItem, nil];
+	NSArray *menuItems = [NSArray arrayWithObjects:historyItem, diffItem, checkoutItem, finderItem, openFilesItem, nil];
 	for (NSMenuItem *item in menuItems) {
 		[item setTarget:self];
 		[item setRepresentedObject:filePaths];
