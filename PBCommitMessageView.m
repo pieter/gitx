@@ -13,9 +13,7 @@
 
 - (void)drawRect:(NSRect)aRect
 {
-	NSColor *originalColor = [self backgroundColor];
-	[originalColor set];
-	NSRectFill(aRect);
+	[super drawRect:aRect];
 
 	// draw a vertical line after the given size (used as an indicator
 	// for the first line of the commit message)
@@ -33,10 +31,6 @@
         line.size.height = aRect.size.height;
         NSRectFill(line);
     }
-
-	[self setBackgroundColor:nil];
-	[super drawRect:aRect];
-	[self setBackgroundColor:originalColor];
 }
 
 @end

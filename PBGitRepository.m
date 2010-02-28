@@ -150,6 +150,11 @@ NSString* PBGitRepositoryErrorDomain = @"GitXErrorDomain";
 	return self;
 }
 
+- (BOOL)isDocumentEdited
+{
+	return NO;
+}
+
 // The fileURL the document keeps is to the .git dir, but that’s pretty
 // useless for display in the window title bar, so we show the directory above
 - (NSString *) displayName
