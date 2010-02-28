@@ -200,7 +200,7 @@
 
 - (void)outlineView:(NSOutlineView *)outlineView willDisplayCell:(PBSourceViewCell *)cell forTableColumn:(NSTableColumn *)tableColumn item:(PBSourceViewItem *)item
 {
-	cell.isCheckedOut = [item.revSpecifier isEqualTo:[repository headRef]];
+	cell.isCheckedOut = [item.revSpecifier isEqual:[repository headRef]];
 
 	[cell setImage:[item icon]];
 }

@@ -397,7 +397,7 @@ NSString* PBGitRepositoryErrorDomain = @"GitXErrorDomain";
 
 	// First check if the branch doesn't exist already
 	for (PBGitRevSpecifier *rev in branches)
-		if ([branch isEqualTo: rev])
+		if ([branch isEqual: rev])
 			return rev;
 
 	NSIndexSet *newIndex = [NSIndexSet indexSetWithIndex:[branches count]];
@@ -412,7 +412,7 @@ NSString* PBGitRepositoryErrorDomain = @"GitXErrorDomain";
 - (BOOL) removeBranch:(PBGitRevSpecifier *)branch
 {
 	for (PBGitRevSpecifier *rev in branches) {
-		if ([branch isEqualTo:rev]) {
+		if ([branch isEqual:rev]) {
 			NSIndexSet *oldIndex = [NSIndexSet indexSetWithIndex:[branches indexOfObject:rev]];
 			[self willChange:NSKeyValueChangeRemoval valuesAtIndexes:oldIndex forKey:@"branches"];
 
