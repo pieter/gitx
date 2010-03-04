@@ -162,7 +162,13 @@ var showRefs = function() {
 	} else
 		refs.parentNode.style.display = "none";
 }
-
+var generateTextWithURLsFromText = function(text)
+{	
+	// (^|[ \t\r\n])((ftp|http|https|gopher|mailto|news|nntp|telnet|wais|file|prospero|aim|webcal|jira|ngmoco):(([A-Za-z0-9$_.+!*(),;/?:@&~=-])|%[A-Fa-f0-9]{2}){2,}(#([a-zA-Z0-9][a-zA-Z0-9$_.+!*(),;/?:@&~=%-]*))?([A-Za-z0-9$_+!*();/?:~-]))
+	var reg = new RegExp("(^|[ \\t\\r\\n])((ftp|http|https|gopher|mailto|news|nntp|telnet|wais|file|prospero|aim|webcal|jira|ngmoco):(([A-Za-z0-9$_.+!*(),;/?:@&~=-])|%[A-Fa-f0-9]{2}){2,}(#([a-zA-Z0-9][a-zA-Z0-9$_.+!*(),;/?:@&~=%-]*))?([A-Za-z0-9$_+!*();/?:~-]))");
+	var urled = text.replace(reg,"<a href='$2'>$2</a>");
+	return urled;
+};
 var loadCommit = function(commitObject, currentRef) {
 	// These are only the things we can do instantly.
 	// Other information will be loaded later by loadCommitDetails,
@@ -314,7 +320,7 @@ var loadCommitDetails = function(data)
 	}
 
 	$("date").innerHTML = commit.author_date;
-	$("message").innerHTML = commit.message.replace(/\n/g,"<br>");
+	$("message").innerHTML = generateTextWithURLsFromText(commit.message.replace(/\n/g,"<br>"));
 
 	if (commit.diff.length < 200000)
 		showDiff();
