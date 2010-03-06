@@ -287,7 +287,11 @@
 
 - (NSArray *)menuItemsForPaths:(NSArray *)paths
 {
-	BOOL multiple = [paths count] != 1;
+	NSMutableArray *filePaths = [NSMutableArray array];
+	for (NSString *filePath in paths)
+		[filePaths addObject:[filePath stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]]];
+
+	BOOL multiple = [filePaths count] != 1;
 	NSMenuItem *historyItem = [[NSMenuItem alloc] initWithTitle:multiple? @"Show history of files" : @"Show history of file"
 														 action:@selector(showCommitsFromTree:)
 												 keyEquivalent:@""];
@@ -301,7 +305,7 @@
 	NSArray *menuItems = [NSArray arrayWithObjects:historyItem, finderItem, openFilesItem, nil];
 	for (NSMenuItem *item in menuItems) {
 		[item setTarget:self];
-		[item setRepresentedObject:paths];
+		[item setRepresentedObject:filePaths];
 	}
 
 	return menuItems;
