@@ -26,6 +26,9 @@
 	IBOutlet NSProgressIndicator *progressIndicator;
 
 	PBViewController* viewController;
+
+	IBOutlet NSToolbarItem *terminalItem;
+	IBOutlet NSToolbarItem *finderItem;
 }
 
 @property (assign) __weak PBGitRepository *repository;
