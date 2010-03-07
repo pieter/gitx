@@ -20,6 +20,7 @@
 #define kShouldCheckoutBranch @"PBShouldCheckoutBranch"
 #define kRecentCloneDestination @"PBRecentCloneDestination"
 #define kSuppressAcceptDropRef @"PBSuppressAcceptDropRef"
+#define kShowStageView @"PBShowStageView"
 
 @implementation PBGitDefaults
 
@@ -116,5 +117,16 @@
 {
 	return [[NSUserDefaults standardUserDefaults] setBool:suppress forKey:kSuppressAcceptDropRef];
 }
+
++ (BOOL) showStageView
+{
+	return [[NSUserDefaults standardUserDefaults] boolForKey:kShowStageView];
+}
+
++ (void) setShowStageView:(BOOL)suppress
+{
+	return [[NSUserDefaults standardUserDefaults] setBool:suppress forKey:kShowStageView];
+}
+
 
 @end

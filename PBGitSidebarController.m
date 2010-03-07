@@ -14,6 +14,7 @@
 #import "PBSourceViewCell.h"
 #import "NSOutlineViewExt.h"
 #import "PBAddRemoteSheet.h"
+#import "PBGitDefaults.h"
 
 @interface PBGitSidebarController ()
 
@@ -52,7 +53,10 @@
 
 	[self menuNeedsUpdate:[actionButton menu]];
 
-	[self selectCurrentBranch];
+	if ([PBGitDefaults showStageView])
+		[self selectStage];
+	else
+		[self selectCurrentBranch];
 }
 
 - (void) observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
@@ -176,10 +180,12 @@
 	if ([item revSpecifier]) {
 		repository.currentBranch = [item revSpecifier];
 		[superController changeContentController:historyViewController];
+		[PBGitDefaults setShowStageView:NO];
 	}
 
 	if (item == stage) {
 		[superController changeContentController:commitViewController];
+		[PBGitDefaults setShowStageView:YES];
 	}
 
 	[self updateActionMenu];

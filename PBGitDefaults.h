@@ -25,5 +25,7 @@
 + (void) setRecentCloneDestination:(NSString *)path;
 + (BOOL) suppressAcceptDropRef;
 + (void) setSuppressAcceptDropRef:(BOOL)suppress;
++ (BOOL) showStageView;
++ (void) setShowStageView:(BOOL)suppress;
 
 @end
