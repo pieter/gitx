@@ -76,8 +76,6 @@
 
 	[self setNextResponder: contentController];
 	[[self window] makeFirstResponder:[contentController firstResponder]];
-
-	[[self window] setToolbar:[contentController viewToolbar]];
 	[contentController updateView];
 }
 

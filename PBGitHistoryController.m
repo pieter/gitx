@@ -15,6 +15,7 @@
 #import "PBCreateTagSheet.h"
 #import "PBAddRemoteSheet.h"
 #import "PBGitSidebarController.h"
+#import "PBGitGradientBarView.h"
 #define QLPreviewPanel NSClassFromString(@"QLPreviewPanel")
 
 
@@ -45,8 +46,14 @@
 	[[commitList tableColumnWithIdentifier:@"subject"] setSortDescriptorPrototype:[[NSSortDescriptor alloc] initWithKey:@"subject" ascending:YES]];
 	// Add a menu that allows a user to select which columns to view
 	[[commitList headerView] setMenu:[self tableColumnMenu]];
-	[historySplitView setTopMin:33.0 andBottomMin:100.0];
+	[historySplitView setTopMin:58.0 andBottomMin:100.0];
 	[historySplitView uncollapse];
+
+	[upperToolbarView setTopShade:237/255.0 bottomShade:216/255.0];
+	[scopeBarView setTopColor:[NSColor colorWithCalibratedHue:0.579 saturation:0.068 brightness:0.898 alpha:1.000] 
+				  bottomColor:[NSColor colorWithCalibratedHue:0.579 saturation:0.119 brightness:0.765 alpha:1.000]];
+	//[scopeBarView setTopShade:207/255.0 bottomShade:180/255.0];
+
 	[super awakeFromNib];
 }
 

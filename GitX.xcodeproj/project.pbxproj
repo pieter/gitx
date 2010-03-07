@@ -58,6 +58,7 @@
 		D858108511274D28007F254B /* Tag.png in Resources */ = {isa = PBXBuildFile; fileRef = D858108211274D28007F254B /* Tag.png */; };
 		D85B939310E3D8B4007F3C28 /* PBCreateBranchSheet.xib in Resources */ = {isa = PBXBuildFile; fileRef = D85B939210E3D8B4007F3C28 /* PBCreateBranchSheet.xib */; };
 		D889EB3110E6BCBB00F08413 /* PBCreateTagSheet.xib in Resources */ = {isa = PBXBuildFile; fileRef = D889EB3010E6BCBB00F08413 /* PBCreateTagSheet.xib */; };
+		D8A4BB6F11337D5C00E92D51 /* PBGitGradientBarView.m in Sources */ = {isa = PBXBuildFile; fileRef = D8A4BB6E11337D5C00E92D51 /* PBGitGradientBarView.m */; };
 		D8E3B2B810DC9FB2001096A3 /* ScriptingBridge.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D8E3B2B710DC9FB2001096A3 /* ScriptingBridge.framework */; };
 		D8E3B34D10DCA958001096A3 /* PBCreateTagSheet.m in Sources */ = {isa = PBXBuildFile; fileRef = D8E3B34C10DCA958001096A3 /* PBCreateTagSheet.m */; };
 		D8FDD9F711432A12005647F6 /* PBCloneRepositoryPanel.xib in Resources */ = {isa = PBXBuildFile; fileRef = D8FDD9F511432A12005647F6 /* PBCloneRepositoryPanel.xib */; };
@@ -255,6 +256,8 @@
 		D858108111274D28007F254B /* RemoteBranch.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = RemoteBranch.png; path = Images/RemoteBranch.png; sourceTree = "<group>"; };
 		D858108211274D28007F254B /* Tag.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Tag.png; path = Images/Tag.png; sourceTree = "<group>"; };
 		D85B93F610E51279007F3C28 /* PBGitRefish.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PBGitRefish.h; sourceTree = "<group>"; };
+		D8A4BB6D11337D5C00E92D51 /* PBGitGradientBarView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PBGitGradientBarView.h; sourceTree = "<group>"; };
+		D8A4BB6E11337D5C00E92D51 /* PBGitGradientBarView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PBGitGradientBarView.m; sourceTree = "<group>"; };
 		D8C1B77210E875CF009B7F8B /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/PBRemoteProgressSheet.xib; sourceTree = "<group>"; };
 		D8E3B2B710DC9FB2001096A3 /* ScriptingBridge.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ScriptingBridge.framework; path = /System/Library/Frameworks/ScriptingBridge.framework; sourceTree = "<absolute>"; };
 		D8E3B34B10DCA958001096A3 /* PBCreateTagSheet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PBCreateTagSheet.h; sourceTree = "<group>"; };
@@ -705,6 +708,8 @@
 				D823487410CB382C00944BDE /* Terminal.h */,
 				F567B88B1057FA9F000DB976 /* NSOutlineViewExt.h */,
 				F567B88C1057FA9F000DB976 /* NSOutlineViewExt.m */,
+				D8A4BB6D11337D5C00E92D51 /* PBGitGradientBarView.h */,
+				D8A4BB6E11337D5C00E92D51 /* PBGitGradientBarView.m */,
 			);
 			name = Aux;
 			sourceTree = "<group>";
@@ -1113,6 +1118,7 @@
 				D8FDDA6E114335E8005647F6 /* PBGitSVRemoteItem.m in Sources */,
 				D8FDDA6F114335E8005647F6 /* PBGitSVStageItem.m in Sources */,
 				D8FDDA70114335E8005647F6 /* PBGitSVTagItem.m in Sources */,
+				D8A4BB6F11337D5C00E92D51 /* PBGitGradientBarView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -11,7 +11,7 @@
 
 @implementation PBViewController
 
-@synthesize repository, viewToolbar;
+@synthesize repository;
 
 - (id)initWithRepository:(PBGitRepository *)theRepository superController:(PBGitWindowController *)controller
 {

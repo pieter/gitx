@@ -13,6 +13,7 @@
 #import "PBCollapsibleSplitView.h"
 
 @class PBGitSidebarController;
+@class PBGitGradientBarView;
 
 @interface PBGitHistoryController : PBViewController {
 	IBOutlet NSSearchField *searchField;
@@ -21,6 +22,8 @@
 	IBOutlet NSOutlineView* fileBrowser;
 	IBOutlet NSTableView* commitList;
 	IBOutlet PBCollapsibleSplitView *historySplitView;
+	IBOutlet PBGitGradientBarView *upperToolbarView;
+	IBOutlet PBGitGradientBarView *scopeBarView;
 
 	IBOutlet id webView;
 	int selectedTab;
