@@ -13,23 +13,23 @@
 
 @interface PBGitWindowController : NSWindowController {
 	__weak PBGitRepository* repository;
-	int selectedViewIndex;
-	IBOutlet NSView* contentView;
 
-	PBViewController *historyViewController;
-	PBViewController *commitViewController;
+	PBViewController *contentController;
+
+	PBGitSidebarController *sidebarController;
+	IBOutlet NSSplitView *splitView;
+	IBOutlet NSView *sourceSplitView;
+	IBOutlet NSView *contentSplitView;
 
 	PBViewController* viewController;
 }
 
 @property (assign) __weak PBGitRepository *repository;
-@property (readonly) NSViewController *viewController;
-@property (assign) int selectedViewIndex;
 
 - (id)initWithRepository:(PBGitRepository*)theRepository displayDefault:(BOOL)display;
 
-- (void)changeViewController:(NSInteger)whichViewTag;
-- (void)useToolbar:(NSToolbar *)toolbar;
+- (void)changeContentController:(PBViewController *)controller;
+
 - (void)showMessageSheet:(NSString *)messageText infoText:(NSString *)infoText;
 - (void)showErrorSheet:(NSError *)error;
 - (void)showErrorSheetTitle:(NSString *)title message:(NSString *)message arguments:(NSArray *)arguments output:(NSString *)output;

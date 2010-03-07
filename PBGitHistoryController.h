@@ -15,7 +15,6 @@
 @class PBGitSidebarController;
 
 @interface PBGitHistoryController : PBViewController {
-	PBGitSidebarController *sidebarController;
 	IBOutlet NSSearchField *searchField;
 	IBOutlet NSArrayController* commitController;
 	IBOutlet NSTreeController* treeController;

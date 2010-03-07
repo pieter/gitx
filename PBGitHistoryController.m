@@ -33,19 +33,6 @@
 	[fileBrowser setTarget:self];
 	[fileBrowser setDoubleAction:@selector(openSelectedFile:)];
 
-	[historySplitView removeFromSuperview];
-	NSSplitView *newView = [[NSSplitView alloc] initWithFrame:[historySplitView frame]];
-	
-	sidebarController = [[PBGitSidebarController alloc] initWithRepository:repository superController:superController];
-	[newView setDividerStyle:NSSplitViewDividerStyleThin];
-	[newView addSubview:[sidebarController view]];
-	[newView addSubview:historySplitView];
-	[newView setVertical:YES];
-	[newView adjustSubviews];
-	[newView setAutoresizingMask: NSViewWidthSizable | NSViewHeightSizable];
-
-	[[self view] addSubview:newView];
-
 	if (!repository.currentBranch) {
 		[repository reloadRefs];
 		[repository readCurrentBranch];
@@ -107,6 +94,7 @@
 	else if([(NSString *)context isEqualToString:@"branchChange"]) {
 		// Reset the sorting
 		commitController.sortDescriptors = [NSArray array];
+		[repository reloadRefs];
 	}
 	else {
 		[super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
@@ -194,7 +182,7 @@
 
 - (void) updateView
 {
-	[self refresh:nil];
+
 }
 
 - (NSResponder *)firstResponder;

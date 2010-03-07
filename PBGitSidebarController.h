@@ -10,6 +10,8 @@
 #import "PBViewController.h"
 
 @class PBSourceViewItem;
+@class PBGitHistoryController;
+@class PBGitCommitController;
 
 @interface PBGitSidebarController : PBViewController {
 	IBOutlet NSWindow *window;
@@ -21,7 +23,13 @@
 	PBSourceViewItem *stage;
 
 	PBSourceViewItem *branches, *remotes, *tags, *others;
+
+	PBGitHistoryController *historyViewController;
+	PBGitCommitController *commitViewController;
 }
+
+- (void) selectStage;
+- (void) selectCurrentBranch;
 
 @property(readonly) NSMutableArray *items;
 @end

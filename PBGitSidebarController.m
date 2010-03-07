@@ -8,12 +8,13 @@
 
 #import "PBGitSidebarController.h"
 #import "PBSourceViewItems.h"
+#import "PBGitHistoryController.h"
+#import "PBGitCommitController.h"
 #import "NSOutlineViewExt.h"
 
 @interface PBGitSidebarController ()
 
 - (void)populateList;
-- (void)updateSelection;
 - (void)addRevSpec:(PBGitRevSpecifier *)revSpec;
 @end
 
@@ -35,17 +36,26 @@
 	window.contentView = self.view;
 	[self populateList];
 
+	historyViewController = [[PBGitHistoryController alloc] initWithRepository:repository superController:superController];
+	commitViewController = [[PBGitCommitController alloc] initWithRepository:repository superController:superController];
+
 	[repository addObserver:self forKeyPath:@"currentBranch" options:0 context:@"currentBranchChange"];
-	[self updateSelection];
+	[self selectCurrentBranch];
 }
 
 - (void) observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
 {
 	if ([@"currentBranchChange" isEqualTo:context])
-		[self updateSelection];		
+		[self selectCurrentBranch];
 }
 
-- (void)updateSelection
+- (void) selectStage
+{
+	NSIndexSet *index = [NSIndexSet indexSetWithIndex:[sourceView rowForItem:stage]];
+	[sourceView selectRowIndexes:index byExtendingSelection:NO];
+}
+
+- (void) selectCurrentBranch
 {
 	PBGitRevSpecifier *rev = repository.currentBranch;
 	if (!rev)
@@ -97,13 +107,13 @@
 	PBSourceViewItem *item = [sourceView itemAtRow:index];
 
 	if ([item revSpecifier]) {
-		[[repository windowController] showHistoryView:self];
 		repository.currentBranch = [item revSpecifier];
+		[superController changeContentController:historyViewController];
 		return;
 	}
 
 	if (item == stage)
-		[[repository windowController] showCommitView:self];
+		[superController changeContentController:commitViewController];
 
 	/* ... */
 

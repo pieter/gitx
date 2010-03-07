@@ -16,7 +16,7 @@
 @implementation PBGitWindowController
 
 
-@synthesize repository, viewController, selectedViewIndex;
+@synthesize repository;
 
 - (id)initWithRepository:(PBGitRepository*)theRepository displayDefault:(BOOL)displayDefault
 {
@@ -24,12 +24,6 @@
 		return nil;
 
 	self.repository = theRepository;
-	[self showWindow:nil];
-
-	if (displayDefault)
-		self.selectedViewIndex = [[NSUserDefaults standardUserDefaults] integerForKey:@"selectedViewIndex"];
-	else
-		self.selectedViewIndex = -1;
 
 	return self;
 }
@@ -37,10 +31,9 @@
 - (void)windowWillClose:(NSNotification *)notification
 {
 	NSLog(@"Window will close!");
-	if (historyViewController)
-		[historyViewController removeView];
-	if (commitViewController)
-		[commitViewController removeView];
+
+	if (sidebarController)
+		[sidebarController removeView];
 }
 
 - (BOOL)validateMenuItem:(NSMenuItem *)menuItem
@@ -51,78 +44,51 @@
 	return YES;
 }
 
-- (void) setSelectedViewIndex: (int) i
-{
-	[self changeViewController: i];
-}
-
-- (void)changeViewController:(NSInteger)whichViewTag
-{
-	[self willChangeValueForKey:@"viewController"];
-
-	if (viewController != nil)
-		[[viewController view] removeFromSuperview];
-
-	if ([repository isBareRepository]) {	// in bare repository we don't want to view commit
-		whichViewTag = 0;		// even if it was selected by default
-	}
-
-	// Set our default here because we might have changed it (based on bare repo) before
-	selectedViewIndex = whichViewTag;
-	[[NSUserDefaults standardUserDefaults] setInteger:whichViewTag forKey:@"selectedViewIndex"];
-
-	switch (whichViewTag)
-	{
-		case 0:	// swap in the "CustomImageViewController - NSImageView"
-			if (!historyViewController)
-				historyViewController = [[PBGitHistoryController alloc] initWithRepository:repository superController:self];
-			else
-				[historyViewController updateView];
-			viewController = historyViewController;
-			break;
-		case 1:
-			if (!commitViewController)
-				commitViewController = [[PBGitCommitController alloc] initWithRepository:repository superController:self];
-			else
-				[commitViewController updateView];
-
-			viewController = commitViewController;
-			break;
-	}
-
-	// make sure we automatically resize the controller's view to the current window size
-	[[viewController view] setFrame: [contentView bounds]];
-	
-	//// embed the current view to our host view
-	[contentView addSubview: [viewController view]];
-
-	[self useToolbar: [viewController viewToolbar]];
-
-	// Allow the viewcontroller to catch actions
-	[self setNextResponder: viewController];
-	[self didChangeValueForKey:@"viewController"];	// this will trigger the NSTextField's value binding to change
-
-	[[self window] makeFirstResponder:[viewController firstResponder]];
-}
-
-- (void)awakeFromNib
+- (void) awakeFromNib
 {
 	[[self window] setDelegate:self];
-	[[self window] setAutorecalculatesContentBorderThickness:NO forEdge:NSMinYEdge];
-	[[self window] setContentBorderThickness:35.0f forEdge:NSMinYEdge];
-	[self showHistoryView:nil];
+
+	sidebarController = [[PBGitSidebarController alloc] initWithRepository:repository superController:self];
+	[[sidebarController view] setFrame:[sourceSplitView bounds]];
+	[sourceSplitView addSubview:[sidebarController view]];
+
+	[self showWindow:nil];
+}
+
+- (void) removeAllContentSubViews
+{
+	if ([contentSplitView subviews])
+		while ([[contentSplitView subviews] count] > 0)
+			[[[contentSplitView subviews] lastObject] removeFromSuperviewWithoutNeedingDisplay];
+}
+
+- (void) changeContentController:(PBViewController *)controller
+{
+	if (!controller || (contentController == controller))
+		return;
+
+	[self removeAllContentSubViews];
+
+	contentController = controller;
+	
+	[[contentController view] setFrame:[contentSplitView bounds]];
+	[contentSplitView addSubview:[contentController view]];
+
+	[self setNextResponder: contentController];
+	[[self window] makeFirstResponder:[contentController firstResponder]];
+
+	[[self window] setToolbar:[contentController viewToolbar]];
+	[contentController updateView];
 }
 
 - (void) showCommitView:(id)sender
 {
-	if (self.selectedViewIndex != 1)
-		self.selectedViewIndex = 1;
+	[sidebarController selectStage];
 }
 
 - (void) showHistoryView:(id)sender
 {
-	if (self.selectedViewIndex != 0)
-		self.selectedViewIndex = 0;
+	[sidebarController selectCurrentBranch];
 }
 
 - (void)showMessageSheet:(NSString *)messageText infoText:(NSString *)infoText
@@ -173,21 +139,49 @@
 
 
 #pragma mark -
-#pragma mark Toolbar Delegates
+#pragma mark SplitView Delegates
 
-- (void) useToolbar:(NSToolbar *)toolbar
+#define kGitSplitViewMinWidth 150.0f
+#define kGitSplitViewMaxWidth 300.0f
+
+#pragma mark min/max widths while moving the divider
+
+- (CGFloat)splitView:(NSSplitView *)view constrainMinCoordinate:(CGFloat)proposedMin ofSubviewAt:(NSInteger)dividerIndex
 {
-	NSSegmentedControl *item = nil;
-	for (NSToolbarItem *toolbarItem in [toolbar items]) {
-		if ([[toolbarItem view] isKindOfClass:[NSSegmentedControl class]]) {
-			item = (NSSegmentedControl *)[toolbarItem view];
-			break;
-		}
-	}
-	[item bind:@"selectedIndex" toObject:self withKeyPath:@"selectedViewIndex" options:0];
-	[item setEnabled: ![repository isBareRepository]];
+	if (proposedMin < kGitSplitViewMinWidth)
+		return kGitSplitViewMinWidth;
 
-	[self.window setToolbar:toolbar];
+	return proposedMin;
+}
+
+- (CGFloat)splitView:(NSSplitView *)view constrainMaxCoordinate:(CGFloat)proposedMax ofSubviewAt:(NSInteger)dividerIndex
+{
+	if (dividerIndex == 0)
+		return kGitSplitViewMaxWidth;
+
+	return proposedMax;
+}
+
+#pragma mark constrain sidebar width while resizing the window
+
+- (void)splitView:(NSSplitView *)sender resizeSubviewsWithOldSize:(NSSize)oldSize
+{
+	NSRect newFrame = [sender frame];
+
+	float dividerThickness = [sender dividerThickness];
+
+	NSView *sourceView = [[sender subviews] objectAtIndex:0];
+	NSRect sourceFrame = [sourceView frame];
+	sourceFrame.size.height = newFrame.size.height;
+
+	NSView *mainView = [[sender subviews] objectAtIndex:1];
+	NSRect mainFrame = [mainView frame];
+	mainFrame.origin.x = sourceFrame.size.width + dividerThickness;
+	mainFrame.size.width = newFrame.size.width - mainFrame.origin.x;
+	mainFrame.size.height = newFrame.size.height;
+
+	[sourceView setFrame:sourceFrame];
+	[mainView setFrame:mainFrame];
 }
 
 @end
