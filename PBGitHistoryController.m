@@ -20,7 +20,7 @@
 
 
 @implementation PBGitHistoryController
-@synthesize selectedTab, webCommit, rawCommit, gitTree, commitController;
+@synthesize selectedTab, webCommit, rawCommit, gitTree, commitController, refController;
 
 - (void)awakeFromNib
 {

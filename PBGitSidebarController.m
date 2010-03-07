@@ -10,6 +10,8 @@
 #import "PBSourceViewItems.h"
 #import "PBGitHistoryController.h"
 #import "PBGitCommitController.h"
+#import "PBRefController.h"
+#import "PBSourceViewCell.h"
 #import "NSOutlineViewExt.h"
 
 @interface PBGitSidebarController ()
@@ -127,8 +129,10 @@
 	return [item isGroupItem];
 }
 
-- (void)outlineView:(NSOutlineView *)outlineView willDisplayCell:(id)cell forTableColumn:(NSTableColumn *)tableColumn item:(id)item
+- (void)outlineView:(NSOutlineView *)outlineView willDisplayCell:(PBSourceViewCell *)cell forTableColumn:(NSTableColumn *)tableColumn item:(PBSourceViewItem *)item
 {
+	cell.isCheckedOut = [item.revSpecifier isEqualTo:[repository headRef]];
+
 	[cell setImage:[item icon]];
 }
 
@@ -202,6 +206,34 @@
 - (id)outlineView:(NSOutlineView *)outlineView objectValueForTableColumn:(NSTableColumn *)tableColumn byItem:(id)item
 {
 	return [(PBSourceViewItem *)item title];
+}
+
+
+#pragma mark Menus
+
+- (NSMenu *) menuForRow:(NSInteger)row
+{
+	PBSourceViewItem *viewItem = [sourceView itemAtRow:row];
+
+	PBGitRef *ref = nil;
+
+	// create a ref for a remote because they don't store one
+	if ([self outlineView:sourceView isItemExpandable:viewItem] && (viewItem.parent == remotes))
+		ref = [PBGitRef refFromString:[kGitXRemoteRefPrefix stringByAppendingString:[viewItem title]]];
+	else
+		ref = [[viewItem revSpecifier] ref];
+
+	if (!ref)
+		return nil;
+
+	NSArray *menuItems = [historyViewController.refController menuItemsForRef:ref];
+
+	NSMenu *menu = [[NSMenu alloc] init];
+	[menu setAutoenablesItems:NO];
+	for (NSMenuItem *item in menuItems)
+		[menu addItem:item];
+
+	return menu;
 }
 
 @end

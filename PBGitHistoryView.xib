@@ -1643,6 +1643,14 @@
 					</object>
 					<int key="connectionID">328</int>
 				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
+						<string key="label">refController</string>
+						<reference key="source" ref="1001"/>
+						<reference key="destination" ref="892732705"/>
+					</object>
+					<int key="connectionID">329</int>
+				</object>
 			</object>
 			<object class="IBMutableOrderedSet" key="objectRecords">
 				<object class="NSArray" key="orderedObjects">
@@ -2263,7 +2271,7 @@
 				</object>
 			</object>
 			<nil key="sourceID"/>
-			<int key="maxID">328</int>
+			<int key="maxID">329</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<object class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -2366,6 +2374,7 @@
 							<string>commitList</string>
 							<string>fileBrowser</string>
 							<string>historySplitView</string>
+							<string>refController</string>
 							<string>scopeBarView</string>
 							<string>searchField</string>
 							<string>treeController</string>
@@ -2378,6 +2387,7 @@
 							<string>NSTableView</string>
 							<string>NSOutlineView</string>
 							<string>PBCollapsibleSplitView</string>
+							<string>PBRefController</string>
 							<string>PBGitGradientBarView</string>
 							<string>NSSearchField</string>
 							<string>NSTreeController</string>
@@ -2458,13 +2468,11 @@
 							<string>pushDefaultRemoteForRef:</string>
 							<string>pushToRemote:</string>
 							<string>pushUpdatesToRemote:</string>
-							<string>rebaseActiveBranch:</string>
 							<string>rebaseHeadBranch:</string>
 							<string>showTagInfoSheet:</string>
 						</object>
 						<object class="NSMutableArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
-							<string>PBRefMenuItem</string>
 							<string>PBRefMenuItem</string>
 							<string>PBRefMenuItem</string>
 							<string>PBRefMenuItem</string>

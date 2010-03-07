@@ -31,5 +31,7 @@
 - (void) selectStage;
 - (void) selectCurrentBranch;
 
+- (NSMenu *) menuForRow:(NSInteger)row;
+
 @property(readonly) NSMutableArray *items;
 @end

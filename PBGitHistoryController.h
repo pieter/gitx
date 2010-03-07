@@ -14,8 +14,10 @@
 
 @class PBGitSidebarController;
 @class PBGitGradientBarView;
+@class PBRefController;
 
 @interface PBGitHistoryController : PBViewController {
+	IBOutlet PBRefController *refController;
 	IBOutlet NSSearchField *searchField;
 	IBOutlet NSArrayController* commitController;
 	IBOutlet NSTreeController* treeController;
@@ -38,6 +40,7 @@
 @property (retain) PBGitCommit *webCommit, *rawCommit;
 @property (retain) PBGitTree* gitTree;
 @property (readonly) NSArrayController *commitController;
+@property (readonly) PBRefController *refController;
 
 - (IBAction) setDetailedView: sender;
 - (IBAction) setRawView: sender;
