@@ -33,23 +33,21 @@
 	IBOutlet PBGitGradientBarView *scopeBarView;
 
 	IBOutlet id webView;
-	int selectedTab;
+	int selectedCommitDetailsIndex;
 	
-	PBGitTree* gitTree;
-	PBGitCommit* webCommit;
-	PBGitCommit* rawCommit;
-	PBGitCommit* realCommit;
+	PBGitTree *gitTree;
+	PBGitCommit *webCommit;
+	PBGitCommit *selectedCommit;
 }
 
-@property (assign) int selectedTab;
-@property (retain) PBGitCommit *webCommit, *rawCommit;
+@property (assign) int selectedCommitDetailsIndex;
+@property (retain) PBGitCommit *webCommit;
 @property (retain) PBGitTree* gitTree;
 @property (readonly) NSArrayController *commitController;
 @property (readonly) PBRefController *refController;
 
-- (IBAction) setDetailedView: sender;
-- (IBAction) setRawView: sender;
-- (IBAction) setTreeView: sender;
+- (IBAction) setDetailedView:(id)sender;
+- (IBAction) setTreeView:(id)sender;
 
 - (void) selectCommit: (NSString*) commit;
 - (IBAction) refresh: sender;

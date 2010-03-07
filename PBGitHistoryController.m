@@ -20,12 +20,18 @@
 #define QLPreviewPanel NSClassFromString(@"QLPreviewPanel")
 
 
+#define kHistorySelectedDetailIndexKey @"PBHistorySelectedDetailIndex"
+#define kHistoryDetailViewIndex 0
+#define kHistoryTreeViewIndex 1
+
+
 @implementation PBGitHistoryController
-@synthesize selectedTab, webCommit, rawCommit, gitTree, commitController, refController;
+@synthesize selectedCommitDetailsIndex, webCommit, gitTree, commitController, refController;
 
 - (void)awakeFromNib
 {
-	self.selectedTab = [[NSUserDefaults standardUserDefaults] integerForKey:@"Repository Window Selected Tab Index"];;
+	self.selectedCommitDetailsIndex = [[NSUserDefaults standardUserDefaults] integerForKey:kHistorySelectedDetailIndexKey];
+
 	[commitController addObserver:self forKeyPath:@"selection" options:(NSKeyValueObservingOptionNew,NSKeyValueObservingOptionOld) context:@"commitChange"];
 	[commitController addObserver:self forKeyPath:@"arrangedObjects.@count" options:NSKeyValueObservingOptionInitial context:@"updateCommitCount"];
 	[treeController addObserver:self forKeyPath:@"selection" options:0 context:@"treeChange"];
@@ -61,38 +67,32 @@
 
 - (void) updateKeys
 {
-	NSArray* selection = [commitController selectedObjects];
-	
 	// Remove any references in the QLPanel
 	//[[QLPreviewPanel sharedPreviewPanel] setURLs:[NSArray array] currentIndex:0 preservingDisplayState:YES];
 	// We have to do this manually, as NSTreeController leaks memory?
 	//[treeController setSelectionIndexPaths:[NSArray array]];
-	
-	if ([selection count] > 0)
-		realCommit = [selection objectAtIndex:0];
-	else
-		realCommit = nil;
-	
-	self.webCommit = nil;
-	self.rawCommit = nil;
-	self.gitTree = nil;
-	
-	switch (self.selectedTab) {
-		case 0:	self.webCommit = realCommit;			break;
-		case 1:	self.gitTree   = realCommit.tree;	break;
-	}
 
-	BOOL isOnHeadBranch = [realCommit isOnHeadBranch];
+	selectedCommit = [[commitController selectedObjects] lastObject];
+
+	if (self.selectedCommitDetailsIndex == kHistoryTreeViewIndex)
+		self.gitTree = selectedCommit.tree;
+	else // kHistoryDetailViewIndex
+		self.webCommit = selectedCommit;
+
+	BOOL isOnHeadBranch = [selectedCommit isOnHeadBranch];
 	[mergeButton setEnabled:!isOnHeadBranch];
 	[cherryPickButton setEnabled:!isOnHeadBranch];
 	[rebaseButton setEnabled:!isOnHeadBranch];
 }
 
 
-- (void) setSelectedTab: (int) number
+- (void) setSelectedCommitDetailsIndex:(int)detailsIndex
 {
-	selectedTab = number;
-	[[NSUserDefaults standardUserDefaults] setInteger:selectedTab forKey:@"Repository Window Selected Tab Index"];
+	if (selectedCommitDetailsIndex == detailsIndex)
+		return;
+
+	selectedCommitDetailsIndex = detailsIndex;
+	[[NSUserDefaults standardUserDefaults] setInteger:selectedCommitDetailsIndex forKey:kHistorySelectedDetailIndexKey];
 	[self updateKeys];
 }
 
@@ -128,14 +128,14 @@
 	[[NSWorkspace sharedWorkspace] openTempFile:name];
 }
 
-- (IBAction) setDetailedView: sender {
-	self.selectedTab = 0;
+- (IBAction) setDetailedView:(id)sender
+{
+	self.selectedCommitDetailsIndex = kHistoryDetailViewIndex;
 }
-- (IBAction) setRawView: sender {
-	self.selectedTab = 1;
-}
-- (IBAction) setTreeView: sender {
-	self.selectedTab = 2;
+
+- (IBAction) setTreeView:(id)sender
+{
+	self.selectedCommitDetailsIndex = kHistoryTreeViewIndex;
 }
 
 - (void)keyDown:(NSEvent*)event
@@ -199,7 +199,7 @@
 
 - (void) updateView
 {
-
+	[self updateKeys];
 }
 
 - (NSResponder *)firstResponder;
@@ -292,12 +292,12 @@
 	for (NSString *filePath in [sender representedObject])
 		[files addObject:[filePath stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]]];
 
-	[repository checkoutFiles:files fromRefish:realCommit];
+	[repository checkoutFiles:files fromRefish:selectedCommit];
 }
 
 - (void) diffFilesAction:(id)sender
 {
-	[PBDiffWindowController showDiffWindowWithFiles:[sender representedObject] fromCommit:realCommit diffCommit:nil];
+	[PBDiffWindowController showDiffWindowWithFiles:[sender representedObject] fromCommit:selectedCommit diffCommit:nil];
 }
 
 - (NSMenu *)contextMenuForTreeView
@@ -324,7 +324,7 @@
 	PBGitRef *headRef = [[repository headRef] ref];
 	NSString *headRefName = [headRef shortName];
 	NSString *diffTitle = [NSString stringWithFormat:@"Diff %@ with %@", multiple ? @"files" : @"file", headRefName];
-	BOOL isHead = [[realCommit realSha] isEqualToString:[repository headSHA]];
+	BOOL isHead = [[selectedCommit realSha] isEqualToString:[repository headSHA]];
 	NSMenuItem *diffItem = [[NSMenuItem alloc] initWithTitle:diffTitle
 													  action:isHead ? nil : @selector(diffFilesAction:)
 											   keyEquivalent:@""];
@@ -379,18 +379,18 @@
 {
 	PBGitRef *currentRef = [repository.currentBranch ref];
 
-	if (!realCommit || [realCommit hasRef:currentRef])
+	if (!selectedCommit || [selectedCommit hasRef:currentRef])
 		[PBCreateBranchSheet beginCreateBranchSheetAtRefish:currentRef inRepository:self.repository];
 	else
-		[PBCreateBranchSheet beginCreateBranchSheetAtRefish:realCommit inRepository:self.repository];
+		[PBCreateBranchSheet beginCreateBranchSheetAtRefish:selectedCommit inRepository:self.repository];
 }
 
 - (IBAction) createTag:(id)sender
 {
-	if (!realCommit)
+	if (!selectedCommit)
 		[PBCreateTagSheet beginCreateTagSheetAtRefish:[repository.currentBranch ref] inRepository:repository];
 	else
-		[PBCreateTagSheet beginCreateTagSheetAtRefish:realCommit inRepository:repository];
+		[PBCreateTagSheet beginCreateTagSheetAtRefish:selectedCommit inRepository:repository];
 }
 
 - (IBAction) showAddRemoteSheet:(id)sender
@@ -400,21 +400,21 @@
 
 - (IBAction) merge:(id)sender
 {
-	if (realCommit)
-		[repository mergeWithRefish:realCommit];
+	if (selectedCommit)
+		[repository mergeWithRefish:selectedCommit];
 }
 
 - (IBAction) cherryPick:(id)sender
 {
-	if (realCommit)
-		[repository cherryPickRefish:realCommit];
+	if (selectedCommit)
+		[repository cherryPickRefish:selectedCommit];
 }
 
 - (IBAction) rebase:(id)sender
 {
-	if (realCommit) {
+	if (selectedCommit) {
 		PBGitRef *headRef = [[repository headRef] ref];
-		[repository rebaseBranch:headRef onRefish:realCommit];
+		[repository rebaseBranch:headRef onRefish:selectedCommit];
 	}
 }
 	

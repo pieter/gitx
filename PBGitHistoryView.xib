@@ -53,7 +53,7 @@
 					<bool key="EncodedWithXMLCoder">YES</bool>
 					<string>path</string>
 					<string>contents</string>
-					<string>selectedTab</string>
+					<string>selectedCommitDetailsIndex</string>
 					<string>textContents</string>
 				</object>
 				<string key="NSObjectClassName">PBGitTree</string>
@@ -102,7 +102,7 @@
 				<string key="NSClassName">PBWebHistoryController</string>
 			</object>
 			<object class="NSCustomView" id="319362431">
-				<reference key="NSNextResponder"/>
+				<nil key="NSNextResponder"/>
 				<int key="NSvFlags">4370</int>
 				<object class="NSMutableArray" key="NSSubviews">
 					<bool key="EncodedWithXMLCoder">YES</bool>
@@ -1213,7 +1213,6 @@
 					</object>
 				</object>
 				<string key="NSFrameSize">{852, 432}</string>
-				<reference key="NSSuperview"/>
 				<string key="NSClassName">NSView</string>
 			</object>
 			<object class="NSCustomObject" id="892732705">
@@ -1345,15 +1344,15 @@
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBBindingConnection" key="connection">
-						<string key="label">selectedIndex: selectedTab</string>
+						<string key="label">selectedIndex: selectedCommitDetailsIndex</string>
 						<reference key="source" ref="135073984"/>
 						<reference key="destination" ref="1001"/>
 						<object class="NSNibBindingConnector" key="connector">
 							<reference key="NSSource" ref="135073984"/>
 							<reference key="NSDestination" ref="1001"/>
-							<string key="NSLabel">selectedIndex: selectedTab</string>
+							<string key="NSLabel">selectedIndex: selectedCommitDetailsIndex</string>
 							<string key="NSBinding">selectedIndex</string>
-							<string key="NSKeyPath">selectedTab</string>
+							<string key="NSKeyPath">selectedCommitDetailsIndex</string>
 							<int key="NSNibBindingConnectorVersion">2</int>
 						</object>
 					</object>
@@ -1361,15 +1360,15 @@
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBBindingConnection" key="connection">
-						<string key="label">selectedIndex: selectedTab</string>
+						<string key="label">selectedIndex: selectedCommitDetailsIndex</string>
 						<reference key="source" ref="802449565"/>
 						<reference key="destination" ref="1001"/>
 						<object class="NSNibBindingConnector" key="connector">
 							<reference key="NSSource" ref="802449565"/>
 							<reference key="NSDestination" ref="1001"/>
-							<string key="NSLabel">selectedIndex: selectedTab</string>
+							<string key="NSLabel">selectedIndex: selectedCommitDetailsIndex</string>
 							<string key="NSBinding">selectedIndex</string>
-							<string key="NSKeyPath">selectedTab</string>
+							<string key="NSKeyPath">selectedCommitDetailsIndex</string>
 							<int key="NSNibBindingConnectorVersion">2</int>
 						</object>
 					</object>
@@ -3643,7 +3642,6 @@
 				<string>AddLabelTemplate</string>
 				<string>CherryPickTemplate</string>
 				<string>MergeTemplate</string>
-				<string>NSQuickLookTemplate</string>
 				<string>RebaseTemplate</string>
 			</object>
 			<object class="NSMutableArray" key="dict.values">
@@ -3652,7 +3650,6 @@
 				<string>{23, 12}</string>
 				<string>{18.5143, 12.3429}</string>
 				<string>{16.4571, 12.3429}</string>
-				<string>{19, 11}</string>
 				<string>{16.4571, 13.3714}</string>
 			</object>
 		</object>
