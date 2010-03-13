@@ -16,6 +16,7 @@
 #import "PBPrefsWindowController.h"
 #import "PBNSURLPathUserDefaultsTransfomer.h"
 #import "PBGitDefaults.h"
+#import "Sparkle/SUUpdater.h"
 
 @implementation ApplicationController
 @synthesize cliProxy;
@@ -63,6 +64,7 @@
 
 - (void)applicationDidFinishLaunching:(NSNotification*)notification
 {
+	[[SUUpdater sharedUpdater] setSendsSystemProfile:YES];
 	[self registerServices];
 
 	// Only try to open a default document if there are no documents open already.
