@@ -15,6 +15,7 @@
 #define CANCELBUTTONWIDTH		100.0
 #define CANCELBUTTONHEIGHT		24.0
 #define	PASSHEIGHT				22.0
+#define	PASSLABELHEIGHT			16.0
 
 
 @interface GAPAppDelegate : NSObject <NSApplicationDelegate>
@@ -48,7 +49,7 @@
 {
 	if( !mPasswordPanel )
 	{
-		NSRect			box = NSMakeRect( 100, 100, 400, 80 );
+		NSRect			box = NSMakeRect( 100, 100, 250, 100 );
 		mPasswordPanel = [[NSPanel alloc] initWithContentRect: box
 															styleMask: NSTitledWindowMask
 															backing: NSBackingStoreBuffered defer: NO];
@@ -60,14 +61,14 @@
 		
 		// OK:
 		NSRect		okBox = box;
-		okBox.origin.x = NSMaxX( box ) -OKBUTTONWIDTH -12;
+		okBox.origin.x = NSMaxX( box ) -OKBUTTONWIDTH -10;
 		okBox.size.width = OKBUTTONWIDTH;
-		okBox.origin.y += 12;
+		okBox.origin.y += 10;
 		okBox.size.height = OKBUTTONHEIGHT;
 		NSButton*	okButton = [[[NSButton alloc] initWithFrame: okBox] autorelease];
 		[okButton setTarget: self];
 		[okButton setAction: @selector(doOKButton:)];
-		[okButton setTitle: @"OK"];
+		[okButton setTitle: @"OK"];			// +++ Localize.
 		[okButton setKeyEquivalent: @"\r"];
 		[okButton setBordered: YES];
 		[okButton setBezelStyle: NSRoundedBezelStyle];
@@ -77,12 +78,12 @@
 		NSRect	cancelBox = box;
 		cancelBox.origin.x = NSMinX( okBox ) -CANCELBUTTONWIDTH -6;
 		cancelBox.size.width = CANCELBUTTONWIDTH;
-		cancelBox.origin.y += 12;
+		cancelBox.origin.y += 10;
 		cancelBox.size.height = CANCELBUTTONHEIGHT;
 		okButton = [[[NSButton alloc] initWithFrame: cancelBox] autorelease];
 		[okButton setTarget: self];
 		[okButton setAction: @selector(doCancelButton:)];
-		[okButton setTitle: @"Cancel"];
+		[okButton setTitle: @"Cancel"];			// +++ Localize.
 		[okButton setBordered: YES];
 		[okButton setBezelStyle: NSRoundedBezelStyle];
 		[[mPasswordPanel contentView] addSubview: okButton];
@@ -101,6 +102,21 @@
 		[mPasswordField setBezelStyle: NSTextFieldSquareBezel];
 		[mPasswordField selectText: self];
 		[[mPasswordPanel contentView] addSubview: mPasswordField];
+		
+		// Password label:
+		NSRect				passLabelBox = box;
+		passLabelBox.origin.y = NSMaxY(passBox) + 6;
+		passLabelBox.size.height = PASSLABELHEIGHT;
+		passLabelBox.origin.x += 12;
+		passLabelBox.size.width -= 12 * 2;
+		NSTextField*		passwordLabel = [[[NSTextField alloc] initWithFrame: passLabelBox] autorelease];
+		[passwordLabel setSelectable: YES];
+		[passwordLabel setEditable: NO];
+		[passwordLabel setBordered: NO];
+		[passwordLabel setBezeled: NO];
+		[passwordLabel setDrawsBackground: NO];
+		[passwordLabel setStringValue: @"Please enter your password:"];	// +++ Localize.
+		[[mPasswordPanel contentView] addSubview: passwordLabel];
 	}
 	
 	return mPasswordPanel;
