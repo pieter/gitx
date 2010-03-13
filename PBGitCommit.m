@@ -89,17 +89,7 @@ NSString * const kGitXCommitType = @"commit";
 	if ([otherSHA isEqualToString:mySHA])
 		return YES;
 
-	NSString *commitRange = [NSString stringWithFormat:@"%@..%@", mySHA, otherSHA];
-	NSString *parentsOutput = [repository outputForArguments:[NSArray arrayWithObjects:@"rev-list", @"--parents", @"-1", commitRange, nil]];
-	if ([parentsOutput isEqualToString:@""]) {
-		return NO;
-	}
-
-	NSString *mergeSHA = [repository outputForArguments:[NSArray arrayWithObjects:@"merge-base", mySHA, otherSHA, nil]];
-	if ([mergeSHA isEqualToString:mySHA] || [mergeSHA isEqualToString:otherSHA])
-		return YES;
-
-	return NO;
+	return [repository isOnSameBranch:otherSHA asSHA:mySHA];
 }
 
 - (BOOL) isOnHeadBranch

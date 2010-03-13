@@ -340,6 +340,33 @@ NSString* PBGitRepositoryErrorDomain = @"GitXErrorDomain";
 	return nil;
 }
 
+- (BOOL) isOnSameBranch:(NSString *)branchSHA asSHA:(NSString *)testSHA
+{
+	if (!branchSHA || !testSHA)
+		return NO;
+
+	if ([testSHA isEqualToString:branchSHA])
+		return YES;
+
+	NSArray *revList = revisionList.projectCommits;
+
+	NSMutableSet *searchSHAs = [NSMutableSet setWithObject:branchSHA];
+
+	for (PBGitCommit *commit in revList) {
+		NSString *commitSHA = [commit realSha];
+		if ([searchSHAs containsObject:commitSHA]) {
+			if ([testSHA isEqualToString:commitSHA])
+				return YES;
+			[searchSHAs removeObject:commitSHA];
+			[searchSHAs addObjectsFromArray:commit.parents];
+		}
+		else if ([testSHA isEqualToString:commitSHA])
+			return NO;
+	}
+
+	return NO;
+}
+
 - (BOOL) isSHAOnHeadBranch:(NSString *)testSHA
 {
 	if (!testSHA)
@@ -350,17 +377,7 @@ NSString* PBGitRepositoryErrorDomain = @"GitXErrorDomain";
 	if ([testSHA isEqualToString:headSHA])
 		return YES;
 
-	NSString *commitRange = [NSString stringWithFormat:@"%@..%@", testSHA, headSHA];
-	NSString *parentsOutput = [self outputForArguments:[NSArray arrayWithObjects:@"rev-list", @"--parents", @"-1", commitRange, nil]];
-	if ([parentsOutput isEqualToString:@""]) {
-		return NO;
-	}
-
-	NSString *mergeSHA = [self outputForArguments:[NSArray arrayWithObjects:@"merge-base", testSHA, headSHA, nil]];
-	if ([mergeSHA isEqualToString:testSHA] || [mergeSHA isEqualToString:headSHA])
-		return YES;
-
-	return NO;
+	return [self isOnSameBranch:headSHA asSHA:testSHA];
 }
 
 - (BOOL) isRefOnHeadBranch:(PBGitRef *)testRef

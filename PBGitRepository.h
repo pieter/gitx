@@ -80,6 +80,7 @@ enum branchFilterTypes {
 - (NSString *) shaForRef:(PBGitRef *)ref;
 - (PBGitCommit *) commitForRef:(PBGitRef *)ref;
 - (PBGitCommit *) commitForSHA:(NSString *)sha;
+- (BOOL) isOnSameBranch:(NSString *)baseSHA asSHA:(NSString *)testSHA;
 - (BOOL) isSHAOnHeadBranch:(NSString *)testSHA;
 - (BOOL) isRefOnHeadBranch:(PBGitRef *)testRef;
 - (BOOL) checkRefFormat:(NSString *)refName;
