@@ -11,6 +11,7 @@
 #import "PBGitCommitController.h"
 #import "Terminal.h"
 #import "PBCloneRepsitoryToSheet.h"
+#import "PBGitSidebarController.h"
 
 @implementation PBGitWindowController
 
@@ -19,17 +20,16 @@
 
 - (id)initWithRepository:(PBGitRepository*)theRepository displayDefault:(BOOL)displayDefault
 {
-	if(self = [self initWithWindowNibName:@"RepositoryWindow"])
-	{
-		self.repository = theRepository;
-		[self showWindow:nil];
-	}
-	
-	if (displayDefault) {
+	if (!(self = [self initWithWindowNibName:@"RepositoryWindow"]))
+		return nil;
+
+	self.repository = theRepository;
+	[self showWindow:nil];
+
+	if (displayDefault)
 		self.selectedViewIndex = [[NSUserDefaults standardUserDefaults] integerForKey:@"selectedViewIndex"];
-	} else {
+	else
 		self.selectedViewIndex = -1;
-	}
 
 	return self;
 }

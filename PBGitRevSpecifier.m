@@ -47,9 +47,19 @@
 	[revspec setDescription:@"Local branches"];
 	return revspec;
 }
+
 - (BOOL) isSimpleRef
 {
-	return ([parameters count] == 1 && ![[parameters objectAtIndex:0] hasPrefix:@"-"]);
+	if ([parameters count] > 1)
+		return NO;
+
+	NSString *param = [parameters objectAtIndex:0];
+	if ([param hasPrefix:@"-"] ||
+		[param rangeOfCharacterFromSet:[NSCharacterSet characterSetWithCharactersInString:@"^@{}~:"]].location != NSNotFound ||
+		[param rangeOfString:@".."].location != NSNotFound)
+		return NO;
+
+	return YES;
 }
 
 - (NSString*) simpleRef

@@ -9,7 +9,8 @@
 #import <Cocoa/Cocoa.h>
 #import "PBGitRepository.h"
 
-@class PBViewController;
+@class PBViewController, PBGitSidebarController;
+
 @interface PBGitWindowController : NSWindowController {
 	__weak PBGitRepository* repository;
 	int selectedViewIndex;
