@@ -223,47 +223,44 @@ NSString* PBGitRepositoryErrorDomain = @"GitXErrorDomain";
 		[refs setObject:[NSMutableArray arrayWithObject:ref] forKey:sha];
 }
 
-// reloadRefs: reload all refs in the repository, like in readRefs
-// To stay compatible, this does not remove a ref from the branches list
-// even after it has been deleted.
-// returns YES when a ref was changed
-- (BOOL) reloadRefs
+- (void) reloadRefs
 {
 	_headRef = nil;
-	BOOL ret = NO;
 
 	refs = [NSMutableDictionary dictionary];
+	NSMutableArray *oldBranches = [branches mutableCopy];
 
-	NSString* output = [PBEasyPipe outputForCommand:[PBGitBinary path]
-										   withArgs:[NSArray arrayWithObjects:@"for-each-ref", @"--format=%(refname) %(objecttype) %(objectname)"
-													 " %(*objectname)", @"refs", nil]
-											  inDir: self.fileURL.path];
-	NSArray* lines = [output componentsSeparatedByString:@"\n"];
+	NSArray *arguments = [NSArray arrayWithObjects:@"for-each-ref", @"--format=%(refname) %(objecttype) %(objectname) %(*objectname)", @"refs", nil];
+	NSString *output = [self outputForArguments:arguments];
+	NSArray *lines = [output componentsSeparatedByString:@"\n"];
 
-	for (NSString* line in lines) {
+	for (NSString *line in lines) {
 		// If its an empty line, skip it (e.g. with empty repositories)
 		if ([line length] == 0)
 			continue;
 
-		NSArray* components = [line componentsSeparatedByString:@" "];
+		NSArray *components = [line componentsSeparatedByString:@" "];
 
-		// First do the ref matching. If this ref is new, add it to our ref list
 		PBGitRef *newRef = [PBGitRef refFromString:[components objectAtIndex:0]];
-		PBGitRevSpecifier* revSpec = [[PBGitRevSpecifier alloc] initWithRef:newRef];
-		if ([self addBranch:revSpec] != revSpec)
-			ret = YES;
+		PBGitRevSpecifier *revSpec = [[PBGitRevSpecifier alloc] initWithRef:newRef];
 
-		// Also add this ref to the refs list
+		[self addBranch:revSpec];
 		[self addRef:newRef fromParameters:components];
+		[oldBranches removeObject:revSpec];
 	}
+
+	for (PBGitRevSpecifier *branch in oldBranches)
+		if ([branch isSimpleRef] && ![branch isEqual:[self headRef]])
+			[self removeBranch:branch];
 
 	// Add an "All branches" option in the branches list
 	[self addBranch:[PBGitRevSpecifier allBranchesRevSpec]];
 	[self addBranch:[PBGitRevSpecifier localBranchesRevSpec]];
 
-	[[[self windowController] window] setTitle:[self displayName]];
+	[self willChangeValueForKey:@"refs"];
+	[self didChangeValueForKey:@"refs"];
 
-	return ret;
+	[[[self windowController] window] setTitle:[self displayName]];
 }
 
 - (void) lazyReload

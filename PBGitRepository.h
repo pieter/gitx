@@ -65,7 +65,7 @@ extern NSString* PBGitRepositoryErrorDomain;
 - (NSString *)gitIgnoreFilename;
 - (BOOL)isBareRepository;
 
-- (BOOL) reloadRefs;
+- (void) reloadRefs;
 - (void) addRef:(PBGitRef *)ref fromParameters:(NSArray *)params;
 - (void) lazyReload;
 - (PBGitRevSpecifier*) headRef;
