@@ -46,4 +46,5 @@
 - (IBAction) revealInFinder:(id)sender;
 - (IBAction) openInTerminal:(id)sender;
 - (IBAction) cloneTo:(id)sender;
+- (IBAction) refresh:(id)sender;
 @end

@@ -151,6 +151,11 @@
 	[PBCloneRepsitoryToSheet beginCloneRepsitoryToSheetForRepository:repository];
 }
 
+- (IBAction) refresh:(id)sender
+{
+	[repository forceUpdateRevisions];
+}
+
 - (void) updateStatus
 {
 	NSString *status = contentController.status;
