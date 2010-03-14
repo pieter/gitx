@@ -17,12 +17,20 @@
 #import "PBGitSidebarController.h"
 #import "PBGitGradientBarView.h"
 #import "PBDiffWindowController.h"
+#import "PBGitDefaults.h"
+#import "PBGitRevList.h"
 #define QLPreviewPanel NSClassFromString(@"QLPreviewPanel")
 
 
 #define kHistorySelectedDetailIndexKey @"PBHistorySelectedDetailIndex"
 #define kHistoryDetailViewIndex 0
 #define kHistoryTreeViewIndex 1
+
+@interface PBGitHistoryController ()
+
+- (void) updateBranchFilterMatrix;
+
+@end
 
 
 @implementation PBGitHistoryController
@@ -32,10 +40,16 @@
 {
 	self.selectedCommitDetailsIndex = [[NSUserDefaults standardUserDefaults] integerForKey:kHistorySelectedDetailIndexKey];
 
-	[commitController addObserver:self forKeyPath:@"selection" options:(NSKeyValueObservingOptionNew,NSKeyValueObservingOptionOld) context:@"commitChange"];
+	[commitController addObserver:self forKeyPath:@"selection" options:0 context:@"commitChange"];
 	[commitController addObserver:self forKeyPath:@"arrangedObjects.@count" options:NSKeyValueObservingOptionInitial context:@"updateCommitCount"];
 	[treeController addObserver:self forKeyPath:@"selection" options:0 context:@"treeChange"];
+
+	[repository.revisionList addObserver:self forKeyPath:@"isUpdating" options:0 context:@"revisionListUpdating"];
+	[repository.revisionList addObserver:self forKeyPath:@"updatedGraph" options:0 context:@"revisionListUpdatedGraph"];
 	[repository addObserver:self forKeyPath:@"currentBranch" options:0 context:@"branchChange"];
+	[repository addObserver:self forKeyPath:@"refs" options:0 context:@"updateRefs"];
+
+	forceSelectionUpdate = YES;
 	NSSize cellSpacing = [commitList intercellSpacing];
 	cellSpacing.height = 0;
 	[commitList setIntercellSpacing:cellSpacing];
@@ -61,6 +75,7 @@
 	[scopeBarView setTopColor:[NSColor colorWithCalibratedHue:0.579 saturation:0.068 brightness:0.898 alpha:1.000] 
 				  bottomColor:[NSColor colorWithCalibratedHue:0.579 saturation:0.119 brightness:0.765 alpha:1.000]];
 	//[scopeBarView setTopShade:207/255.0 bottomShade:180/255.0];
+	[self updateBranchFilterMatrix];
 
 	[super awakeFromNib];
 }
@@ -85,6 +100,41 @@
 	[rebaseButton setEnabled:!isOnHeadBranch];
 }
 
+- (void) updateBranchFilterMatrix
+{
+	if ([repository.currentBranch isSimpleRef]) {
+		[allBranchesFilterItem setEnabled:YES];
+		[localRemoteBranchesFilterItem setEnabled:YES];
+
+		NSInteger filter = repository.currentBranchFilter;
+		[allBranchesFilterItem setState:(filter == kGitXAllBranchesFilter)];
+		[localRemoteBranchesFilterItem setState:(filter == kGitXLocalRemoteBranchesFilter)];
+		[selectedBranchFilterItem setState:(filter == kGitXSelectedBranchFilter)];
+	}
+	else {
+		[allBranchesFilterItem setState:NO];
+		[localRemoteBranchesFilterItem setState:NO];
+
+		[allBranchesFilterItem setEnabled:NO];
+		[localRemoteBranchesFilterItem setEnabled:NO];
+
+		[selectedBranchFilterItem setState:YES];
+	}
+
+	[selectedBranchFilterItem setTitle:[repository.currentBranch title]];
+	[selectedBranchFilterItem sizeToFit];
+
+	[localRemoteBranchesFilterItem setTitle:[[repository.currentBranch ref] isRemote] ? @"Remote" : @"Local"];
+}
+
+- (PBGitCommit *) firstCommit
+{
+	NSArray *arrangedObjects = [commitController arrangedObjects];
+	if ([arrangedObjects count] > 0)
+		return [arrangedObjects objectAtIndex:0];
+
+	return nil;
+}
 
 - (void) setSelectedCommitDetailsIndex:(int)detailsIndex
 {
@@ -93,7 +143,14 @@
 
 	selectedCommitDetailsIndex = detailsIndex;
 	[[NSUserDefaults standardUserDefaults] setInteger:selectedCommitDetailsIndex forKey:kHistorySelectedDetailIndexKey];
+	forceSelectionUpdate = YES;
 	[self updateKeys];
+}
+
+- (void) updateStatus
+{
+	self.isBusy = repository.revisionList.isUpdating;
+	self.status = [NSString stringWithFormat:@"%d commits loaded", [[commitController arrangedObjects] count]];
 }
 
 - (void) observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
@@ -102,20 +159,39 @@
 		[self updateKeys];
 		return;
 	}
-	else if ([(NSString *)context isEqualToString: @"treeChange"]) {
+
+	if ([(NSString *)context isEqualToString: @"treeChange"]) {
 		[self updateQuicklookForce: NO];
+		return;
 	}
-	else if([(NSString *)context isEqualToString:@"branchChange"]) {
+
+	if([(NSString *)context isEqualToString:@"branchChange"]) {
 		// Reset the sorting
-		commitController.sortDescriptors = [NSArray array];
-		[repository reloadRefs];
+		if ([[commitController sortDescriptors] count])
+			[commitController setSortDescriptors:[NSArray array]];
+		[self updateBranchFilterMatrix];
+		return;
 	}
-	else if([(NSString *)context isEqualToString:@"updateCommitCount"]) {
-		self.status = [NSString stringWithFormat:@"%d commits loaded", [[commitController arrangedObjects] count]];
+
+	if([(NSString *)context isEqualToString:@"updateRefs"]) {
+		[commitController rearrangeObjects];
+		return;
 	}
-	else {
-		[super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
+
+	if([(NSString *)context isEqualToString:@"updateCommitCount"] || [(NSString *)context isEqualToString:@"revisionListUpdating"]) {
+		[self updateStatus];
+		return;
 	}
+
+	if([(NSString *)context isEqualToString:@"revisionListUpdatedGraph"]) {
+		if ([repository.currentBranch isSimpleRef])
+			[self selectCommit:[repository shaForRef:[repository.currentBranch ref]]];
+		else
+			[self selectCommit:[[self firstCommit] realSha]];
+		return;
+	}
+
+	[super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
 }
 
 - (IBAction) openSelectedFile: sender
@@ -131,11 +207,21 @@
 - (IBAction) setDetailedView:(id)sender
 {
 	self.selectedCommitDetailsIndex = kHistoryDetailViewIndex;
+	forceSelectionUpdate = YES;
 }
 
 - (IBAction) setTreeView:(id)sender
 {
 	self.selectedCommitDetailsIndex = kHistoryTreeViewIndex;
+	forceSelectionUpdate = YES;
+}
+
+- (IBAction) setBranchFilter:(id)sender
+{
+	repository.currentBranchFilter = [sender tag];
+	[PBGitDefaults setBranchFilter:repository.currentBranchFilter];
+	[self updateBranchFilterMatrix];
+	forceSelectionUpdate = YES;
 }
 
 - (void)keyDown:(NSEvent*)event
@@ -193,8 +279,7 @@
 
 - (IBAction) refresh: sender
 {
-	[repository reloadRefs];
-	[repository.revisionList reload];
+	[repository forceUpdateRevisions];
 }
 
 - (void) updateView
@@ -207,13 +292,46 @@
 	return commitList;
 }
 
-- (void) selectCommit: (NSString*) commit
+- (void) scrollSelectionToTopOfViewFrom:(NSInteger)oldIndex
 {
-	NSPredicate* selection = [NSPredicate predicateWithFormat:@"realSha == %@", commit];
-	NSArray* selectedCommits = [repository.revisionList.commits filteredArrayUsingPredicate:selection];
-	[commitController setSelectedObjects: selectedCommits];
-	int index = [[commitController selectionIndexes] firstIndex];
-	[commitList scrollRowToVisible: index];
+	if (oldIndex == NSIntegerMax)
+		oldIndex = 0;
+
+	NSInteger newIndex = [[commitController selectionIndexes] firstIndex];
+
+	if (newIndex > oldIndex) {
+		NSInteger visibleRows = floorf([[commitList superview] bounds].size.height / [commitList rowHeight]);
+		newIndex += visibleRows - 1;
+		if (newIndex >= [[commitController content] count])
+			newIndex = [[commitController content] count] - 1;
+	}
+
+	[commitList scrollRowToVisible:newIndex];
+}
+
+- (NSArray *) selectedObjectsForSHA:(NSString *)commitSHA
+{
+	NSPredicate *selection = [NSPredicate predicateWithFormat:@"realSha == %@", commitSHA];
+	NSArray *selectedCommits = [[commitController content] filteredArrayUsingPredicate:selection];
+
+	if (([selectedCommits count] == 0) && [self firstCommit])
+		selectedCommits = [NSArray arrayWithObject:[self firstCommit]];
+
+	return selectedCommits;
+}
+
+- (void) selectCommit:(NSString *)commitSHA
+{
+	if (!forceSelectionUpdate && [[selectedCommit realSha] isEqualToString:commitSHA])
+		return;
+
+	NSInteger oldIndex = [[commitController selectionIndexes] firstIndex];
+
+	NSArray *selectedCommits = [self selectedObjectsForSHA:commitSHA];
+	[commitController setSelectedObjects:selectedCommits];
+
+	if (repository.currentBranchFilter != kGitXSelectedBranchFilter)
+		[self scrollSelectionToTopOfViewFrom:oldIndex];
 }
 
 - (BOOL) hasNonlinearPath

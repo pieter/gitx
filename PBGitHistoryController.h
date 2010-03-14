@@ -31,9 +31,13 @@
 	IBOutlet NSButton *rebaseButton;
 
 	IBOutlet PBGitGradientBarView *scopeBarView;
+	IBOutlet NSButton *allBranchesFilterItem;
+	IBOutlet NSButton *localRemoteBranchesFilterItem;
+	IBOutlet NSButton *selectedBranchFilterItem;
 
 	IBOutlet id webView;
 	int selectedCommitDetailsIndex;
+	BOOL forceSelectionUpdate;
 	
 	PBGitTree *gitTree;
 	PBGitCommit *webCommit;
@@ -48,6 +52,7 @@
 
 - (IBAction) setDetailedView:(id)sender;
 - (IBAction) setTreeView:(id)sender;
+- (IBAction) setBranchFilter:(id)sender;
 
 - (void) selectCommit: (NSString*) commit;
 - (IBAction) refresh: sender;

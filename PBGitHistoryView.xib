@@ -93,7 +93,6 @@
 				</object>
 				<string key="NSObjectClassName">PBGitCommit</string>
 				<object class="_NSManagedProxy" key="_NSManagedProxy"/>
-				<bool key="NSAvoidsEmptySelection">YES</bool>
 				<bool key="NSPreservesSelection">YES</bool>
 				<bool key="NSFilterRestrictsInsertion">YES</bool>
 				<bool key="NSClearsFilterPredicateOnInsertion">YES</bool>
@@ -102,7 +101,7 @@
 				<string key="NSClassName">PBWebHistoryController</string>
 			</object>
 			<object class="NSCustomView" id="319362431">
-				<nil key="NSNextResponder"/>
+				<reference key="NSNextResponder"/>
 				<int key="NSvFlags">4370</int>
 				<object class="NSMutableArray" key="NSSubviews">
 					<bool key="EncodedWithXMLCoder">YES</bool>
@@ -593,7 +592,7 @@
 															</object>
 														</object>
 														<double key="NSRowHeight">17</double>
-														<int key="NSTvFlags">-1019215872</int>
+														<int key="NSTvFlags">-750780416</int>
 														<reference key="NSDelegate"/>
 														<reference key="NSDataSource"/>
 														<string key="NSAutosaveName">CommitView</string>
@@ -662,6 +661,31 @@
 										<int key="NSvFlags">266</int>
 										<object class="NSMutableArray" key="NSSubviews">
 											<bool key="EncodedWithXMLCoder">YES</bool>
+											<object class="NSButton" id="832955200">
+												<reference key="NSNextResponder" ref="428755155"/>
+												<int key="NSvFlags">268</int>
+												<string key="NSFrame">{{49, 2}, {57, 17}}</string>
+												<reference key="NSSuperview" ref="428755155"/>
+												<int key="NSTag">1</int>
+												<bool key="NSEnabled">YES</bool>
+												<object class="NSButtonCell" key="NSCell" id="819755658">
+													<int key="NSCellFlags">67239424</int>
+													<int key="NSCellFlags2">134348800</int>
+													<string key="NSContents">Remote</string>
+													<object class="NSFont" key="NSSupport" id="689970718">
+														<string key="NSName">LucidaGrande-Bold</string>
+														<double key="NSSize">11</double>
+														<int key="NSfFlags">16</int>
+													</object>
+													<reference key="NSControlView" ref="832955200"/>
+													<int key="NSButtonFlags">-1232846593</int>
+													<int key="NSButtonFlags2">173</int>
+													<string key="NSAlternateContents"/>
+													<string key="NSKeyEquivalent"/>
+													<int key="NSPeriodicDelay">400</int>
+													<int key="NSPeriodicInterval">75</int>
+												</object>
+											</object>
 											<object class="NSSearchField" id="354285291">
 												<reference key="NSNextResponder" ref="428755155"/>
 												<int key="NSvFlags">265</int>
@@ -721,6 +745,47 @@
 														<int key="NSPeriodicInterval">75</int>
 													</object>
 													<int key="NSMaximumRecents">255</int>
+												</object>
+											</object>
+											<object class="NSButton" id="1055854415">
+												<reference key="NSNextResponder" ref="428755155"/>
+												<int key="NSvFlags">268</int>
+												<string key="NSFrame">{{114, 2}, {103, 17}}</string>
+												<reference key="NSSuperview" ref="428755155"/>
+												<int key="NSTag">2</int>
+												<bool key="NSEnabled">YES</bool>
+												<object class="NSButtonCell" key="NSCell" id="670683219">
+													<int key="NSCellFlags">67239424</int>
+													<int key="NSCellFlags2">131072</int>
+													<string key="NSContents">Selected Branch</string>
+													<reference key="NSSupport" ref="689970718"/>
+													<reference key="NSControlView" ref="1055854415"/>
+													<int key="NSButtonFlags">-1232846593</int>
+													<int key="NSButtonFlags2">173</int>
+													<string key="NSAlternateContents"/>
+													<string key="NSKeyEquivalent"/>
+													<int key="NSPeriodicDelay">400</int>
+													<int key="NSPeriodicInterval">75</int>
+												</object>
+											</object>
+											<object class="NSButton" id="884073279">
+												<reference key="NSNextResponder" ref="428755155"/>
+												<int key="NSvFlags">268</int>
+												<string key="NSFrame">{{11, 2}, {30, 17}}</string>
+												<reference key="NSSuperview" ref="428755155"/>
+												<bool key="NSEnabled">YES</bool>
+												<object class="NSButtonCell" key="NSCell" id="291056109">
+													<int key="NSCellFlags">67239424</int>
+													<int key="NSCellFlags2">134348800</int>
+													<string key="NSContents">All</string>
+													<reference key="NSSupport" ref="689970718"/>
+													<reference key="NSControlView" ref="884073279"/>
+													<int key="NSButtonFlags">-1232846593</int>
+													<int key="NSButtonFlags2">173</int>
+													<string key="NSAlternateContents"/>
+													<string key="NSKeyEquivalent"/>
+													<int key="NSPeriodicDelay">400</int>
+													<int key="NSPeriodicInterval">75</int>
 												</object>
 											</object>
 										</object>
@@ -1213,6 +1278,7 @@
 					</object>
 				</object>
 				<string key="NSFrameSize">{852, 432}</string>
+				<reference key="NSSuperview"/>
 				<string key="NSClassName">NSView</string>
 			</object>
 			<object class="NSCustomObject" id="892732705">
@@ -1812,6 +1878,54 @@
 					</object>
 					<int key="connectionID">354</int>
 				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
+						<string key="label">allBranchesFilterItem</string>
+						<reference key="source" ref="1001"/>
+						<reference key="destination" ref="884073279"/>
+					</object>
+					<int key="connectionID">381</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
+						<string key="label">selectedBranchFilterItem</string>
+						<reference key="source" ref="1001"/>
+						<reference key="destination" ref="1055854415"/>
+					</object>
+					<int key="connectionID">383</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">setBranchFilter:</string>
+						<reference key="source" ref="1001"/>
+						<reference key="destination" ref="1055854415"/>
+					</object>
+					<int key="connectionID">384</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">setBranchFilter:</string>
+						<reference key="source" ref="1001"/>
+						<reference key="destination" ref="884073279"/>
+					</object>
+					<int key="connectionID">386</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">setBranchFilter:</string>
+						<reference key="source" ref="1001"/>
+						<reference key="destination" ref="832955200"/>
+					</object>
+					<int key="connectionID">391</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
+						<string key="label">localRemoteBranchesFilterItem</string>
+						<reference key="source" ref="1001"/>
+						<reference key="destination" ref="832955200"/>
+					</object>
+					<int key="connectionID">393</int>
+				</object>
 			</object>
 			<object class="IBMutableOrderedSet" key="objectRecords">
 				<object class="NSArray" key="orderedObjects">
@@ -2145,6 +2259,9 @@
 						<object class="NSMutableArray" key="children">
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<reference ref="354285291"/>
+							<reference ref="884073279"/>
+							<reference ref="1055854415"/>
+							<reference ref="832955200"/>
 						</object>
 						<reference key="parent" ref="24227530"/>
 						<string key="objectName">Commits Scope Bar</string>
@@ -2312,6 +2429,48 @@
 						<reference key="object" ref="760195759"/>
 						<reference key="parent" ref="258088911"/>
 					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">355</int>
+						<reference key="object" ref="884073279"/>
+						<object class="NSMutableArray" key="children">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+							<reference ref="291056109"/>
+						</object>
+						<reference key="parent" ref="428755155"/>
+					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">356</int>
+						<reference key="object" ref="291056109"/>
+						<reference key="parent" ref="884073279"/>
+					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">359</int>
+						<reference key="object" ref="1055854415"/>
+						<object class="NSMutableArray" key="children">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+							<reference ref="670683219"/>
+						</object>
+						<reference key="parent" ref="428755155"/>
+					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">360</int>
+						<reference key="object" ref="670683219"/>
+						<reference key="parent" ref="1055854415"/>
+					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">387</int>
+						<reference key="object" ref="832955200"/>
+						<object class="NSMutableArray" key="children">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+							<reference ref="819755658"/>
+						</object>
+						<reference key="parent" ref="428755155"/>
+					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">388</int>
+						<reference key="object" ref="819755658"/>
+						<reference key="parent" ref="832955200"/>
+					</object>
 				</object>
 			</object>
 			<object class="NSMutableDictionary" key="flattenedProperties">
@@ -2390,9 +2549,18 @@
 					<string>35.CustomClassName</string>
 					<string>35.IBPluginDependency</string>
 					<string>35.ImportedFromIB2</string>
+					<string>355.IBAttributePlaceholdersKey</string>
+					<string>355.IBPluginDependency</string>
+					<string>356.IBPluginDependency</string>
+					<string>359.IBAttributePlaceholdersKey</string>
+					<string>359.IBPluginDependency</string>
 					<string>36.IBPluginDependency</string>
 					<string>36.ImportedFromIB2</string>
+					<string>360.IBPluginDependency</string>
 					<string>38.IBPluginDependency</string>
+					<string>387.IBAttributePlaceholdersKey</string>
+					<string>387.IBPluginDependency</string>
+					<string>388.IBPluginDependency</string>
 					<string>39.IBPluginDependency</string>
 					<string>39.ImportedFromIB2</string>
 					<string>4.IBAttributePlaceholdersKey</string>
@@ -2523,8 +2691,38 @@
 					<string>PBGitRevisionCell</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<integer value="1"/>
+					<object class="NSMutableDictionary">
+						<string key="NS.key.0">ToolTip</string>
+						<object class="IBToolTipAttribute" key="NS.object.0">
+							<string key="name">ToolTip</string>
+							<reference key="object" ref="884073279"/>
+							<string key="toolTip">View commits from all branches</string>
+						</object>
+					</object>
+					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
+					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
+					<object class="NSMutableDictionary">
+						<string key="NS.key.0">ToolTip</string>
+						<object class="IBToolTipAttribute" key="NS.object.0">
+							<string key="name">ToolTip</string>
+							<reference key="object" ref="1055854415"/>
+							<string key="toolTip">View commits from the selected branch only</string>
+						</object>
+					</object>
+					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<integer value="1"/>
+					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
+					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
+					<object class="NSMutableDictionary">
+						<string key="NS.key.0">ToolTip</string>
+						<object class="IBToolTipAttribute" key="NS.object.0">
+							<string key="name">ToolTip</string>
+							<reference key="object" ref="832955200"/>
+							<string key="toolTip">View commits from only local or remote branches</string>
+						</object>
+					</object>
+					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<integer value="1"/>
@@ -2564,7 +2762,7 @@
 				</object>
 			</object>
 			<nil key="sourceID"/>
-			<int key="maxID">354</int>
+			<int key="maxID">393</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<object class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -2638,8 +2836,8 @@
 							<string>openSelectedFile:</string>
 							<string>rebase:</string>
 							<string>refresh:</string>
+							<string>setBranchFilter:</string>
 							<string>setDetailedView:</string>
-							<string>setRawView:</string>
 							<string>setTreeView:</string>
 							<string>showAddRemoteSheet:</string>
 							<string>showCommitsFromTree:</string>
@@ -2669,16 +2867,19 @@
 						<bool key="EncodedWithXMLCoder">YES</bool>
 						<object class="NSArray" key="dict.sortedKeys">
 							<bool key="EncodedWithXMLCoder">YES</bool>
+							<string>allBranchesFilterItem</string>
 							<string>cherryPickButton</string>
 							<string>commitController</string>
 							<string>commitList</string>
 							<string>fileBrowser</string>
 							<string>historySplitView</string>
+							<string>localRemoteBranchesFilterItem</string>
 							<string>mergeButton</string>
 							<string>rebaseButton</string>
 							<string>refController</string>
 							<string>scopeBarView</string>
 							<string>searchField</string>
+							<string>selectedBranchFilterItem</string>
 							<string>treeController</string>
 							<string>upperToolbarView</string>
 							<string>webView</string>
@@ -2686,15 +2887,18 @@
 						<object class="NSMutableArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<string>NSButton</string>
+							<string>NSButton</string>
 							<string>NSArrayController</string>
 							<string>NSTableView</string>
 							<string>NSOutlineView</string>
 							<string>PBCollapsibleSplitView</string>
 							<string>NSButton</string>
 							<string>NSButton</string>
+							<string>NSButton</string>
 							<string>PBRefController</string>
 							<string>PBGitGradientBarView</string>
 							<string>NSSearchField</string>
+							<string>NSButton</string>
 							<string>NSTreeController</string>
 							<string>PBGitGradientBarView</string>
 							<string>id</string>
@@ -2767,6 +2971,7 @@
 							<string>copySHA:</string>
 							<string>createBranch:</string>
 							<string>createTag:</string>
+							<string>diffWithHEAD:</string>
 							<string>fetchRemote:</string>
 							<string>merge:</string>
 							<string>pullRemote:</string>
@@ -2778,6 +2983,7 @@
 						</object>
 						<object class="NSMutableArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
+							<string>PBRefMenuItem</string>
 							<string>PBRefMenuItem</string>
 							<string>PBRefMenuItem</string>
 							<string>PBRefMenuItem</string>
@@ -3642,6 +3848,7 @@
 				<string>AddLabelTemplate</string>
 				<string>CherryPickTemplate</string>
 				<string>MergeTemplate</string>
+				<string>NSQuickLookTemplate</string>
 				<string>RebaseTemplate</string>
 			</object>
 			<object class="NSMutableArray" key="dict.values">
@@ -3650,6 +3857,7 @@
 				<string>{23, 12}</string>
 				<string>{18.5143, 12.3429}</string>
 				<string>{16.4571, 12.3429}</string>
+				<string>{19, 11}</string>
 				<string>{16.4571, 13.3714}</string>
 			</object>
 		</object>

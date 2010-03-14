@@ -24,6 +24,7 @@
 #define kShowStageView @"PBShowStageView"
 #define kOpenPreviousDocumentsOnLaunch @"PBOpenPreviousDocumentsOnLaunch"
 #define kPreviousDocumentPaths @"PBPreviousDocumentPaths"
+#define kBranchFilterState @"PBBranchFilter"
 
 @implementation PBGitDefaults
 
@@ -158,6 +159,15 @@
 + (void) removePreviousDocumentPaths
 {
 	[[NSUserDefaults standardUserDefaults] removeObjectForKey:kPreviousDocumentPaths];
+}
++ (NSInteger) branchFilter
+{
+	return [[NSUserDefaults standardUserDefaults] integerForKey:kBranchFilterState];
+}
+
++ (void) setBranchFilter:(NSInteger)state
+{
+	[[NSUserDefaults standardUserDefaults] setInteger:state forKey:kBranchFilterState];
 }
 
 @end

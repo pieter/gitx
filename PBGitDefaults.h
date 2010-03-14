@@ -32,5 +32,7 @@
 + (void) setPreviousDocumentPaths:(NSArray *)documentPaths;
 + (NSArray *) previousDocumentPaths;
 + (void) removePreviousDocumentPaths;
++ (NSInteger) branchFilter;
++ (void) setBranchFilter:(NSInteger)state;
 
 @end

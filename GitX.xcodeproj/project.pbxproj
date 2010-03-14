@@ -56,6 +56,8 @@
 		D828A5F31128AE7200F09D11 /* PullTemplate.png in Resources */ = {isa = PBXBuildFile; fileRef = D828A5F01128AE7200F09D11 /* PullTemplate.png */; };
 		D828A5F41128AE7200F09D11 /* PushTemplate.png in Resources */ = {isa = PBXBuildFile; fileRef = D828A5F11128AE7200F09D11 /* PushTemplate.png */; };
 		D828AEEC112F411100F09D11 /* CloneRepositoryTemplate.png in Resources */ = {isa = PBXBuildFile; fileRef = D828AEEB112F411100F09D11 /* CloneRepositoryTemplate.png */; };
+		D8295D2A1130A1DC00C838E8 /* PBGitHistoryList.m in Sources */ = {isa = PBXBuildFile; fileRef = D8295D291130A1DC00C838E8 /* PBGitHistoryList.m */; };
+		D8295DE01130E43900C838E8 /* PBGitHistoryGrapher.m in Sources */ = {isa = PBXBuildFile; fileRef = D8295DDF1130E43900C838E8 /* PBGitHistoryGrapher.m */; };
 		D8357535112640F100DE249D /* PBRemoteProgressSheet.xib in Resources */ = {isa = PBXBuildFile; fileRef = D8C1B77110E875CF009B7F8B /* PBRemoteProgressSheet.xib */; };
 		D854948610D5C01B0083B917 /* PBCreateBranchSheet.m in Sources */ = {isa = PBXBuildFile; fileRef = D854948510D5C01B0083B917 /* PBCreateBranchSheet.m */; };
 		D85810551127476E007F254B /* StageView.png in Resources */ = {isa = PBXBuildFile; fileRef = D85810541127476E007F254B /* StageView.png */; };
@@ -266,6 +268,10 @@
 		D828A5F01128AE7200F09D11 /* PullTemplate.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = PullTemplate.png; path = Images/PullTemplate.png; sourceTree = "<group>"; };
 		D828A5F11128AE7200F09D11 /* PushTemplate.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = PushTemplate.png; path = Images/PushTemplate.png; sourceTree = "<group>"; };
 		D828AEEB112F411100F09D11 /* CloneRepositoryTemplate.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = CloneRepositoryTemplate.png; path = Images/CloneRepositoryTemplate.png; sourceTree = "<group>"; };
+		D8295D281130A1DC00C838E8 /* PBGitHistoryList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PBGitHistoryList.h; sourceTree = "<group>"; };
+		D8295D291130A1DC00C838E8 /* PBGitHistoryList.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PBGitHistoryList.m; sourceTree = "<group>"; };
+		D8295DDE1130E43900C838E8 /* PBGitHistoryGrapher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PBGitHistoryGrapher.h; sourceTree = "<group>"; };
+		D8295DDF1130E43900C838E8 /* PBGitHistoryGrapher.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PBGitHistoryGrapher.m; sourceTree = "<group>"; };
 		D854948410D5C01B0083B917 /* PBCreateBranchSheet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PBCreateBranchSheet.h; sourceTree = "<group>"; };
 		D854948510D5C01B0083B917 /* PBCreateBranchSheet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PBCreateBranchSheet.m; sourceTree = "<group>"; };
 		D854949310D5C3E20083B917 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/PBCreateBranchSheet.xib; sourceTree = "<group>"; };
@@ -815,8 +821,12 @@
 				F56524EF0E02D45200F03B52 /* PBGitCommit.m */,
 				F5C007730E731B48007B84B2 /* PBGitRef.h */,
 				F5C007740E731B48007B84B2 /* PBGitRef.m */,
+				D8295D281130A1DC00C838E8 /* PBGitHistoryList.h */,
+				D8295D291130A1DC00C838E8 /* PBGitHistoryList.m */,
 				F5FF4E160E0829C20006317A /* PBGitRevList.h */,
 				F5FF4E170E0829C20006317A /* PBGitRevList.mm */,
+				D8295DDE1130E43900C838E8 /* PBGitHistoryGrapher.h */,
+				D8295DDF1130E43900C838E8 /* PBGitHistoryGrapher.m */,
 				F53FF2030E7ABB5300389171 /* PBGitRevSpecifier.h */,
 				F53FF2040E7ABB5300389171 /* PBGitRevSpecifier.m */,
 				F56174550E058893001DCD79 /* PBGitTree.h */,
@@ -1163,6 +1173,8 @@
 				D8A4BB6F11337D5C00E92D51 /* PBGitGradientBarView.m in Sources */,
 				D828A40D1127B18700F09D11 /* PBSourceViewCell.m in Sources */,
 				D828A4111127B1C400F09D11 /* PBSourceViewBadge.m in Sources */,
+				D8295D2A1130A1DC00C838E8 /* PBGitHistoryList.m in Sources */,
+				D8295DE01130E43900C838E8 /* PBGitHistoryGrapher.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -106,8 +106,11 @@
 - (void) selectCurrentBranch
 {
 	PBGitRevSpecifier *rev = repository.currentBranch;
-	if (!rev)
+	if (!rev) {
+		[repository reloadRefs];
+		[repository readCurrentBranch];
 		return;
+	}
 	
 	PBSourceViewItem *item = nil;
 	for (PBSourceViewItem *it in items)
@@ -178,7 +181,8 @@
 	PBSourceViewItem *item = [sourceView itemAtRow:index];
 
 	if ([item revSpecifier]) {
-		repository.currentBranch = [item revSpecifier];
+		if (![repository.currentBranch isEqual:[item revSpecifier]])
+			repository.currentBranch = [item revSpecifier];
 		[superController changeContentController:historyViewController];
 		[PBGitDefaults setShowStageView:NO];
 	}

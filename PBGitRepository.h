@@ -7,23 +7,29 @@
 //
 
 #import <Cocoa/Cocoa.h>
-#import "PBGitRevList.h"
+#import "PBGitHistoryList.h"
 #import "PBGitRevSpecifier.h"
 #import "PBGitConfig.h"
 #import "PBGitRefish.h"
 
 extern NSString* PBGitRepositoryErrorDomain;
+enum branchFilterTypes {
+	kGitXAllBranchesFilter = 0,
+	kGitXLocalRemoteBranchesFilter,
+	kGitXSelectedBranchFilter
+};
 
 @class PBGitWindowController;
 @class PBGitCommit;
 
 @interface PBGitRepository : NSDocument {
-	PBGitRevList* revisionList;
+	PBGitHistoryList* revisionList;
 	PBGitConfig *config;
 
 	BOOL hasChanged;
 	NSMutableArray *branches;
 	PBGitRevSpecifier *currentBranch;
+	NSInteger currentBranchFilter;
 	NSMutableDictionary *refs;
 
 	PBGitRevSpecifier *_headRef; // Caching
@@ -96,12 +102,14 @@ extern NSString* PBGitRepositoryErrorDomain;
 
 - (id) initWithURL: (NSURL*) path;
 - (void) setup;
+- (void) forceUpdateRevisions;
 
 @property (assign) BOOL hasChanged;
 @property (readonly) PBGitWindowController *windowController;
 @property (readonly) PBGitConfig *config;
-@property (retain) PBGitRevList* revisionList;
+@property (retain) PBGitHistoryList *revisionList;
 @property (assign) NSMutableArray* branches;
 @property (assign) PBGitRevSpecifier *currentBranch;
+@property (assign) NSInteger currentBranchFilter;
 @property (retain) NSMutableDictionary* refs;
 @end

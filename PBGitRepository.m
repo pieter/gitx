@@ -16,12 +16,15 @@
 #import "PBGitRef.h"
 #import "PBGitRevSpecifier.h"
 #import "PBRemoteProgressSheet.h"
+#import "PBGitRevList.h"
+#import "PBGitDefaults.h"
 
 NSString* PBGitRepositoryErrorDomain = @"GitXErrorDomain";
 
 @implementation PBGitRepository
 
 @synthesize revisionList, branches, currentBranch, refs, hasChanged, config;
+@synthesize currentBranchFilter;
 
 - (BOOL)readFromData:(NSData *)data ofType:(NSString *)typeName error:(NSError **)outError
 {
@@ -113,7 +116,6 @@ NSString* PBGitRepositoryErrorDomain = @"GitXErrorDomain";
 
 	[self setFileURL:gitDirURL];
 	[self setup];
-	[self readCurrentBranch];
 	return YES;
 }
 
@@ -122,7 +124,8 @@ NSString* PBGitRepositoryErrorDomain = @"GitXErrorDomain";
 	config = [[PBGitConfig alloc] initWithRepositoryPath:[[self fileURL] path]];
 	self.branches = [NSMutableArray array];
 	[self reloadRefs];
-	revisionList = [[PBGitRevList alloc] initWithRepository:self];
+	currentBranchFilter = [PBGitDefaults branchFilter];
+	revisionList = [[PBGitHistoryList alloc] initWithRepository:self];
 }
 
 - (id) initWithURL: (NSURL*) path
@@ -148,6 +151,11 @@ NSString* PBGitRepositoryErrorDomain = @"GitXErrorDomain";
 	[self showWindows];
 
 	return self;
+}
+
+- (void) forceUpdateRevisions
+{
+	[revisionList forceUpdate];
 }
 
 - (BOOL)isDocumentEdited
@@ -253,10 +261,6 @@ NSString* PBGitRepositoryErrorDomain = @"GitXErrorDomain";
 		if ([branch isSimpleRef] && ![branch isEqual:[self headRef]])
 			[self removeBranch:branch];
 
-	// Add an "All branches" option in the branches list
-	[self addBranch:[PBGitRevSpecifier allBranchesRevSpec]];
-	[self addBranch:[PBGitRevSpecifier localBranchesRevSpec]];
-
 	[self willChangeValueForKey:@"refs"];
 	[self didChangeValueForKey:@"refs"];
 
@@ -268,8 +272,7 @@ NSString* PBGitRepositoryErrorDomain = @"GitXErrorDomain";
 	if (!hasChanged)
 		return;
 
-	[self reloadRefs];
-	[self.revisionList reload];
+	[self.revisionList updateHistory];
 	hasChanged = NO;
 }
 
@@ -328,7 +331,7 @@ NSString* PBGitRepositoryErrorDomain = @"GitXErrorDomain";
 {
 	if (!sha)
 		return nil;
-	NSArray *revList = [self.revisionList.commits copy];
+	NSArray *revList = revisionList.projectCommits;
 
 	for (PBGitCommit *commit in revList)
 		if ([[commit realSha] isEqualToString:sha])
