@@ -153,7 +153,7 @@
 
 - (IBAction) refresh:(id)sender
 {
-	[repository forceUpdateRevisions];
+	[contentController refresh:self];
 }
 
 - (void) updateStatus
