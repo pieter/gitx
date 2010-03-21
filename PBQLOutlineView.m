@@ -28,7 +28,7 @@
 - (void) keyDown: (NSEvent *) event
 {
 	if ([[event characters] isEqualToString:@" "]) {
-		[controller toggleQuickView:self];
+		[controller toggleQLPreviewPanel:self];
 		return;
 	}
 

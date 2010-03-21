@@ -15,6 +15,7 @@
 @class PBGitSidebarController;
 @class PBGitGradientBarView;
 @class PBRefController;
+@class QLPreviewPanel;
 
 @interface PBGitHistoryController : PBViewController {
 	IBOutlet PBRefController *refController;
@@ -24,6 +25,7 @@
 	IBOutlet NSOutlineView* fileBrowser;
 	IBOutlet NSTableView* commitList;
 	IBOutlet PBCollapsibleSplitView *historySplitView;
+    QLPreviewPanel* previewPanel;
 
 	IBOutlet PBGitGradientBarView *upperToolbarView;
 	IBOutlet NSButton *mergeButton;
@@ -56,7 +58,7 @@
 
 - (void) selectCommit: (NSString*) commit;
 - (IBAction) refresh: sender;
-- (IBAction) toggleQuickView: sender;
+- (IBAction) toggleQLPreviewPanel:(id)sender;
 - (IBAction) openSelectedFile: sender;
 - (void) updateQuicklookForce: (BOOL) force;
 

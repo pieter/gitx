@@ -28,8 +28,9 @@
 #endif
 
 	if(self = [super init]) {
-		if(![[NSBundle bundleWithPath:@"/System/Library/PrivateFrameworks/QuickLookUI.framework"] load])
-			NSLog(@"Could not load QuickLook");
+        if(![[NSBundle bundleWithPath:@"/System/Library/Frameworks/Quartz.framework/Frameworks/QuickLookUI.framework"] load])
+			if(![[NSBundle bundleWithPath:@"/System/Library/PrivateFrameworks/QuickLookUI.framework"] load])
+				NSLog(@"Could not load QuickLook");
 
 		self.cliProxy = [PBCLIProxy new];
 	}

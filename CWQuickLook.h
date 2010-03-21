@@ -1,5 +1,12 @@
 @interface QLPreviewPanel : NSPanel
 + (id)sharedPreviewPanel;
+
+// part of the public QL API
++ (BOOL)sharedPreviewPanelExists;
+- (void)reloadData;
+- (void)setDataSource:(id)source;
+
+// the private QL API
 + (id)_previewPanel;
 + (BOOL)isSharedPreviewPanelLoaded;
 - (id)initWithContentRect:(struct _NSRect)fp8 styleMask:(unsigned int)fp24 backing:(unsigned int)fp28 defer:(BOOL)fp32;

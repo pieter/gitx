@@ -245,36 +245,49 @@
 	
 }
 
-- (IBAction) toggleQuickView: sender
+- (IBAction) toggleQLPreviewPanel:(id)sender
 {
-	id panel = [QLPreviewPanel sharedPreviewPanel];
-	if ([panel isOpen]) {
-		[panel closePanel];
-	} else {
-		[[QLPreviewPanel sharedPreviewPanel] makeKeyAndOrderFrontWithEffect:1];
-		[self updateQuicklookForce: YES];
+	if ([[QLPreviewPanel sharedPreviewPanel] respondsToSelector:@selector(setDataSource:)]) {
+		// Public QL API
+		if ([QLPreviewPanel sharedPreviewPanelExists] && [[QLPreviewPanel sharedPreviewPanel] isVisible])
+			[[QLPreviewPanel sharedPreviewPanel] orderOut:nil];
+		else
+			[[QLPreviewPanel sharedPreviewPanel] makeKeyAndOrderFront:nil];
+	}
+	else {
+		// Private QL API (10.5 only)
+		if ([[QLPreviewPanel sharedPreviewPanel] isOpen])
+			[[QLPreviewPanel sharedPreviewPanel] closePanel];
+		else {
+			[[QLPreviewPanel sharedPreviewPanel] makeKeyAndOrderFrontWithEffect:1];
+			[self updateQuicklookForce:YES];
+		}
 	}
 }
 
-- (void) updateQuicklookForce: (BOOL) force
+- (void) updateQuicklookForce:(BOOL)force
 {
 	if (!force && ![[QLPreviewPanel sharedPreviewPanel] isOpen])
 		return;
-	
-	NSArray* selectedFiles = [treeController selectedObjects];
-	
-	if ([selectedFiles count] == 0)
-		return;
-	
-	NSMutableArray* fileNames = [NSMutableArray array];
-	for (PBGitTree* tree in selectedFiles) {
-		NSString* s = [tree tmpFileNameForContents];
-		if (s)
-			[fileNames addObject:[NSURL fileURLWithPath: s]];
+
+	if ([[QLPreviewPanel sharedPreviewPanel] respondsToSelector:@selector(setDataSource:)]) {
+		// Public QL API
+		[previewPanel reloadData];
 	}
-	
-	[[QLPreviewPanel sharedPreviewPanel] setURLs:fileNames currentIndex:0 preservingDisplayState:YES];
-	
+	else {
+		// Private QL API (10.5 only)
+		NSArray *selectedFiles = [treeController selectedObjects];
+
+		NSMutableArray *fileNames = [NSMutableArray array];
+		for (PBGitTree *tree in selectedFiles) {
+			NSString *filePath = [tree tmpFileNameForContents];
+			if (filePath)
+				[fileNames addObject:[NSURL fileURLWithPath:filePath]];
+		}
+
+		if ([fileNames count])
+			[[QLPreviewPanel sharedPreviewPanel] setURLs:fileNames currentIndex:0 preservingDisplayState:YES];
+	}
 }
 
 - (IBAction) refresh: sender
@@ -535,6 +548,85 @@
 		[repository rebaseBranch:headRef onRefish:selectedCommit];
 	}
 }
-	
+
+#pragma mark -
+#pragma mark Quick Look Public API support
+
+@protocol QLPreviewItem;
+
+#pragma mark (QLPreviewPanelController)
+
+- (BOOL) acceptsPreviewPanelControl:(id)panel
+{
+    return YES;
+}
+
+- (void)beginPreviewPanelControl:(id)panel
+{
+    // This document is now responsible of the preview panel
+    // It is allowed to set the delegate, data source and refresh panel.
+    previewPanel = panel;
+	[previewPanel setDelegate:self];
+	[previewPanel setDataSource:self];
+}
+
+- (void)endPreviewPanelControl:(id)panel
+{
+    // This document loses its responsisibility on the preview panel
+    // Until the next call to -beginPreviewPanelControl: it must not
+    // change the panel's delegate, data source or refresh it.
+    previewPanel = nil;
+}
+
+#pragma mark <QLPreviewPanelDataSource>
+
+- (NSInteger)numberOfPreviewItemsInPreviewPanel:(id)panel
+{
+    return [[fileBrowser selectedRowIndexes] count];
+}
+
+- (id <QLPreviewItem>)previewPanel:(id)panel previewItemAtIndex:(NSInteger)index
+{
+	PBGitTree *treeItem = (PBGitTree *)[[treeController selectedObjects] objectAtIndex:index];
+	NSURL *previewURL = [NSURL fileURLWithPath:[treeItem tmpFileNameForContents]];
+
+    return (<QLPreviewItem>)previewURL;
+}
+
+#pragma mark <QLPreviewPanelDelegate>
+
+- (BOOL)previewPanel:(id)panel handleEvent:(NSEvent *)event
+{
+    // redirect all key down events to the table view
+    if ([event type] == NSKeyDown) {
+        [fileBrowser keyDown:event];
+        return YES;
+    }
+    return NO;
+}
+
+// This delegate method provides the rect on screen from which the panel will zoom.
+- (NSRect)previewPanel:(id)panel sourceFrameOnScreenForPreviewItem:(id <QLPreviewItem>)item
+{
+    NSInteger index = [fileBrowser rowForItem:[[treeController selectedNodes] objectAtIndex:0]];
+    if (index == NSNotFound) {
+        return NSZeroRect;
+    }
+
+    NSRect iconRect = [fileBrowser frameOfCellAtColumn:0 row:index];
+
+    // check that the icon rect is visible on screen
+    NSRect visibleRect = [fileBrowser visibleRect];
+
+    if (!NSIntersectsRect(visibleRect, iconRect)) {
+        return NSZeroRect;
+    }
+
+    // convert icon rect to screen coordinates
+    iconRect = [fileBrowser convertRectToBase:iconRect];
+    iconRect.origin = [[fileBrowser window] convertBaseToScreen:iconRect.origin];
+
+    return iconRect;
+}
 
 @end

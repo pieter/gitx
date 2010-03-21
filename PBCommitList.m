@@ -28,12 +28,15 @@
 		return;
 	}
 
-	if ([character isEqualToString:@" "])
-	{
-		if ([event modifierFlags] & NSShiftKeyMask)
-			[webView scrollPageUp: self];
+	if ([character isEqualToString:@" "]) {
+		if (controller.selectedCommitDetailsIndex == 0) {
+			if ([event modifierFlags] & NSShiftKeyMask)
+				[webView scrollPageUp:self];
+			else
+				[webView scrollPageDown:self];
+		}
 		else
-			[webView scrollPageDown: self];
+			[controller toggleQLPreviewPanel:self];
 	}
 	else if ([character rangeOfCharacterFromSet:[NSCharacterSet characterSetWithCharactersInString:@"jkcv"]].location == 0)
 		[webController sendKey: character];
