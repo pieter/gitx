@@ -23,6 +23,7 @@
 	IBOutlet NSArrayController* commitController;
 	IBOutlet NSTreeController* treeController;
 	IBOutlet NSOutlineView* fileBrowser;
+	NSArray *currentFileBrowserSelectionPath;
 	IBOutlet NSTableView* commitList;
 	IBOutlet PBCollapsibleSplitView *historySplitView;
     QLPreviewPanel* previewPanel;

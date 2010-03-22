@@ -29,6 +29,8 @@
 @interface PBGitHistoryController ()
 
 - (void) updateBranchFilterMatrix;
+- (void) restoreFileBrowserSelection;
+- (void) saveFileBrowserSelection;
 
 @end
 
@@ -89,8 +91,10 @@
 
 	selectedCommit = [[commitController selectedObjects] lastObject];
 
-	if (self.selectedCommitDetailsIndex == kHistoryTreeViewIndex)
+	if (self.selectedCommitDetailsIndex == kHistoryTreeViewIndex) {
 		self.gitTree = selectedCommit.tree;
+		[self restoreFileBrowserSelection];
+	}
 	else // kHistoryDetailViewIndex
 		self.webCommit = selectedCommit;
 
@@ -153,15 +157,60 @@
 	self.status = [NSString stringWithFormat:@"%d commits loaded", [[commitController arrangedObjects] count]];
 }
 
+- (void) restoreFileBrowserSelection
+{
+	if (self.selectedCommitDetailsIndex != kHistoryTreeViewIndex)
+		return;
+
+	NSArray *children = [treeController content];
+	if ([children count] == 0)
+		return;
+
+	NSIndexPath *path = [[NSIndexPath alloc] init];
+	if ([currentFileBrowserSelectionPath count] == 0)
+		path = [path indexPathByAddingIndex:0];
+	else {
+		for (NSString *pathComponent in currentFileBrowserSelectionPath) {
+			PBGitTree *child = nil;
+			NSUInteger childIndex = 0;
+			for (child in children) {
+				if ([child.path isEqualToString:pathComponent]) {
+					path = [path indexPathByAddingIndex:childIndex];
+					children = child.children;
+					break;
+				}
+				childIndex++;
+			}
+			if (!child)
+				return;
+		}
+	}
+
+	[treeController setSelectionIndexPath:path];
+}
+
+- (void) saveFileBrowserSelection
+{
+	NSArray *objects = [treeController selectedObjects];
+	NSArray *content = [treeController content];
+
+	if ([objects count] && [content count]) {
+		PBGitTree *treeItem = [objects objectAtIndex:0];
+		currentFileBrowserSelectionPath = [treeItem.fullPath componentsSeparatedByString:@"/"];
+	}
+}
+
 - (void) observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
 {
     if ([(NSString *)context isEqualToString: @"commitChange"]) {
 		[self updateKeys];
+		[self restoreFileBrowserSelection];
 		return;
 	}
 
 	if ([(NSString *)context isEqualToString: @"treeChange"]) {
 		[self updateQuicklookForce: NO];
+		[self saveFileBrowserSelection];
 		return;
 	}
 
