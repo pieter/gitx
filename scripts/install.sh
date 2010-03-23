@@ -20,19 +20,7 @@
 
 # Installs GitX.app to $CUSTOM_INSTALL_DIR from Install.xcconfig
 
-# returns 1 if $1 contains $2
-# and 0 if it does not
-function strcont() {
-    result="${1//*$2*/#}"
-    result="${result//#/$2}"
-    if [[ "$result" == "$2" ]]; then
-        echo 1
-    else
-        echo 0
-    fi
-}
-
-if [[ $(strcont $BUILD_STYLE "Install") == 1 ]]; then
+if [[ $BUILD_STYLE =~ "Install" ]]; then
     echo "Installing to ${CUSTOM_INSTALL_DIR}... (switch to build config other than Install to avoid)"
     if [[ -e /opt/local/bin/rsync ]]; then
         /opt/local/bin/rsync -rlHEptog --xattrs --acls "$BUILT_PRODUCTS_DIR/$FULL_PRODUCT_NAME" "$CUSTOM_INSTALL_DIR/"
