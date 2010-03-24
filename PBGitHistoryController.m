@@ -7,6 +7,7 @@
 //
 
 #import "PBGitHistoryController.h"
+#import "CWQuickLook.h"
 #import "PBGitGrapher.h"
 #import "PBGitRevisionCell.h"
 #import "PBCommitList.h"
@@ -340,12 +341,9 @@
 
 - (void) updateQuicklookForce:(BOOL)force
 {
-	if ((!force && ![[QLPreviewPanel sharedPreviewPanel] isVisible] && ![[QLPreviewPanel sharedPreviewPanel] isOpen]) 
-        || ![QLPreviewPanel sharedPreviewPanelExists])
-    {
-        return;
-    }
-
+	if (!force && ![[QLPreviewPanel sharedPreviewPanel] isOpen])
+		return;
+    
 	if ([[QLPreviewPanel sharedPreviewPanel] respondsToSelector:@selector(setDataSource:)]) {
 		// Public QL API
 		[previewPanel reloadData];
@@ -353,14 +351,14 @@
 	else {
 		// Private QL API (10.5 only)
 		NSArray *selectedFiles = [treeController selectedObjects];
-
+        
 		NSMutableArray *fileNames = [NSMutableArray array];
 		for (PBGitTree *tree in selectedFiles) {
 			NSString *filePath = [tree tmpFileNameForContents];
 			if (filePath)
 				[fileNames addObject:[NSURL fileURLWithPath:filePath]];
 		}
-
+        
 		if ([fileNames count])
 			[[QLPreviewPanel sharedPreviewPanel] setURLs:fileNames currentIndex:0 preservingDisplayState:YES];
 	}

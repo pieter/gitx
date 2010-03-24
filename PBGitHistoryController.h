@@ -11,7 +11,6 @@
 #import "PBGitTree.h"
 #import "PBViewController.h"
 #import "PBCollapsibleSplitView.h"
-#import <Quartz/Quartz.h> /* for the QLPreviewPanelDataSource et al. stuff */
 
 @class PBQLOutlineView;
 @class PBGitSidebarController;
@@ -19,7 +18,7 @@
 @class PBRefController;
 @class QLPreviewPanel;
 
-@interface PBGitHistoryController : PBViewController <QLPreviewPanelDataSource, QLPreviewPanelDelegate> {
+@interface PBGitHistoryController : PBViewController {
 	IBOutlet PBRefController *refController;
 	IBOutlet NSSearchField *searchField;
 	IBOutlet NSArrayController* commitController;
