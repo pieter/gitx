@@ -490,13 +490,6 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		080E96DDFE201D6D7F000001 /* Classes */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			name = Classes;
-			sourceTree = "<group>";
-		};
 		1058C7A0FEA54F0111CA2CBB /* Linked Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -540,15 +533,13 @@
 				654D18EE108C9589008D960C /* Config */,
 				654D18F5108C96BC008D960C /* Scripts */,
 				F5886A080ED5D26B0066E74C /* SpeedTest */,
-				913D5E420E5563FD00CECEA2 /* cli */,
+				654FEF1C115A1611004C8721 /* CLI */,
 				F57CC43E0E05E472000472E2 /* Aux */,
 				F57CC3850E05DDC1000472E2 /* Controllers */,
 				F56174540E05887E001DCD79 /* Git */,
 				654D17E7108C90E8008D960C /* html */,
 				7756732906782D8800D1FEB8 /* Models */,
-				080E96DDFE201D6D7F000001 /* Classes */,
 				29B97315FDCFA39411CA2CEA /* Other Sources */,
-				551BF118112F373E00265053 /* gitx_asskpasswd */,
 				29B97317FDCFA39411CA2CEA /* Resources */,
 				29B97323FDCFA39411CA2CEA /* Frameworks */,
 				19C28FACFE9D520D11CA2CBB /* Products */,
@@ -636,6 +627,15 @@
 			path = scripts;
 			sourceTree = "<group>";
 		};
+		654FEF1C115A1611004C8721 /* CLI */ = {
+			isa = PBXGroup;
+			children = (
+				913D5E420E5563FD00CECEA2 /* gitx */,
+				551BF118112F373E00265053 /* gitx_asskpasswd */,
+			);
+			name = CLI;
+			sourceTree = "<group>";
+		};
 		65F3543F11599F2400235D5B /* Images */ = {
 			isa = PBXGroup;
 			children = (
@@ -672,14 +672,14 @@
 			name = Models;
 			sourceTree = "<group>";
 		};
-		913D5E420E5563FD00CECEA2 /* cli */ = {
+		913D5E420E5563FD00CECEA2 /* gitx */ = {
 			isa = PBXGroup;
 			children = (
 				913D5E5D0E556A9300CECEA2 /* PBCLIProxy.h */,
 				913D5E5E0E556A9300CECEA2 /* PBCLIProxy.m */,
 				913D5E440E55640C00CECEA2 /* gitx.m */,
 			);
-			name = cli;
+			name = gitx;
 			sourceTree = "<group>";
 		};
 		D82F435F111B9C6D00A25A39 /* Sheets */ = {
@@ -1510,6 +1510,7 @@
 			buildSettings = {
 				GCC_ENABLE_OBJC_GC = required;
 				GCC_PREPROCESSOR_DEFINITIONS_NOT_USED_IN_PRECOMPS = DEBUG_BUILD;
+				GCC_VERSION = com.apple.compilers.llvmgcc42;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				INFOPLIST_PREPROCESS = YES;
@@ -1521,7 +1522,12 @@
 		26FC0A8A0875C7B200E6366F /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = (
+					ppc,
+					i386,
+				);
 				GCC_ENABLE_OBJC_GC = required;
+				GCC_VERSION = com.apple.compilers.llvmgcc42;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				INFOPLIST_PREFIX_HEADER = $PROJECT_TEMP_DIR/revision;
@@ -1605,13 +1611,13 @@
 					i386,
 				);
 				GCC_ENABLE_OBJC_GC = required;
-				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_VERSION = com.apple.compilers.llvmgcc42;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				INFOPLIST_PREFIX_HEADER = $PROJECT_TEMP_DIR/revision;
 				INFOPLIST_PREPROCESS = YES;
 				PREBINDING = NO;
-				SDKROOT = macosx10.6;
+				SDKROOT = macosx10.5;
 			};
 			name = Install;
 		};
