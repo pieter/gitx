@@ -27,6 +27,8 @@
 #define kPreviousDocumentPaths               @"PBPreviousDocumentPaths"
 #define kBranchFilterState                   @"PBBranchFilter"
 #define kShowRelativeDates                   @"PBShowRelativeDates"
+#define kTruncateInfoText                    @"PBTruncateInfoText"
+#define kTruncateInfoTextSize                @"PBTruncateInfoTextSize"
 
 @implementation PBGitDefaults
 
@@ -59,12 +61,26 @@
                       forKey:kOpenPreviousDocumentsOnLaunch];
     [defaultValues setObject:[NSNumber numberWithBool:YES]
                       forKey:kShowRelativeDates];
+    [defaultValues setObject:[NSNumber numberWithBool:YES]
+                      forKey:kTruncateInfoText];
+    [defaultValues setObject:[NSNumber numberWithInteger:1000]
+                      forKey:kTruncateInfoTextSize];
     [[NSUserDefaults standardUserDefaults] registerDefaults:defaultValues];
 }
 
 + (int) commitMessageViewVerticalLineLength
 {
 	return [[NSUserDefaults standardUserDefaults] integerForKey:kCommitMessageViewVerticalLineLength];
+}
+
++ (BOOL) truncateInfoText
+{
+	return [[NSUserDefaults standardUserDefaults] boolForKey:kTruncateInfoText];
+}
+
++ (NSInteger) truncateInfoTextSize
+{
+	return [[NSUserDefaults standardUserDefaults] integerForKey:kTruncateInfoTextSize];
 }
 
 + (BOOL) commitMessageViewHasVerticalLine

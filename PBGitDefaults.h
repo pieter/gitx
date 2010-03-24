@@ -12,6 +12,8 @@
 }
 
 + (int) commitMessageViewVerticalLineLength;
++ (NSInteger) truncateInfoTextSize;
++ (BOOL) truncateInfoText;
 + (BOOL) commitMessageViewHasVerticalLine;
 + (BOOL) isGistEnabled;
 + (BOOL) isGravatarEnabled;
