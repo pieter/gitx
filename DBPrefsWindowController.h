@@ -71,5 +71,6 @@
 - (void)crossFadeView:(NSView *)oldView withView:(NSView *)newView;
 - (NSRect)frameForView:(NSView *)view;
 
+- (NSString *)defaultViewIdentifier;
 
 @end

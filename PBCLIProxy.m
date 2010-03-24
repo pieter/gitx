@@ -63,7 +63,7 @@
 		[document.windowController showCommitView:self];
 	else {
 		PBGitRevSpecifier* rev = [[PBGitRevSpecifier alloc] initWithParameters:arguments];
-		rev.workingDirectory = repositoryPath;
+		rev.workingDirectory = url;
 		document.currentBranch = [document addBranch: rev];
 		[document.windowController showHistoryView:self];
 	}

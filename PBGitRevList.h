@@ -9,17 +9,24 @@
 #import <Cocoa/Cocoa.h>
 
 @class PBGitRepository;
+@class PBGitRevSpecifier;
 
 @interface PBGitRevList : NSObject {
-	NSArray* commits;
+	NSMutableArray *commits;
+
 	PBGitRepository *repository;
-	NSString* lastSha;
+	PBGitRevSpecifier *currentRev;
+	BOOL isGraphing;
+
+	NSThread *parseThread;
+	BOOL isParsing;
+	BOOL resetCommits;
 }
 
-- initWithRepository:(PBGitRepository *)repo;
-- (void) readCommitsForce: (BOOL) force;
-- (void) reload;
+- (id) initWithRepository:(PBGitRepository *)repo rev:(PBGitRevSpecifier *)rev shouldGraph:(BOOL)graph;
+- (void) loadRevisons;
 
-@property(retain) NSArray* commits;
+@property (retain) NSMutableArray *commits;
+@property (readonly) BOOL isParsing;
 
 @end

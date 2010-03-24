@@ -9,6 +9,10 @@
 #import "PBGitCommit.h"
 #import "PBGitDefaults.h"
 
+
+NSString * const kGitXCommitType = @"commit";
+
+
 @implementation PBGitCommit
 
 @synthesize repository, subject, timestamp, author, parentShas, nParents, sign, lineInfo;
@@ -111,6 +115,11 @@
 	return &sha;
 }
 
++ commitWithRepository:(PBGitRepository*)repo andSha:(git_oid)newSha
+{
+	return [[[self alloc] initWithRepository:repo andSha:newSha] autorelease];
+}
+
 - initWithRepository:(PBGitRepository*) repo andSha:(git_oid)newSha
 {
 	details = nil;
@@ -121,10 +130,32 @@
 
 - (NSString *)realSha
 {
-	char *hex = git_oid_allocfmt(&sha);
-	NSString *str = [NSString stringWithUTF8String:hex];
-	free(hex);
-	return str;
+	if (!realSHA) {
+		char *hex = git_oid_mkhex(&sha);
+		realSHA = [NSString stringWithUTF8String:hex];
+		free(hex);
+	}
+
+	return realSHA;
+}
+
+- (BOOL) isOnSameBranchAs:(PBGitCommit *)other
+{
+	if (!other)
+		return NO;
+
+	NSString *mySHA = [self realSha];
+	NSString *otherSHA = [other realSha];
+
+	if ([otherSHA isEqualToString:mySHA])
+		return YES;
+
+	return [repository isOnSameBranch:otherSHA asSHA:mySHA];
+}
+
+- (BOOL) isOnHeadBranch
+{
+	return [self isOnSameBranchAs:[repository headCommit]];
 }
 
 // FIXME: Remove this method once it's unused.
@@ -165,6 +196,18 @@
 	[self.refs removeObject:ref];
 }
 
+- (BOOL) hasRef:(PBGitRef *)ref
+{
+	if (!self.refs)
+		return NO;
+
+	for (PBGitRef *existingRef in self.refs)
+		if ([existingRef isEqualToRef:ref])
+			return YES;
+
+	return NO;
+}
+
 - (NSMutableArray *)refs
 {
 	return [[repository refs] objectForKey:[self realSha]];
@@ -189,4 +232,23 @@
 + (BOOL)isKeyExcludedFromWebScript:(const char *)name {
 	return NO;
 }
+
+
+#pragma mark <PBGitRefish>
+
+- (NSString *) refishName
+{
+	return [self realSha];
+}
+
+- (NSString *) shortName
+{
+	return [[self realSha] substringToIndex:10];
+}
+
+- (NSString *) refishType
+{
+	return kGitXCommitType;
+}
+
 @end

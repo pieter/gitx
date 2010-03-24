@@ -20,59 +20,81 @@
 
 using namespace std;
 
+
+@interface PBGitRevList ()
+
+@property (assign) BOOL isParsing;
+
+@end
+
+
+#define kRevListThreadKey @"thread"
+#define kRevListRevisionsKey @"revisions"
+
+
 @implementation PBGitRevList
 
 @synthesize commits;
-- (id)initWithRepository:(PBGitRepository *)repo
+@synthesize isParsing;
+
+
+- (id) initWithRepository:(PBGitRepository *)repo rev:(PBGitRevSpecifier *)rev shouldGraph:(BOOL)graph
 {
 	repository = repo;
-	[repository addObserver:self forKeyPath:@"currentBranch" options:0 context:nil];
+	isGraphing = graph;
+	currentRev = [rev copy];
 
 	return self;
 }
 
-- (void) reload
+
+- (void) loadRevisons
 {
-	[self readCommitsForce: YES];
+	[parseThread cancel];
+
+	parseThread = [[NSThread alloc] initWithTarget:self selector:@selector(walkRevisionListWithSpecifier:) object:currentRev];
+	self.isParsing = YES;
+	resetCommits = YES;
+	[parseThread start];
 }
 
-- (void) readCommitsForce: (BOOL) force
-{
-	// We use refparse to get the commit sha that we will parse. That way,
-	// we can check if the current branch is the same as the previous one
-	// and in that case we don't have to reload the revision list.
 
-	// If no branch is selected, don't do anything
-	if (![repository currentBranch])
+- (void) finishedParsing
+{
+	self.isParsing = NO;
+}
+
+
+- (void) updateCommits:(NSDictionary *)update
+{
+	if ([update objectForKey:kRevListThreadKey] != parseThread)
 		return;
 
-	PBGitRevSpecifier* newRev = [repository currentBranch];
-	NSString* newSha = nil;
+	NSArray *revisions = [update objectForKey:kRevListRevisionsKey];
+	if (!revisions || [revisions count] == 0)
+		return;
 
-	if (!force && newRev && [newRev isSimpleRef]) {
-		newSha = [repository parseReference:[newRev simpleRef]];
-		if ([newSha isEqualToString:lastSha])
-			return;
+	if (resetCommits) {
+		self.commits = [NSMutableArray array];
+		resetCommits = NO;
 	}
-	lastSha = newSha;
 
-	NSThread * commitThread = [[NSThread alloc] initWithTarget: self selector: @selector(walkRevisionListWithSpecifier:) object:newRev];
-	[commitThread start];
+	NSRange range = NSMakeRange([commits count], [revisions count]);
+	NSIndexSet *indexes = [NSIndexSet indexSetWithIndexesInRange:range];
+
+	[self willChange:NSKeyValueChangeInsertion valuesAtIndexes:indexes forKey:@"commits"];
+	[commits addObjectsFromArray:revisions];
+	[self didChange:NSKeyValueChangeInsertion valuesAtIndexes:indexes forKey:@"commits"];
 }
 
-- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object
-	change:(NSDictionary *)change context:(void *)context
-{
-	if (object == repository)
-		[self readCommitsForce: NO];
-}
 
-- (void) walkRevisionListWithSpecifier: (PBGitRevSpecifier*) rev
+- (void) walkRevisionListWithSpecifier:(PBGitRevSpecifier*)rev
 {
 	NSDate *start = [NSDate date];
-	NSMutableArray* revisions = [NSMutableArray array];
-	PBGitGrapher* g = [[PBGitGrapher alloc] initWithRepository: repository];
+	NSMutableArray *revisions = [NSMutableArray array];
+	PBGitGrapher *g = [[PBGitGrapher alloc] initWithRepository:repository];
 	std::map<string, NSStringEncoding> encodingMap;
+	NSThread *currentThread = [NSThread currentThread];
 
 	NSString *formatString = @"--pretty=format:%H\01%e\01%an\01%s\01%P\01%at";
 	BOOL showSign = [rev hasLeftRight];
@@ -108,8 +130,15 @@ using namespace std;
 		if (sha[1] == 'i') // Matches 'Final output'
 		{
 			num = 0;
-			[self performSelectorOnMainThread:@selector(setCommits:) withObject:revisions waitUntilDone:NO];
-			g = [[PBGitGrapher alloc] initWithRepository: repository];
+			if ([currentThread isCancelled])
+				break;
+
+			NSDictionary *update = [NSDictionary dictionaryWithObjectsAndKeys:currentThread, kRevListThreadKey, revisions, kRevListRevisionsKey, nil];
+			[self performSelectorOnMainThread:@selector(updateCommits:) withObject:update waitUntilDone:NO];
+			revisions = [NSMutableArray array];
+
+			if (isGraphing)
+				g = [[PBGitGrapher alloc] initWithRepository:repository];
 			revisions = [NSMutableArray array];
 
 			// If the length is < 40, then there are no commits.. quit now
@@ -164,7 +193,6 @@ using namespace std;
 		int time;
 		stream >> time;
 
-		
 		[newCommit setSubject:[NSString stringWithCString:subject.c_str() encoding:encoding]];
 		[newCommit setAuthor:[NSString stringWithCString:author.c_str() encoding:encoding]];
 		[newCommit setTimestamp:time];
@@ -185,18 +213,32 @@ using namespace std;
 			cout << "Error" << endl;
 
 		[revisions addObject: newCommit];
-		[g decorateCommit: newCommit];
+		if (isGraphing)
+			[g decorateCommit:newCommit];
 
-		if (++num % 1000 == 0)
-			[self performSelectorOnMainThread:@selector(setCommits:) withObject:revisions waitUntilDone:NO];
+		if (++num % 1000 == 0) {
+			if ([currentThread isCancelled])
+				break;
+			NSDictionary *update = [NSDictionary dictionaryWithObjectsAndKeys:currentThread, kRevListThreadKey, revisions, kRevListRevisionsKey, nil];
+			[self performSelectorOnMainThread:@selector(updateCommits:) withObject:update waitUntilDone:NO];
+			revisions = [NSMutableArray array];
+		}
 	}
 	
-	NSTimeInterval duration = [[NSDate date] timeIntervalSinceDate:start];
-#ifdef DEBUG_BUILD
-    NSLog(@"Loaded %i commits in %f seconds", num, duration);
-#endif
-	// Make sure the commits are stored before exiting.
-	[self performSelectorOnMainThread:@selector(setCommits:) withObject:revisions waitUntilDone:YES];
+	if (![currentThread isCancelled]) {
+		NSTimeInterval duration = [[NSDate date] timeIntervalSinceDate:start];
+		NSLog(@"Loaded %i commits in %f seconds", num, duration);
+
+		// Make sure the commits are stored before exiting.
+		NSDictionary *update = [NSDictionary dictionaryWithObjectsAndKeys:currentThread, kRevListThreadKey, revisions, kRevListRevisionsKey, nil];
+		[self performSelectorOnMainThread:@selector(updateCommits:) withObject:update waitUntilDone:YES];
+
+		[self performSelectorOnMainThread:@selector(finishedParsing) withObject:nil waitUntilDone:NO];
+	}
+	else {
+		NSLog(@"[%@ %s] thread has been canceled", [self class], _cmd);
+	}
+
 	[task waitUntilExit];
 }
 

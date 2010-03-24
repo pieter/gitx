@@ -9,29 +9,42 @@
 #import <Cocoa/Cocoa.h>
 #import "PBGitRepository.h"
 
-@class PBViewController;
+@class PBViewController, PBGitSidebarController;
+
 @interface PBGitWindowController : NSWindowController <NSWindowDelegate> {
 	__weak PBGitRepository* repository;
-	int selectedViewIndex;
-	IBOutlet NSView* contentView;
 
-	PBViewController *historyViewController;
-	PBViewController *commitViewController;
+	PBViewController *contentController;
+
+	PBGitSidebarController *sidebarController;
+	IBOutlet NSView *sourceListControlsView;
+	IBOutlet NSSplitView *splitView;
+	IBOutlet NSView *sourceSplitView;
+	IBOutlet NSView *contentSplitView;
+
+	IBOutlet NSTextField *statusField;
+	IBOutlet NSProgressIndicator *progressIndicator;
 
 	PBViewController* viewController;
+
+	IBOutlet NSToolbarItem *terminalItem;
+	IBOutlet NSToolbarItem *finderItem;
 }
 
 @property (assign) __weak PBGitRepository *repository;
-@property (readonly) NSViewController *viewController;
-@property (assign) int selectedViewIndex;
 
 - (id)initWithRepository:(PBGitRepository*)theRepository displayDefault:(BOOL)display;
 
-- (void)changeViewController:(NSInteger)whichViewTag;
-- (void)useToolbar:(NSToolbar *)toolbar;
+- (void)changeContentController:(PBViewController *)controller;
+
 - (void)showMessageSheet:(NSString *)messageText infoText:(NSString *)infoText;
 - (void)showErrorSheet:(NSError *)error;
+- (void)showErrorSheetTitle:(NSString *)title message:(NSString *)message arguments:(NSArray *)arguments output:(NSString *)output;
 
 - (IBAction) showCommitView:(id)sender;
 - (IBAction) showHistoryView:(id)sender;
+- (IBAction) revealInFinder:(id)sender;
+- (IBAction) openInTerminal:(id)sender;
+- (IBAction) cloneTo:(id)sender;
+- (IBAction) refresh:(id)sender;
 @end

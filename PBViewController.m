@@ -11,7 +11,9 @@
 
 @implementation PBViewController
 
-@synthesize repository, viewToolbar;
+@synthesize repository;
+@synthesize status;
+@synthesize isBusy;
 
 - (id)initWithRepository:(PBGitRepository *)theRepository superController:(PBGitWindowController *)controller
 {
@@ -38,6 +40,10 @@
 // This is called when the view is displayed again; it 
 // should be updated to show the most recent information
 - (void) updateView
+{
+}
+
+- (IBAction) refresh: sender
 {
 }
 

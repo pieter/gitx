@@ -46,10 +46,15 @@
 		[[self script] callWebScriptMethod:@"reload" withArguments: nil];
 		return;
 	}
-	currentSha = [content realSha];
 
 	NSArray *arguments = [NSArray arrayWithObjects:content, [[[historyController repository] headRef] simpleRef], nil];
-	[[self script] callWebScriptMethod:@"loadCommit" withArguments: arguments];
+	id scriptResult = [[self script] callWebScriptMethod:@"loadCommit" withArguments: arguments];
+	if (!scriptResult) {
+		// the web view is not really ready for scripting???
+		[self performSelector:_cmd withObject:content afterDelay:0.05];
+		return;
+	}
+	currentSha = [content realSha];
 
 	// Now we load the extended details. We used to do this in a separate thread,
 	// but this caused some funny behaviour because NSTask's and NSThread's don't really
@@ -115,7 +120,7 @@ contextMenuItemsForElement:(NSDictionary *)element
 			for (PBGitRef *ref in [historyController.webCommit refs])
 			{
 				if ([[ref shortName] isEqualToString:selectedRefString])
-					return [contextMenuDelegate menuItemsForRef:ref commit:historyController.webCommit];
+					return [contextMenuDelegate menuItemsForRef:ref];
 			}
 			NSLog(@"Could not find selected ref!");
 			return defaultMenuItems;

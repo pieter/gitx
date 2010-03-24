@@ -9,6 +9,8 @@
 #import "PBPrefsWindowController.h"
 #import "PBGitRepository.h"
 
+#define kPreferenceViewIdentifier @"PBGitXPreferenceViewIdentifier"
+
 @implementation PBPrefsWindowController
 
 # pragma mark DBPrefsWindowController overrides
@@ -21,6 +23,22 @@
 	[self addView:integrationPrefsView label:@"Integration" image:[NSImage imageNamed:NSImageNameNetwork]];
 	// UPDATES
 	[self addView:updatesPrefsView label:@"Updates"];
+}
+
+- (void)displayViewForIdentifier:(NSString *)identifier animate:(BOOL)animate
+{
+	[super displayViewForIdentifier:identifier animate:animate];
+
+	[[NSUserDefaults standardUserDefaults] setObject:identifier forKey:kPreferenceViewIdentifier];
+}
+
+- (NSString *)defaultViewIdentifier
+{
+	NSString *identifier = [[NSUserDefaults standardUserDefaults] objectForKey:kPreferenceViewIdentifier];
+	if (identifier)
+		return identifier;
+
+	return [super defaultViewIdentifier];
 }
 
 #pragma mark -

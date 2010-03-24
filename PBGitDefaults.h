@@ -12,6 +12,7 @@
 }
 
 + (int) commitMessageViewVerticalLineLength;
++ (BOOL) commitMessageViewHasVerticalLine;
 + (BOOL) isGistEnabled;
 + (BOOL) isGravatarEnabled;
 + (BOOL) confirmPublicGists;
@@ -20,5 +21,19 @@
 + (BOOL) refreshAutomatically;
 + (BOOL)openCurDirOnLaunch;
 + (BOOL)showOpenPanelOnLaunch;
++ (BOOL) shouldCheckoutBranch;
++ (void) setShouldCheckoutBranch:(BOOL)shouldCheckout;
++ (NSString *) recentCloneDestination;
++ (void) setRecentCloneDestination:(NSString *)path;
++ (BOOL) suppressAcceptDropRef;
++ (void) setSuppressAcceptDropRef:(BOOL)suppress;
++ (BOOL) showStageView;
++ (void) setShowStageView:(BOOL)suppress;
++ (BOOL) openPreviousDocumentsOnLaunch;
++ (void) setPreviousDocumentPaths:(NSArray *)documentPaths;
++ (NSArray *) previousDocumentPaths;
++ (void) removePreviousDocumentPaths;
++ (NSInteger) branchFilter;
++ (void) setBranchFilter:(NSInteger)state;
 
 @end
