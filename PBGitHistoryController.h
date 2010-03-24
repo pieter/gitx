@@ -27,7 +27,7 @@
 	NSArray *currentFileBrowserSelectionPath;
 	IBOutlet NSTableView* commitList;
 	IBOutlet PBCollapsibleSplitView *historySplitView;
-    QLPreviewPanel* previewPanel;
+    __weak QLPreviewPanel* previewPanel;
 
 	IBOutlet PBGitGradientBarView *upperToolbarView;
 	IBOutlet NSButton *mergeButton;
