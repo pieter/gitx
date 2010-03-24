@@ -60,11 +60,12 @@
 	else
 		description = [NSString stringWithFormat:@"Push updates to remote %@", [remoteRef remoteName]];
 
+    NSString * sdesc = [NSString stringWithFormat:@"p%@", [description substringFromIndex:1]]; 
 	NSAlert *alert = [NSAlert alertWithMessageText:description
 									 defaultButton:@"Push"
 								   alternateButton:@"Cancel"
 									   otherButton:nil
-						 informativeTextWithFormat:@"Are you sure you want to %@?", description];
+						 informativeTextWithFormat:@"Are you sure you want to %@?", sdesc];
 
 	NSMutableDictionary *info = [NSMutableDictionary dictionary];
 	if (ref)
