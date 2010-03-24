@@ -3,7 +3,7 @@
 	<data>
 		<int key="IBDocument.SystemTarget">1050</int>
 		<string key="IBDocument.SystemVersion">10C540</string>
-		<string key="IBDocument.InterfaceBuilderVersion">762</string>
+		<string key="IBDocument.InterfaceBuilderVersion">740</string>
 		<string key="IBDocument.AppKitVersion">1038.25</string>
 		<string key="IBDocument.HIToolboxVersion">458.00</string>
 		<object class="NSMutableDictionary" key="IBDocument.PluginVersions">
@@ -15,18 +15,18 @@
 			</object>
 			<object class="NSMutableArray" key="dict.values">
 				<bool key="EncodedWithXMLCoder">YES</bool>
-				<string>762</string>
-				<string>762</string>
+				<string>740</string>
+				<string>740</string>
 			</object>
 		</object>
 		<object class="NSMutableArray" key="IBDocument.EditedObjectIDs">
 			<bool key="EncodedWithXMLCoder">YES</bool>
-			<integer value="11"/>
+			<integer value="46"/>
 		</object>
 		<object class="NSArray" key="IBDocument.PluginDependencies">
 			<bool key="EncodedWithXMLCoder">YES</bool>
-			<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 			<string>com.apple.WebKitIBPlugin</string>
+			<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 		</object>
 		<object class="NSMutableDictionary" key="IBDocument.Metadata">
 			<bool key="EncodedWithXMLCoder">YES</bool>
@@ -131,7 +131,7 @@
 										<string key="NSResourceName">NSQuickLookTemplate</string>
 									</object>
 									<string key="NSAlternateContents"/>
-									<string key="NSKeyEquivalent"/>
+									<string type="base64-UTF8" key="NSKeyEquivalent">IA</string>
 									<int key="NSPeriodicDelay">400</int>
 									<int key="NSPeriodicInterval">75</int>
 								</object>
@@ -408,7 +408,7 @@
 																	</object>
 																	<object class="NSColor" key="NSBackgroundColor" id="703711204">
 																		<int key="NSColorSpace">3</int>
-																		<bytes key="NSWhite">MC4zMzMzMzI5OQA</bytes>
+																		<bytes key="NSWhite">MC4zMzMzMzI5ODU2AA</bytes>
 																	</object>
 																	<object class="NSColor" key="NSTextColor" id="160578461">
 																		<int key="NSColorSpace">6</int>
@@ -436,7 +436,7 @@
 																		<string key="NSColorName">controlBackgroundColor</string>
 																		<object class="NSColor" key="NSColor" id="827382333">
 																			<int key="NSColorSpace">3</int>
-																			<bytes key="NSWhite">MC42NjY2NjY2NjY3AA</bytes>
+																			<bytes key="NSWhite">MC42NjY2NjY2ODY1AA</bytes>
 																		</object>
 																	</object>
 																	<object class="NSColor" key="NSTextColor" id="57062640">
@@ -480,7 +480,7 @@
 																<string key="NSIdentifier">DateColumn</string>
 																<double key="NSWidth">165</double>
 																<double key="NSMinWidth">10</double>
-																<double key="NSMaxWidth">3.4028229999999999e+38</double>
+																<double key="NSMaxWidth">3.4028230607370965e+38</double>
 																<object class="NSTableHeaderCell" key="NSHeaderCell">
 																	<int key="NSCellFlags">75628096</int>
 																	<int key="NSCellFlags2">2048</int>
@@ -511,7 +511,7 @@
 																<string key="NSIdentifier">SHAColumn</string>
 																<double key="NSWidth">30</double>
 																<double key="NSMinWidth">10</double>
-																<double key="NSMaxWidth">3.4028229999999999e+38</double>
+																<double key="NSMaxWidth">3.4028230607370965e+38</double>
 																<object class="NSTableHeaderCell" key="NSHeaderCell">
 																	<int key="NSCellFlags">75628096</int>
 																	<int key="NSCellFlags2">2048</int>
@@ -573,7 +573,7 @@
 												<reference key="NSSuperview" ref="663765878"/>
 												<reference key="NSTarget" ref="663765878"/>
 												<string key="NSAction">_doScroller:</string>
-												<double key="NSPercent">0.87603305785123964</double>
+												<double key="NSPercent">0.87603306770324707</double>
 											</object>
 											<object class="NSScroller" id="452331733">
 												<reference key="NSNextResponder" ref="663765878"/>
@@ -583,7 +583,7 @@
 												<int key="NSsFlags">1</int>
 												<reference key="NSTarget" ref="663765878"/>
 												<string key="NSAction">_doScroller:</string>
-												<double key="NSPercent">0.9988276670574443</double>
+												<double key="NSPercent">0.99882769584655762</double>
 											</object>
 											<object class="NSClipView" id="906093892">
 												<reference key="NSNextResponder" ref="663765878"/>
@@ -881,7 +881,7 @@
 																								<reference key="NSSupport" ref="26"/>
 																								<object class="NSColor" key="NSBackgroundColor">
 																									<int key="NSColorSpace">3</int>
-																									<bytes key="NSWhite">MC4zMzMzMzI5OQA</bytes>
+																									<bytes key="NSWhite">MC4zMzMzMzI5ODU2AA</bytes>
 																								</object>
 																								<reference key="NSTextColor" ref="160578461"/>
 																							</object>
@@ -928,7 +928,7 @@
 																			<reference key="NSSuperview" ref="776605770"/>
 																			<reference key="NSTarget" ref="776605770"/>
 																			<string key="NSAction">_doScroller:</string>
-																			<double key="NSPercent">0.9948186</double>
+																			<double key="NSPercent">0.99481862783432007</double>
 																		</object>
 																		<object class="NSScroller" id="471196443">
 																			<reference key="NSNextResponder" ref="776605770"/>
@@ -938,8 +938,8 @@
 																			<int key="NSsFlags">1</int>
 																			<reference key="NSTarget" ref="776605770"/>
 																			<string key="NSAction">_doScroller:</string>
-																			<double key="NSCurValue">0.0045045049999999998</double>
-																			<double key="NSPercent">0.99801189999999995</double>
+																			<double key="NSCurValue">0.0045045050792396069</double>
+																			<double key="NSPercent">0.99801188707351685</double>
 																		</object>
 																	</object>
 																	<string key="NSFrameSize">{208, 234}</string>
@@ -964,7 +964,7 @@
 																				<object class="NSTextView" id="75600241">
 																					<reference key="NSNextResponder" ref="321980917"/>
 																					<int key="NSvFlags">2322</int>
-																					<string key="NSFrameSize">{545, 120}</string>
+																					<string key="NSFrameSize">{545, 98}</string>
 																					<reference key="NSSuperview" ref="321980917"/>
 																					<object class="NSTextContainer" key="NSTextContainer" id="480935218">
 																						<object class="NSLayoutManager" key="NSLayoutManager">
@@ -1151,7 +1151,7 @@
 																						<nil key="NSDefaultParagraphStyle"/>
 																					</object>
 																					<int key="NSTVFlags">7</int>
-																					<string key="NSMaxSize">{1186, 1e+07}</string>
+																					<string key="NSMaxSize">{1190, 1e+07}</string>
 																					<string key="NSMinize">{0, 0}</string>
 																					<nil key="NSDelegate"/>
 																				</object>
@@ -1174,7 +1174,7 @@
 																			<reference key="NSSuperview" ref="630571485"/>
 																			<reference key="NSTarget" ref="630571485"/>
 																			<string key="NSAction">_doScroller:</string>
-																			<double key="NSPercent">0.030031680000000002</double>
+																			<double key="NSPercent">0.030031679198145866</double>
 																		</object>
 																		<object class="NSScroller" id="667376581">
 																			<reference key="NSNextResponder" ref="630571485"/>
@@ -1185,7 +1185,7 @@
 																			<reference key="NSTarget" ref="630571485"/>
 																			<string key="NSAction">_doScroller:</string>
 																			<double key="NSCurValue">1</double>
-																			<double key="NSPercent">0.94565220000000005</double>
+																			<double key="NSPercent">0.94565218687057495</double>
 																		</object>
 																	</object>
 																	<string key="NSFrame">{{209, 0}, {645, 234}}</string>
@@ -2980,6 +2980,9 @@
 							<string>commitController</string>
 							<string>commitList</string>
 							<string>historyController</string>
+							<string>pullItem</string>
+							<string>pushItem</string>
+							<string>rebaseItem</string>
 						</object>
 						<object class="NSMutableArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
@@ -2987,6 +2990,9 @@
 							<string>NSArrayController</string>
 							<string>PBCommitList</string>
 							<string>PBGitHistoryController</string>
+							<string>KBPopUpToolbarItem</string>
+							<string>KBPopUpToolbarItem</string>
+							<string>KBPopUpToolbarItem</string>
 						</object>
 					</object>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
@@ -3474,6 +3480,69 @@
 					<string key="className">NSObject</string>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
 						<string key="majorKey">IBFrameworkSource</string>
+						<string key="minorKey">ImageKit.framework/Headers/IKImageBrowserView.h</string>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
+					<string key="className">NSObject</string>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<string key="majorKey">IBFrameworkSource</string>
+						<string key="minorKey">ImageKit.framework/Headers/IKSaveOptions.h</string>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
+					<string key="className">NSObject</string>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<string key="majorKey">IBFrameworkSource</string>
+						<string key="minorKey">ImageKit.framework/Headers/ImageKitDeprecated.h</string>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
+					<string key="className">NSObject</string>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<string key="majorKey">IBFrameworkSource</string>
+						<string key="minorKey">PDFKit.framework/Headers/PDFDocument.h</string>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
+					<string key="className">NSObject</string>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<string key="majorKey">IBFrameworkSource</string>
+						<string key="minorKey">PDFKit.framework/Headers/PDFView.h</string>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
+					<string key="className">NSObject</string>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<string key="majorKey">IBFrameworkSource</string>
+						<string key="minorKey">QuartzComposer.framework/Headers/QCCompositionParameterView.h</string>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
+					<string key="className">NSObject</string>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<string key="majorKey">IBFrameworkSource</string>
+						<string key="minorKey">QuartzComposer.framework/Headers/QCCompositionPickerView.h</string>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
+					<string key="className">NSObject</string>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<string key="majorKey">IBFrameworkSource</string>
+						<string key="minorKey">QuartzFilters.framework/Headers/QuartzFilterManager.h</string>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
+					<string key="className">NSObject</string>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<string key="majorKey">IBFrameworkSource</string>
+						<string key="minorKey">QuickLookUI.framework/Headers/QLPreviewPanel.h</string>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
+					<string key="className">NSObject</string>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<string key="majorKey">IBFrameworkSource</string>
 						<string key="minorKey">Sparkle.framework/Headers/SUAppcast.h</string>
 					</object>
 				</object>
@@ -3800,14 +3869,13 @@
 			</object>
 		</object>
 		<int key="IBDocument.localizationMode">0</int>
-		<string key="IBDocument.TargetRuntimeIdentifier">IBCocoaFramework</string>
 		<object class="NSMutableDictionary" key="IBDocument.PluginDeclaredDependencies">
 			<string key="NS.key.0">com.apple.InterfaceBuilder.CocoaPlugin.macosx</string>
 			<integer value="1050" key="NS.object.0"/>
 		</object>
 		<object class="NSMutableDictionary" key="IBDocument.PluginDeclaredDependencyDefaults">
 			<string key="NS.key.0">com.apple.InterfaceBuilder.CocoaPlugin.macosx</string>
-			<integer value="1050" key="NS.object.0"/>
+			<integer value="1060" key="NS.object.0"/>
 		</object>
 		<object class="NSMutableDictionary" key="IBDocument.PluginDeclaredDevelopmentDependencies">
 			<string key="NS.key.0">com.apple.InterfaceBuilder.CocoaPlugin.InterfaceBuilder3</string>
@@ -3816,30 +3884,5 @@
 		<bool key="IBDocument.PluginDeclaredDependenciesTrackSystemTargetVersion">YES</bool>
 		<string key="IBDocument.LastKnownRelativeProjectPath">GitX.xcodeproj</string>
 		<int key="IBDocument.defaultPropertyAccessControl">3</int>
-		<object class="NSMutableDictionary" key="IBDocument.LastKnownImageSizes">
-			<bool key="EncodedWithXMLCoder">YES</bool>
-			<object class="NSArray" key="dict.sortedKeys">
-				<bool key="EncodedWithXMLCoder">YES</bool>
-				<string>AddBranchTemplate</string>
-				<string>AddLabelTemplate</string>
-				<string>CherryPickTemplate</string>
-				<string>DetailViewTemplate</string>
-				<string>MergeTemplate</string>
-				<string>NSPathTemplate</string>
-				<string>NSQuickLookTemplate</string>
-				<string>RebaseTemplate</string>
-			</object>
-			<object class="NSMutableArray" key="dict.values">
-				<bool key="EncodedWithXMLCoder">YES</bool>
-				<string>{20, 12}</string>
-				<string>{23, 12}</string>
-				<string>{18.5143, 12.3429}</string>
-				<string>{17, 17}</string>
-				<string>{16.4571, 12.3429}</string>
-				<string>{16, 9}</string>
-				<string>{19, 11}</string>
-				<string>{16.4571, 13.3714}</string>
-			</object>
-		</object>
 	</data>
 </archive>
