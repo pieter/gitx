@@ -48,7 +48,7 @@
 	NSLog(@"Starting command `%@ %@` in dir %@", cmd, [args componentsJoinedByString:@" "], dir);
 #endif
     
-	NSPipe* pipe = [NSPipe pipe];
+	NSPipe* pipe = [[NSPipe alloc] init];
 	[task setStandardOutput:pipe];
     [task setStandardError:pipe];
 	return task;
@@ -74,8 +74,8 @@
     NSFileHandle * handle = [[task standardOutput] fileHandleForReading];
 
     if (input) {
-        [task setStandardInput:[NSPipe pipe]];
-        NSFileHandle * inHandle = [task.standardInput fileHandleForWriting];
+        [task setStandardInput:[[NSPipe alloc] init]];
+        NSFileHandle * inHandle = [[task standardInput] fileHandleForWriting];
         [inHandle writeData:[input dataUsingEncoding:NSUTF8StringEncoding]];
         [inHandle closeFile];
     }
