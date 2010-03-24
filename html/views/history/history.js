@@ -252,7 +252,6 @@ var showDiff = function() {
 		}
 
 		link.appendChild(document.createTextNode(finalFile.unEscapeHTML()));
-		button.setAttribute("representedFile", finalFile);
 		link.setAttribute("representedFile", finalFile);
 
 		p.insertBefore(img, link);
