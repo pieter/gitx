@@ -19,12 +19,13 @@
 
 #import <Cocoa/Cocoa.h>
 
-OBJC_EXTERN NSString * const PBGitXErrorDomain;
-OBJC_EXTERN NSString * const PBCLIProxyErrorDomain;
+extern NSString * const PBGitXErrorDomain;
+extern NSString * const PBCLIProxyErrorDomain;
+extern NSString * const PBGitRepositoryErrorDomain;
 
-OBJC_EXTERN NSString * const PBInvalidBranchErrorMessage;
-OBJC_EXTERN NSString * const PBMissingRemoteErrorMessage;
+extern NSString * const PBInvalidBranchErrorMessage;
+extern NSString * const PBMissingRemoteErrorMessage;
 
-OBJC_EXTERN const NSInteger PBFileReadingUnsupportedErrorCode;   /* @"Reading files is not supported." */
-OBJC_EXTERN const NSInteger PBNotAGitRepositoryErrorCode;        /* @"%@ does not appear to be a git repository." */
-OBJC_EXTERN const NSInteger PBGitBinaryNotFoundErrorCode;
+extern const NSInteger PBFileReadingUnsupportedErrorCode;   /* @"Reading files is not supported." */
+extern const NSInteger PBNotAGitRepositoryErrorCode;        /* @"%@ does not appear to be a git repository." */
+extern const NSInteger PBGitBinaryNotFoundErrorCode;

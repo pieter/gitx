@@ -13,7 +13,6 @@
 #import "PBGitXErrors.h"
 #import "PBGitRefish.h"
 
-extern NSString* PBGitRepositoryErrorDomain;
 enum branchFilterTypes {
 	kGitXAllBranchesFilter = 0,
 	kGitXLocalRemoteBranchesFilter,
