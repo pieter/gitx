@@ -28,6 +28,11 @@
 		47DBDB670E94EE8B00671A1E /* PBPrefsWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 47DBDB660E94EE8B00671A1E /* PBPrefsWindowController.m */; };
 		47DBDBB10E94F6CA00671A1E /* Updates.png in Resources */ = {isa = PBXBuildFile; fileRef = 47DBDBB00E94F6CA00671A1E /* Updates.png */; };
 		47DBDBCA0E95016F00671A1E /* PBNSURLPathUserDefaultsTransfomer.m in Sources */ = {isa = PBXBuildFile; fileRef = 47DBDBC90E95016F00671A1E /* PBNSURLPathUserDefaultsTransfomer.m */; };
+		551BF11E112F376C00265053 /* gitx_askpasswd_main.m in Sources */ = {isa = PBXBuildFile; fileRef = 551BF11D112F376C00265053 /* gitx_askpasswd_main.m */; };
+		551BF176112F3F4B00265053 /* gitx_askpasswd in Resources */ = {isa = PBXBuildFile; fileRef = 551BF111112F371800265053 /* gitx_askpasswd */; };
+		652C162710A94D0800B80380 /* PullPopUpTemplate.png in Resources */ = {isa = PBXBuildFile; fileRef = 652C162410A94D0800B80380 /* PullPopUpTemplate.png */; };
+		652C162810A94D0800B80380 /* PushPopUpTemplate.png in Resources */ = {isa = PBXBuildFile; fileRef = 652C162510A94D0800B80380 /* PushPopUpTemplate.png */; };
+		652C162910A94D0800B80380 /* RebasePopUpTemplate.png in Resources */ = {isa = PBXBuildFile; fileRef = 652C162610A94D0800B80380 /* RebasePopUpTemplate.png */; };
 		653D930A109BEAFE00B26705 /* PBGitXErrors.m in Sources */ = {isa = PBXBuildFile; fileRef = 653D9309109BEAFE00B26705 /* PBGitXErrors.m */; };
 		654D16E8108C6CA6008D960C /* PBQLOutlineView.m in Sources */ = {isa = PBXBuildFile; fileRef = F513085A0E0740F2000C8BCD /* PBQLOutlineView.m */; };
 		6552BA27109C4CA8003B4892 /* Preferences.xib in Resources */ = {isa = PBXBuildFile; fileRef = 47DBDB690E94EF6500671A1E /* Preferences.xib */; };
@@ -184,6 +189,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		551BF174112F3F3500265053 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 551BF110112F371800265053 /* gitx_askpasswd */;
+			remoteInfo = gitx_askpasswd;
+		};
 		913D5E590E5564F400CECEA2 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
@@ -231,6 +243,11 @@
 		47DBDBB00E94F6CA00671A1E /* Updates.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Updates.png; path = Images/Preferences/Updates.png; sourceTree = "<group>"; };
 		47DBDBC80E95016F00671A1E /* PBNSURLPathUserDefaultsTransfomer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PBNSURLPathUserDefaultsTransfomer.h; sourceTree = "<group>"; };
 		47DBDBC90E95016F00671A1E /* PBNSURLPathUserDefaultsTransfomer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PBNSURLPathUserDefaultsTransfomer.m; sourceTree = "<group>"; };
+		551BF111112F371800265053 /* gitx_askpasswd */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = gitx_askpasswd; sourceTree = BUILT_PRODUCTS_DIR; };
+		551BF11D112F376C00265053 /* gitx_askpasswd_main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = gitx_askpasswd_main.m; sourceTree = "<group>"; };
+		652C162410A94D0800B80380 /* PullPopUpTemplate.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = PullPopUpTemplate.png; path = Images/PullPopUpTemplate.png; sourceTree = "<group>"; };
+		652C162510A94D0800B80380 /* PushPopUpTemplate.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = PushPopUpTemplate.png; path = Images/PushPopUpTemplate.png; sourceTree = "<group>"; };
+		652C162610A94D0800B80380 /* RebasePopUpTemplate.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = RebasePopUpTemplate.png; path = Images/RebasePopUpTemplate.png; sourceTree = "<group>"; };
 		653D9308109BEAFE00B26705 /* PBGitXErrors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PBGitXErrors.h; sourceTree = "<group>"; };
 		653D9309109BEAFE00B26705 /* PBGitXErrors.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PBGitXErrors.m; sourceTree = "<group>"; };
 		654D17E7108C90E8008D960C /* html */ = {isa = PBXFileReference; lastKnownFileType = folder; path = html; sourceTree = "<group>"; };
@@ -430,6 +447,13 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		551BF10F112F371800265053 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		8D11072E0486CEB800E47090 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -511,6 +535,7 @@
 				913D5E490E55644600CECEA2 /* gitx */,
 				F5886A100ED5D33D0066E74C /* SpeedTest.app */,
 				F567CC39106E6B910059BB9D /* GitXTesting.framework */,
+				551BF111112F371800265053 /* gitx_askpasswd */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -529,6 +554,7 @@
 				7756732906782D8800D1FEB8 /* Models */,
 				080E96DDFE201D6D7F000001 /* Classes */,
 				29B97315FDCFA39411CA2CEA /* Other Sources */,
+				551BF118112F373E00265053 /* gitx_asskpasswd */,
 				29B97317FDCFA39411CA2CEA /* Resources */,
 				29B97323FDCFA39411CA2CEA /* Frameworks */,
 				19C28FACFE9D520D11CA2CBB /* Products */,
@@ -589,6 +615,14 @@
 				47DBDBB00E94F6CA00671A1E /* Updates.png */,
 			);
 			name = "Preference Icons";
+			sourceTree = "<group>";
+		};
+		551BF118112F373E00265053 /* gitx_asskpasswd */ = {
+			isa = PBXGroup;
+			children = (
+				551BF11D112F376C00265053 /* gitx_askpasswd_main.m */,
+			);
+			name = gitx_asskpasswd;
 			sourceTree = "<group>";
 		};
 		654D18EE108C9589008D960C /* Config */ = {
@@ -938,6 +972,22 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
+		551BF110112F371800265053 /* gitx_askpasswd */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 551BF119112F373E00265053 /* Build configuration list for PBXNativeTarget "gitx_askpasswd" */;
+			buildPhases = (
+				551BF10E112F371800265053 /* Sources */,
+				551BF10F112F371800265053 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = gitx_askpasswd;
+			productName = gitx_askpasswd;
+			productReference = 551BF111112F371800265053 /* gitx_askpasswd */;
+			productType = "com.apple.product-type.tool";
+		};
 		8D1107260486CEB800E47090 /* GitX */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 26FC0A840875C7B200E6366F /* Build configuration list for PBXNativeTarget "GitX" */;
@@ -953,6 +1003,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				551BF175112F3F3500265053 /* PBXTargetDependency */,
 				913D5E5A0E5564F400CECEA2 /* PBXTargetDependency */,
 				F5643A020F792B4900A579C2 /* PBXTargetDependency */,
 			);
@@ -1030,6 +1081,7 @@
 				F5886A0F0ED5D33D0066E74C /* SpeedTest */,
 				F56439F70F792B2100A579C2 /* Generate PList Prefix */,
 				F567CC38106E6B910059BB9D /* GitXTesting */,
+				551BF110112F371800265053 /* gitx_askpasswd */,
 			);
 		};
 /* End PBXProject section */
@@ -1061,6 +1113,7 @@
 				F5E92A1B0E88550E00056E75 /* empty_file.png in Resources */,
 				F5E92A230E88569500056E75 /* new_file.png in Resources */,
 				913D5E500E55645900CECEA2 /* gitx in Resources */,
+				551BF176112F3F4B00265053 /* gitx_askpasswd in Resources */,
 				8D11072B0486CEB800E47090 /* InfoPlist.strings in Resources */,
 				65F3555B1159A95700235D5B /* MainMenu.xib in Resources */,
 				65F3555D1159A96600235D5B /* RepositoryWindow.xib in Resources */,
@@ -1160,6 +1213,14 @@
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		551BF10E112F371800265053 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				551BF11E112F376C00265053 /* gitx_askpasswd_main.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		8D11072C0486CEB800E47090 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -1292,6 +1353,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		551BF175112F3F3500265053 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 551BF110112F371800265053 /* gitx_askpasswd */;
+			targetProxy = 551BF174112F3F3500265053 /* PBXContainerItemProxy */;
+		};
 		913D5E5A0E5564F400CECEA2 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 913D5E480E55644600CECEA2 /* cli tool */;
@@ -1470,6 +1536,72 @@
 				SDKROOT = macosx10.5;
 			};
 			name = Release;
+		};
+		551BF113112F371800265053 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COPY_PHASE_STRIP = NO;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_MODEL_TUNING = G5;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/AppKit.framework/Headers/AppKit.h";
+				INSTALL_PATH = /usr/local/bin;
+				OTHER_LDFLAGS = (
+					"-framework",
+					Foundation,
+					"-framework",
+					AppKit,
+				);
+				PREBINDING = NO;
+				PRODUCT_NAME = gitx_askpasswd;
+			};
+			name = Debug;
+		};
+		551BF114112F371800265053 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				GCC_MODEL_TUNING = G5;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/AppKit.framework/Headers/AppKit.h";
+				INSTALL_PATH = /usr/local/bin;
+				OTHER_LDFLAGS = (
+					"-framework",
+					Foundation,
+					"-framework",
+					AppKit,
+				);
+				PREBINDING = NO;
+				PRODUCT_NAME = gitx_askpasswd;
+				ZERO_LINK = NO;
+			};
+			name = Release;
+		};
+		551BF115112F371800265053 /* Install */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_MODEL_TUNING = G5;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/AppKit.framework/Headers/AppKit.h";
+				INSTALL_PATH = /usr/local/bin;
+				OTHER_LDFLAGS = (
+					"-framework",
+					Foundation,
+					"-framework",
+					AppKit,
+				);
+				PREBINDING = NO;
+				PRODUCT_NAME = gitx_askpasswd;
+			};
+			name = Install;
 		};
 		654D1896108C9293008D960C /* Install */ = {
 			isa = XCBuildConfiguration;
@@ -1819,6 +1951,16 @@
 				26FC0A890875C7B200E6366F /* Debug */,
 				26FC0A8A0875C7B200E6366F /* Release */,
 				654D1896108C9293008D960C /* Install */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		551BF119112F373E00265053 /* Build configuration list for PBXNativeTarget "gitx_askpasswd" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				551BF113112F371800265053 /* Debug */,
+				551BF114112F371800265053 /* Release */,
+				551BF115112F371800265053 /* Install */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
