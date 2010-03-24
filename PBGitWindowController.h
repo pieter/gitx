@@ -14,7 +14,7 @@
 @interface PBGitWindowController : NSWindowController {
 	__weak PBGitRepository* repository;
 
-	PBViewController *contentController;
+	__weak PBViewController *contentController;
 
 	PBGitSidebarController *sidebarController;
 	IBOutlet NSView *sourceListControlsView;
@@ -25,13 +25,15 @@
 	IBOutlet NSTextField *statusField;
 	IBOutlet NSProgressIndicator *progressIndicator;
 
-	PBViewController* viewController;
+	__weak PBViewController* viewController;
 
 	IBOutlet NSToolbarItem *terminalItem;
 	IBOutlet NSToolbarItem *finderItem;
 }
 
 @property (assign) __weak PBGitRepository *repository;
+@property (assign) __weak PBViewController * viewController;
+@property (assign) __weak PBViewController * contentController;
 
 - (id)initWithRepository:(PBGitRepository*)theRepository displayDefault:(BOOL)display;
 
