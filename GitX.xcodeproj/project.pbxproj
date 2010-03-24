@@ -30,9 +30,6 @@
 		47DBDBCA0E95016F00671A1E /* PBNSURLPathUserDefaultsTransfomer.m in Sources */ = {isa = PBXBuildFile; fileRef = 47DBDBC90E95016F00671A1E /* PBNSURLPathUserDefaultsTransfomer.m */; };
 		551BF11E112F376C00265053 /* gitx_askpasswd_main.m in Sources */ = {isa = PBXBuildFile; fileRef = 551BF11D112F376C00265053 /* gitx_askpasswd_main.m */; };
 		551BF176112F3F4B00265053 /* gitx_askpasswd in Resources */ = {isa = PBXBuildFile; fileRef = 551BF111112F371800265053 /* gitx_askpasswd */; };
-		652C162710A94D0800B80380 /* PullPopUpTemplate.png in Resources */ = {isa = PBXBuildFile; fileRef = 652C162410A94D0800B80380 /* PullPopUpTemplate.png */; };
-		652C162810A94D0800B80380 /* PushPopUpTemplate.png in Resources */ = {isa = PBXBuildFile; fileRef = 652C162510A94D0800B80380 /* PushPopUpTemplate.png */; };
-		652C162910A94D0800B80380 /* RebasePopUpTemplate.png in Resources */ = {isa = PBXBuildFile; fileRef = 652C162610A94D0800B80380 /* RebasePopUpTemplate.png */; };
 		653D930A109BEAFE00B26705 /* PBGitXErrors.m in Sources */ = {isa = PBXBuildFile; fileRef = 653D9309109BEAFE00B26705 /* PBGitXErrors.m */; };
 		654D16E8108C6CA6008D960C /* PBQLOutlineView.m in Sources */ = {isa = PBXBuildFile; fileRef = F513085A0E0740F2000C8BCD /* PBQLOutlineView.m */; };
 		6552BA27109C4CA8003B4892 /* Preferences.xib in Resources */ = {isa = PBXBuildFile; fileRef = 47DBDB690E94EF6500671A1E /* Preferences.xib */; };
@@ -193,7 +190,7 @@
 			isa = PBXContainerItemProxy;
 			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = 551BF110112F371800265053 /* gitx_askpasswd */;
+			remoteGlobalIDString = 551BF110112F371800265053;
 			remoteInfo = gitx_askpasswd;
 		};
 		913D5E590E5564F400CECEA2 /* PBXContainerItemProxy */ = {
@@ -245,9 +242,6 @@
 		47DBDBC90E95016F00671A1E /* PBNSURLPathUserDefaultsTransfomer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PBNSURLPathUserDefaultsTransfomer.m; sourceTree = "<group>"; };
 		551BF111112F371800265053 /* gitx_askpasswd */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = gitx_askpasswd; sourceTree = BUILT_PRODUCTS_DIR; };
 		551BF11D112F376C00265053 /* gitx_askpasswd_main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = gitx_askpasswd_main.m; sourceTree = "<group>"; };
-		652C162410A94D0800B80380 /* PullPopUpTemplate.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = PullPopUpTemplate.png; path = Images/PullPopUpTemplate.png; sourceTree = "<group>"; };
-		652C162510A94D0800B80380 /* PushPopUpTemplate.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = PushPopUpTemplate.png; path = Images/PushPopUpTemplate.png; sourceTree = "<group>"; };
-		652C162610A94D0800B80380 /* RebasePopUpTemplate.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = RebasePopUpTemplate.png; path = Images/RebasePopUpTemplate.png; sourceTree = "<group>"; };
 		653D9308109BEAFE00B26705 /* PBGitXErrors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PBGitXErrors.h; sourceTree = "<group>"; };
 		653D9309109BEAFE00B26705 /* PBGitXErrors.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PBGitXErrors.m; sourceTree = "<group>"; };
 		654D17E7108C90E8008D960C /* html */ = {isa = PBXFileReference; lastKnownFileType = folder; path = html; sourceTree = "<group>"; };
@@ -1478,7 +1472,7 @@
 				INSTALL_PATH = "$(HOME)/Applications";
 				LIBRARY_SEARCH_PATHS = libgit2;
 				PRODUCT_NAME = GitX;
-				SDKROOT = /Developer/SDKs/MacOSX10.5.sdk;
+				SDKROOT = "$(DEVELOPER_SDK_DIR)/MacOSX10.5.sdk";
 				WARNING_CFLAGS = "-Wno-deprecated-declarations";
 				WRAPPER_EXTENSION = app;
 				ZERO_LINK = NO;
