@@ -9,7 +9,6 @@
 #import "PBRefController.h"
 #import "PBGitRevisionCell.h"
 #import "PBRefMenuItem.h"
-#import "KBPopUpToolbarItem.h"
 #import "PBCreateBranchSheet.h"
 #import "PBCreateTagSheet.h"
 #import "PBGitDefaults.h"

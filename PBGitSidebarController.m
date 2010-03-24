@@ -42,7 +42,7 @@
 - (void)awakeFromNib
 {
 	[super awakeFromNib];
-	window.contentView = self.view;
+	window.contentView = [self view];
 	[self populateList];
 
 	historyViewController = [[PBGitHistoryController alloc] initWithRepository:repository superController:superController];

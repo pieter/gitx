@@ -250,8 +250,6 @@ static NSString * repositoryBasePath = nil;
 - (void) reloadRefs
 {
 	_headRef = nil; 
-	BOOL ret = NO;
-
 	refs = [NSMutableDictionary dictionary];
 	NSMutableArray *oldBranches = [branches mutableCopy];
 

@@ -21,13 +21,13 @@
 - (void)keyDown:(NSEvent *)event
 {
 	NSString* character = [event charactersIgnoringModifiers];
-
+    
 	// Pass on command-shift up/down to the responder. We want the splitview to capture this.
 	if ([event modifierFlags] & NSShiftKeyMask && [event modifierFlags] & NSCommandKeyMask && ([event keyCode] == 0x7E || [event keyCode] == 0x7D)) {
 		[self.nextResponder keyDown:event];
 		return;
 	}
-
+    
 	if ([character isEqualToString:@" "]) {
 		if (controller.selectedCommitDetailsIndex == 0) {
 			if ([event modifierFlags] & NSShiftKeyMask)

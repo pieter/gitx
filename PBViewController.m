@@ -43,10 +43,6 @@
 {
 }
 
-- (IBAction) refresh: sender
-{
-}
-
 - (NSResponder *)firstResponder;
 {
 	return nil;
