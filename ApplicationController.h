@@ -7,7 +7,6 @@
 //
 
 #import <Cocoa/Cocoa.h>
-#import <Quartz/Quartz.h> /* for QLPreviewPanel */
 #import "PBGitRepository.h"
 
 @class PBCLIProxy;
@@ -37,8 +36,6 @@
 
 - (IBAction)saveAction:sender;
 - (IBAction) showHelp:(id) sender;
-
-- (IBAction)togglePreviewPanel:(id)previewPanel;
 
 - (IBAction) showCloneRepository:(id)sender;
 @end

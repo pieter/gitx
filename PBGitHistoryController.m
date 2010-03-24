@@ -20,6 +20,7 @@
 #import "PBDiffWindowController.h"
 #import "PBGitDefaults.h"
 #import "PBGitRevList.h"
+
 #define QLPreviewPanel NSClassFromString(@"QLPreviewPanel")
 #define kHistorySelectedDetailIndexKey @"PBHistorySelectedDetailIndex"
 #define kHistoryDetailViewIndex 0
@@ -37,87 +38,7 @@
 @implementation PBGitHistoryController
 @synthesize selectedCommitDetailsIndex, webCommit, gitTree, commitController, refController;
 
-// MARK: Quick Look panel support
-
-- (BOOL)acceptsPreviewPanelControl:(QLPreviewPanel *)panel;
-{
-    return YES;
-}
-
-- (void)beginPreviewPanelControl:(QLPreviewPanel *)panel
-{
-    // This document is now responsible of the preview panel
-    // It is allowed to set the delegate, data source and refresh panel.
-    previewPanel = panel;
-    panel.delegate = self;
-    panel.dataSource = self;
-}
-
-- (void)endPreviewPanelControl:(QLPreviewPanel *)panel
-{
-    // This document loses its responsisibility on the preview panel
-    // Until the next call to -beginPreviewPanelControl: it must not
-    // change the panel's delegate, data source or refresh it.
-    [previewPanel release];
-    previewPanel = nil;
-}
-
-// MARK: Quick Look panel data source
-
-- (NSInteger)numberOfPreviewItemsInPreviewPanel:(QLPreviewPanel *)panel
-{
-    return [[fileBrowser selectedRowIndexes] count];
-}
-
-- (id <QLPreviewItem>)previewPanel:(QLPreviewPanel *)panel previewItemAtIndex:(NSInteger)index
-{
-    return [[treeController selectedObjects] objectAtIndex:index];
-}
-
-// MARK: Quick Look panel delegate
-
-- (BOOL)previewPanel:(QLPreviewPanel *)panel handleEvent:(NSEvent *)event
-{
-    // redirect all key down events to the table view
-    if ([event type] == NSKeyDown) {
-        [fileBrowser keyDown:event];
-        return YES;
-    }
-    return NO;
-}
-
-// This delegate method provides the rect on screen from which the panel will zoom.
-- (NSRect)previewPanel:(QLPreviewPanel *)panel sourceFrameOnScreenForPreviewItem:(id <QLPreviewItem>)item
-{
-    NSInteger index = [fileBrowser rowForItem:[[treeController selectedNodes] objectAtIndex:0]];
-    if (index == NSNotFound) {
-        return NSZeroRect;
-    }
-    
-    NSRect iconRect = [fileBrowser frameOfCellAtColumn:0 row:index];
-    
-    // check that the icon rect is visible on screen
-    NSRect visibleRect = [fileBrowser visibleRect];
-    
-    if (!NSIntersectsRect(visibleRect, iconRect)) {
-        return NSZeroRect;
-    }
-
-    // convert icon rect to screen coordinates
-    iconRect = [fileBrowser convertRectToBase:iconRect];
-    iconRect.origin = [[fileBrowser window] convertBaseToScreen:iconRect.origin];
-    
-    return iconRect;
-}
-
-// This delegate method provides a transition image between the table view and the preview panel
-- (id)previewPanel:(QLPreviewPanel *)panel transitionImageForPreviewItem:(id <QLPreviewItem>)item contentRect:(NSRect *)contentRect
-{
-    PBGitTree * treeItem = (PBGitTree *)item;
-    return treeItem.iconImage;
-}
-
-// MARK: NSToolbarItemValidation Methods
+#pragma mark NSToolbarItemValidation Methods
 
 - (BOOL) validateToolbarItem:(NSToolbarItem *)theItem {
     
@@ -137,7 +58,7 @@
     return res;
 }
 
-// MARK: PBGitHistoryController
+#pragma mark PBGitHistoryController
 
 - (void)awakeFromNib
 {
@@ -185,11 +106,6 @@
 
 - (void) updateKeys
 {
-	// Remove any references in the QLPanel
-	//[[QLPreviewPanel sharedPreviewPanel] setURLs:[NSArray array] currentIndex:0 preservingDisplayState:YES];
-	// We have to do this manually, as NSTreeController leaks memory?
-	//[treeController setSelectionIndexPaths:[NSArray array]];
-
 	selectedCommit = [[commitController selectedObjects] lastObject];
 
 	if (self.selectedCommitDetailsIndex == kHistoryTreeViewIndex) {
@@ -381,12 +297,7 @@
         && [event modifierFlags] & NSCommandKeyMask) 
     {
         // command+alt+f
-        [superController.window makeFirstResponder: searchField];
-    }
-    else if ([[event charactersIgnoringModifiers] isEqualToString: @" "]) 
-    {
-        // space
-        [[NSApp delegate] togglePreviewPanel:self];
+        [[superController window] makeFirstResponder: searchField];
     }
 	else 
     {
@@ -409,10 +320,6 @@
 
 - (IBAction) toggleQLPreviewPanel:(id)sender
 {
-    // !!! Andre Berg 20100324: commented this out since brotherbard implements 
-    // the QLPreviewPanel a bit more gracefully than me
-    // [[NSApp delegate] togglePreviewPanel:sender];
-    
 	if ([[QLPreviewPanel sharedPreviewPanel] respondsToSelector:@selector(setDataSource:)]) {
 		// Public QL API
 		if ([QLPreviewPanel sharedPreviewPanelExists] && [[QLPreviewPanel sharedPreviewPanel] isVisible])
@@ -759,7 +666,7 @@
 	PBGitTree *treeItem = (PBGitTree *)[[treeController selectedObjects] objectAtIndex:index];
 	NSURL *previewURL = [NSURL fileURLWithPath:[treeItem tmpFileNameForContents]];
 
-    return (<QLPreviewItem>)previewURL;
+    return (id <QLPreviewItem>)previewURL;
 }
 
 #pragma mark <QLPreviewPanelDelegate>

@@ -31,6 +31,7 @@
         if(![[NSBundle bundleWithPath:@"/System/Library/Frameworks/Quartz.framework/Frameworks/QuickLookUI.framework"] load])
 			if(![[NSBundle bundleWithPath:@"/System/Library/PrivateFrameworks/QuickLookUI.framework"] load])
 				NSLog(@"Could not load QuickLook");
+
 		self.cliProxy = [PBCLIProxy new];
 	}
 
@@ -215,7 +216,7 @@
         return managedObjectModel;
     }
 	
-    managedObjectModel = [NSManagedObjectModel mergedModelFromBundles:nil];    
+    managedObjectModel = [[NSManagedObjectModel mergedModelFromBundles:nil] retain];    
     return managedObjectModel;
 }
 
@@ -292,11 +293,13 @@
  */
  
 - (IBAction) saveAction:(id)sender {
+
     NSError *error = nil;
     if (![[self managedObjectContext] save:&error]) {
         [[NSApplication sharedApplication] presentError:error];
     }
 }
+
 
 /**
     Implementation of the applicationShouldTerminate: method, used here to
@@ -344,26 +347,6 @@
     }
     
     return reply;
-}
-
-// QuickLook preview panel
-
-- (IBAction)togglePreviewPanel:(id)previewPanel
-{
-    if ([QLPreviewPanel sharedPreviewPanelExists] && [[QLPreviewPanel sharedPreviewPanel] isVisible]) {
-        [[QLPreviewPanel sharedPreviewPanel] orderOut:nil];
-    } else {
-        [[QLPreviewPanel sharedPreviewPanel] makeKeyAndOrderFront:nil];
-    }
-}
-
-- (BOOL) validateMenuItem:(NSMenuItem *)item {
-    if ([item action] == @selector(saveAction:)) {
-        // disable the Save menu item if there is no repository document open
-        return ([[PBRepositoryDocumentController sharedDocumentController] currentDocument] != nil);
-    } else {
-        return [NSApp validateMenuItem:item];
-    }
 }
 
 - (void)applicationWillTerminate:(NSNotification *)aNotification
