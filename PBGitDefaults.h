@@ -18,6 +18,7 @@
 + (BOOL) confirmPublicGists;
 + (BOOL) isGistPublic;
 + (BOOL) showWhitespaceDifferences;
++ (BOOL) showRelativeDates;
 + (BOOL) refreshAutomatically;
 + (BOOL)openCurDirOnLaunch;
 + (BOOL)showOpenPanelOnLaunch;

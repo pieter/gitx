@@ -131,6 +131,8 @@
 		return [PBGitDefaults confirmPublicGists];
 	else if([feature isEqualToString:@"publicGist"])
 		return [PBGitDefaults isGistPublic];
+    else if ([feature isEqualToString:@"showWhitespaceDifferences"])
+        return [PBGitDefaults showWhitespaceDifferences];
 	else
 		return YES;
 }

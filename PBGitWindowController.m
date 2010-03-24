@@ -17,7 +17,7 @@
 @implementation PBGitWindowController
 
 
-@synthesize repository;
+@synthesize repository, viewController, contentController;
 
 - (id)initWithRepository:(PBGitRepository*)theRepository displayDefault:(BOOL)displayDefault
 {
@@ -124,8 +124,8 @@
    /* Using ...didBecomeMain is better than ...didBecomeKey here because the QuickLook panel will count as key state change 
     and the outline view window will trigger a refresh in the middle of the QuickLook panel's closing animation which 
     causes a half second freeze with left over artifacts. */
-   if (self.viewController && [PBGitDefaults refreshAutomatically]) {
-		[(PBViewController *)self.viewController refresh:nil];
+   if (self.contentController && [PBGitDefaults refreshAutomatically]) {
+		[self.contentController refresh:nil];
 	}
 }
 
