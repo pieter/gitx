@@ -13,6 +13,9 @@
 #import "Terminal.h"
 #import "PBCloneRepsitoryToSheet.h"
 #import "PBGitSidebarController.h"
+#import "NSString_Truncate.h"
+
+#define SHEET_INFOTEXT_CHAR_LIMIT 2000      // character size limit for the message sheet's info text
 
 @implementation PBGitWindowController
 
@@ -108,6 +111,9 @@
 
 - (void)showMessageSheet:(NSString *)messageText infoText:(NSString *)infoText
 {
+    if ([infoText length] > SHEET_INFOTEXT_CHAR_LIMIT) {
+        infoText = [infoText truncateToLength:SHEET_INFOTEXT_CHAR_LIMIT mode:PBNSStringTruncateModeCenter indicator:@" ... "];
+    }
 	[[NSAlert alertWithMessageText:messageText
 			 defaultButton:nil
 		       alternateButton:nil

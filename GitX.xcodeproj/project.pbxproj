@@ -32,6 +32,7 @@
 		551BF176112F3F4B00265053 /* gitx_askpasswd in Resources */ = {isa = PBXBuildFile; fileRef = 551BF111112F371800265053 /* gitx_askpasswd */; };
 		653D930A109BEAFE00B26705 /* PBGitXErrors.m in Sources */ = {isa = PBXBuildFile; fileRef = 653D9309109BEAFE00B26705 /* PBGitXErrors.m */; };
 		654D16E8108C6CA6008D960C /* PBQLOutlineView.m in Sources */ = {isa = PBXBuildFile; fileRef = F513085A0E0740F2000C8BCD /* PBQLOutlineView.m */; };
+		654FEFA0115A2684004C8721 /* NSString_Truncate.m in Sources */ = {isa = PBXBuildFile; fileRef = 654FEF9F115A2684004C8721 /* NSString_Truncate.m */; };
 		6552BA27109C4CA8003B4892 /* Preferences.xib in Resources */ = {isa = PBXBuildFile; fileRef = 47DBDB690E94EF6500671A1E /* Preferences.xib */; };
 		65C77FA0108BF560003BD3B5 /* Quartz.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 65C77F9F108BF560003BD3B5 /* Quartz.framework */; };
 		65F3544011599F3100235D5B /* AddRemoteBranchTemplate.png in Resources */ = {isa = PBXBuildFile; fileRef = 65A102F110A7D9FE0033C593 /* AddRemoteBranchTemplate.png */; };
@@ -247,6 +248,8 @@
 		654D17E7108C90E8008D960C /* html */ = {isa = PBXFileReference; lastKnownFileType = folder; path = html; sourceTree = "<group>"; };
 		654D18EF108C9597008D960C /* Install.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Install.xcconfig; sourceTree = "<group>"; };
 		654D18F6108C96CB008D960C /* install.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = install.sh; sourceTree = "<group>"; };
+		654FEF9F115A2684004C8721 /* NSString_Truncate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSString_Truncate.m; sourceTree = "<group>"; };
+		654FEFAF115A2747004C8721 /* NSString_Truncate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSString_Truncate.h; sourceTree = "<group>"; };
 		65A102F110A7D9FE0033C593 /* AddRemoteBranchTemplate.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = AddRemoteBranchTemplate.png; path = Images/AddRemoteBranchTemplate.png; sourceTree = "<group>"; };
 		65C77F9F108BF560003BD3B5 /* Quartz.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Quartz.framework; path = System/Library/Frameworks/Quartz.framework; sourceTree = SDKROOT; };
 		770B37EC0679A11B001EADE2 /* GitTest_DataModel.xcdatamodel */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = wrapper.xcdatamodel; path = GitTest_DataModel.xcdatamodel; sourceTree = "<group>"; };
@@ -791,6 +794,8 @@
 				F56524BA0E02D22D00F03B52 /* NSFileHandleExt.h */,
 				F562C8850FE1766C000EC528 /* NSString_RegEx.h */,
 				F562C8860FE1766C000EC528 /* NSString_RegEx.m */,
+				654FEFAF115A2747004C8721 /* NSString_Truncate.h */,
+				654FEF9F115A2684004C8721 /* NSString_Truncate.m */,
 				F57CC38F0E05DDF2000472E2 /* PBEasyPipe.h */,
 				F57CC3900E05DDF2000472E2 /* PBEasyPipe.m */,
 				F5DFFA6A0E075D8800617813 /* PBEasyFS.h */,
@@ -1292,6 +1297,7 @@
 				D8295D2A1130A1DC00C838E8 /* PBGitHistoryList.m in Sources */,
 				D8295DE01130E43900C838E8 /* PBGitHistoryGrapher.m in Sources */,
 				D8E105471157C18200FC28A4 /* PBQLTextView.m in Sources */,
+				654FEFA0115A2684004C8721 /* NSString_Truncate.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1632,11 +1638,13 @@
 					"$(inherited)",
 					"\"$(SRCROOT)\"",
 				);
+				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
 				GCC_MODEL_TUNING = G5;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = GitX_Prefix.pch;
-				GCC_PREPROCESSOR_DEFINITIONS_NOT_USED_IN_PRECOMPS = "";
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = YES;
 				HEADER_SEARCH_PATHS = libgit2/src;
 				INFOPLIST_FILE = Info.plist;
 				INFOPLIST_OTHER_PREPROCESSOR_FLAGS = "-traditional";
