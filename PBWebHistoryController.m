@@ -127,6 +127,15 @@ contextMenuItemsForElement:(NSDictionary *)element
 		}
 		if ([node hasAttributes] && [[node attributes] getNamedItem:@"representedFile"])
 			return [historyController menuItemsForPaths:[NSArray arrayWithObject:[[[node attributes] getNamedItem:@"representedFile"] value]]];
+        else if ([[node class] isEqual:[DOMHTMLImageElement class]]) {
+            // !!! Andre Berg 20100324: NSMenuItem: Copy Image is the only one that makes sense here 
+            // since we don't need to download the image or open it in a new window (besides with the 
+            // current implementation these two entries crash GitX anyway
+            //
+            // FIXME: determine object index dynamically 
+            // (since this could change between WebKit versions).
+            defaultMenuItems = [NSArray arrayWithObject:[defaultMenuItems objectAtIndex:2]]; 
+        }
 
 		node = [node parentNode];
 	}
