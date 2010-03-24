@@ -106,7 +106,6 @@
 	NSFileHandle* handle = [[task standardOutput] fileHandleForReading];
 	
 	[task launch];
-#warning This can cause a "Bad file descriptor"... when?
 	NSData *data;
 	@try {
 		data = [handle readDataToEndOfFile];
