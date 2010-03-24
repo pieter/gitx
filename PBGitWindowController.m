@@ -111,8 +111,8 @@
 
 - (void)showMessageSheet:(NSString *)messageText infoText:(NSString *)infoText
 {
-    if ([infoText length] > SHEET_INFOTEXT_CHAR_LIMIT) {
-        infoText = [infoText truncateToLength:SHEET_INFOTEXT_CHAR_LIMIT mode:PBNSStringTruncateModeCenter indicator:@" ... "];
+    if ([PBGitDefaults truncateInfoText] && ([infoText length] > [PBGitDefaults truncateInfoTextSize])) {
+        infoText = [infoText truncateToLength:[PBGitDefaults truncateInfoTextSize] mode:PBNSStringTruncateModeCenter indicator:@" ... "];
     }
 	[[NSAlert alertWithMessageText:messageText
 			 defaultButton:nil
