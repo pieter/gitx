@@ -26,7 +26,7 @@ NSString * const kGitXCommitType = @"commit";
 	NSMutableArray *p = [NSMutableArray arrayWithCapacity:nParents];
 	for (i = 0; i < nParents; ++i)
 	{
-		char *s = git_oid_allocfmt(parentShas + i);
+		char *s = git_oid_mkhex(parentShas + i);
 		[p addObject:[NSString stringWithUTF8String:s]];
 		free(s);
 	}
