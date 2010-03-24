@@ -11,40 +11,6 @@
 #import "NSFileHandleExt.h"
 #import "PBEasyPipe.h"
 #import "PBEasyFS.h"
-#import "PBRepositoryDocumentController.h"
-
-#define ICON_SIZE 48.0
-
-static NSDictionary* quickLookOptions = nil;
-static NSOperationQueue* treeIconQueue = nil;
-
-
-@interface PBGitTree (QLPreviewItemProtocol) <QLPreviewItem>
-- (NSURL *) previewItemURL;
-- (NSString *) previewItemTitle;
-@end
-
-@implementation PBGitTree (QLPreviewItemProtocol)
-
-- (NSURL *) previewItemURL {
-    NSDocument * curDoc = [[PBRepositoryDocumentController sharedDocumentController] currentDocument];
-    NSString * absPath = self.absolutePath;
-    NSString * basePath = nil;
-    if (curDoc) {
-        basePath = [[[curDoc fileURL] path] stringByDeletingLastPathComponent];
-    } else {
-        basePath = [PBGitRepository basePath];
-    }
-    if ([absPath isEqualToString:basePath]) {
-        absPath = [absPath stringByAppendingFormat:@"/%@", [self fullPath]];
-    }
-    return [NSURL fileURLWithPath:absPath];
-}
-
-- (NSString *) previewItemTitle {
-    return [self fullPath];
-}
-@end
 
 @implementation PBGitTree
 
@@ -72,7 +38,7 @@ static NSOperationQueue* treeIconQueue = nil;
 	return tree;
 }
 
-- init
+- (id) init
 {
     if (self = [super init]) {
         children = nil;
@@ -81,30 +47,6 @@ static NSOperationQueue* treeIconQueue = nil;
         absolutePath = [PBGitRepository basePath];
     }
 	return self;
-}
-
-- (NSImage *) iconImage {
-    if (!iconImage) {
-        iconImage = [[NSWorkspace sharedWorkspace] iconForFile:self.absolutePath ];
-        [iconImage setSize:NSMakeSize(ICON_SIZE, ICON_SIZE)];
-        
-        if (!treeIconQueue) {
-            treeIconQueue = [[NSOperationQueue alloc] init];
-            [treeIconQueue setMaxConcurrentOperationCount:2];
-            quickLookOptions = [[NSDictionary alloc] initWithObjectsAndKeys:
-                                (id)kCFBooleanTrue, (id)kQLThumbnailOptionIconModeKey,
-                                nil];
-        }
-        [treeIconQueue addOperationWithBlock:^{
-            CGImageRef quickLookIcon = QLThumbnailImageCreate(NULL, (CFURLRef)[NSURL fileURLWithPath:self.absolutePath], CGSizeMake(ICON_SIZE, ICON_SIZE), (CFDictionaryRef)quickLookOptions);
-            if (quickLookIcon != NULL) {
-                NSImage* betterIcon = [[NSImage alloc] initWithCGImage:quickLookIcon size:NSMakeSize(ICON_SIZE, ICON_SIZE)];
-                [self performSelectorOnMainThread:@selector(setIconImage:) withObject:betterIcon waitUntilDone:NO];
-                CFRelease(quickLookIcon);
-            }
-        }];
-    }
-    return iconImage;
 }
 
 - (NSString*) refSpec
@@ -277,7 +219,10 @@ static NSOperationQueue* treeIconQueue = nil;
 	
 	NSString* p = [handle readLine];
 	while ([p length] > 0) {
-		BOOL isLeaf = ([p characterAtIndex:[p length]- 1] != '/');
+		if ([p isEqualToString:@"\r"])
+			break;
+
+		BOOL isLeaf = ([p characterAtIndex:p.length - 1] != '/');
 		if (!isLeaf)
 			p = [p substringToIndex:[p length]-1];
 
@@ -302,10 +247,14 @@ static NSOperationQueue* treeIconQueue = nil;
 	return [[parent fullPath] stringByAppendingPathComponent: self.path];
 }
 
-- (void) finalize
-{
-	if (localFileName)
-		[[NSFileManager defaultManager] removeItemAtPath:localFileName error:nil];
-	[super finalize];
-}
+// !!! Andre Berg 20100324: finalize seldomly causes the following error message:
+// malloc: resurrection error for object 0x12b1110 while assigning NSFilesystemItemRemoveOperation._removePath[32](0x12a0170)[16] = NSPathStore2[240](0x12b1110)
+// garbage pointer stored into reachable memory, break on auto_zone_resurrection_error to debug
+// objc[40604]: **resurrected** object 0x12b1110 of class NSPathStore2 being finalized
+// - (void) finalize
+// {
+// 	if (localFileName)
+// 		[[NSFileManager defaultManager] removeItemAtPath:localFileName error:nil];
+// 	[super finalize];
+// }
 @end

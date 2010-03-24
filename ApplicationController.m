@@ -16,6 +16,7 @@
 #import "PBPrefsWindowController.h"
 #import "PBNSURLPathUserDefaultsTransfomer.h"
 #import "PBGitDefaults.h"
+#import "PBCloneRepositoryPanel.h"
 
 @implementation ApplicationController
 @synthesize cliProxy;
@@ -27,11 +28,10 @@
 #endif
 
 	if(self = [super init]) {
-        /* Location of QuickLookUI.framework - it's public now */
-        if(![[NSBundle bundleWithPath:@"/System/Library/Frameworks/Quartz.framework/Frameworks/QuickLookUI.framework"] load]) 
-        {
-            NSLog(@"Could not load QuickLook");
-        }
+        if(![[NSBundle bundleWithPath:@"/System/Library/Frameworks/Quartz.framework/Frameworks/QuickLookUI.framework"] load])
+			if(![[NSBundle bundleWithPath:@"/System/Library/PrivateFrameworks/QuickLookUI.framework"] load])
+				NSLog(@"Could not load QuickLook");
+
 		self.cliProxy = [PBCLIProxy new];
 	}
 
@@ -65,34 +65,53 @@
 
 - (void)applicationDidFinishLaunching:(NSNotification*)notification
 {
+	// Make sure Git's SSH password requests get forwarded to our little UI tool:
+	setenv( "SSH_ASKPASS", [[[NSBundle mainBundle] pathForResource: @"gitx_askpasswd" ofType: @""] UTF8String], 1 );
+	setenv( "DISPLAY", "localhost:0", 1 );
+	
 	[self registerServices];
+
+    BOOL hasOpenedDocuments = NO;
+    NSArray *launchedDocuments = [[[PBRepositoryDocumentController sharedDocumentController] documents] copy];
 
 	// Only try to open a default document if there are no documents open already.
 	// For example, the application might have been launched by double-clicking a .git repository,
 	// or by dragging a folder to the app icon
-	if ([[[PBRepositoryDocumentController sharedDocumentController] documents] count])
-		return;
+	if ([launchedDocuments count])
+		hasOpenedDocuments = YES;
+
+    // open any documents that were open the last time the app quit
+    if ([PBGitDefaults openPreviousDocumentsOnLaunch]) {
+        for (NSString *path in [PBGitDefaults previousDocumentPaths]) {
+            NSURL *url = [NSURL fileURLWithPath:path isDirectory:YES];
+            NSError *error = nil;
+            if (url && [[PBRepositoryDocumentController sharedDocumentController] openDocumentWithContentsOfURL:url display:YES error:&error])
+                hasOpenedDocuments = YES;
+        }
+    }
+
+	// Try to find the current directory, to open that as a repository
+	if ([PBGitDefaults openCurDirOnLaunch] && !hasOpenedDocuments) {
+		NSString *curPath = [[[NSProcessInfo processInfo] environment] objectForKey:@"PWD"];
+        NSURL *url = nil;
+		if (curPath)
+			url = [NSURL fileURLWithPath:curPath];
+        // Try to open the found URL
+        NSError *error = nil;
+        if (url && [[PBRepositoryDocumentController sharedDocumentController] openDocumentWithContentsOfURL:url display:YES error:&error])
+            hasOpenedDocuments = YES;
+	}
+
+    // to bring the launched documents to the front
+    for (PBGitRepository *document in launchedDocuments)
+        [document showWindows];
 
 	if (![[NSApplication sharedApplication] isActive])
 		return;
 
-	NSURL *url = nil;
-
-	// Try to find the current directory, to open that as a repository
-	if ([PBGitDefaults openCurDirOnLaunch]) {
-		NSString *curPath = [[[NSProcessInfo processInfo] environment] objectForKey:@"PWD"];
-		if (curPath)
-			url = [NSURL fileURLWithPath:curPath];
-	}
-
-	// Try to open the found URL
-	NSError *error = nil;
-	if (url && [[PBRepositoryDocumentController sharedDocumentController] openDocumentWithContentsOfURL:url display:YES error:&error])
-		return;
-
 	// The current directory was not enabled or could not be opened (most likely it’s not a git repository).
 	// show an open panel for the user to select a repository to view
-	if ([PBGitDefaults showOpenPanelOnLaunch])
+	if ([PBGitDefaults showOpenPanelOnLaunch] && !hasOpenedDocuments)
 		[[PBRepositoryDocumentController sharedDocumentController] openDocument:self];
 }
 
@@ -118,6 +137,14 @@
 	#endif
 
 	[NSApp orderFrontStandardAboutPanelWithOptions:dict];
+}
+
+- (IBAction) showCloneRepository:(id)sender
+{
+	if (!cloneRepositoryPanel)
+		cloneRepositoryPanel = [PBCloneRepositoryPanel panel];
+
+	[cloneRepositoryPanel showWindow:self];
 }
 
 - (IBAction)installCliTool:(id)sender;
@@ -193,7 +220,7 @@
         return managedObjectModel;
     }
 	
-    managedObjectModel = [NSManagedObjectModel mergedModelFromBundles:nil];    
+    managedObjectModel = [[NSManagedObjectModel mergedModelFromBundles:nil] retain];    
     return managedObjectModel;
 }
 
@@ -270,11 +297,13 @@
  */
  
 - (IBAction) saveAction:(id)sender {
+
     NSError *error = nil;
     if (![[self managedObjectContext] save:&error]) {
         [[NSApplication sharedApplication] presentError:error];
     }
 }
+
 
 /**
     Implementation of the applicationShouldTerminate: method, used here to
@@ -324,24 +353,20 @@
     return reply;
 }
 
-// QuickLook preview panel
-
-- (IBAction)togglePreviewPanel:(id)previewPanel
+- (void)applicationWillTerminate:(NSNotification *)aNotification
 {
-    if ([QLPreviewPanel sharedPreviewPanelExists] && [[QLPreviewPanel sharedPreviewPanel] isVisible]) {
-        [[QLPreviewPanel sharedPreviewPanel] orderOut:nil];
-    } else {
-        [[QLPreviewPanel sharedPreviewPanel] makeKeyAndOrderFront:nil];
-    }
-}
+	[PBGitDefaults removePreviousDocumentPaths];
 
-- (BOOL) validateMenuItem:(NSMenuItem *)item {
-    if ([item action] == @selector(saveAction:)) {
-        // disable the Save menu item if there is no repository document open
-        return ([[PBRepositoryDocumentController sharedDocumentController] currentDocument] != nil);
-    } else {
-        return [NSApp validateMenuItem:item];
-    }
+	if ([PBGitDefaults openPreviousDocumentsOnLaunch]) {
+		NSArray *documents = [[PBRepositoryDocumentController sharedDocumentController] documents];
+		if ([documents count] > 0) {
+			NSMutableArray *paths = [NSMutableArray array];
+			for (PBGitRepository *repository in documents)
+				[paths addObject:[repository workingDirectory]];
+
+			[PBGitDefaults setPreviousDocumentPaths:paths];
+		}
+	}
 }
 
 /**

@@ -14,6 +14,6 @@
 	NSString *repositoryPath;
 }
 @property (copy) NSString *repositoryPath;
-- init;
-- initWithRepository:(NSString *)path;
+- (id) init;
+- (id) initWithRepositoryPath:(NSString *)path;
 @end

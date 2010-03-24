@@ -1,3 +1,7 @@
 [submodule "libgit2"]
-	path = libgit2
-	url = git://repo.or.cz/libgit2.git
+    path = libgit2
+    url = git://github.com/pieter/libgit2.git
+
+# Please don't change the submodule link since we really need the
+# "saved" libgit2 from Pieter's repo as GitX uses a deprecated function 
+# to calculate the realSha

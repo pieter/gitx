@@ -12,44 +12,56 @@
 @implementation PBGitRevSpecifier
 
 @synthesize parameters, description, workingDirectory;
+@synthesize isSimpleRef;
 
-- (id) initWithParameters:(NSArray*) params
+
+// internal designated init
+- (id) initWithParameters:(NSArray *)params description:(NSString *)descrip
 {
 	parameters = params;
-	description = nil;
+	description = descrip;
+
+	if (([parameters count] > 1) || ([parameters count] == 0))
+		isSimpleRef =  NO;
+	else {
+		NSString *param = [parameters objectAtIndex:0];
+		if ([param hasPrefix:@"-"] ||
+			[param rangeOfCharacterFromSet:[NSCharacterSet characterSetWithCharactersInString:@"^@{}~:"]].location != NSNotFound ||
+			[param rangeOfString:@".."].location != NSNotFound)
+			isSimpleRef =  NO;
+		else
+			isSimpleRef =  YES;
+	}
+
 	return self;
 }
 
-- (id) initWithRef: (PBGitRef*) ref
+- (id) initWithParameters:(NSArray *)params
 {
-	parameters = [NSArray arrayWithObject: ref.ref];
-	description = [ref shortName];
+	[self initWithParameters:params description:nil];
+	return self;
+}
+
+- (id) initWithRef:(PBGitRef *)ref
+{
+	[self initWithParameters:[NSArray arrayWithObject:ref.ref] description:[ref shortName]];
 	return self;
 }
 
 - (id) initWithCoder:(NSCoder *)coder
 {
-	parameters = [coder decodeObjectForKey:@"Parameters"];
-	description = [coder decodeObjectForKey:@"Description"];
+	[self initWithParameters:[coder decodeObjectForKey:@"Parameters"] description:[coder decodeObjectForKey:@"Description"]];
 	return self;
 }
 
 + (PBGitRevSpecifier *)allBranchesRevSpec
 {
-	id revspec = [[PBGitRevSpecifier alloc] initWithParameters:[NSArray arrayWithObject:@"--all"]];
-	[revspec setDescription:@"All branches"];
-	return revspec;
+	return [[PBGitRevSpecifier alloc] initWithParameters:[NSArray arrayWithObject:@"--all"] description:@"All branches"];
 }
 
 + (PBGitRevSpecifier *)localBranchesRevSpec
 {
-	id revspec = [[PBGitRevSpecifier alloc] initWithParameters:[NSArray arrayWithObject:@"--branches"]];
-	[revspec setDescription:@"Local branches"];
-	return revspec;
-}
-- (BOOL) isSimpleRef
-{
-	return ([parameters count] == 1 && ![[parameters objectAtIndex:0] hasPrefix:@"-"]);
+	return [[PBGitRevSpecifier alloc] initWithParameters:[NSArray arrayWithObject:@"--branches"] description:@"Local branches"];
 }
 
 - (NSString*) simpleRef
@@ -59,12 +71,42 @@
 	return [parameters objectAtIndex:0];
 }
 
-- (NSString*) description
+- (PBGitRef *) ref
 {
-	if (description)
-		return description;
+	if (![self isSimpleRef])
+		return nil;
+
+	return [PBGitRef refFromString:[self simpleRef]];
+}
+
+- (NSString *) description
+{
+	if (!description)
+		description = [parameters componentsJoinedByString:@" "];
+
+	return description;
+}
+
+- (NSString *) title
+{
+	NSString *title = nil;
 	
-	return [parameters componentsJoinedByString:@" "];
+	if ([self.description isEqualToString:@"HEAD"])
+		title = @"detached HEAD";
+	else if ([self isSimpleRef])
+		title = [[self ref] shortName];
+	else if ([self.description hasPrefix:@"-S"])
+		title = [self.description substringFromIndex:[@"-S" length]];
+	else if ([self.description hasPrefix:@"HEAD -- "])
+		title = [self.description substringFromIndex:[@"HEAD -- " length]];
+	else if ([self.description hasPrefix:@"-- "])
+		title = [self.description substringFromIndex:[@"-- " length]];
+	else if ([self.description hasPrefix:@"--left-right "])
+		title = [self.description substringFromIndex:[@"--left-right " length]];
+	else
+		title = self.description;
+	
+	return [NSString stringWithFormat:@"\"%@\"", title];
 }
 
 - (BOOL) hasPathLimiter;
@@ -82,17 +124,34 @@
 			return YES;
 	return NO;
 }
-	
-- (BOOL) isEqualTo: (PBGitRevSpecifier*) other
+
+- (BOOL) isEqual:(PBGitRevSpecifier *)other
 {
 	if ([self isSimpleRef] ^ [other isSimpleRef])
 		return NO;
 	
 	if ([self isSimpleRef])
-		return [[[self parameters] objectAtIndex: 0] isEqualToString: [other.parameters objectAtIndex: 0]];
+		return [[[self parameters] objectAtIndex:0] isEqualToString:[other.parameters objectAtIndex:0]];
 
-	return ([[parameters componentsJoinedByString:@" "] isEqualToString: [other.parameters componentsJoinedByString:@" "]] &&
-			 (!description  || [description isEqualToString:other.description]));
+	return [self.description isEqualToString:other.description];
+}
+
+- (NSUInteger) hash
+{
+	if ([self isSimpleRef])
+		return [[[self parameters] objectAtIndex:0] hash];
+
+	return [self.description hash];
+}
+
+- (BOOL) isAllBranchesRev
+{
+	return [self isEqual:[PBGitRevSpecifier allBranchesRevSpec]];
+}
+
+- (BOOL) isLocalBranchesRev
+{
+	return [self isEqual:[PBGitRevSpecifier localBranchesRevSpec]];
 }
 
 - (void) encodeWithCoder:(NSCoder *)coder
@@ -100,4 +159,14 @@
 	[coder encodeObject:description forKey:@"Description"];
 	[coder encodeObject:parameters forKey:@"Parameters"];
 }
+
+- (id)copyWithZone:(NSZone *)zone
+{
+    PBGitRevSpecifier *copy = [[[self class] allocWithZone:zone] initWithParameters:[self.parameters copy]];
+    copy.description = [self.description copy];
+	copy.workingDirectory = [self.workingDirectory copy];
+
+    return copy;
+}
+
 @end

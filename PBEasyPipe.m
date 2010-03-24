@@ -50,8 +50,7 @@
     
 	NSPipe* pipe = [NSPipe pipe];
 	[task setStandardOutput:pipe];
-   [task setStandardError:pipe];
-   
+    [task setStandardError:pipe];
 	return task;
 }
 
@@ -107,7 +106,6 @@
 	NSFileHandle* handle = [[task standardOutput] fileHandleForReading];
 	
 	[task launch];
-#warning This can cause a "Bad file descriptor"... when?
 	NSData *data;
 	@try {
 		data = [handle readDataToEndOfFile];

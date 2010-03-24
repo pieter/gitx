@@ -21,19 +21,22 @@
 - (void)keyDown:(NSEvent *)event
 {
 	NSString* character = [event charactersIgnoringModifiers];
-
+    
 	// Pass on command-shift up/down to the responder. We want the splitview to capture this.
 	if ([event modifierFlags] & NSShiftKeyMask && [event modifierFlags] & NSCommandKeyMask && ([event keyCode] == 0x7E || [event keyCode] == 0x7D)) {
 		[self.nextResponder keyDown:event];
 		return;
 	}
-
-	if ([character isEqualToString:@" "])
-	{
-		if ([event modifierFlags] & NSShiftKeyMask)
-			[webView scrollPageUp: self];
+    
+	if ([character isEqualToString:@" "]) {
+		if (controller.selectedCommitDetailsIndex == 0) {
+			if ([event modifierFlags] & NSShiftKeyMask)
+				[webView scrollPageUp:self];
+			else
+				[webView scrollPageDown:self];
+		}
 		else
-			[webView scrollPageDown: self];
+			[controller toggleQLPreviewPanel:self];
 	}
 	else if ([character rangeOfCharacterFromSet:[NSCharacterSet characterSetWithCharactersInString:@"jkcv"]].location == 0)
 		[webController sendKey: character];
@@ -61,8 +64,9 @@
 	int row = [self rowAtPoint:location];
 	int column = [self columnAtPoint:location];
 	PBGitRevisionCell *cell = (PBGitRevisionCell *)[self preparedCellAtColumn:column row:row];
+	NSRect cellFrame = [self frameOfCellAtColumn:column row:row];
 
-	int index = [cell indexAtX:location.x];
+	int index = [cell indexAtX:(location.x - cellFrame.origin.x)];
 	if (index == -1)
 		return [super dragImageForRowsWithIndexes:dragRows tableColumns:tableColumns event:dragEvent offset:dragImageOffset];
 

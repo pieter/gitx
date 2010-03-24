@@ -9,6 +9,8 @@
 #import "PBPrefsWindowController.h"
 #import "PBGitRepository.h"
 
+#define kPreferenceViewIdentifier @"PBGitXPreferenceViewIdentifier"
+
 @implementation PBPrefsWindowController
 
 # pragma mark DBPrefsWindowController overrides
@@ -21,6 +23,22 @@
 	[self addView:integrationPrefsView label:@"Integration" image:[NSImage imageNamed:NSImageNameNetwork]];
 	// UPDATES
 	[self addView:updatesPrefsView label:@"Updates"];
+}
+
+- (void)displayViewForIdentifier:(NSString *)identifier animate:(BOOL)animate
+{
+	[super displayViewForIdentifier:identifier animate:animate];
+
+	[[NSUserDefaults standardUserDefaults] setObject:identifier forKey:kPreferenceViewIdentifier];
+}
+
+- (NSString *)defaultViewIdentifier
+{
+	NSString *identifier = [[NSUserDefaults standardUserDefaults] objectForKey:kPreferenceViewIdentifier];
+	if (identifier)
+		return identifier;
+
+	return [super defaultViewIdentifier];
 }
 
 #pragma mark -
@@ -44,7 +62,6 @@
 	[openPanel setAllowsMultipleSelection:NO];
 	[openPanel setTreatsFilePackagesAsDirectories:YES];
 	[openPanel setAccessoryView:gitPathOpenAccessory];
-    //[openPanel setShowsHiddenFiles:YES];
 
 	gitPathOpenPanel = openPanel;
 }
@@ -54,10 +71,14 @@
 
 - (IBAction) showHideAllFiles: sender
 {
-	//NSNumber *showHidden = [NSNumber numberWithBool:[sender state] == NSOnState];
-	//[[gitPathOpenPanel valueForKey:@"_navView"] setValue:showHidden forKey:@"showsHiddenFiles"];
-    BOOL showHidden = ([sender state] == NSOnState);
-	[gitPathOpenPanel setShowsHiddenFiles:showHidden];
+    if ([gitPathOpenPanel respondsToSelector:@selector(setShowsHiddenFiles:)]) {
+        BOOL showHidden = ([sender state] == NSOnState);
+        [gitPathOpenPanel setShowsHiddenFiles:showHidden];
+    } else {
+        /* FIXME: This uses undocumented OpenPanel features to show hidden files! */
+        NSNumber *showHidden = [NSNumber numberWithBool:[sender state] == NSOnState];
+        [[gitPathOpenPanel valueForKey:@"_navView"] setValue:showHidden forKey:@"showsHiddenFiles"];
+    }
 }
 
 @end

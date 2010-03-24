@@ -7,96 +7,39 @@
 //
 
 #import "PBGitHistoryController.h"
+#import "CWQuickLook.h"
 #import "PBGitGrapher.h"
 #import "PBGitRevisionCell.h"
 #import "PBCommitList.h"
 #import "ApplicationController.h"
 #import "PBQLOutlineView.h"
+#import "PBCreateBranchSheet.h"
+#import "PBCreateTagSheet.h"
+#import "PBAddRemoteSheet.h"
+#import "PBGitSidebarController.h"
+#import "PBGitGradientBarView.h"
+#import "PBDiffWindowController.h"
+#import "PBGitDefaults.h"
+#import "PBGitRevList.h"
+
+#define QLPreviewPanel NSClassFromString(@"QLPreviewPanel")
+#define kHistorySelectedDetailIndexKey @"PBHistorySelectedDetailIndex"
+#define kHistoryDetailViewIndex 0
+#define kHistoryTreeViewIndex 1
+
+@interface PBGitHistoryController ()
+
+- (void) updateBranchFilterMatrix;
+- (void) restoreFileBrowserSelection;
+- (void) saveFileBrowserSelection;
+
+@end
+
 
 @implementation PBGitHistoryController
-@synthesize selectedTab, webCommit, rawCommit, gitTree, commitController;
+@synthesize selectedCommitDetailsIndex, webCommit, gitTree, commitController, refController;
 
-// MARK: Quick Look panel support
-
-- (BOOL)acceptsPreviewPanelControl:(QLPreviewPanel *)panel;
-{
-    return YES;
-}
-
-- (void)beginPreviewPanelControl:(QLPreviewPanel *)panel
-{
-    // This document is now responsible of the preview panel
-    // It is allowed to set the delegate, data source and refresh panel.
-    previewPanel = panel;
-    panel.delegate = self;
-    panel.dataSource = self;
-}
-
-- (void)endPreviewPanelControl:(QLPreviewPanel *)panel
-{
-    // This document loses its responsisibility on the preview panel
-    // Until the next call to -beginPreviewPanelControl: it must not
-    // change the panel's delegate, data source or refresh it.
-    [previewPanel release];
-    previewPanel = nil;
-}
-
-// MARK: Quick Look panel data source
-
-- (NSInteger)numberOfPreviewItemsInPreviewPanel:(QLPreviewPanel *)panel
-{
-    return [[fileBrowser selectedRowIndexes] count];
-}
-
-- (id <QLPreviewItem>)previewPanel:(QLPreviewPanel *)panel previewItemAtIndex:(NSInteger)index
-{
-    return [[treeController selectedObjects] objectAtIndex:index];
-}
-
-// MARK: Quick Look panel delegate
-
-- (BOOL)previewPanel:(QLPreviewPanel *)panel handleEvent:(NSEvent *)event
-{
-    // redirect all key down events to the table view
-    if ([event type] == NSKeyDown) {
-        [fileBrowser keyDown:event];
-        return YES;
-    }
-    return NO;
-}
-
-// This delegate method provides the rect on screen from which the panel will zoom.
-- (NSRect)previewPanel:(QLPreviewPanel *)panel sourceFrameOnScreenForPreviewItem:(id <QLPreviewItem>)item
-{
-    NSInteger index = [fileBrowser rowForItem:[[treeController selectedNodes] objectAtIndex:0]];
-    if (index == NSNotFound) {
-        return NSZeroRect;
-    }
-    
-    NSRect iconRect = [fileBrowser frameOfCellAtColumn:0 row:index];
-    
-    // check that the icon rect is visible on screen
-    NSRect visibleRect = [fileBrowser visibleRect];
-    
-    if (!NSIntersectsRect(visibleRect, iconRect)) {
-        return NSZeroRect;
-    }
-
-    // convert icon rect to screen coordinates
-    iconRect = [fileBrowser convertRectToBase:iconRect];
-    iconRect.origin = [[fileBrowser window] convertBaseToScreen:iconRect.origin];
-    
-    return iconRect;
-}
-
-// This delegate method provides a transition image between the table view and the preview panel
-- (id)previewPanel:(QLPreviewPanel *)panel transitionImageForPreviewItem:(id <QLPreviewItem>)item contentRect:(NSRect *)contentRect
-{
-    PBGitTree * treeItem = (PBGitTree *)item;
-    return treeItem.iconImage;
-}
-
-// MARK: NSToolbarItemValidation Methods
+#pragma mark NSToolbarItemValidation Methods
 
 - (BOOL) validateToolbarItem:(NSToolbarItem *)theItem {
     
@@ -116,14 +59,22 @@
     return res;
 }
 
-// MARK: PBGitHistoryController
+#pragma mark PBGitHistoryController
 
 - (void)awakeFromNib
 {
-	self.selectedTab = [[NSUserDefaults standardUserDefaults] integerForKey:@"Repository Window Selected Tab Index"];;
-	[commitController addObserver:self forKeyPath:@"selection" options:(NSKeyValueObservingOptionNew,NSKeyValueObservingOptionOld) context:@"commitChange"];
+	self.selectedCommitDetailsIndex = [[NSUserDefaults standardUserDefaults] integerForKey:kHistorySelectedDetailIndexKey];
+
+	[commitController addObserver:self forKeyPath:@"selection" options:0 context:@"commitChange"];
+	[commitController addObserver:self forKeyPath:@"arrangedObjects.@count" options:NSKeyValueObservingOptionInitial context:@"updateCommitCount"];
 	[treeController addObserver:self forKeyPath:@"selection" options:0 context:@"treeChange"];
+
+	[repository.revisionList addObserver:self forKeyPath:@"isUpdating" options:0 context:@"revisionListUpdating"];
+	[repository.revisionList addObserver:self forKeyPath:@"updatedGraph" options:0 context:@"revisionListUpdatedGraph"];
 	[repository addObserver:self forKeyPath:@"currentBranch" options:0 context:@"branchChange"];
+	[repository addObserver:self forKeyPath:@"refs" options:0 context:@"updateRefs"];
+
+	forceSelectionUpdate = YES;
 	NSSize cellSpacing = [commitList intercellSpacing];
 	cellSpacing.height = 0;
 	[commitList setIntercellSpacing:cellSpacing];
@@ -142,59 +93,172 @@
 	[[commitList tableColumnWithIdentifier:@"subject"] setSortDescriptorPrototype:[[NSSortDescriptor alloc] initWithKey:@"subject" ascending:YES]];
 	// Add a menu that allows a user to select which columns to view
 	[[commitList headerView] setMenu:[self tableColumnMenu]];
-	[historySplitView setTopMin:33.0 andBottomMin:100.0];
+	[historySplitView setTopMin:58.0 andBottomMin:100.0];
 	[historySplitView uncollapse];
+
+	[upperToolbarView setTopShade:237/255.0 bottomShade:216/255.0];
+	[scopeBarView setTopColor:[NSColor colorWithCalibratedHue:0.579 saturation:0.068 brightness:0.898 alpha:1.000] 
+				  bottomColor:[NSColor colorWithCalibratedHue:0.579 saturation:0.119 brightness:0.765 alpha:1.000]];
+	//[scopeBarView setTopShade:207/255.0 bottomShade:180/255.0];
+	[self updateBranchFilterMatrix];
+
 	[super awakeFromNib];
 }
 
 - (void) updateKeys
 {
-	NSArray* selection = [commitController selectedObjects];
-	
-	// Remove any references in the QLPanel
-	//[[QLPreviewPanel sharedPreviewPanel] setURLs:[NSArray array] currentIndex:0 preservingDisplayState:YES];
-	// We have to do this manually, as NSTreeController leaks memory?
-	//[treeController setSelectionIndexPaths:[NSArray array]];
-	
-	if ([selection count] > 0)
-		realCommit = [selection objectAtIndex:0];
-	else
-		realCommit = nil;
-	
-	self.webCommit = nil;
-	self.rawCommit = nil;
-	self.gitTree = nil;
-	
-	switch (self.selectedTab) {
-		case 0:	self.webCommit = realCommit;			break;
-		case 1:	self.gitTree   = realCommit.tree;	break;
+	selectedCommit = [[commitController selectedObjects] lastObject];
+
+	if (self.selectedCommitDetailsIndex == kHistoryTreeViewIndex) {
+		self.gitTree = selectedCommit.tree;
+		[self restoreFileBrowserSelection];
 	}
-}	
+	else // kHistoryDetailViewIndex
+		self.webCommit = selectedCommit;
 
+	BOOL isOnHeadBranch = [selectedCommit isOnHeadBranch];
+	[mergeButton setEnabled:!isOnHeadBranch];
+	[cherryPickButton setEnabled:!isOnHeadBranch];
+	[rebaseButton setEnabled:!isOnHeadBranch];
+}
 
-- (void) setSelectedTab: (int) number
+- (void) updateBranchFilterMatrix
 {
-	selectedTab = number;
-	[[NSUserDefaults standardUserDefaults] setInteger:selectedTab forKey:@"Repository Window Selected Tab Index"];
+	if ([repository.currentBranch isSimpleRef]) {
+		[allBranchesFilterItem setEnabled:YES];
+		[localRemoteBranchesFilterItem setEnabled:YES];
+
+		NSInteger filter = repository.currentBranchFilter;
+		[allBranchesFilterItem setState:(filter == kGitXAllBranchesFilter)];
+		[localRemoteBranchesFilterItem setState:(filter == kGitXLocalRemoteBranchesFilter)];
+		[selectedBranchFilterItem setState:(filter == kGitXSelectedBranchFilter)];
+	}
+	else {
+		[allBranchesFilterItem setState:NO];
+		[localRemoteBranchesFilterItem setState:NO];
+
+		[allBranchesFilterItem setEnabled:NO];
+		[localRemoteBranchesFilterItem setEnabled:NO];
+
+		[selectedBranchFilterItem setState:YES];
+	}
+
+	[selectedBranchFilterItem setTitle:[repository.currentBranch title]];
+	[selectedBranchFilterItem sizeToFit];
+
+	[localRemoteBranchesFilterItem setTitle:[[repository.currentBranch ref] isRemote] ? @"Remote" : @"Local"];
+}
+
+- (PBGitCommit *) firstCommit
+{
+	NSArray *arrangedObjects = [commitController arrangedObjects];
+	if ([arrangedObjects count] > 0)
+		return [arrangedObjects objectAtIndex:0];
+
+	return nil;
+}
+
+- (void) setSelectedCommitDetailsIndex:(int)detailsIndex
+{
+	if (selectedCommitDetailsIndex == detailsIndex)
+		return;
+
+	selectedCommitDetailsIndex = detailsIndex;
+	[[NSUserDefaults standardUserDefaults] setInteger:selectedCommitDetailsIndex forKey:kHistorySelectedDetailIndexKey];
+	forceSelectionUpdate = YES;
 	[self updateKeys];
+}
+
+- (void) updateStatus
+{
+	self.isBusy = repository.revisionList.isUpdating;
+	self.status = [NSString stringWithFormat:@"%d commits loaded", [[commitController arrangedObjects] count]];
+}
+
+- (void) restoreFileBrowserSelection
+{
+	if (self.selectedCommitDetailsIndex != kHistoryTreeViewIndex)
+		return;
+
+	NSArray *children = [treeController content];
+	if ([children count] == 0)
+		return;
+
+	NSIndexPath *path = [[NSIndexPath alloc] init];
+	if ([currentFileBrowserSelectionPath count] == 0)
+		path = [path indexPathByAddingIndex:0];
+	else {
+		for (NSString *pathComponent in currentFileBrowserSelectionPath) {
+			PBGitTree *child = nil;
+			NSUInteger childIndex = 0;
+			for (child in children) {
+				if ([child.path isEqualToString:pathComponent]) {
+					path = [path indexPathByAddingIndex:childIndex];
+					children = child.children;
+					break;
+				}
+				childIndex++;
+			}
+			if (!child)
+				return;
+		}
+	}
+
+	[treeController setSelectionIndexPath:path];
+}
+
+- (void) saveFileBrowserSelection
+{
+	NSArray *objects = [treeController selectedObjects];
+	NSArray *content = [treeController content];
+
+	if ([objects count] && [content count]) {
+		PBGitTree *treeItem = [objects objectAtIndex:0];
+		currentFileBrowserSelectionPath = [treeItem.fullPath componentsSeparatedByString:@"/"];
+	}
 }
 
 - (void) observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
 {
     if ([(NSString *)context isEqualToString: @"commitChange"]) {
 		[self updateKeys];
+		[self restoreFileBrowserSelection];
 		return;
 	}
-	else if ([(NSString *)context isEqualToString: @"treeChange"]) {
+
+	if ([(NSString *)context isEqualToString: @"treeChange"]) {
 		[self updateQuicklookForce: NO];
+		[self saveFileBrowserSelection];
+		return;
 	}
-	else if([(NSString *)context isEqualToString:@"branchChange"]) {
+
+	if([(NSString *)context isEqualToString:@"branchChange"]) {
 		// Reset the sorting
-		commitController.sortDescriptors = [NSArray array];
+		if ([[commitController sortDescriptors] count])
+			[commitController setSortDescriptors:[NSArray array]];
+		[self updateBranchFilterMatrix];
+		return;
 	}
-	else {
-		[super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
+
+	if([(NSString *)context isEqualToString:@"updateRefs"]) {
+		[commitController rearrangeObjects];
+		return;
 	}
+
+	if([(NSString *)context isEqualToString:@"updateCommitCount"] || [(NSString *)context isEqualToString:@"revisionListUpdating"]) {
+		[self updateStatus];
+		return;
+	}
+
+	if([(NSString *)context isEqualToString:@"revisionListUpdatedGraph"]) {
+		if ([repository.currentBranch isSimpleRef])
+			[self selectCommit:[repository shaForRef:[repository.currentBranch ref]]];
+		else
+			[self selectCommit:[[self firstCommit] realSha]];
+		return;
+	}
+
+	[super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
 }
 
 - (IBAction) openSelectedFile: sender
@@ -207,14 +271,24 @@
 	[[NSWorkspace sharedWorkspace] openFile:name];
 }
 
-- (IBAction) setDetailedView: sender {
-	self.selectedTab = 0;
+- (IBAction) setDetailedView:(id)sender
+{
+	self.selectedCommitDetailsIndex = kHistoryDetailViewIndex;
+	forceSelectionUpdate = YES;
 }
-- (IBAction) setRawView: sender {
-	self.selectedTab = 1;
+
+- (IBAction) setTreeView:(id)sender
+{
+	self.selectedCommitDetailsIndex = kHistoryTreeViewIndex;
+	forceSelectionUpdate = YES;
 }
-- (IBAction) setTreeView: sender {
-	self.selectedTab = 2;
+
+- (IBAction) setBranchFilter:(id)sender
+{
+	repository.currentBranchFilter = [sender tag];
+	[PBGitDefaults setBranchFilter:repository.currentBranchFilter];
+	[self updateBranchFilterMatrix];
+	forceSelectionUpdate = YES;
 }
 
 - (void)keyDown:(NSEvent*)event
@@ -224,12 +298,7 @@
         && [event modifierFlags] & NSCommandKeyMask) 
     {
         // command+alt+f
-        [superController.window makeFirstResponder: searchField];
-    }
-    else if ([[event charactersIgnoringModifiers] isEqualToString: @" "]) 
-    {
-        // space
-        [[NSApp delegate] togglePreviewPanel:self];
+        [[superController window] makeFirstResponder: searchField];
     }
 	else 
     {
@@ -250,42 +319,59 @@
 	
 }
 
-- (IBAction) toggleQuickView: sender
+- (IBAction) toggleQLPreviewPanel:(id)sender
 {
-    [[NSApp delegate] togglePreviewPanel:sender];
+	if ([[QLPreviewPanel sharedPreviewPanel] respondsToSelector:@selector(setDataSource:)]) {
+		// Public QL API
+		if ([QLPreviewPanel sharedPreviewPanelExists] && [[QLPreviewPanel sharedPreviewPanel] isVisible])
+			[[QLPreviewPanel sharedPreviewPanel] orderOut:nil];
+		else
+			[[QLPreviewPanel sharedPreviewPanel] makeKeyAndOrderFront:nil];
+	}
+	else {
+		// Private QL API (10.5 only)
+		if ([[QLPreviewPanel sharedPreviewPanel] isOpen])
+			[[QLPreviewPanel sharedPreviewPanel] closePanel];
+		else {
+			[[QLPreviewPanel sharedPreviewPanel] makeKeyAndOrderFrontWithEffect:1];
+			[self updateQuicklookForce:YES];
+		}
+	}
 }
 
-- (void) updateQuicklookForce: (BOOL) force
+- (void) updateQuicklookForce:(BOOL)force
 {
-	if ((!force && ![[QLPreviewPanel sharedPreviewPanel] isVisible]) 
-        || ![QLPreviewPanel sharedPreviewPanelExists])
-    {
-        return;
-    }
-	
-// 	NSArray* selectedFiles = [treeController selectedObjects];
-// 	
-// 	if ([selectedFiles count] == 0)
-// 		return;
-// 	
-// 	NSMutableArray* fileNames = [NSMutableArray array];
-// 	for (PBGitTree* tree in selectedFiles) {
-// 		NSString* s = [tree tmpFileNameForContents];
-// 		if (s)
-// 			[fileNames addObject:[NSURL fileURLWithPath: s]];
-// 	}
-    [[QLPreviewPanel sharedPreviewPanel] reloadData];    
+	if (!force && ![[QLPreviewPanel sharedPreviewPanel] isOpen])
+		return;
+    
+	if ([[QLPreviewPanel sharedPreviewPanel] respondsToSelector:@selector(setDataSource:)]) {
+		// Public QL API
+		[previewPanel reloadData];
+	}
+	else {
+		// Private QL API (10.5 only)
+		NSArray *selectedFiles = [treeController selectedObjects];
+        
+		NSMutableArray *fileNames = [NSMutableArray array];
+		for (PBGitTree *tree in selectedFiles) {
+			NSString *filePath = [tree tmpFileNameForContents];
+			if (filePath)
+				[fileNames addObject:[NSURL fileURLWithPath:filePath]];
+		}
+        
+		if ([fileNames count])
+			[[QLPreviewPanel sharedPreviewPanel] setURLs:fileNames currentIndex:0 preservingDisplayState:YES];
+	}
 }
 
 - (IBAction) refresh: sender
 {
-	[repository reloadRefs];
-	[repository.revisionList reload];
+	[repository forceUpdateRevisions];
 }
 
 - (void) updateView
 {
-	[self refresh:nil];
+	[self updateKeys];
 }
 
 - (NSResponder *)firstResponder;
@@ -293,13 +379,46 @@
 	return commitList;
 }
 
-- (void) selectCommit: (NSString*) commit
+- (void) scrollSelectionToTopOfViewFrom:(NSInteger)oldIndex
 {
-	NSPredicate* selection = [NSPredicate predicateWithFormat:@"realSha == %@", commit];
-	NSArray* selectedCommits = [repository.revisionList.commits filteredArrayUsingPredicate:selection];
-	[commitController setSelectedObjects: selectedCommits];
-	int index = [[commitController selectionIndexes] firstIndex];
-	[commitList scrollRowToVisible: index];
+	if (oldIndex == NSIntegerMax)
+		oldIndex = 0;
+
+	NSInteger newIndex = [[commitController selectionIndexes] firstIndex];
+
+	if (newIndex > oldIndex) {
+		NSInteger visibleRows = floorf([[commitList superview] bounds].size.height / [commitList rowHeight]);
+		newIndex += visibleRows - 1;
+		if (newIndex >= [[commitController content] count])
+			newIndex = [[commitController content] count] - 1;
+	}
+
+	[commitList scrollRowToVisible:newIndex];
+}
+
+- (NSArray *) selectedObjectsForSHA:(NSString *)commitSHA
+{
+	NSPredicate *selection = [NSPredicate predicateWithFormat:@"realSha == %@", commitSHA];
+	NSArray *selectedCommits = [[commitController content] filteredArrayUsingPredicate:selection];
+
+	if (([selectedCommits count] == 0) && [self firstCommit])
+		selectedCommits = [NSArray arrayWithObject:[self firstCommit]];
+
+	return selectedCommits;
+}
+
+- (void) selectCommit:(NSString *)commitSHA
+{
+	if (!forceSelectionUpdate && [[selectedCommit realSha] isEqualToString:commitSHA])
+		return;
+
+	NSInteger oldIndex = [[commitController selectionIndexes] firstIndex];
+
+	NSArray *selectedCommits = [self selectedObjectsForSHA:commitSHA];
+	[commitController setSelectedObjects:selectedCommits];
+
+	if (repository.currentBranchFilter != kGitXSelectedBranchFilter)
+		[self scrollSelectionToTopOfViewFrom:oldIndex];
 }
 
 - (BOOL) hasNonlinearPath
@@ -372,6 +491,19 @@
 	}
 }
 
+- (void) checkoutFiles:(id)sender
+{
+	NSMutableArray *files = [NSMutableArray array];
+	for (NSString *filePath in [sender representedObject])
+		[files addObject:[filePath stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]]];
+
+	[repository checkoutFiles:files fromRefish:selectedCommit];
+}
+
+- (void) diffFilesAction:(id)sender
+{
+	[PBDiffWindowController showDiffWindowWithFiles:[sender representedObject] fromCommit:selectedCommit diffCommit:nil];
+}
 
 - (NSMenu *)contextMenuForTreeView
 {
@@ -385,21 +517,37 @@
 
 - (NSArray *)menuItemsForPaths:(NSArray *)paths
 {
-	BOOL multiple = [paths count] != 1;
+	NSMutableArray *filePaths = [NSMutableArray array];
+	for (NSString *filePath in paths)
+		[filePaths addObject:[filePath stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]]];
+
+	BOOL multiple = [filePaths count] != 1;
 	NSMenuItem *historyItem = [[NSMenuItem alloc] initWithTitle:multiple? @"Show history of files" : @"Show history of file"
 														 action:@selector(showCommitsFromTree:)
-                                                  keyEquivalent:@""];
+												  keyEquivalent:@""];
+
+	PBGitRef *headRef = [[repository headRef] ref];
+	NSString *headRefName = [headRef shortName];
+	NSString *diffTitle = [NSString stringWithFormat:@"Diff %@ with %@", multiple ? @"files" : @"file", headRefName];
+	BOOL isHead = [[selectedCommit realSha] isEqualToString:[repository headSHA]];
+	NSMenuItem *diffItem = [[NSMenuItem alloc] initWithTitle:diffTitle
+													  action:isHead ? nil : @selector(diffFilesAction:)
+											   keyEquivalent:@""];
+
+	NSMenuItem *checkoutItem = [[NSMenuItem alloc] initWithTitle:multiple ? @"Checkout files" : @"Checkout file"
+														  action:@selector(checkoutFiles:)
+												   keyEquivalent:@""];
 	NSMenuItem *finderItem = [[NSMenuItem alloc] initWithTitle:@"Show in Finder"
 														action:@selector(showInFinderAction:)
 												 keyEquivalent:@""];
 	NSMenuItem *openFilesItem = [[NSMenuItem alloc] initWithTitle:multiple? @"Open Files" : @"Open File"
 														   action:@selector(openFilesAction:)
 													keyEquivalent:@""];
-    
-	NSArray *menuItems = [NSArray arrayWithObjects:historyItem, finderItem, openFilesItem, nil];
+
+	NSArray *menuItems = [NSArray arrayWithObjects:historyItem, diffItem, checkoutItem, finderItem, openFilesItem, nil];
 	for (NSMenuItem *item in menuItems) {
 		[item setTarget:self];
-		[item setRepresentedObject:paths];
+		[item setRepresentedObject:filePaths];
 	}
     
 	return menuItems;
@@ -427,6 +575,132 @@
 	if(offset == 1)
 		return proposedMax - historySplitView.bottomViewMin;
 	return [sender frame].size.height;
+}
+
+
+#pragma mark Repository Methods
+
+- (IBAction) createBranch:(id)sender
+{
+	PBGitRef *currentRef = [repository.currentBranch ref];
+
+	if (!selectedCommit || [selectedCommit hasRef:currentRef])
+		[PBCreateBranchSheet beginCreateBranchSheetAtRefish:currentRef inRepository:self.repository];
+	else
+		[PBCreateBranchSheet beginCreateBranchSheetAtRefish:selectedCommit inRepository:self.repository];
+}
+
+- (IBAction) createTag:(id)sender
+{
+	if (!selectedCommit)
+		[PBCreateTagSheet beginCreateTagSheetAtRefish:[repository.currentBranch ref] inRepository:repository];
+	else
+		[PBCreateTagSheet beginCreateTagSheetAtRefish:selectedCommit inRepository:repository];
+}
+
+- (IBAction) showAddRemoteSheet:(id)sender
+{
+	[PBAddRemoteSheet beginAddRemoteSheetForRepository:self.repository];
+}
+
+- (IBAction) merge:(id)sender
+{
+	if (selectedCommit)
+		[repository mergeWithRefish:selectedCommit];
+}
+
+- (IBAction) cherryPick:(id)sender
+{
+	if (selectedCommit)
+		[repository cherryPickRefish:selectedCommit];
+}
+
+- (IBAction) rebase:(id)sender
+{
+	if (selectedCommit) {
+		PBGitRef *headRef = [[repository headRef] ref];
+		[repository rebaseBranch:headRef onRefish:selectedCommit];
+	}
+}
+
+#pragma mark -
+#pragma mark Quick Look Public API support
+
+@protocol QLPreviewItem;
+
+#pragma mark (QLPreviewPanelController)
+
+- (BOOL) acceptsPreviewPanelControl:(id)panel
+{
+    return YES;
+}
+
+- (void)beginPreviewPanelControl:(id)panel
+{
+    // This document is now responsible of the preview panel
+    // It is allowed to set the delegate, data source and refresh panel.
+    previewPanel = panel;
+	[previewPanel setDelegate:self];
+	[previewPanel setDataSource:self];
+}
+
+- (void)endPreviewPanelControl:(id)panel
+{
+    // This document loses its responsisibility on the preview panel
+    // Until the next call to -beginPreviewPanelControl: it must not
+    // change the panel's delegate, data source or refresh it.
+    previewPanel = nil;
+}
+
+#pragma mark <QLPreviewPanelDataSource>
+
+- (NSInteger)numberOfPreviewItemsInPreviewPanel:(id)panel
+{
+    return [[fileBrowser selectedRowIndexes] count];
+}
+
+- (id <QLPreviewItem>)previewPanel:(id)panel previewItemAtIndex:(NSInteger)index
+{
+	PBGitTree *treeItem = (PBGitTree *)[[treeController selectedObjects] objectAtIndex:index];
+	NSURL *previewURL = [NSURL fileURLWithPath:[treeItem tmpFileNameForContents]];
+
+    return (id <QLPreviewItem>)previewURL;
+}
+
+#pragma mark <QLPreviewPanelDelegate>
+
+- (BOOL)previewPanel:(id)panel handleEvent:(NSEvent *)event
+{
+    // redirect all key down events to the table view
+    if ([event type] == NSKeyDown) {
+        [fileBrowser keyDown:event];
+        return YES;
+    }
+    return NO;
+}
+
+// This delegate method provides the rect on screen from which the panel will zoom.
+- (NSRect)previewPanel:(id)panel sourceFrameOnScreenForPreviewItem:(id <QLPreviewItem>)item
+{
+    NSInteger index = [fileBrowser rowForItem:[[treeController selectedNodes] objectAtIndex:0]];
+    if (index == NSNotFound) {
+        return NSZeroRect;
+    }
+
+    NSRect iconRect = [fileBrowser frameOfCellAtColumn:0 row:index];
+
+    // check that the icon rect is visible on screen
+    NSRect visibleRect = [fileBrowser visibleRect];
+
+    if (!NSIntersectsRect(visibleRect, iconRect)) {
+        return NSZeroRect;
+    }
+
+    // convert icon rect to screen coordinates
+    iconRect = [fileBrowser convertRectToBase:iconRect];
+    iconRect.origin = [[fileBrowser window] convertBaseToScreen:iconRect.origin];
+
+    return iconRect;
 }
 
 @end

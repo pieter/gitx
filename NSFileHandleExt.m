@@ -36,8 +36,14 @@
 	while (n > 0) {
 		n = read(fd, buffer + bytesReceived++, 1);
 		
-		if (n < 0)
-			[[NSException exceptionWithName:@"Socket error" reason:@"Remote host closed connection" userInfo:nil] raise];
+		if (n < 0) {
+            if (errno == EINTR) {
+                n = 1;
+                bytesReceived--;
+            } else {
+                [[NSException exceptionWithName:@"Socket error" reason:@"Remote host closed connection" userInfo:nil] raise];
+            }
+        }
 		
 		if (bytesReceived >= bufferSize) {
 			// Make buffer bigger

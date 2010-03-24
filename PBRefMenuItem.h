@@ -11,15 +11,13 @@
 #import "PBGitCommit.h"
 
 @interface PBRefMenuItem : NSMenuItem {
-	PBGitRef *ref;
-	PBGitCommit *commit;
+	id <PBGitRefish> refish;
 }
-	
-@property (retain) PBGitCommit *commit;
-@property (retain) PBGitRef *ref;
 
-+ (PBRefMenuItem *)addRemoteMethod:(BOOL)isRemote title:(NSString *)title action:(SEL)selector;
-+ (NSArray *)defaultMenuItemsForRef:(PBGitRef *)ref commit:(PBGitCommit *)commit target:(id)target;
-+ (PBRefMenuItem *)separatorItem;
+@property (retain) id <PBGitRefish> refish;
+
++ (PBRefMenuItem *) separatorItem;
++ (NSArray *) defaultMenuItemsForRef:(PBGitRef *)ref inRepository:(PBGitRepository *)repo target:(id)target;
++ (NSArray *) defaultMenuItemsForCommit:(PBGitCommit *)commit target:(id)target;
 
 @end

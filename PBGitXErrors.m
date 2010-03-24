@@ -21,6 +21,7 @@
 
 NSString * const PBGitXErrorDomain      = @"PBGitXErrorDomain";
 NSString * const PBCLIProxyErrorDomain  = @"PBCLIProxyErrorDomain";
+NSString * const PBGitRepositoryErrorDomain  = @"PBGitRepositoryErrorDomain";
 
 NSString * const PBInvalidBranchErrorMessage  = @"Please select a local branch from the branch popup menu, which has a corresponding remote tracking branch set up.\n\n"
                                                 @"You can also use the context menu to choose a branch by right clicking on its label in the history view.";
