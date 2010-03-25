@@ -26,8 +26,8 @@ NSString * const kGitXCommitType = @"commit";
 	NSMutableArray *p = [NSMutableArray arrayWithCapacity:nParents];
 	for (i = 0; i < nParents; ++i)
 	{
-		char buff[2000];
-		char * s = git_oid_to_string(buff, 2000, parentShas + i);		
+		char buff[GIT_OID_HEXSZ+1];
+		char * s = git_oid_to_string(buff, GIT_OID_HEXSZ+1, parentShas + i);		
 		[p addObject:[NSString stringWithUTF8String:s]];
 	}
 	return p;
@@ -127,8 +127,8 @@ NSString * const kGitXCommitType = @"commit";
 - (NSString *)realSha
 {
 	if (!realSHA) {
-		char buff[2000];
-		char * hex = git_oid_to_string(buff, 2000, &sha);		
+		char buff[GIT_OID_HEXSZ+1];
+		char * hex = git_oid_to_string(buff, GIT_OID_HEXSZ+1, &sha);		
 		realSHA = [NSString stringWithUTF8String:hex];
 	}
 
