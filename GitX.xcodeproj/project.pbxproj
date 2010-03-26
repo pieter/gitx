@@ -1507,9 +1507,6 @@
 			buildSettings = {
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				INFOPLIST_PREFIX_HEADER = $PROJECT_TEMP_DIR/revision;
-				INFOPLIST_PREPROCESS = YES;
-				PREBINDING = NO;
 			};
 			name = Release;
 		};
@@ -1583,19 +1580,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 656F3B0A115C042D00CA816E /* Common.xcconfig */;
 			buildSettings = {
-				ARCHS = (
-					ppc,
-					i386,
-					x86_64,
-				);
-				GCC_C_LANGUAGE_STANDARD = gnu99;
-				GCC_ENABLE_OBJC_GC = required;
-				GCC_WARN_ABOUT_RETURN_TYPE = YES;
-				GCC_WARN_UNUSED_VARIABLE = YES;
-				INFOPLIST_PREFIX_HEADER = $PROJECT_TEMP_DIR/revision;
-				INFOPLIST_PREPROCESS = YES;
-				PREBINDING = NO;
-				SDKROOT = macosx10.6;
 			};
 			name = Install;
 		};
