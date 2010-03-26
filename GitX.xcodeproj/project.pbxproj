@@ -37,6 +37,8 @@
 		6552BA27109C4CA8003B4892 /* Preferences.xib in Resources */ = {isa = PBXBuildFile; fileRef = 47DBDB690E94EF6500671A1E /* Preferences.xib */; };
 		65604690115BF80F0021E246 /* Debug.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 6560468F115BF80F0021E246 /* Debug.xcconfig */; };
 		656F3B0B115C042D00CA816E /* Common.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 656F3B0A115C042D00CA816E /* Common.xcconfig */; };
+		659E57A2115C80D300786570 /* PBEasyPipe.m in Sources */ = {isa = PBXBuildFile; fileRef = F57CC3900E05DDF2000472E2 /* PBEasyPipe.m */; };
+		659E57D3115C819B00786570 /* PBGitBinary.m in Sources */ = {isa = PBXBuildFile; fileRef = F53C4DF60E97FC630022AD59 /* PBGitBinary.m */; };
 		65C77FA0108BF560003BD3B5 /* Quartz.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 65C77F9F108BF560003BD3B5 /* Quartz.framework */; };
 		65F3544011599F3100235D5B /* AddRemoteBranchTemplate.png in Resources */ = {isa = PBXBuildFile; fileRef = 65A102F110A7D9FE0033C593 /* AddRemoteBranchTemplate.png */; };
 		65F3555B1159A95700235D5B /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 65F3555A1159A95700235D5B /* MainMenu.xib */; };
@@ -103,8 +105,6 @@
 		F52BCE030E84208300AA3741 /* PBGitHistoryView.xib in Resources */ = {isa = PBXBuildFile; fileRef = F52BCE020E84208300AA3741 /* PBGitHistoryView.xib */; };
 		F52BCE070E84211300AA3741 /* PBGitHistoryController.m in Sources */ = {isa = PBXBuildFile; fileRef = F52BCE060E84211300AA3741 /* PBGitHistoryController.m */; };
 		F53C4DF70E97FC630022AD59 /* PBGitBinary.m in Sources */ = {isa = PBXBuildFile; fileRef = F53C4DF60E97FC630022AD59 /* PBGitBinary.m */; };
-		F53C4DF80E97FCA70022AD59 /* PBGitBinary.m in Sources */ = {isa = PBXBuildFile; fileRef = F53C4DF60E97FC630022AD59 /* PBGitBinary.m */; };
-		F53C4DF90E97FCAD0022AD59 /* PBEasyPipe.m in Sources */ = {isa = PBXBuildFile; fileRef = F57CC3900E05DDF2000472E2 /* PBEasyPipe.m */; };
 		F53FF2050E7ABB5300389171 /* PBGitRevSpecifier.m in Sources */ = {isa = PBXBuildFile; fileRef = F53FF2040E7ABB5300389171 /* PBGitRevSpecifier.m */; };
 		F56174570E058893001DCD79 /* PBGitTree.m in Sources */ = {isa = PBXBuildFile; fileRef = F56174560E058893001DCD79 /* PBGitTree.m */; };
 		F56244090E9684B0002B6C44 /* PBUnsortableTableHeader.m in Sources */ = {isa = PBXBuildFile; fileRef = F56244080E9684B0002B6C44 /* PBUnsortableTableHeader.m */; };
@@ -1236,8 +1236,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F5EF8C8E0E9D4A5D0050906B /* PBWebController.m in Sources */,
 				8D11072D0486CEB800E47090 /* main.m in Sources */,
+				F5EF8C8E0E9D4A5D0050906B /* PBWebController.m in Sources */,
 				F574A2910EAE2FF4003F2CB1 /* PBGitConfig.m in Sources */,
 				77C8280E06725ACE000B614F /* ApplicationController.m in Sources */,
 				770B37ED0679A11B001EADE2 /* GitTest_DataModel.xcdatamodel in Sources */,
@@ -1317,8 +1317,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F53C4DF90E97FCAD0022AD59 /* PBEasyPipe.m in Sources */,
-				F53C4DF80E97FCA70022AD59 /* PBGitBinary.m in Sources */,
+				659E57D3115C819B00786570 /* PBGitBinary.m in Sources */,
+				659E57A2115C80D300786570 /* PBEasyPipe.m in Sources */,
 				913D5E4D0E55644E00CECEA2 /* gitx.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

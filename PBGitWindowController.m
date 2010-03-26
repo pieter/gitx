@@ -15,8 +15,6 @@
 #import "PBGitSidebarController.h"
 #import "NSString_Truncate.h"
 
-#define SHEET_INFOTEXT_CHAR_LIMIT 2000      // character size limit for the message sheet's info text
-
 @implementation PBGitWindowController
 
 
