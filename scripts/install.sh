@@ -19,13 +19,29 @@
 # limitations under the License.
 
 # Installs GitX.app to $CUSTOM_INSTALL_DIR from Install.xcconfig
+# Installs gitx to $CLI_CUSTOM_INSTALL_DIR from Install.xcconfig using gitx_askpasswd
+
+export SUDO_ASKPASS="$BUILT_PRODUCTS_DIR/gitx_askpasswd"
+export GITX_ASKPASSWD_DIALOG_TITLE="Please enter sudo pass for Install"
 
 if [[ $BUILD_STYLE =~ "Install" ]]; then
-    echo "Installing to ${CUSTOM_INSTALL_DIR}... (switch to build config other than Install to avoid)"
+    if [[ ! -d "$CUSTOM_INSTALL_DIR" ]]; then
+        echo "$CUSTOM_INSTALL_DIR doesn't exist. Will create it for you..."
+        sudo -A -E /bin/mkdir -p "${CUSTOM_INSTALL_DIR}"
+    fi
+    if [[ ! -d "$CLI_CUSTOM_INSTALL_DIR" ]]; then
+        echo "$CLI_CUSTOM_INSTALL_DIR doesn't exist. Will create it for you..."
+        sudo -A -E /bin/mkdir -p "${CLI_CUSTOM_INSTALL_DIR}"
+    fi 
+    echo "Installing ${FULL_PRODUCT_NAME} to ${CUSTOM_INSTALL_DIR}... "
+    echo "Installing gitx command line tool to ${CLI_CUSTOM_INSTALL_DIR}..."
+    echo "(switch to build config other than Install to avoid)"
     if [[ -e /opt/local/bin/rsync ]]; then
         /opt/local/bin/rsync -rlHEptog --xattrs --acls "$BUILT_PRODUCTS_DIR/$FULL_PRODUCT_NAME" "$CUSTOM_INSTALL_DIR/"
+        sudo -A -E /opt/local/bin/rsync -rlHEptog --xattrs --acls "$BUILT_PRODUCTS_DIR/gitx" "$CLI_CUSTOM_INSTALL_DIR/"
     else
         /usr/bin/rsync -rlHEptog "$BUILT_PRODUCTS_DIR/$FULL_PRODUCT_NAME" "$CUSTOM_INSTALL_DIR/"
+        sudo -A -E /usr/bin/rsync -rlHEptog "$BUILT_PRODUCTS_DIR/gitx" "$CLI_CUSTOM_INSTALL_DIR/"
     fi
 else
     echo '$BUILD_STYLE does not contain "Install"... nothing to copy'

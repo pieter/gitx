@@ -24,7 +24,7 @@
 	NSSecureTextField*	mPasswordField;
 }
 
--(NSPanel*)		passwordPanel;
+-(NSPanel*)		passwordPanel:(NSString *)title;
 
 -(IBAction)	doOKButton: (id)sender;
 -(IBAction)	doCancelButton: (id)sender;
@@ -45,14 +45,15 @@
 	[super dealloc];
 }
 
--(NSPanel*)	passwordPanel
+-(NSPanel*)	passwordPanel:(NSString *)title
 {
 	if( !mPasswordPanel )
 	{
 		NSRect			box = NSMakeRect( 100, 100, 250, 100 );
-		mPasswordPanel = [[NSPanel alloc] initWithContentRect: box
-															styleMask: NSTitledWindowMask
-															backing: NSBackingStoreBuffered defer: NO];
+        mPasswordPanel = [[NSPanel alloc] initWithContentRect: box
+                                                    styleMask: NSTitledWindowMask
+                                                      backing: NSBackingStoreBuffered 
+                                                        defer: NO];
 		[mPasswordPanel setHidesOnDeactivate: NO];
 		[mPasswordPanel setLevel: NSFloatingWindowLevel];
 		[mPasswordPanel center];
@@ -115,7 +116,7 @@
 		[passwordLabel setBordered: NO];
 		[passwordLabel setBezeled: NO];
 		[passwordLabel setDrawsBackground: NO];
-		[passwordLabel setStringValue: @"Please enter your password:"];	// +++ Localize.
+		[passwordLabel setStringValue: title];	// +++ Localize.
 		[[mPasswordPanel contentView] addSubview: passwordLabel];
 	}
 	
@@ -148,7 +149,21 @@ int	main( int argc, const char** argv )
 	NSApplication	*	app = [NSApplication sharedApplication];
 	GAPAppDelegate	*	appDel = [[GAPAppDelegate alloc] init];
 	[app setDelegate: appDel];
-	NSWindow*			passPanel = [appDel passwordPanel];
+    
+    NSString * title;
+    const char * envtitle = getenv("GITX_ASKPASSWD_DIALOG_TITLE");
+    
+    if (envtitle != NULL) {
+        title = [NSString stringWithUTF8String:envtitle];
+    } else {
+        if (argc > 1) {
+            title = [NSString stringWithUTF8String:argv[1]];
+        } else {
+            title = @"Please enter your password:";
+        }
+    }
+    
+	NSWindow*			passPanel = [appDel passwordPanel:title];
 	
 	[app activateIgnoringOtherApps: YES];
 	[passPanel makeKeyAndOrderFront: nil];
