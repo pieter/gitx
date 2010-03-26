@@ -23,18 +23,27 @@
 		connection = [NSConnection new];
 		[connection setRootObject:self];
 
-		if ([connection registerName:ConnectionName] == NO)
+		if ([connection registerName:PBDOConnectionName] == NO)
 			NSBeep();
 	}
 	return self;
 }
 
-- (BOOL)openRepository:(NSURL*)repositoryPath arguments: (NSArray*) args error:(NSError**)error;
+- (BOOL)openRepository:(NSString *)repositoryPath arguments: (NSArray*) args error:(NSError**)error
 {
 	// FIXME I found that creating this redundant NSURL reference was necessary to
 	// work around an apparent bug with GC and Distributed Objects
 	// I am not familiar with GC though, so perhaps I was doing something wrong.
-	NSURL* url = [NSURL fileURLWithPath:[repositoryPath path]];
+    
+    // !!! Andre Berg 20100326: This is because NSURL objects are passed by reference
+    // See NSObject's implementation of -replacementObjectForPortCoder: where it says
+    // "Subclasses that want to be passed by copy instead of by reference must override 
+    // this method and return self."
+    // In other words we either make a subclass of NSURL that returns self for that implementation
+    // or we simply pass the path as NSString which is always bycopy.
+    // See also http://jens.mooseyard.com/2009/07/the-subtle-dangers-of-distributed-objects/#comment-3068
+    //
+	NSURL* url = [NSURL fileURLWithPath:repositoryPath isDirectory:YES];
 	NSArray* arguments = [NSArray arrayWithArray:args];
 
 	PBGitRepository *document = [[PBRepositoryDocumentController sharedDocumentController] documentForLocation:url];
@@ -62,9 +71,23 @@
 		[[arguments objectAtIndex:0] isEqualToString:@"-c"]))
 		[document.windowController showCommitView:self];
 	else {
-		PBGitRevSpecifier* rev = [[PBGitRevSpecifier alloc] initWithParameters:arguments];
-		rev.workingDirectory = url;
-		document.currentBranch = [document addBranch: rev];
+        PBGitRevSpecifier* rev = nil;
+        if ([arguments count] > 0 && [[arguments objectAtIndex:0] isEqualToString:@"--all"]) {
+            document.currentBranchFilter = kGitXAllBranchesFilter;
+            [document readCurrentBranch];
+            rev = document.currentBranch;
+        } else if ([arguments count] > 0 && [[arguments objectAtIndex:0] isEqualToString:@"--local"]) {
+            document.currentBranchFilter = kGitXLocalRemoteBranchesFilter;
+            [document readCurrentBranch];
+            rev = document.currentBranch;
+        }
+        
+        if (!rev) {
+            rev = [[PBGitRevSpecifier alloc] initWithParameters:arguments];
+            rev.workingDirectory = url;
+            document.currentBranch = [document addBranch: rev];
+        }
+        
 		[document.windowController showHistoryView:self];
 	}
 	[NSApp activateIgnoringOtherApps:YES];

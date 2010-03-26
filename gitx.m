@@ -12,7 +12,7 @@
 
 NSDistantObject* connect()
 {
-	id proxy = [NSConnection rootProxyForConnectionWithRegisteredName:ConnectionName host:nil];
+	id proxy = [NSConnection rootProxyForConnectionWithRegisteredName:PBDOConnectionName host:nil];
 	[proxy setProtocolForProxy:@protocol(GitXCliToolProtocol)];
 	return proxy;
 }
@@ -59,6 +59,7 @@ void usage(char const *programName)
 	printf("\tSee 'man git-log' and 'man git-rev-list' for options you can pass to gitx\n");
 	printf("\n");
 	printf("\t--all                  show all branches\n");
+    printf("\t--local                show local branches\n");
 	printf("\t<branch>               show specific branch\n");
 	printf("\t -- <path>             show commits touching paths\n");
 	exit(1);
@@ -148,13 +149,13 @@ int main(int argc, const char** argv)
 		handleDiffWithArguments([arguments subarrayWithRange:NSMakeRange(1, [arguments count] - 1)], pwd, proxy);
 
 	// No diff, just open the current dir
-	NSURL* url = [NSURL fileURLWithPath:pwd];
 	NSError* error = nil;
 
-	if (![proxy openRepository:url arguments: arguments error:&error]) {
-		fprintf(stderr, "Error opening repository at %s\n", [[url path] UTF8String]);
+	if (![proxy openRepository:pwd arguments: arguments error:&error]) {
+		fprintf(stderr, "Error opening repository at %s\n", [pwd UTF8String]);
 		if (error)
 			fprintf(stderr, "\t%s\n", [[error localizedFailureReason] UTF8String]);
+        return 1;
 	}
 
 	return 0;
