@@ -1177,7 +1177,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "echo \"Running install script...\" \n\"${PROJECT_DIR}/scripts/install.sh\"\n";
+			shellScript = "echo \"Running install script...\"\nchmod u+x \"${PROJECT_DIR}/scripts/install.sh\"\n\"${PROJECT_DIR}/scripts/install.sh\"\n";
 		};
 		F56439F60F792B2100A579C2 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
