@@ -1,9 +1,9 @@
 //
-//  Install.xcconfig
+//  Debug.xcconfig
 //  GitX
 //
-//  Created by Andre Berg on 19.10.09.
-//  Copyright 2009 Berg Media. All rights reserved.
+//  Created by Andre Berg on 25.03.10.
+//  Copyright 2010 Berg Media. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
 //  you may not use this file except in compliance with the License.
@@ -17,12 +17,17 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-// Global settings across build configurations for Install
+#include "Common.xcconfig"
 
-#include "Release.xcconfig"
+// Macros
 
-CUSTOM_INSTALL_DIR = $(DEVELOPER_DIR)/Applications/Utilities/Third-Party    // used with the Install.sh script
+GCC_PREPROCESSOR_DEFINITIONS_NOT_USED_IN_PRECOMPS = DEBUG_BUILD
 
-DEPLOYMENT_POSTPROCESSING = YES
+OTHER_CFLAGS = -fdiagnostics-show-option
 
-STRIP_INSTALLED_PRODUCT = YES
+// Warnings
+
+GCC_WARN_UNUSED_VARIABLE = YES
+GCC_WARN_CHECK_SWITCH_STATEMENTS = YES
+GCC_WARN_ABOUT_RETURN_TYPE = YES
+
