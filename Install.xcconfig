@@ -19,10 +19,10 @@
 
 // Global settings across build configurations for Install
 
+// The Install build config should just serve as a mere extension to the Release
+// config, e.g. please do not define settings here that could as well be defined
+// in Release.xcconfig.
+
 #include "Release.xcconfig"
 
 CUSTOM_INSTALL_DIR = $(DEVELOPER_DIR)/Applications/Utilities/Third-Party    // used with the Install.sh script
-
-DEPLOYMENT_POSTPROCESSING = YES
-
-STRIP_INSTALLED_PRODUCT = YES
