@@ -31,7 +31,6 @@
 
 	PBGitHistoryGrapher *grapher;
 	NSOperationQueue *graphQueue;
-	NSInvocationOperation *lastOperation;
 
 	NSMutableArray *commits;
 	BOOL isUpdating;

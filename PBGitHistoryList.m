@@ -131,8 +131,8 @@
 	if (graphQueue)
 		[graphQueue removeObserver:self forKeyPath:@"operations"];
 	graphQueue = [[NSOperationQueue alloc] init];
+	[graphQueue setMaxConcurrentOperationCount:1];
 	[graphQueue addObserver:self forKeyPath:@"operations" options:0 context:@"operations"];
-	lastOperation = nil;
 
 	grapher = [self grapher];
 }
@@ -140,12 +140,7 @@
 
 - (NSInvocationOperation *) operationForCommits:(NSArray *)newCommits
 {
-	NSInvocationOperation *graphOperation = [[NSInvocationOperation alloc] initWithTarget:grapher selector:@selector(graphCommits:) object:newCommits];
-	if (lastOperation)
-		[graphOperation addDependency:lastOperation];
-	lastOperation = graphOperation;
-
-	return graphOperation;
+	return [[NSInvocationOperation alloc] initWithTarget:grapher selector:@selector(graphCommits:) object:newCommits];
 }
 
 
