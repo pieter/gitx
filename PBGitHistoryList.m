@@ -159,6 +159,9 @@
 			if ([ref isBranch] || [ref isTag])
 				[baseCommitSHAs addObject:sha];
 
+	if (![[PBGitRef refFromString:[[repository headRef] simpleRef]] type])
+		[baseCommitSHAs addObject:[repository headSHA]];
+
 	return baseCommitSHAs;
 }
 
