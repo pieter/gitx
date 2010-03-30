@@ -66,6 +66,10 @@ NSString * const kGitXRemoteRefPrefix = @"refs/remotes/";
 	return nil;
 }
 
+- (NSString *) description {
+    return [NSString stringWithFormat:@"<PBGitRef %p> ref = %@", self, self.ref];
+}
+
 - (BOOL) isBranch
 {
 	return [ref hasPrefix:kGitXBranchRefPrefix];
@@ -120,6 +124,10 @@ NSString * const kGitXRemoteRefPrefix = @"refs/remotes/";
 
 + (BOOL)isKeyExcludedFromWebScript:(const char *)name {
 	return NO;
+}
+
+- (NSString *)debugDescription {
+    return [NSString stringWithFormat:@"<PBGitRef %p> ref = %@, type = %@", self, ref, [self type]];
 }
 
 
