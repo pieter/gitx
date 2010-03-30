@@ -35,13 +35,8 @@
 	// work around an apparent bug with GC and Distributed Objects
 	// I am not familiar with GC though, so perhaps I was doing something wrong.
     
-    // !!! Andre Berg 20100326: This is because NSURL objects are passed by reference
-    // See NSObject's implementation of -replacementObjectForPortCoder: where it says
-    // "Subclasses that want to be passed by copy instead of by reference must override 
-    // this method and return self."
-    // In other words we either make a subclass of NSURL that returns self for that implementation
-    // or we simply pass the path as NSString which is always bycopy.
-    // See also http://jens.mooseyard.com/2009/07/the-subtle-dangers-of-distributed-objects/#comment-3068
+    // !!! Andre Berg 20100326: This is because NSURL objects are passed as proxies
+    // See also http://jens.mooseyard.com/2009/07/the-subtle-dangers-of-distributed-objects/#comment-3069
     //
 	NSURL* url = [NSURL fileURLWithPath:repositoryPath isDirectory:YES];
 	NSArray* arguments = [NSArray arrayWithArray:args];
