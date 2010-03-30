@@ -33,6 +33,8 @@ enum branchFilterTypes {
 	NSMutableDictionary *refs;
 
 	PBGitRevSpecifier *_headRef; // Caching
+    
+    BOOL launchedFromCLI;
 }
 
 - (void) cloneRepositoryToPath:(NSString *)path bare:(BOOL)isBare;
@@ -114,5 +116,6 @@ enum branchFilterTypes {
 @property (assign) PBGitRevSpecifier *currentBranch;
 @property (assign) NSInteger currentBranchFilter;
 @property (retain) NSMutableDictionary* refs;
+@property (assign) BOOL launchedFromCLI;
 
 @end

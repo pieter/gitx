@@ -67,6 +67,10 @@
 		return NO;
 	}
 
+    NSLog(@"document = %@ at path = %@", document, repositoryPath);      
+    
+    document.launchedFromCLI = YES;
+
 	if ([arguments count] > 0 && ([[arguments objectAtIndex:0] isEqualToString:@"--commit"] ||
 		[[arguments objectAtIndex:0] isEqualToString:@"-c"]))
 		[document.windowController showCommitView:self];

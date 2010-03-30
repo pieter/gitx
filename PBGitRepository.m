@@ -25,6 +25,7 @@ static NSString * repositoryBasePath = nil;
 
 @synthesize revisionList, branches, currentBranch, refs, hasChanged, config;
 @synthesize currentBranchFilter;
+@synthesize launchedFromCLI;
 
 - (BOOL)readFromData:(NSData *)data ofType:(NSString *)typeName error:(NSError **)outError
 {
