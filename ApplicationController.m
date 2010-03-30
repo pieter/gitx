@@ -115,14 +115,23 @@
 		[[PBRepositoryDocumentController sharedDocumentController] openDocument:self];
 }
 
-- (void) windowWillClose: sender
+
+- (void) windowWillClose:(id)sender
 {
-	[firstResponder terminate: sender];
+    if ([[[sender object] windowController] isKindOfClass:[PBPrefsWindowController class]] ) {
+        for (PBGitRepository * doc in [[PBRepositoryDocumentController sharedDocumentController] documents]) {
+            [[[doc windowForSheet] contentView] setNeedsDisplay:YES];
+        }
+    } else {
+        [firstResponder terminate: sender];
+    }	
 }
 
 - (IBAction)openPreferencesWindow:(id)sender
 {
-	[[PBPrefsWindowController sharedPrefsWindowController] showWindow:nil];
+    DBPrefsWindowController * prefsWindowController = [PBPrefsWindowController sharedPrefsWindowController];
+    [[prefsWindowController window] setDelegate:self];
+	[prefsWindowController showWindow:nil];
 }
 
 - (IBAction)showAboutPanel:(id)sender
