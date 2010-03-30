@@ -41,11 +41,16 @@ var Commit = function(obj) {
                 this.author_date = new Date(parseInt(match[3]) * 1000);
                 
                 match = this.header.match(/\ncommitter (.*) <(.*@.*|.*)> ([0-9].*)/);
+                if (typeof match !== 'undefined') {
+                    this.committer_name = match[1];
+                    this.committer_email = match[2];
+                } else {
+                    this.committer_name = "undefined";
+                    this.committer_email = "undefined";
+                }
             } 
         }
 
-		this.committer_name = match[1];
-		this.committer_email = match[2];
 		this.committer_date = new Date(parseInt(match[3]) * 1000);		
 	}
 
