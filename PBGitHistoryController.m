@@ -241,6 +241,10 @@
 
 - (void) observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
 {
+    if ([ApplicationController sharedApplicationController].launchedFromGitx) {
+        return;
+    }
+
     if ([(NSString *)context isEqualToString: @"commitChange"]) {
 		[self updateKeys];
 		[self restoreFileBrowserSelection];
