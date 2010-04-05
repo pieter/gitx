@@ -10,7 +10,6 @@
 #import "PBGitCommit.h"
 #import "PBGitWindowController.h"
 #import "PBGitBinary.h"
-
 #import "NSFileHandleExt.h"
 #import "PBEasyPipe.h"
 #import "PBGitRef.h"
@@ -23,9 +22,13 @@ static NSString * repositoryBasePath = nil;
 
 @implementation PBGitRepository
 
-@synthesize revisionList, branches, currentBranch, refs, hasChanged, config;
+@synthesize revisionList;
+@synthesize branches;
+@synthesize currentBranch;
+@synthesize refs;
+@synthesize hasChanged;
+@synthesize config;
 @synthesize currentBranchFilter;
-@synthesize launchedFromCLI;
 
 - (BOOL)readFromData:(NSData *)data ofType:(NSString *)typeName error:(NSError **)outError
 {
