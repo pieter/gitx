@@ -47,7 +47,6 @@
 - (void) copy:(id)sender
 {
 	[controller copyCommitInfo];
-};	
 
 - (void)mouseDown:(NSEvent *)theEvent
 {
