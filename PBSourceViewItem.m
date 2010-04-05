@@ -23,6 +23,18 @@
 	return self;
 }
 
+- (NSString *) description {
+    return [NSString stringWithFormat:@"<%@ %p> title = %@, rev = %@, children = %@", 
+            NSStringFromClass([self class]), self, title, revSpecifier, children];
+}
+
+- (NSString *) debugDescription {
+    return [NSString stringWithFormat:@"%@, p = %@, ch = %@, grp? %@, unc? %@", 
+            [self description], parent, children, BMStringFromBOOL(isGroupItem), BMStringFromBOOL(isUncollapsible)];
+}
+
+
+
 + (id)itemWithTitle:(NSString *)title
 {
 	PBSourceViewItem *item = [[[self class] alloc] init];
