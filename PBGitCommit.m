@@ -33,6 +33,11 @@ NSString * const kGitXCommitType = @"commit";
 	return p;
 }
 
+- (NSString *) description {
+    return [NSString stringWithFormat:@"%@, realSha = %@, %d parent(s), repository = %@", 
+            [super description], [self realSha], nParents, repository];
+}
+
 - (NSDate *)date
 {
 	return [NSDate dateWithTimeIntervalSince1970:timestamp];

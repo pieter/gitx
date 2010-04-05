@@ -87,6 +87,11 @@
 	return description;
 }
 
+- (NSString *) debugDescription {
+    return [NSString stringWithFormat:@"<%@: %p> description = %@, parameters = %@", 
+            NSStringFromClass([self class]), self, description, parameters];
+}
+
 - (NSString *) title
 {
 	NSString *title = nil;
