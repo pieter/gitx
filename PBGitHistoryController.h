@@ -76,9 +76,11 @@
 - (IBAction) openSelectedFile:(id)sender;
 
 - (BOOL) selectCommit: (NSString*) commit;
+- (void) updateKeys;
 
 - (void) updateQuicklookForce: (BOOL) force;
 
+- (void) scrollSelectionToTopOfViewFrom:(NSInteger)oldIndex;
 
 // Moved over Sidebar methods
 - (IBAction) fetchPullPushAction:(id)sender;

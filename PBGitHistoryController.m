@@ -82,6 +82,12 @@
 	[repository addObserver:self forKeyPath:@"currentBranch" options:0 context:@"branchChange"];
 	[repository addObserver:self forKeyPath:@"refs" options:0 context:@"updateRefs"];
 
+	NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
+	[nc addObserver:self
+	       selector:@selector(preferencesChangedWithNotification:)
+               name:NSUserDefaultsDidChangeNotification
+             object:nil];
+
 	forceSelectionUpdate = YES;
 	NSSize cellSpacing = [commitList intercellSpacing];
 	cellSpacing.height = 0;
@@ -181,6 +187,10 @@
 {
 	self.isBusy = repository.revisionList.isUpdating;
 	self.status = [NSString stringWithFormat:@"%d commits loaded", [[commitController arrangedObjects] count]];
+}
+
+- (void) preferencesChangedWithNotification:(NSNotification *)notification {
+    [[[repository windowForSheet] contentView] setNeedsDisplay:YES];
 }
 
 - (void) restoreFileBrowserSelection
