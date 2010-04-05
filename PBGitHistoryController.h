@@ -16,6 +16,7 @@
 @class PBGitGradientBarView;
 @class PBRefController;
 @class QLPreviewPanel;
+@class PBCommitList;
 
 @interface PBGitHistoryController : PBViewController {
 	IBOutlet PBRefController *refController;
@@ -24,7 +25,7 @@
 	IBOutlet NSTreeController* treeController;
 	IBOutlet NSOutlineView* fileBrowser;
 	NSArray *currentFileBrowserSelectionPath;
-	IBOutlet NSTableView* commitList;
+	IBOutlet PBCommitList* commitList;
 	IBOutlet PBCollapsibleSplitView *historySplitView;
     QLPreviewPanel* previewPanel;
 

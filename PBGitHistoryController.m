@@ -363,19 +363,26 @@
 
 - (void) scrollSelectionToTopOfViewFrom:(NSInteger)oldIndex
 {
-	if (oldIndex == NSIntegerMax)
+	if (oldIndex == NSNotFound)
 		oldIndex = 0;
 
 	NSInteger newIndex = [[commitController selectionIndexes] firstIndex];
 
 	if (newIndex > oldIndex) {
-		NSInteger visibleRows = floorf([[commitList superview] bounds].size.height / [commitList rowHeight]);
-		newIndex += visibleRows - 1;
+        CGFloat sviewHeight = [[commitList superview] bounds].size.height;
+        CGFloat rowHeight = [commitList rowHeight];
+		NSInteger visibleRows = roundf(sviewHeight / rowHeight );
+		newIndex += (visibleRows - 1);
 		if (newIndex >= [[commitController content] count])
 			newIndex = [[commitController content] count] - 1;
 	}
 
+    if (newIndex != oldIndex) {
+        commitList.useAdjustScroll = YES;
+    }
+
 	[commitList scrollRowToVisible:newIndex];
+    commitList.useAdjustScroll = NO;
 }
 
 - (NSArray *) selectedObjectsForSHA:(NSString *)commitSHA
