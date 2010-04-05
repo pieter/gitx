@@ -311,6 +311,13 @@ static NSString * repositoryBasePath = nil;
 	return [self shaForRef:[[self headRef] ref]];
 }
 
+- (NSString *) headRefForSHA:(NSString *)sha
+{
+	// TODO: move code over
+    // from PBGitSidebarController populateList
+    // that deals with getting the head refs path
+}
+
 - (PBGitCommit *) headCommit
 {
 	return [self commitForSHA:[self headSHA]];
@@ -417,6 +424,32 @@ static NSString * repositoryBasePath = nil;
 	return YES;
 }
 
+- (BOOL) checkRefFormatForBranch:(NSString *)shaOrRefName
+{
+	int retValue = 1;
+	[self outputInWorkdirForArguments:[NSArray arrayWithObjects:@"check-ref-format", @"--branch", shaOrRefName, nil] retValue:&retValue];
+	if (retValue)
+		return NO;
+	return YES;
+}
+
+- (PBGitRef *) completeRefForString:(NSString *)partialRefString {
+    if (![self checkRefFormat:partialRefString] &&
+        ![self checkRefFormatForBranch:partialRefString]) {
+        return nil;
+    }
+    NSArray * prefixes = [NSArray arrayWithObjects:kGitXBranchRefPrefix, kGitXRemoteRefPrefix, kGitXTagRefPrefix, nil];
+    PBGitRef * completeRef = nil;
+    for (NSString * prefix in prefixes) {
+        PBGitRef * tryref = [PBGitRef refFromString:[NSString stringWithFormat:@"%@%@", prefix, partialRefString]];
+        if ([self refExists:tryref]) {
+            completeRef = tryref;
+            break;
+        }
+    }
+    return completeRef;
+}
+
 - (BOOL) refExists:(PBGitRef *)ref
 {
 	int retValue = 1;
@@ -424,6 +457,15 @@ static NSString * repositoryBasePath = nil;
     if (retValue || [output isEqualToString:@""])
         return NO;
     return YES;
+}
+
+- (NSString *) shaExists:(NSString *)sha
+{
+	int retValue = 1;
+    NSString *output = [self outputInWorkdirForArguments:[NSArray arrayWithObjects:@"rev-parse", sha, nil] retValue:&retValue];
+    if (retValue || [output isEqualToString:@""])
+        return nil;
+    return output;
 }
 		
 // Returns either this object, or an existing, equal object

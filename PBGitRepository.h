@@ -103,7 +103,11 @@ static NSString * PBStringFromBranchFilterType(PBGitXBranchFilterType type) {
 - (BOOL) isSHAOnHeadBranch:(NSString *)testSHA;
 - (BOOL) isRefOnHeadBranch:(PBGitRef *)testRef;
 - (BOOL) checkRefFormat:(NSString *)refName;
+- (BOOL) checkRefFormatForBranch:(NSString *)shaOrRefName;
+- (PBGitRef *) completeRefForString:(NSString *)partialRefString;
 - (BOOL) refExists:(PBGitRef *)ref;
+// checks to see if the ref or sha exists - returns nil if not found and the complete sha if found
+- (NSString *) shaExists:(NSString *)sha;
 
 - (NSArray *) remotes;
 - (BOOL) hasRemotes;
