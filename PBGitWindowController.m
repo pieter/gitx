@@ -17,8 +17,11 @@
 
 @implementation PBGitWindowController
 
-
-@synthesize repository, viewController, contentController;
+@synthesize repository;
+@synthesize viewController;
+@synthesize contentController;
+@synthesize sidebarController;
+@synthesize historyController;
 
 - (id)initWithRepository:(PBGitRepository*)theRepository displayDefault:(BOOL)displayDefault
 {
