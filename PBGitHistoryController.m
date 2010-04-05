@@ -261,7 +261,7 @@
 	[super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
 }
 
-- (IBAction) openSelectedFile: sender
+- (IBAction) openSelectedFile:(id)sender
 {
 	NSArray* selectedFiles = [treeController selectedObjects];
 	if ([selectedFiles count] == 0)
@@ -364,7 +364,7 @@
 	}
 }
 
-- (IBAction) refresh: sender
+- (IBAction) refresh:(id)sender
 {
 	[repository forceUpdateRevisions];
 }

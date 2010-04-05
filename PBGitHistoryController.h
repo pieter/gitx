@@ -59,9 +59,9 @@
 - (IBAction) setBranchFilter:(id)sender;
 
 - (void) selectCommit: (NSString*) commit;
-- (IBAction) refresh: sender;
+- (IBAction) refresh:(id)sender;
 - (IBAction) toggleQLPreviewPanel:(id)sender;
-- (IBAction) openSelectedFile: sender;
+- (IBAction) openSelectedFile:(id)sender;
 - (void) updateQuicklookForce: (BOOL) force;
 
 // Context menu methods
