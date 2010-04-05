@@ -17,6 +17,7 @@
 #import "PBRemoteProgressSheet.h"
 #import "PBGitRevList.h"
 #import "PBGitDefaults.h"
+#import "BMScript.h"
 
 static NSString * repositoryBasePath = nil;
 
@@ -959,6 +960,29 @@ static NSString * repositoryBasePath = nil;
 {
 	NSArray* arguments = [str componentsSeparatedByString:@" "];
 	return [self outputForArguments: arguments retValue: ret];
+}
+
+- (NSString *) outputForShellScriptTemplate:(NSString *)scriptTemplate keywordDict:(NSDictionary *)keywordDict retValue:(NSInteger *)retValue {
+    BMScript * script = [[BMScript alloc] initWithTemplateSource:scriptTemplate
+                                                         options:BMSynthesizeOptions(@"/bin/sh", @"-c")];
+    [script saturateTemplateWithDictionary:keywordDict];
+
+    if (*retValue) {
+        *retValue = [script execute];
+    } else {
+        [script execute];
+    }
+    return [script lastResult];
+}
+
+- (NSString *) outputForShellScript:(NSString *)script retValue:(NSInteger *)retValue {
+    BMScript * shellScript = [BMScript shellScriptWithSource:script];
+    if (*retValue) {
+        *retValue = [shellScript execute];
+    } else {
+        [shellScript execute];
+    }
+    return [shellScript lastResult];
 }
 
 - (NSString*) outputForArguments:(NSArray*) arguments

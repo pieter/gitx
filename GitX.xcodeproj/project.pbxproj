@@ -31,6 +31,8 @@
 		551BF11E112F376C00265053 /* gitx_askpasswd_main.m in Sources */ = {isa = PBXBuildFile; fileRef = 551BF11D112F376C00265053 /* gitx_askpasswd_main.m */; };
 		551BF176112F3F4B00265053 /* gitx_askpasswd in Resources */ = {isa = PBXBuildFile; fileRef = 551BF111112F371800265053 /* gitx_askpasswd */; };
 		6501ABC1115C064A00171062 /* Release.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 6501ABC0115C064A00171062 /* Release.xcconfig */; };
+		650A6BAA115F5DBE00F2E2B9 /* BMScript.m in Sources */ = {isa = PBXBuildFile; fileRef = 650A6BA9115F5DBE00F2E2B9 /* BMScript.m */; };
+		65241C96116984F800D49143 /* PBCommitList.m in Sources */ = {isa = PBXBuildFile; fileRef = 65241C95116984F800D49143 /* PBCommitList.m */; };
 		653D930A109BEAFE00B26705 /* PBGitXErrors.m in Sources */ = {isa = PBXBuildFile; fileRef = 653D9309109BEAFE00B26705 /* PBGitXErrors.m */; };
 		654D16E8108C6CA6008D960C /* PBQLOutlineView.m in Sources */ = {isa = PBXBuildFile; fileRef = F513085A0E0740F2000C8BCD /* PBQLOutlineView.m */; };
 		654FEFA0115A2684004C8721 /* NSString_Truncate.m in Sources */ = {isa = PBXBuildFile; fileRef = 654FEF9F115A2684004C8721 /* NSString_Truncate.m */; };
@@ -159,7 +161,6 @@
 		F593DF780E9E636C003A8559 /* PBFileChangesTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = F593DF770E9E636C003A8559 /* PBFileChangesTableView.m */; };
 		F5945E170E02B0C200706420 /* PBGitRepository.m in Sources */ = {isa = PBXBuildFile; fileRef = F5945E160E02B0C200706420 /* PBGitRepository.m */; };
 		F59F1DD5105C4FF300115F88 /* PBGitIndex.m in Sources */ = {isa = PBXBuildFile; fileRef = F59F1DD4105C4FF300115F88 /* PBGitIndex.m */; };
-		F5AD56790E79B78100EDAAFE /* PBCommitList.m in Sources */ = {isa = PBXBuildFile; fileRef = F5AD56780E79B78100EDAAFE /* PBCommitList.m */; };
 		F5C007750E731B48007B84B2 /* PBGitRef.m in Sources */ = {isa = PBXBuildFile; fileRef = F5C007740E731B48007B84B2 /* PBGitRef.m */; };
 		F5C580E50EDA250900995434 /* libgit2.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F5C580E40EDA250900995434 /* libgit2.a */; };
 		F5C580F50EDA251100995434 /* libgit2.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F5C580E40EDA250900995434 /* libgit2.a */; };
@@ -247,6 +248,12 @@
 		551BF111112F371800265053 /* gitx_askpasswd */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = gitx_askpasswd; sourceTree = BUILT_PRODUCTS_DIR; };
 		551BF11D112F376C00265053 /* gitx_askpasswd_main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = gitx_askpasswd_main.m; sourceTree = "<group>"; };
 		6501ABC0115C064A00171062 /* Release.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Release.xcconfig; sourceTree = "<group>"; };
+		650A6BA7115F5DBE00F2E2B9 /* BMDefines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BMDefines.h; sourceTree = "<group>"; };
+		650A6BA8115F5DBE00F2E2B9 /* BMScript.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BMScript.h; sourceTree = "<group>"; };
+		650A6BA9115F5DBE00F2E2B9 /* BMScript.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BMScript.m; sourceTree = "<group>"; };
+		650FBBC7115CE6AA00CE5638 /* CWQuickLook.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CWQuickLook.h; sourceTree = "<group>"; };
+		65241C94116984F800D49143 /* PBCommitList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PBCommitList.h; sourceTree = "<group>"; };
+		65241C95116984F800D49143 /* PBCommitList.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PBCommitList.m; sourceTree = "<group>"; };
 		653D9308109BEAFE00B26705 /* PBGitXErrors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PBGitXErrors.h; sourceTree = "<group>"; };
 		653D9309109BEAFE00B26705 /* PBGitXErrors.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PBGitXErrors.m; sourceTree = "<group>"; };
 		654D17E7108C90E8008D960C /* html */ = {isa = PBXFileReference; lastKnownFileType = folder; path = html; sourceTree = "<group>"; };
@@ -409,8 +416,6 @@
 		F5945E160E02B0C200706420 /* PBGitRepository.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PBGitRepository.m; sourceTree = "<group>"; wrapsLines = 1; };
 		F59F1DD3105C4FF300115F88 /* PBGitIndex.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PBGitIndex.h; sourceTree = "<group>"; };
 		F59F1DD4105C4FF300115F88 /* PBGitIndex.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PBGitIndex.m; sourceTree = "<group>"; };
-		F5AD56770E79B78100EDAAFE /* PBCommitList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PBCommitList.h; sourceTree = "<group>"; };
-		F5AD56780E79B78100EDAAFE /* PBCommitList.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PBCommitList.m; sourceTree = "<group>"; };
 		F5B721C30E05CF7E00AF29DC /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/MainMenu.xib; sourceTree = "<group>"; };
 		F5C007730E731B48007B84B2 /* PBGitRef.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PBGitRef.h; sourceTree = "<group>"; };
 		F5C007740E731B48007B84B2 /* PBGitRef.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PBGitRef.m; sourceTree = "<group>"; };
@@ -717,8 +722,6 @@
 			isa = PBXGroup;
 			children = (
 				D8FDDA7311433634005647F6 /* PBSourceViewItems.h */,
-				F58DB5E6105671B600CFDF4A /* PBSourceViewItem.h */,
-				F58DB5E7105671B600CFDF4A /* PBSourceViewItem.m */,
 				D8FDDA66114335E8005647F6 /* PBGitSVStageItem.h */,
 				D8FDDA67114335E8005647F6 /* PBGitSVStageItem.m */,
 				D8FDDA5C114335E8005647F6 /* PBGitSVBranchItem.h */,
@@ -795,10 +798,12 @@
 		F57CC43E0E05E472000472E2 /* Aux */ = {
 			isa = PBXGroup;
 			children = (
+				650A6BA7115F5DBE00F2E2B9 /* BMDefines.h */,
+				650A6BA8115F5DBE00F2E2B9 /* BMScript.h */,
+				650A6BA9115F5DBE00F2E2B9 /* BMScript.m */,
+				650FBBC7115CE6AA00CE5638 /* CWQuickLook.h */,
 				47DBDBC80E95016F00671A1E /* PBNSURLPathUserDefaultsTransfomer.h */,
 				47DBDBC90E95016F00671A1E /* PBNSURLPathUserDefaultsTransfomer.m */,
-				F5AD56770E79B78100EDAAFE /* PBCommitList.h */,
-				F5AD56780E79B78100EDAAFE /* PBCommitList.m */,
 				F56524B90E02D22D00F03B52 /* NSFileHandleExt.m */,
 				F56524BA0E02D22D00F03B52 /* NSFileHandleExt.h */,
 				F562C8850FE1766C000EC528 /* NSString_RegEx.h */,
@@ -853,6 +858,8 @@
 				D828A40C1127B18700F09D11 /* PBSourceViewCell.m */,
 				D828A40F1127B1C400F09D11 /* PBSourceViewBadge.h */,
 				D828A4101127B1C400F09D11 /* PBSourceViewBadge.m */,
+				F58DB5E6105671B600CFDF4A /* PBSourceViewItem.h */,
+				F58DB5E7105671B600CFDF4A /* PBSourceViewItem.m */,
 				D8FDDA58114335B0005647F6 /* Source View Items */,
 			);
 			name = Sidebar;
@@ -900,11 +907,11 @@
 			isa = PBXGroup;
 			children = (
 				F5C6F6750E65FE2B00478D97 /* Graphing */,
-				F5AD56770E79B78100EDAAFE /* PBCommitList.h */,
-				F5AD56780E79B78100EDAAFE /* PBCommitList.m */,
 				D85B93F610E51279007F3C28 /* PBGitRefish.h */,
 				F56524EE0E02D45200F03B52 /* PBGitCommit.h */,
 				F56524EF0E02D45200F03B52 /* PBGitCommit.m */,
+				65241C94116984F800D49143 /* PBCommitList.h */,
+				65241C95116984F800D49143 /* PBCommitList.m */,
 				F5C007730E731B48007B84B2 /* PBGitRef.h */,
 				F5C007740E731B48007B84B2 /* PBGitRef.m */,
 				D8295D281130A1DC00C838E8 /* PBGitHistoryList.h */,
@@ -1025,8 +1032,9 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 913D5E570E55646100CECEA2 /* Build configuration list for PBXNativeTarget "cli tool" */;
 			buildPhases = (
-				913D5E460E55644600CECEA2 /* Sources */,
 				913D5E470E55644600CECEA2 /* Frameworks */,
+				913D5E460E55644600CECEA2 /* Sources */,
+				65957407116211EC00CEA800 /* Run Install Script */,
 			);
 			buildRules = (
 			);
@@ -1179,6 +1187,20 @@
 			shellPath = /bin/sh;
 			shellScript = "echo \"Running install script...\"\nchmod u+x \"${PROJECT_DIR}/scripts/install.sh\"\n\"${PROJECT_DIR}/scripts/install.sh\"\n";
 		};
+		65957407116211EC00CEA800 /* Run Install Script */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 12;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Run Install Script";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "echo \"Running install script...\"\nchmod u+x \"${PROJECT_DIR}/scripts/install.sh\"\n\"${PROJECT_DIR}/scripts/install.sh\"\n";
+		};
 		F56439F60F792B2100A579C2 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -1236,66 +1258,48 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8D11072D0486CEB800E47090 /* main.m in Sources */,
-				F5EF8C8E0E9D4A5D0050906B /* PBWebController.m in Sources */,
-				F574A2910EAE2FF4003F2CB1 /* PBGitConfig.m in Sources */,
 				77C8280E06725ACE000B614F /* ApplicationController.m in Sources */,
-				770B37ED0679A11B001EADE2 /* GitTest_DataModel.xcdatamodel in Sources */,
-				F5945E170E02B0C200706420 /* PBGitRepository.m in Sources */,
-				F56524BB0E02D22D00F03B52 /* NSFileHandleExt.m in Sources */,
-				F56524F00E02D45200F03B52 /* PBGitCommit.m in Sources */,
-				F565262B0E03D89B00F03B52 /* PBWebHistoryController.m in Sources */,
-				F56174570E058893001DCD79 /* PBGitTree.m in Sources */,
-				F57CC3910E05DDF2000472E2 /* PBEasyPipe.m in Sources */,
-				F57CC4410E05E496000472E2 /* PBGitWindowController.m in Sources */,
-				F5DFFA6C0E075D8800617813 /* PBEasyFS.m in Sources */,
-				F50FE0E30E07BE9600854FCD /* PBGitRevisionCell.m in Sources */,
-				F5FF4E180E0829C20006317A /* PBGitRevList.mm in Sources */,
-				F5FF4E7A0E082E440006317A /* PBGitGrapher.mm in Sources */,
-				911111F80E594F3F00BF76B4 /* PBRepositoryDocumentController.m in Sources */,
-				913D5E5F0E556A9300CECEA2 /* PBCLIProxy.m in Sources */,
-				F56CC7320E65E0E5004307B4 /* PBGraphCellInfo.m in Sources */,
-				F5C6F68D0E65FF9300478D97 /* PBGitLane.mm in Sources */,
-				F5C007750E731B48007B84B2 /* PBGitRef.m in Sources */,
-				F5AD56790E79B78100EDAAFE /* PBCommitList.m in Sources */,
-				F53FF2050E7ABB5300389171 /* PBGitRevSpecifier.m in Sources */,
-				F52BCE070E84211300AA3741 /* PBGitHistoryController.m in Sources */,
-				F59116E90E843BCB0072CCB1 /* PBGitCommitController.m in Sources */,
-				F5E926060E8827D300056E75 /* PBViewController.m in Sources */,
-				F5E927F80E883E7200056E75 /* PBChangedFile.m in Sources */,
-				F5E927FC0E883F0700056E75 /* PBWebChangesController.m in Sources */,
-				91B103CC0E898EC300C84364 /* PBIconAndTextCell.m in Sources */,
-				F5140DC90E8A8EB20091E9F3 /* RoundedRectangle.m in Sources */,
-				F56244090E9684B0002B6C44 /* PBUnsortableTableHeader.m in Sources */,
-				F53C4DF70E97FC630022AD59 /* PBGitBinary.m in Sources */,
-				F593DF780E9E636C003A8559 /* PBFileChangesTableView.m in Sources */,
-				93F7857F0EA3ABF100C1F443 /* PBCommitMessageView.m in Sources */,
-				93CB42C20EAB7B2200530609 /* PBGitDefaults.m in Sources */,
-				F5E424150EA3E4E10046E362 /* PBDiffWindowController.m in Sources */,
-				F5E424180EA3E4EB0046E362 /* PBWebDiffController.m in Sources */,
-				F5FE6C030EB13BC900F30D12 /* PBServicesController.m in Sources */,
-				F50A41230EBB875D00208746 /* PBNiceSplitView.m in Sources */,
-				F5FC41F40EBCBD4300191D80 /* PBGitXProtocol.m in Sources */,
-				F574A2850EAE2EAC003F2CB1 /* PBRefController.m in Sources */,
-				F5FC43FE0EBD08EE00191D80 /* PBRefMenuItem.m in Sources */,
-				F523CEB60ED3399200DDD714 /* PBGitIndexController.m in Sources */,
+				650A6BAA115F5DBE00F2E2B9 /* BMScript.m in Sources */,
 				47DBDB580E94EDE700671A1E /* DBPrefsWindowController.m in Sources */,
-				47DBDB670E94EE8B00671A1E /* PBPrefsWindowController.m in Sources */,
-				47DBDBCA0E95016F00671A1E /* PBNSURLPathUserDefaultsTransfomer.m in Sources */,
+				770B37ED0679A11B001EADE2 /* GitTest_DataModel.xcdatamodel in Sources */,
+				8D11072D0486CEB800E47090 /* main.m in Sources */,
+				F56524BB0E02D22D00F03B52 /* NSFileHandleExt.m in Sources */,
+				F567B88D1057FA9F000DB976 /* NSOutlineViewExt.m in Sources */,
 				F562C8870FE1766C000EC528 /* NSString_RegEx.m in Sources */,
+				654FEFA0115A2684004C8721 /* NSString_Truncate.m in Sources */,
+				D8083C44111F106800337480 /* PBAddRemoteSheet.m in Sources */,
+				F5E927F80E883E7200056E75 /* PBChangedFile.m in Sources */,
+				913D5E5F0E556A9300CECEA2 /* PBCLIProxy.m in Sources */,
+				D8083E03111FA33700337480 /* PBCloneRepositoryPanel.m in Sources */,
+				D8083DC4111F90F300337480 /* PBCloneRepsitoryToSheet.m in Sources */,
 				EB2A734A0FEE3F09006601CF /* PBCollapsibleSplitView.m in Sources */,
-				F59F1DD5105C4FF300115F88 /* PBGitIndex.m in Sources */,
-				654D16E8108C6CA6008D960C /* PBQLOutlineView.m in Sources */,
-				653D930A109BEAFE00B26705 /* PBGitXErrors.m in Sources */,
+				65241C96116984F800D49143 /* PBCommitList.m in Sources */,
+				93F7857F0EA3ABF100C1F443 /* PBCommitMessageView.m in Sources */,
 				D854948610D5C01B0083B917 /* PBCreateBranchSheet.m in Sources */,
 				D8E3B34D10DCA958001096A3 /* PBCreateTagSheet.m in Sources */,
-				D8083A43111E045D00337480 /* PBRemoteProgressSheet.m in Sources */,
-				D8083C44111F106800337480 /* PBAddRemoteSheet.m in Sources */,
-				D8083DC4111F90F300337480 /* PBCloneRepsitoryToSheet.m in Sources */,
-				D8083E03111FA33700337480 /* PBCloneRepositoryPanel.m in Sources */,
+				F5E424150EA3E4E10046E362 /* PBDiffWindowController.m in Sources */,
+				F5DFFA6C0E075D8800617813 /* PBEasyFS.m in Sources */,
+				F57CC3910E05DDF2000472E2 /* PBEasyPipe.m in Sources */,
+				F593DF780E9E636C003A8559 /* PBFileChangesTableView.m in Sources */,
+				F53C4DF70E97FC630022AD59 /* PBGitBinary.m in Sources */,
+				F56524F00E02D45200F03B52 /* PBGitCommit.m in Sources */,
+				F59116E90E843BCB0072CCB1 /* PBGitCommitController.m in Sources */,
+				F574A2910EAE2FF4003F2CB1 /* PBGitConfig.m in Sources */,
+				93CB42C20EAB7B2200530609 /* PBGitDefaults.m in Sources */,
+				D8A4BB6F11337D5C00E92D51 /* PBGitGradientBarView.m in Sources */,
+				F5FF4E7A0E082E440006317A /* PBGitGrapher.mm in Sources */,
+				F52BCE070E84211300AA3741 /* PBGitHistoryController.m in Sources */,
+				D8295DE01130E43900C838E8 /* PBGitHistoryGrapher.m in Sources */,
+				D8295D2A1130A1DC00C838E8 /* PBGitHistoryList.m in Sources */,
+				F59F1DD5105C4FF300115F88 /* PBGitIndex.m in Sources */,
+				F523CEB60ED3399200DDD714 /* PBGitIndexController.m in Sources */,
+				F5C6F68D0E65FF9300478D97 /* PBGitLane.mm in Sources */,
+				F5C007750E731B48007B84B2 /* PBGitRef.m in Sources */,
+				F5945E170E02B0C200706420 /* PBGitRepository.m in Sources */,
+				F50FE0E30E07BE9600854FCD /* PBGitRevisionCell.m in Sources */,
+				F5FF4E180E0829C20006317A /* PBGitRevList.mm in Sources */,
+				F53FF2050E7ABB5300389171 /* PBGitRevSpecifier.m in Sources */,
 				F58DB55910566D3500CFDF4A /* PBGitSidebarController.m in Sources */,
-				F58DB5E8105671B600CFDF4A /* PBSourceViewItem.m in Sources */,
-				F567B88D1057FA9F000DB976 /* NSOutlineViewExt.m in Sources */,
 				D8FDDA6A114335E8005647F6 /* PBGitSVBranchItem.m in Sources */,
 				D8FDDA6B114335E8005647F6 /* PBGitSVFolderItem.m in Sources */,
 				D8FDDA6C114335E8005647F6 /* PBGitSVOtherRevItem.m in Sources */,
@@ -1303,13 +1307,32 @@
 				D8FDDA6E114335E8005647F6 /* PBGitSVRemoteItem.m in Sources */,
 				D8FDDA6F114335E8005647F6 /* PBGitSVStageItem.m in Sources */,
 				D8FDDA70114335E8005647F6 /* PBGitSVTagItem.m in Sources */,
-				D8A4BB6F11337D5C00E92D51 /* PBGitGradientBarView.m in Sources */,
-				D828A40D1127B18700F09D11 /* PBSourceViewCell.m in Sources */,
-				D828A4111127B1C400F09D11 /* PBSourceViewBadge.m in Sources */,
-				D8295D2A1130A1DC00C838E8 /* PBGitHistoryList.m in Sources */,
-				D8295DE01130E43900C838E8 /* PBGitHistoryGrapher.m in Sources */,
+				F56174570E058893001DCD79 /* PBGitTree.m in Sources */,
+				F57CC4410E05E496000472E2 /* PBGitWindowController.m in Sources */,
+				653D930A109BEAFE00B26705 /* PBGitXErrors.m in Sources */,
+				F5FC41F40EBCBD4300191D80 /* PBGitXProtocol.m in Sources */,
+				F56CC7320E65E0E5004307B4 /* PBGraphCellInfo.m in Sources */,
+				91B103CC0E898EC300C84364 /* PBIconAndTextCell.m in Sources */,
+				F50A41230EBB875D00208746 /* PBNiceSplitView.m in Sources */,
+				47DBDBCA0E95016F00671A1E /* PBNSURLPathUserDefaultsTransfomer.m in Sources */,
+				47DBDB670E94EE8B00671A1E /* PBPrefsWindowController.m in Sources */,
+				654D16E8108C6CA6008D960C /* PBQLOutlineView.m in Sources */,
 				D8E105471157C18200FC28A4 /* PBQLTextView.m in Sources */,
-				654FEFA0115A2684004C8721 /* NSString_Truncate.m in Sources */,
+				F574A2850EAE2EAC003F2CB1 /* PBRefController.m in Sources */,
+				F5FC43FE0EBD08EE00191D80 /* PBRefMenuItem.m in Sources */,
+				D8083A43111E045D00337480 /* PBRemoteProgressSheet.m in Sources */,
+				911111F80E594F3F00BF76B4 /* PBRepositoryDocumentController.m in Sources */,
+				F5FE6C030EB13BC900F30D12 /* PBServicesController.m in Sources */,
+				D828A4111127B1C400F09D11 /* PBSourceViewBadge.m in Sources */,
+				D828A40D1127B18700F09D11 /* PBSourceViewCell.m in Sources */,
+				F58DB5E8105671B600CFDF4A /* PBSourceViewItem.m in Sources */,
+				F56244090E9684B0002B6C44 /* PBUnsortableTableHeader.m in Sources */,
+				F5E926060E8827D300056E75 /* PBViewController.m in Sources */,
+				F5E927FC0E883F0700056E75 /* PBWebChangesController.m in Sources */,
+				F5EF8C8E0E9D4A5D0050906B /* PBWebController.m in Sources */,
+				F5E424180EA3E4EB0046E362 /* PBWebDiffController.m in Sources */,
+				F565262B0E03D89B00F03B52 /* PBWebHistoryController.m in Sources */,
+				F5140DC90E8A8EB20091E9F3 /* RoundedRectangle.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1596,6 +1619,7 @@
 		};
 		654D1898108C9293008D960C /* Install */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 654D18EF108C9597008D960C /* Install.xcconfig */;
 			buildSettings = {
 				COPY_PHASE_STRIP = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
@@ -1688,6 +1712,7 @@
 		};
 		913D5E4B0E55644600CECEA2 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 6560468F115BF80F0021E246 /* Debug.xcconfig */;
 			buildSettings = {
 				COPY_PHASE_STRIP = NO;
 				GCC_DYNAMIC_NO_PIC = NO;
@@ -1712,6 +1737,7 @@
 		};
 		913D5E4C0E55644600CECEA2 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 6501ABC0115C064A00171062 /* Release.xcconfig */;
 			buildSettings = {
 				COPY_PHASE_STRIP = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";

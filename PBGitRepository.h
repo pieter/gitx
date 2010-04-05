@@ -80,6 +80,8 @@ static NSString * PBStringFromBranchFilterType(PBGitXBranchFilterType type) {
 - (NSString*) outputForArguments:(NSArray*) args retValue:(int *)ret;
 - (NSString *)outputInWorkdirForArguments:(NSArray*) arguments;
 - (NSString *)outputInWorkdirForArguments:(NSArray*) arguments retValue:(int *)ret;
+- (NSString *) outputForShellScriptTemplate:(NSString *)scriptTemplate keywordDict:(NSDictionary *)keywordDict retValue:(NSInteger *)retValue;
+- (NSString *) outputForShellScript:(NSString *)script retValue:(NSInteger *)retValue;
 - (BOOL)executeHook:(NSString *)name output:(NSString **)output;
 - (BOOL)executeHook:(NSString *)name withArgs:(NSArray*) arguments output:(NSString **)output;
 
