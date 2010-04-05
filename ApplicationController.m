@@ -21,27 +21,60 @@
 @implementation ApplicationController
 @synthesize cliProxy;
 
-- (ApplicationController*)init
+static ApplicationController * sharedApplicationControllerInstance = nil; 
+
++ (void) initialize {
+    if (sharedApplicationControllerInstance == nil)
+        sharedApplicationControllerInstance = [[self alloc] init];
+}
+
++ (ApplicationController *) sharedApplicationController {
+    //Already set by +initialize.
+    return sharedApplicationControllerInstance;
+}
+
++ (id) allocWithZone:(NSZone *) zone {
+    //Usually already set by +initialize.
+    if (sharedApplicationControllerInstance) {
+        //The caller expects to receive a new object, so implicitly retain it
+        //to balance out the eventual release message.
+        return [sharedApplicationControllerInstance retain];
+    } else {
+        //When not already set, +initialize is our caller.
+        //It's creating the shared instance, let this go through.
+        return [super allocWithZone: zone];
+    }
+}
+
+- (id) copyWithZone:(NSZone *) zone {
+    return self;
+}
+
+- (NSUInteger) retainCount {
+    return UINT_MAX; // denotes an object that cannot be released
+}
+
+- (ApplicationController *) init
 {
+    //If sharedApplicationControllerInstance is nil, +initialize is our caller, so initialize the instance.
+    //If it is not nil, simply return the instance without re-initializing it.
+    if (sharedApplicationControllerInstance == nil) {
 #ifdef DEBUG_BUILD
-	[NSApp activateIgnoringOtherApps:YES];
+        [NSApp activateIgnoringOtherApps:YES];
 #endif
-
-	if(self = [super init]) {
-        if(![[NSBundle bundleWithPath:@"/System/Library/Frameworks/Quartz.framework/Frameworks/QuickLookUI.framework"] load])
-			if(![[NSBundle bundleWithPath:@"/System/Library/PrivateFrameworks/QuickLookUI.framework"] load])
-				NSLog(@"Could not load QuickLook");
-
-		self.cliProxy = [PBCLIProxy new];
-	}
-
-	/* Value Transformers */
-	NSValueTransformer *transformer = [[PBNSURLPathUserDefaultsTransfomer alloc] init];
-	[NSValueTransformer setValueTransformer:transformer forName:@"PBNSURLPathUserDefaultsTransfomer"];
-	
-	// Make sure the PBGitDefaults is initialized, by calling a random method
-	[PBGitDefaults class];
-	return self;
+        if(self = [super init]) {
+            if(![[NSBundle bundleWithPath:@"/System/Library/Frameworks/Quartz.framework/Frameworks/QuickLookUI.framework"] load])
+                if(![[NSBundle bundleWithPath:@"/System/Library/PrivateFrameworks/QuickLookUI.framework"] load])
+                    NSLog(@"Could not load QuickLook");
+        }
+        /* Value Transformers */
+        NSValueTransformer *transformer = [[PBNSURLPathUserDefaultsTransfomer alloc] init];
+        [NSValueTransformer setValueTransformer:transformer forName:@"PBNSURLPathUserDefaultsTransfomer"];
+        // Make sure the PBGitDefaults is initialized, by calling a random method
+        [PBGitDefaults class];
+        return self;
+    }
+    return self;
 }
 
 - (void)registerServices

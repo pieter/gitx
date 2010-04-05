@@ -24,6 +24,7 @@
 	PBCloneRepositoryPanel *cloneRepositoryPanel;
 }
 @property (retain) PBCLIProxy* cliProxy;
++ (ApplicationController *) sharedApplicationController;
 
 - (NSPersistentStoreCoordinator *)persistentStoreCoordinator;
 - (NSManagedObjectModel *)managedObjectModel;
