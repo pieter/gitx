@@ -71,11 +71,12 @@
 - (IBAction) setDetailedView:(id)sender;
 - (IBAction) setTreeView:(id)sender;
 - (IBAction) setBranchFilter:(id)sender;
-
-- (void) selectCommit: (NSString*) commit;
 - (IBAction) refresh:(id)sender;
 - (IBAction) toggleQLPreviewPanel:(id)sender;
 - (IBAction) openSelectedFile:(id)sender;
+
+- (BOOL) selectCommit: (NSString*) commit;
+
 - (void) updateQuicklookForce: (BOOL) force;
 
 

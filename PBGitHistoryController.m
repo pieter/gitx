@@ -424,18 +424,32 @@
 	return selectedCommits;
 }
 
-- (void) selectCommit:(NSString *)commitSHA
+- (BOOL) selectCommit:(NSString *)commitSHA
 {
+    ApplicationController * appController = [ApplicationController sharedApplicationController];
+    if (appController.launchedFromGitx && [appController.cliArgs isEqualToString:@"--commit"]) {
+        return NO;
+    }
+    NSLog(@"[%@ %s]: SHA = %@", [self class], _cmd, commitSHA);
 	if (!forceSelectionUpdate && [[selectedCommit realSha] isEqualToString:commitSHA])
-		return;
+		return NO;
 
 	NSInteger oldIndex = [[commitController selectionIndexes] firstIndex];
+    if (oldIndex == NSNotFound) {
+        oldIndex = [[commitController content] indexOfObject:selectedCommit];
+    }
 
 	NSArray *selectedCommits = [self selectedObjectsForSHA:commitSHA];
+    selectedCommit = [selectedCommits objectAtIndex:0];
+
 	[commitController setSelectedObjects:selectedCommits];
 
-	if (repository.currentBranchFilter != kGitXSelectedBranchFilter)
-		[self scrollSelectionToTopOfViewFrom:oldIndex];
+	if (repository.currentBranchFilter != kGitXSelectedBranchFilter) {
+        NSLog(@"[%@ %s] currentBranchFilter = %@", [self class], _cmd, PBStringFromBranchFilterType(repository.currentBranchFilter));
+        [self scrollSelectionToTopOfViewFrom:oldIndex];
+    }
+
+    return YES;
 }
 
 - (BOOL) hasNonlinearPath
