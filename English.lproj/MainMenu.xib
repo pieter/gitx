@@ -12,7 +12,7 @@
 		</object>
 		<object class="NSMutableArray" key="IBDocument.EditedObjectIDs">
 			<bool key="EncodedWithXMLCoder">YES</bool>
-			<integer value="937"/>
+			<integer value="81"/>
 		</object>
 		<object class="NSArray" key="IBDocument.PluginDependencies">
 			<bool key="EncodedWithXMLCoder">YES</bool>
@@ -299,6 +299,7 @@
 								</object>
 								<object class="NSMenuItem" id="740351946">
 									<reference key="NSMenu" ref="310195297"/>
+									<bool key="NSIsDisabled">YES</bool>
 									<bool key="NSIsHidden">YES</bool>
 									<string key="NSTitle">Save</string>
 									<string key="NSKeyEquiv">s</string>
@@ -309,6 +310,7 @@
 								</object>
 								<object class="NSMenuItem" id="968242847">
 									<reference key="NSMenu" ref="310195297"/>
+									<bool key="NSIsDisabled">YES</bool>
 									<bool key="NSIsHidden">YES</bool>
 									<string key="NSTitle">Save As…</string>
 									<string key="NSKeyEquiv">S</string>
@@ -319,6 +321,7 @@
 								</object>
 								<object class="NSMenuItem" id="656100832">
 									<reference key="NSMenu" ref="310195297"/>
+									<bool key="NSIsDisabled">YES</bool>
 									<bool key="NSIsHidden">YES</bool>
 									<string key="NSTitle">Revert to Saved</string>
 									<string key="NSKeyEquiv"/>
@@ -340,6 +343,7 @@
 								</object>
 								<object class="NSMenuItem" id="994490497">
 									<reference key="NSMenu" ref="310195297"/>
+									<bool key="NSIsDisabled">YES</bool>
 									<bool key="NSIsHidden">YES</bool>
 									<string key="NSTitle">Page Setup…</string>
 									<string key="NSKeyEquiv">P</string>
@@ -350,6 +354,7 @@
 								</object>
 								<object class="NSMenuItem" id="520747322">
 									<reference key="NSMenu" ref="310195297"/>
+									<bool key="NSIsDisabled">YES</bool>
 									<bool key="NSIsHidden">YES</bool>
 									<string key="NSTitle">Print…</string>
 									<string key="NSKeyEquiv">p</string>
@@ -1141,14 +1146,6 @@
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBActionConnection" key="connection">
-						<string key="label">saveAction:</string>
-						<reference key="source" ref="859235683"/>
-						<reference key="destination" ref="740351946"/>
-					</object>
-					<int key="connectionID">211</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBActionConnection" key="connection">
 						<string key="label">performMiniaturize:</string>
 						<reference key="source" ref="954860085"/>
 						<reference key="destination" ref="894434726"/>
@@ -1518,8 +1515,8 @@
 							<reference ref="968526216"/>
 							<reference ref="656100832"/>
 							<reference ref="255451250"/>
-							<reference ref="231313974"/>
 							<reference ref="936887448"/>
+							<reference ref="231313974"/>
 						</object>
 						<reference key="parent" ref="19371157"/>
 					</object>
@@ -2265,7 +2262,7 @@
 					<integer value="1"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<integer value="1"/>
-					<string>{{880, 713}, {135, 23}}</string>
+					<string>{{778, 1007}, {135, 23}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<integer value="1"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -2376,7 +2373,7 @@
 					<integer value="1"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<integer value="1"/>
-					<string>{{809, 663}, {194, 73}}</string>
+					<string>{{707, 957}, {194, 73}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<integer value="1"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -2393,7 +2390,7 @@
 					<string>{{297, 739}, {329, 20}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<integer value="1"/>
-					<string>{{790, 533}, {231, 173}}</string>
+					<string>{{657, 857}, {231, 173}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<integer value="1"/>
 					<string>{{499, 623}, {234, 113}}</string>
@@ -2403,7 +2400,7 @@
 					<integer value="1"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<integer value="1"/>
-					<string>{{533, 513}, {259, 223}}</string>
+					<string>{{431, 807}, {259, 223}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<integer value="1"/>
 					<string>{{309, 536}, {262, 203}}</string>
@@ -2425,7 +2422,7 @@
 					<integer value="1"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<integer value="1"/>
-					<string>{{582, 493}, {196, 243}}</string>
+					<string>{{480, 787}, {196, 243}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<integer value="1"/>
 					<string>{{358, 536}, {199, 203}}</string>
@@ -2549,6 +2546,13 @@
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
 						<string key="majorKey">IBUserSource</string>
 						<string key="minorKey"/>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
+					<string key="className">NSObject</string>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<string key="majorKey">IBProjectSource</string>
+						<string key="minorKey">BMScript.h</string>
 					</object>
 				</object>
 				<object class="IBPartialClassDescription">
@@ -2725,6 +2729,7 @@
 							<string>cherryPick:</string>
 							<string>createBranch:</string>
 							<string>createTag:</string>
+							<string>fetchPullPushAction:</string>
 							<string>merge:</string>
 							<string>openFilesAction:</string>
 							<string>openSelectedFile:</string>
@@ -2740,6 +2745,7 @@
 						</object>
 						<object class="NSMutableArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
+							<string>id</string>
 							<string>id</string>
 							<string>id</string>
 							<string>id</string>
@@ -2771,6 +2777,7 @@
 							<string>mergeButton</string>
 							<string>rebaseButton</string>
 							<string>refController</string>
+							<string>remoteControls</string>
 							<string>scopeBarView</string>
 							<string>searchField</string>
 							<string>selectedBranchFilterItem</string>
@@ -2783,13 +2790,14 @@
 							<string>NSButton</string>
 							<string>NSButton</string>
 							<string>NSArrayController</string>
-							<string>NSTableView</string>
+							<string>PBCommitList</string>
 							<string>NSOutlineView</string>
 							<string>PBCollapsibleSplitView</string>
 							<string>NSButton</string>
 							<string>NSButton</string>
 							<string>NSButton</string>
 							<string>PBRefController</string>
+							<string>NSSegmentedControl</string>
 							<string>PBGitGradientBarView</string>
 							<string>NSSearchField</string>
 							<string>NSButton</string>
@@ -2999,9 +3007,6 @@
 							<string>commitController</string>
 							<string>commitList</string>
 							<string>historyController</string>
-							<string>pullItem</string>
-							<string>pushItem</string>
-							<string>rebaseItem</string>
 						</object>
 						<object class="NSMutableArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
@@ -3009,9 +3014,6 @@
 							<string>NSArrayController</string>
 							<string>PBCommitList</string>
 							<string>PBGitHistoryController</string>
-							<string>KBPopUpToolbarItem</string>
-							<string>KBPopUpToolbarItem</string>
-							<string>KBPopUpToolbarItem</string>
 						</object>
 					</object>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
@@ -3807,6 +3809,14 @@
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
 						<string key="majorKey">IBFrameworkSource</string>
 						<string key="minorKey">AppKit.framework/Headers/NSSearchField.h</string>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
+					<string key="className">NSSegmentedControl</string>
+					<string key="superclassName">NSControl</string>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<string key="majorKey">IBFrameworkSource</string>
+						<string key="minorKey">AppKit.framework/Headers/NSSegmentedControl.h</string>
 					</object>
 				</object>
 				<object class="IBPartialClassDescription">
