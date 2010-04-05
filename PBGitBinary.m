@@ -110,7 +110,7 @@ static NSMutableArray *locations = nil;
 {
 	NSMutableString *error = [NSMutableString stringWithString:
 							  @"Could not find a git binary version " MIN_GIT_VERSION " or higher.\n"
-							  "Please make sure there is a git binary in one of the following locations:\n\n"];
+							  @"Please make sure there is a git binary in one of the following locations:\n\n"];
 	for (NSString *location in [PBGitBinary searchLocations]) {
 		[error appendFormat:@"\t%@\n", location];
 	}
