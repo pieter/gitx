@@ -13,11 +13,28 @@
 #import "PBGitXErrors.h"
 #import "PBGitRefish.h"
 
-enum branchFilterTypes {
+typedef enum branchFilterTypes {
 	kGitXAllBranchesFilter = 0,
 	kGitXLocalRemoteBranchesFilter,
 	kGitXSelectedBranchFilter
-};
+} PBGitXBranchFilterType;
+
+static NSString * PBStringFromBranchFilterType(PBGitXBranchFilterType type) {
+    switch (type) {
+        case kGitXAllBranchesFilter:
+            return @"All";
+            break;
+        case kGitXLocalRemoteBranchesFilter:
+            return @"Local";
+            break;
+        case kGitXSelectedBranchFilter:
+            return @"Selected";
+            break;
+        default:
+            break;
+    }
+    return @"Not a branch filter type";
+}
 
 @class PBGitWindowController;
 @class PBGitCommit;
