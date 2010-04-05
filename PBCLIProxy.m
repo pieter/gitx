@@ -29,7 +29,7 @@
 	return self;
 }
 
-- (BOOL)openRepository:(NSString *)repositoryPath arguments: (NSArray*) args error:(NSError**)error
+- (BOOL) openRepository:(in bycopy NSString *)repositoryPath arguments:(in bycopy NSArray *)args error:(byref NSError **)error
 {
 	// FIXME I found that creating this redundant NSURL reference was necessary to
 	// work around an apparent bug with GC and Distributed Objects
@@ -94,7 +94,7 @@
 	return YES;
 }
 
-- (void)openDiffWindowWithDiff:(NSString *)diff
+- (oneway void) openDiffWindowWithDiff:(in bycopy NSString *)diff
 {
 	PBDiffWindowController *diffController = [[PBDiffWindowController alloc] initWithDiff:[diff copy]];
 	[diffController showWindow:nil];

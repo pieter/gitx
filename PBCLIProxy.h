@@ -20,6 +20,8 @@
 #define PBCLIProxyErrorDomain @"PBCLIProxyErrorDomain"
 
 @protocol GitXCliToolProtocol
-- (BOOL)openRepository:(NSString *)repositoryPath arguments: (NSArray*) args error:(NSError**)error;
-- (void)openDiffWindowWithDiff:(NSString *)diff;
+
+- (BOOL) openRepository:(in bycopy NSString *)repositoryPath arguments:(in bycopy NSArray *) args error:(byref NSError**)error;
+- (oneway void) openDiffWindowWithDiff:(in bycopy NSString *)diff;
+
 @end
