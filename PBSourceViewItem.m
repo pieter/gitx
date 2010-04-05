@@ -111,7 +111,7 @@
 
 - (PBSourceViewItem *) findRev:(PBGitRevSpecifier *)rev
 {
-    NSLog(@"[%@ %s] rev = %@, revSpecifier = %@", [self class], _cmd, rev, revSpecifier);
+    // NSLog(@"[%@ %s] rev = %@, revSpecifier = %@", [self class], _cmd, rev, revSpecifier);
 	if (rev == revSpecifier || [rev isEqual:revSpecifier])
 		return self;
 

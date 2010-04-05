@@ -69,7 +69,7 @@
 
 - (void)populateList
 {
-    NSLog(@"[%@ %s]", [self class], _cmd);
+    // NSLog(@"[%@ %s]", [self class], _cmd);
 
 	PBSourceViewItem *project = [PBSourceViewItem groupItemWithTitle:[repository projectName]];
 	project.isUncollapsible = YES;
@@ -166,20 +166,20 @@
         if (resolvedRev) {
             repository.currentBranch = resolvedRev;
             //repository.currentBranch.isSimpleRef = YES;
-            NSLog(@"[%@ %s] currentBranch = %@", [self class], _cmd, repository.currentBranch);
-            NSLog(@"[%@ %s] items = %@", [self class], _cmd, [items description]);
+            // NSLog(@"[%@ %s] currentBranch = %@", [self class], _cmd, repository.currentBranch);
+            // NSLog(@"[%@ %s] items = %@", [self class], _cmd, [items description]);
             for (PBSourceViewItem * item in items) {
                 if (deferredSelectObject = [item findRev:resolvedRev])
                     break;
             }
-            NSLog(@"[%@ %s] deferredSelectObject = %@", [self class], _cmd, deferredSelectObject);
+            // NSLog(@"[%@ %s] deferredSelectObject = %@", [self class], _cmd, deferredSelectObject);
         }
     }
 }
 
 - (void) observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
 {
-    NSLog(@"[%@ %s]", [self class], _cmd);
+    // NSLog(@"[%@ %s]", [self class], _cmd);
 
 	if ([@"currentBranchChange" isEqualToString:context]) {
 		[sourceView reloadData];
@@ -227,7 +227,7 @@
 {
     [sourceView PBExpandItem:branchItem expandParents:YES];
     NSInteger row = [sourceView rowForItem:branchItem];
-    NSLog(@"[%@ %s] rowForItem (%@) = %d", [self class], _cmd, branchItem, row);
+    // NSLog(@"[%@ %s] rowForItem (%@) = %d", [self class], _cmd, branchItem, row);
     NSIndexSet *index = [NSIndexSet indexSetWithIndex:row];
 	[sourceView selectRowIndexes:index byExtendingSelection:NO];
 }
@@ -236,7 +236,7 @@
 	PBSourceViewItem *foundItem = nil;
 	for (PBSourceViewItem *item in items) {
         if (foundItem = [item findRev:rev]) {
-            NSLog(@"[%@ %s]: found item! Item = %@ for rev = %@", [self class], _cmd, item, rev);
+            //NSLog(@"[%@ %s]: found item! Item = %@ for rev = %@", [self class], _cmd, item, rev);
 			return foundItem;
         }
     }
@@ -245,9 +245,9 @@
 
 - (BOOL) selectCommitWithSha:(NSString *)refSHA  {
     NSArray *revList = repository.revisionList.commits;
-    NSLog(@"[%@ %s] revList = %@", [self class], _cmd, revList);
+    // NSLog(@"[%@ %s] revList = %@", [self class], _cmd, revList);
     for (PBGitCommit *commit in revList) {
-        NSLog(@"[%@ %s] commit = %@", [self class], _cmd, commit);
+        // NSLog(@"[%@ %s] commit = %@", [self class], _cmd, commit);
         if ([[commit realSha] isEqualToString:refSHA]) {
             [historyViewController selectCommit:refSHA];
             return YES;
@@ -260,7 +260,7 @@
 {
 	PBGitRevSpecifier *rev = repository.currentBranch;
 
-    NSLog(@"[%@ %s] rev = %@", [self class], _cmd, rev);
+    // NSLog(@"[%@ %s] rev = %@", [self class], _cmd, rev);
 
     if (deferredSelectObject) {
         NSString * sha = [ApplicationController sharedApplicationController].deferredSelectSha;
@@ -270,7 +270,7 @@
         }
 
         [self selectBranch:deferredSelectObject];
-        //[historyViewController selectCommit:sha];
+
         deferredSelectObject = nil;
         return;
     }
@@ -280,24 +280,8 @@
         [repository readCurrentBranch];
         return;
     }
-//     else {
-//         NSString * refSHA = [repository shaForRef:[rev ref]];
-//         if (![self selectCommitWithSha:refSHA]) {
-//             [repository reloadRefs];
-//             [self selectCommitWithSha:refSHA];
-//         }
-//     }
 
     PBSourceViewItem *item = [self itemForRev:rev];
-
-//     if (!item) {
-//         // Obviously we havn't found the item so we reset it's isSimpleRef status back to NO
-//         // so it will get added to the OTHER group.
-//         //[rev setIsSimpleRef:NO];
-//         [self addRevSpec:rev];
-//         // Try to find the just added item again.
-//         item = [self itemForRev:rev];
-//     }
     [self selectBranch:item];
 }
 

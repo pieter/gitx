@@ -121,8 +121,8 @@ static ApplicationController * sharedApplicationControllerInstance = nil;
         self.cliArgs = [NSString stringWithUTF8String:(cliargs)];
     }
 
-    NSLog(@"[%@ %s] launchedFromGitx = %@", [self class], _cmd, (launchedFromGitx ? @"YES" : @"NO"));
-    NSLog(@"[%@ %s] cliArgs = %@", [self class], _cmd, cliArgs);
+    // NSLog(@"[%@ %s] launchedFromGitx = %@", [self class], _cmd, (launchedFromGitx ? @"YES" : @"NO"));
+    // NSLog(@"[%@ %s] cliArgs = %@", [self class], _cmd, cliArgs);
 
 	[self registerServices];
 
@@ -219,7 +219,7 @@ static ApplicationController * sharedApplicationControllerInstance = nil;
 - (void) finalizeCLILaunch:(id)object {
     for (PBGitRepository * document in launchedDocuments) {
         BOOL success = [[[(PBGitRepository *)document windowController] historyController] selectCommit:self.deferredSelectSha];
-        NSLog(@"[%@ %s] trying to select commit with sha %@ (success = %@)", [self class], _cmd, self.deferredSelectSha, BMStringFromBOOL(success));
+        // NSLog(@"[%@ %s] trying to select commit with sha %@ (success = %@)", [self class], _cmd, self.deferredSelectSha, BMStringFromBOOL(success));
         if (success) {
             PBGitWindowController * wc = [(PBGitRepository *)document windowController];
             PBGitHistoryController * histController = wc.historyController;

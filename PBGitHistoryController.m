@@ -424,7 +424,7 @@
         commitList.useAdjustScroll = YES;
     }
 
-    NSLog(@"[%@ %s] newIndex = %d, oldIndex = %d", [self class], _cmd, newIndex, oldIndex);
+    // NSLog(@"[%@ %s] newIndex = %d, oldIndex = %d", [self class], _cmd, newIndex, oldIndex);
 
 	[commitList scrollRowToVisible:newIndex];
     commitList.useAdjustScroll = NO;
@@ -447,7 +447,7 @@
     if (appController.launchedFromGitx && [appController.cliArgs isEqualToString:@"--commit"]) {
         return NO;
     }
-    NSLog(@"[%@ %s]: SHA = %@", [self class], _cmd, commitSHA);
+    // NSLog(@"[%@ %s]: SHA = %@", [self class], _cmd, commitSHA);
 	if (!forceSelectionUpdate && [[selectedCommit realSha] isEqualToString:commitSHA])
 		return NO;
 
@@ -462,7 +462,7 @@
 	[commitController setSelectedObjects:selectedCommits];
 
 	if (repository.currentBranchFilter != kGitXSelectedBranchFilter) {
-        NSLog(@"[%@ %s] currentBranchFilter = %@", [self class], _cmd, PBStringFromBranchFilterType(repository.currentBranchFilter));
+        // NSLog(@"[%@ %s] currentBranchFilter = %@", [self class], _cmd, PBStringFromBranchFilterType(repository.currentBranchFilter));
         [self scrollSelectionToTopOfViewFrom:oldIndex];
     }
 
