@@ -349,6 +349,10 @@ static NSString * repositoryBasePath = nil;
 		return nil;
 	NSArray *revList = revisionList.projectCommits;
 
+    if (!revList) {
+        [revisionList forceUpdate];
+        revList = revisionList.projectCommits;
+    }
 	for (PBGitCommit *commit in revList)
 		if ([[commit realSha] isEqualToString:sha])
 			return commit;
