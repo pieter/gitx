@@ -40,8 +40,12 @@
 
 
 @implementation PBGitHistoryController
-@synthesize selectedCommitDetailsIndex, webCommit, gitTree, commitController, refController;
+@synthesize selectedCommitDetailsIndex, webCommit, gitTree;
+@synthesize commitController, refController;
 @synthesize sidebarSourceView, sidebarRemotes;
+@synthesize searchField;
+@synthesize commitList;
+@synthesize webView;
 
 #pragma mark NSToolbarItemValidation Methods
 
