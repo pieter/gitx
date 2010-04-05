@@ -21,6 +21,9 @@
 #import "PBDiffWindowController.h"
 #import "PBGitDefaults.h"
 #import "PBGitRevList.h"
+#import "PBCommitList.h"
+#import "PBSourceViewItem.h"
+#import "PBRefController.h"
 
 #define QLPreviewPanel NSClassFromString(@"QLPreviewPanel")
 #define kHistorySelectedDetailIndexKey @"PBHistorySelectedDetailIndex"
@@ -38,6 +41,7 @@
 
 @implementation PBGitHistoryController
 @synthesize selectedCommitDetailsIndex, webCommit, gitTree, commitController, refController;
+@synthesize sidebarSourceView, sidebarRemotes;
 
 #pragma mark NSToolbarItemValidation Methods
 
@@ -620,6 +624,67 @@
 	if (selectedCommit) {
 		PBGitRef *headRef = [[repository headRef] ref];
 		[repository rebaseBranch:headRef onRefish:selectedCommit];
+	}
+}
+
+#pragma mark Remote controls
+
+// !!! Andre Berg 20100330: moved these over from the PBGitSidebarController
+// since I grew tired of having to go all the way down with the mouse just
+// to do some basic actions I need to frequently (YMMV) =)
+
+enum  {
+	kAddRemoteSegment = 0,
+	kFetchSegment,
+	kPullSegment,
+	kPushSegment
+};
+
+- (void) updateRemoteControls:(PBGitRef *)forRef
+{
+	BOOL hasRemote = NO;
+
+	PBGitRef *ref = forRef;
+	if ([ref isRemote] || ([ref isBranch] && [[repository remoteRefForBranch:ref error:NULL] remoteName]))
+		hasRemote = YES;
+
+	[remoteControls setEnabled:hasRemote forSegment:kFetchSegment];
+	[remoteControls setEnabled:hasRemote forSegment:kPullSegment];
+	[remoteControls setEnabled:hasRemote forSegment:kPushSegment];
+}
+
+- (IBAction) fetchPullPushAction:(id)sender
+{
+	NSInteger selectedSegment = [sender selectedSegment];
+
+	if (selectedSegment == kAddRemoteSegment) {
+		[PBAddRemoteSheet beginAddRemoteSheetForRepository:repository];
+		return;
+	}
+    NSOutlineView * sourceView = sidebarSourceView;
+	NSInteger index = [sourceView selectedRow];
+	PBSourceViewItem *item = [sourceView itemAtRow:index];
+	PBGitRef *ref = [[item revSpecifier] ref];
+
+	if (!ref && (item.parent == sidebarRemotes))
+		ref = [PBGitRef refFromString:[kGitXRemoteRefPrefix stringByAppendingString:[item title]]];
+
+	if (![ref isRemote] && ![ref isBranch])
+		return;
+
+	PBGitRef *remoteRef = [repository remoteRefForBranch:ref error:NULL];
+	if (!remoteRef)
+		return;
+
+	if (selectedSegment == kFetchSegment)
+		[repository beginFetchFromRemoteForRef:ref];
+	else if (selectedSegment == kPullSegment)
+		[repository beginPullFromRemote:remoteRef forRef:ref];
+	else if (selectedSegment == kPushSegment) {
+		if ([ref isRemote])
+			[refController showConfirmPushRefSheet:nil remote:remoteRef];
+		else if ([ref isBranch])
+			[refController showConfirmPushRefSheet:ref remote:remoteRef];
 	}
 }
 

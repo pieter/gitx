@@ -18,7 +18,6 @@
 	IBOutlet NSOutlineView *sourceView;
 	IBOutlet NSView *sourceListControlsView;
 	IBOutlet NSPopUpButton *actionButton;
-	IBOutlet NSSegmentedControl *remoteControls;
 
 	NSMutableArray *items;
 
@@ -40,4 +39,6 @@
 
 @property(readonly) NSMutableArray *items;
 @property(readonly) NSView *sourceListControlsView;
+@property(readonly) PBSourceViewItem * remotes;
+@property(readonly) NSOutlineView * sourceView;
 @end

@@ -17,6 +17,8 @@
 @class PBGitGradientBarView;
 @class PBRefController;
 @class QLPreviewPanel;
+@class PBCommitList;
+@class PBSourceViewItem;
 
 @interface PBGitHistoryController : PBViewController {
 	IBOutlet PBRefController *refController;
@@ -40,12 +42,19 @@
 	IBOutlet NSButton *selectedBranchFilterItem;
 
 	IBOutlet id webView;
+
+    // moved from PBGitSidebarController
+    IBOutlet NSSegmentedControl * remoteControls;
+
 	int selectedCommitDetailsIndex;
 	BOOL forceSelectionUpdate;
 	
 	PBGitTree *gitTree;
 	PBGitCommit *webCommit;
 	PBGitCommit *selectedCommit;
+
+    PBSourceViewItem * sidebarRemotes;
+    NSOutlineView * sidebarSourceView;
 }
 
 @property (assign) int selectedCommitDetailsIndex;
@@ -53,6 +62,8 @@
 @property (retain) PBGitTree* gitTree;
 @property (readonly) NSArrayController *commitController;
 @property (readonly) PBRefController *refController;
+@property (assign) NSOutlineView * sidebarSourceView;
+@property (assign) PBSourceViewItem * sidebarRemotes;
 
 - (IBAction) setDetailedView:(id)sender;
 - (IBAction) setTreeView:(id)sender;
@@ -63,6 +74,11 @@
 - (IBAction) toggleQLPreviewPanel:(id)sender;
 - (IBAction) openSelectedFile:(id)sender;
 - (void) updateQuicklookForce: (BOOL) force;
+
+
+// Moved over Sidebar methods
+- (IBAction) fetchPullPushAction:(id)sender;
+- (void) updateRemoteControls:(PBGitRef *)forRef;
 
 // Context menu methods
 - (NSMenu *)contextMenuForTreeView;

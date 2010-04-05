@@ -23,12 +23,12 @@
 - (PBSourceViewItem *) itemForRev:(PBGitRevSpecifier *)rev;
 - (void) removeRevSpec:(PBGitRevSpecifier *)rev;
 - (void) updateActionMenu;
-- (void) updateRemoteControls;
+
 @end
 
 @implementation PBGitSidebarController
 @synthesize items;
-@synthesize sourceListControlsView;
+@synthesize sourceListControlsView, sourceView, remotes;
 
 - (id)initWithRepository:(PBGitRepository *)theRepository superController:(PBGitWindowController *)controller
 {
@@ -193,7 +193,7 @@
 	}
 
 	[self updateActionMenu];
-	[self updateRemoteControls];
+	[historyViewController updateRemoteControls:[[self selectedItem] ref]];
 }
 
 #pragma mark NSOutlineView delegate methods
