@@ -21,18 +21,23 @@
 	parameters = params;
 	description = descrip;
 
-	if (([parameters count] > 1) || ([parameters count] == 0))
-		isSimpleRef =  NO;
-	else {
-		NSString *param = [parameters objectAtIndex:0];
+	if (([parameters count] > 1) || ([parameters count] == 0)) {
+        isSimpleRef =  NO;
+    } else {
+        NSString *param = [parameters objectAtIndex:0];
 		if ([param hasPrefix:@"-"] ||
 			[param rangeOfCharacterFromSet:[NSCharacterSet characterSetWithCharactersInString:@"^@{}~:"]].location != NSNotFound ||
-			[param rangeOfString:@".."].location != NSNotFound)
-			isSimpleRef =  NO;
-		else
-			isSimpleRef =  YES;
+			[param rangeOfString:@".."].location != NSNotFound) {
+            isSimpleRef =  NO;
+        } else {
+            if ([param hasPrefix:@"refs/"]) {
+                isSimpleRef = YES;
+            } else {
+                isSimpleRef = NO;
+            }
+        }
 	}
-
+    // NSLog(@"paramters = %@, isSimpleRef = %@", parameters, (isSimpleRef ? @"YES" : @"NO"));
 	return self;
 }
 
