@@ -21,9 +21,20 @@
 	NSManagedObjectContext *managedObjectContext;
 
 	PBCLIProxy *cliProxy;
+    NSString * cliArgs;
+
+    // CLI set state
+    BOOL launchedFromGitx;
+    NSString * deferredSelectSha;
+    NSArray * launchedDocuments;
+
 	PBCloneRepositoryPanel *cloneRepositoryPanel;
 }
 @property (retain) PBCLIProxy* cliProxy;
+@property (copy) NSString *cliArgs;
+@property (assign) BOOL launchedFromGitx;
+@property (copy) NSString *deferredSelectSha;
+
 + (ApplicationController *) sharedApplicationController;
 
 - (NSPersistentStoreCoordinator *)persistentStoreCoordinator;

@@ -15,6 +15,8 @@
 #import "NSOutlineViewExt.h"
 #import "PBAddRemoteSheet.h"
 #import "PBGitDefaults.h"
+#import "BMScript.h"
+#import "ApplicationController.h"
 
 @interface PBGitSidebarController ()
 
@@ -29,13 +31,14 @@
 @implementation PBGitSidebarController
 @synthesize items;
 @synthesize sourceListControlsView, sourceView, remotes;
+@synthesize deferredSelectObject;
 
 - (id)initWithRepository:(PBGitRepository *)theRepository superController:(PBGitWindowController *)controller
 {
 	self = [super initWithRepository:theRepository superController:controller];
 	[sourceView setDelegate:self];
 	items = [NSMutableArray array];
-
+    deferredSelectObject = nil;
 	return self;
 }
 
@@ -48,7 +51,12 @@
 	historyViewController = [[PBGitHistoryController alloc] initWithRepository:repository superController:superController];
 	commitViewController = [[PBGitCommitController alloc] initWithRepository:repository superController:superController];
 
-	[repository addObserver:self forKeyPath:@"currentBranch" options:0 context:@"currentBranchChange"];
+    superController.historyController = historyViewController;
+
+    historyViewController.sidebarSourceView = self.sourceView;
+    historyViewController.sidebarRemotes = self.remotes;
+
+    [repository addObserver:self forKeyPath:@"currentBranch" options:0 context:@"currentBranchChange"];
 	[repository addObserver:self forKeyPath:@"branches" options:(NSKeyValueObservingOptionOld | NSKeyValueObservingOptionNew) context:@"branchesModified"];
 
 	[self menuNeedsUpdate:[actionButton menu]];
@@ -56,11 +64,123 @@
 	if ([PBGitDefaults showStageView])
 		[self selectStage];
 	else
-		[self selectCurrentBranch];
+        [self selectCurrentBranch];
+}
+
+- (void)populateList
+{
+    NSLog(@"[%@ %s]", [self class], _cmd);
+
+	PBSourceViewItem *project = [PBSourceViewItem groupItemWithTitle:[repository projectName]];
+	project.isUncollapsible = YES;
+
+	stage = [PBGitSVStageItem stageItem];
+	[project addChild:stage];
+
+	branches = [PBSourceViewItem groupItemWithTitle:@"Branches"];
+	remotes = [PBSourceViewItem groupItemWithTitle:@"Remotes"];
+	tags = [PBSourceViewItem groupItemWithTitle:@"Tags"];
+	others = [PBSourceViewItem groupItemWithTitle:@"Other"];
+
+	for (PBGitRevSpecifier *branchRev in repository.branches)
+		[self addRevSpec:branchRev];
+
+    [items addObject:project];
+	[items addObject:branches];
+	[items addObject:remotes];
+	[items addObject:tags];
+	[items addObject:others];
+
+	[sourceView reloadData];
+	[sourceView expandItem:project];
+	[sourceView expandItem:branches expandChildren:YES];
+	[sourceView expandItem:remotes];
+
+	[sourceView reloadItem:nil reloadChildren:YES];
+
+    // figure out if args passed to gitx are meaningful enough to describe a source view branch
+    // and a selectable commit on the history view controller...
+
+    ApplicationController * appController = [ApplicationController sharedApplicationController];
+    PBGitRevSpecifier * resolvedRev = nil;
+
+//     if (YES) {
+//         //appController.cliArgs = @"rdi/master";
+//         //appController.cliArgs = @"d12b92349bb89bc83b8eab45a4bed88d50547aeb";
+//         appController.cliArgs = @"--commit";
+//         appController.launchedFromGitx = YES;
+//     }
+
+    NSString * cliargs = appController.cliArgs;
+
+    // if the cliArgs have a "-" prefix it might be one of the "--all", "--local", "--commit", "-S..." etc.
+    // parameters (see ApplicationController.m and gitx.m) then don't set the deferredSelectObject and continue
+    // as normal
+    if (appController.launchedFromGitx && cliargs && !([cliargs hasPrefix:@"-"])) {
+
+        repository.currentBranchFilter = [PBGitDefaults branchFilter];
+
+        // is it a partial ref ? (like xyz/master) - try to complete the rev
+        PBGitRef * ref;
+        if (ref = [repository completeRefForString:cliargs]) {
+            NSLog(@"[%@ %s] completed ref for %@ = %@", [self class], _cmd, cliargs, ref);
+            if (ref) {
+                resolvedRev = [[PBGitRevSpecifier alloc] initWithRef:ref];
+            }
+        } else {
+            // is it a SHA ? - figure out the branch the SHA lives in
+            if ((appController.deferredSelectSha = [repository shaExists:cliargs])) {
+
+                NSLog(@"[%@ %s] appController.deferredSelectSha = %@", [self class], _cmd, appController.deferredSelectSha);
+
+                // this little shell script looks up the rev for a SHA and gets the refs/... path
+                // for its most recent commit (aka head commit (but not _the_ HEAD)
+                NSString * headRefPathForShaTemplate = [NSString stringWithString:@"#!/bin/sh\n"
+                                                                                  @"cd \"%{DIR}\"\n"
+                                                                                  @"br=`%{GITPATH} name-rev \"%{SHA}\" | awk '{gsub(/~.*/,\"\",$2);print $2}'`\n"
+                                                                                  @"headsha=`%{GITPATH} rev-parse $br`\n"
+                                                                                  @"%{GITPATH} show-ref | grep $headsha | awk '{print $2}'\n"];
+
+                NSDictionary * kwds = [NSDictionary dictionaryWithObjectsAndKeys:[PBGitBinary path], @"GITPATH",
+                                                                      [repository workingDirectory], @"DIR",
+                                                                                            cliargs, @"SHA", nil];
+
+                TerminationStatus retVal = BMScriptNotExecuted;
+                NSString * output = [repository outputForShellScriptTemplate:headRefPathForShaTemplate
+                                                                 keywordDict:kwds
+                                                                    retValue:&retVal];
+
+                if (BMScriptFinishedSuccessfully == retVal) {
+                    output = [output substringToIndex:[output length] - 1]; // trim \n
+                    if ([output rangeOfString:@"\n"].location != NSNotFound) {
+                        NSArray * lines = [output componentsSeparatedByString:@"\n"];
+                        resolvedRev = [[PBGitRevSpecifier alloc] initWithRef:[PBGitRef refFromString:[lines objectAtIndex:0]]];
+                    } else {
+                        resolvedRev = [[PBGitRevSpecifier alloc] initWithRef:[PBGitRef refFromString:output]];
+                    }
+                }
+            }
+        }
+        // now try to find resolvedRev in the sourceView and store it
+        // in defereredSelectObject so we can select it later
+        if (resolvedRev) {
+            repository.currentBranch = resolvedRev;
+            //repository.currentBranch.isSimpleRef = YES;
+            NSLog(@"[%@ %s] currentBranch = %@", [self class], _cmd, repository.currentBranch);
+            NSLog(@"[%@ %s] items = %@", [self class], _cmd, [items description]);
+            for (PBSourceViewItem * item in items) {
+                if (deferredSelectObject = [item findRev:resolvedRev])
+                    break;
+            }
+            NSLog(@"[%@ %s] deferredSelectObject = %@", [self class], _cmd, deferredSelectObject);
+        }
+    }
 }
 
 - (void) observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
 {
+    NSLog(@"[%@ %s]", [self class], _cmd);
+
 	if ([@"currentBranchChange" isEqualToString:context]) {
 		[sourceView reloadData];
 		[self selectCurrentBranch];
@@ -103,47 +223,89 @@
 	[sourceView selectRowIndexes:index byExtendingSelection:NO];
 }
 
-- (void) selectCurrentBranch
+- (void) selectBranch:(PBSourceViewItem *)branchItem
 {
-	PBGitRevSpecifier *rev = repository.currentBranch;
-	if (!rev) {
-		[repository reloadRefs];
-		[repository readCurrentBranch];
-		return;
-	}
-	
-	PBSourceViewItem *item = nil;
-	for (PBSourceViewItem *it in items)
-		if (item = [it findRev:rev])
-			break;
-	
-	if (!item) {
-		[self addRevSpec:rev];
-		// Try to find the just added item again.
-		// TODO: refactor with above.
-		for (PBSourceViewItem *it in items)
-			if (item = [it findRev:rev])
-				break;
-	}
-	
-	[sourceView PBExpandItem:item expandParents:YES];
-	NSIndexSet *index = [NSIndexSet indexSetWithIndex:[sourceView rowForItem:item]];
-	
+    [sourceView PBExpandItem:branchItem expandParents:YES];
+    NSInteger row = [sourceView rowForItem:branchItem];
+    NSLog(@"[%@ %s] rowForItem (%@) = %d", [self class], _cmd, branchItem, row);
+    NSIndexSet *index = [NSIndexSet indexSetWithIndex:row];
 	[sourceView selectRowIndexes:index byExtendingSelection:NO];
 }
 
-- (PBSourceViewItem *) itemForRev:(PBGitRevSpecifier *)rev
-{
+- (PBSourceViewItem *) itemForRev:(PBGitRevSpecifier *)rev {
 	PBSourceViewItem *foundItem = nil;
-	for (PBSourceViewItem *item in items)
-		if (foundItem = [item findRev:rev])
+	for (PBSourceViewItem *item in items) {
+        if (foundItem = [item findRev:rev]) {
+            NSLog(@"[%@ %s]: found item! Item = %@ for rev = %@", [self class], _cmd, item, rev);
 			return foundItem;
+        }
+    }
 	return nil;
 }
+
+- (BOOL) selectCommitWithSha:(NSString *)refSHA  {
+    NSArray *revList = repository.revisionList.commits;
+    NSLog(@"[%@ %s] revList = %@", [self class], _cmd, revList);
+    for (PBGitCommit *commit in revList) {
+        NSLog(@"[%@ %s] commit = %@", [self class], _cmd, commit);
+        if ([[commit realSha] isEqualToString:refSHA]) {
+            [historyViewController selectCommit:refSHA];
+            return YES;
+        }
+    }
+    return NO;
+}
+
+- (void) selectCurrentBranch
+{
+	PBGitRevSpecifier *rev = repository.currentBranch;
+
+    NSLog(@"[%@ %s] rev = %@", [self class], _cmd, rev);
+
+    if (deferredSelectObject) {
+        NSString * sha = [ApplicationController sharedApplicationController].deferredSelectSha;
+
+        if (!sha) {
+            sha = [repository shaForRef:[deferredSelectObject.revSpecifier ref]];
+        }
+
+        [self selectBranch:deferredSelectObject];
+        //[historyViewController selectCommit:sha];
+        deferredSelectObject = nil;
+        return;
+    }
+
+    if (!rev) {
+        [repository reloadRefs];
+        [repository readCurrentBranch];
+        return;
+    }
+//     else {
+//         NSString * refSHA = [repository shaForRef:[rev ref]];
+//         if (![self selectCommitWithSha:refSHA]) {
+//             [repository reloadRefs];
+//             [self selectCommitWithSha:refSHA];
+//         }
+//     }
+
+    PBSourceViewItem *item = [self itemForRev:rev];
+
+//     if (!item) {
+//         // Obviously we havn't found the item so we reset it's isSimpleRef status back to NO
+//         // so it will get added to the OTHER group.
+//         //[rev setIsSimpleRef:NO];
+//         [self addRevSpec:rev];
+//         // Try to find the just added item again.
+//         item = [self itemForRev:rev];
+//     }
+    [self selectBranch:item];
+}
+
 
 - (void)addRevSpec:(PBGitRevSpecifier *)rev
 {
 	if (![rev isSimpleRef]) {
+        NSLog(@"[%@ %s]: rev = %@", [self class], _cmd, rev);
 		[others addChild:[PBSourceViewItem itemWithRevSpec:rev]];
 		[sourceView reloadData];
 		return;
@@ -221,36 +383,6 @@
 - (BOOL) outlineView:(NSOutlineView *)outlineView shouldShowOutlineCellForItem:(id)item
 {
 	return ![item isUncollapsible];
-}
-
-- (void)populateList
-{
-	PBSourceViewItem *project = [PBSourceViewItem groupItemWithTitle:[repository projectName]];
-	project.isUncollapsible = YES;
-
-	stage = [PBGitSVStageItem stageItem];
-	[project addChild:stage];
-	
-	branches = [PBSourceViewItem groupItemWithTitle:@"Branches"];
-	remotes = [PBSourceViewItem groupItemWithTitle:@"Remotes"];
-	tags = [PBSourceViewItem groupItemWithTitle:@"Tags"];
-	others = [PBSourceViewItem groupItemWithTitle:@"Other"];
-
-	for (PBGitRevSpecifier *rev in repository.branches)
-		[self addRevSpec:rev];
-
-	[items addObject:project];
-	[items addObject:branches];
-	[items addObject:remotes];
-	[items addObject:tags];
-	[items addObject:others];
-
-	[sourceView reloadData];
-	[sourceView expandItem:project];
-	[sourceView expandItem:branches expandChildren:YES];
-	[sourceView expandItem:remotes];
-
-	[sourceView reloadItem:nil reloadChildren:YES];
 }
 
 #pragma mark NSOutlineView Datasource methods
@@ -332,64 +464,5 @@
 	PBGitRef *ref = [[self selectedItem] ref];
 	[self addMenuItemsForRef:ref toMenu:menu];
 }
-
-
-#pragma mark Remote controls
-
-enum  {
-	kAddRemoteSegment = 0,
-	kFetchSegment,
-	kPullSegment,
-	kPushSegment
-};
-
-- (void) updateRemoteControls
-{
-	BOOL hasRemote = NO;
-
-	PBGitRef *ref = [[self selectedItem] ref];
-	if ([ref isRemote] || ([ref isBranch] && [[repository remoteRefForBranch:ref error:NULL] remoteName]))
-		hasRemote = YES;
-
-	[remoteControls setEnabled:hasRemote forSegment:kFetchSegment];
-	[remoteControls setEnabled:hasRemote forSegment:kPullSegment];
-	[remoteControls setEnabled:hasRemote forSegment:kPushSegment];
-}
-
-- (IBAction) fetchPullPushAction:(id)sender
-{
-	NSInteger selectedSegment = [sender selectedSegment];
-
-	if (selectedSegment == kAddRemoteSegment) {
-		[PBAddRemoteSheet beginAddRemoteSheetForRepository:repository];
-		return;
-	}
-
-	NSInteger index = [sourceView selectedRow];
-	PBSourceViewItem *item = [sourceView itemAtRow:index];
-	PBGitRef *ref = [[item revSpecifier] ref];
-
-	if (!ref && (item.parent == remotes))
-		ref = [PBGitRef refFromString:[kGitXRemoteRefPrefix stringByAppendingString:[item title]]];
-
-	if (![ref isRemote] && ![ref isBranch])
-		return;
-
-	PBGitRef *remoteRef = [repository remoteRefForBranch:ref error:NULL];
-	if (!remoteRef)
-		return;
-
-	if (selectedSegment == kFetchSegment)
-		[repository beginFetchFromRemoteForRef:ref];
-	else if (selectedSegment == kPullSegment)
-		[repository beginPullFromRemote:remoteRef forRef:ref];
-	else if (selectedSegment == kPushSegment) {
-		if ([ref isRemote])
-			[historyViewController.refController showConfirmPushRefSheet:nil remote:remoteRef];
-		else if ([ref isBranch])
-			[historyViewController.refController showConfirmPushRefSheet:ref remote:remoteRef];
-	}
-}
-
 
 @end

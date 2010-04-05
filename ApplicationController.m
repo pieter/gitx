@@ -17,9 +17,14 @@
 #import "PBNSURLPathUserDefaultsTransfomer.h"
 #import "PBGitDefaults.h"
 #import "PBCloneRepositoryPanel.h"
+#import "BMScript.h"
+#import "PBGitSidebarController.h"
 
 @implementation ApplicationController
 @synthesize cliProxy;
+@synthesize cliArgs;
+@synthesize launchedFromGitx;
+@synthesize deferredSelectSha;
 
 static ApplicationController * sharedApplicationControllerInstance = nil; 
 
@@ -66,6 +71,11 @@ static ApplicationController * sharedApplicationControllerInstance = nil;
             if(![[NSBundle bundleWithPath:@"/System/Library/Frameworks/Quartz.framework/Frameworks/QuickLookUI.framework"] load])
                 if(![[NSBundle bundleWithPath:@"/System/Library/PrivateFrameworks/QuickLookUI.framework"] load])
                     NSLog(@"Could not load QuickLook");
+
+            self.cliProxy = [PBCLIProxy new];
+            launchedFromGitx = NO;
+            cliArgs = nil;
+            deferredSelectSha = nil;
         }
         /* Value Transformers */
         NSValueTransformer *transformer = [[PBNSURLPathUserDefaultsTransfomer alloc] init];
@@ -101,11 +111,31 @@ static ApplicationController * sharedApplicationControllerInstance = nil;
 	// Make sure Git's SSH password requests get forwarded to our little UI tool:
 	setenv( "SSH_ASKPASS", [[[NSBundle mainBundle] pathForResource: @"gitx_askpasswd" ofType: @""] UTF8String], 1 );
 	setenv( "DISPLAY", "localhost:0", 1 );
-	
+
+    char * launchedfromgitx = getenv("GITX_LAUNCHED_FROM_CLI");
+    char * cliargs = getenv("GITX_CLI_ARGUMENTS");
+
+    self.launchedFromGitx = (launchedfromgitx ? YES : NO);
+
+    if (cliargs) {
+        self.cliArgs = [NSString stringWithUTF8String:(cliargs)];
+    }
+
+    NSLog(@"[%@ %s] launchedFromGitx = %@", [self class], _cmd, (launchedFromGitx ? @"YES" : @"NO"));
+    NSLog(@"[%@ %s] cliArgs = %@", [self class], _cmd, cliArgs);
+
 	[self registerServices];
 
+    if ([cliArgs isEqualToString:@"--all"]) {
+        [PBGitDefaults setBranchFilter:kGitXAllBranchesFilter];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+    } else if ([cliArgs isEqualToString:@"--local"]) {
+        [PBGitDefaults setBranchFilter:kGitXLocalRemoteBranchesFilter];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+    }
+
     BOOL hasOpenedDocuments = NO;
-    NSArray *launchedDocuments = [[[PBRepositoryDocumentController sharedDocumentController] documents] copy];
+    launchedDocuments = [[[PBRepositoryDocumentController sharedDocumentController] documents] copy];
 
 	// Only try to open a default document if there are no documents open already.
 	// For example, the application might have been launched by double-clicking a .git repository,
@@ -123,7 +153,7 @@ static ApplicationController * sharedApplicationControllerInstance = nil;
         }
     }
 
-	// Try to find the current directory, to open that as a repository
+	// Try to find the current directory, to open that as a repository...
 	if ([PBGitDefaults openCurDirOnLaunch] && !hasOpenedDocuments) {
 		NSString *curPath = [[[NSProcessInfo processInfo] environment] objectForKey:@"PWD"];
         NSURL *url = nil;
@@ -135,9 +165,47 @@ static ApplicationController * sharedApplicationControllerInstance = nil;
             hasOpenedDocuments = YES;
 	}
 
-    // to bring the launched documents to the front
-    for (PBGitRepository *document in launchedDocuments)
+    launchedDocuments = [[[PBRepositoryDocumentController sharedDocumentController] documents] copy];
+
+    // ...to bring the launched documents to the front
+    for (PBGitRepository *document in launchedDocuments) {
+
+        PBGitWindowController * wc = [(PBGitRepository *)document windowController];
+        PBGitHistoryController * historyViewController = wc.historyController;
+        NSArrayController * ccontroller = historyViewController.commitController;
+
+        // determine what to show right after start - stage or standard history view?
+        if ([cliArgs isEqualToString:@"--commit"] || [cliArgs isEqualToString:@"-c"]) {
+            [wc showCommitView:self];
+            launchedFromGitx = NO;
+        } else {
+            [wc showHistoryView:self];
+        }
+
+        if ([cliArgs hasPrefix:@"--author"]) {
+            NSArray * components = [cliArgs componentsSeparatedByString:@"="];
+            NSString * author = [components objectAtIndex:1];
+            [ccontroller setFilterPredicate:[NSPredicate predicateWithFormat:@"author contains[c] %@", author]];
+            [historyViewController.commitList selectRowIndexes:[NSIndexSet indexSetWithIndex:0] byExtendingSelection:NO];
+        } else if ([cliArgs hasPrefix:@"--subject"]) {
+            NSArray * components = [cliArgs componentsSeparatedByString:@"="];
+            NSString * subject = [components objectAtIndex:1];
+            [ccontroller setFilterPredicate:[NSPredicate predicateWithFormat:@"subject contains[c] %@", subject]];
+        } else if ([cliArgs hasPrefix:@"--sha"]) {
+            NSArray * components = [cliArgs componentsSeparatedByString:@"="];
+            NSString * sha = [components objectAtIndex:1];
+            [ccontroller setFilterPredicate:[NSPredicate predicateWithFormat:@"realSha contains[c] %@", sha]];
+        } else if ([cliArgs hasPrefix:@"-S"]) {
+            NSString * subject = [cliArgs substringFromIndex:2];
+            [ccontroller setFilterPredicate:[NSPredicate predicateWithFormat:@"subject contains[c] %@", subject]];
+        }
+
         [document showWindows];
+    }
+
+    if (launchedFromGitx) {
+        [self performSelector:@selector(finalizeCLILaunch:) withObject:self afterDelay:0.5];
+    }
 
 	if (![[NSApplication sharedApplication] isActive])
 		return;
@@ -146,6 +214,25 @@ static ApplicationController * sharedApplicationControllerInstance = nil;
 	// show an open panel for the user to select a repository to view
 	if ([PBGitDefaults showOpenPanelOnLaunch] && !hasOpenedDocuments)
 		[[PBRepositoryDocumentController sharedDocumentController] openDocument:self];
+}
+
+- (void) finalizeCLILaunch:(id)object {
+    for (PBGitRepository * document in launchedDocuments) {
+        BOOL success = [[[(PBGitRepository *)document windowController] historyController] selectCommit:self.deferredSelectSha];
+        NSLog(@"[%@ %s] trying to select commit with sha %@ (success = %@)", [self class], _cmd, self.deferredSelectSha, BMStringFromBOOL(success));
+        if (success) {
+            PBGitWindowController * wc = [(PBGitRepository *)document windowController];
+            PBGitHistoryController * histController = wc.historyController;
+            PBCommitList * clist = histController.commitList;
+            // updating the selection with the selection seems redundant but it also updates the row select indicator
+            [clist selectRowIndexes:[clist selectedRowIndexes] byExtendingSelection:NO];
+            [histController scrollSelectionToTopOfViewFrom:0];
+            [histController updateKeys];
+        }
+    }
+    // Reset CLI indication status so KVO all over the controllers can go the intended ways again...
+    self.deferredSelectSha = nil;
+    self.launchedFromGitx = NO;
 }
 
 

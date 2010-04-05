@@ -109,9 +109,10 @@
 	[node addRev:theRevSpecifier toPath:[path subarrayWithRange:NSMakeRange(1, [path count] - 1)]];
 }
 
-- (PBSourceViewItem *)findRev:(PBGitRevSpecifier *)rev
+- (PBSourceViewItem *) findRev:(PBGitRevSpecifier *)rev
 {
-	if (rev == revSpecifier)
+    NSLog(@"[%@ %s] rev = %@, revSpecifier = %@", [self class], _cmd, rev, revSpecifier);
+	if (rev == revSpecifier || [rev isEqual:revSpecifier])
 		return self;
 
 	PBSourceViewItem *item = nil;
