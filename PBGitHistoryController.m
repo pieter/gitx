@@ -121,7 +121,10 @@
 
 - (void) updateKeys
 {
-	selectedCommit = [[commitController selectedObjects] lastObject];
+	PBGitCommit * lastObject = [[commitController selectedObjects] lastObject];
+    if (lastObject) {
+        selectedCommit = lastObject;
+    }
 
 	if (self.selectedCommitDetailsIndex == kHistoryTreeViewIndex) {
 		self.gitTree = selectedCommit.tree;
