@@ -26,6 +26,9 @@ extern NSString * const PBGitRepositoryErrorDomain;
 extern NSString * const PBInvalidBranchErrorMessage;
 extern NSString * const PBMissingRemoteErrorMessage;
 
-extern const NSInteger PBFileReadingUnsupportedErrorCode;   /* @"Reading files is not supported." */
-extern const NSInteger PBNotAGitRepositoryErrorCode;        /* @"%@ does not appear to be a git repository." */
+extern const NSInteger PBFileReadingUnsupportedErrorCode;           /* @"Reading files is not supported." */
+extern const NSInteger PBNotAGitRepositoryErrorCode;                /* @"%@ does not appear to be a git repository." */
 extern const NSInteger PBGitBinaryNotFoundErrorCode;
+extern const NSInteger PBNotAValidRefFormatErrorCode;               /* happens when check-ref-format in PBGitRepository -checkRefFormat returns NO */
+// extern const NSInteger PBCLINilValueForArgumentsCode;               /* PBCLIProxy -openRepository:arguments:error: is passed nil for arguments */
+// extern const NSInteger PBCLINilValueForRepositoryPathErrorCode;     /* PBCLIProxy -openRepository:arguments:error: is passed nil for repositoryPath */

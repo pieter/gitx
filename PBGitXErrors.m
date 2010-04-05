@@ -28,6 +28,9 @@ NSString * const PBInvalidBranchErrorMessage  = @"Please select a local branch f
 
 NSString * const PBMissingRemoteErrorMessage  = @"This branch does not appear to have a remote tracking branch associated in its config file section.";
 
-const NSInteger PBNotAGitRepositoryErrorCode        = 1;
-const NSInteger PBFileReadingUnsupportedErrorCode   = 2;
-const NSInteger PBGitBinaryNotFoundErrorCode        = 3;
+const NSInteger PBNotAGitRepositoryErrorCode            = 1;
+const NSInteger PBFileReadingUnsupportedErrorCode       = 2;
+const NSInteger PBGitBinaryNotFoundErrorCode            = 3;
+const NSInteger PBNotAValidRefFormatErrorCode           = 4;
+// const NSInteger PBCLINilValueForArgumentsCode           = 5;
+// const NSInteger PBCLINilValueForRepositoryPathErrorCode = 6;
