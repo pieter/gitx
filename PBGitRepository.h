@@ -50,6 +50,7 @@ static NSString * PBStringFromBranchFilterType(PBGitXBranchFilterType type) {
 	NSMutableDictionary *refs;
 
 	PBGitRevSpecifier *_headRef; // Caching
+	NSString* _headSha;
 }
 
 - (void) cloneRepositoryToPath:(NSString *)path bare:(BOOL)isBare;

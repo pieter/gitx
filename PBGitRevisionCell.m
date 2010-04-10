@@ -54,6 +54,16 @@
 	
 }
 
+- (BOOL) isCurrentCommit
+{
+	NSString* thisSha = [self.objectValue realSha];
+
+	PBGitRepository* repository = [self.objectValue repository];
+	NSString* currentSha = [repository headSHA];
+
+	return [ currentSha isEqualToString : thisSha ];
+}
+
 - (void) drawCircleInRect: (NSRect) r
 {
 
@@ -71,7 +81,13 @@
 	[path fill];
 	
 	NSRect smallOval = { columnOrigin.x - 3, columnOrigin.y + r.size.height * 0.5 - 3, 6, 6};
-	[[NSColor whiteColor] set];
+
+	if ( [self isCurrentCommit ] ) {
+		[[NSColor colorWithCalibratedRed: 0Xfc/256.0 green:0Xa6/256.0 blue: 0X4f/256.0 alpha: 1.0] set];
+	} else {
+		[[NSColor whiteColor] set];
+	}
+
 	path = [NSBezierPath bezierPathWithOvalInRect:smallOval];
 	[path fill];	
 }

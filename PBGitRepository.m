@@ -234,6 +234,7 @@ NSString* PBGitRepositoryErrorDomain = @"GitXErrorDomain";
 - (void) reloadRefs
 {
 	_headRef = nil;
+	_headSha = nil;
 
 	refs = [NSMutableDictionary dictionary];
 	NSMutableArray *oldBranches = [branches mutableCopy];
@@ -287,12 +288,17 @@ NSString* PBGitRepositoryErrorDomain = @"GitXErrorDomain";
 	else
 		_headRef = [[PBGitRevSpecifier alloc] initWithRef:[PBGitRef refFromString:@"HEAD"]];
 
+	_headSha = [self shaForRef:[_headRef ref]];
+
 	return _headRef;
 }
 
 - (NSString *) headSHA
 {
-	return [self shaForRef:[[self headRef] ref]];
+	if (! _headSha)
+		[self headRef];
+
+	return _headSha;
 }
 
 - (PBGitCommit *) headCommit
