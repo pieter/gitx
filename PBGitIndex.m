@@ -331,7 +331,7 @@ NSString *PBGitIndexOperationFailed = @"PBGitIndexOperationFailed";
 
 - (BOOL)applyPatch:(NSString *)hunk stage:(BOOL)stage reverse:(BOOL)reverse;
 {
-	NSMutableArray *array = [NSMutableArray arrayWithObjects:@"apply", nil];
+	NSMutableArray *array = [NSMutableArray arrayWithObjects:@"apply", @"--unidiff-zero", nil];
 	if (stage)
 		[array addObject:@"--cached"];
 	if (reverse)
