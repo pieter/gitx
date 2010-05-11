@@ -175,13 +175,6 @@ NSString *PBGitIndexOperationFailed = @"PBGitIndexOperationFailed";
 
 	[self postCommitUpdate:@"Creating commit"];
 	int ret = 1;
-	NSString *commit = [repository outputForArguments:arguments
-										  inputString:commitMessage
-							   byExtendingEnvironment:amendEnvironment
-											 retValue: &ret];
-	
-	if (ret || [commit length] != 40)
-		return [self postCommitFailure:@"Could not create a commit object"];
 	
 	[self postCommitUpdate:@"Running hooks"];
 	if (![repository executeHook:@"pre-commit" output:nil])
@@ -189,6 +182,16 @@ NSString *PBGitIndexOperationFailed = @"PBGitIndexOperationFailed";
 	
 	if (![repository executeHook:@"commit-msg" withArgs:[NSArray arrayWithObject:commitMessageFile] output:nil])
 		return [self postCommitFailure:@"Commit-msg hook failed"];
+	
+	commitMessage = [NSString stringWithContentsOfFile:commitMessageFile encoding:NSUTF8StringEncoding error:nil];
+	
+	NSString *commit = [repository outputForArguments:arguments
+										  inputString:commitMessage
+							   byExtendingEnvironment:amendEnvironment
+											 retValue: &ret];
+	
+	if (ret || [commit length] != 40)
+		return [self postCommitFailure:@"Could not create a commit object"];
 	
 	[self postCommitUpdate:@"Updating HEAD"];
 	[repository outputForArguments:[NSArray arrayWithObjects:@"update-ref", @"-m", commitSubject, @"HEAD", commit, nil]
