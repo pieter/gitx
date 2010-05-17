@@ -12,7 +12,7 @@
 @class PBCLIProxy;
 @class PBCloneRepositoryPanel;
 
-@interface ApplicationController : NSObject
+@interface ApplicationController : NSObject <NSWindowDelegate>
 {
 	IBOutlet NSWindow *window;
 	IBOutlet id firstResponder;
