@@ -17,6 +17,7 @@
 #import "PBNSURLPathUserDefaultsTransfomer.h"
 #import "PBGitDefaults.h"
 #import "PBCloneRepositoryPanel.h"
+#import "Sparkle/SUUpdater.h"
 
 @implementation ApplicationController
 @synthesize cliProxy;
@@ -65,6 +66,7 @@
 
 - (void)applicationDidFinishLaunching:(NSNotification*)notification
 {
+	[[SUUpdater sharedUpdater] setSendsSystemProfile:YES];
 	[self registerServices];
 
     BOOL hasOpenedDocuments = NO;
