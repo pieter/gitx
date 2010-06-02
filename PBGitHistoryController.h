@@ -12,35 +12,54 @@
 #import "PBViewController.h"
 #import "PBCollapsibleSplitView.h"
 
+@class PBGitSidebarController;
+@class PBGitGradientBarView;
+@class PBRefController;
+@class QLPreviewPanel;
+
 @interface PBGitHistoryController : PBViewController {
+	IBOutlet PBRefController *refController;
 	IBOutlet NSSearchField *searchField;
 	IBOutlet NSArrayController* commitController;
 	IBOutlet NSTreeController* treeController;
 	IBOutlet NSOutlineView* fileBrowser;
+	NSArray *currentFileBrowserSelectionPath;
 	IBOutlet NSTableView* commitList;
 	IBOutlet PBCollapsibleSplitView *historySplitView;
+    QLPreviewPanel* previewPanel;
+
+	IBOutlet PBGitGradientBarView *upperToolbarView;
+	IBOutlet NSButton *mergeButton;
+	IBOutlet NSButton *cherryPickButton;
+	IBOutlet NSButton *rebaseButton;
+
+	IBOutlet PBGitGradientBarView *scopeBarView;
+	IBOutlet NSButton *allBranchesFilterItem;
+	IBOutlet NSButton *localRemoteBranchesFilterItem;
+	IBOutlet NSButton *selectedBranchFilterItem;
 
 	IBOutlet id webView;
-	int selectedTab;
+	int selectedCommitDetailsIndex;
+	BOOL forceSelectionUpdate;
 	
-	PBGitTree* gitTree;
-	PBGitCommit* webCommit;
-	PBGitCommit* rawCommit;
-	PBGitCommit* realCommit;
+	PBGitTree *gitTree;
+	PBGitCommit *webCommit;
+	PBGitCommit *selectedCommit;
 }
 
-@property (assign) int selectedTab;
-@property (retain) PBGitCommit *webCommit, *rawCommit;
+@property (assign) int selectedCommitDetailsIndex;
+@property (retain) PBGitCommit *webCommit;
 @property (retain) PBGitTree* gitTree;
 @property (readonly) NSArrayController *commitController;
+@property (readonly) PBRefController *refController;
 
-- (IBAction) setDetailedView: sender;
-- (IBAction) setRawView: sender;
-- (IBAction) setTreeView: sender;
+- (IBAction) setDetailedView:(id)sender;
+- (IBAction) setTreeView:(id)sender;
+- (IBAction) setBranchFilter:(id)sender;
 
 - (void) selectCommit: (NSString*) commit;
 - (IBAction) refresh: sender;
-- (IBAction) toggleQuickView: sender;
+- (IBAction) toggleQLPreviewPanel:(id)sender;
 - (IBAction) openSelectedFile: sender;
 - (void) updateQuicklookForce: (BOOL) force;
 
@@ -50,6 +69,14 @@
 - (void)showCommitsFromTree:(id)sender;
 - (void)showInFinderAction:(id)sender;
 - (void)openFilesAction:(id)sender;
+
+// Repository Methods
+- (IBAction) createBranch:(id)sender;
+- (IBAction) createTag:(id)sender;
+- (IBAction) showAddRemoteSheet:(id)sender;
+- (IBAction) merge:(id)sender;
+- (IBAction) cherryPick:(id)sender;
+- (IBAction) rebase:(id)sender;
 
 - (void) copyCommitInfo;
 

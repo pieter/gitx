@@ -211,9 +211,9 @@ static DBPrefsWindowController *_sharedPrefsWindowController = nil;
 		[toolbar release];
 	}
 
-	NSString *firstIdentifier = [toolbarIdentifiers objectAtIndex:0];
-	[[[self window] toolbar] setSelectedItemIdentifier:firstIdentifier];
-	[self displayViewForIdentifier:firstIdentifier animate:NO];
+	NSString *identifier = [self defaultViewIdentifier];
+	[[[self window] toolbar] setSelectedItemIdentifier:identifier];
+	[self displayViewForIdentifier:identifier animate:NO];
 
 	[[self window] center];
 
@@ -401,6 +401,18 @@ static DBPrefsWindowController *_sharedPrefsWindowController = nil;
 	windowFrame.origin.y = NSMaxY([[self window] frame]) - NSHeight(windowFrame);
 
 	return windowFrame;
+}
+
+
+
+
+#pragma mark -
+#pragma mark Default View
+
+
+- (NSString *)defaultViewIdentifier
+{
+	return [toolbarIdentifiers objectAtIndex:0];
 }
 
 

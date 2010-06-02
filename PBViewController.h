@@ -14,11 +14,13 @@
 	__weak PBGitRepository *repository;
 	__weak PBGitWindowController *superController;
 
-	IBOutlet NSToolbar *viewToolbar;
+	NSString *status;
+	BOOL isBusy;
 }
 
 @property (readonly) __weak PBGitRepository *repository;
-@property (readonly) NSToolbar *viewToolbar;
+@property(copy) NSString *status;
+@property(assign) BOOL isBusy;
 
 - (id)initWithRepository:(PBGitRepository *)theRepository superController:(PBGitWindowController *)controller;
 
@@ -36,5 +38,6 @@
 - (void)viewLoaded;
 
 - (NSResponder *)firstResponder;
+- (IBAction) refresh:(id)sender;
 
 @end
