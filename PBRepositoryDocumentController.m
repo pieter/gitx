@@ -72,7 +72,8 @@
         NSString * reason = @"It does not appear to be a git repository.";
         NSString * suggestion = @"Make sure there really is a \u201c.git\u201d folder somewhere in the path hierarchy you are trying to open";
         NSDictionary * errInfo = [NSDictionary dictionaryWithObjectsAndKeys:reason, NSLocalizedFailureReasonErrorKey, suggestion, NSLocalizedRecoverySuggestionErrorKey, nil];
-        *outError = [NSError errorWithDomain:NSCocoaErrorDomain code:PBNotAGitRepositoryErrorCode userInfo:errInfo];
+        if (outError)
+            *outError = [NSError errorWithDomain:NSCocoaErrorDomain code:PBNotAGitRepositoryErrorCode userInfo:errInfo];
         return nil;
     }
     return [super openDocumentWithContentsOfURL:absoluteURL display:displayDocument error:outError];
