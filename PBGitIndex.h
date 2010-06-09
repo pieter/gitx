@@ -75,6 +75,7 @@ extern NSString *PBGitIndexOperationFailed;
 
 // Intra-file changes
 - (BOOL)applyPatch:(NSString *)hunk stage:(BOOL)stage reverse:(BOOL)reverse;
+- (NSString *)blameFile:(PBChangedFile *)file;
 - (NSString *)diffForFile:(PBChangedFile *)file staged:(BOOL)staged contextLines:(NSUInteger)context;
 
 @end

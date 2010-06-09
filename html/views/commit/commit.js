@@ -41,6 +41,24 @@ var displayContext = function() {
 	$("contextTitle").style.display = "";
 }
 
+var showFileBlame = function(file, cached) {
+	if (!file) {
+		setState("No file selected");
+		return;
+	}
+
+	//setState("blame "+file.path);
+	var changes = Index.blameFile_(file);
+
+	hideNotification();
+	hideState();
+
+	$("diff").style.display = "";
+	$("diff").innerHTML="<pre>"+changes+"</pre>";
+
+	return;
+}
+
 var showFileChanges = function(file, cached) {
 	if (!file) {
 		setState("No file selected");

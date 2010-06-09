@@ -66,15 +66,26 @@
 	[[self script] callWebScriptMethod:@"showMultipleFilesSelection" withArguments:[NSArray arrayWithObject:objects]];
 }
 
+-(IBAction)displayControlChanged:(id)sender{
+	[self refresh];
+}
+
 - (void) refresh
 {
 	if (!finishedLoading)
 		return;
 
 	id script = [view windowScriptObject];
-	[script callWebScriptMethod:@"showFileChanges"
-		      withArguments:[NSArray arrayWithObjects:selectedFile ?: (id)[NSNull null],
-				     [NSNumber numberWithBool:selectedFileIsCached], nil]];
+	
+	if([displayControl selectedSegment]==0){
+		[script callWebScriptMethod:@"showFileChanges"
+					  withArguments:[NSArray arrayWithObjects:selectedFile ?: (id)[NSNull null],
+									 [NSNumber numberWithBool:selectedFileIsCached], nil]];
+	}else{
+		[script callWebScriptMethod:@"showFileBlame"
+					  withArguments:[NSArray arrayWithObjects:selectedFile ?: (id)[NSNull null],
+									 [NSNumber numberWithBool:selectedFileIsCached], nil]];
+	}
 }
 
 - (void)stageHunk:(NSString *)hunk reverse:(BOOL)reverse

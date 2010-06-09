@@ -353,6 +353,11 @@ NSString *PBGitIndexOperationFailed = @"PBGitIndexOperationFailed";
 }
 
 
+- (NSString *)blameFile:(PBChangedFile *)file
+{
+	return [repository outputInWorkdirForArguments:[NSArray arrayWithObjects:@"blame", file.path, nil]];
+}
+
 - (NSString *)diffForFile:(PBChangedFile *)file staged:(BOOL)staged contextLines:(NSUInteger)context
 {
 	NSString *parameter = [NSString stringWithFormat:@"-U%u", context];
