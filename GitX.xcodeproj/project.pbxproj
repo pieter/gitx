@@ -22,6 +22,7 @@
 
 /* Begin PBXBuildFile section */
 		056438B70ED0C40B00985397 /* DetailViewTemplate.png in Resources */ = {isa = PBXBuildFile; fileRef = 056438B60ED0C40B00985397 /* DetailViewTemplate.png */; };
+		314E974611C17BB4007E9610 /* blame.css in Resources */ = {isa = PBXBuildFile; fileRef = 314E974511C17BB4007E9610 /* blame.css */; };
 		31F8A73611C0CE5300517F78 /* index.html in Resources */ = {isa = PBXBuildFile; fileRef = 31F8A73511C0CE5300517F78 /* index.html */; };
 		31F8A75411C0D0F800517F78 /* blame.js in Sources */ = {isa = PBXBuildFile; fileRef = 31F8A75311C0D0F800517F78 /* blame.js */; };
 		3BC07F4C0ED5A5C5009A7768 /* HistoryViewTemplate.png in Resources */ = {isa = PBXBuildFile; fileRef = 3BC07F4A0ED5A5C5009A7768 /* HistoryViewTemplate.png */; };
@@ -220,6 +221,7 @@
 		29B97316FDCFA39411CA2CEA /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		29B97324FDCFA39411CA2CEA /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
 		29B97325FDCFA39411CA2CEA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
+		314E974511C17BB4007E9610 /* blame.css */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.css; path = blame.css; sourceTree = "<group>"; };
 		31F8A73511C0CE5300517F78 /* index.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = index.html; sourceTree = "<group>"; };
 		31F8A75311C0D0F800517F78 /* blame.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = blame.js; sourceTree = "<group>"; };
 		32CA4F630368D1EE00C91783 /* GitX_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GitX_Prefix.pch; sourceTree = "<group>"; };
@@ -603,6 +605,7 @@
 			children = (
 				31F8A73511C0CE5300517F78 /* index.html */,
 				31F8A75311C0D0F800517F78 /* blame.js */,
+				314E974511C17BB4007E9610 /* blame.css */,
 			);
 			name = blame;
 			path = html/views/blame;
@@ -1076,6 +1079,7 @@
 				D8A4BD091134AD2900E92D51 /* RebaseTemplate.png in Resources */,
 				D828AEEC112F411100F09D11 /* CloneRepositoryTemplate.png in Resources */,
 				31F8A73611C0CE5300517F78 /* index.html in Resources */,
+				314E974611C17BB4007E9610 /* blame.css in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

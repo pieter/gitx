@@ -114,15 +114,29 @@
 	return [repository outputInWorkdirForArguments:[NSArray arrayWithObjects:@"blame", self.path, nil]];
 }
 
+// XXX: create img tag for images.
 - (NSString*) contents:(NSInteger)option
 {
+	NSString* contents;
+
 	if (!leaf)
 		return [NSString stringWithFormat:@"This is a tree with path %@", [self fullPath]];
 	
+	if ([self hasBinaryAttributes])
+		return [NSString stringWithFormat:@"%@ appears to be a binary file of %d bytes", [self fullPath], [self fileSize]];
+	
+	if ([self fileSize] > 52428800) // ~50MB
+		return [NSString stringWithFormat:@"%@ is too big to be displayed (%d bytes)", [self fullPath], [self fileSize]];
+	
 	if(option==0)
-		return [repository outputForArguments:[NSArray arrayWithObjects:@"show", [self refSpec], nil]];
+		contents= [repository outputForArguments:[NSArray arrayWithObjects:@"show", [self refSpec], nil]];
 	else
-		return [repository outputInWorkdirForArguments:[NSArray arrayWithObjects:@"blame", self.path, nil]];
+		contents=[PBGitTree parseBlame:[repository outputInWorkdirForArguments:[NSArray arrayWithObjects:@"blame", @"-p", self.fullPath, nil]]];
+	
+	if ([self hasBinaryHeader:contents])
+		return [NSString stringWithFormat:@"%@ appears to be a binary file of %d bytes", [self fullPath], [self fileSize]];
+	
+	return contents;
 }
 
 - (long long)fileSize
@@ -261,5 +275,69 @@
 	if (localFileName)
 		[[NSFileManager defaultManager] removeFileAtPath:localFileName handler:nil];
 	[super finalize];
+}
+
++(NSString *)parseBlame:(NSString *)string
+{
+	string=[string stringByReplacingOccurrencesOfString:@"<" withString:@"&lt;"];
+	string=[string stringByReplacingOccurrencesOfString:@">" withString:@"&gt;"];
+
+	NSString *codeLineFormat=@"\t<tr><td>%@</td><td>%@</td></tr>\n";
+	
+	NSArray *lines = [string componentsSeparatedByString:@"\n"];
+	NSString *line;
+	NSMutableDictionary *headers=[NSMutableDictionary dictionary];
+	NSMutableString *res=[NSMutableString string];
+	
+	[res appendString:@"<table class='blocks'>\n"];
+	int i=0;
+	while(i<[lines count]){
+		line=[lines objectAtIndex:i];
+		NSArray *header=[line componentsSeparatedByString:@" "];
+		if([header count]==4){
+			int nLines=[(NSString *)[header objectAtIndex:3] intValue];
+			[res appendFormat:@"<tr class='block l%d'>\n",nLines];
+			line=[lines objectAtIndex:++i];
+			if([[[line componentsSeparatedByString:@" "] objectAtIndex:0] isEqual:@"author"]){
+				NSString *author=line;
+				NSString *summary=nil;
+				while(summary==nil){
+					line=[lines objectAtIndex:i++];
+					if([[[line componentsSeparatedByString:@" "] objectAtIndex:0] isEqual:@"summary"]){
+						summary=line;
+					}
+				}
+				NSString *block=[NSString stringWithFormat:@"<td><p class='author'>%@</p><p class='summary'>%@</p></td>\n<td>\n",author,summary];
+				[headers setObject:block forKey:[header objectAtIndex:0]];
+			}
+			[res appendString:[headers objectForKey:[header objectAtIndex:0]]];
+			
+			[res appendString:@"<table class='code'>\n"];
+			do{
+				line=[lines objectAtIndex:i++];
+			}while([line characterAtIndex:0]!='\t');
+			line=[line stringByReplacingOccurrencesOfString:@"\t" withString:@"&nbsp;&nbsp;&nbsp;&nbsp;"];
+			[res appendFormat:codeLineFormat,[header objectAtIndex:2],line];
+			
+			int n;
+			for(n=1;n<nLines;n++){
+				line=[lines objectAtIndex:i++];
+				NSArray *h=[line componentsSeparatedByString:@" "];
+				do{
+					line=[lines objectAtIndex:i++];
+				}while([line characterAtIndex:0]!='\t');
+				line=[line stringByReplacingOccurrencesOfString:@"\t" withString:@"&nbsp;&nbsp;&nbsp;&nbsp;"];
+				[res appendFormat:codeLineFormat,[h objectAtIndex:2],line];
+			}
+			[res appendString:@"</table>\n</td>\n"];
+		}else{
+			break;
+		}
+		[res appendString:@"</tr>\n"];
+	}  
+	[res appendString:@"</table>\n"];
+	
+
+	return (NSString *)res;
 }
 @end

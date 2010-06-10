@@ -40,5 +40,7 @@
 @property(readonly) NSString* fullPath;
 @property(readonly) NSString* contents;
 - (NSString*) contents:(NSInteger)option;
++(NSString *)parseBlame:(NSString *)blame;
+
 
 @end
