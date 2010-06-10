@@ -39,5 +39,6 @@
 @property(readonly) NSArray* children;
 @property(readonly) NSString* fullPath;
 @property(readonly) NSString* contents;
+- (NSString*) contents:(NSInteger)option;
 
 @end

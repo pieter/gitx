@@ -7,6 +7,7 @@
 //
 
 #import <Cocoa/Cocoa.h>
+#import <WebKit/WebKit.h>
 #import "PBGitCommit.h"
 #import "PBGitTree.h"
 #import "PBViewController.h"
@@ -37,6 +38,9 @@
 	IBOutlet NSButton *allBranchesFilterItem;
 	IBOutlet NSButton *localRemoteBranchesFilterItem;
 	IBOutlet NSButton *selectedBranchFilterItem;
+	
+	IBOutlet WebView *webViewFileViwer;
+	IBOutlet NSSegmentedCell *displayControl;
 
 	IBOutlet id webView;
 	int selectedCommitDetailsIndex;
@@ -89,4 +93,5 @@
 - (CGFloat)splitView:(NSSplitView *)sender constrainMinCoordinate:(CGFloat)proposedMin ofSubviewAt:(NSInteger)offset;
 - (CGFloat)splitView:(NSSplitView *)sender constrainMaxCoordinate:(CGFloat)proposedMax ofSubviewAt:(NSInteger)offset;
 
+- (IBAction)updateFileViwer:(id)sender;
 @end

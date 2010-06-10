@@ -22,6 +22,8 @@
 
 /* Begin PBXBuildFile section */
 		056438B70ED0C40B00985397 /* DetailViewTemplate.png in Resources */ = {isa = PBXBuildFile; fileRef = 056438B60ED0C40B00985397 /* DetailViewTemplate.png */; };
+		31F8A73611C0CE5300517F78 /* index.html in Resources */ = {isa = PBXBuildFile; fileRef = 31F8A73511C0CE5300517F78 /* index.html */; };
+		31F8A75411C0D0F800517F78 /* blame.js in Sources */ = {isa = PBXBuildFile; fileRef = 31F8A75311C0D0F800517F78 /* blame.js */; };
 		3BC07F4C0ED5A5C5009A7768 /* HistoryViewTemplate.png in Resources */ = {isa = PBXBuildFile; fileRef = 3BC07F4A0ED5A5C5009A7768 /* HistoryViewTemplate.png */; };
 		3BC07F4D0ED5A5C5009A7768 /* CommitViewTemplate.png in Resources */ = {isa = PBXBuildFile; fileRef = 3BC07F4B0ED5A5C5009A7768 /* CommitViewTemplate.png */; };
 		47DBDB580E94EDE700671A1E /* DBPrefsWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 47DBDB570E94EDE700671A1E /* DBPrefsWindowController.m */; };
@@ -218,6 +220,8 @@
 		29B97316FDCFA39411CA2CEA /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		29B97324FDCFA39411CA2CEA /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
 		29B97325FDCFA39411CA2CEA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
+		31F8A73511C0CE5300517F78 /* index.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = index.html; sourceTree = "<group>"; };
+		31F8A75311C0D0F800517F78 /* blame.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = blame.js; sourceTree = "<group>"; };
 		32CA4F630368D1EE00C91783 /* GitX_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GitX_Prefix.pch; sourceTree = "<group>"; };
 		3BC07F4A0ED5A5C5009A7768 /* HistoryViewTemplate.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = HistoryViewTemplate.png; path = Images/HistoryViewTemplate.png; sourceTree = "<group>"; };
 		3BC07F4B0ED5A5C5009A7768 /* CommitViewTemplate.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = CommitViewTemplate.png; path = Images/CommitViewTemplate.png; sourceTree = "<group>"; };
@@ -509,6 +513,7 @@
 		29B97314FDCFA39411CA2CEA /* GitTest */ = {
 			isa = PBXGroup;
 			children = (
+				31F8A73911C0CE6C00517F78 /* html */,
 				F5886A080ED5D26B0066E74C /* SpeedTest */,
 				913D5E420E5563FD00CECEA2 /* cli */,
 				F57CC43E0E05E472000472E2 /* Aux */,
@@ -591,6 +596,32 @@
 				1058C7A2FEA54F0111CA2CBB /* Other Frameworks */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		31F8A73411C0CE5300517F78 /* blame */ = {
+			isa = PBXGroup;
+			children = (
+				31F8A73511C0CE5300517F78 /* index.html */,
+				31F8A75311C0D0F800517F78 /* blame.js */,
+			);
+			name = blame;
+			path = html/views/blame;
+			sourceTree = "<group>";
+		};
+		31F8A73911C0CE6C00517F78 /* html */ = {
+			isa = PBXGroup;
+			children = (
+				31F8A73A11C0CE7400517F78 /* views */,
+			);
+			name = html;
+			sourceTree = "<group>";
+		};
+		31F8A73A11C0CE7400517F78 /* views */ = {
+			isa = PBXGroup;
+			children = (
+				31F8A73411C0CE5300517F78 /* blame */,
+			);
+			name = views;
 			sourceTree = "<group>";
 		};
 		47DBDB920E94F47200671A1E /* Preference Icons */ = {
@@ -1044,6 +1075,7 @@
 				D8A4BD081134AD2900E92D51 /* MergeTemplate.png in Resources */,
 				D8A4BD091134AD2900E92D51 /* RebaseTemplate.png in Resources */,
 				D828AEEC112F411100F09D11 /* CloneRepositoryTemplate.png in Resources */,
+				31F8A73611C0CE5300517F78 /* index.html in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1185,6 +1217,7 @@
 				D8295D2A1130A1DC00C838E8 /* PBGitHistoryList.m in Sources */,
 				D8295DE01130E43900C838E8 /* PBGitHistoryGrapher.m in Sources */,
 				D8E105471157C18200FC28A4 /* PBQLTextView.m in Sources */,
+				31F8A75411C0D0F800517F78 /* blame.js in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -79,6 +79,11 @@
 	//[scopeBarView setTopShade:207/255.0 bottomShade:180/255.0];
 	[self updateBranchFilterMatrix];
 
+	NSString *path = [NSString stringWithFormat:@"html/views/%@", @"blame"];
+	NSString* file = [[NSBundle mainBundle] pathForResource:@"index" ofType:@"html" inDirectory:path];
+	NSURLRequest * request = [NSURLRequest requestWithURL:[NSURL fileURLWithPath:file]];
+	[[webViewFileViwer mainFrame] loadRequest:request];
+	
 	[super awakeFromNib];
 }
 
@@ -211,6 +216,7 @@
 	if ([(NSString *)context isEqualToString: @"treeChange"]) {
 		[self updateQuicklookForce: NO];
 		[self saveFileBrowserSelection];
+		[self updateFileViwer:nil];
 		return;
 	}
 
@@ -688,4 +694,21 @@
     return iconRect;
 }
 
+- (IBAction)updateFileViwer:(id)sender
+{
+	
+	NSArray *objects = [treeController selectedObjects];
+	NSArray *content = [treeController content];
+	
+	if ([objects count] && [content count]) {
+		PBGitTree *treeItem = [objects objectAtIndex:0];
+		currentFileBrowserSelectionPath = [treeItem.fullPath componentsSeparatedByString:@"/"];
+		
+		id script = [webViewFileViwer windowScriptObject];
+		
+		[script callWebScriptMethod:@"showFileBlame"
+					  withArguments:[NSArray arrayWithObjects:[treeItem contents:[displayControl selectedSegment]], nil]];
+	}
+	
+}
 @end

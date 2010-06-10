@@ -101,7 +101,7 @@
 {
 	if (!leaf)
 		return [NSString stringWithFormat:@"This is a tree with path %@", [self fullPath]];
-
+	
 	if ([self isLocallyCached]) {
 		NSData *data = [NSData dataWithContentsOfFile:localFileName];
 		NSString *string = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
@@ -110,7 +110,19 @@
 		return string;
 	}
 	
-	return [repository outputForArguments:[NSArray arrayWithObjects:@"show", [self refSpec], nil]];
+	//return [repository outputForArguments:[NSArray arrayWithObjects:@"show", [self refSpec], nil]];
+	return [repository outputInWorkdirForArguments:[NSArray arrayWithObjects:@"blame", self.path, nil]];
+}
+
+- (NSString*) contents:(NSInteger)option
+{
+	if (!leaf)
+		return [NSString stringWithFormat:@"This is a tree with path %@", [self fullPath]];
+	
+	if(option==0)
+		return [repository outputForArguments:[NSArray arrayWithObjects:@"show", [self refSpec], nil]];
+	else
+		return [repository outputInWorkdirForArguments:[NSArray arrayWithObjects:@"blame", self.path, nil]];
 }
 
 - (long long)fileSize
