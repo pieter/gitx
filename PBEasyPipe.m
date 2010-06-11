@@ -110,7 +110,7 @@
 
 + (NSString*) outputForCommand: (NSString*) cmd withArgs: (NSArray*) args  inDir: (NSString*) dir
 {
-	//NSLog(@"cmd=%@ args=%@ dir=%@",cmd,args,dir);
+	NSLog(@"cmd=%@ args=%@ dir=%@",cmd,args,dir);
 
 	NSTask *task = [self taskForCommand:cmd withArgs:args inDir:dir];
 	NSFileHandle* handle = [task.standardOutput fileHandleForReading];

@@ -129,9 +129,11 @@
 		return [NSString stringWithFormat:@"%@ is too big to be displayed (%d bytes)", [self fullPath], [self fileSize]];
 	
 	if(option==0)
-		contents= [repository outputForArguments:[NSArray arrayWithObjects:@"show", [self refSpec], nil]];
-	else
-		contents=[PBGitTree parseBlame:[repository outputInWorkdirForArguments:[NSArray arrayWithObjects:@"blame", @"-p", self.fullPath, nil]]];
+		contents=[repository outputForArguments:[NSArray arrayWithObjects:@"show", [self refSpec], nil]];
+	else if(option==1)
+		contents=[PBGitTree parseBlame:[repository outputInWorkdirForArguments:[NSArray arrayWithObjects:@"blame", @"-p", self.fullPath, self.sha, nil]]];
+	else if(option==2)
+		contents=[repository outputInWorkdirForArguments:[NSArray arrayWithObjects:@"diff", self.sha, self.fullPath, nil]];
 	
 	if ([self hasBinaryHeader:contents])
 		return [NSString stringWithFormat:@"%@ appears to be a binary file of %d bytes", [self fullPath], [self fileSize]];
@@ -337,7 +339,7 @@
 		[res appendString:@"</tr>\n"];
 	}  
 	[res appendString:@"</table>\n"];
-	NSLog(@"%@",res);
+	//NSLog(@"%@",res);
 
 	return (NSString *)res;
 }

@@ -693,8 +693,16 @@
 
 - (IBAction)updateFileViwer:(id)sender
 {
-	NSString *path = [NSString stringWithFormat:@"html/views/%@", @"blame"];
-	NSString* file = [[NSBundle mainBundle] pathForResource:@"index" ofType:@"html" inDirectory:path];
+	NSString *type=@"source";
+	if([displayControl selectedSegment]==1){
+		type=@"blame";
+	}else if([displayControl selectedSegment]==2){
+		type=@"diff";
+	}
+	
+	NSString *path = [NSString stringWithFormat:@"html/views/%@", type];
+	NSString *file = [[NSBundle mainBundle] pathForResource:@"index" ofType:@"html" inDirectory:path];
+	NSLog(@"updateFileViwer -> file: '%@'",file);
 	NSURLRequest * request = [NSURLRequest requestWithURL:[NSURL fileURLWithPath:file]];
 	[[webViewFileViwer mainFrame] loadRequest:request];	
 }
@@ -708,15 +716,17 @@
 		PBGitTree *treeItem = [objects objectAtIndex:0];
 		currentFileBrowserSelectionPath = [treeItem.fullPath componentsSeparatedByString:@"/"];
 		
+		NSString *txt=[treeItem contents:[displayControl selectedSegment]];
+		NSLog(@"didFinishLoadForFrame -> txt: '%@'",[txt substringToIndex:80]);
+		
 		id script = [webViewFileViwer windowScriptObject];
 		[script callWebScriptMethod:@"showFile"
-					  withArguments:[NSArray arrayWithObjects:[treeItem contents:[displayControl selectedSegment]], nil]];
+					  withArguments:[NSArray arrayWithObjects:txt, nil]];
 	}
 }
 
 - (void)webView:(WebView *)sender didFailLoadWithError:(NSError *)error forFrame:(WebFrame *)frame
 {
-    NSString *titleString = @"Error Loading Page";
     NSString *messageString = [error localizedDescription];
     NSString *moreString = [error localizedFailureReason] ?
 	[error localizedFailureReason] :
