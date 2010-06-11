@@ -709,10 +709,20 @@
 		currentFileBrowserSelectionPath = [treeItem.fullPath componentsSeparatedByString:@"/"];
 		
 		id script = [webViewFileViwer windowScriptObject];
-		[script callWebScriptMethod:@"showFileBlame"
+		[script callWebScriptMethod:@"showFile"
 					  withArguments:[NSArray arrayWithObjects:[treeItem contents:[displayControl selectedSegment]], nil]];
 	}
-	
+}
+
+- (void)webView:(WebView *)sender didFailLoadWithError:(NSError *)error forFrame:(WebFrame *)frame
+{
+    NSString *titleString = @"Error Loading Page";
+    NSString *messageString = [error localizedDescription];
+    NSString *moreString = [error localizedFailureReason] ?
+	[error localizedFailureReason] :
+	NSLocalizedString(@"Try typing the URL again.", nil);
+    messageString = [NSString stringWithFormat:@"%@. %@", messageString, moreString];
+	NSLog(@"ERROR!!!! - %@",messageString);
 }
 
 @end

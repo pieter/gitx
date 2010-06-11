@@ -282,7 +282,7 @@
 	string=[string stringByReplacingOccurrencesOfString:@"<" withString:@"&lt;"];
 	string=[string stringByReplacingOccurrencesOfString:@">" withString:@"&gt;"];
 
-	NSString *codeLineFormat=@"\t<tr><td>%@</td><td>%@</td></tr>\n";
+	NSString *codeLineFormat=@"\t<tr><td>%@</td><td><pre class='brush: js'>%@</pre></td></tr>\n";
 	
 	NSArray *lines = [string componentsSeparatedByString:@"\n"];
 	NSString *line;
@@ -336,7 +336,7 @@
 		[res appendString:@"</tr>\n"];
 	}  
 	[res appendString:@"</table>\n"];
-	
+	NSLog(res);
 
 	return (NSString *)res;
 }
