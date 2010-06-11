@@ -79,10 +79,7 @@
 	//[scopeBarView setTopShade:207/255.0 bottomShade:180/255.0];
 	[self updateBranchFilterMatrix];
 
-	NSString *path = [NSString stringWithFormat:@"html/views/%@", @"blame"];
-	NSString* file = [[NSBundle mainBundle] pathForResource:@"index" ofType:@"html" inDirectory:path];
-	NSURLRequest * request = [NSURLRequest requestWithURL:[NSURL fileURLWithPath:file]];
-	[[webViewFileViwer mainFrame] loadRequest:request];
+	[webViewFileViwer setFrameLoadDelegate:self];
 	
 	[super awakeFromNib];
 }
@@ -696,7 +693,14 @@
 
 - (IBAction)updateFileViwer:(id)sender
 {
-	
+	NSString *path = [NSString stringWithFormat:@"html/views/%@", @"blame"];
+	NSString* file = [[NSBundle mainBundle] pathForResource:@"index" ofType:@"html" inDirectory:path];
+	NSURLRequest * request = [NSURLRequest requestWithURL:[NSURL fileURLWithPath:file]];
+	[[webViewFileViwer mainFrame] loadRequest:request];	
+}
+
+- (void)webView:(WebView *)sender didFinishLoadForFrame:(WebFrame *)frame
+{
 	NSArray *objects = [treeController selectedObjects];
 	NSArray *content = [treeController content];
 	
@@ -705,10 +709,10 @@
 		currentFileBrowserSelectionPath = [treeItem.fullPath componentsSeparatedByString:@"/"];
 		
 		id script = [webViewFileViwer windowScriptObject];
-		
 		[script callWebScriptMethod:@"showFileBlame"
 					  withArguments:[NSArray arrayWithObjects:[treeItem contents:[displayControl selectedSegment]], nil]];
 	}
 	
 }
+
 @end
