@@ -281,8 +281,6 @@
 {
 	string=[string stringByReplacingOccurrencesOfString:@"<" withString:@"&lt;"];
 	string=[string stringByReplacingOccurrencesOfString:@">" withString:@"&gt;"];
-
-	NSString *codeLineFormat=@"\t<tr><td>%@</td><td><pre class='brush: js'>%@</pre></td></tr>\n";
 	
 	NSArray *lines = [string componentsSeparatedByString:@"\n"];
 	NSString *line;
@@ -312,12 +310,13 @@
 			}
 			[res appendString:[headers objectForKey:[header objectAtIndex:0]]];
 			
-			[res appendString:@"<table class='code'>\n"];
+			NSMutableString *code=[NSMutableString string];
 			do{
 				line=[lines objectAtIndex:i++];
 			}while([line characterAtIndex:0]!='\t');
 			line=[line stringByReplacingOccurrencesOfString:@"\t" withString:@"&nbsp;&nbsp;&nbsp;&nbsp;"];
-			[res appendFormat:codeLineFormat,[header objectAtIndex:2],line];
+			[code appendString:line];
+			[code appendString:@"\n"];
 			
 			int n;
 			for(n=1;n<nLines;n++){
@@ -327,16 +326,18 @@
 					line=[lines objectAtIndex:i++];
 				}while([line characterAtIndex:0]!='\t');
 				line=[line stringByReplacingOccurrencesOfString:@"\t" withString:@"&nbsp;&nbsp;&nbsp;&nbsp;"];
-				[res appendFormat:codeLineFormat,[h objectAtIndex:2],line];
+				[code appendString:line];
+				[code appendString:@"\n"];
 			}
-			[res appendString:@"</table>\n</td>\n"];
+			[res appendFormat:@"<pre class='first-line: %@;brush: objc'>%@</pre>",[header objectAtIndex:2],code];
+			[res appendString:@"</td>\n"];
 		}else{
 			break;
 		}
 		[res appendString:@"</tr>\n"];
 	}  
 	[res appendString:@"</table>\n"];
-	NSLog(res);
+	NSLog(@"%@",res);
 
 	return (NSString *)res;
 }

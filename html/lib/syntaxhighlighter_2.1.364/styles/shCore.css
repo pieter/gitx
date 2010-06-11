@@ -51,10 +51,10 @@
 	height: auto !important;
 	width: auto !important;
 	line-height: 1.1em !important;
-	font-family: "Consolas", "Bitstream Vera Sans Mono", "Courier New", Courier, monospace !important;
+	-font-family: "Consolas", "Bitstream Vera Sans Mono", "Courier New", Courier, monospace !important;
 	font-weight: normal !important;
 	font-style: normal !important;
-	font-size: 1em !important;
+	-font-size: 1em !important;
 	min-height: inherit !important; /* For IE8, FF & WebKit */
 	min-height: auto !important; /* For IE7 */
 }
@@ -62,7 +62,7 @@
 .syntaxhighlighter
 {
 	width: 99% !important; /* 99% fixes IE8 horizontal scrollbar */
-	margin: 1em 0 1em 0 !important;
+	margin: 0 !important;
 	padding: 1px !important; /* adds a little border on top and bottom */
 	position: relative !important;
 }
