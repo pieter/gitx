@@ -43,6 +43,10 @@
 					   (commit)?@"commit":@"diff", ITEM_IDENTIFIER, 
 					   @"Diff", ITEM_NAME, 
 					   nil], 
+					  [NSDictionary dictionaryWithObjectsAndKeys:
+					   @"log", ITEM_IDENTIFIER, 
+					   @"History", ITEM_NAME, 
+					   nil], 
 					  nil];
 	[self.groups addObject:[NSDictionary dictionaryWithObjectsAndKeys:
 							[NSNumber numberWithBool:NO], GROUP_SEPARATOR, 
@@ -122,24 +126,36 @@
 
 - (void)webView:(WebView *)sender didFinishLoadForFrame:(WebFrame *)frame
 {
-	NSString *txt;
 	NSString *show=[[[scopeBar selectedItems] objectAtIndex:0] objectAtIndex:0];
+	
+	NSString *path = [NSString stringWithFormat:@"html/views/%@", show];
+	NSString *formatFile = [[NSBundle mainBundle] pathForResource:@"format" ofType:@"html" inDirectory:path];
+	NSString *testFile = [NSString stringWithFormat:@"%@/test.html",NSHomeDirectory()];
+	NSString *format;
+	if(formatFile!=nil)
+		format=[NSString stringWithContentsOfURL:[NSURL fileURLWithPath:formatFile] encoding:nil error:nil];
+	
+	NSString *txt;
 	if(show==@"source")
 		txt=[repository outputForArguments:[NSArray arrayWithObjects:@"show", [self refSpec], nil]];
 	else if(show==@"blame")
 		txt=[self parseBlame:[repository outputInWorkdirForArguments:[NSArray arrayWithObjects:@"blame", @"-p", file, sha, nil]]];
 	else if((show==@"diff") || (show==@"commit"))
 		txt=[repository outputInWorkdirForArguments:[NSArray arrayWithObjects:@"diff", (sha!=nil)?sha:file , (sha!=nil)?file:nil, nil]];
+	else if(show==@"log")
+		txt=[self parseLog:[repository outputInWorkdirForArguments:[NSArray arrayWithObjects:@"log", [NSString stringWithFormat:@"--pretty=format:%@",format], @"--", file, nil]]];
 	else
 		return; // XXXX controlar mejor.
 	
 	NSLog(@"didFinishLoadForFrame -> txt: '%@'",[txt substringToIndex:80]);
+	NSLog(@"didFinishLoadForFrame -> path: '%@'",path);
+	NSLog(@"didFinishLoadForFrame -> testFile: '%@'",testFile);
 	
 	id script = [webViewFileViwer windowScriptObject];
 	[script callWebScriptMethod:@"showFile"
 				  withArguments:[NSArray arrayWithObjects:txt, nil]];
 	
-	//NSLog(@"%@",[[[[sender mainFrame] DOMDocument] documentElement] outerHTML]);
+	[[[[[sender mainFrame] DOMDocument] documentElement] outerHTML] writeToFile:testFile atomically:YES encoding:NSUTF8StringEncoding error:nil];
 }
 
 - (NSString*)refSpec
@@ -147,6 +163,11 @@
 	return [NSString stringWithFormat:@"%@:%@", (sha!=nil)?sha:@"HEAD", file];
 }
 
+
+-(NSString *)parseLog:(NSString *)string
+{
+	return string;
+}
 
 -(NSString *)parseBlame:(NSString *)string
 {

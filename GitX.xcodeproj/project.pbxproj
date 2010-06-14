@@ -29,6 +29,9 @@
 		31D70AFC11C4006C00F4B199 /* MGScopeBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 31D70AF311C4006C00F4B199 /* MGScopeBar.m */; };
 		31D70AFD11C4006C00F4B199 /* ReadMe.txt in Resources */ = {isa = PBXBuildFile; fileRef = 31D70AF911C4006C00F4B199 /* ReadMe.txt */; };
 		31D70AFE11C4006C00F4B199 /* Source Code License.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 31D70AFA11C4006C00F4B199 /* Source Code License.rtf */; };
+		31DA63D811C6D7CD00BCBCAD /* index.html in Resources */ = {isa = PBXBuildFile; fileRef = 31DA63D711C6D7CD00BCBCAD /* index.html */; };
+		31DA63DA11C6D7F700BCBCAD /* log.js in Sources */ = {isa = PBXBuildFile; fileRef = 31DA63D911C6D7F700BCBCAD /* log.js */; };
+		31DA63DF11C6DA5800BCBCAD /* format.html in Resources */ = {isa = PBXBuildFile; fileRef = 31DA63DE11C6DA5800BCBCAD /* format.html */; };
 		3BC07F4C0ED5A5C5009A7768 /* HistoryViewTemplate.png in Resources */ = {isa = PBXBuildFile; fileRef = 3BC07F4A0ED5A5C5009A7768 /* HistoryViewTemplate.png */; };
 		3BC07F4D0ED5A5C5009A7768 /* CommitViewTemplate.png in Resources */ = {isa = PBXBuildFile; fileRef = 3BC07F4B0ED5A5C5009A7768 /* CommitViewTemplate.png */; };
 		47DBDB580E94EDE700671A1E /* DBPrefsWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 47DBDB570E94EDE700671A1E /* DBPrefsWindowController.m */; };
@@ -315,6 +318,9 @@
 		31D70AF811C4006C00F4B199 /* MGScopeBarDelegateProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MGScopeBarDelegateProtocol.h; sourceTree = "<group>"; };
 		31D70AF911C4006C00F4B199 /* ReadMe.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = ReadMe.txt; sourceTree = "<group>"; };
 		31D70AFA11C4006C00F4B199 /* Source Code License.rtf */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; path = "Source Code License.rtf"; sourceTree = "<group>"; };
+		31DA63D711C6D7CD00BCBCAD /* index.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = index.html; path = log/index.html; sourceTree = "<group>"; };
+		31DA63D911C6D7F700BCBCAD /* log.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; name = log.js; path = log/log.js; sourceTree = "<group>"; };
+		31DA63DE11C6DA5800BCBCAD /* format.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = format.html; path = log/format.html; sourceTree = "<group>"; };
 		32CA4F630368D1EE00C91783 /* GitX_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GitX_Prefix.pch; sourceTree = "<group>"; };
 		3BC07F4A0ED5A5C5009A7768 /* HistoryViewTemplate.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = HistoryViewTemplate.png; path = Images/HistoryViewTemplate.png; sourceTree = "<group>"; };
 		3BC07F4B0ED5A5C5009A7768 /* CommitViewTemplate.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = CommitViewTemplate.png; path = Images/CommitViewTemplate.png; sourceTree = "<group>"; };
@@ -796,6 +802,16 @@
 			path = MGScopeBar;
 			sourceTree = "<group>";
 		};
+		31DA63D511C6D7A600BCBCAD /* log */ = {
+			isa = PBXGroup;
+			children = (
+				31DA63D711C6D7CD00BCBCAD /* index.html */,
+				31DA63D911C6D7F700BCBCAD /* log.js */,
+				31DA63DE11C6DA5800BCBCAD /* format.html */,
+			);
+			name = log;
+			sourceTree = "<group>";
+		};
 		47DBDB920E94F47200671A1E /* Preference Icons */ = {
 			isa = PBXGroup;
 			children = (
@@ -837,6 +853,7 @@
 		C3138B8B11C2F48400BE6CBE /* views */ = {
 			isa = PBXGroup;
 			children = (
+				31DA63D511C6D7A600BCBCAD /* log */,
 				C3138B8C11C2F48400BE6CBE /* blame */,
 				C3138B9111C2F48400BE6CBE /* commit */,
 				C3138B9611C2F48400BE6CBE /* diff */,
@@ -1485,6 +1502,8 @@
 				31D70AFD11C4006C00F4B199 /* ReadMe.txt in Resources */,
 				31D70AFE11C4006C00F4B199 /* Source Code License.rtf in Resources */,
 				31A520AC11C6983900F604D0 /* test.html in Resources */,
+				31DA63D811C6D7CD00BCBCAD /* index.html in Resources */,
+				31DA63DF11C6DA5800BCBCAD /* format.html in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1667,6 +1686,7 @@
 				315CB97B11C3305F003B8DBE /* FileViewerController.m in Sources */,
 				31D70AFB11C4006C00F4B199 /* MGRecessedPopUpButtonCell.m in Sources */,
 				31D70AFC11C4006C00F4B199 /* MGScopeBar.m in Sources */,
+				31DA63DA11C6D7F700BCBCAD /* log.js in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

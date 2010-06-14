@@ -29,6 +29,7 @@
 - (void)showFile:(NSString *)file sha:(NSString *)sha;
 - (NSString*)refSpec;
 
+-(NSString *)parseLog:(NSString *)string;
 -(NSString *)parseBlame:(NSString *)string;
 
 @property(retain) NSMutableArray *groups;
