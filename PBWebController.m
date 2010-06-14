@@ -110,8 +110,13 @@
 
 - (BOOL) isReachable:(NSString *)hostname
 {
-	SCNetworkConnectionFlags flags;
-	if (!SCNetworkCheckReachabilityByName([hostname cStringUsingEncoding:NSASCIIStringEncoding], &flags))
+    SCNetworkReachabilityRef target;
+    SCNetworkConnectionFlags flags = 0;
+    Boolean reachable;
+    target = SCNetworkReachabilityCreateWithName(NULL, [hostname cStringUsingEncoding:NSASCIIStringEncoding]);
+    reachable = SCNetworkReachabilityGetFlags(target, &flags);
+    
+	if (!reachable)
 		return FALSE;
 
 	// If a connection is required, then it's not reachable
@@ -131,6 +136,8 @@
 		return [PBGitDefaults confirmPublicGists];
 	else if([feature isEqualToString:@"publicGist"])
 		return [PBGitDefaults isGistPublic];
+    else if ([feature isEqualToString:@"showWhitespaceDifferences"])
+        return [PBGitDefaults showWhitespaceDifferences];
 	else
 		return YES;
 }

@@ -9,14 +9,16 @@
 #import <Cocoa/Cocoa.h>
 #import "PBGitRepository.h"
 
-@class PBViewController, PBGitSidebarController;
+@class PBViewController, PBGitSidebarController, PBGitHistoryController;
 
 @interface PBGitWindowController : NSWindowController {
 	__weak PBGitRepository* repository;
 
-	PBViewController *contentController;
+	__weak PBViewController *contentController;
+	__weak PBViewController* viewController;
+	__weak PBGitSidebarController *sidebarController;
+	__weak PBGitHistoryController *historyController;
 
-	PBGitSidebarController *sidebarController;
 	IBOutlet NSView *sourceListControlsView;
 	IBOutlet NSSplitView *splitView;
 	IBOutlet NSView *sourceSplitView;
@@ -25,13 +27,15 @@
 	IBOutlet NSTextField *statusField;
 	IBOutlet NSProgressIndicator *progressIndicator;
 
-	PBViewController* viewController;
-
 	IBOutlet NSToolbarItem *terminalItem;
 	IBOutlet NSToolbarItem *finderItem;
 }
 
 @property (assign) __weak PBGitRepository *repository;
+@property (assign) __weak PBViewController * viewController;
+@property (assign) __weak PBViewController * contentController;
+@property (assign) __weak PBGitSidebarController * sidebarController;
+@property (assign) __weak PBGitHistoryController * historyController;
 
 - (id)initWithRepository:(PBGitRepository*)theRepository displayDefault:(BOOL)display;
 

@@ -42,6 +42,9 @@ extern NSString * const kGitXRemoteRefPrefix;
 
 - (PBGitRef *) remoteRef;
 
+- (NSString *)description;
+- (NSString *)debugDescription;
+
 - (BOOL) isEqualToRef:(PBGitRef *)otherRef;
 
 + (PBGitRef*) refFromString: (NSString*) s;

@@ -34,11 +34,11 @@ extern NSString * const kGitXCommitType;
 	PBGitRepository* repository;
 }
 
-+ commitWithRepository:(PBGitRepository*)repo andSha:(git_oid)newSha;
-- initWithRepository:(PBGitRepository *)repo andSha:(git_oid)sha;
++ (id) commitWithRepository:(PBGitRepository*)repo andSha:(git_oid)newSha;
+- (id) initWithRepository:(PBGitRepository *)repo andSha:(git_oid)sha;
 
-- (void)addRef:(PBGitRef *)ref;
-- (void)removeRef:(id)ref;
+- (void) addRef:(PBGitRef *)ref;
+- (void) removeRef:(id)ref;
 - (BOOL) hasRef:(PBGitRef *)ref;
 
 - (NSString *)realSha;

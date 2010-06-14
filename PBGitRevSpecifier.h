@@ -16,6 +16,7 @@
 	BOOL isSimpleRef;
 }
 
+- (id) initWithParameters:(NSArray *)params description:(NSString *)descrip;
 - (id) initWithParameters:(NSArray*) params;
 - (id) initWithRef: (PBGitRef*) ref;
 

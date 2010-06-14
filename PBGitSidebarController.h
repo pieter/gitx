@@ -12,13 +12,13 @@
 @class PBSourceViewItem;
 @class PBGitHistoryController;
 @class PBGitCommitController;
+@class ApplicationController;
 
 @interface PBGitSidebarController : PBViewController {
 	IBOutlet NSWindow *window;
 	IBOutlet NSOutlineView *sourceView;
 	IBOutlet NSView *sourceListControlsView;
 	IBOutlet NSPopUpButton *actionButton;
-	IBOutlet NSSegmentedControl *remoteControls;
 
 	NSMutableArray *items;
 
@@ -26,18 +26,23 @@
 	PBSourceViewItem *stage;
 
 	PBSourceViewItem *branches, *remotes, *tags, *others;
+    PBSourceViewItem * deferredSelectObject;
 
 	PBGitHistoryController *historyViewController;
 	PBGitCommitController *commitViewController;
 }
 
 - (void) selectStage;
+- (void) selectBranch:(PBSourceViewItem *)branchItem;
 - (void) selectCurrentBranch;
+
+- (PBSourceViewItem *) selectedItem;
 
 - (NSMenu *) menuForRow:(NSInteger)row;
 
-- (IBAction) fetchPullPushAction:(id)sender;
-
 @property(readonly) NSMutableArray *items;
 @property(readonly) NSView *sourceListControlsView;
+@property(readonly) PBSourceViewItem * remotes;
+@property(readonly) NSOutlineView * sourceView;
+@property(assign) PBSourceViewItem * deferredSelectObject;
 @end

@@ -14,7 +14,7 @@
 
 @implementation PBGitTree
 
-@synthesize sha, path, repository, leaf, parent;
+@synthesize sha, path, repository, leaf, parent, iconImage, absolutePath;
 
 + (PBGitTree*) rootForCommit:(id) commit
 {
@@ -38,11 +38,14 @@
 	return tree;
 }
 
-- init
+- (id) init
 {
-	children = nil;
-	localFileName = nil;
-	leaf = YES;
+    if (self = [super init]) {
+        children = nil;
+        localFileName = nil;
+        leaf = YES;
+        absolutePath = [PBGitRepository basePath];
+    }
 	return self;
 }
 
@@ -178,7 +181,7 @@
 		NSData* data = [handle readDataToEndOfFile];
 		[data writeToFile:newName atomically:YES];
 	} else { // Directory
-		[[NSFileManager defaultManager] createDirectoryAtPath:newName attributes:nil];
+		[[NSFileManager defaultManager] createDirectoryAtPath:newName withIntermediateDirectories:YES attributes:nil error:nil];
 		for (PBGitTree* child in [self children])
 			[child saveToFolder: newName];
 	}
@@ -236,13 +239,13 @@
 	NSMutableArray* c = [NSMutableArray array];
 	
 	NSString* p = [handle readLine];
-	while (p.length > 0) {
+	while ([p length] > 0) {
 		if ([p isEqualToString:@"\r"])
 			break;
 
 		BOOL isLeaf = ([p characterAtIndex:p.length - 1] != '/');
 		if (!isLeaf)
-			p = [p substringToIndex:p.length -1];
+			p = [p substringToIndex:[p length]-1];
 
 		PBGitTree* child = [PBGitTree treeForTree:self andPath:p];
 		child.leaf = isLeaf;
@@ -259,18 +262,22 @@
 	if (!parent)
 		return @"";
 	
-	if ([parent.fullPath isEqualToString:@""])
+	if ([[parent fullPath] isEqualToString:@""])
 		return self.path;
 	
-	return [parent.fullPath stringByAppendingPathComponent: self.path];
+	return [[parent fullPath] stringByAppendingPathComponent: self.path];
 }
 
-- (void) finalize
-{
-	if (localFileName)
-		[[NSFileManager defaultManager] removeFileAtPath:localFileName handler:nil];
-	[super finalize];
-}
+// !!! Andre Berg 20100324: finalize seldomly causes the following error message:
+// malloc: resurrection error for object 0x12b1110 while assigning NSFilesystemItemRemoveOperation._removePath[32](0x12a0170)[16] = NSPathStore2[240](0x12b1110)
+// garbage pointer stored into reachable memory, break on auto_zone_resurrection_error to debug
+// objc[40604]: **resurrected** object 0x12b1110 of class NSPathStore2 being finalized
+// - (void) finalize
+// {
+// 	if (localFileName)
+// 		[[NSFileManager defaultManager] removeItemAtPath:localFileName error:nil];
+// 	[super finalize];
+// }
 
 +(NSString *)parseBlame:(NSString *)string
 {

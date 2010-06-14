@@ -26,11 +26,16 @@ NSString * const kGitXCommitType = @"commit";
 	NSMutableArray *p = [NSMutableArray arrayWithCapacity:nParents];
 	for (i = 0; i < nParents; ++i)
 	{
-		char *s = git_oid_mkhex(parentShas + i);
+		char buff[GIT_OID_HEXSZ+1];
+		char * s = git_oid_to_string(buff, GIT_OID_HEXSZ+1, parentShas + i);		
 		[p addObject:[NSString stringWithUTF8String:s]];
-		free(s);
 	}
 	return p;
+}
+
+- (NSString *) description {
+    return [NSString stringWithFormat:@"%@, realSha = %@, %d parent(s), repository = %@", 
+            [super description], [self realSha], nParents, repository];
 }
 
 - (NSDate *)date
@@ -38,10 +43,67 @@ NSString * const kGitXCommitType = @"commit";
 	return [NSDate dateWithTimeIntervalSince1970:timestamp];
 }
 
-- (NSString *) dateString
-{
-	NSDateFormatter* formatter = [[NSDateFormatter alloc] initWithDateFormat:@"%Y-%m-%d %H:%M:%S" allowNaturalLanguage:NO];
-	return [formatter stringFromDate: self.date];
+-(NSString *)dateString {
+    if ([PBGitDefaults showRelativeDates]) {
+        // Code modified from Gilean ( http://stackoverflow.com/users/6305/gilean ).
+        // Copied from stackoverflow's accepted answer for Objective C relative dates.
+        // http://stackoverflow.com/questions/902950/iphone-convert-date-string-to-a-relative-time-stamp
+        // Modified the seconds constants with compile time math to aid in ease of adjustment of "Majic" numbers.
+        //
+        NSDate *todayDate = [NSDate date];
+        double ti = [self.date timeIntervalSinceDate:todayDate];
+        ti = ti * -1;
+        if(ti < 1) {
+            return @"In the future!";
+        } else      if ( ti < 60 ) {
+            return @"less than a minute ago";
+        } else if ( ti < (60 * 60) ) {
+            int diff = round(ti / 60);
+            if ( diff < 2 ) {
+                return @"1 minute ago";
+            } else {
+                return [NSString stringWithFormat:@"%d minutes ago", diff];
+            }
+        } else if ( ti < ( 60 * 60 * 24 ) ) {
+            int diff = round(ti / 60 / 60);
+            if ( diff < 2 ) {
+                return @"1 hour ago";
+            } else {
+                return[NSString stringWithFormat:@"%d hours ago", diff];
+            }
+        } else if ( ti < ( 60 * 60 * 24 * 7 ) ) {
+            int diff = round(ti / 60 / 60 / 24);
+            if ( diff < 2 ) {
+                return @"1 day ago";
+            } else {
+                return[NSString stringWithFormat:@"%d days ago", diff];
+            }
+        } else if ( ti < ( 60 * 60 * 24 * 31.5 ) ) {
+            int diff = round(ti / 60 / 60 / 24 / 7);
+            if ( diff < 2 ) {
+                return @"1 week ago";
+            } else {
+                return[NSString stringWithFormat:@"%d weeks ago", diff];
+            }
+        } else if ( ti < ( 60 * 60 * 24 * 365 ) ) {
+            int diff = round(ti / 60 / 60 / 24 / 30);
+            if ( diff < 2 ) {
+                return @"1 month ago";
+            } else {
+                return[NSString stringWithFormat:@"%d months ago", diff];
+            }
+        } else {
+            float diff = round(ti / 60 / 60 / 24 / 365 * 4) / 4.0;
+            if ( diff < 1.25 ) {
+                return @"1 year ago";
+            } else {
+                return[NSString stringWithFormat:@"%g years ago", diff];
+            }
+        }
+    } else {
+        NSDateFormatter* formatter = [[NSDateFormatter alloc] initWithDateFormat:@"%Y-%m-%d %H:%M:%S" allowNaturalLanguage:NO];
+        return [formatter stringFromDate: self.date];
+    }
 }
 
 - (NSArray*) treeContents
@@ -70,9 +132,9 @@ NSString * const kGitXCommitType = @"commit";
 - (NSString *)realSha
 {
 	if (!realSHA) {
-		char *hex = git_oid_mkhex(&sha);
+		char buff[GIT_OID_HEXSZ+1];
+		char * hex = git_oid_to_string(buff, GIT_OID_HEXSZ+1, &sha);		
 		realSHA = [NSString stringWithUTF8String:hex];
-		free(hex);
 	}
 
 	return realSHA;

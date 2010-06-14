@@ -7,9 +7,11 @@
 //
 
 #import <Cocoa/Cocoa.h>
+#import <Quartz/Quartz.h>
 #import "PBGitRepository.h"
 
 @interface PBGitTree : NSObject {
+
 	long long _fileSize;
 
 	NSString* sha;
@@ -21,8 +23,10 @@
 
 	NSString* localFileName;
 	NSDate* localMtime;
+    
+    NSString * absolutePath;
+    NSImage * iconImage;
 }
-
 + (PBGitTree*) rootForCommit: (id) commit;
 + (PBGitTree*) treeForTree: (PBGitTree*) tree andPath: (NSString*) path;
 - (void) saveToFolder: (NSString *) directory;
@@ -43,4 +47,6 @@
 +(NSString *)parseBlame:(NSString *)blame;
 
 
+@property (copy) NSString *absolutePath;
+@property (retain) NSImage *iconImage;
 @end

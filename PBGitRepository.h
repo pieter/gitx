@@ -10,14 +10,31 @@
 #import "PBGitHistoryList.h"
 #import "PBGitRevSpecifier.h"
 #import "PBGitConfig.h"
+#import "PBGitXErrors.h"
 #import "PBGitRefish.h"
 
-extern NSString* PBGitRepositoryErrorDomain;
-enum branchFilterTypes {
+typedef enum branchFilterTypes {
 	kGitXAllBranchesFilter = 0,
 	kGitXLocalRemoteBranchesFilter,
 	kGitXSelectedBranchFilter
-};
+} PBGitXBranchFilterType;
+
+static NSString * PBStringFromBranchFilterType(PBGitXBranchFilterType type) {
+    switch (type) {
+        case kGitXAllBranchesFilter:
+            return @"All";
+            break;
+        case kGitXLocalRemoteBranchesFilter:
+            return @"Local";
+            break;
+        case kGitXSelectedBranchFilter:
+            return @"Selected";
+            break;
+        default:
+            break;
+    }
+    return @"Not a branch filter type";
+}
 
 @class PBGitWindowController;
 @class PBGitCommit;
@@ -63,6 +80,8 @@ enum branchFilterTypes {
 - (NSString*) outputForArguments:(NSArray*) args retValue:(int *)ret;
 - (NSString *)outputInWorkdirForArguments:(NSArray*) arguments;
 - (NSString *)outputInWorkdirForArguments:(NSArray*) arguments retValue:(int *)ret;
+- (NSString *) outputForShellScriptTemplate:(NSString *)scriptTemplate keywordDict:(NSDictionary *)keywordDict retValue:(NSInteger *)retValue;
+- (NSString *) outputForShellScript:(NSString *)script retValue:(NSInteger *)retValue;
 - (BOOL)executeHook:(NSString *)name output:(NSString **)output;
 - (BOOL)executeHook:(NSString *)name withArgs:(NSArray*) arguments output:(NSString **)output;
 
@@ -84,7 +103,11 @@ enum branchFilterTypes {
 - (BOOL) isSHAOnHeadBranch:(NSString *)testSHA;
 - (BOOL) isRefOnHeadBranch:(PBGitRef *)testRef;
 - (BOOL) checkRefFormat:(NSString *)refName;
+- (BOOL) checkRefFormatForBranch:(NSString *)shaOrRefName;
+- (PBGitRef *) completeRefForString:(NSString *)partialRefString;
 - (BOOL) refExists:(PBGitRef *)ref;
+// checks to see if the ref or sha exists - returns nil if not found and the complete sha if found
+- (NSString *) shaExists:(NSString *)sha;
 
 - (NSArray *) remotes;
 - (BOOL) hasRemotes;
@@ -100,6 +123,7 @@ enum branchFilterTypes {
 
 + (NSURL*)gitDirForURL:(NSURL*)repositoryURL;
 + (NSURL*)baseDirForURL:(NSURL*)repositoryURL;
++ (NSString *) basePath;
 
 - (id) initWithURL: (NSURL*) path;
 - (void) setup;
@@ -113,4 +137,5 @@ enum branchFilterTypes {
 @property (assign) PBGitRevSpecifier *currentBranch;
 @property (assign) NSInteger currentBranchFilter;
 @property (retain) NSMutableDictionary* refs;
+
 @end

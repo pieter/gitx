@@ -60,11 +60,12 @@
 	else
 		description = [NSString stringWithFormat:@"Push updates to remote %@", [remoteRef remoteName]];
 
+    NSString * sdesc = [NSString stringWithFormat:@"p%@", [description substringFromIndex:1]]; 
 	NSAlert *alert = [NSAlert alertWithMessageText:description
 									 defaultButton:@"Push"
 								   alternateButton:@"Cancel"
 									   otherButton:nil
-						 informativeTextWithFormat:@"Are you sure you want to %@?", description];
+						 informativeTextWithFormat:@"Are you sure you want to %@?", sdesc];
 
 	NSMutableDictionary *info = [NSMutableDictionary dictionary];
 	if (ref)
@@ -274,6 +275,43 @@
 	return [PBRefMenuItem defaultMenuItemsForCommit:commit target:self];
 }
 
+// - (BOOL) addRemoteImplWithName:(NSString *)remoteName forURL:(NSString *)remoteURL
+// {
+//  int ret = 1;
+//     BOOL success = NO;
+//     if (!remoteName || !remoteURL) {
+//         return success;
+//     }
+//  NSString *rval = [historyController.repository outputInWorkdirForArguments:[NSArray arrayWithObjects:@"remote",  @"add", @"-f", remoteName, remoteURL, nil] retValue: &ret];
+//  if (ret) {
+//      NSString *info = [NSString stringWithFormat:@"There was an error adding the remote.\n\n%d\n%@", ret, rval];
+//      [[historyController.repository windowController] showMessageSheet:@"Adding Remote failed" infoText:info];
+//      return success;
+//  }
+//  [historyController.repository reloadRefs];
+//  [commitController rearrangeObjects];
+//     success = YES;
+//     return success;
+// }
+// 
+// - (void) toggleToolbarItems:(NSToolbar *)tb matchingLabels:(NSArray *)labels enabledState:(BOOL)state  {
+//     NSArray * tbItems = [tb items];
+//     
+//     /* if labels is nil, assume all toolbar items */
+//     if (!labels) {
+//         for (NSToolbarItem * curItem in tbItems) {
+//             [curItem setEnabled:state];
+//         }
+//     } else {
+//         for (NSToolbarItem * curItem in tbItems) {
+//             for (NSString * curLabel in labels) {
+//                 if ([[curItem label] isEqualToString:curLabel]) {
+//                     [curItem setEnabled:state];
+//                 }
+//             }
+//         }
+//     }
+// }
 
 # pragma mark Tableview delegate methods
 
@@ -400,3 +438,4 @@
 }
 
 @end
+

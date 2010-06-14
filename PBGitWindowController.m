@@ -9,14 +9,19 @@
 #import "PBGitWindowController.h"
 #import "PBGitHistoryController.h"
 #import "PBGitCommitController.h"
+#import "PBGitDefaults.h"
 #import "Terminal.h"
 #import "PBCloneRepsitoryToSheet.h"
 #import "PBGitSidebarController.h"
+#import "NSString_Truncate.h"
 
 @implementation PBGitWindowController
 
-
 @synthesize repository;
+@synthesize viewController;
+@synthesize contentController;
+@synthesize sidebarController;
+@synthesize historyController;
 
 - (id)initWithRepository:(PBGitRepository*)theRepository displayDefault:(BOOL)displayDefault
 {
@@ -30,7 +35,7 @@
 
 - (void)windowWillClose:(NSNotification *)notification
 {
-	NSLog(@"Window will close!");
+	//NSLog(@"Window will close!");
 
 	if (sidebarController)
 		[sidebarController removeView];
@@ -107,6 +112,9 @@
 
 - (void)showMessageSheet:(NSString *)messageText infoText:(NSString *)infoText
 {
+    if ([PBGitDefaults truncateInfoText] && ([infoText length] > [PBGitDefaults truncateInfoTextSize])) {
+        infoText = [infoText truncateToLength:[PBGitDefaults truncateInfoTextSize] mode:PBNSStringTruncateModeCenter indicator:@" ... "];
+    }
 	[[NSAlert alertWithMessageText:messageText
 			 defaultButton:nil
 		       alternateButton:nil
@@ -117,6 +125,15 @@
 - (void)showErrorSheet:(NSError *)error
 {
 	[[NSAlert alertWithError:error] beginSheetModalForWindow: [self window] modalDelegate:self didEndSelector:nil contextInfo:nil];
+}
+
+- (void)windowDidBecomeMain:(NSNotification *)notification {
+   /* Using ...didBecomeMain is better than ...didBecomeKey here because the QuickLook panel will count as key state change 
+    and the outline view window will trigger a refresh in the middle of the QuickLook panel's closing animation which 
+    causes a half second freeze with left over artifacts. */
+   if (self.contentController && [PBGitDefaults refreshAutomatically]) {
+		[self.contentController refresh:nil];
+	}
 }
 
 - (void)showErrorSheetTitle:(NSString *)title message:(NSString *)message arguments:(NSArray *)arguments output:(NSString *)output

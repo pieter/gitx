@@ -1,3 +1,4 @@
+#if MAC_OS_X_VERSION_MAX_ALLOWED <= MAC_OS_X_VERSION_10_5
 @interface QLPreviewPanel : NSPanel
 + (id)sharedPreviewPanel;
 
@@ -90,3 +91,4 @@
 - (void)setShowsiChatTheater:(BOOL)fp8;
 - (void)setShowsFullscreen:(BOOL)fp8;
 @end
+#endif

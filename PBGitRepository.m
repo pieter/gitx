@@ -10,7 +10,6 @@
 #import "PBGitCommit.h"
 #import "PBGitWindowController.h"
 #import "PBGitBinary.h"
-
 #import "NSFileHandleExt.h"
 #import "PBEasyPipe.h"
 #import "PBGitRef.h"
@@ -18,19 +17,25 @@
 #import "PBRemoteProgressSheet.h"
 #import "PBGitRevList.h"
 #import "PBGitDefaults.h"
+#import "BMScript.h"
 
-NSString* PBGitRepositoryErrorDomain = @"GitXErrorDomain";
+static NSString * repositoryBasePath = nil;
 
 @implementation PBGitRepository
 
-@synthesize revisionList, branches, currentBranch, refs, hasChanged, config;
+@synthesize revisionList;
+@synthesize branches;
+@synthesize currentBranch;
+@synthesize refs;
+@synthesize hasChanged;
+@synthesize config;
 @synthesize currentBranchFilter;
 
 - (BOOL)readFromData:(NSData *)data ofType:(NSString *)typeName error:(NSError **)outError
 {
 	if (outError) {
-		*outError = [NSError errorWithDomain:PBGitRepositoryErrorDomain
-                                      code:0
+		*outError = [NSError errorWithDomain:PBGitXErrorDomain
+                                      code:PBFileReadingUnsupportedErrorCode
                                   userInfo:[NSDictionary dictionaryWithObject:@"Reading files is not supported." forKey:NSLocalizedFailureReasonErrorKey]];
 	}
 	return NO;
@@ -41,6 +46,15 @@ NSString* PBGitRepositoryErrorDomain = @"GitXErrorDomain";
 	return [[PBEasyPipe outputForCommand:[PBGitBinary path] withArgs:[NSArray arrayWithObjects:@"rev-parse", @"--is-bare-repository", nil] inDir:path] isEqualToString:@"true"];
 }
 
+// can be used to return the basePath of a repo when [self fileURL] is unavailable yet
++ (NSString *) basePath {
+    if (repositoryBasePath) {
+        return repositoryBasePath;
+    }
+    return nil;
+}
+
+
 + (NSURL*)gitDirForURL:(NSURL*)repositoryURL;
 {
 	if (![PBGitBinary path])
@@ -48,13 +62,19 @@ NSString* PBGitRepositoryErrorDomain = @"GitXErrorDomain";
 
 	NSString* repositoryPath = [repositoryURL path];
 
+    // save base path
+    repositoryBasePath = [repositoryPath stringByDeletingLastPathComponent];
+
 	if ([self isBareRepository:repositoryPath])
 		return repositoryURL;
 
-
 	// Use rev-parse to find the .git dir for the repository being opened
 	NSString* newPath = [PBEasyPipe outputForCommand:[PBGitBinary path] withArgs:[NSArray arrayWithObjects:@"rev-parse", @"--git-dir", nil] inDir:repositoryPath];
-	if ([newPath isEqualToString:@".git"])
+    
+    if ([newPath rangeOfString:@"fatal:"].length != 0)
+        return nil;
+	
+    if ([newPath isEqualToString:@".git"])
 		return [NSURL fileURLWithPath:[repositoryPath stringByAppendingPathComponent:@".git"]];
 	if ([newPath length] > 0)
 		return [NSURL fileURLWithPath:newPath];
@@ -87,7 +107,7 @@ NSString* PBGitRepositoryErrorDomain = @"GitXErrorDomain";
 		if (outError) {
 			NSDictionary* userInfo = [NSDictionary dictionaryWithObject:[PBGitBinary notFoundError]
 																 forKey:NSLocalizedRecoverySuggestionErrorKey];
-			*outError = [NSError errorWithDomain:PBGitRepositoryErrorDomain code:0 userInfo:userInfo];
+			*outError = [NSError errorWithDomain:PBGitXErrorDomain code:PBGitBinaryNotFoundErrorCode userInfo:userInfo];
 		}
 		return NO;
 	}
@@ -98,7 +118,7 @@ NSString* PBGitRepositoryErrorDomain = @"GitXErrorDomain";
 		if (outError) {
 			NSDictionary* userInfo = [NSDictionary dictionaryWithObject:@"Reading files is not supported."
 																 forKey:NSLocalizedRecoverySuggestionErrorKey];
-			*outError = [NSError errorWithDomain:PBGitRepositoryErrorDomain code:0 userInfo:userInfo];
+			*outError = [NSError errorWithDomain:PBGitXErrorDomain code:PBFileReadingUnsupportedErrorCode userInfo:userInfo];
 		}
 		return NO;
 	}
@@ -107,9 +127,9 @@ NSString* PBGitRepositoryErrorDomain = @"GitXErrorDomain";
 	NSURL* gitDirURL = [PBGitRepository gitDirForURL:[self fileURL]];
 	if (!gitDirURL) {
 		if (outError) {
-			NSDictionary* userInfo = [NSDictionary dictionaryWithObject:[NSString stringWithFormat:@"%@ does not appear to be a git repository.", [self fileName]]
+			NSDictionary* userInfo = [NSDictionary dictionaryWithObject:[NSString stringWithFormat:@"%@ does not appear to be a git repository.", [[self fileURL] path]]
 																 forKey:NSLocalizedRecoverySuggestionErrorKey];
-			*outError = [NSError errorWithDomain:PBGitRepositoryErrorDomain code:0 userInfo:userInfo];
+			*outError = [NSError errorWithDomain:PBGitXErrorDomain code:PBNotAGitRepositoryErrorCode userInfo:userInfo];
 		}
 		return NO;
 	}
@@ -137,20 +157,20 @@ NSString* PBGitRepositoryErrorDomain = @"GitXErrorDomain";
 	if (!gitDirURL)
 		return nil;
 
-	self = [self init];
-	[self setFileURL: gitDirURL];
-
-	[self setup];
-	
-	// We don't want the window controller to display anything yet..
-	// We'll leave that to the caller of this method.
-#ifndef CLI
-	[self addWindowController:[[PBGitWindowController alloc] initWithRepository:self displayDefault:NO]];
-#endif
-
-	[self showWindows];
-
-	return self;
+	if (self = [super init]) {
+        [self setFileURL: gitDirURL];
+        
+        [self setup];
+        
+        // We don't want the window controller to display anything yet..
+        // We'll leave that to the caller of this method.
+        #ifndef CLI
+            [self addWindowController:[[PBGitWindowController alloc] initWithRepository:self displayDefault:NO]];
+        #endif
+        
+        [self showWindows];
+    }
+    return self;
 }
 
 - (void) forceUpdateRevisions
@@ -165,6 +185,7 @@ NSString* PBGitRepositoryErrorDomain = @"GitXErrorDomain";
 
 // The fileURL the document keeps is to the .git dir, but that’s pretty
 // useless for display in the window title bar, so we show the directory above
+
 - (NSString *) displayName
 {
 	if (![[PBGitRef refFromString:[[self headRef] simpleRef]] type])
@@ -233,8 +254,7 @@ NSString* PBGitRepositoryErrorDomain = @"GitXErrorDomain";
 
 - (void) reloadRefs
 {
-	_headRef = nil;
-
+	_headRef = nil; 
 	refs = [NSMutableDictionary dictionary];
 	NSMutableArray *oldBranches = [branches mutableCopy];
 
@@ -295,6 +315,13 @@ NSString* PBGitRepositoryErrorDomain = @"GitXErrorDomain";
 	return [self shaForRef:[[self headRef] ref]];
 }
 
+- (NSString *) headRefForSHA:(NSString *)sha
+{
+	// TODO: move code over
+    // from PBGitSidebarController populateList
+    // that deals with getting the head refs path
+}
+
 - (PBGitCommit *) headCommit
 {
 	return [self commitForSHA:[self headSHA]];
@@ -333,6 +360,10 @@ NSString* PBGitRepositoryErrorDomain = @"GitXErrorDomain";
 		return nil;
 	NSArray *revList = revisionList.projectCommits;
 
+    if (!revList) {
+        [revisionList forceUpdate];
+        revList = revisionList.projectCommits;
+    }
 	for (PBGitCommit *commit in revList)
 		if ([[commit realSha] isEqualToString:sha])
 			return commit;
@@ -397,6 +428,32 @@ NSString* PBGitRepositoryErrorDomain = @"GitXErrorDomain";
 	return YES;
 }
 
+- (BOOL) checkRefFormatForBranch:(NSString *)shaOrRefName
+{
+	int retValue = 1;
+	[self outputInWorkdirForArguments:[NSArray arrayWithObjects:@"check-ref-format", @"--branch", shaOrRefName, nil] retValue:&retValue];
+	if (retValue)
+		return NO;
+	return YES;
+}
+
+- (PBGitRef *) completeRefForString:(NSString *)partialRefString {
+    if (![self checkRefFormat:partialRefString] &&
+        ![self checkRefFormatForBranch:partialRefString]) {
+        return nil;
+    }
+    NSArray * prefixes = [NSArray arrayWithObjects:kGitXBranchRefPrefix, kGitXRemoteRefPrefix, kGitXTagRefPrefix, nil];
+    PBGitRef * completeRef = nil;
+    for (NSString * prefix in prefixes) {
+        PBGitRef * tryref = [PBGitRef refFromString:[NSString stringWithFormat:@"%@%@", prefix, partialRefString]];
+        if ([self refExists:tryref]) {
+            completeRef = tryref;
+            break;
+        }
+    }
+    return completeRef;
+}
+
 - (BOOL) refExists:(PBGitRef *)ref
 {
 	int retValue = 1;
@@ -404,6 +461,15 @@ NSString* PBGitRepositoryErrorDomain = @"GitXErrorDomain";
     if (retValue || [output isEqualToString:@""])
         return NO;
     return YES;
+}
+
+- (NSString *) shaExists:(NSString *)sha
+{
+	int retValue = 1;
+    NSString *output = [self outputInWorkdirForArguments:[NSArray arrayWithObjects:@"rev-parse", sha, nil] retValue:&retValue];
+    if (retValue || [output isEqualToString:@""])
+        return nil;
+    return output;
 }
 		
 // Returns either this object, or an existing, equal object
@@ -449,8 +515,9 @@ NSString* PBGitRepositoryErrorDomain = @"GitXErrorDomain";
 
 - (NSString *) workingDirectory
 {
-	if ([self.fileURL.path hasSuffix:@"/.git"])
-		return [self.fileURL.path substringToIndex:[self.fileURL.path length] - 5];
+    NSString * dotGitSuffix = @"/.git";
+	if ([[[self fileURL] path] hasSuffix:dotGitSuffix])
+		return [[[self fileURL] path] substringToIndex:[[[self fileURL] path] length] - [dotGitSuffix length]];
 	else if ([[self outputForCommand:@"rev-parse --is-inside-work-tree"] isEqualToString:@"true"])
 		return [PBGitBinary path];
 	
@@ -863,7 +930,7 @@ NSString* PBGitRepositoryErrorDomain = @"GitXErrorDomain";
 
 - (NSFileHandle*) handleForArguments:(NSArray *)args
 {
-	NSString* gitDirArg = [@"--git-dir=" stringByAppendingString:self.fileURL.path];
+	NSString* gitDirArg = [@"--git-dir=" stringByAppendingString:[[self fileURL] path]];
 	NSMutableArray* arguments =  [NSMutableArray arrayWithObject: gitDirArg];
 	[arguments addObjectsFromArray: args];
 	return [PBEasyPipe handleForCommand:[PBGitBinary path] withArgs:arguments];
@@ -871,7 +938,7 @@ NSString* PBGitRepositoryErrorDomain = @"GitXErrorDomain";
 
 - (NSFileHandle*) handleInWorkDirForArguments:(NSArray *)args
 {
-	NSString* gitDirArg = [@"--git-dir=" stringByAppendingString:self.fileURL.path];
+	NSString* gitDirArg = [@"--git-dir=" stringByAppendingString:[[self fileURL] path]];
 	NSMutableArray* arguments =  [NSMutableArray arrayWithObject: gitDirArg];
 	[arguments addObjectsFromArray: args];
 	return [PBEasyPipe handleForCommand:[PBGitBinary path] withArgs:arguments inDir:[self workingDirectory]];
@@ -895,9 +962,32 @@ NSString* PBGitRepositoryErrorDomain = @"GitXErrorDomain";
 	return [self outputForArguments: arguments retValue: ret];
 }
 
+- (NSString *) outputForShellScriptTemplate:(NSString *)scriptTemplate keywordDict:(NSDictionary *)keywordDict retValue:(NSInteger *)retValue {
+    BMScript * script = [[BMScript alloc] initWithTemplateSource:scriptTemplate
+                                                         options:BMSynthesizeOptions(@"/bin/sh", @"-c")];
+    [script saturateTemplateWithDictionary:keywordDict];
+
+    if (*retValue) {
+        *retValue = [script execute];
+    } else {
+        [script execute];
+    }
+    return [script lastResult];
+}
+
+- (NSString *) outputForShellScript:(NSString *)script retValue:(NSInteger *)retValue {
+    BMScript * shellScript = [BMScript shellScriptWithSource:script];
+    if (*retValue) {
+        *retValue = [shellScript execute];
+    } else {
+        [shellScript execute];
+    }
+    return [shellScript lastResult];
+}
+
 - (NSString*) outputForArguments:(NSArray*) arguments
 {
-	return [PBEasyPipe outputForCommand:[PBGitBinary path] withArgs:arguments inDir: self.fileURL.path];
+	return [PBEasyPipe outputForCommand:[PBGitBinary path] withArgs:arguments inDir: [[self fileURL] path]];
 }
 
 - (NSString*) outputInWorkdirForArguments:(NSArray*) arguments
@@ -912,7 +1002,7 @@ NSString* PBGitRepositoryErrorDomain = @"GitXErrorDomain";
 
 - (NSString*) outputForArguments:(NSArray *)arguments retValue:(int *)ret
 {
-	return [PBEasyPipe outputForCommand:[PBGitBinary path] withArgs:arguments inDir: self.fileURL.path retValue: ret];
+	return [PBEasyPipe outputForCommand:[PBGitBinary path] withArgs:arguments inDir: [[self fileURL] path] retValue: ret];
 }
 
 - (NSString*) outputForArguments:(NSArray *)arguments inputString:(NSString *)input retValue:(int *)ret

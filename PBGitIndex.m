@@ -155,7 +155,7 @@ NSString *PBGitIndexOperationFailed = @"PBGitIndexOperationFailed";
 		[commitSubject appendString:[commitMessage substringToIndex:newLine.location]];
 	
 	NSString *commitMessageFile;
-	commitMessageFile = [repository.fileURL.path stringByAppendingPathComponent:@"COMMIT_EDITMSG"];
+	commitMessageFile = [[[repository fileURL] path] stringByAppendingPathComponent:@"COMMIT_EDITMSG"];
 	
 	[commitMessage writeToFile:commitMessageFile atomically:YES encoding:NSUTF8StringEncoding error:nil];
 

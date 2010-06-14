@@ -14,6 +14,7 @@
 @synthesize repository;
 @synthesize status;
 @synthesize isBusy;
+@synthesize superController;
 
 - (id)initWithRepository:(PBGitRepository *)theRepository superController:(PBGitWindowController *)controller
 {
@@ -47,12 +48,14 @@
 {
 }
 
-- (IBAction) refresh: sender
-{
-}
-
 - (void)viewLoaded
 {
+    return;
+}
+
+- (IBAction) refresh:(id)sender
+{
+    return;
 }
 
 @end

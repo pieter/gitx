@@ -80,17 +80,19 @@
 }
 
 /* Implemented to satisfy datasourcee protocol */
-- (BOOL) outlineView: (NSOutlineView *)ov
-         isItemExpandable: (id)item { return NO; }
+- (BOOL) outlineView:(NSOutlineView *)ov isItemExpandable:(id)item {
+    return YES;
+}
 
-- (NSInteger)  outlineView: (NSOutlineView *)ov
-         numberOfChildrenOfItem:(id)item { return 0; }
+- (NSInteger) outlineView:(NSOutlineView *)ov numberOfChildrenOfItem:(id)item {
+    return 0;
+}
 
-- (id)   outlineView: (NSOutlineView *)ov
-         child:(NSInteger)index
-         ofItem:(id)item { return nil; }
+- (id) outlineView:(NSOutlineView *)ov child:(NSInteger)index ofItem:(id)item {
+    return nil;
+}
 
-- (id)   outlineView: (NSOutlineView *)ov
-         objectValueForTableColumn:(NSTableColumn*)col
-         byItem:(id)item { return nil; }
+- (id) outlineView:(NSOutlineView *)ov objectValueForTableColumn:(NSTableColumn *)col byItem:(id)item {
+    return nil;
+}
 @end

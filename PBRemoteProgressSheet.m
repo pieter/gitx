@@ -24,7 +24,7 @@ NSString * const kGitXProgressErrorInfo          = @"PBGitXProgressErrorInfo";
 
 @interface PBRemoteProgressSheet ()
 
-- (void) beginRemoteProgressSheetForArguments:(NSArray *)args title:(NSString *)theTitle description:(NSString *)theDescription inDir:(NSString *)dir windowController:(PBGitWindowController *)controller;
+- (void) beginRemoteProgressSheetForArguments:(NSArray *)args title:(NSString *)theTitle description:(NSString *)theDescription inDirectory:(NSString *)dir windowController:(PBGitWindowController *)controller;
 - (void) showSuccessMessage;
 - (void) showErrorMessage;
 
@@ -55,7 +55,7 @@ NSString * const kGitXProgressErrorInfo          = @"PBGitXProgressErrorInfo";
 + (void) beginRemoteProgressSheetForArguments:(NSArray *)args title:(NSString *)theTitle description:(NSString *)theDescription inDir:(NSString *)dir windowController:(PBGitWindowController *)windowController
 {
 	PBRemoteProgressSheet *sheet = [[self alloc] initWithWindowNibName:@"PBRemoteProgressSheet"];
-	[sheet beginRemoteProgressSheetForArguments:args title:theTitle description:theDescription inDir:dir windowController:windowController];
+	[sheet beginRemoteProgressSheetForArguments:args title:theTitle description:theDescription inDirectory:dir windowController:windowController];
 }
 
 
@@ -65,7 +65,7 @@ NSString * const kGitXProgressErrorInfo          = @"PBGitXProgressErrorInfo";
 }
 
 
-- (void) beginRemoteProgressSheetForArguments:(NSArray *)args title:(NSString *)theTitle description:(NSString *)theDescription inDir:(NSString *)dir windowController:(PBGitWindowController *)windowController
+- (void) beginRemoteProgressSheetForArguments:(NSArray *)args title:(NSString *)theTitle description:(NSString *)theDescription inDirectory:(NSString *)dir windowController:(PBGitWindowController *)windowController
 {
 	controller  = windowController;
 	arguments   = args;

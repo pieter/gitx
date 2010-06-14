@@ -85,6 +85,7 @@ catch_exit:
 	if (pmatch)
 		free(pmatch);
 	regfree(&preg);
+    [[NSGarbageCollector defaultCollector] collectIfNeeded];
 	return outMatches;
 }
 
