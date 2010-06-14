@@ -40,7 +40,7 @@
 	IBOutlet NSButton *localRemoteBranchesFilterItem;
 	IBOutlet NSButton *selectedBranchFilterItem;
 	
-	IBOutlet NSSplitView *fileViewer;
+	IBOutlet NSView *fileViewer;
 	FileViewerController *fileViewerController;
 	
 	IBOutlet id webView;

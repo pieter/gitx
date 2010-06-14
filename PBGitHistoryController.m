@@ -123,7 +123,13 @@
 	[fileViewerController loadView];
 	
 	//[fileViewer setAutoresizesSubviews:YES];
-	[fileViewer addSubview:[fileViewerController view]];
+	//[fileViewer addSubview:[fileViewerController view]];
+	
+	// XXXX :( ?
+	NSMutableArray *sv=[NSMutableArray arrayWithArray:[[fileViewer superview] subviews]];
+	[sv removeObjectAtIndex:1];
+	[sv insertObject:[fileViewerController view] atIndex:1];
+	[[fileViewer superview] setSubviews:sv];
 	
 	[super awakeFromNib];
 }
