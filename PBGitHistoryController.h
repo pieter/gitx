@@ -12,6 +12,7 @@
 #import "PBGitTree.h"
 #import "PBViewController.h"
 #import "PBCollapsibleSplitView.h"
+#import "FileViewerController.h"
 
 @class PBGitSidebarController;
 @class PBGitGradientBarView;
@@ -39,9 +40,9 @@
 	IBOutlet NSButton *localRemoteBranchesFilterItem;
 	IBOutlet NSButton *selectedBranchFilterItem;
 	
-	IBOutlet WebView *webViewFileViwer;
-	IBOutlet NSSegmentedCell *displayControl;
-
+	IBOutlet NSSplitView *fileViewer;
+	FileViewerController *fileViewerController;
+	
 	IBOutlet id webView;
 	int selectedCommitDetailsIndex;
 	BOOL forceSelectionUpdate;

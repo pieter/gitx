@@ -62,6 +62,19 @@
 
 	[cachedFilesController setAutomaticallyRearrangesObjects:NO];
 	[unstagedFilesController setAutomaticallyRearrangesObjects:NO];
+	
+	fileViewerController=[[FileViewerController alloc] retain];
+	[fileViewerController setCommit:true];
+	[fileViewerController initWithRepository:repository];
+	[fileViewerController loadView];
+	
+	// XXXX :( ?
+	NSMutableArray *sv=[NSMutableArray arrayWithArray:[[fileViewer superview] subviews]];
+	[sv removeObjectAtIndex:0];
+	[sv insertObject:[fileViewerController view] atIndex:0];
+	[[fileViewer superview] setSubviews:sv];
+	webController.fileViewerController=fileViewerController;
+	
 }
 
 - (void) removeView

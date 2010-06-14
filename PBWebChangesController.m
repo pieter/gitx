@@ -12,6 +12,8 @@
 
 @implementation PBWebChangesController
 
+@synthesize fileViewerController;
+
 - (void) awakeFromNib
 {
 	selectedFile = nil;
@@ -72,8 +74,11 @@
 
 - (void) refresh
 {
-	if (!finishedLoading)
+	[fileViewerController showFile:[selectedFile path] sha:nil];
+	/*if (!finishedLoading)
 		return;
+	
+	[fileViewerController showFile:selectedFile sha:@""];
 
 	id script = [view windowScriptObject];
 	
@@ -85,7 +90,7 @@
 		[script callWebScriptMethod:@"showFileBlame"
 					  withArguments:[NSArray arrayWithObjects:selectedFile ?: (id)[NSNull null],
 									 [NSNumber numberWithBool:selectedFileIsCached], nil]];
-	}
+	}*/
 }
 
 - (void)stageHunk:(NSString *)hunk reverse:(BOOL)reverse

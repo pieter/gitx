@@ -79,7 +79,14 @@
 	//[scopeBarView setTopShade:207/255.0 bottomShade:180/255.0];
 	[self updateBranchFilterMatrix];
 
-	[webViewFileViwer setFrameLoadDelegate:self];
+//	[webViewFileViwer setFrameLoadDelegate:self];
+	
+	fileViewerController=[[FileViewerController alloc] retain];
+	[fileViewerController initWithRepository:repository];
+	[fileViewerController loadView];
+	
+	//[fileViewer setAutoresizesSubviews:YES];
+	[fileViewer addSubview:[fileViewerController view]];
 	
 	[super awakeFromNib];
 }
@@ -213,7 +220,15 @@
 	if ([(NSString *)context isEqualToString: @"treeChange"]) {
 		[self updateQuicklookForce: NO];
 		[self saveFileBrowserSelection];
-		[self updateFileViwer:nil];
+		NSLog(@"---> %@",object);
+		NSArray *objects = [(NSTreeController *)object selectedObjects];
+		if([objects count]){
+			PBGitTree *tree=(PBGitTree *)[objects objectAtIndex:0];
+			NSLog(@"---> %@",tree.fullPath);
+			[fileViewerController showFile:tree.fullPath sha:tree.sha];
+		}
+
+		//[self updateFileViwer:nil];
 		return;
 	}
 
@@ -689,50 +704,6 @@
     iconRect.origin = [[fileBrowser window] convertBaseToScreen:iconRect.origin];
 
     return iconRect;
-}
-
-- (IBAction)updateFileViwer:(id)sender
-{
-	NSString *type=@"source";
-	if([displayControl selectedSegment]==1){
-		type=@"blame";
-	}else if([displayControl selectedSegment]==2){
-		type=@"diff";
-	}
-	
-	NSString *path = [NSString stringWithFormat:@"html/views/%@", type];
-	NSString *file = [[NSBundle mainBundle] pathForResource:@"index" ofType:@"html" inDirectory:path];
-	NSLog(@"updateFileViwer -> file: '%@'",file);
-	NSURLRequest * request = [NSURLRequest requestWithURL:[NSURL fileURLWithPath:file]];
-	[[webViewFileViwer mainFrame] loadRequest:request];	
-}
-
-- (void)webView:(WebView *)sender didFinishLoadForFrame:(WebFrame *)frame
-{
-	NSArray *objects = [treeController selectedObjects];
-	NSArray *content = [treeController content];
-	
-	if ([objects count] && [content count]) {
-		PBGitTree *treeItem = [objects objectAtIndex:0];
-		currentFileBrowserSelectionPath = [treeItem.fullPath componentsSeparatedByString:@"/"];
-		
-		NSString *txt=[treeItem contents:[displayControl selectedSegment]];
-		NSLog(@"didFinishLoadForFrame -> txt: '%@'",[txt substringToIndex:80]);
-		
-		id script = [webViewFileViwer windowScriptObject];
-		[script callWebScriptMethod:@"showFile"
-					  withArguments:[NSArray arrayWithObjects:txt, nil]];
-	}
-}
-
-- (void)webView:(WebView *)sender didFailLoadWithError:(NSError *)error forFrame:(WebFrame *)frame
-{
-    NSString *messageString = [error localizedDescription];
-    NSString *moreString = [error localizedFailureReason] ?
-	[error localizedFailureReason] :
-	NSLocalizedString(@"Try typing the URL again.", nil);
-    messageString = [NSString stringWithFormat:@"%@. %@", messageString, moreString];
-	NSLog(@"ERROR!!!! - %@",messageString);
 }
 
 @end

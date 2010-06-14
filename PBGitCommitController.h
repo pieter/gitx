@@ -8,6 +8,7 @@
 
 #import <Cocoa/Cocoa.h>
 #import "PBViewController.h"
+#import "FileViewerController.h"
 
 @class PBGitIndexController, PBIconAndTextCell, PBWebChangesController, PBGitIndex;
 
@@ -20,6 +21,9 @@
 	IBOutlet NSArrayController *unstagedFilesController;
 	IBOutlet NSArrayController *cachedFilesController;
 	IBOutlet NSButton *commitButton;
+
+	IBOutlet NSView *fileViewer;
+	FileViewerController *fileViewerController;
 
 	IBOutlet PBGitIndexController *indexController;
 	IBOutlet PBWebChangesController *webController;

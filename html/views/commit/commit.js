@@ -179,6 +179,10 @@ var diffHeader;
 var originalDiff;
 var originalCached;
 
+var showFile = function(diff) {
+	displayDiff(diff,false);
+}
+
 var displayDiff = function(diff, cached)
 {
 	diffHeader = diff.split("\n").slice(0,4).join("\n");

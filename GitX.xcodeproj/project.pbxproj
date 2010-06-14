@@ -22,6 +22,13 @@
 
 /* Begin PBXBuildFile section */
 		056438B70ED0C40B00985397 /* DetailViewTemplate.png in Resources */ = {isa = PBXBuildFile; fileRef = 056438B60ED0C40B00985397 /* DetailViewTemplate.png */; };
+		315CB97B11C3305F003B8DBE /* FileViewerController.m in Sources */ = {isa = PBXBuildFile; fileRef = 315CB97A11C3305F003B8DBE /* FileViewerController.m */; };
+		315CB9B011C339DA003B8DBE /* FileViewer.xib in Resources */ = {isa = PBXBuildFile; fileRef = 315CB9AF11C339DA003B8DBE /* FileViewer.xib */; };
+		31A520AC11C6983900F604D0 /* test.html in Resources */ = {isa = PBXBuildFile; fileRef = 31A520AB11C6983900F604D0 /* test.html */; };
+		31D70AFB11C4006C00F4B199 /* MGRecessedPopUpButtonCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 31D70AF111C4006C00F4B199 /* MGRecessedPopUpButtonCell.m */; };
+		31D70AFC11C4006C00F4B199 /* MGScopeBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 31D70AF311C4006C00F4B199 /* MGScopeBar.m */; };
+		31D70AFD11C4006C00F4B199 /* ReadMe.txt in Resources */ = {isa = PBXBuildFile; fileRef = 31D70AF911C4006C00F4B199 /* ReadMe.txt */; };
+		31D70AFE11C4006C00F4B199 /* Source Code License.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 31D70AFA11C4006C00F4B199 /* Source Code License.rtf */; };
 		3BC07F4C0ED5A5C5009A7768 /* HistoryViewTemplate.png in Resources */ = {isa = PBXBuildFile; fileRef = 3BC07F4A0ED5A5C5009A7768 /* HistoryViewTemplate.png */; };
 		3BC07F4D0ED5A5C5009A7768 /* CommitViewTemplate.png in Resources */ = {isa = PBXBuildFile; fileRef = 3BC07F4B0ED5A5C5009A7768 /* CommitViewTemplate.png */; };
 		47DBDB580E94EDE700671A1E /* DBPrefsWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 47DBDB570E94EDE700671A1E /* DBPrefsWindowController.m */; };
@@ -296,6 +303,18 @@
 		29B97316FDCFA39411CA2CEA /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		29B97324FDCFA39411CA2CEA /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
 		29B97325FDCFA39411CA2CEA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
+		315CB97911C3305F003B8DBE /* FileViewerController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FileViewerController.h; path = FileViewer/FileViewerController.h; sourceTree = "<group>"; };
+		315CB97A11C3305F003B8DBE /* FileViewerController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FileViewerController.m; path = FileViewer/FileViewerController.m; sourceTree = "<group>"; };
+		315CB9AF11C339DA003B8DBE /* FileViewer.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = FileViewer.xib; path = FileViewer/FileViewer.xib; sourceTree = "<group>"; };
+		31A520AB11C6983900F604D0 /* test.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = test.html; sourceTree = "<group>"; };
+		31D70AF011C4006C00F4B199 /* MGRecessedPopUpButtonCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MGRecessedPopUpButtonCell.h; sourceTree = "<group>"; };
+		31D70AF111C4006C00F4B199 /* MGRecessedPopUpButtonCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MGRecessedPopUpButtonCell.m; sourceTree = "<group>"; };
+		31D70AF211C4006C00F4B199 /* MGScopeBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MGScopeBar.h; sourceTree = "<group>"; };
+		31D70AF311C4006C00F4B199 /* MGScopeBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MGScopeBar.m; sourceTree = "<group>"; };
+		31D70AF711C4006C00F4B199 /* MGScopeBar_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MGScopeBar_Prefix.pch; sourceTree = "<group>"; };
+		31D70AF811C4006C00F4B199 /* MGScopeBarDelegateProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MGScopeBarDelegateProtocol.h; sourceTree = "<group>"; };
+		31D70AF911C4006C00F4B199 /* ReadMe.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = ReadMe.txt; sourceTree = "<group>"; };
+		31D70AFA11C4006C00F4B199 /* Source Code License.rtf */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; path = "Source Code License.rtf"; sourceTree = "<group>"; };
 		32CA4F630368D1EE00C91783 /* GitX_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GitX_Prefix.pch; sourceTree = "<group>"; };
 		3BC07F4A0ED5A5C5009A7768 /* HistoryViewTemplate.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = HistoryViewTemplate.png; path = Images/HistoryViewTemplate.png; sourceTree = "<group>"; };
 		3BC07F4B0ED5A5C5009A7768 /* CommitViewTemplate.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = CommitViewTemplate.png; path = Images/CommitViewTemplate.png; sourceTree = "<group>"; };
@@ -665,6 +684,8 @@
 		29B97314FDCFA39411CA2CEA /* GitTest */ = {
 			isa = PBXGroup;
 			children = (
+				31D70AEF11C4006C00F4B199 /* MGScopeBar */,
+				315CB97811C32FC2003B8DBE /* FileViewer */,
 				C3138B6211C2F39900BE6CBE /* html */,
 				F5886A080ED5D26B0066E74C /* SpeedTest */,
 				913D5E420E5563FD00CECEA2 /* cli */,
@@ -750,6 +771,31 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		315CB97811C32FC2003B8DBE /* FileViewer */ = {
+			isa = PBXGroup;
+			children = (
+				315CB97911C3305F003B8DBE /* FileViewerController.h */,
+				315CB97A11C3305F003B8DBE /* FileViewerController.m */,
+				315CB9AF11C339DA003B8DBE /* FileViewer.xib */,
+			);
+			name = FileViewer;
+			sourceTree = "<group>";
+		};
+		31D70AEF11C4006C00F4B199 /* MGScopeBar */ = {
+			isa = PBXGroup;
+			children = (
+				31D70AF011C4006C00F4B199 /* MGRecessedPopUpButtonCell.h */,
+				31D70AF111C4006C00F4B199 /* MGRecessedPopUpButtonCell.m */,
+				31D70AF211C4006C00F4B199 /* MGScopeBar.h */,
+				31D70AF311C4006C00F4B199 /* MGScopeBar.m */,
+				31D70AF711C4006C00F4B199 /* MGScopeBar_Prefix.pch */,
+				31D70AF811C4006C00F4B199 /* MGScopeBarDelegateProtocol.h */,
+				31D70AF911C4006C00F4B199 /* ReadMe.txt */,
+				31D70AFA11C4006C00F4B199 /* Source Code License.rtf */,
+			);
+			path = MGScopeBar;
+			sourceTree = "<group>";
+		};
 		47DBDB920E94F47200671A1E /* Preference Icons */ = {
 			isa = PBXGroup;
 			children = (
@@ -819,6 +865,7 @@
 				C3138B9311C2F48400BE6CBE /* commit.js */,
 				C3138B9411C2F48400BE6CBE /* index.html */,
 				C3138B9511C2F48400BE6CBE /* multipleSelection.js */,
+				31A520AB11C6983900F604D0 /* test.html */,
 			);
 			path = commit;
 			sourceTree = "<group>";
@@ -1434,6 +1481,10 @@
 				C3138C3111C2F48400BE6CBE /* diff.css in Resources */,
 				C3138C3211C2F48400BE6CBE /* GitX.css in Resources */,
 				C3138C3311C2F48400BE6CBE /* notification.css in Resources */,
+				315CB9B011C339DA003B8DBE /* FileViewer.xib in Resources */,
+				31D70AFD11C4006C00F4B199 /* ReadMe.txt in Resources */,
+				31D70AFE11C4006C00F4B199 /* Source Code License.rtf in Resources */,
+				31A520AC11C6983900F604D0 /* test.html in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1613,6 +1664,9 @@
 				C3138C1611C2F48400BE6CBE /* shLegacy.js in Sources */,
 				C3138C1711C2F48400BE6CBE /* shCore.js in Sources */,
 				C3138C1811C2F48400BE6CBE /* shLegacy.js in Sources */,
+				315CB97B11C3305F003B8DBE /* FileViewerController.m in Sources */,
+				31D70AFB11C4006C00F4B199 /* MGRecessedPopUpButtonCell.m in Sources */,
+				31D70AFC11C4006C00F4B199 /* MGScopeBar.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1820,6 +1874,7 @@
 		26FC0A890875C7B200E6366F /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				GCC_C_LANGUAGE_STANDARD = c99;
 				GCC_ENABLE_OBJC_GC = required;
 				GCC_PREPROCESSOR_DEFINITIONS_NOT_USED_IN_PRECOMPS = DEBUG_BUILD;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
@@ -1837,6 +1892,7 @@
 					ppc,
 					i386,
 				);
+				GCC_C_LANGUAGE_STANDARD = c99;
 				GCC_ENABLE_OBJC_GC = required;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;

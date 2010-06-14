@@ -22,7 +22,11 @@
 
 	PBChangedFile *selectedFile;
 	BOOL selectedFileIsCached;
+	FileViewerController *fileViewerController;
 }
+
+@property(readwrite) FileViewerController *fileViewerController;
+
 -(IBAction)displayControlChanged:(id)sender;
 
 - (void) refresh;
