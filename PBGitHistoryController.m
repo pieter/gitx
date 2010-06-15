@@ -119,7 +119,7 @@
 //	[webViewFileViwer setFrameLoadDelegate:self];
 	
 	fileViewerController=[[FileViewerController alloc] retain];
-	[fileViewerController initWithRepository:repository];
+	[fileViewerController initWithRepository:repository andController:self];
 	[fileViewerController loadView];
 	
 	//[fileViewer setAutoresizesSubviews:YES];
@@ -478,7 +478,7 @@
     if (appController.launchedFromGitx && [appController.cliArgs isEqualToString:@"--commit"]) {
         return NO;
     }
-    // NSLog(@"[%@ %s]: SHA = %@", [self class], _cmd, commitSHA);
+    NSLog(@"[%@ %s]: SHA = %@", [self class], _cmd, commitSHA);
 	if (!forceSelectionUpdate && [[selectedCommit realSha] isEqualToString:commitSHA])
 		return NO;
 
@@ -493,7 +493,7 @@
 	[commitController setSelectedObjects:selectedCommits];
 
 	if (repository.currentBranchFilter != kGitXSelectedBranchFilter) {
-        // NSLog(@"[%@ %s] currentBranchFilter = %@", [self class], _cmd, PBStringFromBranchFilterType(repository.currentBranchFilter));
+        NSLog(@"[%@ %s] currentBranchFilter = %@", [self class], _cmd, PBStringFromBranchFilterType(repository.currentBranchFilter));
         [self scrollSelectionToTopOfViewFrom:oldIndex];
     }
 

@@ -21,11 +21,11 @@
 	NSString *sha;
 
 	PBGitRepository *repository;
-
+	id controller;
 	bool commit;
 }
 
-- (id)initWithRepository:(PBGitRepository *)theRepository;
+- (id)initWithRepository:(PBGitRepository *)theRepository andController:(id)theController;
 - (void)showFile:(NSString *)file sha:(NSString *)sha;
 - (NSString*)refSpec;
 

@@ -7,6 +7,7 @@
 //
 
 #import "FileViewerController.h"
+#import "PBGitHistoryController.h"
 
 #define GROUP_LABEL				@"Label"			// string
 #define GROUP_SEPARATOR			@"HasSeparator"		// BOOL as NSNumber
@@ -20,9 +21,10 @@
 
 #pragma mark Setup and teardown
 
-- (id)initWithRepository:(PBGitRepository *)theRepository
+- (id)initWithRepository:(PBGitRepository *)theRepository andController:(id)theController;
 {
 	repository=theRepository;
+	controller=theController;
 	return [self initWithNibName:@"FileViewer" bundle:[NSBundle mainBundle]];	
 }
 
@@ -64,6 +66,21 @@
 	[super dealloc];
 }
 
+
+#pragma mark JavaScript log.js methods
++ (BOOL)isSelectorExcludedFromWebScript:(SEL)sel
+{
+    if (sel == @selector(selectCommit:)) return NO;
+    return YES;
+}
+
+- (void) selectCommit:(NSString*)c
+{
+	NSLog(@"[FileViewerController controller:%@]",controller);
+	if([(PBGitHistoryController *)controller selectCommit:sha])
+		NSLog(@"---");
+	NSLog(@"[FileViewerController selectCommit:%@]",c);
+}
 
 #pragma mark MGScopeBarDelegate methods
 
@@ -133,7 +150,7 @@
 	NSString *testFile = [NSString stringWithFormat:@"%@/test.html",NSHomeDirectory()];
 	NSString *format;
 	if(formatFile!=nil)
-		format=[NSString stringWithContentsOfURL:[NSURL fileURLWithPath:formatFile] encoding:nil error:nil];
+		format=[NSString stringWithContentsOfURL:[NSURL fileURLWithPath:formatFile] encoding:NSUTF8StringEncoding error:nil];
 	
 	NSString *txt;
 	if(show==@"source")
@@ -147,15 +164,14 @@
 	else
 		return; // XXXX controlar mejor.
 	
-	NSLog(@"didFinishLoadForFrame -> txt: '%@'",[txt substringToIndex:80]);
-	NSLog(@"didFinishLoadForFrame -> path: '%@'",path);
-	NSLog(@"didFinishLoadForFrame -> testFile: '%@'",testFile);
+	NSLog(@"didFinishLoadForFrame -> txt: '%@'",([txt length]>180)?[txt substringToIndex:180]:txt);
 	
 	id script = [webViewFileViwer windowScriptObject];
+	[script setValue:self forKey:@"Controler"];
 	[script callWebScriptMethod:@"showFile"
 				  withArguments:[NSArray arrayWithObjects:txt, nil]];
 	
-	[[[[[sender mainFrame] DOMDocument] documentElement] outerHTML] writeToFile:testFile atomically:YES encoding:NSUTF8StringEncoding error:nil];
+	//[[[[[sender mainFrame] DOMDocument] documentElement] outerHTML] writeToFile:testFile atomically:YES encoding:NSUTF8StringEncoding error:nil];
 }
 
 - (NSString*)refSpec
