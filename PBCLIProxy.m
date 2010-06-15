@@ -80,9 +80,11 @@
                                    suggestion], NSLocalizedFailureReasonErrorKey,
                                   recoveryInfo, NSLocalizedRecoverySuggestionErrorKey, nil];
 
-        *error = [NSError errorWithDomain:PBCLIProxyErrorDomain code:errCode userInfo:userInfo];
-
-        fprintf(stderr, "\t%s\n", [[*error localizedFailureReason] UTF8String]);
+        if (error)
+        {
+            *error = [NSError errorWithDomain:PBCLIProxyErrorDomain code:errCode userInfo:userInfo];
+            fprintf(stderr, "\t%s\n", [[*error localizedFailureReason] UTF8String]);
+        }
     }
 
     // NSLog(@"document = %@ at path = %@", document, repositoryPath);

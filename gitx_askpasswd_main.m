@@ -18,7 +18,7 @@
 #define	PASSLABELHEIGHT			16.0
 
 
-@interface GAPAppDelegate : NSObject
+@interface GAPAppDelegate : NSObject <NSApplicationDelegate>
 {
 	NSPanel*			mPasswordPanel;
 	NSSecureTextField*	mPasswordField;
