@@ -1,5 +1,5 @@
 var selectCommit = function(a) {
-	window.Controler.selectCommit_(a);
+	window.Controller.selectCommit_(a);
 	return false;
 }
 

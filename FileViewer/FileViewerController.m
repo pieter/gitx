@@ -138,11 +138,14 @@
 
 # pragma mark WebKitDelegate methods
 
+- (void)webView:(WebView *)sender runJavaScriptAlertPanelWithMessage:(NSString *)message initiatedByFrame:(WebFrame *)frame
+{
+    NSLog(@"[Alert] message = %@",message);
+}
+
 + (BOOL)isSelectorExcludedFromWebScript:(SEL)sel
 {
-	return NO; //![controller respondsToSelector:sel];
-//    if (sel == @selector(selectCommit:)) return NO;
-//    return YES;
+    return YES;
 }
 
 - (void)webView:(WebView *)sender didClearWindowObject:(WebScriptObject *)windowObject forFrame:(WebFrame *)frame
