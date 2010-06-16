@@ -11,7 +11,9 @@
 
 @implementation PBViewController
 
-@synthesize repository, viewToolbar;
+@synthesize repository;
+@synthesize status;
+@synthesize isBusy;
 
 - (id)initWithRepository:(PBGitRepository *)theRepository superController:(PBGitWindowController *)controller
 {
@@ -42,6 +44,10 @@
 
 // The next methods should be implemented in the subclass if necessary
 - (void)updateView
+{
+}
+
+- (IBAction) refresh: sender
 {
 }
 

@@ -57,7 +57,7 @@ var showFileChanges = function(file, cached) {
 	if (file.status == 0) // New file?
 		return showNewFile(file);
 
-	setTitle((cached ? "Staged": "Unstaged") + " changes for" + file.path);
+	setTitle((cached ? "Staged": "Unstaged") + " changes for " + file.path);
 	displayContext();
 	var changes = Index.diffForFile_staged_contextLines_(file, cached, contextLines);
 	

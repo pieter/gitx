@@ -24,7 +24,7 @@
 
 @implementation PBGitCommitController
 
-@synthesize status, index, busy;
+@synthesize index;
 
 - (id)initWithRepository:(PBGitRepository *)theRepository superController:(PBGitWindowController *)controller
 {
@@ -93,7 +93,7 @@
 
 - (void) refresh:(id) sender
 {
-	self.busy = YES;
+	self.isBusy = YES;
 	self.status = @"Refreshing index…";
 	[index refresh];
 
@@ -127,7 +127,7 @@
 	[cachedFilesController setSelectionIndexes:[NSIndexSet indexSet]];
 	[unstagedFilesController setSelectionIndexes:[NSIndexSet indexSet]];
 
-	self.busy = YES;
+	self.isBusy = YES;
 	[commitMessageView setEditable:NO];
 
 	[index commitWithMessage:commitMessage];
@@ -137,7 +137,7 @@
 # pragma mark PBGitIndex Notification handling
 - (void)refreshFinished:(NSNotification *)notification
 {
-	self.busy = NO;
+	self.isBusy = NO;
 	self.status = @"Index refresh finished";
 }
 
@@ -155,7 +155,7 @@
 
 - (void)commitFailed:(NSNotification *)notification
 {
-	self.busy = NO;
+	self.isBusy = NO;
 	NSString *reason = [[notification userInfo] objectForKey:@"description"];
 	self.status = [@"Commit failed: " stringByAppendingString:reason];
 	[commitMessageView setEditable:YES];
@@ -177,6 +177,12 @@
 {
 	[cachedFilesController rearrangeObjects];
 	[unstagedFilesController rearrangeObjects];
+    if ([[cachedFilesController arrangedObjects] count]) {
+        [commitButton setEnabled:YES];
+    } else {
+        [commitButton setEnabled:NO];
+    }
+
 }
 
 - (void)indexOperationFailed:(NSNotification *)notification

@@ -19,17 +19,13 @@
 	IBOutlet NSTextView *commitMessageView;
 	IBOutlet NSArrayController *unstagedFilesController;
 	IBOutlet NSArrayController *cachedFilesController;
+	IBOutlet NSButton *commitButton;
 
 	IBOutlet PBGitIndexController *indexController;
 	IBOutlet PBWebChangesController *webController;
-
-	NSString *status;
-	BOOL busy;
 }
 
-@property(copy) NSString *status;
 @property(readonly) PBGitIndex *index;
-@property(assign) BOOL busy;
 
 - (IBAction) refresh:(id) sender;
 - (IBAction) commit:(id) sender;

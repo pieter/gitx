@@ -32,6 +32,7 @@
 
 	NSPipe* pipe = [NSPipe pipe];
 	task.standardOutput = pipe;
+	task.standardError = pipe;
 	return task;
 }
 

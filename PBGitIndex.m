@@ -202,7 +202,7 @@ NSString *PBGitIndexOperationFailed = @"PBGitIndexOperationFailed";
 	NSMutableDictionary *userInfo = [NSMutableDictionary dictionaryWithObject:[NSNumber numberWithBool:success] forKey:@"success"];
 	NSString *description;  
 	if (success)
-		description = [NSString stringWithFormat:@"Successful commit %@", commit];
+		description = [NSString stringWithFormat:@"Successfully created commit %@", commit];
 	else
 		description = [NSString stringWithFormat:@"Post-commit hook failed, but successfully created commit %@", commit];
 	
