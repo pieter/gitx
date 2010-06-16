@@ -65,7 +65,7 @@
 	
 	fileViewerController=[[FileViewerController alloc] retain];
 	[fileViewerController setCommit:true];
-	[fileViewerController initWithRepository:repository andController:self];
+	[fileViewerController initWithRepository:repository andController:webController];
 	[fileViewerController loadView];
 	
 	// XXXX :( ?

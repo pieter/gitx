@@ -56,8 +56,9 @@
 							items, GROUP_ITEMS, 
 							nil]];
 	[scopeBar reloadData];
+	[webViewFileViwer setUIDelegate:self];
 	[webViewFileViwer setFrameLoadDelegate:self];
-}
+	[webViewFileViwer setResourceLoadDelegate:self];}
 
 
 - (void)dealloc
@@ -68,11 +69,6 @@
 
 
 #pragma mark JavaScript log.js methods
-+ (BOOL)isSelectorExcludedFromWebScript:(SEL)sel
-{
-    if (sel == @selector(selectCommit:)) return NO;
-    return YES;
-}
 
 - (void) selectCommit:(NSString*)c
 {
@@ -140,6 +136,25 @@
 	[self scopeBar:scopeBar selectedStateChanged:true forItem:show inGroup:0];
 }
 
+# pragma mark WebKitDelegate methods
+
++ (BOOL)isSelectorExcludedFromWebScript:(SEL)sel
+{
+	return NO; //![controller respondsToSelector:sel];
+//    if (sel == @selector(selectCommit:)) return NO;
+//    return YES;
+}
+
+- (void)webView:(WebView *)sender didClearWindowObject:(WebScriptObject *)windowObject forFrame:(WebFrame *)frame
+{
+	id script = [sender windowScriptObject];
+	[script setValue:controller forKey:@"Controller"];
+}
+
+- (void)webView:(WebView *)webView addMessageToConsole:(NSDictionary *)dictionary
+{
+	NSLog(@"Error from webkit: %@", dictionary);
+}
 
 - (void)webView:(WebView *)sender didFinishLoadForFrame:(WebFrame *)frame
 {
@@ -147,7 +162,7 @@
 	
 	NSString *path = [NSString stringWithFormat:@"html/views/%@", show];
 	NSString *formatFile = [[NSBundle mainBundle] pathForResource:@"format" ofType:@"html" inDirectory:path];
-	NSString *testFile = [NSString stringWithFormat:@"%@/test.html",NSHomeDirectory()];
+	//NSString *testFile = [NSString stringWithFormat:@"%@/test.html",NSHomeDirectory()];
 	NSString *format;
 	if(formatFile!=nil)
 		format=[NSString stringWithContentsOfURL:[NSURL fileURLWithPath:formatFile] encoding:NSUTF8StringEncoding error:nil];
@@ -167,7 +182,6 @@
 	NSLog(@"didFinishLoadForFrame -> txt: '%@'",([txt length]>180)?[txt substringToIndex:180]:txt);
 	
 	id script = [webViewFileViwer windowScriptObject];
-	[script setValue:self forKey:@"Controler"];
 	[script callWebScriptMethod:@"showFile"
 				  withArguments:[NSArray arrayWithObjects:txt, nil]];
 	

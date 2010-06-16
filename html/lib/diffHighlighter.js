@@ -1,10 +1,6 @@
 // If we run from a Safari instance, we don't
 // have a Controller object. Instead, we fake it by
 // using the console
-if (typeof Controller == 'undefined') {
-	Controller = console;
-	Controller.log_ = console.log;
-}
 
 var highlightDiff = function(diff, element, callbacks) {
 	if (!diff || diff == "")
@@ -188,7 +184,7 @@ var highlightDiff = function(diff, element, callbacks) {
 
 		sindex = "index=" + lindex.toString() + " ";
 		if (firstChar == "+") {
-            if (Controller.isFeatureEnabled_("showWhitespaceDifferences")) {
+            if (window.Controller.isFeatureEnabled_("showWhitespaceDifferences")) {
                 // Highlight trailing whitespace
                 if (m = l.match(/\s+$/))
                     l = l.replace(/\s+$/, "<span class='whitespace'>" + m + "</span>"); 
@@ -228,5 +224,5 @@ var highlightDiff = function(diff, element, callbacks) {
 
 	// TODO: Replace this with a performance pref call
 	if (false)
-		Controller.log_("Total time:" + (new Date().getTime() - start));
+		alert("Total time:" + (new Date().getTime() - start));
 }
