@@ -232,14 +232,15 @@
 	
 	NSString* ref = [self refSpec];
 
-	NSFileHandle* handle = [repository handleForArguments:[NSArray arrayWithObjects:@"show", ref, nil]];
-	[handle readLine];
+	NSFileHandle* handle = [repository handleForArguments:[NSArray arrayWithObjects:@"show",@"--pretty=format:",@"--name-only", self.sha, nil]];
+	//[handle readLine];
 	[handle readLine];
 	
 	NSMutableArray* c = [NSMutableArray array];
 	
 	NSString* p = [handle readLine];
 	while ([p length] > 0) {
+		NSLog(@"-->%@",p);
 		if ([p isEqualToString:@"\r"])
 			break;
 
