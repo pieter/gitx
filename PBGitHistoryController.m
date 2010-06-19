@@ -848,7 +848,7 @@ enum  {
 
 + (BOOL)isSelectorExcludedFromWebScript:(SEL)sel
 {
-    //NSLog(@"[%@ %s]: controller = %@ (%i)", [self class], _cmd, self,[self respondsToSelector:sel]);
+    NSLog(@"[%@ %s]: self = %@ (%i)", [self class], _cmd, self,[self respondsToSelector:sel]);
 	//return NO; //![controller respondsToSelector:sel];
 	if (sel == @selector(selectCommit:)) return NO;
 	return YES;

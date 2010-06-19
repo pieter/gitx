@@ -8,6 +8,7 @@
 
 #import "FileViewerController.h"
 #import "PBGitHistoryController.h"
+#import "PBGitDefaults.h"
 
 #define GROUP_LABEL				@"Label"			// string
 #define GROUP_SEPARATOR			@"HasSeparator"		// BOOL as NSNumber
@@ -34,16 +35,16 @@
 	scopeBar.delegate = self;
 	NSArray *items = [NSArray arrayWithObjects:
 					  [NSDictionary dictionaryWithObjectsAndKeys:
+					   (commit)?@"commit":@"diff", ITEM_IDENTIFIER, 
+					   @"Diff", ITEM_NAME, 
+					   nil], 
+					  [NSDictionary dictionaryWithObjectsAndKeys:
 					   @"source", ITEM_IDENTIFIER, 
 					   @"Source", ITEM_NAME, 
 					   nil], 
 					  [NSDictionary dictionaryWithObjectsAndKeys:
 					   @"blame", ITEM_IDENTIFIER, 
 					   @"Blame", ITEM_NAME, 
-					   nil], 
-					  [NSDictionary dictionaryWithObjectsAndKeys:
-					   (commit)?@"commit":@"diff", ITEM_IDENTIFIER, 
-					   @"Diff", ITEM_NAME, 
 					   nil], 
 					  [NSDictionary dictionaryWithObjectsAndKeys:
 					   @"log", ITEM_IDENTIFIER, 
@@ -77,6 +78,7 @@
 		NSLog(@"---");
 	NSLog(@"[FileViewerController selectCommit:%@]",c);
 }
+
 
 #pragma mark MGScopeBarDelegate methods
 
@@ -145,13 +147,16 @@
 
 + (BOOL)isSelectorExcludedFromWebScript:(SEL)sel
 {
-    return YES;
+    NSLog(@"[%@ %s]: self = %@ (%i)", [self class], _cmd, self,[self respondsToSelector:sel]);
+    return NO;
 }
 
 - (void)webView:(WebView *)sender didClearWindowObject:(WebScriptObject *)windowObject forFrame:(WebFrame *)frame
 {
 	id script = [sender windowScriptObject];
+	NSLog(@"Controller: %@", controller);
 	[script setValue:controller forKey:@"Controller"];
+	[script setValue:[PBGitDefaults alloc] forKey:@"Config"];
 }
 
 - (void)webView:(WebView *)webView addMessageToConsole:(NSDictionary *)dictionary
@@ -175,8 +180,13 @@
 		txt=[repository outputForArguments:[NSArray arrayWithObjects:@"show", [self refSpec], nil]];
 	else if(show==@"blame")
 		txt=[self parseBlame:[repository outputInWorkdirForArguments:[NSArray arrayWithObjects:@"blame", @"-p", file, sha, nil]]];
-	else if((show==@"diff") || (show==@"commit"))
-		txt=[repository outputInWorkdirForArguments:[NSArray arrayWithObjects:@"diff", (sha!=nil)?sha:file , (sha!=nil)?file:nil, nil]];
+	else if(show==@"diff"){
+		NSString *diff_p=[repository outputInWorkdirForArguments:[NSArray arrayWithObjects:@"show", @"--pretty=format:", sha, file, nil]];
+		NSString *diff_l=[repository outputInWorkdirForArguments:[NSArray arrayWithObjects:@"diff", file, nil]];
+		txt=[NSString stringWithFormat:@"%@\n%@",diff_p,diff_l];
+	}
+	else if(show==@"commit")
+		txt=[repository outputInWorkdirForArguments:[NSArray arrayWithObjects:@"diff", (sha!=nil)?sha:file, (sha!=nil)?file:nil, nil]];
 	else if(show==@"log")
 		txt=[self parseLog:[repository outputInWorkdirForArguments:[NSArray arrayWithObjects:@"log", [NSString stringWithFormat:@"--pretty=format:%@",format], @"--", file, nil]]];
 	else

@@ -202,4 +202,27 @@
 	[[NSUserDefaults standardUserDefaults] setInteger:state forKey:kBranchFilterState];
 }
 
+- (BOOL) isFeatureEnabled:(NSString *)feature
+{
+	if([feature isEqualToString:@"gravatar"])
+		return [PBGitDefaults isGravatarEnabled];
+	else if([feature isEqualToString:@"gist"])
+		return [PBGitDefaults isGistEnabled];
+	else if([feature isEqualToString:@"confirmGist"])
+		return [PBGitDefaults confirmPublicGists];
+	else if([feature isEqualToString:@"publicGist"])
+		return [PBGitDefaults isGistPublic];
+    else if ([feature isEqualToString:@"showWhitespaceDifferences"])
+        return [PBGitDefaults showWhitespaceDifferences];
+	else
+		return YES;
+}
+
++ (BOOL)isSelectorExcludedFromWebScript:(SEL)sel
+{
+    NSLog(@"[%@ %s]: self = %@ (%i)", [self class], _cmd, self,[self respondsToSelector:sel]);
+    return NO;
+}
+
+
 @end

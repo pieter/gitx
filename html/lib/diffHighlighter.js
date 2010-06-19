@@ -3,6 +3,11 @@
 // using the console
 
 var highlightDiff = function(diff, element, callbacks) {
+	
+	alert("window="+window);
+	alert("window.Config="+window.Config);
+	alert("window.Config.isFeatureEnabled_="+window.Config.isFeatureEnabled_);
+	
 	if (!diff || diff == "")
 		return;
 
@@ -184,7 +189,7 @@ var highlightDiff = function(diff, element, callbacks) {
 
 		sindex = "index=" + lindex.toString() + " ";
 		if (firstChar == "+") {
-            if (window.Controller.isFeatureEnabled_("showWhitespaceDifferences")) {
+            if (window.Config.isFeatureEnabled_("showWhitespaceDifferences")) {
                 // Highlight trailing whitespace
                 if (m = l.match(/\s+$/))
                     l = l.replace(/\s+$/, "<span class='whitespace'>" + m + "</span>"); 
