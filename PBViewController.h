@@ -16,6 +16,7 @@
 
 	NSString *status;
 	BOOL isBusy;
+	BOOL hasViewLoaded;
 }
 
 @property (readonly) __weak PBGitRepository *repository;

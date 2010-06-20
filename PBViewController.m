@@ -27,14 +27,16 @@
 	return self;
 }
 
-- (void) removeView
+- (void)removeView
 {
 	[self unbind:@"repository"];
-	[[self view] removeFromSuperview];	// remove the current view
+	if (hasViewLoaded)
+		[[self view] removeFromSuperview];	// remove the current view
 }
 
-- (void) awakeFromNib
+- (void)awakeFromNib
 {
+	hasViewLoaded = YES;
 }
 
 - (NSResponder *)firstResponder;
