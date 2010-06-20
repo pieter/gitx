@@ -251,30 +251,57 @@ NSString *PBGitIndexOperationFailed = @"PBGitIndexOperationFailed";
 
 - (BOOL)stageFiles:(NSArray *)stageFiles
 {
-	// Input string for update-index
-	// This will be a list of filenames that
-	// should be updated. It's similar to
-	// "git add -- <files>
-	NSMutableString *input = [NSMutableString string];
-
-	for (PBChangedFile *file in stageFiles) {
-		[input appendFormat:@"%@\0", file.path];
-	}
+	// Do staging files by chunks of 1000 files each, to prevent program freeze (because NSPipe has limited capacity)
 	
-	int ret = 1;
-	[repository outputForArguments:[NSArray arrayWithObjects:@"update-index", @"--add", @"--remove", @"-z", @"--stdin", nil]
-					   inputString:input
-						  retValue:&ret];
+	int filesCount = [stageFiles count];
+	
+	// Prepare first iteration
+	int loopFrom = 0;
+	int loopTo = 1000;
+	if (loopTo > filesCount)
+		loopTo = filesCount;
+	int loopCount = 0;
+	int i = 0;
+	
+	// Staging
+	while (loopCount < filesCount) {
+		// Input string for update-index
+		// This will be a list of filenames that
+		// should be updated. It's similar to
+		// "git add -- <files>
+		NSMutableString *input = [NSMutableString string];
 
-	if (ret) {
-		[self postOperationFailed:[NSString stringWithFormat:@"Error in staging files. Return value: %i", ret]];
-		return NO;
-	}
+		for (i = loopFrom; i < loopTo; i++) {
+			loopCount++;
+			
+			PBChangedFile *file = [stageFiles objectAtIndex:i];
+			
+			[input appendFormat:@"%@\0", file.path];
+		}
+		
+			
+		int ret = 1;
+		[repository outputForArguments:[NSArray arrayWithObjects:@"update-index", @"--add", @"--remove", @"-z", @"--stdin", nil]
+						   inputString:input
+							  retValue:&ret];
 
-	for (PBChangedFile *file in stageFiles)
-	{
-		file.hasUnstagedChanges = NO;
-		file.hasStagedChanges = YES;
+		if (ret) {
+			[self postOperationFailed:[NSString stringWithFormat:@"Error in staging files. Return value: %i", ret]];
+			return NO;
+		}
+
+		for (i = loopFrom; i < loopTo; i++) {
+			PBChangedFile *file = [stageFiles objectAtIndex:i];
+			
+			file.hasUnstagedChanges = NO;
+			file.hasStagedChanges = YES;
+		}
+		
+		// Prepare next iteration
+		loopFrom = loopCount;
+		loopTo = loopFrom + 1000;
+		if (loopTo > filesCount)
+			loopTo = filesCount;
 	}
 
 	[self postIndexChange];
@@ -284,27 +311,53 @@ NSString *PBGitIndexOperationFailed = @"PBGitIndexOperationFailed";
 // TODO: Refactor with above. What's a better name for this?
 - (BOOL)unstageFiles:(NSArray *)unstageFiles
 {
-	NSMutableString *input = [NSMutableString string];
-
-	for (PBChangedFile *file in unstageFiles) {
-		[input appendString:[file indexInfo]];
-	}
-
-	int ret = 1;
-	[repository outputForArguments:[NSArray arrayWithObjects:@"update-index", @"-z", @"--index-info", nil]
-					   inputString:input 
-						  retValue:&ret];
-
-	if (ret)
-	{
-		[self postOperationFailed:[NSString stringWithFormat:@"Error in unstaging files. Return value: %i", ret]];
-		return NO;
-	}
-
-	for (PBChangedFile *file in unstageFiles)
-	{
-		file.hasUnstagedChanges = YES;
-		file.hasStagedChanges = NO;
+	// Do unstaging files by chunks of 1000 files each, to prevent program freeze (because NSPipe has limited capacity)
+	
+	int filesCount = [unstageFiles count];
+	
+	// Prepare first iteration
+	int loopFrom = 0;
+	int loopTo = 1000;
+	if (loopTo > filesCount)
+		loopTo = filesCount;
+	int loopCount = 0;
+	int i = 0;
+	
+	// Unstaging
+	while (loopCount < filesCount) {
+		NSMutableString *input = [NSMutableString string];
+		
+		for (i = loopFrom; i < loopTo; i++) {
+			loopCount++;
+			
+			PBChangedFile *file = [unstageFiles objectAtIndex:i];
+			
+			[input appendString:[file indexInfo]];
+		}
+		
+		int ret = 1;
+		[repository outputForArguments:[NSArray arrayWithObjects:@"update-index", @"-z", @"--index-info", nil]
+						   inputString:input
+							  retValue:&ret];
+		
+		if (ret)
+		{
+			[self postOperationFailed:[NSString stringWithFormat:@"Error in unstaging files. Return value: %i", ret]];
+			return NO;
+		}
+		
+		for (i = loopFrom; i < loopTo; i++) {
+			PBChangedFile *file = [unstageFiles objectAtIndex:i];
+			
+			file.hasUnstagedChanges = YES;
+			file.hasStagedChanges = NO;
+		}
+		
+		// Prepare next iteration
+		loopFrom = loopCount;
+		loopTo = loopFrom + 1000;
+		if (loopTo > filesCount)
+			loopTo = filesCount;
 	}
 
 	[self postIndexChange];
