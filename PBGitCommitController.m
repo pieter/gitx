@@ -64,10 +64,9 @@
 	[unstagedFilesController setAutomaticallyRearrangesObjects:NO];
 }
 
-- (void) removeView
+- (void)removeView
 {
 	[webController closeView];
-	[super finalize];
 }
 
 - (NSResponder *)firstResponder;
