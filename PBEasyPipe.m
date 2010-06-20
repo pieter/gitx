@@ -19,10 +19,10 @@
 + (NSTask *) taskForCommand:(NSString *)cmd withArgs:(NSArray *)args inDir:(NSString *)dir
 {
 	NSTask* task = [[NSTask alloc] init];
-	task.launchPath = cmd;
-	task.arguments = args;
+	[task setLaunchPath:cmd];
+	[task setArguments:args];
 	if (dir)
-		task.currentDirectoryPath = dir;
+		[task setCurrentDirectoryPath:dir];
 
 	if ([[NSUserDefaults standardUserDefaults] boolForKey:@"Show Debug Messages"])
 		NSLog(@"Starting command `%@ %@` in dir %@", cmd, [args componentsJoinedByString:@" "], dir);
@@ -31,15 +31,15 @@
 #endif
 
 	NSPipe* pipe = [NSPipe pipe];
-	task.standardOutput = pipe;
-	task.standardError = pipe;
+	[task setStandardOutput:pipe];
+	[task setStandardError:pipe];
 	return task;
 }
 
 + (NSFileHandle*) handleForCommand: (NSString*) cmd withArgs: (NSArray*) args inDir: (NSString*) dir
 {
 	NSTask *task = [self taskForCommand:cmd withArgs:args inDir:dir];
-	NSFileHandle* handle = [task.standardOutput fileHandleForReading];
+	NSFileHandle* handle = [[task standardOutput] fileHandleForReading];
 	
 	[task launch];
 	return handle;
@@ -76,14 +76,14 @@
 	if (dict) {
 		NSMutableDictionary *env = [[[NSProcessInfo processInfo] environment] mutableCopy];
 		[env addEntriesFromDictionary:dict];
-		task.environment = env;
+		[task setEnvironment:env];
 	}
 
-	NSFileHandle* handle = [task.standardOutput fileHandleForReading];
+	NSFileHandle* handle = [[task standardOutput] fileHandleForReading];
 
 	if (input) {
-		task.standardInput = [NSPipe pipe];
-		NSFileHandle *inHandle = [task.standardInput fileHandleForWriting];
+		[task setStandardInput:[NSPipe pipe]];
+		NSFileHandle *inHandle = [[task standardInput] fileHandleForWriting];
 		[inHandle writeData:[input dataUsingEncoding:NSUTF8StringEncoding]];
 		[inHandle closeFile];
 	}
@@ -111,10 +111,10 @@
 + (NSString*) outputForCommand: (NSString*) cmd withArgs: (NSArray*) args  inDir: (NSString*) dir
 {
 	NSTask *task = [self taskForCommand:cmd withArgs:args inDir:dir];
-	NSFileHandle* handle = [task.standardOutput fileHandleForReading];
+	NSFileHandle* handle = [[task standardOutput] fileHandleForReading];
 	
 	[task launch];
-#warning This can cause a "Bad file descriptor"... when?
+	// This can cause a "Bad file descriptor"... when?
 	NSData *data;
 	@try {
 		data = [handle readDataToEndOfFile];
