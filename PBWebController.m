@@ -58,6 +58,7 @@
 {
 	id script = [view windowScriptObject];
 	[script setValue: self forKey:@"Controller"];
+	[script setValue:[PBGitDefaults alloc] forKey:@"Config"];
 }
 
 - (void) webView:(id) v didFinishLoadForFrame:(id) frame
