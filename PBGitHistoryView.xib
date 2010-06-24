@@ -921,7 +921,7 @@
 																		<object class="NSCustomView" id="160663570">
 																			<reference key="NSNextResponder" ref="282860308"/>
 																			<int key="NSvFlags">266</int>
-																			<string key="NSFrame">{{0, 204}, {172, 30}}</string>
+																			<string key="NSFrame">{{0, 209}, {172, 25}}</string>
 																			<reference key="NSSuperview" ref="282860308"/>
 																			<string key="NSClassName">MGScopeBar</string>
 																		</object>
@@ -938,7 +938,7 @@
 																						<object class="NSOutlineView" id="216928480">
 																							<reference key="NSNextResponder" ref="859661469"/>
 																							<int key="NSvFlags">4368</int>
-																							<string key="NSFrameSize">{154, 202}</string>
+																							<string key="NSFrameSize">{155, 207}</string>
 																							<reference key="NSSuperview" ref="859661469"/>
 																							<bool key="NSEnabled">YES</bool>
 																							<object class="_NSCornerView" key="NSCornerView">
@@ -949,7 +949,7 @@
 																							<object class="NSMutableArray" key="NSTableColumns">
 																								<bool key="EncodedWithXMLCoder">YES</bool>
 																								<object class="NSTableColumn" id="728334291">
-																									<double key="NSWidth">151</double>
+																									<double key="NSWidth">152</double>
 																									<double key="NSMinWidth">16</double>
 																									<double key="NSMaxWidth">1000</double>
 																									<object class="NSTableHeaderCell" key="NSHeaderCell">
@@ -992,7 +992,7 @@
 																							<int key="NSTableViewDraggingDestinationStyle">0</int>
 																						</object>
 																					</object>
-																					<string key="NSFrame">{{1, 1}, {154, 202}}</string>
+																					<string key="NSFrame">{{1, 1}, {155, 207}}</string>
 																					<reference key="NSSuperview" ref="776605770"/>
 																					<reference key="NSNextKeyView" ref="216928480"/>
 																					<reference key="NSDocView" ref="216928480"/>
@@ -1002,7 +1002,7 @@
 																				<object class="NSScroller" id="692013536">
 																					<reference key="NSNextResponder" ref="776605770"/>
 																					<int key="NSvFlags">256</int>
-																					<string key="NSFrame">{{155, 1}, {15, 202}}</string>
+																					<string key="NSFrame">{{156, 1}, {15, 207}}</string>
 																					<reference key="NSSuperview" ref="776605770"/>
 																					<reference key="NSTarget" ref="776605770"/>
 																					<string key="NSAction">_doScroller:</string>
@@ -1020,7 +1020,7 @@
 																					<double key="NSPercent">0.99801188707351685</double>
 																				</object>
 																			</object>
-																			<string key="NSFrameSize">{171, 204}</string>
+																			<string key="NSFrameSize">{172, 209}</string>
 																			<reference key="NSSuperview" ref="282860308"/>
 																			<reference key="NSNextKeyView" ref="859661469"/>
 																			<int key="NSsFlags">18</int>
@@ -1753,6 +1753,14 @@
 						<reference key="destination" ref="1001"/>
 					</object>
 					<int key="connectionID">416</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
+						<string key="label">pair</string>
+						<reference key="source" ref="160663570"/>
+						<reference key="destination" ref="776605770"/>
+					</object>
+					<int key="connectionID">417</int>
 				</object>
 			</object>
 			<object class="IBMutableOrderedSet" key="objectRecords">
@@ -2580,7 +2588,7 @@
 				</object>
 			</object>
 			<nil key="sourceID"/>
-			<int key="maxID">416</int>
+			<int key="maxID">417</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<object class="NSMutableArray" key="referencedPartialClassDescriptions">
