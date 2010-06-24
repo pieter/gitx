@@ -142,7 +142,13 @@
     }
 
 	if (self.selectedCommitDetailsIndex == kHistoryTreeViewIndex) {
-		self.gitTree = selectedCommit.tree;
+		PBGitTree *pt = selectedCommit.tree;
+		
+		NSString *show=[[[treeStyle selectedItems] objectAtIndex:0] objectAtIndex:0];
+		pt.onlyCommit=[show isEqualToString:@"Only Commit"];
+
+		self.gitTree=pt;
+		
 		[self restoreFileBrowserSelection];
 	}
 	else // kHistoryDetailViewIndex
@@ -853,6 +859,39 @@ enum  {
 	if (sel == @selector(selectCommit:)) return NO;
 	return YES;
 }
+
+#pragma mark <MGScopeBarDelegate>
+
+- (int)numberOfGroupsInScopeBar:(MGScopeBar *)theScopeBar
+{
+	return 1;
+}
+
+- (NSArray *)scopeBar:(MGScopeBar *)theScopeBar itemIdentifiersForGroup:(int)groupNumber
+{
+	return [NSArray arrayWithObjects:@"Only Commit",@"All Files",nil];
+}
+
+- (NSString *)scopeBar:(MGScopeBar *)theScopeBar labelForGroup:(int)groupNumber
+{
+	return nil;
+}
+
+- (MGScopeBarGroupSelectionMode)scopeBar:(MGScopeBar *)theScopeBar selectionModeForGroup:(int)groupNumber
+{
+	return MGRadioSelectionMode;
+}
+
+- (NSString *)scopeBar:(MGScopeBar *)theScopeBar titleOfItem:(NSString *)identifier inGroup:(int)groupNumber
+{
+	return identifier;
+}
+
+- (void)scopeBar:(MGScopeBar *)theScopeBar selectedStateChanged:(BOOL)selected forItem:(NSString *)identifier inGroup:(int)groupNumber
+{
+	[self updateKeys];
+}
+
 
 @end
 

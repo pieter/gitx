@@ -22,7 +22,7 @@
 @class PBCommitList;
 @class PBSourceViewItem;
 
-@interface PBGitHistoryController : PBViewController {
+@interface PBGitHistoryController : PBViewController <MGScopeBarDelegate>{
 	IBOutlet PBRefController *refController;
 	IBOutlet PBCommitList* commitList;
 	IBOutlet PBCollapsibleSplitView *historySplitView;
@@ -54,6 +54,8 @@
 	BOOL forceSelectionUpdate;
 	NSArray *currentFileBrowserSelectionPath;
 
+	IBOutlet MGScopeBar *treeStyle;
+	NSArray *treeOpts;
 	PBGitTree *gitTree;
 	PBGitCommit *webCommit;
 	PBGitCommit *selectedCommit;

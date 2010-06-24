@@ -14,7 +14,7 @@
 
 @implementation PBGitTree
 
-@synthesize sha, path, repository, leaf, parent, iconImage, absolutePath;
+@synthesize sha, path, repository, leaf, parent, iconImage, absolutePath, onlyCommit;
 
 + (PBGitTree*) rootForCommit:(id) commit
 {
@@ -46,6 +46,7 @@
         leaf = YES;
         absolutePath = [PBGitRepository basePath];
     }
+	onlyCommit=true;
 	return self;
 }
 
@@ -230,17 +231,22 @@
 	if (children != nil)
 		return children;
 	
-	NSString* ref = [self refSpec];
 
-	NSFileHandle* handle = [repository handleForArguments:[NSArray arrayWithObjects:@"show",@"--pretty=format:",@"--name-only", self.sha, nil]];
-	//[handle readLine];
+	NSFileHandle* handle;
+	
+	if(onlyCommit){
+		handle = [repository handleForArguments:[NSArray arrayWithObjects:@"show",@"--pretty=format:",@"--name-only", self.sha,nil]];
+	}else{
+		NSString* ref = [self refSpec];
+		handle = [repository handleForArguments:[NSArray arrayWithObjects:@"show", ref, nil]];
+		[handle readLine];
+	}	
 	[handle readLine];
 	
 	NSMutableArray* c = [NSMutableArray array];
 	
 	NSString* p = [handle readLine];
 	while ([p length] > 0) {
-		NSLog(@"-->%@",p);
 		if ([p isEqualToString:@"\r"])
 			break;
 

@@ -26,6 +26,7 @@
     
     NSString * absolutePath;
     NSImage * iconImage;
+	
 }
 + (PBGitTree*) rootForCommit: (id) commit;
 + (PBGitTree*) treeForTree: (PBGitTree*) tree andPath: (NSString*) path;
@@ -37,6 +38,7 @@
 @property(copy) NSString* sha;
 @property(copy) NSString* path;
 @property(assign) BOOL leaf;
+@property(assign) BOOL onlyCommit;
 @property(retain) PBGitRepository* repository;
 @property(assign) __weak PBGitTree* parent;
 
