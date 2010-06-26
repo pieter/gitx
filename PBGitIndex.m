@@ -327,7 +327,8 @@ NSString *PBGitIndexOperationFailed = @"PBGitIndexOperationFailed";
 	}
 
 	for (PBChangedFile *file in discardFiles)
-		file.hasUnstagedChanges = NO;
+		if (file.status != NEW)
+			file.hasUnstagedChanges = NO;
 
 	[self postIndexChange];
 }
