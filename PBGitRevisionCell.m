@@ -20,16 +20,20 @@
 	return self;
 }
 
-- (NSArray*) colors
++ (NSArray *)laneColors
 {
-	return 	[NSArray arrayWithObjects:
-				[NSColor colorWithCalibratedRed: 0X4e/256.0 green:0X9A/256.0 blue: 0X06/256.0 alpha: 1.0],
-				[NSColor colorWithCalibratedRed: 0X20/256.0 green:0X4A/256.0 blue: 0X87/256.0 alpha: 1.0],
-				[NSColor colorWithCalibratedRed: 0XC4/256.0 green:0XA0/256.0 blue: 0 alpha: 1.0],
-				[NSColor colorWithCalibratedRed: 0X5C/256.0 green:0X35/256.0 blue: 0X66/256.0 alpha: 1.0],
-				[NSColor colorWithCalibratedRed: 0XA4/256.0 green:0X00/256.0 blue: 0X00/256.0 alpha: 1.0],
-				[NSColor colorWithCalibratedRed: 0XCE/256.0 green:0X5C/256.0 blue: 0 alpha: 1.0],
-				nil];
+	static NSArray *laneColors = nil;
+	if (!laneColors)
+		laneColors = [NSArray arrayWithObjects:
+					  [NSColor colorWithCalibratedRed: 0X4e/256.0 green:0X9A/256.0 blue: 0X06/256.0 alpha: 1.0],
+					  [NSColor colorWithCalibratedRed: 0X20/256.0 green:0X4A/256.0 blue: 0X87/256.0 alpha: 1.0],
+					  [NSColor colorWithCalibratedRed: 0XC4/256.0 green:0XA0/256.0 blue: 0 alpha: 1.0],
+					  [NSColor colorWithCalibratedRed: 0X5C/256.0 green:0X35/256.0 blue: 0X66/256.0 alpha: 1.0],
+					  [NSColor colorWithCalibratedRed: 0XA4/256.0 green:0X00/256.0 blue: 0X00/256.0 alpha: 1.0],
+					  [NSColor colorWithCalibratedRed: 0XCE/256.0 green:0X5C/256.0 blue: 0 alpha: 1.0],
+					  nil];
+
+	return laneColors;
 }
 
 - (void) drawLineFromColumn: (int) from toColumn: (int) to inRect: (NSRect) r offset: (int) offset color: (int) c
@@ -41,8 +45,7 @@
 	NSPoint source = NSMakePoint(origin.x + columnWidth* from, origin.y + offset);
 	NSPoint center = NSMakePoint( origin.x + columnWidth * to, origin.y + r.size.height * 0.5 + 0.5);
 
-	// Just use red for now.
-	NSArray* colors = [self colors];
+	NSArray* colors = [PBGitRevisionCell laneColors];
 	[[colors objectAtIndex: c % [colors count]] set];
 	
 	NSBezierPath * path = [NSBezierPath bezierPath];
