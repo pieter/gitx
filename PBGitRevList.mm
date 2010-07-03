@@ -102,7 +102,7 @@ using namespace std;
 	if (showSign)
 		formatString = [formatString stringByAppendingString:@"\01%m"];
 	
-	NSMutableArray *arguments = [NSMutableArray arrayWithObjects:@"log", @"-z", @"--early-output", @"--topo-order", @"--children", formatString, nil];
+	NSMutableArray *arguments = [NSMutableArray arrayWithObjects:@"log", @"-z", @"--topo-order", @"--children", formatString, nil];
 
 	if (!rev)
 		[arguments addObject:@"HEAD"];
@@ -123,30 +123,6 @@ using namespace std;
 		string sha;
 		if (!getline(stream, sha, '\1'))
 			break;
-
-		// We reached the end of some temporary output. Show what we have
-		// until now, and then start again. The sha of the next thing is still
-		// in this buffer. So, we use a substring of current input.
-		if (sha[1] == 'i') // Matches 'Final output'
-		{
-			num = 0;
-			if ([currentThread isCancelled])
-				break;
-
-			NSDictionary *update = [NSDictionary dictionaryWithObjectsAndKeys:currentThread, kRevListThreadKey, revisions, kRevListRevisionsKey, nil];
-			[self performSelectorOnMainThread:@selector(updateCommits:) withObject:update waitUntilDone:NO];
-			revisions = [NSMutableArray array];
-
-			if (isGraphing)
-				g = [[PBGitGrapher alloc] initWithRepository:repository];
-			revisions = [NSMutableArray array];
-
-			// If the length is < 40, then there are no commits.. quit now
-			if (sha.length() < 40)
-				break;
-
-			sha = sha.substr(sha.length() - 40, 40);
-		}
 
 		// From now on, 1.2 seconds
 		string encoding_str;

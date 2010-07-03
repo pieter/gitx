@@ -95,6 +95,7 @@
 {
 	if (!array || [array count] == 0)
 		return;
+
 	if (resetCommits) {
 		self.commits = [NSMutableArray array];
 		resetCommits = NO;
@@ -108,6 +109,14 @@
 	[self didChange:NSKeyValueChangeInsertion valuesAtIndexes:indexes forKey:@"commits"];
 }
 
+
+- (void) updateCommitsFromGrapher:(NSDictionary *)commitData
+{
+	if ([commitData objectForKey:kCurrentQueueKey] != graphQueue)
+		return;
+
+	[self addCommitsFromArray:[commitData objectForKey:kNewCommitsKey]];
+}
 
 - (void) finishedGraphing
 {
@@ -204,7 +213,7 @@
 {
 	BOOL viewAllBranches = (repository.currentBranchFilter == kGitXAllBranchesFilter);
 
-	return [[PBGitHistoryGrapher alloc] initWithBaseCommits:[self baseCommits] viewAllBranches:viewAllBranches delegate:self];
+	return [[PBGitHistoryGrapher alloc] initWithBaseCommits:[self baseCommits] viewAllBranches:viewAllBranches queue:graphQueue delegate:self];
 }
 
 
@@ -301,6 +310,7 @@
 		lastBranchFilter = -1;
 		lastRemoteRef = nil;
 		lastSHA = nil;
+		self.commits = [NSMutableArray array];
 		[projectRevList loadRevisons];
 		return;
 	}
@@ -318,6 +328,7 @@
 	lastBranchFilter = -1;
 	lastRemoteRef = nil;
 	lastSHA = nil;
+	self.commits = [NSMutableArray array];
 
 	[otherRevListParser loadRevisons];
 }

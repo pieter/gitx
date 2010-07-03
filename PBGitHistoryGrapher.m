@@ -13,14 +13,22 @@
 @implementation PBGitHistoryGrapher
 
 
-- (id) initWithBaseCommits:(NSSet *)commits viewAllBranches:(BOOL)viewAll delegate:(id)theDelegate
+- (id) initWithBaseCommits:(NSSet *)commits viewAllBranches:(BOOL)viewAll queue:(NSOperationQueue *)queue delegate:(id)theDelegate
 {
 	delegate = theDelegate;
+	currentQueue = queue;
 	searchSHAs = [NSMutableSet setWithSet:commits];
 	grapher = [[PBGitGrapher alloc] initWithRepository:nil];
 	viewAllBranches = viewAll;
 
 	return self;
+}
+
+
+- (void)sendCommits:(NSArray *)commits
+{
+	NSDictionary *commitData = [NSDictionary dictionaryWithObjectsAndKeys:currentQueue, kCurrentQueueKey, commits, kNewCommitsKey, nil];
+	[delegate performSelectorOnMainThread:@selector(updateCommitsFromGrapher:) withObject:commitData waitUntilDone:NO];
 }
 
 
@@ -43,12 +51,12 @@
 			}
 		}
 		if (++counter % 2000 == 0) {
-			[delegate performSelectorOnMainThread:@selector(addCommitsFromArray:) withObject:[commits copy] waitUntilDone:NO];
+			[self sendCommits:commits];
 			commits = [NSMutableArray array];
 		}
 	}
 
-	[delegate performSelectorOnMainThread:@selector(addCommitsFromArray:) withObject:commits waitUntilDone:YES];
+	[self sendCommits:commits];
 	[delegate performSelectorOnMainThread:@selector(finishedGraphing) withObject:nil waitUntilDone:NO];
 }
 

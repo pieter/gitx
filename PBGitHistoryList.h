@@ -40,7 +40,7 @@
 - (void) forceUpdate;
 - (void) updateHistory;
 
-- (void) addCommitsFromArray:(NSArray *)array;
+- (void) updateCommitsFromGrapher:(NSDictionary *)commitData;
 
 
 @property (retain) PBGitRevList *projectRevList;
