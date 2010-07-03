@@ -96,7 +96,7 @@ using namespace std;
 	std::map<string, NSStringEncoding> encodingMap;
 	NSThread *currentThread = [NSThread currentThread];
 
-	NSString *formatString = @"--pretty=format:%H\01%e\01%an\01%s\01%P\01%at";
+	NSString *formatString = @"--pretty=format:%H\01%e\01%an\01%cn\01%s\01%P\01%at";
 	BOOL showSign = [rev hasLeftRight];
 
 	if (showSign)
@@ -145,6 +145,9 @@ using namespace std;
 		string author;
 		getline(stream, author, '\1');
 
+		string committer;
+		getline(stream, committer, '\1');
+
 		string subject;
 		getline(stream, subject, '\1');
 
@@ -171,6 +174,7 @@ using namespace std;
 
 		[newCommit setSubject:[NSString stringWithCString:subject.c_str() encoding:encoding]];
 		[newCommit setAuthor:[NSString stringWithCString:author.c_str() encoding:encoding]];
+		[newCommit setCommitter:[NSString stringWithCString:committer.c_str() encoding:encoding]];
 		[newCommit setTimestamp:time];
 		
 		if (showSign)

@@ -23,6 +23,7 @@ extern NSString * const kGitXCommitType;
 
 	NSString* subject;
 	NSString* author;
+	NSString *committer;
 	NSString* details;
 	NSString *_patch;
 	NSArray* parents;
@@ -53,6 +54,7 @@ extern NSString * const kGitXCommitType;
 @property (readonly) git_oid *sha;
 @property (copy) NSString* subject;
 @property (copy) NSString* author;
+@property (copy) NSString *committer;
 @property (readonly) NSArray* parents; // TODO: remove this and its uses
 
 @property (assign) git_oid *parentShas;
