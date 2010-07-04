@@ -12,7 +12,6 @@
 #import "PBGitGrapher.h"
 #import "PBGitRevSpecifier.h"
 
-#include "git/oid.h"
 #include <ext/stdio_filebuf.h>
 #include <iostream>
 #include <string>
@@ -140,7 +139,7 @@ using namespace std;
 
 		git_oid oid;
 		git_oid_mkstr(&oid, sha.c_str());
-		PBGitCommit* newCommit = [[PBGitCommit alloc] initWithRepository:repository andSha:oid];
+		PBGitCommit *newCommit = [PBGitCommit commitWithRepository:repository andSha:[PBGitSHA shaWithOID:oid]];
 
 		string author;
 		getline(stream, author, '\1');
@@ -160,13 +159,12 @@ using namespace std;
 				continue;
 			}
 			int nParents = (parentString.size() + 1) / 41;
-			git_oid *parents = (git_oid *)malloc(sizeof(git_oid) * nParents);
+			NSMutableArray *parents = [NSMutableArray arrayWithCapacity:nParents];
 			int parentIndex;
 			for (parentIndex = 0; parentIndex < nParents; ++parentIndex)
-				git_oid_mkstr(parents + parentIndex, parentString.substr(parentIndex * 41, 40).c_str());
-			
-			newCommit.parentShas = parents;
-			newCommit.nParents = nParents;
+				[parents addObject:[PBGitSHA shaWithCString:parentString.substr(parentIndex * 41, 40).c_str()]];
+
+			[newCommit setParents:parents];
 		}
 
 		int time;

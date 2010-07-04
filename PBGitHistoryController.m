@@ -236,7 +236,7 @@
 		if ([repository.currentBranch isSimpleRef])
 			[self selectCommit:[repository shaForRef:[repository.currentBranch ref]]];
 		else
-			[self selectCommit:[[self firstCommit] realSha]];
+			[self selectCommit:[[self firstCommit] sha]];
 		return;
 	}
 
@@ -385,9 +385,9 @@
     commitList.useAdjustScroll = NO;
 }
 
-- (NSArray *) selectedObjectsForSHA:(NSString *)commitSHA
+- (NSArray *) selectedObjectsForSHA:(PBGitSHA *)commitSHA
 {
-	NSPredicate *selection = [NSPredicate predicateWithFormat:@"realSha == %@", commitSHA];
+	NSPredicate *selection = [NSPredicate predicateWithFormat:@"sha == %@", commitSHA];
 	NSArray *selectedCommits = [[commitController content] filteredArrayUsingPredicate:selection];
 
 	if (([selectedCommits count] == 0) && [self firstCommit])
@@ -396,9 +396,9 @@
 	return selectedCommits;
 }
 
-- (void) selectCommit:(NSString *)commitSHA
+- (void)selectCommit:(PBGitSHA *)commitSHA
 {
-	if (!forceSelectionUpdate && [[selectedCommit realSha] isEqualToString:commitSHA])
+	if (!forceSelectionUpdate && [[selectedCommit sha] isEqual:commitSHA])
 		return;
 
 	NSInteger oldIndex = [[commitController selectionIndexes] firstIndex];
@@ -521,7 +521,7 @@
 	PBGitRef *headRef = [[repository headRef] ref];
 	NSString *headRefName = [headRef shortName];
 	NSString *diffTitle = [NSString stringWithFormat:@"Diff %@ with %@", multiple ? @"files" : @"file", headRefName];
-	BOOL isHead = [[selectedCommit realSha] isEqualToString:[repository headSHA]];
+	BOOL isHead = [[selectedCommit sha] isEqual:[repository headSHA]];
 	NSMenuItem *diffItem = [[NSMenuItem alloc] initWithTitle:diffTitle
 													  action:isHead ? nil : @selector(diffFilesAction:)
 											   keyEquivalent:@""];

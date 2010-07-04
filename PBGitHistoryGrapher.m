@@ -8,6 +8,7 @@
 
 #import "PBGitHistoryGrapher.h"
 #import "PBGitGrapher.h"
+#import "PBGitSHA.h"
 
 
 @implementation PBGitHistoryGrapher
@@ -41,13 +42,13 @@
 	NSInteger counter = 0;
 
 	for (PBGitCommit *commit in revList) {
-		NSString *commitSHA = [commit realSha];
+		PBGitSHA *commitSHA = [commit sha];
 		if (viewAllBranches || [searchSHAs containsObject:commitSHA]) {
 			[grapher decorateCommit:commit];
 			[commits addObject:commit];
 			if (!viewAllBranches) {
 				[searchSHAs removeObject:commitSHA];
-				[searchSHAs addObjectsFromArray:commit.parents];
+				[searchSHAs addObjectsFromArray:[commit parents]];
 			}
 		}
 		if (++counter % 2000 == 0) {

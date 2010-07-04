@@ -145,7 +145,7 @@
 
 	NSString *headBranchName = [[[commit.repository headRef] ref] shortName];
 	BOOL isOnHeadBranch = [commit isOnHeadBranch];
-	BOOL isHead = [[commit realSha] isEqualToString:[commit.repository headSHA]];
+	BOOL isHead = [[commit sha] isEqual:[commit.repository headSHA]];
 
 	[items addObject:[PBRefMenuItem itemWithTitle:@"Checkout Commit" action:@selector(checkout:) enabled:YES]];
 	[items addObject:[PBRefMenuItem separatorItem]];

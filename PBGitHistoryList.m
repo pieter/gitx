@@ -11,6 +11,7 @@
 #import "PBGitRevList.h"
 #import "PBGitGrapher.h"
 #import "PBGitHistoryGrapher.h"
+#import "PBGitSHA.h"
 
 
 
@@ -158,7 +159,7 @@
 	NSMutableSet *baseCommitSHAs = [NSMutableSet set];
 	NSDictionary *refs = repository.refs;
 
-	for (NSString *sha in refs)
+	for (PBGitSHA *sha in refs)
 		for (PBGitRef *ref in [refs objectForKey:sha])
 			if ([ref isBranch] || [ref isTag])
 				[baseCommitSHAs addObject:sha];
@@ -177,7 +178,7 @@
 
 	PBGitRef *remoteRef = [[repository.currentBranch ref] remoteRef];
 
-	for (NSString *sha in refs)
+	for (PBGitSHA *sha in refs)
 		for (PBGitRef *ref in [refs objectForKey:sha])
 			if ([remoteRef isEqualToRef:[ref remoteRef]])
 				[baseCommitSHAs addObject:sha];
@@ -193,7 +194,7 @@
 			return [NSMutableSet setWithObject:lastSHA];
 		else if ([repository.currentBranch isSimpleRef]) {
 			PBGitRef *currentRef = [repository.currentBranch ref];
-			NSString *sha = [repository shaForRef:currentRef];
+			PBGitSHA *sha = [repository shaForRef:currentRef];
 			if (sha)
 				return [NSMutableSet setWithObject:sha];
 		}
@@ -267,8 +268,8 @@
 		return NO;
 	}
 
-	NSString *revSHA = [repository shaForRef:[rev ref]];
-	if ([revSHA isEqualToString:lastSHA] && (lastBranchFilter == repository.currentBranchFilter))
+	PBGitSHA *revSHA = [repository shaForRef:[rev ref]];
+	if ([revSHA isEqual:lastSHA] && (lastBranchFilter == repository.currentBranchFilter))
 		return NO;
 
 	lastBranchFilter = repository.currentBranchFilter;
@@ -341,6 +342,7 @@
 - (void) removeObservers
 {
 	[repository removeObserver:self forKeyPath:@"currentBranch"];
+	[repository removeObserver:self forKeyPath:@"currentBranchFilter"];
 	[repository removeObserver:self forKeyPath:@"hasChanged"];
 
 	if (currentRevList) {

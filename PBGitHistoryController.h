@@ -17,6 +17,7 @@
 @class PBRefController;
 @class QLPreviewPanel;
 @class PBCommitList;
+@class PBGitSHA;
 
 @interface PBGitHistoryController : PBViewController {
 	IBOutlet PBRefController *refController;
@@ -58,7 +59,7 @@
 - (IBAction) setTreeView:(id)sender;
 - (IBAction) setBranchFilter:(id)sender;
 
-- (void) selectCommit: (NSString*) commit;
+- (void)selectCommit:(PBGitSHA *)commit;
 - (IBAction) refresh:(id)sender;
 - (IBAction) toggleQLPreviewPanel:(id)sender;
 - (IBAction) openSelectedFile:(id)sender;

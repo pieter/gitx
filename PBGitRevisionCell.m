@@ -59,12 +59,12 @@
 
 - (BOOL) isCurrentCommit
 {
-	NSString* thisSha = [self.objectValue realSha];
+	PBGitSHA *thisSha = [self.objectValue sha];
 
 	PBGitRepository* repository = [self.objectValue repository];
-	NSString* currentSha = [repository headSHA];
+	PBGitSHA *currentSha = [repository headSHA];
 
-	return [ currentSha isEqualToString : thisSha ];
+	return [currentSha isEqual:thisSha];
 }
 
 - (void) drawCircleInRect: (NSRect) r
