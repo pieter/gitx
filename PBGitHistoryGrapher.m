@@ -38,7 +38,9 @@
 	if (!revList || [revList count] == 0)
 		return;
 
+	//NSDate *start = [NSDate date];
 	NSThread *currentThread = [NSThread currentThread];
+	NSDate *lastUpdate = [NSDate date];
 	NSMutableArray *commits = [NSMutableArray array];
 	NSInteger counter = 0;
 
@@ -54,11 +56,16 @@
 				[searchSHAs addObjectsFromArray:[commit parents]];
 			}
 		}
-		if (++counter % 2000 == 0) {
-			[self sendCommits:commits];
-			commits = [NSMutableArray array];
+		if (++counter % 100 == 0) {
+			if ([[NSDate date] timeIntervalSinceDate:lastUpdate] > 0.1) {
+				[self sendCommits:commits];
+				commits = [NSMutableArray array];
+				lastUpdate = [NSDate date];
+			}
 		}
 	}
+	//NSTimeInterval duration = [[NSDate date] timeIntervalSinceDate:start];
+	//NSLog(@"Graphed %i commits in %f seconds (%f/sec)", counter, duration, counter/duration);
 
 	[self sendCommits:commits];
 	[delegate performSelectorOnMainThread:@selector(finishedGraphing) withObject:nil waitUntilDone:NO];

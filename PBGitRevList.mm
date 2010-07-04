@@ -96,6 +96,7 @@ using namespace std;
 - (void) walkRevisionListWithSpecifier:(PBGitRevSpecifier*)rev
 {
 	NSDate *start = [NSDate date];
+	NSDate *lastUpdate = [NSDate date];
 	NSMutableArray *revisions = [NSMutableArray array];
 	PBGitGrapher *g = [[PBGitGrapher alloc] initWithRepository:repository];
 	std::map<string, NSStringEncoding> encodingMap;
@@ -125,6 +126,9 @@ using namespace std;
 
 	int num = 0;
 	while (true) {
+		if ([currentThread isCancelled])
+			break;
+
 		string sha;
 		if (!getline(stream, sha, '\1'))
 			break;
@@ -200,18 +204,19 @@ using namespace std;
 		if (isGraphing)
 			[g decorateCommit:newCommit];
 
-		if (++num % 1000 == 0) {
-			if ([currentThread isCancelled])
-				break;
-			NSDictionary *update = [NSDictionary dictionaryWithObjectsAndKeys:currentThread, kRevListThreadKey, revisions, kRevListRevisionsKey, nil];
-			[self performSelectorOnMainThread:@selector(updateCommits:) withObject:update waitUntilDone:NO];
-			revisions = [NSMutableArray array];
+		if (++num % 100 == 0) {
+			if ([[NSDate date] timeIntervalSinceDate:lastUpdate] > 0.1) {
+				NSDictionary *update = [NSDictionary dictionaryWithObjectsAndKeys:currentThread, kRevListThreadKey, revisions, kRevListRevisionsKey, nil];
+				[self performSelectorOnMainThread:@selector(updateCommits:) withObject:update waitUntilDone:NO];
+				revisions = [NSMutableArray array];
+				lastUpdate = [NSDate date];
+			}
 		}
 	}
 	
 	if (![currentThread isCancelled]) {
 		NSTimeInterval duration = [[NSDate date] timeIntervalSinceDate:start];
-		NSLog(@"Loaded %i commits in %f seconds", num, duration);
+		NSLog(@"Loaded %i commits in %f seconds (%f/sec)", num, duration, num/duration);
 
 		// Make sure the commits are stored before exiting.
 		NSDictionary *update = [NSDictionary dictionaryWithObjectsAndKeys:currentThread, kRevListThreadKey, revisions, kRevListRevisionsKey, nil];
