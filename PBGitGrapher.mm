@@ -48,6 +48,7 @@ void add_line(struct PBGitGraphLine *lines, int *nLines, int upper, int from, in
 
 	PBGitLane *currentLane = NULL;
 	BOOL didFirst = NO;
+	git_oid commit_oid = [[commit sha] oid];
 	
 	// First, iterate over earlier columns and pass through any that don't want this commit
 	if (previous != nil) {
@@ -57,7 +58,7 @@ void add_line(struct PBGitGraphLine *lines, int *nLines, int upper, int from, in
 			i++;
 			// This is our commit! We should do a "merge": move the line from
 			// our upperMapping to their lowerMapping
-			if ((*it)->isCommit([[commit sha] oid])) {
+			if ((*it)->isCommit(commit_oid)) {
 				if (!didFirst) {
 					didFirst = YES;
 					currentLanes->push_back(*it);
@@ -127,7 +128,14 @@ void add_line(struct PBGitGraphLine *lines, int *nLines, int upper, int from, in
 		add_line(lines, &currentLine, 0, currentLanes->size(), newPos, newLane->index());
 	}
 
-	previous = [[PBGraphCellInfo alloc] initWithPosition:newPos andLines:lines];
+	if (commit.lineInfo) {
+		previous = commit.lineInfo;
+		previous.position = newPos;
+		previous.lines = lines;
+	}
+	else
+		previous = [[PBGraphCellInfo alloc] initWithPosition:newPos andLines:lines];
+
 	if (currentLine > maxLines)
 		NSLog(@"Number of lines: %i vs allocated: %i", currentLine, maxLines);
 

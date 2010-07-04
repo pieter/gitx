@@ -74,6 +74,9 @@ NSString * const kGitXCommitType = @"commit";
 
 - (BOOL)isEqual:(id)otherCommit
 {
+	if (self == otherCommit)
+		return YES;
+
 	if (![otherCommit isMemberOfClass:[PBGitCommit class]])
 		return NO;
 
