@@ -7,6 +7,7 @@
 //
 
 #import "PBGitHistoryController.h"
+#import "PBWebHistoryController.h"
 #import "CWQuickLook.h"
 #import "PBGitGrapher.h"
 #import "PBGitRevisionCell.h"
@@ -415,17 +416,26 @@
 	return [commitController filterPredicate] || [[commitController sortDescriptors] count] > 0;
 }
 
-- (void) removeView
+- (void)closeView
 {
 	float position = [[[historySplitView subviews] objectAtIndex:0] frame].size.height;
 	[[NSUserDefaults standardUserDefaults] setFloat:position forKey:@"PBGitSplitViewPosition"];
 	[[NSUserDefaults standardUserDefaults] synchronize];
-	[webView close];
-	[commitController removeObserver:self forKeyPath:@"selection"];
-	[treeController removeObserver:self forKeyPath:@"selection"];
-	[repository removeObserver:self forKeyPath:@"currentBranch"];
 
-	[super removeView];
+	if (commitController) {
+		[commitController removeObserver:self forKeyPath:@"selection"];
+		[commitController removeObserver:self forKeyPath:@"arrangedObjects.@count"];
+		[treeController removeObserver:self forKeyPath:@"selection"];
+
+		[repository.revisionList removeObserver:self forKeyPath:@"isUpdating"];
+		[repository.revisionList removeObserver:self forKeyPath:@"updatedGraph"];
+		[repository removeObserver:self forKeyPath:@"currentBranch"];
+		[repository removeObserver:self forKeyPath:@"refs"];
+	}
+
+	[webHistoryController closeView];
+
+	[super closeView];
 }
 
 #pragma mark Table Column Methods

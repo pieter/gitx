@@ -13,6 +13,7 @@
 #import "PBCollapsibleSplitView.h"
 
 @class PBGitSidebarController;
+@class PBWebHistoryController;
 @class PBGitGradientBarView;
 @class PBRefController;
 @class QLPreviewPanel;
@@ -28,6 +29,7 @@
 	NSArray *currentFileBrowserSelectionPath;
 	IBOutlet PBCommitList* commitList;
 	IBOutlet PBCollapsibleSplitView *historySplitView;
+	IBOutlet PBWebHistoryController *webHistoryController;
     QLPreviewPanel* previewPanel;
 
 	IBOutlet PBGitGradientBarView *upperToolbarView;

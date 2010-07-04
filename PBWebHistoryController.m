@@ -22,6 +22,14 @@
 	[historyController addObserver:self forKeyPath:@"webCommit" options:0 context:@"ChangedCommit"];
 }
 
+- (void)closeView
+{
+	[[self script] setValue:nil forKey:@"commit"];
+	[historyController removeObserver:self forKeyPath:@"webCommit"];
+
+	[super closeView];
+}
+
 - (void) didLoad
 {
 	currentSha = nil;
@@ -161,9 +169,8 @@ contextMenuItemsForElement:(NSDictionary *)element
 	return [historyController valueForKeyPath:[@"repository.config." stringByAppendingString:config]];
 }
 
-- (void) finalize
+- (void)finalize
 {
-	[historyController removeObserver:self forKeyPath:@"webCommit"];
 	[super finalize];
 }
 

@@ -46,10 +46,14 @@
 	return [view windowScriptObject];
 }
 
-- (void) closeView
+- (void)closeView
 {
-	if (view)
+	if (view) {
+		[[self script] setValue:nil forKey:@"Controller"];
 		[view close];
+	}
+
+	[[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 # pragma mark Delegate methods

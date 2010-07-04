@@ -27,7 +27,7 @@
 	return self;
 }
 
-- (void)removeView
+- (void)closeView
 {
 	[self unbind:@"repository"];
 	if (hasViewLoaded)

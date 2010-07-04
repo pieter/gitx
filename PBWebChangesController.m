@@ -24,6 +24,15 @@
 	[cachedFilesController addObserver:self forKeyPath:@"selection" options:0 context:@"cachedFileSelected"];
 }
 
+- (void)closeView
+{
+	[[self script] removeWebScriptKey:@"Index"];
+	[unstagedFilesController removeObserver:self forKeyPath:@"selection"];
+	[cachedFilesController removeObserver:self forKeyPath:@"selection"];
+
+	[super closeView];
+}
+
 - (void) didLoad
 {
 	[[self script] setValue:controller.index forKey:@"Index"];

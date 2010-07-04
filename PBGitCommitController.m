@@ -64,7 +64,7 @@
 	[unstagedFilesController setAutomaticallyRearrangesObjects:NO];
 }
 
-- (void)removeView
+- (void)closeView
 {
 	[webController closeView];
 }

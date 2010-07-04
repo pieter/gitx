@@ -33,7 +33,10 @@
 	NSLog(@"Window will close!");
 
 	if (sidebarController)
-		[sidebarController removeView];
+		[sidebarController closeView];
+
+	if (contentController)
+		[contentController removeObserver:self forKeyPath:@"status"];
 }
 
 - (BOOL)validateMenuItem:(NSMenuItem *)menuItem

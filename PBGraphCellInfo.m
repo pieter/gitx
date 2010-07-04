@@ -19,6 +19,12 @@
 	return self;
 }
 
+- (void)setLines:(struct PBGitGraphLine *)l
+{
+	free(lines);
+	lines = l;
+}
+
 -(void) finalize
 {
 	free(lines);

@@ -59,6 +59,17 @@
 		[self selectCurrentBranch];
 }
 
+- (void)closeView
+{
+	[historyViewController closeView];
+	[commitViewController closeView];
+
+	[repository removeObserver:self forKeyPath:@"currentBranch"];
+	[repository removeObserver:self forKeyPath:@"branches"];
+
+	[super closeView];
+}
+
 - (void) observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
 {
 	if ([@"currentBranchChange" isEqualToString:context]) {
