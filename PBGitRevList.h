@@ -25,6 +25,7 @@
 
 - (id) initWithRepository:(PBGitRepository *)repo rev:(PBGitRevSpecifier *)rev shouldGraph:(BOOL)graph;
 - (void) loadRevisons;
+- (void)cancel;
 
 @property (retain) NSMutableArray *commits;
 @property (readonly) BOOL isParsing;

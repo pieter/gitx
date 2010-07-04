@@ -128,6 +128,13 @@ NSString* PBGitRepositoryErrorDomain = @"GitXErrorDomain";
 	revisionList = [[PBGitHistoryList alloc] initWithRepository:self];
 }
 
+- (void)close
+{
+	[revisionList cleanup];
+
+	[super close];
+}
+
 - (id) initWithURL: (NSURL*) path
 {
 	if (![PBGitBinary path])

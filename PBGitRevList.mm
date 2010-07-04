@@ -58,6 +58,12 @@ using namespace std;
 }
 
 
+- (void)cancel
+{
+	[parseThread cancel];
+}
+
+
 - (void) finishedParsing
 {
 	self.isParsing = NO;
@@ -217,6 +223,7 @@ using namespace std;
 		NSLog(@"[%@ %s] thread has been canceled", [self class], _cmd);
 	}
 
+	[task terminate];
 	[task waitUntilExit];
 }
 

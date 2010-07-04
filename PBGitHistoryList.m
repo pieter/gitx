@@ -82,6 +82,20 @@
 }
 
 
+- (void)cleanup
+{
+	if (currentRevList) {
+		[currentRevList removeObserver:self forKeyPath:@"commits"];
+		[currentRevList cancel];
+	}
+	[graphQueue cancelAllOperations];
+
+	[repository removeObserver:self forKeyPath:@"currentBranch"];
+	[repository removeObserver:self forKeyPath:@"currentBranchFilter"];
+	[repository removeObserver:self forKeyPath:@"hasChanged"];
+}
+
+
 - (NSArray *) projectCommits
 {
 	return [projectRevList.commits copy];
@@ -137,12 +151,9 @@
 	resetCommits = YES;
 	self.isUpdating = YES;
 
-	[graphQueue setSuspended:YES];
-	if (graphQueue)
-		[graphQueue removeObserver:self forKeyPath:@"operations"];
+	[graphQueue cancelAllOperations];
 	graphQueue = [[NSOperationQueue alloc] init];
 	[graphQueue setMaxConcurrentOperationCount:1];
-	[graphQueue addObserver:self forKeyPath:@"operations" options:0 context:@"operations"];
 
 	grapher = [self grapher];
 }
@@ -223,15 +234,12 @@
 	if (currentRevList == parser)
 		return;
 
-	if (currentRevList) {
+	if (currentRevList)
 		[currentRevList removeObserver:self forKeyPath:@"commits"];
-		[currentRevList removeObserver:self forKeyPath:@"isParsing"];
-	}
 
 	currentRevList = parser;
 
 	[currentRevList addObserver:self forKeyPath:@"commits" options:NSKeyValueObservingOptionNew context:@"commitsUpdated"];
-	[currentRevList addObserver:self forKeyPath:@"isParsing" options:0 context:@"revListParsing"];
 }
 
 
@@ -339,22 +347,6 @@
 #pragma mark -
 #pragma mark Key Value Observing
 
-- (void) removeObservers
-{
-	[repository removeObserver:self forKeyPath:@"currentBranch"];
-	[repository removeObserver:self forKeyPath:@"currentBranchFilter"];
-	[repository removeObserver:self forKeyPath:@"hasChanged"];
-
-	if (currentRevList) {
-		[currentRevList removeObserver:self forKeyPath:@"commits"];
-		[currentRevList removeObserver:self forKeyPath:@"isParsing"];
-	}
-
-	if (graphQueue)
-		[graphQueue removeObserver:self forKeyPath:@"operations"];
-}
-
-
 - (void) observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
 {
 	if ([@"currentBranch" isEqualToString:context]) {
@@ -376,11 +368,6 @@
 			else
 				[self addCommitsFromArray:newCommits];
 		}
-		return;
-	}
-
-	if ([@"revListParsing" isEqualToString:context] || [@"operations" isEqualToString:context]) {
-		[self finishedGraphing];
 		return;
 	}
 

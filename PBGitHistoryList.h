@@ -40,6 +40,7 @@
 - (id) initWithRepository:(PBGitRepository *)repo;
 - (void) forceUpdate;
 - (void) updateHistory;
+- (void)cleanup;
 
 - (void) updateCommitsFromGrapher:(NSDictionary *)commitData;
 

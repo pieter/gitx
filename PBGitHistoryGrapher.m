@@ -38,10 +38,13 @@
 	if (!revList || [revList count] == 0)
 		return;
 
+	NSThread *currentThread = [NSThread currentThread];
 	NSMutableArray *commits = [NSMutableArray array];
 	NSInteger counter = 0;
 
 	for (PBGitCommit *commit in revList) {
+		if ([currentThread isCancelled])
+			return;
 		PBGitSHA *commitSHA = [commit sha];
 		if (viewAllBranches || [searchSHAs containsObject:commitSHA]) {
 			[grapher decorateCommit:commit];
