@@ -73,7 +73,21 @@ NSString * const kGitXProgressErrorInfo          = @"PBGitXProgressErrorInfo";
 	description = theDescription;
 
 	[self window]; // loads the window (if it wasn't already)
+
+	// resize window if the description is larger than the default text field
+	NSRect originalFrame = [self.progressDescription frame];
 	[self.progressDescription setStringValue:[self progressTitle]];
+	NSAttributedString *attributedTitle = [self.progressDescription attributedStringValue];
+	NSSize boundingSize = originalFrame.size;
+	boundingSize.height = 0.0f;
+	NSRect boundingRect = [attributedTitle boundingRectWithSize:boundingSize options:NSStringDrawingUsesLineFragmentOrigin];
+	CGFloat heightDelta = boundingRect.size.height - originalFrame.size.height;
+	if (heightDelta > 0.0f) {
+		NSRect windowFrame = [[self window] frame];
+		windowFrame.size.height += heightDelta;
+		[[self window] setFrame:windowFrame display:NO];
+	}
+
 	[self.progressIndicator startAnimation:nil];
 	[NSApp beginSheet:[self window] modalForWindow:[controller window] modalDelegate:self didEndSelector:nil contextInfo:nil];
 
