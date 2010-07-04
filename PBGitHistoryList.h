@@ -28,7 +28,6 @@
 	PBGitRef *lastRemoteRef;
 	BOOL resetCommits;
 	BOOL shouldReloadProjectHistory;
-	NSDate *updatedGraph;
 
 	PBGitHistoryGrapher *grapher;
 	NSOperationQueue *graphQueue;
@@ -49,6 +48,5 @@
 @property (retain) NSMutableArray *commits;
 @property (readonly) NSArray *projectCommits;
 @property (assign) BOOL isUpdating;
-@property (retain) NSDate *updatedGraph;
 
 @end

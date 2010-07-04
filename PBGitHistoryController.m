@@ -48,7 +48,6 @@
 	[treeController addObserver:self forKeyPath:@"selection" options:0 context:@"treeChange"];
 
 	[repository.revisionList addObserver:self forKeyPath:@"isUpdating" options:0 context:@"revisionListUpdating"];
-	[repository.revisionList addObserver:self forKeyPath:@"updatedGraph" options:0 context:@"revisionListUpdatedGraph"];
 	[repository addObserver:self forKeyPath:@"currentBranch" options:0 context:@"branchChange"];
 	[repository addObserver:self forKeyPath:@"refs" options:0 context:@"updateRefs"];
 
@@ -83,26 +82,34 @@
 	[super awakeFromNib];
 }
 
-- (void) updateKeys
+- (void)updateKeys
 {
-	// Remove any references in the QLPanel
-	//[[QLPreviewPanel sharedPreviewPanel] setURLs:[NSArray array] currentIndex:0 preservingDisplayState:YES];
-	// We have to do this manually, as NSTreeController leaks memory?
-	//[treeController setSelectionIndexPaths:[NSArray array]];
+	PBGitCommit *lastObject = [[commitController selectedObjects] lastObject];
+	if (lastObject) {
+		if (![selectedCommit isEqual:lastObject]) {
+			selectedCommit = lastObject;
 
-	selectedCommit = [[commitController selectedObjects] lastObject];
+			BOOL isOnHeadBranch = [selectedCommit isOnHeadBranch];
+			[mergeButton setEnabled:!isOnHeadBranch];
+			[cherryPickButton setEnabled:!isOnHeadBranch];
+			[rebaseButton setEnabled:!isOnHeadBranch];
+		}
+	}
+	else {
+		[mergeButton setEnabled:NO];
+		[cherryPickButton setEnabled:NO];
+		[rebaseButton setEnabled:NO];
+	}
 
 	if (self.selectedCommitDetailsIndex == kHistoryTreeViewIndex) {
 		self.gitTree = selectedCommit.tree;
 		[self restoreFileBrowserSelection];
 	}
-	else // kHistoryDetailViewIndex
+	else {
+		// kHistoryDetailViewIndex
+		if (![self.webCommit isEqual:selectedCommit])
 		self.webCommit = selectedCommit;
-
-	BOOL isOnHeadBranch = [selectedCommit isOnHeadBranch];
-	[mergeButton setEnabled:!isOnHeadBranch];
-	[cherryPickButton setEnabled:!isOnHeadBranch];
-	[rebaseButton setEnabled:!isOnHeadBranch];
+	}
 }
 
 - (void) updateBranchFilterMatrix
@@ -139,6 +146,11 @@
 		return [arrangedObjects objectAtIndex:0];
 
 	return nil;
+}
+
+- (BOOL)isCommitSelected
+{
+	return [selectedCommit isEqual:[[commitController selectedObjects] lastObject]];
 }
 
 - (void) setSelectedCommitDetailsIndex:(int)detailsIndex
@@ -230,10 +242,7 @@
 
 	if([(NSString *)context isEqualToString:@"updateCommitCount"] || [(NSString *)context isEqualToString:@"revisionListUpdating"]) {
 		[self updateStatus];
-		return;
-	}
 
-	if([(NSString *)context isEqualToString:@"revisionListUpdatedGraph"]) {
 		if ([repository.currentBranch isSimpleRef])
 			[self selectCommit:[repository shaForRef:[repository.currentBranch ref]]];
 		else
@@ -399,7 +408,7 @@
 
 - (void)selectCommit:(PBGitSHA *)commitSHA
 {
-	if (!forceSelectionUpdate && [[selectedCommit sha] isEqual:commitSHA])
+	if (!forceSelectionUpdate && [[[[commitController selectedObjects] lastObject] sha] isEqual:commitSHA])
 		return;
 
 	NSInteger oldIndex = [[commitController selectionIndexes] firstIndex];
@@ -409,6 +418,8 @@
 
 	if (repository.currentBranchFilter != kGitXSelectedBranchFilter)
 		[self scrollSelectionToTopOfViewFrom:oldIndex];
+
+	forceSelectionUpdate = NO;
 }
 
 - (BOOL) hasNonlinearPath
@@ -428,7 +439,6 @@
 		[treeController removeObserver:self forKeyPath:@"selection"];
 
 		[repository.revisionList removeObserver:self forKeyPath:@"isUpdating"];
-		[repository.revisionList removeObserver:self forKeyPath:@"updatedGraph"];
 		[repository removeObserver:self forKeyPath:@"currentBranch"];
 		[repository removeObserver:self forKeyPath:@"refs"];
 	}

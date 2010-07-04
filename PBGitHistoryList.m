@@ -36,7 +36,6 @@
 @synthesize projectRevList;
 @synthesize commits;
 @synthesize isUpdating;
-@synthesize updatedGraph;
 @dynamic projectCommits;
 
 
@@ -137,7 +136,6 @@
 {
 	if (!currentRevList.isParsing && ([[graphQueue operations] count] == 0)) {
 		self.isUpdating = NO;
-		[self performSelector:@selector(setUpdatedGraph:) withObject:[NSDate date] afterDelay:0];
 	}
 }
 
@@ -272,7 +270,6 @@
 		lastRemoteRef = [[rev ref] remoteRef];
 		lastSHA = nil;
 		self.isUpdating = NO;
-		self.updatedGraph = [NSDate date];
 		return NO;
 	}
 
