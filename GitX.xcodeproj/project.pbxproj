@@ -46,6 +46,8 @@
 		93CB42C20EAB7B2200530609 /* PBGitDefaults.m in Sources */ = {isa = PBXBuildFile; fileRef = 93CB42C10EAB7B2200530609 /* PBGitDefaults.m */; };
 		93F7857F0EA3ABF100C1F443 /* PBCommitMessageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 93F7857E0EA3ABF100C1F443 /* PBCommitMessageView.m */; };
 		D26DC6450E782C9000C777B2 /* gitx.icns in Resources */ = {isa = PBXBuildFile; fileRef = D26DC6440E782C9000C777B2 /* gitx.icns */; };
+		D8022FE811E124A0003C21F6 /* PBGitXMessageSheet.xib in Resources */ = {isa = PBXBuildFile; fileRef = D8022FE711E124A0003C21F6 /* PBGitXMessageSheet.xib */; };
+		D8022FED11E124C8003C21F6 /* PBGitXMessageSheet.m in Sources */ = {isa = PBXBuildFile; fileRef = D8022FEC11E124C8003C21F6 /* PBGitXMessageSheet.m */; };
 		D8083A43111E045D00337480 /* PBRemoteProgressSheet.m in Sources */ = {isa = PBXBuildFile; fileRef = D8083A42111E045D00337480 /* PBRemoteProgressSheet.m */; };
 		D8083C44111F106800337480 /* PBAddRemoteSheet.m in Sources */ = {isa = PBXBuildFile; fileRef = D8083C43111F106800337480 /* PBAddRemoteSheet.m */; };
 		D8083C47111F136400337480 /* PBAddRemoteSheet.xib in Resources */ = {isa = PBXBuildFile; fileRef = D8083C45111F136400337480 /* PBAddRemoteSheet.xib */; };
@@ -270,6 +272,9 @@
 		93FCCBA80EA8AF450061B02B /* PBGitConfig.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PBGitConfig.m; sourceTree = "<group>"; };
 		D26DC6440E782C9000C777B2 /* gitx.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = gitx.icns; sourceTree = "<group>"; };
 		D8022A3411DFCCA5003C21F6 /* build_libgit2.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = build_libgit2.sh; sourceTree = "<group>"; };
+		D8022FE711E124A0003C21F6 /* PBGitXMessageSheet.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = PBGitXMessageSheet.xib; path = ../GitX/PBGitXMessageSheet.xib; sourceTree = SOURCE_ROOT; };
+		D8022FEB11E124C8003C21F6 /* PBGitXMessageSheet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PBGitXMessageSheet.h; sourceTree = "<group>"; };
+		D8022FEC11E124C8003C21F6 /* PBGitXMessageSheet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PBGitXMessageSheet.m; sourceTree = "<group>"; };
 		D8083A2D111E045300337480 /* PBRemoteProgressSheet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PBRemoteProgressSheet.h; sourceTree = "<group>"; };
 		D8083A42111E045D00337480 /* PBRemoteProgressSheet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PBRemoteProgressSheet.m; sourceTree = "<group>"; };
 		D8083C42111F106800337480 /* PBAddRemoteSheet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PBAddRemoteSheet.h; sourceTree = "<group>"; };
@@ -610,6 +615,7 @@
 				47DBDB680E94EF6500671A1E /* Preferences.xib */,
 				F569AE920F2CBD7C00C2FFA7 /* Credits.html */,
 				F58DB55F10566E3900CFDF4A /* PBGitSidebarView.xib */,
+				D8022FE711E124A0003C21F6 /* PBGitXMessageSheet.xib */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -673,6 +679,8 @@
 				D8083DC3111F90F300337480 /* PBCloneRepsitoryToSheet.m */,
 				D8083E01111FA33700337480 /* PBCloneRepositoryPanel.h */,
 				D8083E02111FA33700337480 /* PBCloneRepositoryPanel.m */,
+				D8022FEB11E124C8003C21F6 /* PBGitXMessageSheet.h */,
+				D8022FEC11E124C8003C21F6 /* PBGitXMessageSheet.m */,
 			);
 			name = Sheets;
 			sourceTree = "<group>";
@@ -1119,6 +1127,7 @@
 				D8A4BD081134AD2900E92D51 /* MergeTemplate.png in Resources */,
 				D8A4BD091134AD2900E92D51 /* RebaseTemplate.png in Resources */,
 				D828AEEC112F411100F09D11 /* CloneRepositoryTemplate.png in Resources */,
+				D8022FE811E124A0003C21F6 /* PBGitXMessageSheet.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1248,6 +1257,7 @@
 				D8295DE01130E43900C838E8 /* PBGitHistoryGrapher.m in Sources */,
 				D8E105471157C18200FC28A4 /* PBQLTextView.m in Sources */,
 				D8FBCF19115FA20C0098676A /* PBGitSHA.m in Sources */,
+				D8022FED11E124C8003C21F6 /* PBGitXMessageSheet.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
