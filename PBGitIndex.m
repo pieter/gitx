@@ -177,8 +177,13 @@ NSString *PBGitIndexOperationFailed = @"PBGitIndexOperationFailed";
 	int ret = 1;
 	
 	[self postCommitUpdate:@"Running hooks"];
-	if (![repository executeHook:@"pre-commit" output:nil])
-		return [self postCommitFailure:@"Pre-commit hook failed"];
+    NSString *preCommitHookOutput = nil;
+	if (![repository executeHook:@"pre-commit" output:&preCommitHookOutput]) {
+        NSString *preCommitFailureMessage = [NSString stringWithFormat:@"Pre-commit hook failed%@%@",
+                                                                                   [preCommitHookOutput length] > 0 ? @":\n" : @"",
+                                                                                   preCommitHookOutput];
+        return [self postCommitFailure:preCommitFailureMessage];
+    }
 	
 	if (![repository executeHook:@"commit-msg" withArgs:[NSArray arrayWithObject:commitMessageFile] output:nil])
 		return [self postCommitFailure:@"Commit-msg hook failed"];
