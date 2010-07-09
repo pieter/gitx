@@ -14,17 +14,17 @@ body {
 }
 
 #rightcontent {
-	float: right;
-	margin: 5px;
+	position: absolute;
+	right: 5px;
+	top: 5px;
 }
 
 #buttons {
-	float: left;
 }
 
 #gist {
-	-webkit-appearance: button;
-	font: 13px bold 'Lucida Grande';
+	-webkit-appearance: push-button;
+	font: 10px bold 'Lucida Grande';
 	width: 80px;
 	height: 23px;
 	margin-right: 5px;
