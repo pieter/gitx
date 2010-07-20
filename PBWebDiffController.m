@@ -18,6 +18,14 @@
 	[diffController addObserver:self forKeyPath:@"diff" options:0 context:@"ChangedDiff"];
 }
 
+- (void)closeView
+{
+	[diffController removeObserver:self forKeyPath:@"diff"];
+
+	[super closeView];
+}
+
+
 - (void) didLoad
 {
 	[self showDiff:diffController.diff];

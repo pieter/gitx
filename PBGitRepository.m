@@ -128,6 +128,13 @@ NSString* PBGitRepositoryErrorDomain = @"GitXErrorDomain";
 	revisionList = [[PBGitHistoryList alloc] initWithRepository:self];
 }
 
+- (void)close
+{
+	[revisionList cleanup];
+
+	[super close];
+}
+
 - (id) initWithURL: (NSURL*) path
 {
 	if (![PBGitBinary path])
@@ -218,11 +225,11 @@ NSString* PBGitRepositoryErrorDomain = @"GitXErrorDomain";
 {
 	NSString* type = [components objectAtIndex:1];
 
-	NSString* sha;
+	PBGitSHA *sha;
 	if ([type isEqualToString:@"tag"] && [components count] == 4)
-		sha = [components objectAtIndex:3];
+		sha = [PBGitSHA shaWithString:[components objectAtIndex:3]];
 	else
-		sha = [components objectAtIndex:2];
+		sha = [PBGitSHA shaWithString:[components objectAtIndex:2]];
 
 	NSMutableArray* curRefs;
 	if (curRefs = [refs objectForKey:sha])
@@ -234,6 +241,7 @@ NSString* PBGitRepositoryErrorDomain = @"GitXErrorDomain";
 - (void) reloadRefs
 {
 	_headRef = nil;
+	_headSha = nil;
 
 	refs = [NSMutableDictionary dictionary];
 	NSMutableArray *oldBranches = [branches mutableCopy];
@@ -287,25 +295,30 @@ NSString* PBGitRepositoryErrorDomain = @"GitXErrorDomain";
 	else
 		_headRef = [[PBGitRevSpecifier alloc] initWithRef:[PBGitRef refFromString:@"HEAD"]];
 
+	_headSha = [self shaForRef:[_headRef ref]];
+
 	return _headRef;
 }
 
-- (NSString *) headSHA
+- (PBGitSHA *)headSHA
 {
-	return [self shaForRef:[[self headRef] ref]];
+	if (! _headSha)
+		[self headRef];
+
+	return _headSha;
 }
 
-- (PBGitCommit *) headCommit
+- (PBGitCommit *)headCommit
 {
 	return [self commitForSHA:[self headSHA]];
 }
 
-- (NSString *) shaForRef:(PBGitRef *)ref
+- (PBGitSHA *)shaForRef:(PBGitRef *)ref
 {
 	if (!ref)
 		return nil;
 
-	for (NSString *sha in refs)
+	for (PBGitSHA *sha in refs)
 		for (PBGitRef *existingRef in [refs objectForKey:sha])
 			if ([existingRef isEqualToRef:ref])
 				return sha;
@@ -316,10 +329,10 @@ NSString* PBGitRepositoryErrorDomain = @"GitXErrorDomain";
 	if (retValue || [shaForRef isEqualToString:@""])
 		return nil;
 
-	return shaForRef;
+	return [PBGitSHA shaWithString:shaForRef];
 }
 
-- (PBGitCommit *) commitForRef:(PBGitRef *)ref
+- (PBGitCommit *)commitForRef:(PBGitRef *)ref
 {
 	if (!ref)
 		return nil;
@@ -327,25 +340,29 @@ NSString* PBGitRepositoryErrorDomain = @"GitXErrorDomain";
 	return [self commitForSHA:[self shaForRef:ref]];
 }
 
-- (PBGitCommit *) commitForSHA:(NSString *)sha
+- (PBGitCommit *)commitForSHA:(PBGitSHA *)sha
 {
 	if (!sha)
 		return nil;
 	NSArray *revList = revisionList.projectCommits;
 
+    if (!revList) {
+        [revisionList forceUpdate];
+        revList = revisionList.projectCommits;
+    }
 	for (PBGitCommit *commit in revList)
-		if ([[commit realSha] isEqualToString:sha])
+		if ([[commit sha] isEqual:sha])
 			return commit;
 
 	return nil;
 }
 
-- (BOOL) isOnSameBranch:(NSString *)branchSHA asSHA:(NSString *)testSHA
+- (BOOL)isOnSameBranch:(PBGitSHA *)branchSHA asSHA:(PBGitSHA *)testSHA
 {
 	if (!branchSHA || !testSHA)
 		return NO;
 
-	if ([testSHA isEqualToString:branchSHA])
+	if ([testSHA isEqual:branchSHA])
 		return YES;
 
 	NSArray *revList = revisionList.projectCommits;
@@ -353,34 +370,34 @@ NSString* PBGitRepositoryErrorDomain = @"GitXErrorDomain";
 	NSMutableSet *searchSHAs = [NSMutableSet setWithObject:branchSHA];
 
 	for (PBGitCommit *commit in revList) {
-		NSString *commitSHA = [commit realSha];
+		PBGitSHA *commitSHA = [commit sha];
 		if ([searchSHAs containsObject:commitSHA]) {
-			if ([testSHA isEqualToString:commitSHA])
+			if ([testSHA isEqual:commitSHA])
 				return YES;
 			[searchSHAs removeObject:commitSHA];
 			[searchSHAs addObjectsFromArray:commit.parents];
 		}
-		else if ([testSHA isEqualToString:commitSHA])
+		else if ([testSHA isEqual:commitSHA])
 			return NO;
 	}
 
 	return NO;
 }
 
-- (BOOL) isSHAOnHeadBranch:(NSString *)testSHA
+- (BOOL)isSHAOnHeadBranch:(PBGitSHA *)testSHA
 {
 	if (!testSHA)
 		return NO;
 
-	NSString *headSHA = [self headSHA];
+	PBGitSHA *headSHA = [self headSHA];
 
-	if ([testSHA isEqualToString:headSHA])
+	if ([testSHA isEqual:headSHA])
 		return YES;
 
 	return [self isOnSameBranch:headSHA asSHA:testSHA];
 }
 
-- (BOOL) isRefOnHeadBranch:(PBGitRef *)testRef
+- (BOOL)isRefOnHeadBranch:(PBGitRef *)testRef
 {
 	if (!testRef)
 		return NO;

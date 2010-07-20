@@ -13,14 +13,32 @@
 #import "PBGitRefish.h"
 
 extern NSString* PBGitRepositoryErrorDomain;
-enum branchFilterTypes {
+typedef enum branchFilterTypes {
 	kGitXAllBranchesFilter = 0,
 	kGitXLocalRemoteBranchesFilter,
 	kGitXSelectedBranchFilter
-};
+} PBGitXBranchFilterType;
+
+static NSString * PBStringFromBranchFilterType(PBGitXBranchFilterType type) {
+    switch (type) {
+        case kGitXAllBranchesFilter:
+            return @"All";
+            break;
+        case kGitXLocalRemoteBranchesFilter:
+            return @"Local";
+            break;
+        case kGitXSelectedBranchFilter:
+            return @"Selected";
+            break;
+        default:
+            break;
+    }
+    return @"Not a branch filter type";
+}
 
 @class PBGitWindowController;
 @class PBGitCommit;
+@class PBGitSHA;
 
 @interface PBGitRepository : NSDocument {
 	PBGitHistoryList* revisionList;
@@ -33,6 +51,7 @@ enum branchFilterTypes {
 	NSMutableDictionary *refs;
 
 	PBGitRevSpecifier *_headRef; // Caching
+	PBGitSHA* _headSha;
 }
 
 - (void) cloneRepositoryToPath:(NSString *)path bare:(BOOL)isBare;
@@ -74,17 +93,17 @@ enum branchFilterTypes {
 - (void) reloadRefs;
 - (void) addRef:(PBGitRef *)ref fromParameters:(NSArray *)params;
 - (void) lazyReload;
-- (PBGitRevSpecifier*) headRef;
-- (NSString *) headSHA;
-- (PBGitCommit *) headCommit;
-- (NSString *) shaForRef:(PBGitRef *)ref;
-- (PBGitCommit *) commitForRef:(PBGitRef *)ref;
-- (PBGitCommit *) commitForSHA:(NSString *)sha;
-- (BOOL) isOnSameBranch:(NSString *)baseSHA asSHA:(NSString *)testSHA;
-- (BOOL) isSHAOnHeadBranch:(NSString *)testSHA;
-- (BOOL) isRefOnHeadBranch:(PBGitRef *)testRef;
-- (BOOL) checkRefFormat:(NSString *)refName;
-- (BOOL) refExists:(PBGitRef *)ref;
+- (PBGitRevSpecifier*)headRef;
+- (PBGitSHA *)headSHA;
+- (PBGitCommit *)headCommit;
+- (PBGitSHA *)shaForRef:(PBGitRef *)ref;
+- (PBGitCommit *)commitForRef:(PBGitRef *)ref;
+- (PBGitCommit *)commitForSHA:(PBGitSHA *)sha;
+- (BOOL)isOnSameBranch:(PBGitSHA *)baseSHA asSHA:(PBGitSHA *)testSHA;
+- (BOOL)isSHAOnHeadBranch:(PBGitSHA *)testSHA;
+- (BOOL)isRefOnHeadBranch:(PBGitRef *)testRef;
+- (BOOL)checkRefFormat:(NSString *)refName;
+- (BOOL)refExists:(PBGitRef *)ref;
 
 - (NSArray *) remotes;
 - (BOOL) hasRemotes;

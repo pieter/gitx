@@ -7,6 +7,7 @@
 //
 
 #import "PBGitCommit.h"
+#import "PBGitSHA.h"
 #import "PBGitDefaults.h"
 
 
@@ -15,23 +16,11 @@ NSString * const kGitXCommitType = @"commit";
 
 @implementation PBGitCommit
 
-@synthesize repository, subject, timestamp, author, parentShas, nParents, sign, lineInfo;
+@synthesize repository, subject, timestamp, author, sign, lineInfo;
+@synthesize sha;
+@synthesize parents;
+@synthesize committer;
 
-- (NSArray *) parents
-{
-	if (nParents == 0)
-		return NULL;
-
-	int i;
-	NSMutableArray *p = [NSMutableArray arrayWithCapacity:nParents];
-	for (i = 0; i < nParents; ++i)
-	{
-		char *s = git_oid_mkhex(parentShas + i);
-		[p addObject:[NSString stringWithUTF8String:s]];
-		free(s);
-	}
-	return p;
-}
 
 - (NSDate *)date
 {
@@ -49,17 +38,12 @@ NSString * const kGitXCommitType = @"commit";
 	return self.tree.children;
 }
 
-- (git_oid *)sha
++ (PBGitCommit *)commitWithRepository:(PBGitRepository*)repo andSha:(PBGitSHA *)newSha
 {
-	return &sha;
+	return [[self alloc] initWithRepository:repo andSha:newSha];
 }
 
-+ commitWithRepository:(PBGitRepository*)repo andSha:(git_oid)newSha
-{
-	return [[[self alloc] initWithRepository:repo andSha:newSha] autorelease];
-}
-
-- initWithRepository:(PBGitRepository*) repo andSha:(git_oid)newSha
+- (id)initWithRepository:(PBGitRepository*) repo andSha:(PBGitSHA *)newSha
 {
 	details = nil;
 	repository = repo;
@@ -69,32 +53,39 @@ NSString * const kGitXCommitType = @"commit";
 
 - (NSString *)realSha
 {
-	if (!realSHA) {
-		char *hex = git_oid_mkhex(&sha);
-		realSHA = [NSString stringWithUTF8String:hex];
-		free(hex);
-	}
-
-	return realSHA;
+	return sha.string;
 }
 
-- (BOOL) isOnSameBranchAs:(PBGitCommit *)other
+- (BOOL) isOnSameBranchAs:(PBGitCommit *)otherCommit
 {
-	if (!other)
+	if (!otherCommit)
 		return NO;
 
-	NSString *mySHA = [self realSha];
-	NSString *otherSHA = [other realSha];
-
-	if ([otherSHA isEqualToString:mySHA])
+	if ([self isEqual:otherCommit])
 		return YES;
 
-	return [repository isOnSameBranch:otherSHA asSHA:mySHA];
+	return [repository isOnSameBranch:otherCommit.sha asSHA:self.sha];
 }
 
 - (BOOL) isOnHeadBranch
 {
 	return [self isOnSameBranchAs:[repository headCommit]];
+}
+
+- (BOOL)isEqual:(id)otherCommit
+{
+	if (self == otherCommit)
+		return YES;
+
+	if (![otherCommit isMemberOfClass:[PBGitCommit class]])
+		return NO;
+
+	return [self.sha isEqual:[(PBGitCommit *)otherCommit sha]];
+}
+
+- (NSUInteger)hash
+{
+	return [self.sha hash];
 }
 
 // FIXME: Remove this method once it's unused.
@@ -149,17 +140,16 @@ NSString * const kGitXCommitType = @"commit";
 
 - (NSMutableArray *)refs
 {
-	return [[repository refs] objectForKey:[self realSha]];
+	return [[repository refs] objectForKey:[self sha]];
 }
 
 - (void) setRefs:(NSMutableArray *)refs
 {
-	[[repository refs] setObject:refs forKey:[self realSha]];
+	[[repository refs] setObject:refs forKey:[self sha]];
 }
 
 - (void)finalize
 {
-	free(parentShas);
 	[super finalize];
 }
 

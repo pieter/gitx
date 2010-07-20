@@ -8,6 +8,7 @@
 
 #import "PBWebHistoryController.h"
 #import "PBGitDefaults.h"
+#import "PBGitSHA.h"
 
 @implementation PBWebHistoryController
 
@@ -21,9 +22,17 @@
 	[historyController addObserver:self forKeyPath:@"webCommit" options:0 context:@"ChangedCommit"];
 }
 
+- (void)closeView
+{
+	[[self script] setValue:nil forKey:@"commit"];
+	[historyController removeObserver:self forKeyPath:@"webCommit"];
+
+	[super closeView];
+}
+
 - (void) didLoad
 {
-	currentSha = @"";
+	currentSha = nil;
 	[self changeContentTo: historyController.webCommit];
 }
 
@@ -41,7 +50,7 @@
 		return;
 
 	// The sha is the same, but refs may have changed.. reload it lazy
-	if ([currentSha isEqualToString: [content realSha]])
+	if ([currentSha isEqual:[content sha]])
 	{
 		[[self script] callWebScriptMethod:@"reload" withArguments: nil];
 		return;
@@ -54,26 +63,28 @@
 		[self performSelector:_cmd withObject:content afterDelay:0.05];
 		return;
 	}
-	currentSha = [content realSha];
+	currentSha = [content sha];
 
 	// Now we load the extended details. We used to do this in a separate thread,
 	// but this caused some funny behaviour because NSTask's and NSThread's don't really
 	// like each other. Instead, just do it async.
 
-	NSMutableArray *taskArguments = [NSMutableArray arrayWithObjects:@"show", @"--pretty=raw", @"-M", @"--no-color", currentSha, nil];
+	NSMutableArray *taskArguments = [NSMutableArray arrayWithObjects:@"show", @"--pretty=raw", @"-M", @"--no-color", [currentSha string], nil];
 	if (![PBGitDefaults showWhitespaceDifferences])
 		[taskArguments insertObject:@"-w" atIndex:1];
 
 	NSFileHandle *handle = [repository handleForArguments:taskArguments];
 	NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
 	// Remove notification, in case we have another one running
-	[nc removeObserver:self];
+	[nc removeObserver:self name:NSFileHandleReadToEndOfFileCompletionNotification object:nil];
 	[nc addObserver:self selector:@selector(commitDetailsLoaded:) name:NSFileHandleReadToEndOfFileCompletionNotification object:handle]; 
 	[handle readToEndOfFileInBackgroundAndNotify];
 }
 
 - (void)commitDetailsLoaded:(NSNotification *)notification
 {
+	[[NSNotificationCenter defaultCenter] removeObserver:self name:NSFileHandleReadToEndOfFileCompletionNotification object:nil];
+
 	NSData *data = [[notification userInfo] valueForKey:NSFileHandleNotificationDataItem];
 	if (!data)
 		return;
@@ -88,9 +99,9 @@
 	[[view windowScriptObject] callWebScriptMethod:@"loadCommitDetails" withArguments:[NSArray arrayWithObject:details]];
 }
 
-- (void) selectCommit: (NSString*) sha
+- (void)selectCommit:(NSString *)sha
 {
-	[historyController selectCommit:sha];
+	[historyController selectCommit:[PBGitSHA shaWithString:sha]];
 }
 
 - (void) sendKey: (NSString*) key
@@ -127,6 +138,15 @@ contextMenuItemsForElement:(NSDictionary *)element
 		}
 		if ([node hasAttributes] && [[node attributes] getNamedItem:@"representedFile"])
 			return [historyController menuItemsForPaths:[NSArray arrayWithObject:[[[node attributes] getNamedItem:@"representedFile"] value]]];
+        else if ([[node class] isEqual:[DOMHTMLImageElement class]]) {
+            // Copy Image is the only menu item that makes sense here since we don't need
+			// to download the image or open it in a new window (besides with the
+			// current implementation these two entries can crash GitX anyway)
+			for (NSMenuItem *item in defaultMenuItems)
+				if ([item tag] == WebMenuItemTagCopyImageToClipboard)
+					return [NSArray arrayWithObject:item];
+			return nil;
+        }
 
 		node = [node parentNode];
 	}
@@ -149,9 +169,8 @@ contextMenuItemsForElement:(NSDictionary *)element
 	return [historyController valueForKeyPath:[@"repository.config." stringByAppendingString:config]];
 }
 
-- (void) finalize
+- (void)finalize
 {
-	[historyController removeObserver:self forKeyPath:@"webCommit"];
 	[super finalize];
 }
 

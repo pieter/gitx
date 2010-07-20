@@ -13,9 +13,12 @@
 #import "PBCollapsibleSplitView.h"
 
 @class PBGitSidebarController;
+@class PBWebHistoryController;
 @class PBGitGradientBarView;
 @class PBRefController;
 @class QLPreviewPanel;
+@class PBCommitList;
+@class PBGitSHA;
 
 @interface PBGitHistoryController : PBViewController {
 	IBOutlet PBRefController *refController;
@@ -24,8 +27,9 @@
 	IBOutlet NSTreeController* treeController;
 	IBOutlet NSOutlineView* fileBrowser;
 	NSArray *currentFileBrowserSelectionPath;
-	IBOutlet NSTableView* commitList;
+	IBOutlet PBCommitList* commitList;
 	IBOutlet PBCollapsibleSplitView *historySplitView;
+	IBOutlet PBWebHistoryController *webHistoryController;
     QLPreviewPanel* previewPanel;
 
 	IBOutlet PBGitGradientBarView *upperToolbarView;
@@ -57,10 +61,10 @@
 - (IBAction) setTreeView:(id)sender;
 - (IBAction) setBranchFilter:(id)sender;
 
-- (void) selectCommit: (NSString*) commit;
-- (IBAction) refresh: sender;
+- (void)selectCommit:(PBGitSHA *)commit;
+- (IBAction) refresh:(id)sender;
 - (IBAction) toggleQLPreviewPanel:(id)sender;
-- (IBAction) openSelectedFile: sender;
+- (IBAction) openSelectedFile:(id)sender;
 - (void) updateQuicklookForce: (BOOL) force;
 
 // Context menu methods

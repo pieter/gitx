@@ -33,9 +33,9 @@ public:
 		d_index = s_colorIndex++;
 	}
 	
-	bool isCommit(git_oid *sha) const
+	bool isCommit(git_oid sha) const
 	{
-		return !git_oid_cmp(&d_sha, sha);
+		return !git_oid_cmp(&d_sha, &sha);
 	}
 	
 	void setSha(git_oid sha);

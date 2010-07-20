@@ -12,7 +12,6 @@
 #import "PBGitGrapher.h"
 #import "PBGitRevSpecifier.h"
 
-#include "git/oid.h"
 #include <ext/stdio_filebuf.h>
 #include <iostream>
 #include <string>
@@ -59,6 +58,12 @@ using namespace std;
 }
 
 
+- (void)cancel
+{
+	[parseThread cancel];
+}
+
+
 - (void) finishedParsing
 {
 	self.isParsing = NO;
@@ -91,18 +96,19 @@ using namespace std;
 - (void) walkRevisionListWithSpecifier:(PBGitRevSpecifier*)rev
 {
 	NSDate *start = [NSDate date];
+	NSDate *lastUpdate = [NSDate date];
 	NSMutableArray *revisions = [NSMutableArray array];
 	PBGitGrapher *g = [[PBGitGrapher alloc] initWithRepository:repository];
 	std::map<string, NSStringEncoding> encodingMap;
 	NSThread *currentThread = [NSThread currentThread];
 
-	NSString *formatString = @"--pretty=format:%H\01%e\01%an\01%s\01%P\01%at";
+	NSString *formatString = @"--pretty=format:%H\01%e\01%an\01%cn\01%s\01%P\01%at";
 	BOOL showSign = [rev hasLeftRight];
 
 	if (showSign)
 		formatString = [formatString stringByAppendingString:@"\01%m"];
 	
-	NSMutableArray *arguments = [NSMutableArray arrayWithObjects:@"log", @"-z", @"--early-output", @"--topo-order", @"--children", formatString, nil];
+	NSMutableArray *arguments = [NSMutableArray arrayWithObjects:@"log", @"-z", @"--topo-order", @"--children", formatString, nil];
 
 	if (!rev)
 		[arguments addObject:@"HEAD"];
@@ -120,33 +126,12 @@ using namespace std;
 
 	int num = 0;
 	while (true) {
+		if ([currentThread isCancelled])
+			break;
+
 		string sha;
 		if (!getline(stream, sha, '\1'))
 			break;
-
-		// We reached the end of some temporary output. Show what we have
-		// until now, and then start again. The sha of the next thing is still
-		// in this buffer. So, we use a substring of current input.
-		if (sha[1] == 'i') // Matches 'Final output'
-		{
-			num = 0;
-			if ([currentThread isCancelled])
-				break;
-
-			NSDictionary *update = [NSDictionary dictionaryWithObjectsAndKeys:currentThread, kRevListThreadKey, revisions, kRevListRevisionsKey, nil];
-			[self performSelectorOnMainThread:@selector(updateCommits:) withObject:update waitUntilDone:NO];
-			revisions = [NSMutableArray array];
-
-			if (isGraphing)
-				g = [[PBGitGrapher alloc] initWithRepository:repository];
-			revisions = [NSMutableArray array];
-
-			// If the length is < 40, then there are no commits.. quit now
-			if (sha.length() < 40)
-				break;
-
-			sha = sha.substr(sha.length() - 40, 40);
-		}
 
 		// From now on, 1.2 seconds
 		string encoding_str;
@@ -164,10 +149,13 @@ using namespace std;
 
 		git_oid oid;
 		git_oid_mkstr(&oid, sha.c_str());
-		PBGitCommit* newCommit = [[PBGitCommit alloc] initWithRepository:repository andSha:oid];
+		PBGitCommit *newCommit = [PBGitCommit commitWithRepository:repository andSha:[PBGitSHA shaWithOID:oid]];
 
 		string author;
 		getline(stream, author, '\1');
+
+		string committer;
+		getline(stream, committer, '\1');
 
 		string subject;
 		getline(stream, subject, '\1');
@@ -181,13 +169,12 @@ using namespace std;
 				continue;
 			}
 			int nParents = (parentString.size() + 1) / 41;
-			git_oid *parents = (git_oid *)malloc(sizeof(git_oid) * nParents);
+			NSMutableArray *parents = [NSMutableArray arrayWithCapacity:nParents];
 			int parentIndex;
 			for (parentIndex = 0; parentIndex < nParents; ++parentIndex)
-				git_oid_mkstr(parents + parentIndex, parentString.substr(parentIndex * 41, 40).c_str());
-			
-			newCommit.parentShas = parents;
-			newCommit.nParents = nParents;
+				[parents addObject:[PBGitSHA shaWithCString:parentString.substr(parentIndex * 41, 40).c_str()]];
+
+			[newCommit setParents:parents];
 		}
 
 		int time;
@@ -195,6 +182,7 @@ using namespace std;
 
 		[newCommit setSubject:[NSString stringWithCString:subject.c_str() encoding:encoding]];
 		[newCommit setAuthor:[NSString stringWithCString:author.c_str() encoding:encoding]];
+		[newCommit setCommitter:[NSString stringWithCString:committer.c_str() encoding:encoding]];
 		[newCommit setTimestamp:time];
 		
 		if (showSign)
@@ -216,18 +204,19 @@ using namespace std;
 		if (isGraphing)
 			[g decorateCommit:newCommit];
 
-		if (++num % 1000 == 0) {
-			if ([currentThread isCancelled])
-				break;
-			NSDictionary *update = [NSDictionary dictionaryWithObjectsAndKeys:currentThread, kRevListThreadKey, revisions, kRevListRevisionsKey, nil];
-			[self performSelectorOnMainThread:@selector(updateCommits:) withObject:update waitUntilDone:NO];
-			revisions = [NSMutableArray array];
+		if (++num % 100 == 0) {
+			if ([[NSDate date] timeIntervalSinceDate:lastUpdate] > 0.1) {
+				NSDictionary *update = [NSDictionary dictionaryWithObjectsAndKeys:currentThread, kRevListThreadKey, revisions, kRevListRevisionsKey, nil];
+				[self performSelectorOnMainThread:@selector(updateCommits:) withObject:update waitUntilDone:NO];
+				revisions = [NSMutableArray array];
+				lastUpdate = [NSDate date];
+			}
 		}
 	}
 	
 	if (![currentThread isCancelled]) {
 		NSTimeInterval duration = [[NSDate date] timeIntervalSinceDate:start];
-		NSLog(@"Loaded %i commits in %f seconds", num, duration);
+		NSLog(@"Loaded %i commits in %f seconds (%f/sec)", num, duration, num/duration);
 
 		// Make sure the commits are stored before exiting.
 		NSDictionary *update = [NSDictionary dictionaryWithObjectsAndKeys:currentThread, kRevListThreadKey, revisions, kRevListRevisionsKey, nil];
@@ -239,6 +228,7 @@ using namespace std;
 		NSLog(@"[%@ %s] thread has been canceled", [self class], _cmd);
 	}
 
+	[task terminate];
 	[task waitUntilExit];
 }
 

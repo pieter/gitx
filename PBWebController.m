@@ -46,10 +46,14 @@
 	return [view windowScriptObject];
 }
 
-- (void) closeView
+- (void)closeView
 {
-	if (view)
+	if (view) {
+		[[self script] setValue:nil forKey:@"Controller"];
 		[view close];
+	}
+
+	[[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 # pragma mark Delegate methods
@@ -110,8 +114,14 @@
 
 - (BOOL) isReachable:(NSString *)hostname
 {
-	SCNetworkConnectionFlags flags;
-	if (!SCNetworkCheckReachabilityByName([hostname cStringUsingEncoding:NSASCIIStringEncoding], &flags))
+    SCNetworkReachabilityRef target;
+    SCNetworkConnectionFlags flags = 0;
+    Boolean reachable;
+    target = SCNetworkReachabilityCreateWithName(NULL, [hostname cStringUsingEncoding:NSASCIIStringEncoding]);
+    reachable = SCNetworkReachabilityGetFlags(target, &flags);
+	CFRelease(target);
+
+	if (!reachable)
 		return FALSE;
 
 	// If a connection is required, then it's not reachable

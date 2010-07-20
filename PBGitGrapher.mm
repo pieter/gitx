@@ -39,13 +39,16 @@ void add_line(struct PBGitGraphLine *lines, int *nLines, int upper, int from, in
 	int i = 0, newPos = -1;
 	std::list<PBGitLane *> *currentLanes = new std::list<PBGitLane *>;
 	std::list<PBGitLane *> *previousLanes = (std::list<PBGitLane *> *)pl;
+	NSArray *parents = [commit parents];
+	int nParents = [parents count];
 
-	int maxLines = (previousLanes->size() + commit.nParents + 2) * 2;
+	int maxLines = (previousLanes->size() + nParents + 2) * 2;
 	struct PBGitGraphLine *lines = (struct PBGitGraphLine *)malloc(sizeof(struct PBGitGraphLine) * maxLines);
 	int currentLine = 0;
 
 	PBGitLane *currentLane = NULL;
 	BOOL didFirst = NO;
+	git_oid commit_oid = [[commit sha] oid];
 	
 	// First, iterate over earlier columns and pass through any that don't want this commit
 	if (previous != nil) {
@@ -55,14 +58,14 @@ void add_line(struct PBGitGraphLine *lines, int *nLines, int upper, int from, in
 			i++;
 			// This is our commit! We should do a "merge": move the line from
 			// our upperMapping to their lowerMapping
-			if ((*it)->isCommit([commit sha])) {
+			if ((*it)->isCommit(commit_oid)) {
 				if (!didFirst) {
 					didFirst = YES;
 					currentLanes->push_back(*it);
 					currentLane = currentLanes->back();
 					newPos = currentLanes->size();
 					add_line(lines, &currentLine, 1, i, newPos,(*it)->index());
-					if (commit.nParents)
+					if (nParents)
 						add_line(lines, &currentLine, 0, newPos, newPos,(*it)->index());
 				}
 				else {
@@ -84,8 +87,9 @@ void add_line(struct PBGitGraphLine *lines, int *nLines, int upper, int from, in
 	//Add your own parents
 
 	// If we already did the first parent, don't do so again
-	if (!didFirst && currentLanes->size() < MAX_LANES && commit.nParents) {
-		PBGitLane *newLane = new PBGitLane(commit.parentShas);
+	if (!didFirst && currentLanes->size() < MAX_LANES && nParents) {
+		git_oid parentOID = [[parents objectAtIndex:0] oid];
+		PBGitLane *newLane = new PBGitLane(&parentOID);
 		currentLanes->push_back(newLane);
 		newPos = currentLanes->size();
 		add_line(lines, &currentLine, 0, newPos, newPos, newLane->index());
@@ -97,15 +101,15 @@ void add_line(struct PBGitGraphLine *lines, int *nLines, int upper, int from, in
 	// This boolean will tell us if that happened
 	BOOL addedParent = NO;
 
-	int parentIndex;
-	for (parentIndex = 1; parentIndex < commit.nParents; ++parentIndex) {
-		git_oid *parent = commit.parentShas + parentIndex;
+	int parentIndex = 0;
+	for (parentIndex = 1; parentIndex < nParents; ++parentIndex) {
+		git_oid parentOID = [[parents objectAtIndex:parentIndex] oid];
 		int i = 0;
 		BOOL was_displayed = NO;
 		std::list<PBGitLane *>::iterator it = currentLanes->begin();
 		for (; it != currentLanes->end(); ++it) {
 			i++;
-			if ((*it)->isCommit(parent)) {
+			if ((*it)->isCommit(parentOID)) {
 				add_line(lines, &currentLine, 0, i, newPos,(*it)->index());
 				was_displayed = YES;
 				break;
@@ -119,12 +123,19 @@ void add_line(struct PBGitGraphLine *lines, int *nLines, int upper, int from, in
 
 		// Really add this parent
 		addedParent = YES;
-		PBGitLane *newLane = new PBGitLane(parent);
+		PBGitLane *newLane = new PBGitLane(&parentOID);
 		currentLanes->push_back(newLane);
 		add_line(lines, &currentLine, 0, currentLanes->size(), newPos, newLane->index());
 	}
 
-	previous = [[PBGraphCellInfo alloc] initWithPosition:newPos andLines:lines];
+	if (commit.lineInfo) {
+		previous = commit.lineInfo;
+		previous.position = newPos;
+		previous.lines = lines;
+	}
+	else
+		previous = [[PBGraphCellInfo alloc] initWithPosition:newPos andLines:lines];
+
 	if (currentLine > maxLines)
 		NSLog(@"Number of lines: %i vs allocated: %i", currentLine, maxLines);
 
@@ -138,8 +149,8 @@ void add_line(struct PBGitGraphLine *lines, int *nLines, int upper, int from, in
 		previous.numColumns = currentLanes->size();
 
 	// Update the current lane to point to the new parent
-	if (currentLane && commit.nParents > 0)
-		currentLane->setSha(commit.parentShas[0]);
+	if (currentLane && nParents > 0)
+		currentLane->setSha([[parents objectAtIndex:0] oid]);
 	else
 		currentLanes->remove(currentLane);
 

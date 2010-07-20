@@ -216,9 +216,6 @@
 	
 	NSString* p = [handle readLine];
 	while (p.length > 0) {
-		if ([p isEqualToString:@"\r"])
-			break;
-
 		BOOL isLeaf = ([p characterAtIndex:p.length - 1] != '/');
 		if (!isLeaf)
 			p = [p substringToIndex:p.length -1];

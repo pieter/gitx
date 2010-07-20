@@ -9,18 +9,23 @@
 #import <Cocoa/Cocoa.h>
 
 
+#define kCurrentQueueKey @"kCurrentQueueKey"
+#define kNewCommitsKey @"kNewCommitsKey"
+
+
 @class PBGitGrapher;
 
 
 @interface PBGitHistoryGrapher : NSObject {
 	id delegate;
+	NSOperationQueue *currentQueue;
 
 	NSMutableSet *searchSHAs;
 	PBGitGrapher *grapher;
 	BOOL viewAllBranches;
 }
 
-- (id) initWithBaseCommits:(NSSet *)commits viewAllBranches:(BOOL)viewAll delegate:(id)theDelegate;
+- (id) initWithBaseCommits:(NSSet *)commits viewAllBranches:(BOOL)viewAll queue:(NSOperationQueue *)queue delegate:(id)theDelegate;
 - (void) graphCommits:(NSArray *)revList;
 
 @end

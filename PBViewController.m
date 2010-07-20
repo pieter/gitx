@@ -27,14 +27,16 @@
 	return self;
 }
 
-- (void) removeView
+- (void)closeView
 {
 	[self unbind:@"repository"];
-	[[self view] removeFromSuperview];	// remove the current view
+	if (hasViewLoaded)
+		[[self view] removeFromSuperview];	// remove the current view
 }
 
-- (void) awakeFromNib
+- (void)awakeFromNib
 {
+	hasViewLoaded = YES;
 }
 
 - (NSResponder *)firstResponder;
@@ -42,12 +44,12 @@
 	return nil;
 }
 
-// The next methods should be implemented in the subclass if necessary
-- (void)updateView
+- (IBAction) refresh: sender
 {
 }
 
-- (IBAction) refresh: sender
+// The next methods should be implemented in the subclass if necessary
+- (void)updateView
 {
 }
 

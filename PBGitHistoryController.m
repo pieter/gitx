@@ -7,6 +7,7 @@
 //
 
 #import "PBGitHistoryController.h"
+#import "PBWebHistoryController.h"
 #import "CWQuickLook.h"
 #import "PBGitGrapher.h"
 #import "PBGitRevisionCell.h"
@@ -47,7 +48,6 @@
 	[treeController addObserver:self forKeyPath:@"selection" options:0 context:@"treeChange"];
 
 	[repository.revisionList addObserver:self forKeyPath:@"isUpdating" options:0 context:@"revisionListUpdating"];
-	[repository.revisionList addObserver:self forKeyPath:@"updatedGraph" options:0 context:@"revisionListUpdatedGraph"];
 	[repository addObserver:self forKeyPath:@"currentBranch" options:0 context:@"branchChange"];
 	[repository addObserver:self forKeyPath:@"refs" options:0 context:@"updateRefs"];
 
@@ -82,26 +82,34 @@
 	[super awakeFromNib];
 }
 
-- (void) updateKeys
+- (void)updateKeys
 {
-	// Remove any references in the QLPanel
-	//[[QLPreviewPanel sharedPreviewPanel] setURLs:[NSArray array] currentIndex:0 preservingDisplayState:YES];
-	// We have to do this manually, as NSTreeController leaks memory?
-	//[treeController setSelectionIndexPaths:[NSArray array]];
+	PBGitCommit *lastObject = [[commitController selectedObjects] lastObject];
+	if (lastObject) {
+		if (![selectedCommit isEqual:lastObject]) {
+			selectedCommit = lastObject;
 
-	selectedCommit = [[commitController selectedObjects] lastObject];
+			BOOL isOnHeadBranch = [selectedCommit isOnHeadBranch];
+			[mergeButton setEnabled:!isOnHeadBranch];
+			[cherryPickButton setEnabled:!isOnHeadBranch];
+			[rebaseButton setEnabled:!isOnHeadBranch];
+		}
+	}
+	else {
+		[mergeButton setEnabled:NO];
+		[cherryPickButton setEnabled:NO];
+		[rebaseButton setEnabled:NO];
+	}
 
 	if (self.selectedCommitDetailsIndex == kHistoryTreeViewIndex) {
 		self.gitTree = selectedCommit.tree;
 		[self restoreFileBrowserSelection];
 	}
-	else // kHistoryDetailViewIndex
+	else {
+		// kHistoryDetailViewIndex
+		if (![self.webCommit isEqual:selectedCommit])
 		self.webCommit = selectedCommit;
-
-	BOOL isOnHeadBranch = [selectedCommit isOnHeadBranch];
-	[mergeButton setEnabled:!isOnHeadBranch];
-	[cherryPickButton setEnabled:!isOnHeadBranch];
-	[rebaseButton setEnabled:!isOnHeadBranch];
+	}
 }
 
 - (void) updateBranchFilterMatrix
@@ -138,6 +146,11 @@
 		return [arrangedObjects objectAtIndex:0];
 
 	return nil;
+}
+
+- (BOOL)isCommitSelected
+{
+	return [selectedCommit isEqual:[[commitController selectedObjects] lastObject]];
 }
 
 - (void) setSelectedCommitDetailsIndex:(int)detailsIndex
@@ -229,21 +242,18 @@
 
 	if([(NSString *)context isEqualToString:@"updateCommitCount"] || [(NSString *)context isEqualToString:@"revisionListUpdating"]) {
 		[self updateStatus];
-		return;
-	}
 
-	if([(NSString *)context isEqualToString:@"revisionListUpdatedGraph"]) {
 		if ([repository.currentBranch isSimpleRef])
 			[self selectCommit:[repository shaForRef:[repository.currentBranch ref]]];
 		else
-			[self selectCommit:[[self firstCommit] realSha]];
+			[self selectCommit:[[self firstCommit] sha]];
 		return;
 	}
 
 	[super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
 }
 
-- (IBAction) openSelectedFile: sender
+- (IBAction) openSelectedFile:(id)sender
 {
 	NSArray* selectedFiles = [treeController selectedObjects];
 	if ([selectedFiles count] == 0)
@@ -339,7 +349,7 @@
 	}
 }
 
-- (IBAction) refresh: sender
+- (IBAction) refresh:(id)sender
 {
 	[repository forceUpdateRevisions];
 }
@@ -363,24 +373,31 @@
 
 - (void) scrollSelectionToTopOfViewFrom:(NSInteger)oldIndex
 {
-	if (oldIndex == NSIntegerMax)
+	if (oldIndex == NSNotFound)
 		oldIndex = 0;
 
 	NSInteger newIndex = [[commitController selectionIndexes] firstIndex];
 
 	if (newIndex > oldIndex) {
-		NSInteger visibleRows = floorf([[commitList superview] bounds].size.height / [commitList rowHeight]);
-		newIndex += visibleRows - 1;
+        CGFloat sviewHeight = [[commitList superview] bounds].size.height;
+        CGFloat rowHeight = [commitList rowHeight];
+		NSInteger visibleRows = roundf(sviewHeight / rowHeight );
+		newIndex += (visibleRows - 1);
 		if (newIndex >= [[commitController content] count])
 			newIndex = [[commitController content] count] - 1;
 	}
 
+    if (newIndex != oldIndex) {
+        commitList.useAdjustScroll = YES;
+    }
+
 	[commitList scrollRowToVisible:newIndex];
+    commitList.useAdjustScroll = NO;
 }
 
-- (NSArray *) selectedObjectsForSHA:(NSString *)commitSHA
+- (NSArray *) selectedObjectsForSHA:(PBGitSHA *)commitSHA
 {
-	NSPredicate *selection = [NSPredicate predicateWithFormat:@"realSha == %@", commitSHA];
+	NSPredicate *selection = [NSPredicate predicateWithFormat:@"sha == %@", commitSHA];
 	NSArray *selectedCommits = [[commitController content] filteredArrayUsingPredicate:selection];
 
 	if (([selectedCommits count] == 0) && [self firstCommit])
@@ -389,9 +406,9 @@
 	return selectedCommits;
 }
 
-- (void) selectCommit:(NSString *)commitSHA
+- (void)selectCommit:(PBGitSHA *)commitSHA
 {
-	if (!forceSelectionUpdate && [[selectedCommit realSha] isEqualToString:commitSHA])
+	if (!forceSelectionUpdate && [[[[commitController selectedObjects] lastObject] sha] isEqual:commitSHA])
 		return;
 
 	NSInteger oldIndex = [[commitController selectionIndexes] firstIndex];
@@ -401,6 +418,8 @@
 
 	if (repository.currentBranchFilter != kGitXSelectedBranchFilter)
 		[self scrollSelectionToTopOfViewFrom:oldIndex];
+
+	forceSelectionUpdate = NO;
 }
 
 - (BOOL) hasNonlinearPath
@@ -408,17 +427,25 @@
 	return [commitController filterPredicate] || [[commitController sortDescriptors] count] > 0;
 }
 
-- (void) removeView
+- (void)closeView
 {
 	float position = [[[historySplitView subviews] objectAtIndex:0] frame].size.height;
 	[[NSUserDefaults standardUserDefaults] setFloat:position forKey:@"PBGitSplitViewPosition"];
 	[[NSUserDefaults standardUserDefaults] synchronize];
-	[webView close];
-	[commitController removeObserver:self forKeyPath:@"selection"];
-	[treeController removeObserver:self forKeyPath:@"selection"];
-	[repository removeObserver:self forKeyPath:@"currentBranch"];
 
-	[super removeView];
+	if (commitController) {
+		[commitController removeObserver:self forKeyPath:@"selection"];
+		[commitController removeObserver:self forKeyPath:@"arrangedObjects.@count"];
+		[treeController removeObserver:self forKeyPath:@"selection"];
+
+		[repository.revisionList removeObserver:self forKeyPath:@"isUpdating"];
+		[repository removeObserver:self forKeyPath:@"currentBranch"];
+		[repository removeObserver:self forKeyPath:@"refs"];
+	}
+
+	[webHistoryController closeView];
+
+	[super closeView];
 }
 
 #pragma mark Table Column Methods
@@ -514,7 +541,7 @@
 	PBGitRef *headRef = [[repository headRef] ref];
 	NSString *headRefName = [headRef shortName];
 	NSString *diffTitle = [NSString stringWithFormat:@"Diff %@ with %@", multiple ? @"files" : @"file", headRefName];
-	BOOL isHead = [[selectedCommit realSha] isEqualToString:[repository headSHA]];
+	BOOL isHead = [[selectedCommit sha] isEqual:[repository headSHA]];
 	NSMenuItem *diffItem = [[NSMenuItem alloc] initWithTitle:diffTitle
 													  action:isHead ? nil : @selector(diffFilesAction:)
 											   keyEquivalent:@""];
