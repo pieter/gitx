@@ -125,7 +125,7 @@
 	
 	PBSourceViewItem *item = nil;
 	for (PBSourceViewItem *it in items)
-		if (item = [it findRev:rev])
+		if ( (item = [it findRev:rev]) != nil )
 			break;
 	
 	if (!item) {
@@ -133,7 +133,7 @@
 		// Try to find the just added item again.
 		// TODO: refactor with above.
 		for (PBSourceViewItem *it in items)
-			if (item = [it findRev:rev])
+			if ( (item = [it findRev:rev]) != nil )
 				break;
 	}
 	
@@ -147,7 +147,7 @@
 {
 	PBSourceViewItem *foundItem = nil;
 	for (PBSourceViewItem *item in items)
-		if (foundItem = [item findRev:rev])
+		if ( (foundItem = [item findRev:rev]) != nil )
 			return foundItem;
 	return nil;
 }

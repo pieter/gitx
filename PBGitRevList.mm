@@ -165,7 +165,7 @@ using namespace std;
 		if (parentString.size() != 0)
 		{
 			if (((parentString.size() + 1) % 41) != 0) {
-				NSLog(@"invalid parents: %i", parentString.size());
+				NSLog(@"invalid parents: %zu", parentString.size());
 				continue;
 			}
 			int nParents = (parentString.size() + 1) / 41;
@@ -225,7 +225,7 @@ using namespace std;
 		[self performSelectorOnMainThread:@selector(finishedParsing) withObject:nil waitUntilDone:NO];
 	}
 	else {
-		NSLog(@"[%@ %s] thread has been canceled", [self class], _cmd);
+		NSLog(@"[%@ %s] thread has been canceled", [self class], NSStringFromSelector(_cmd));
 	}
 
 	[task terminate];

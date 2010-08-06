@@ -676,7 +676,7 @@
 	PBGitTree *treeItem = (PBGitTree *)[[treeController selectedObjects] objectAtIndex:index];
 	NSURL *previewURL = [NSURL fileURLWithPath:[treeItem tmpFileNameForContents]];
 
-    return (<QLPreviewItem>)previewURL;
+    return (id <QLPreviewItem>)previewURL;
 }
 
 #pragma mark <QLPreviewPanelDelegate>

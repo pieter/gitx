@@ -232,7 +232,7 @@ NSString* PBGitRepositoryErrorDomain = @"GitXErrorDomain";
 		sha = [PBGitSHA shaWithString:[components objectAtIndex:2]];
 
 	NSMutableArray* curRefs;
-	if (curRefs = [refs objectForKey:sha])
+	if ( (curRefs = [refs objectForKey:sha]) != nil )
 		[curRefs addObject:ref];
 	else
 		[refs setObject:[NSMutableArray arrayWithObject:ref] forKey:sha];

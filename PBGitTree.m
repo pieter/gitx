@@ -65,10 +65,12 @@
 
 - (BOOL)hasBinaryHeader:(NSString*)contents
 {
-	if(!contents)
+	if (!contents)
 		return NO;
 
-	return [contents rangeOfString:@"\0" options:0 range:NSMakeRange(0, ([contents length] >= 8000) ? 7999 : [contents length])].location != NSNotFound;
+	return [contents rangeOfString:@"\0"
+						   options:0
+							 range:NSMakeRange(0, ([contents length] >= 8000) ? 7999 : [contents length])].location != NSNotFound;
 }
 
 - (BOOL)hasBinaryAttributes
