@@ -65,6 +65,8 @@ a.servicebutton{
 	font-family: Monaco;
 	font-size: 10px;
 	word-wrap: break-word; /* make the commit message word wrap (doesn't affect diffs) */
+	padding: 3px; /* don't let the commit message hit the edge of the window */
+	margin: 1em;
 }
 
 #files {
