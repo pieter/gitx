@@ -188,6 +188,8 @@
 	[[NSColor blackColor] setStroke];
 
 	NSRect lastRect;
+	lastRect.origin.x = 0;
+	lastRect.size.width = 0;
 	int index = 0;
 	for (NSValue *rectValue in [self rectsForRefsinRect:*refRect])
 	{
