@@ -304,6 +304,19 @@
 	
 }
 
+- (void) copyCommitSHA
+{
+	PBGitCommit *commit = [[commitController selectedObjects] objectAtIndex:0];
+	if (!commit)
+		return;
+	NSString *info = [[commit realSha] substringWithRange:NSMakeRange(0, 7)];
+
+	NSPasteboard *a =[NSPasteboard generalPasteboard];
+	[a declareTypes:[NSArray arrayWithObject:NSStringPboardType] owner:self];
+	[a setString:info forType: NSStringPboardType];
+
+}
+
 - (IBAction) toggleQLPreviewPanel:(id)sender
 {
 	if ([[QLPreviewPanel sharedPreviewPanel] respondsToSelector:@selector(setDataSource:)]) {

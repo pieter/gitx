@@ -83,6 +83,7 @@
 - (IBAction) rebase:(id)sender;
 
 - (void) copyCommitInfo;
+- (void) copyCommitSHA;
 
 - (BOOL) hasNonlinearPath;
 

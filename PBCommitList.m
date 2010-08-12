@@ -51,6 +51,11 @@
 	[controller copyCommitInfo];
 }
 
+- (void) copySHA:(id)sender
+{
+	[controller copyCommitSHA];
+}
+
 // !!! Andre Berg 20100330: Used from -scrollSelectionToTopOfViewFrom: of PBGitHistoryController
 // so that when the history controller udpates the branch filter the origin of the superview gets
 // shifted into multiples of the row height. Otherwise the top selected row will always be off by
