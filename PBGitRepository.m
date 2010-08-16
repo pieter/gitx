@@ -61,6 +61,8 @@ NSString* PBGitRepositoryErrorDomain = @"GitXErrorDomain";
 
 	if ([newPath isEqualToString:@".git"])
 		return [NSURL fileURLWithPath:[repositoryPath stringByAppendingPathComponent:@".git"]];
+	if ([newPath isEqualToString:@"."])
+		return [NSURL fileURLWithPath:repositoryPath];
 	if ([newPath length] > 0)
 		return [NSURL fileURLWithPath:newPath];
 
