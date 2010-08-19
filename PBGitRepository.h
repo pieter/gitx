@@ -104,6 +104,7 @@ static NSString * PBStringFromBranchFilterType(PBGitXBranchFilterType type) {
 - (BOOL)isRefOnHeadBranch:(PBGitRef *)testRef;
 - (BOOL)checkRefFormat:(NSString *)refName;
 - (BOOL)refExists:(PBGitRef *)ref;
+- (PBGitRef *)refForName:(NSString *)name;
 
 - (NSArray *) remotes;
 - (BOOL) hasRemotes;

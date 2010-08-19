@@ -6,61 +6,52 @@
 //  Copyright 2008 __MyCompanyName__. All rights reserved.
 //
 
-#import "PBCLIProxy.h"
 #import "PBGitBinary.h"
 #import "PBEasyPipe.h"
+#import "GitXScriptingConstants.h"
+#import "GitX.h"
 
-NSDistantObject* connect()
-{
-	id proxy = [NSConnection rootProxyForConnectionWithRegisteredName:ConnectionName host:nil];
-	[proxy setProtocolForProxy:@protocol(GitXCliToolProtocol)];
-	return proxy;
-}
 
-NSDistantObject *createProxy()
-{
-	NSDistantObject *proxy = connect();
 
-	if (proxy)
-		return proxy;
-
-	// The connection failed, so try to launch the app
-	[[NSWorkspace sharedWorkspace] launchAppWithBundleIdentifier: @"nl.frim.GitX"
-														 options: NSWorkspaceLaunchWithoutActivation
-								  additionalEventParamDescriptor: nil
-												launchIdentifier: nil];
-
-	// Now attempt to connect, allowing the app time to startup
-	int attempt;
-	for (attempt = 0; proxy == nil && attempt < 50; ++attempt) {
-		if ( (proxy = connect()) != nil )
-			return proxy;
-
-		usleep(15000);
-	}
-
-	// not succesful!
-	fprintf(stderr, "Couldn't connect to app server!\n");
-	exit(1);
-	return nil;
-}
+#pragma mark Commands handled locally
 
 void usage(char const *programName)
 {
 
-	printf("Usage: %s (--help|--version)\n", programName);
-	printf("   or: %s (--commit|-h)\n", programName);
+	printf("Usage: %s (--help|--version|--git-path)\n", programName);
+	printf("   or: %s (--commit)\n", programName);
+	printf("   or: %s (--all|--local|--branch) [branch/tag]\n", programName);
 	printf("   or: %s <revlist options>\n", programName);
+	printf("   or: %s (--diff)\n", programName);
 	printf("\n");
-	printf("\t-h, --help          print this help\n");
-	printf("\t--commit, -c        start GitX in commit mode\n");
+	printf("    -h, --help             print this help\n");
+	printf("    -v, --version          prints version info for both GitX and git\n");
+	printf("    --git-path             prints the path to the directory containing git\n");
+	printf("\n");
+	printf("Commit/Stage view\n");
+	printf("    -c, --commit           start GitX in commit/stage mode\n");
+	printf("\n");
+	printf("Branch filter options\n");
+	printf("    Add an optional branch or tag name to select that branch using the given branch filter\n");
+	printf("\n");
+	printf("    --all [branch]         view history for all branches\n");
+	printf("    --local [branch]       view history for local branches only\n");
+	printf("    --branch [branch]      view history for the selected branch only\n");
 	printf("\n");
 	printf("RevList options\n");
-	printf("\tSee 'man git-log' and 'man git-rev-list' for options you can pass to gitx\n");
+	printf("    See 'man git-log' and 'man git-rev-list' for options you can pass to gitx\n");
 	printf("\n");
-	printf("\t--all                  show all branches\n");
-	printf("\t<branch>               show specific branch\n");
-	printf("\t -- <path>             show commits touching paths\n");
+	printf("    <branch>               select specific branch or tag\n");
+	printf("     -- <path(s)>          show commits touching paths\n");
+	printf("    -S<string>             show commits that introduce or remove an instance of <string>\n");
+	printf("\n");
+	printf("Diff options\n");
+	printf("    See 'man git-diff' for options you can pass to gitx --diff\n");
+	printf("\n");
+	printf("    -d, --diff [<common diff options>] <commit>{0,2} [--] [<path>...]\n");
+	printf("                            shows the diff in a window in GitX\n");
+	printf("    git diff [options] | gitx\n");
+	printf("                            use gitx to pipe diff output to a GitX window\n");
 	exit(1);
 }
 
@@ -82,34 +73,105 @@ void git_path()
 		exit(101);
 
 	NSString *path = [[PBGitBinary path] stringByDeletingLastPathComponent];
-	printf("%s", [path UTF8String]);
+	printf("%s\n", [path UTF8String]);
 	exit(0);
 }
 
-void handleSTDINDiff(id<GitXCliToolProtocol> proxy)
+
+#pragma mark -
+#pragma mark Commands sent to GitX
+
+void handleSTDINDiff()
 {
 	NSFileHandle *handle = [NSFileHandle fileHandleWithStandardInput];
 	NSData *data = [handle readDataToEndOfFile];
-	NSString *string = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+	NSString *diff = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
 
-	if (string && [string length] > 0) {
-		[proxy openDiffWindowWithDiff:string];
-		exit(0);
+	if (diff && [diff length] > 0) {
+		GitXApplication *gitXApp = [SBApplication applicationWithBundleIdentifier:kGitXBundleIdentifier];
+		[gitXApp showDiff:diff];
 	}
+
+	exit(0);
 }
 
-void handleDiffWithArguments(NSArray *arguments, NSString *directory, id<GitXCliToolProtocol> proxy)
+void handleDiffWithArguments(NSURL *repositoryURL, NSMutableArray *arguments)
 {
-	int ret;
-	arguments = [[NSArray arrayWithObject:@"diff"] arrayByAddingObjectsFromArray:arguments];
-	NSString *diff = [PBEasyPipe outputForCommand:[PBGitBinary path] withArgs:arguments inDir:directory retValue:&ret];
-	if (ret) {
-		printf("Invalid diff command\n");
+	[arguments insertObject:@"diff" atIndex:0];
+
+	int retValue = 1;
+	NSString *diffOutput = [PBEasyPipe outputForCommand:[PBGitBinary path] withArgs:arguments inDir:[repositoryURL path] retValue:&retValue];
+	if (retValue) {
+		// if there is an error diffOutput should have the error output from git
+		if (diffOutput)
+			printf("%s\n", [diffOutput UTF8String]);
+		else
+			printf("Invalid diff command [%d]\n", retValue);
 		exit(3);
 	}
 
-	[proxy openDiffWindowWithDiff:diff];
+	GitXApplication *gitXApp = [SBApplication applicationWithBundleIdentifier:kGitXBundleIdentifier];
+	[gitXApp showDiff:diffOutput];
+
 	exit(0);
+}
+
+void handleOpenRepository(NSURL *repositoryURL, NSMutableArray *arguments)
+{
+	// if there are command line arguments send them to GitX through an Apple Event
+	// the recordDescriptor will be stored in keyAEPropData inside the openDocument or openApplication event
+	NSAppleEventDescriptor *recordDescriptor = nil;
+	if ([arguments count]) {
+		recordDescriptor = [NSAppleEventDescriptor recordDescriptor];
+
+		NSAppleEventDescriptor *listDescriptor = [NSAppleEventDescriptor listDescriptor];
+		uint listIndex = 1; // AppleEvent list descriptor's are one based
+		for (NSString *argument in arguments)
+			[listDescriptor insertDescriptor:[NSAppleEventDescriptor descriptorWithString:argument] atIndex:listIndex++];
+
+		[recordDescriptor setParamDescriptor:listDescriptor forKeyword:kGitXAEKeyArgumentsList];
+
+		// this is used as a double check in GitX
+		NSAppleEventDescriptor *url = [NSAppleEventDescriptor descriptorWithString:[repositoryURL absoluteString]];
+		[recordDescriptor setParamDescriptor:url forKeyword:typeFileURL];
+	}
+
+	// use NSWorkspace to open GitX and send the arguments
+	// this allows the repository document to modify itself before it shows it's GUI
+	BOOL didOpenURLs = [[NSWorkspace sharedWorkspace] openURLs:[NSArray arrayWithObject:repositoryURL]
+									   withAppBundleIdentifier:kGitXBundleIdentifier
+													   options:0
+								additionalEventParamDescriptor:recordDescriptor
+											 launchIdentifiers:NULL];
+	if (!didOpenURLs) {
+		printf("Unable to open GitX.app\n");
+		exit(2);
+	}
+}
+
+
+#pragma mark -
+#pragma mark main
+
+NSURL *workingDirectoryURL()
+{
+	NSString *path = [[[NSProcessInfo processInfo] environment] objectForKey:@"PWD"];
+
+	NSURL *url = [NSURL fileURLWithPath:path isDirectory:YES];
+	if (!url) {
+		printf("Unable to create url to path: %s\n", [path UTF8String]);
+		exit(2);
+	}
+
+	return url;
+}
+
+NSMutableArray *argumentsArray()
+{
+	NSMutableArray *arguments = [[[NSProcessInfo processInfo] arguments] mutableCopy];
+	[arguments removeObjectAtIndex:0]; // url to executable path is not needed
+
+	return arguments;
 }
 
 int main(int argc, const char** argv)
@@ -121,42 +183,28 @@ int main(int argc, const char** argv)
 	if (argc >= 2 && !strcmp(argv[1], "--git-path"))
 		git_path();
 
+	// From here on everything needs to access git, so make sure it's installed
 	if (![PBGitBinary path]) {
 		printf("%s\n", [[PBGitBinary notFoundError] cStringUsingEncoding:NSUTF8StringEncoding]);
 		exit(2);
 	}
 
-	// Attempt to connect to the app
-	id proxy = createProxy();
-
-	// Create arguments
-	argv++; argc--;
-	NSMutableArray* arguments = [NSMutableArray arrayWithCapacity:argc];
-	int i = 0;
-	for (i = 0; i < argc; i++)
-		[arguments addObject: [NSString stringWithUTF8String:argv[i]]];
-
+	// gitx can be used to pipe diff output to be displayed in GitX
 	if (!isatty(STDIN_FILENO) && fdopen(STDIN_FILENO, "r"))
-		handleSTDINDiff(proxy);
+		handleSTDINDiff();
 
-	// From this point, we require a working directory
-	NSString *pwd = [[[NSProcessInfo processInfo] environment] objectForKey:@"PWD"];
-	if (!pwd)
-		exit(2);
+	// From this point, we require a working directory and the arguments
+	NSMutableArray *arguments = argumentsArray();
+	NSURL *wdURL = workingDirectoryURL();
 
 	if ([arguments count] > 0 && ([[arguments objectAtIndex:0] isEqualToString:@"--diff"] ||
-		[[arguments objectAtIndex:0] isEqualToString:@"-d"]))
-		handleDiffWithArguments([arguments subarrayWithRange:NSMakeRange(1, [arguments count] - 1)], pwd, proxy);
-
-	// No diff, just open the current dir
-	NSURL* url = [NSURL fileURLWithPath:pwd];
-	NSError* error = nil;
-
-	if (![proxy openRepository:url arguments: arguments error:&error]) {
-		fprintf(stderr, "Error opening repository at %s\n", [[url path] UTF8String]);
-		if (error)
-			fprintf(stderr, "\t%s\n", [[error localizedFailureReason] UTF8String]);
+								  [[arguments objectAtIndex:0] isEqualToString:@"-d"])) {
+		[arguments removeObjectAtIndex:0];
+		handleDiffWithArguments(wdURL, arguments);
 	}
+
+	// No commands handled by gitx, open the current dir in GitX with the arguments
+	handleOpenRepository(wdURL, arguments);
 
 	return 0;
 }

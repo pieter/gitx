@@ -50,6 +50,7 @@
 	[repository.revisionList addObserver:self forKeyPath:@"isUpdating" options:0 context:@"revisionListUpdating"];
 	[repository addObserver:self forKeyPath:@"currentBranch" options:0 context:@"branchChange"];
 	[repository addObserver:self forKeyPath:@"refs" options:0 context:@"updateRefs"];
+	[repository addObserver:self forKeyPath:@"currentBranchFilter" options:0 context:@"branchFilterChange"];
 
 	forceSelectionUpdate = YES;
 	NSSize cellSpacing = [commitList intercellSpacing];
@@ -237,6 +238,12 @@
 
 	if([(NSString *)context isEqualToString:@"updateRefs"]) {
 		[commitController rearrangeObjects];
+		return;
+	}
+
+	if ([(NSString *)context isEqualToString:@"branchFilterChange"]) {
+		[PBGitDefaults setBranchFilter:repository.currentBranchFilter];
+		[self updateBranchFilterMatrix];
 		return;
 	}
 
@@ -454,6 +461,7 @@
 		[repository.revisionList removeObserver:self forKeyPath:@"isUpdating"];
 		[repository removeObserver:self forKeyPath:@"currentBranch"];
 		[repository removeObserver:self forKeyPath:@"refs"];
+		[repository removeObserver:self forKeyPath:@"currentBranchFilter"];
 	}
 
 	[webHistoryController closeView];

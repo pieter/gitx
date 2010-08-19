@@ -10,7 +10,6 @@
 #import "PBGitRevisionCell.h"
 #import "PBGitWindowController.h"
 #import "PBRepositoryDocumentController.h"
-#import "PBCLIProxy.h"
 #import "PBServicesController.h"
 #import "PBGitXProtocol.h"
 #import "PBPrefsWindowController.h"
@@ -20,7 +19,6 @@
 #import "Sparkle/SUUpdater.h"
 
 @implementation ApplicationController
-@synthesize cliProxy;
 
 - (ApplicationController*)init
 {
@@ -28,13 +26,12 @@
 	[NSApp activateIgnoringOtherApps:YES];
 #endif
 
-	if(self = [super init]) {
-        if(![[NSBundle bundleWithPath:@"/System/Library/Frameworks/Quartz.framework/Frameworks/QuickLookUI.framework"] load])
-			if(![[NSBundle bundleWithPath:@"/System/Library/PrivateFrameworks/QuickLookUI.framework"] load])
-				NSLog(@"Could not load QuickLook");
+	if(!(self = [super init]))
+		return nil;
 
-		self.cliProxy = [PBCLIProxy new];
-	}
+	if(![[NSBundle bundleWithPath:@"/System/Library/Frameworks/Quartz.framework/Frameworks/QuickLookUI.framework"] load])
+		if(![[NSBundle bundleWithPath:@"/System/Library/PrivateFrameworks/QuickLookUI.framework"] load])
+			NSLog(@"Could not load QuickLook");
 
 	/* Value Transformers */
 	NSValueTransformer *transformer = [[PBNSURLPathUserDefaultsTransfomer alloc] init];

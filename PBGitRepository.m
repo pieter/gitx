@@ -18,6 +18,7 @@
 #import "PBRemoteProgressSheet.h"
 #import "PBGitRevList.h"
 #import "PBGitDefaults.h"
+#import "GitXScriptingConstants.h"
 
 NSString* PBGitRepositoryErrorDomain = @"GitXErrorDomain";
 
@@ -428,6 +429,31 @@ NSString* PBGitRepositoryErrorDomain = @"GitXErrorDomain";
     if (retValue || [output isEqualToString:@""])
         return NO;
     return YES;
+}
+
+// useful for getting the full ref for a user entered name
+// EX:  name: master
+//       ref: refs/heads/master
+- (PBGitRef *)refForName:(NSString *)name
+{
+	if (!name)
+		return nil;
+
+	int retValue = 1;
+    NSString *output = [self outputInWorkdirForArguments:[NSArray arrayWithObjects:@"show-ref", name, nil] retValue:&retValue];
+	if (retValue)
+		return nil;
+
+	// the output is in the format: <SHA-1 ID> <space> <reference name>
+	// with potentially multiple lines if there are multiple matching refs (ex: refs/remotes/origin/master)
+	// here we only care about the first match
+	NSArray *refList = [output componentsSeparatedByCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+	if ([refList count] > 1) {
+		NSString *refName = [refList objectAtIndex:1];
+		return [PBGitRef refFromString:refName];
+	}
+
+	return nil;
 }
 		
 // Returns either this object, or an existing, equal object
@@ -873,6 +899,113 @@ NSString* PBGitRepositoryErrorDomain = @"GitXErrorDomain";
 
 	[self reloadRefs];
 	return YES;
+}
+
+
+#pragma mark GitX Scripting
+
+- (void)handleRevListArguments:(NSArray *)arguments
+{
+	if (![arguments count])
+		return;
+
+	PBGitRevSpecifier *revListSpecifier = nil;
+
+	// the argument may be a branch or tag name but will probably not be the full reference
+	if ([arguments count] == 1) {
+		PBGitRef *refArgument = [self refForName:[arguments lastObject]];
+		if (refArgument)
+			revListSpecifier = [[PBGitRevSpecifier alloc] initWithRef:refArgument];
+	}
+
+	if (!revListSpecifier)
+		revListSpecifier = [[PBGitRevSpecifier alloc] initWithParameters:arguments];
+
+	self.currentBranch = [self addBranch:revListSpecifier];
+	[PBGitDefaults setShowStageView:NO];
+	[self.windowController showHistoryView:self];
+}
+
+- (void)handleBranchFilterEventForFilter:(PBGitXBranchFilterType)filter additionalArguments:(NSMutableArray *)arguments
+{
+	self.currentBranchFilter = filter;
+	[PBGitDefaults setShowStageView:NO];
+	[self.windowController showHistoryView:self];
+
+	// treat any additional arguments as a rev-list specifier
+	if ([arguments count] > 1) {
+		[arguments removeObjectAtIndex:0];
+		[self handleRevListArguments:arguments];
+	}
+}
+
+- (void)handleGitXScriptingArguments:(NSAppleEventDescriptor *)argumentsList
+{
+	NSMutableArray *arguments = [NSMutableArray array];
+	uint argumentsIndex = 1; // AppleEvent list descriptor's are one based
+	while(1) {
+		NSAppleEventDescriptor *arg = [argumentsList descriptorAtIndex:argumentsIndex++];
+		if (arg)
+			[arguments addObject:[arg stringValue]];
+		else
+			break;
+	}
+
+	if (![arguments count])
+		return;
+
+	NSString *firstArgument = [arguments objectAtIndex:0];
+
+	if ([firstArgument isEqualToString:@"-c"] || [firstArgument isEqualToString:@"--commit"]) {
+		[PBGitDefaults setShowStageView:YES];
+		[self.windowController showCommitView:self];
+		return;
+	}
+
+	if ([firstArgument isEqualToString:@"--all"]) {
+		[self handleBranchFilterEventForFilter:kGitXAllBranchesFilter additionalArguments:arguments];
+		return;
+	}
+
+	if ([firstArgument isEqualToString:@"--local"]) {
+		[self handleBranchFilterEventForFilter:kGitXLocalRemoteBranchesFilter additionalArguments:arguments];
+		return;
+	}
+
+	if ([firstArgument isEqualToString:@"--branch"]) {
+		[self handleBranchFilterEventForFilter:kGitXSelectedBranchFilter additionalArguments:arguments];
+		return;
+	}
+
+	// if the argument is not a known command then treat it as a rev-list specifier
+	[self handleRevListArguments:arguments];
+}
+
+// see if the current appleEvent has the command line arguments from the gitx cli
+// this could be from an openApplication or an openDocument apple event
+// when opening a repository this is called before the sidebar controller gets it's awakeFromNib: message
+// if the repository is already open then this is also a good place to catch the event as the window is about to be brought forward
+- (void)showWindows
+{
+	NSAppleEventDescriptor *currentAppleEvent = [[NSAppleEventManager sharedAppleEventManager] currentAppleEvent];
+
+	if (currentAppleEvent) {
+		NSAppleEventDescriptor *eventRecord = [currentAppleEvent paramDescriptorForKeyword:keyAEPropData];
+
+		// on app launch there may be many repositories opening, so double check that this is the right repo
+		NSString *path = [[eventRecord paramDescriptorForKeyword:typeFileURL] stringValue];
+		if (path) {
+			if ([[PBGitRepository gitDirForURL:[NSURL URLWithString:path]] isEqual:[self fileURL]]) {
+				NSAppleEventDescriptor *argumentsList = [eventRecord paramDescriptorForKeyword:kGitXAEKeyArgumentsList];
+				[self handleGitXScriptingArguments:argumentsList];
+
+				// showWindows may be called more than once during app launch so remove the CLI data after we handle the event
+				[currentAppleEvent removeDescriptorWithKeyword:keyAEPropData];
+			}
+		}
+	}
+
+	[super showWindows];
 }
 
 
