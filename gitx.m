@@ -28,6 +28,14 @@ void usage(char const *programName)
 	printf("    -v, --version          prints version info for both GitX and git\n");
 	printf("    --git-path             prints the path to the directory containing git\n");
 	printf("\n");
+	printf("Repository path\n");
+	printf("    By default gitx opens the repository in the current directory.\n");
+	printf("    Use --git-dir= to send commands to a repository somewhere else.\n");
+	printf("    Note: This must be the first argument.\n");
+	printf("\n");
+	printf("    --git-dir=<path> [gitx commands]\n");
+	printf("                           send the gitx commands to the repository located at <path>\n");
+	printf("\n");
 	printf("Commit/Stage view\n");
 	printf("    -c, --commit           start GitX in commit/stage mode\n");
 	printf("\n");
@@ -153,9 +161,32 @@ void handleOpenRepository(NSURL *repositoryURL, NSMutableArray *arguments)
 #pragma mark -
 #pragma mark main
 
-NSURL *workingDirectoryURL()
+
+#define kGitDirPrefix @"--git-dir="
+
+NSURL *workingDirectoryURL(NSMutableArray *arguments)
 {
-	NSString *path = [[[NSProcessInfo processInfo] environment] objectForKey:@"PWD"];
+	NSString *path = nil;
+
+	if ([arguments count] && [[arguments objectAtIndex:0] hasPrefix:kGitDirPrefix]) {
+		path = [[[arguments objectAtIndex:0] substringFromIndex:[kGitDirPrefix length]] stringByStandardizingPath];
+
+		// the path must exist and point to a directory
+		BOOL isDirectory = YES;
+		if (![[NSFileManager defaultManager] fileExistsAtPath:path isDirectory:&isDirectory] || !isDirectory) {
+			if (!isDirectory)
+				printf("Fatal: --git-dir path does not point to a directory.\n");
+			else
+				printf("Fatal: --git-dir path does not exist.\n");
+			printf("Cannot open git repository at path: '%s'\n", [path UTF8String]);
+			exit(2);
+		}
+
+		// remove the git-dir argument
+		[arguments removeObjectAtIndex:0];
+	} else {
+		path = [[[NSProcessInfo processInfo] environment] objectForKey:@"PWD"];
+	}
 
 	NSURL *url = [NSURL fileURLWithPath:path isDirectory:YES];
 	if (!url) {
@@ -195,7 +226,7 @@ int main(int argc, const char** argv)
 
 	// From this point, we require a working directory and the arguments
 	NSMutableArray *arguments = argumentsArray();
-	NSURL *wdURL = workingDirectoryURL();
+	NSURL *wdURL = workingDirectoryURL(arguments);
 
 	if ([arguments count] > 0 && ([[arguments objectAtIndex:0] isEqualToString:@"--diff"] ||
 								  [[arguments objectAtIndex:0] isEqualToString:@"-d"])) {
