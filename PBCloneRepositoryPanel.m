@@ -21,6 +21,8 @@
 @synthesize errorMessage;
 @synthesize repositoryAccessoryView;
 
+@synthesize isBare;
+
 
 
 #pragma mark -
@@ -29,6 +31,21 @@
 + (id) panel
 {
 	return [[self alloc] initWithWindowNibName:@"PBCloneRepositoryPanel"];
+}
+
++ (void)beginCloneRepository:(NSString *)repository toURL:(NSURL *)targetURL isBare:(BOOL)bare
+{
+	if (!repository || [repository isEqualToString:@""] || !targetURL || [[targetURL path] isEqualToString:@""])
+		return;
+
+	PBCloneRepositoryPanel *clonePanel = [PBCloneRepositoryPanel panel];
+	[clonePanel showWindow:self];
+
+	[clonePanel.repositoryURL setStringValue:repository];
+	[clonePanel.destinationPath setStringValue:[targetURL path]];
+	clonePanel.isBare = bare;
+
+	[clonePanel clone:self];
 }
 
 

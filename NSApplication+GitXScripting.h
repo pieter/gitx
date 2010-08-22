@@ -12,5 +12,7 @@
 @interface NSApplication (GitXScripting)
 
 - (void)showDiffScriptCommand:(NSScriptCommand *)command;
+- (void)initRepositoryScriptCommand:(NSScriptCommand *)command;
+- (void)cloneRepositoryScriptCommand:(NSScriptCommand *)command;
 
 @end

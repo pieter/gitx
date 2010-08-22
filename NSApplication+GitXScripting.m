@@ -7,7 +7,10 @@
 //
 
 #import "NSApplication+GitXScripting.h"
+#import "GitXScriptingConstants.h"
 #import "PBDiffWindowController.h"
+#import "PBRepositoryDocumentController.h"
+#import "PBCloneRepositoryPanel.h"
 
 
 @implementation NSApplication (GitXScripting)
@@ -19,6 +22,27 @@
 		PBDiffWindowController *diffController = [[PBDiffWindowController alloc] initWithDiff:diffText];
 		[diffController showWindow:nil];
 		[[NSApplication sharedApplication] activateIgnoringOtherApps:YES];
+	}
+}
+
+- (void)initRepositoryScriptCommand:(NSScriptCommand *)command
+{
+	NSURL *repositoryURL = [command directParameter];
+	if (repositoryURL)
+		[[PBRepositoryDocumentController sharedDocumentController] initNewRepositoryAtURL:repositoryURL];
+}
+
+- (void)cloneRepositoryScriptCommand:(NSScriptCommand *)command
+{
+	NSString *repository = [command directParameter];
+	if (repository) {
+		NSDictionary *arguments = [command arguments];
+		NSURL *destinationURL = [arguments objectForKey:kGitXCloneDestinationURLKey];
+		if (destinationURL) {
+			BOOL isBare = [[arguments objectForKey:kGitXCloneIsBareKey] boolValue];
+
+			[PBCloneRepositoryPanel beginCloneRepository:repository toURL:destinationURL isBare:isBare];
+		}
 	}
 }
 

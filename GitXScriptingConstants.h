@@ -10,3 +10,6 @@
 
 
 #define kGitXAEKeyArgumentsList 'ARGS'
+
+#define kGitXCloneDestinationURLKey @"destinationURL"
+#define kGitXCloneIsBareKey @"isBare"
