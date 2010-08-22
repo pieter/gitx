@@ -3,7 +3,7 @@
 	<data>
 		<int key="IBDocument.SystemTarget">1050</int>
 		<string key="IBDocument.SystemVersion">10F569</string>
-		<string key="IBDocument.InterfaceBuilderVersion">762</string>
+		<string key="IBDocument.InterfaceBuilderVersion">788</string>
 		<string key="IBDocument.AppKitVersion">1038.29</string>
 		<string key="IBDocument.HIToolboxVersion">461.00</string>
 		<object class="NSMutableDictionary" key="IBDocument.PluginVersions">
@@ -15,13 +15,13 @@
 			</object>
 			<object class="NSMutableArray" key="dict.values">
 				<bool key="EncodedWithXMLCoder">YES</bool>
-				<string>762</string>
-				<string>762</string>
+				<string>788</string>
+				<string>788</string>
 			</object>
 		</object>
 		<object class="NSMutableArray" key="IBDocument.EditedObjectIDs">
 			<bool key="EncodedWithXMLCoder">YES</bool>
-			<integer value="46"/>
+			<integer value="33"/>
 		</object>
 		<object class="NSArray" key="IBDocument.PluginDependencies">
 			<bool key="EncodedWithXMLCoder">YES</bool>
@@ -88,6 +88,7 @@
 					<string>dateString</string>
 					<string>arran</string>
 					<string>realSha</string>
+					<string>relativeDateString</string>
 				</object>
 				<string key="NSObjectClassName">PBGitCommit</string>
 				<object class="_NSManagedProxy" key="_NSManagedProxy"/>
@@ -496,9 +497,28 @@
 																</object>
 																<object class="NSTextFieldCell" key="NSDataCell" id="853819733">
 																	<int key="NSCellFlags">337772096</int>
-																	<int key="NSCellFlags2">2048</int>
+																	<int key="NSCellFlags2">-2147481600</int>
 																	<string key="NSContents">Text Cell</string>
 																	<reference key="NSSupport" ref="324419606"/>
+																	<object class="NSDateFormatter" key="NSFormatter" id="68879157">
+																		<object class="NSMutableDictionary" key="NS.attributes">
+																			<bool key="EncodedWithXMLCoder">YES</bool>
+																			<object class="NSArray" key="dict.sortedKeys">
+																				<bool key="EncodedWithXMLCoder">YES</bool>
+																				<string>dateStyle</string>
+																				<string>formatterBehavior</string>
+																				<string>timeStyle</string>
+																			</object>
+																			<object class="NSMutableArray" key="dict.values">
+																				<bool key="EncodedWithXMLCoder">YES</bool>
+																				<integer value="3"/>
+																				<integer value="1040"/>
+																				<integer value="1"/>
+																			</object>
+																		</object>
+																		<string key="NS.format">MMMM d, yyyy h:mm a</string>
+																		<bool key="NS.natural">NO</bool>
+																	</object>
 																	<reference key="NSControlView" ref="254268962"/>
 																	<reference key="NSBackgroundColor" ref="827363147"/>
 																	<reference key="NSTextColor" ref="57062640"/>
@@ -506,6 +526,11 @@
 																<int key="NSResizingMask">3</int>
 																<bool key="NSIsResizeable">YES</bool>
 																<reference key="NSTableView" ref="254268962"/>
+																<object class="NSSortDescriptor" key="NSSortDescriptorPrototype">
+																	<string key="NSKey">date</string>
+																	<bool key="NSAscending">YES</bool>
+																	<string key="NSSelector">compare:</string>
+																</object>
 															</object>
 															<object class="NSTableColumn" id="456964926">
 																<string key="NSIdentifier">SHAColumn</string>
@@ -532,6 +557,38 @@
 																<int key="NSResizingMask">3</int>
 																<bool key="NSIsResizeable">YES</bool>
 																<reference key="NSTableView" ref="254268962"/>
+																<bool key="NSHidden">YES</bool>
+															</object>
+															<object class="NSTableColumn" id="453531796">
+																<string key="NSIdentifier">RelativeDateColumn</string>
+																<double key="NSWidth">30</double>
+																<double key="NSMinWidth">10</double>
+																<double key="NSMaxWidth">3.4028230607370965e+38</double>
+																<object class="NSTableHeaderCell" key="NSHeaderCell">
+																	<int key="NSCellFlags">75628096</int>
+																	<int key="NSCellFlags2">2048</int>
+																	<string key="NSContents">Relative Date</string>
+																	<reference key="NSSupport" ref="26"/>
+																	<reference key="NSBackgroundColor" ref="216155638"/>
+																	<reference key="NSTextColor" ref="160578461"/>
+																</object>
+																<object class="NSTextFieldCell" key="NSDataCell" id="41775641">
+																	<int key="NSCellFlags">338820672</int>
+																	<int key="NSCellFlags2">1024</int>
+																	<string key="NSContents"/>
+																	<reference key="NSSupport" ref="324419606"/>
+																	<reference key="NSControlView" ref="254268962"/>
+																	<reference key="NSBackgroundColor" ref="827363147"/>
+																	<reference key="NSTextColor" ref="57062640"/>
+																</object>
+																<int key="NSResizingMask">3</int>
+																<bool key="NSIsResizeable">YES</bool>
+																<reference key="NSTableView" ref="254268962"/>
+																<object class="NSSortDescriptor" key="NSSortDescriptorPrototype">
+																	<string key="NSKey">date</string>
+																	<bool key="NSAscending">YES</bool>
+																	<string key="NSSelector">compare:</string>
+																</object>
 																<bool key="NSHidden">YES</bool>
 															</object>
 														</object>
@@ -1240,6 +1297,9 @@
 			<object class="NSCustomObject" id="892732705">
 				<string key="NSClassName">PBRefController</string>
 			</object>
+			<object class="NSCustomObject" id="246205303">
+				<string key="NSClassName">GitXRelativeDateFormatter</string>
+			</object>
 		</object>
 		<object class="IBObjectContainer" key="IBDocument.Objects">
 			<object class="NSMutableArray" key="connectionRecords">
@@ -1471,26 +1531,6 @@
 						<reference key="destination" ref="1001"/>
 					</object>
 					<int key="connectionID">96</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBBindingConnection" key="connection">
-						<string key="label">value: arrangedObjects.dateString</string>
-						<reference key="source" ref="976830280"/>
-						<reference key="destination" ref="391209158"/>
-						<object class="NSNibBindingConnector" key="connector">
-							<reference key="NSSource" ref="976830280"/>
-							<reference key="NSDestination" ref="391209158"/>
-							<string key="NSLabel">value: arrangedObjects.dateString</string>
-							<string key="NSBinding">value</string>
-							<string key="NSKeyPath">arrangedObjects.dateString</string>
-							<object class="NSDictionary" key="NSOptions">
-								<string key="NS.key.0">NSConditionallySetsEditable</string>
-								<integer value="1" key="NS.object.0"/>
-							</object>
-							<int key="NSNibBindingConnectorVersion">2</int>
-						</object>
-					</object>
-					<int key="connectionID">98</int>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBOutletConnection" key="connection">
@@ -1914,6 +1954,54 @@
 					</object>
 					<int key="connectionID">402</int>
 				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">value: arrangedObjects.date</string>
+						<reference key="source" ref="976830280"/>
+						<reference key="destination" ref="391209158"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="976830280"/>
+							<reference key="NSDestination" ref="391209158"/>
+							<string key="NSLabel">value: arrangedObjects.date</string>
+							<string key="NSBinding">value</string>
+							<string key="NSKeyPath">arrangedObjects.date</string>
+							<object class="NSDictionary" key="NSOptions">
+								<string key="NS.key.0">NSConditionallySetsEditable</string>
+								<boolean value="YES" key="NS.object.0"/>
+							</object>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">404</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
+						<string key="label">formatter</string>
+						<reference key="source" ref="41775641"/>
+						<reference key="destination" ref="246205303"/>
+					</object>
+					<int key="connectionID">416</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">value: arrangedObjects.date</string>
+						<reference key="source" ref="453531796"/>
+						<reference key="destination" ref="391209158"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="453531796"/>
+							<reference key="NSDestination" ref="391209158"/>
+							<string key="NSLabel">value: arrangedObjects.date</string>
+							<string key="NSBinding">value</string>
+							<string key="NSKeyPath">arrangedObjects.date</string>
+							<object class="NSDictionary" key="NSOptions">
+								<string key="NS.key.0">NSConditionallySetsEditable</string>
+								<boolean value="YES" key="NS.object.0"/>
+							</object>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">417</int>
+				</object>
 			</object>
 			<object class="IBMutableOrderedSet" key="objectRecords">
 				<object class="NSArray" key="orderedObjects">
@@ -1990,9 +2078,9 @@
 						<reference key="object" ref="24227530"/>
 						<object class="NSMutableArray" key="children">
 							<bool key="EncodedWithXMLCoder">YES</bool>
-							<reference ref="663765878"/>
 							<reference ref="428755155"/>
 							<reference ref="147470634"/>
+							<reference ref="663765878"/>
 						</object>
 						<reference key="parent" ref="202620420"/>
 						<string key="objectName">Commits Split View</string>
@@ -2044,6 +2132,7 @@
 							<reference ref="976830280"/>
 							<reference ref="1025472344"/>
 							<reference ref="792589327"/>
+							<reference ref="453531796"/>
 						</object>
 						<reference key="parent" ref="663765878"/>
 						<string key="objectName">Commit List</string>
@@ -2097,6 +2186,10 @@
 					<object class="IBObjectRecord">
 						<int key="objectID">34</int>
 						<reference key="object" ref="853819733"/>
+						<object class="NSMutableArray" key="children">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+							<reference ref="68879157"/>
+						</object>
 						<reference key="parent" ref="976830280"/>
 					</object>
 					<object class="IBObjectRecord">
@@ -2434,6 +2527,30 @@
 						<reference key="object" ref="102056827"/>
 						<reference key="parent" ref="16222431"/>
 					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">407</int>
+						<reference key="object" ref="246205303"/>
+						<reference key="parent" ref="0"/>
+					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">409</int>
+						<reference key="object" ref="453531796"/>
+						<object class="NSMutableArray" key="children">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+							<reference ref="41775641"/>
+						</object>
+						<reference key="parent" ref="254268962"/>
+					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">410</int>
+						<reference key="object" ref="41775641"/>
+						<reference key="parent" ref="453531796"/>
+					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">414</int>
+						<reference key="object" ref="68879157"/>
+						<reference key="parent" ref="853819733"/>
+					</object>
 				</object>
 			</object>
 			<object class="NSMutableDictionary" key="flattenedProperties">
@@ -2526,6 +2643,10 @@
 					<string>39.ImportedFromIB2</string>
 					<string>4.IBAttributePlaceholdersKey</string>
 					<string>4.IBPluginDependency</string>
+					<string>409.IBPluginDependency</string>
+					<string>410.IBPluginDependency</string>
+					<string>414.IBDateFormatterBehaviorMetadataKey</string>
+					<string>414.IBPluginDependency</string>
 					<string>46.IBEditorWindowLastContentRect</string>
 					<string>46.IBPluginDependency</string>
 					<string>48.IBPluginDependency</string>
@@ -2694,6 +2815,10 @@
 						</object>
 					</object>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
+					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
+					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
+					<integer value="1"/>
+					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>{{9, 486}, {852, 432}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -2730,11 +2855,19 @@
 				</object>
 			</object>
 			<nil key="sourceID"/>
-			<int key="maxID">402</int>
+			<int key="maxID">417</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<object class="NSMutableArray" key="referencedPartialClassDescriptions">
 				<bool key="EncodedWithXMLCoder">YES</bool>
+				<object class="IBPartialClassDescription">
+					<string key="className">GitXRelativeDateFormatter</string>
+					<string key="superclassName">NSFormatter</string>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<string key="majorKey">IBProjectSource</string>
+						<string key="minorKey">GitXRelativeDateFormatter.h</string>
+					</object>
+				</object>
 				<object class="IBPartialClassDescription">
 					<string key="className">NSOutlineView</string>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
@@ -2766,6 +2899,30 @@
 							<string>PBGitHistoryController</string>
 							<string>PBWebHistoryController</string>
 							<string>WebView</string>
+						</object>
+					</object>
+					<object class="NSMutableDictionary" key="toOneOutletInfosByName">
+						<bool key="EncodedWithXMLCoder">YES</bool>
+						<object class="NSArray" key="dict.sortedKeys">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+							<string>controller</string>
+							<string>webController</string>
+							<string>webView</string>
+						</object>
+						<object class="NSMutableArray" key="dict.values">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+							<object class="IBToOneOutletInfo">
+								<string key="name">controller</string>
+								<string key="candidateClassName">PBGitHistoryController</string>
+							</object>
+							<object class="IBToOneOutletInfo">
+								<string key="name">webController</string>
+								<string key="candidateClassName">PBWebHistoryController</string>
+							</object>
+							<object class="IBToOneOutletInfo">
+								<string key="name">webView</string>
+								<string key="candidateClassName">WebView</string>
+							</object>
 						</object>
 					</object>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
@@ -2831,6 +2988,90 @@
 							<string>id</string>
 						</object>
 					</object>
+					<object class="NSMutableDictionary" key="actionInfosByName">
+						<bool key="EncodedWithXMLCoder">YES</bool>
+						<object class="NSArray" key="dict.sortedKeys">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+							<string>cherryPick:</string>
+							<string>createBranch:</string>
+							<string>createTag:</string>
+							<string>merge:</string>
+							<string>openFilesAction:</string>
+							<string>openSelectedFile:</string>
+							<string>rebase:</string>
+							<string>refresh:</string>
+							<string>setBranchFilter:</string>
+							<string>setDetailedView:</string>
+							<string>setTreeView:</string>
+							<string>showAddRemoteSheet:</string>
+							<string>showCommitsFromTree:</string>
+							<string>showInFinderAction:</string>
+							<string>toggleQLPreviewPanel:</string>
+						</object>
+						<object class="NSMutableArray" key="dict.values">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+							<object class="IBActionInfo">
+								<string key="name">cherryPick:</string>
+								<string key="candidateClassName">id</string>
+							</object>
+							<object class="IBActionInfo">
+								<string key="name">createBranch:</string>
+								<string key="candidateClassName">id</string>
+							</object>
+							<object class="IBActionInfo">
+								<string key="name">createTag:</string>
+								<string key="candidateClassName">id</string>
+							</object>
+							<object class="IBActionInfo">
+								<string key="name">merge:</string>
+								<string key="candidateClassName">id</string>
+							</object>
+							<object class="IBActionInfo">
+								<string key="name">openFilesAction:</string>
+								<string key="candidateClassName">id</string>
+							</object>
+							<object class="IBActionInfo">
+								<string key="name">openSelectedFile:</string>
+								<string key="candidateClassName">id</string>
+							</object>
+							<object class="IBActionInfo">
+								<string key="name">rebase:</string>
+								<string key="candidateClassName">id</string>
+							</object>
+							<object class="IBActionInfo">
+								<string key="name">refresh:</string>
+								<string key="candidateClassName">id</string>
+							</object>
+							<object class="IBActionInfo">
+								<string key="name">setBranchFilter:</string>
+								<string key="candidateClassName">id</string>
+							</object>
+							<object class="IBActionInfo">
+								<string key="name">setDetailedView:</string>
+								<string key="candidateClassName">id</string>
+							</object>
+							<object class="IBActionInfo">
+								<string key="name">setTreeView:</string>
+								<string key="candidateClassName">id</string>
+							</object>
+							<object class="IBActionInfo">
+								<string key="name">showAddRemoteSheet:</string>
+								<string key="candidateClassName">id</string>
+							</object>
+							<object class="IBActionInfo">
+								<string key="name">showCommitsFromTree:</string>
+								<string key="candidateClassName">id</string>
+							</object>
+							<object class="IBActionInfo">
+								<string key="name">showInFinderAction:</string>
+								<string key="candidateClassName">id</string>
+							</object>
+							<object class="IBActionInfo">
+								<string key="name">toggleQLPreviewPanel:</string>
+								<string key="candidateClassName">id</string>
+							</object>
+						</object>
+					</object>
 					<object class="NSMutableDictionary" key="outlets">
 						<bool key="EncodedWithXMLCoder">YES</bool>
 						<object class="NSArray" key="dict.sortedKeys">
@@ -2874,6 +3115,100 @@
 							<string>id</string>
 						</object>
 					</object>
+					<object class="NSMutableDictionary" key="toOneOutletInfosByName">
+						<bool key="EncodedWithXMLCoder">YES</bool>
+						<object class="NSArray" key="dict.sortedKeys">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+							<string>allBranchesFilterItem</string>
+							<string>cherryPickButton</string>
+							<string>commitController</string>
+							<string>commitList</string>
+							<string>fileBrowser</string>
+							<string>historySplitView</string>
+							<string>localRemoteBranchesFilterItem</string>
+							<string>mergeButton</string>
+							<string>rebaseButton</string>
+							<string>refController</string>
+							<string>scopeBarView</string>
+							<string>searchField</string>
+							<string>selectedBranchFilterItem</string>
+							<string>treeController</string>
+							<string>upperToolbarView</string>
+							<string>webHistoryController</string>
+							<string>webView</string>
+						</object>
+						<object class="NSMutableArray" key="dict.values">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+							<object class="IBToOneOutletInfo">
+								<string key="name">allBranchesFilterItem</string>
+								<string key="candidateClassName">NSButton</string>
+							</object>
+							<object class="IBToOneOutletInfo">
+								<string key="name">cherryPickButton</string>
+								<string key="candidateClassName">NSButton</string>
+							</object>
+							<object class="IBToOneOutletInfo">
+								<string key="name">commitController</string>
+								<string key="candidateClassName">NSArrayController</string>
+							</object>
+							<object class="IBToOneOutletInfo">
+								<string key="name">commitList</string>
+								<string key="candidateClassName">PBCommitList</string>
+							</object>
+							<object class="IBToOneOutletInfo">
+								<string key="name">fileBrowser</string>
+								<string key="candidateClassName">NSOutlineView</string>
+							</object>
+							<object class="IBToOneOutletInfo">
+								<string key="name">historySplitView</string>
+								<string key="candidateClassName">PBCollapsibleSplitView</string>
+							</object>
+							<object class="IBToOneOutletInfo">
+								<string key="name">localRemoteBranchesFilterItem</string>
+								<string key="candidateClassName">NSButton</string>
+							</object>
+							<object class="IBToOneOutletInfo">
+								<string key="name">mergeButton</string>
+								<string key="candidateClassName">NSButton</string>
+							</object>
+							<object class="IBToOneOutletInfo">
+								<string key="name">rebaseButton</string>
+								<string key="candidateClassName">NSButton</string>
+							</object>
+							<object class="IBToOneOutletInfo">
+								<string key="name">refController</string>
+								<string key="candidateClassName">PBRefController</string>
+							</object>
+							<object class="IBToOneOutletInfo">
+								<string key="name">scopeBarView</string>
+								<string key="candidateClassName">PBGitGradientBarView</string>
+							</object>
+							<object class="IBToOneOutletInfo">
+								<string key="name">searchField</string>
+								<string key="candidateClassName">NSSearchField</string>
+							</object>
+							<object class="IBToOneOutletInfo">
+								<string key="name">selectedBranchFilterItem</string>
+								<string key="candidateClassName">NSButton</string>
+							</object>
+							<object class="IBToOneOutletInfo">
+								<string key="name">treeController</string>
+								<string key="candidateClassName">NSTreeController</string>
+							</object>
+							<object class="IBToOneOutletInfo">
+								<string key="name">upperToolbarView</string>
+								<string key="candidateClassName">PBGitGradientBarView</string>
+							</object>
+							<object class="IBToOneOutletInfo">
+								<string key="name">webHistoryController</string>
+								<string key="candidateClassName">PBWebHistoryController</string>
+							</object>
+							<object class="IBToOneOutletInfo">
+								<string key="name">webView</string>
+								<string key="candidateClassName">id</string>
+							</object>
+						</object>
+					</object>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
 						<string key="majorKey">IBProjectSource</string>
 						<string key="minorKey">PBGitHistoryController.h</string>
@@ -2903,6 +3238,25 @@
 							<string>PBGitHistoryController</string>
 						</object>
 					</object>
+					<object class="NSMutableDictionary" key="toOneOutletInfosByName">
+						<bool key="EncodedWithXMLCoder">YES</bool>
+						<object class="NSArray" key="dict.sortedKeys">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+							<string>contextMenuDelegate</string>
+							<string>controller</string>
+						</object>
+						<object class="NSMutableArray" key="dict.values">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+							<object class="IBToOneOutletInfo">
+								<string key="name">contextMenuDelegate</string>
+								<string key="candidateClassName">id</string>
+							</object>
+							<object class="IBToOneOutletInfo">
+								<string key="name">controller</string>
+								<string key="candidateClassName">PBGitHistoryController</string>
+							</object>
+						</object>
+					</object>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
 						<string key="majorKey">IBProjectSource</string>
 						<string key="minorKey">PBGitRevisionCell.h</string>
@@ -2923,6 +3277,13 @@
 						<string key="NS.key.0">controller</string>
 						<string key="NS.object.0">PBGitHistoryController</string>
 					</object>
+					<object class="NSMutableDictionary" key="toOneOutletInfosByName">
+						<string key="NS.key.0">controller</string>
+						<object class="IBToOneOutletInfo" key="NS.object.0">
+							<string key="name">controller</string>
+							<string key="candidateClassName">PBGitHistoryController</string>
+						</object>
+					</object>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
 						<string key="majorKey">IBProjectSource</string>
 						<string key="minorKey">PBQLOutlineView.h</string>
@@ -2934,6 +3295,13 @@
 					<object class="NSMutableDictionary" key="outlets">
 						<string key="NS.key.0">controller</string>
 						<string key="NS.object.0">PBGitHistoryController</string>
+					</object>
+					<object class="NSMutableDictionary" key="toOneOutletInfosByName">
+						<string key="NS.key.0">controller</string>
+						<object class="IBToOneOutletInfo" key="NS.object.0">
+							<string key="name">controller</string>
+							<string key="candidateClassName">PBGitHistoryController</string>
+						</object>
 					</object>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
 						<string key="majorKey">IBProjectSource</string>
@@ -2982,6 +3350,90 @@
 							<string>PBRefMenuItem</string>
 						</object>
 					</object>
+					<object class="NSMutableDictionary" key="actionInfosByName">
+						<bool key="EncodedWithXMLCoder">YES</bool>
+						<object class="NSArray" key="dict.sortedKeys">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+							<string>checkout:</string>
+							<string>cherryPick:</string>
+							<string>copyPatch:</string>
+							<string>copySHA:</string>
+							<string>createBranch:</string>
+							<string>createTag:</string>
+							<string>diffWithHEAD:</string>
+							<string>fetchRemote:</string>
+							<string>merge:</string>
+							<string>pullRemote:</string>
+							<string>pushDefaultRemoteForRef:</string>
+							<string>pushToRemote:</string>
+							<string>pushUpdatesToRemote:</string>
+							<string>rebaseHeadBranch:</string>
+							<string>showTagInfoSheet:</string>
+						</object>
+						<object class="NSMutableArray" key="dict.values">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+							<object class="IBActionInfo">
+								<string key="name">checkout:</string>
+								<string key="candidateClassName">PBRefMenuItem</string>
+							</object>
+							<object class="IBActionInfo">
+								<string key="name">cherryPick:</string>
+								<string key="candidateClassName">PBRefMenuItem</string>
+							</object>
+							<object class="IBActionInfo">
+								<string key="name">copyPatch:</string>
+								<string key="candidateClassName">PBRefMenuItem</string>
+							</object>
+							<object class="IBActionInfo">
+								<string key="name">copySHA:</string>
+								<string key="candidateClassName">PBRefMenuItem</string>
+							</object>
+							<object class="IBActionInfo">
+								<string key="name">createBranch:</string>
+								<string key="candidateClassName">PBRefMenuItem</string>
+							</object>
+							<object class="IBActionInfo">
+								<string key="name">createTag:</string>
+								<string key="candidateClassName">PBRefMenuItem</string>
+							</object>
+							<object class="IBActionInfo">
+								<string key="name">diffWithHEAD:</string>
+								<string key="candidateClassName">PBRefMenuItem</string>
+							</object>
+							<object class="IBActionInfo">
+								<string key="name">fetchRemote:</string>
+								<string key="candidateClassName">PBRefMenuItem</string>
+							</object>
+							<object class="IBActionInfo">
+								<string key="name">merge:</string>
+								<string key="candidateClassName">PBRefMenuItem</string>
+							</object>
+							<object class="IBActionInfo">
+								<string key="name">pullRemote:</string>
+								<string key="candidateClassName">PBRefMenuItem</string>
+							</object>
+							<object class="IBActionInfo">
+								<string key="name">pushDefaultRemoteForRef:</string>
+								<string key="candidateClassName">PBRefMenuItem</string>
+							</object>
+							<object class="IBActionInfo">
+								<string key="name">pushToRemote:</string>
+								<string key="candidateClassName">PBRefMenuItem</string>
+							</object>
+							<object class="IBActionInfo">
+								<string key="name">pushUpdatesToRemote:</string>
+								<string key="candidateClassName">PBRefMenuItem</string>
+							</object>
+							<object class="IBActionInfo">
+								<string key="name">rebaseHeadBranch:</string>
+								<string key="candidateClassName">PBRefMenuItem</string>
+							</object>
+							<object class="IBActionInfo">
+								<string key="name">showTagInfoSheet:</string>
+								<string key="candidateClassName">PBRefMenuItem</string>
+							</object>
+						</object>
+					</object>
 					<object class="NSMutableDictionary" key="outlets">
 						<bool key="EncodedWithXMLCoder">YES</bool>
 						<object class="NSArray" key="dict.sortedKeys">
@@ -2999,6 +3451,35 @@
 							<string>PBGitHistoryController</string>
 						</object>
 					</object>
+					<object class="NSMutableDictionary" key="toOneOutletInfosByName">
+						<bool key="EncodedWithXMLCoder">YES</bool>
+						<object class="NSArray" key="dict.sortedKeys">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+							<string>branchPopUp</string>
+							<string>commitController</string>
+							<string>commitList</string>
+							<string>historyController</string>
+						</object>
+						<object class="NSMutableArray" key="dict.values">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+							<object class="IBToOneOutletInfo">
+								<string key="name">branchPopUp</string>
+								<string key="candidateClassName">NSPopUpButton</string>
+							</object>
+							<object class="IBToOneOutletInfo">
+								<string key="name">commitController</string>
+								<string key="candidateClassName">NSArrayController</string>
+							</object>
+							<object class="IBToOneOutletInfo">
+								<string key="name">commitList</string>
+								<string key="candidateClassName">PBCommitList</string>
+							</object>
+							<object class="IBToOneOutletInfo">
+								<string key="name">historyController</string>
+								<string key="candidateClassName">PBGitHistoryController</string>
+							</object>
+						</object>
+					</object>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
 						<string key="majorKey">IBProjectSource</string>
 						<string key="minorKey">PBRefController.h</string>
@@ -3010,6 +3491,13 @@
 					<object class="NSMutableDictionary" key="outlets">
 						<string key="NS.key.0">refish</string>
 						<string key="NS.object.0">id</string>
+					</object>
+					<object class="NSMutableDictionary" key="toOneOutletInfosByName">
+						<string key="NS.key.0">refish</string>
+						<object class="IBToOneOutletInfo" key="NS.object.0">
+							<string key="name">refish</string>
+							<string key="candidateClassName">id</string>
+						</object>
 					</object>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
 						<string key="majorKey">IBProjectSource</string>
@@ -3023,6 +3511,13 @@
 						<string key="NS.key.0">controller</string>
 						<string key="NS.object.0">NSArrayController</string>
 					</object>
+					<object class="NSMutableDictionary" key="toOneOutletInfosByName">
+						<string key="NS.key.0">controller</string>
+						<object class="IBToOneOutletInfo" key="NS.object.0">
+							<string key="name">controller</string>
+							<string key="candidateClassName">NSArrayController</string>
+						</object>
+					</object>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
 						<string key="majorKey">IBProjectSource</string>
 						<string key="minorKey">PBUnsortableTableHeader.h</string>
@@ -3034,6 +3529,13 @@
 					<object class="NSMutableDictionary" key="actions">
 						<string key="NS.key.0">refresh:</string>
 						<string key="NS.object.0">id</string>
+					</object>
+					<object class="NSMutableDictionary" key="actionInfosByName">
+						<string key="NS.key.0">refresh:</string>
+						<object class="IBActionInfo" key="NS.object.0">
+							<string key="name">refresh:</string>
+							<string key="candidateClassName">id</string>
+						</object>
 					</object>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
 						<string key="majorKey">IBProjectSource</string>
@@ -3054,6 +3556,25 @@
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<string>id</string>
 							<string>WebView</string>
+						</object>
+					</object>
+					<object class="NSMutableDictionary" key="toOneOutletInfosByName">
+						<bool key="EncodedWithXMLCoder">YES</bool>
+						<object class="NSArray" key="dict.sortedKeys">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+							<string>repository</string>
+							<string>view</string>
+						</object>
+						<object class="NSMutableArray" key="dict.values">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+							<object class="IBToOneOutletInfo">
+								<string key="name">repository</string>
+								<string key="candidateClassName">id</string>
+							</object>
+							<object class="IBToOneOutletInfo">
+								<string key="name">view</string>
+								<string key="candidateClassName">WebView</string>
+							</object>
 						</object>
 					</object>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
@@ -3077,6 +3598,25 @@
 							<string>PBGitHistoryController</string>
 						</object>
 					</object>
+					<object class="NSMutableDictionary" key="toOneOutletInfosByName">
+						<bool key="EncodedWithXMLCoder">YES</bool>
+						<object class="NSArray" key="dict.sortedKeys">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+							<string>contextMenuDelegate</string>
+							<string>historyController</string>
+						</object>
+						<object class="NSMutableArray" key="dict.values">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+							<object class="IBToOneOutletInfo">
+								<string key="name">contextMenuDelegate</string>
+								<string key="candidateClassName">id</string>
+							</object>
+							<object class="IBToOneOutletInfo">
+								<string key="name">historyController</string>
+								<string key="candidateClassName">PBGitHistoryController</string>
+							</object>
+						</object>
+					</object>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
 						<string key="majorKey">IBProjectSource</string>
 						<string key="minorKey">PBWebHistoryController.h</string>
@@ -3088,6 +3628,13 @@
 					<object class="NSMutableDictionary" key="outlets">
 						<string key="NS.key.0">view</string>
 						<string key="NS.object.0">WebView</string>
+					</object>
+					<object class="NSMutableDictionary" key="toOneOutletInfosByName">
+						<string key="NS.key.0">view</string>
+						<object class="IBToOneOutletInfo" key="NS.object.0">
+							<string key="name">view</string>
+							<string key="candidateClassName">WebView</string>
+						</object>
 					</object>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
 						<string key="majorKey">IBUserSource</string>
@@ -3202,6 +3749,14 @@
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
 						<string key="majorKey">IBFrameworkSource</string>
 						<string key="minorKey">AppKit.framework/Headers/NSController.h</string>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
+					<string key="className">NSDateFormatter</string>
+					<string key="superclassName">NSFormatter</string>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<string key="majorKey">IBFrameworkSource</string>
+						<string key="minorKey">Foundation.framework/Headers/NSDateFormatter.h</string>
 					</object>
 				</object>
 				<object class="IBPartialClassDescription">
@@ -3763,6 +4318,13 @@
 						<string key="NS.key.0">view</string>
 						<string key="NS.object.0">NSView</string>
 					</object>
+					<object class="NSMutableDictionary" key="toOneOutletInfosByName">
+						<string key="NS.key.0">view</string>
+						<object class="IBToOneOutletInfo" key="NS.object.0">
+							<string key="name">view</string>
+							<string key="candidateClassName">NSView</string>
+						</object>
+					</object>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
 						<string key="majorKey">IBFrameworkSource</string>
 						<string key="minorKey">AppKit.framework/Headers/NSViewController.h</string>
@@ -3800,6 +4362,70 @@
 							<string>id</string>
 							<string>id</string>
 							<string>id</string>
+						</object>
+					</object>
+					<object class="NSMutableDictionary" key="actionInfosByName">
+						<bool key="EncodedWithXMLCoder">YES</bool>
+						<object class="NSArray" key="dict.sortedKeys">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+							<string>goBack:</string>
+							<string>goForward:</string>
+							<string>makeTextLarger:</string>
+							<string>makeTextSmaller:</string>
+							<string>makeTextStandardSize:</string>
+							<string>reload:</string>
+							<string>reloadFromOrigin:</string>
+							<string>stopLoading:</string>
+							<string>takeStringURLFrom:</string>
+							<string>toggleContinuousSpellChecking:</string>
+							<string>toggleSmartInsertDelete:</string>
+						</object>
+						<object class="NSMutableArray" key="dict.values">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+							<object class="IBActionInfo">
+								<string key="name">goBack:</string>
+								<string key="candidateClassName">id</string>
+							</object>
+							<object class="IBActionInfo">
+								<string key="name">goForward:</string>
+								<string key="candidateClassName">id</string>
+							</object>
+							<object class="IBActionInfo">
+								<string key="name">makeTextLarger:</string>
+								<string key="candidateClassName">id</string>
+							</object>
+							<object class="IBActionInfo">
+								<string key="name">makeTextSmaller:</string>
+								<string key="candidateClassName">id</string>
+							</object>
+							<object class="IBActionInfo">
+								<string key="name">makeTextStandardSize:</string>
+								<string key="candidateClassName">id</string>
+							</object>
+							<object class="IBActionInfo">
+								<string key="name">reload:</string>
+								<string key="candidateClassName">id</string>
+							</object>
+							<object class="IBActionInfo">
+								<string key="name">reloadFromOrigin:</string>
+								<string key="candidateClassName">id</string>
+							</object>
+							<object class="IBActionInfo">
+								<string key="name">stopLoading:</string>
+								<string key="candidateClassName">id</string>
+							</object>
+							<object class="IBActionInfo">
+								<string key="name">takeStringURLFrom:</string>
+								<string key="candidateClassName">id</string>
+							</object>
+							<object class="IBActionInfo">
+								<string key="name">toggleContinuousSpellChecking:</string>
+								<string key="candidateClassName">id</string>
+							</object>
+							<object class="IBActionInfo">
+								<string key="name">toggleSmartInsertDelete:</string>
+								<string key="candidateClassName">id</string>
+							</object>
 						</object>
 					</object>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">

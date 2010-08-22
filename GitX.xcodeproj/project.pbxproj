@@ -77,6 +77,7 @@
 		D8E105471157C18200FC28A4 /* PBQLTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = D8E105461157C18200FC28A4 /* PBQLTextView.m */; };
 		D8E3B2B810DC9FB2001096A3 /* ScriptingBridge.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D8E3B2B710DC9FB2001096A3 /* ScriptingBridge.framework */; };
 		D8E3B34D10DCA958001096A3 /* PBCreateTagSheet.m in Sources */ = {isa = PBXBuildFile; fileRef = D8E3B34C10DCA958001096A3 /* PBCreateTagSheet.m */; };
+		D8EB616A122F643E00FCCAF4 /* GitXRelativeDateFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = D8EB6169122F643E00FCCAF4 /* GitXRelativeDateFormatter.m */; };
 		D8FBCF19115FA20C0098676A /* PBGitSHA.m in Sources */ = {isa = PBXBuildFile; fileRef = D8FBCF18115FA20C0098676A /* PBGitSHA.m */; };
 		D8FDD9F711432A12005647F6 /* PBCloneRepositoryPanel.xib in Resources */ = {isa = PBXBuildFile; fileRef = D8FDD9F511432A12005647F6 /* PBCloneRepositoryPanel.xib */; };
 		D8FDDA6A114335E8005647F6 /* PBGitSVBranchItem.m in Sources */ = {isa = PBXBuildFile; fileRef = D8FDDA5D114335E8005647F6 /* PBGitSVBranchItem.m */; };
@@ -318,6 +319,8 @@
 		D8E3B34B10DCA958001096A3 /* PBCreateTagSheet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PBCreateTagSheet.h; sourceTree = "<group>"; };
 		D8E3B34C10DCA958001096A3 /* PBCreateTagSheet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PBCreateTagSheet.m; sourceTree = "<group>"; };
 		D8E3B38110DD4E2C001096A3 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/PBCreateTagSheet.xib; sourceTree = "<group>"; };
+		D8EB6168122F643E00FCCAF4 /* GitXRelativeDateFormatter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GitXRelativeDateFormatter.h; sourceTree = "<group>"; };
+		D8EB6169122F643E00FCCAF4 /* GitXRelativeDateFormatter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GitXRelativeDateFormatter.m; sourceTree = "<group>"; };
 		D8FBCF17115FA20C0098676A /* PBGitSHA.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PBGitSHA.h; sourceTree = "<group>"; };
 		D8FBCF18115FA20C0098676A /* PBGitSHA.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PBGitSHA.m; sourceTree = "<group>"; };
 		D8FDD9F611432A12005647F6 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/PBCloneRepositoryPanel.xib; sourceTree = "<group>"; };
@@ -801,6 +804,8 @@
 				F567B88C1057FA9F000DB976 /* NSOutlineViewExt.m */,
 				D8A4BB6D11337D5C00E92D51 /* PBGitGradientBarView.h */,
 				D8A4BB6E11337D5C00E92D51 /* PBGitGradientBarView.m */,
+				D8EB6168122F643E00FCCAF4 /* GitXRelativeDateFormatter.h */,
+				D8EB6169122F643E00FCCAF4 /* GitXRelativeDateFormatter.m */,
 			);
 			name = Aux;
 			sourceTree = "<group>";
@@ -1258,6 +1263,7 @@
 				D8E105471157C18200FC28A4 /* PBQLTextView.m in Sources */,
 				D8FBCF19115FA20C0098676A /* PBGitSHA.m in Sources */,
 				D8022FED11E124C8003C21F6 /* PBGitXMessageSheet.m in Sources */,
+				D8EB616A122F643E00FCCAF4 /* GitXRelativeDateFormatter.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
