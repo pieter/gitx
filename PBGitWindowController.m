@@ -43,7 +43,11 @@
 
 - (BOOL)validateMenuItem:(NSMenuItem *)menuItem
 {
-	if ([menuItem action] == @selector(showCommitView:) || [menuItem action] == @selector(showHistoryView:)) {
+	if ([menuItem action] == @selector(showCommitView:)) {
+		[menuItem setState:(contentController == sidebarController.commitViewController) ? YES : NO];
+		return ![repository isBareRepository];
+	} else if ([menuItem action] == @selector(showHistoryView:)) {
+		[menuItem setState:(contentController != sidebarController.commitViewController) ? YES : NO];
 		return ![repository isBareRepository];
 	}
 	return YES;

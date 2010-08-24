@@ -276,6 +276,16 @@
 	[[NSWorkspace sharedWorkspace] openTempFile:name];
 }
 
+- (BOOL)validateMenuItem:(NSMenuItem *)menuItem
+{
+    if ([menuItem action] == @selector(setDetailedView:)) {
+		[menuItem setState:(self.selectedCommitDetailsIndex == kHistoryDetailViewIndex) ? NSOnState : NSOffState];
+    } else if ([menuItem action] == @selector(setTreeView:)) {
+		[menuItem setState:(self.selectedCommitDetailsIndex == kHistoryTreeViewIndex) ? NSOnState : NSOffState];
+    }
+    return YES;
+}
+
 - (IBAction) setDetailedView:(id)sender
 {
 	self.selectedCommitDetailsIndex = kHistoryDetailViewIndex;
