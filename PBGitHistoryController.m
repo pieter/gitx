@@ -20,7 +20,9 @@
 #import "PBDiffWindowController.h"
 #import "PBGitDefaults.h"
 #import "PBGitRevList.h"
+#import "PBHistorySearchController.h"
 #define QLPreviewPanel NSClassFromString(@"QLPreviewPanel")
+#import "PBQLTextView.h"
 
 
 #define kHistorySelectedDetailIndexKey @"PBHistorySelectedDetailIndex"
@@ -38,6 +40,8 @@
 
 @implementation PBGitHistoryController
 @synthesize selectedCommitDetailsIndex, webCommit, gitTree, commitController, refController;
+@synthesize searchController;
+@synthesize commitList;
 
 - (void)awakeFromNib
 {
@@ -298,6 +302,30 @@
 		[super keyDown: event];
 }
 
+// NSSearchField (actually textfields in general) prevent the normal Find operations from working. Setup custom actions for the
+// next and previous menuitems (in MainMenu.nib) so they will work when the search field is active. When searching for text in
+// a file make sure to call the Find panel's action method instead.
+- (IBAction)selectNext:(id)sender
+{
+	NSResponder *firstResponder = [[[self view] window] firstResponder];
+	if ([firstResponder isKindOfClass:[PBQLTextView class]]) {
+		[(PBQLTextView *)firstResponder performFindPanelAction:sender];
+		return;
+	}
+
+	[searchController selectNextResult];
+}
+- (IBAction)selectPrevious:(id)sender
+{
+	NSResponder *firstResponder = [[[self view] window] firstResponder];
+	if ([firstResponder isKindOfClass:[PBQLTextView class]]) {
+		[(PBQLTextView *)firstResponder performFindPanelAction:sender];
+		return;
+	}
+
+	[searchController selectPreviousResult];
+}
+
 - (void) copyCommitInfo
 {
 	PBGitCommit *commit = [[commitController selectedObjects] objectAtIndex:0];
@@ -436,8 +464,7 @@
 	NSArray *selectedCommits = [self selectedObjectsForSHA:commitSHA];
 	[commitController setSelectedObjects:selectedCommits];
 
-	if (repository.currentBranchFilter != kGitXSelectedBranchFilter)
-		[self scrollSelectionToTopOfViewFrom:oldIndex];
+	[self scrollSelectionToTopOfViewFrom:oldIndex];
 
 	forceSelectionUpdate = NO;
 }

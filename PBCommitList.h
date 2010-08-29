@@ -16,6 +16,8 @@
 	IBOutlet WebView* webView;
 	IBOutlet PBWebHistoryController *webController;
 	IBOutlet PBGitHistoryController *controller;
+	IBOutlet PBHistorySearchController *searchController;
+
     BOOL useAdjustScroll;
 	NSPoint mouseDownPoint;
 }

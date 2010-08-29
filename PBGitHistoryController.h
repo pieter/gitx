@@ -20,6 +20,8 @@
 @class PBCommitList;
 @class PBGitSHA;
 
+@class PBHistorySearchController;
+
 @interface PBGitHistoryController : PBViewController {
 	IBOutlet PBRefController *refController;
 	IBOutlet NSSearchField *searchField;
@@ -31,6 +33,7 @@
 	IBOutlet PBCollapsibleSplitView *historySplitView;
 	IBOutlet PBWebHistoryController *webHistoryController;
     QLPreviewPanel* previewPanel;
+	IBOutlet PBHistorySearchController *searchController;
 
 	IBOutlet PBGitGradientBarView *upperToolbarView;
 	IBOutlet NSButton *mergeButton;
@@ -56,6 +59,8 @@
 @property (retain) PBGitTree* gitTree;
 @property (readonly) NSArrayController *commitController;
 @property (readonly) PBRefController *refController;
+@property (readonly) PBHistorySearchController *searchController;
+@property (readonly) PBCommitList *commitList;
 
 - (IBAction) setDetailedView:(id)sender;
 - (IBAction) setTreeView:(id)sender;
@@ -81,6 +86,10 @@
 - (IBAction) merge:(id)sender;
 - (IBAction) cherryPick:(id)sender;
 - (IBAction) rebase:(id)sender;
+
+// Find/Search methods
+- (IBAction)selectNext:(id)sender;
+- (IBAction)selectPrevious:(id)sender;
 
 - (void) copyCommitInfo;
 - (void) copyCommitSHA;
