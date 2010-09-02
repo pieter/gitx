@@ -129,9 +129,6 @@ var gistie = function() {
 }
 
 var setGravatar = function(email, image) {
-	if (Controller && !Controller.isReachable_("www.gravatar.com"))
-		return;
-
 	if(Controller && !Controller.isFeatureEnabled_("gravatar")) {
 		image.src = "";
 		return;
