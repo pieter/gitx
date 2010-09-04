@@ -17,6 +17,7 @@
 - (void)selectNextResultInDirection:(NSInteger)direction;
 
 - (void)updateUI;
+- (void)setupSearchMenuTemplate;
 
 - (void)startBasicSearch;
 
@@ -94,6 +95,7 @@
 
 - (void)awakeFromNib
 {
+	[self setupSearchMenuTemplate];
 	[[searchField cell] setPlaceholderString:@"Subject, Author, SHA"];
 
 	[self updateUI];
@@ -194,6 +196,34 @@
 		[self selectNextResult];
 
 	[self updateUI];
+}
+
+- (void)setupSearchMenuTemplate
+{
+	NSMenu *searchMenu = [[NSMenu alloc] initWithTitle:@"Search Menu"];
+    NSMenuItem *item;
+
+	item = [[NSMenuItem alloc] initWithTitle:@"Recent Searches" action:NULL keyEquivalent:@""];
+    [item setTag:NSSearchFieldRecentsTitleMenuItemTag];
+    [searchMenu addItem:item];
+
+    item = [[NSMenuItem alloc] initWithTitle:@"Recents" action:NULL keyEquivalent:@""];
+    [item setTag:NSSearchFieldRecentsMenuItemTag];
+    [searchMenu addItem:item];
+
+    item = [NSMenuItem separatorItem];
+    [item setTag:NSSearchFieldRecentsTitleMenuItemTag];
+    [searchMenu addItem:item];
+
+	item = [[NSMenuItem alloc] initWithTitle:@"Clear Recent Searches" action:NULL keyEquivalent:@""];
+    [item setTag:NSSearchFieldClearRecentsMenuItemTag];
+    [searchMenu addItem:item];
+
+	item = [[NSMenuItem alloc] initWithTitle:@"No Recent Searches" action:NULL keyEquivalent:@""];
+    [item setTag:NSSearchFieldNoRecentsMenuItemTag];
+    [searchMenu addItem:item];
+
+    [[searchField cell] setSearchMenuTemplate:searchMenu];
 }
 
 
