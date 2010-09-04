@@ -305,6 +305,9 @@
 		return NO;
 
 	PBGitRef *ref = [[[cell objectValue] refs] objectAtIndex:index];
+	if ([ref isTag] || [ref isRemoteBranch])
+		return NO;
+
 	if ([[[historyController.repository headRef] ref] isEqualToRef:ref])
 		return NO;
 	
