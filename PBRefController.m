@@ -275,6 +275,15 @@
 	return [PBRefMenuItem defaultMenuItemsForCommit:commit target:self];
 }
 
+- (NSArray *)menuItemsForRow:(NSInteger)rowIndex
+{
+	NSArray *commits = [commitController arrangedObjects];
+	if ([commits count] <= rowIndex)
+		return nil;
+
+	return [self menuItemsForCommit:[commits objectAtIndex:rowIndex]];
+}
+
 
 # pragma mark Tableview delegate methods
 

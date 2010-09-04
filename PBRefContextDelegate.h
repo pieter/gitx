@@ -7,8 +7,12 @@
 //
 
 
+@class PBGitRef;
+@class PBGitCommit;
+
 
 @protocol PBRefContextDelegate
 - (NSArray *) menuItemsForRef:(PBGitRef *)ref;
 - (NSArray *) menuItemsForCommit:(PBGitCommit *)commit;
+- (NSArray *)menuItemsForRow:(NSInteger)rowIndex;
 @end

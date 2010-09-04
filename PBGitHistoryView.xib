@@ -1619,14 +1619,6 @@
 				<object class="IBConnectionRecord">
 					<object class="IBOutletConnection" key="connection">
 						<string key="label">delegate</string>
-						<reference key="source" ref="254268962"/>
-						<reference key="destination" ref="1001"/>
-					</object>
-					<int key="connectionID">96</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBOutletConnection" key="connection">
-						<string key="label">delegate</string>
 						<reference key="source" ref="202620420"/>
 						<reference key="destination" ref="1001"/>
 					</object>
@@ -1695,14 +1687,6 @@
 						<reference key="destination" ref="1001"/>
 					</object>
 					<int key="connectionID">234</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBOutletConnection" key="connection">
-						<string key="label">dataSource</string>
-						<reference key="source" ref="254268962"/>
-						<reference key="destination" ref="892732705"/>
-					</object>
-					<int key="connectionID">235</int>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBOutletConnection" key="connection">
@@ -2099,11 +2083,67 @@
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBOutletConnection" key="connection">
+						<string key="label">contextMenuDelegate</string>
+						<reference key="source" ref="746918365"/>
+						<reference key="destination" ref="892732705"/>
+					</object>
+					<int key="connectionID">438</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
+						<string key="label">contextMenuDelegate</string>
+						<reference key="source" ref="853819733"/>
+						<reference key="destination" ref="892732705"/>
+					</object>
+					<int key="connectionID">439</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
+						<string key="label">contextMenuDelegate</string>
+						<reference key="source" ref="750921840"/>
+						<reference key="destination" ref="892732705"/>
+					</object>
+					<int key="connectionID">440</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
+						<string key="label">contextMenuDelegate</string>
+						<reference key="source" ref="671609291"/>
+						<reference key="destination" ref="892732705"/>
+					</object>
+					<int key="connectionID">441</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
+						<string key="label">contextMenuDelegate</string>
+						<reference key="source" ref="493129112"/>
+						<reference key="destination" ref="892732705"/>
+					</object>
+					<int key="connectionID">442</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
+						<string key="label">delegate</string>
+						<reference key="source" ref="254268962"/>
+						<reference key="destination" ref="1001"/>
+					</object>
+					<int key="connectionID">444</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
+						<string key="label">dataSource</string>
+						<reference key="source" ref="254268962"/>
+						<reference key="destination" ref="892732705"/>
+					</object>
+					<int key="connectionID">445</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
 						<string key="label">searchController</string>
 						<reference key="source" ref="1001"/>
 						<reference key="destination" ref="596748029"/>
 					</object>
-					<int key="connectionID">437</int>
+					<int key="connectionID">446</int>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBOutletConnection" key="connection">
@@ -3064,6 +3104,17 @@
 				<object class="IBPartialClassDescription">
 					<string key="className">GitXTextFieldCell</string>
 					<string key="superclassName">NSTextFieldCell</string>
+					<object class="NSMutableDictionary" key="outlets">
+						<string key="NS.key.0">contextMenuDelegate</string>
+						<string key="NS.object.0">id</string>
+					</object>
+					<object class="NSMutableDictionary" key="toOneOutletInfosByName">
+						<string key="NS.key.0">contextMenuDelegate</string>
+						<object class="IBToOneOutletInfo" key="NS.object.0">
+							<string key="name">contextMenuDelegate</string>
+							<string key="candidateClassName">id</string>
+						</object>
+					</object>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
 						<string key="majorKey">IBProjectSource</string>
 						<string key="minorKey">GitXTextFieldCell.h</string>
