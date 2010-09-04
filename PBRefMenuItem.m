@@ -44,6 +44,7 @@
 	NSString *headRefName = [headRef shortName];
 	BOOL isHead = [ref isEqualToRef:headRef];
 	BOOL isOnHeadBranch = isHead ? YES : [repo isRefOnHeadBranch:ref];
+	BOOL isDetachedHead = (isHead && [headRefName isEqualToString:@"HEAD"]);
 
 	NSString *remoteName = [ref remoteName];
 	if (!remoteName && [ref isBranch])
@@ -98,6 +99,9 @@
 		NSString *pushTitle = [NSString stringWithFormat:@"Push updates to %@", remoteName];
 		[items addObject:[PBRefMenuItem itemWithTitle:pushTitle action:@selector(pushUpdatesToRemote:) enabled:YES]];
 	}
+	else if (isDetachedHead) {
+		[items addObject:[PBRefMenuItem itemWithTitle:@"Push" action:nil enabled:NO]];
+	}
 	else {
 		// push to default remote
 		BOOL hasDefaultRemote = NO;
@@ -128,7 +132,7 @@
 	// delete ref
 	[items addObject:[PBRefMenuItem separatorItem]];
 	NSString *deleteTitle = [NSString stringWithFormat:@"Delete %@…", targetRefName];
-	[items addObject:[PBRefMenuItem itemWithTitle:deleteTitle action:@selector(showDeleteRefSheet:) enabled:YES]];
+	[items addObject:[PBRefMenuItem itemWithTitle:deleteTitle action:@selector(showDeleteRefSheet:) enabled:!isDetachedHead]];
 
 	for (PBRefMenuItem *item in items) {
 		[item setTarget:target];
