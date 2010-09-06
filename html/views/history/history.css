@@ -3,7 +3,6 @@ body {
 }
 
 #commit_header {
-	width: 100%;
 	font-size: 12px;
 	padding-left: 5px;
 	padding-right: 5px;
@@ -63,6 +62,9 @@ body {
     font-size: 10px;
 	white-space: pre-wrap;
 	padding-top: 12px;
+	word-wrap: break-word; /* make the commit message word wrap (doesn't affect diffs) */
+	padding: 3px; /* don't let the commit message hit the edge of the window */
+	margin: 1em;
 }
 
 #files {

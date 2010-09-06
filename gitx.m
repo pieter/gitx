@@ -36,8 +36,8 @@ NSDistantObject *createProxy()
 	// Now attempt to connect, allowing the app time to startup
 	int attempt;
 	for (attempt = 0; proxy == nil && attempt < 50; ++attempt) {
-		if (proxy = connectToProxy())
-			break;
+		if ( (proxy = connectToProxy()) != nil )
+			return proxy;
 		usleep(15000);
 	}
     
