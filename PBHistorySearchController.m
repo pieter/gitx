@@ -9,6 +9,7 @@
 #import "PBHistorySearchController.h"
 #import "PBGitHistoryController.h"
 #import "PBGitRepository.h"
+#import "PBGitDefaults.h"
 #import <QuartzCore/CoreAnimation.h>
 
 
@@ -20,6 +21,8 @@
 - (void)setupSearchMenuTemplate;
 
 - (void)startBasicSearch;
+- (void)startBackgroundSearch;
+- (void)clearProgressIndicator;
 
 - (void)showSearchRewindPanelReverse:(BOOL)isReversed;
 
@@ -30,6 +33,8 @@
 #define kGitXSearchDirectionPrevious -1
 
 #define kGitXBasicSearchLabel @"Subject, Author, SHA"
+#define kGitXPickaxeSearchLabel @"Commit (pickaxe)"
+#define kGitXRegexSearchLabel @"Commit (pickaxe regex)"
 
 #define kGitXSearchArrangedObjectsContext @"GitXSearchArrangedObjectsContext"
 
@@ -42,6 +47,9 @@
 @synthesize searchField;
 @synthesize stepper;
 @synthesize numberOfMatchesField;
+@synthesize progressIndicator;
+
+@synthesize searchMode;
 
 
 
@@ -56,6 +64,12 @@
 - (BOOL)hasSearchResults
 {
 	return ([results count] > 0);
+}
+
+- (void)selectSearchMode:(id)sender
+{
+	self.searchMode = [sender tag];
+	[self updateSearch:self];
 }
 
 - (void)selectNextResult
@@ -90,13 +104,16 @@
 
 - (IBAction)updateSearch:(id)sender
 {
-	[self startBasicSearch];
+	if (self.searchMode == kGitXBasicSeachMode)
+		[self startBasicSearch];
+	else
+		[self startBackgroundSearch];
 }
 
 - (void)awakeFromNib
 {
 	[self setupSearchMenuTemplate];
-	[[searchField cell] setPlaceholderString:@"Subject, Author, SHA"];
+	self.searchMode = [PBGitDefaults historySearchMode];
 
 	[self updateUI];
 
@@ -181,6 +198,7 @@
 		[stepper setHidden:NO];
 		[historyController.commitList reloadData];
 	}
+	[self clearProgressIndicator];
 }
 
 // changes the selection to the next match after the current selected row unless the current row is already a match
@@ -203,6 +221,24 @@
 	NSMenu *searchMenu = [[NSMenu alloc] initWithTitle:@"Search Menu"];
     NSMenuItem *item;
 
+	item = [[NSMenuItem alloc] initWithTitle:kGitXBasicSearchLabel action:@selector(selectSearchMode:) keyEquivalent:@""];
+	[item setTarget:self];
+    [item setTag:kGitXBasicSeachMode];
+    [searchMenu addItem:item];
+
+	item = [[NSMenuItem alloc] initWithTitle:kGitXPickaxeSearchLabel action:@selector(selectSearchMode:) keyEquivalent:@""];
+	[item setTarget:self];
+    [item setTag:kGitXPickaxeSearchMode];
+    [searchMenu addItem:item];
+
+	item = [[NSMenuItem alloc] initWithTitle:kGitXRegexSearchLabel action:@selector(selectSearchMode:) keyEquivalent:@""];
+	[item setTarget:self];
+    [item setTag:kGitXRegexSearchMode];
+    [searchMenu addItem:item];
+
+    item = [NSMenuItem separatorItem];
+    [searchMenu addItem:item];
+
 	item = [[NSMenuItem alloc] initWithTitle:@"Recent Searches" action:NULL keyEquivalent:@""];
     [item setTag:NSSearchFieldRecentsTitleMenuItemTag];
     [searchMenu addItem:item];
@@ -224,6 +260,77 @@
     [searchMenu addItem:item];
 
     [[searchField cell] setSearchMenuTemplate:searchMenu];
+}
+
+- (void)updateSearchMenuState
+{
+	NSMenu *searchMenu = [[searchField cell] searchMenuTemplate];
+	if (!searchMenu)
+		return;
+
+	NSMenuItem *item;
+
+	item = [searchMenu itemWithTag:kGitXBasicSeachMode];
+	[item setState:(searchMode == kGitXBasicSeachMode) ? NSOnState : NSOffState];
+
+	item = [searchMenu itemWithTag:kGitXPickaxeSearchMode];
+	[item setState:(searchMode == kGitXPickaxeSearchMode) ? NSOnState : NSOffState];
+
+	item = [searchMenu itemWithTag:kGitXRegexSearchMode];
+	[item setState:(searchMode == kGitXRegexSearchMode) ? NSOnState : NSOffState];
+
+    [[searchField cell] setSearchMenuTemplate:searchMenu];
+
+	[PBGitDefaults setHistorySearchMode:searchMode];
+}
+
+- (void)updateSearchPlaceholderString
+{
+	switch (self.searchMode) {
+		case kGitXPickaxeSearchMode:
+			[[searchField cell] setPlaceholderString:kGitXPickaxeSearchLabel];
+			break;
+		case kGitXRegexSearchMode:
+			[[searchField cell] setPlaceholderString:kGitXRegexSearchLabel];
+			break;
+		default:
+			[[searchField cell] setPlaceholderString:kGitXBasicSearchLabel];
+			break;
+	}
+}
+
+- (void)setSearchMode:(PBHistorySearchMode)mode
+{
+	if ((mode < kGitXBasicSeachMode) || (mode >= kGitXMaxSearchMode))
+		mode = kGitXBasicSeachMode;
+
+	searchMode = mode;
+	[PBGitDefaults setHistorySearchMode:searchMode];
+
+	[self updateSearchMenuState];
+	[self updateSearchPlaceholderString];
+}
+
+- (void)searchTimerFired:(NSTimer*)theTimer
+{
+	[self.progressIndicator setHidden:NO];
+	[self.progressIndicator startAnimation:self];
+}
+
+- (void)clearProgressIndicator
+{
+	[searchTimer invalidate];
+	searchTimer = nil;
+	[self.progressIndicator setHidden:YES];
+	[self.progressIndicator stopAnimation:self];
+}
+
+- (void)startProgressIndicator
+{
+	[self clearProgressIndicator];
+	[numberOfMatchesField setHidden:YES];
+	[stepper setHidden:YES];
+	searchTimer = [NSTimer scheduledTimerWithTimeInterval:0.25 target:self selector:@selector(searchTimerFired:) userInfo:nil repeats:NO];
 }
 
 
@@ -250,6 +357,67 @@
 
 	results = indexes;
 
+	[self updateSelectedResult];
+}
+
+
+
+#pragma mark Pickaxe/Regex Search
+
+- (void)startBackgroundSearch
+{
+	if (backgroundSearchTask) {
+		NSFileHandle *handle = [[backgroundSearchTask standardOutput] fileHandleForReading];
+		[[NSNotificationCenter defaultCenter] removeObserver:self name:NSFileHandleReadToEndOfFileCompletionNotification object:handle];
+		[backgroundSearchTask terminate];
+	}
+
+	NSString *searchString = [[searchField stringValue] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+	if ([searchString isEqualToString:@""]) {
+		[self clearSearch];
+		return;
+	}
+
+	results = nil;
+
+	NSMutableArray *searchArguments = [NSMutableArray arrayWithObjects:@"log", @"--pretty=format:%H", [NSString stringWithFormat:@"-S%@", searchString], nil];
+	if (self.searchMode == kGitXRegexSearchMode)
+		[searchArguments insertObject:@"--pickaxe-regex" atIndex:1];
+
+	backgroundSearchTask = [PBEasyPipe taskForCommand:[PBGitBinary path] withArgs:searchArguments inDir:[[historyController.repository fileURL] path]];
+	[backgroundSearchTask launch];
+
+	NSFileHandle *handle = [[backgroundSearchTask standardOutput] fileHandleForReading];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(parseBackgroundSearchResults:) name:NSFileHandleReadToEndOfFileCompletionNotification object:handle];
+	[handle readToEndOfFileInBackgroundAndNotify];
+
+	[self startProgressIndicator];
+}
+
+- (void)parseBackgroundSearchResults:(NSNotification *)notification
+{
+	[[NSNotificationCenter defaultCenter] removeObserver:self name:NSFileHandleReadToEndOfFileCompletionNotification object:[notification object]];
+	backgroundSearchTask = nil;
+
+	NSMutableIndexSet *indexes = [NSMutableIndexSet indexSet];
+	NSData *data = [[notification userInfo] valueForKey:NSFileHandleNotificationDataItem];
+
+	NSString *resultsString = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+	NSArray *resultsArray = [resultsString componentsSeparatedByString:@"\n"];
+
+	for (NSString *resultSHA in resultsArray) {
+		NSUInteger index = 0;
+		for (PBGitCommit *commit in [commitController arrangedObjects]) {
+			if ([resultSHA isEqualToString:commit.sha.string]) {
+				[indexes addIndex:index];
+				break;
+			}
+			index++;
+		}
+	}
+
+	results = indexes;
+	[self clearProgressIndicator];
 	[self updateSelectedResult];
 }
 

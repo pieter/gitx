@@ -34,5 +34,7 @@
 + (void) removePreviousDocumentPaths;
 + (NSInteger) branchFilter;
 + (void) setBranchFilter:(NSInteger)state;
++ (NSInteger)historySearchMode;
++ (void)setHistorySearchMode:(NSInteger)mode;
 
 @end

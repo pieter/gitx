@@ -7,6 +7,7 @@
 //
 
 #import "PBGitDefaults.h"
+#import "PBHistorySearchController.h"
 
 #define kDefaultVerticalLineLength 50
 #define kCommitMessageViewVerticalLineLength @"PBCommitMessageViewVerticalLineLength"
@@ -25,6 +26,7 @@
 #define kOpenPreviousDocumentsOnLaunch @"PBOpenPreviousDocumentsOnLaunch"
 #define kPreviousDocumentPaths @"PBPreviousDocumentPaths"
 #define kBranchFilterState @"PBBranchFilter"
+#define kHistorySearchMode @"PBHistorySearchMode"
 
 @implementation PBGitDefaults
 
@@ -53,6 +55,8 @@
 					  forKey:kShouldCheckoutBranch];
 	[defaultValues setObject:[NSNumber numberWithBool:NO]
                       forKey:kOpenPreviousDocumentsOnLaunch];
+	[defaultValues setObject:[NSNumber numberWithInteger:kGitXBasicSeachMode]
+                      forKey:kHistorySearchMode];
 	[[NSUserDefaults standardUserDefaults] registerDefaults:defaultValues];
 }
 
@@ -169,5 +173,16 @@
 {
 	[[NSUserDefaults standardUserDefaults] setInteger:state forKey:kBranchFilterState];
 }
+
++ (NSInteger)historySearchMode
+{
+	return [[NSUserDefaults standardUserDefaults] integerForKey:kHistorySearchMode];
+}
+
++ (void)setHistorySearchMode:(NSInteger)mode
+{
+	[[NSUserDefaults standardUserDefaults] setInteger:mode forKey:kHistorySearchMode];
+}
+
 
 @end
