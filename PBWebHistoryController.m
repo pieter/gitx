@@ -46,10 +46,15 @@
 		[[self script] callWebScriptMethod:@"reload" withArguments: nil];
 		return;
 	}
-	currentSha = [content realSha];
 
 	NSArray *arguments = [NSArray arrayWithObjects:content, [[[historyController repository] headRef] simpleRef], nil];
-	[[self script] callWebScriptMethod:@"loadCommit" withArguments: arguments];
+	id scriptResult = [[self script] callWebScriptMethod:@"loadCommit" withArguments: arguments];
+	if (!scriptResult) {
+		// the web view is not really ready for scripting???
+		[self performSelector:_cmd withObject:content afterDelay:0.05];
+		return;
+	}
+	currentSha = [content realSha];
 
 	// Now we load the extended details. We used to do this in a separate thread,
 	// but this caused some funny behaviour because NSTask's and NSThread's don't really
@@ -112,16 +117,25 @@ contextMenuItemsForElement:(NSDictionary *)element
 		// Every ref has a class name of 'refs' and some other class. We check on that to see if we pressed on a ref.
 		if ([[node className] hasPrefix:@"refs "]) {
 			NSString *selectedRefString = [[[node childNodes] item:0] textContent];
-			for (PBGitRef *ref in historyController.webCommit.refs)
+			for (PBGitRef *ref in [historyController.webCommit refs])
 			{
 				if ([[ref shortName] isEqualToString:selectedRefString])
-					return [contextMenuDelegate menuItemsForRef:ref commit:historyController.webCommit];
+					return [contextMenuDelegate menuItemsForRef:ref];
 			}
 			NSLog(@"Could not find selected ref!");
 			return defaultMenuItems;
 		}
 		if ([node hasAttributes] && [[node attributes] getNamedItem:@"representedFile"])
 			return [historyController menuItemsForPaths:[NSArray arrayWithObject:[[[node attributes] getNamedItem:@"representedFile"] value]]];
+        else if ([[node class] isEqual:[DOMHTMLImageElement class]]) {
+            // !!! Andre Berg 20100324: NSMenuItem: Copy Image is the only one that makes sense here 
+            // since we don't need to download the image or open it in a new window (besides with the 
+            // current implementation these two entries crash GitX anyway
+            //
+            // FIXME: determine object index dynamically 
+            // (since this could change between WebKit versions).
+            defaultMenuItems = [NSArray arrayWithObject:[defaultMenuItems objectAtIndex:2]]; 
+        }
 
 		node = [node parentNode];
 	}
@@ -146,13 +160,13 @@ contextMenuItemsForElement:(NSDictionary *)element
 
 - (void) finalize
 {
-	[historyController removeObserver:self forKeyPath:@"webCommit"];
-	[super finalize];
+    [historyController removeObserver:self forKeyPath:@"webCommit"];
+    [super finalize];
 }
 
 - (void) preferencesChanged
 {
-	[[self script] callWebScriptMethod:@"enableFeatures" withArguments:nil];
+    [[self script] callWebScriptMethod:@"enableFeatures" withArguments:nil];
 }
 
 @end

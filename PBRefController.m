@@ -9,81 +9,309 @@
 #import "PBRefController.h"
 #import "PBGitRevisionCell.h"
 #import "PBRefMenuItem.h"
+#import "PBCreateBranchSheet.h"
+#import "PBCreateTagSheet.h"
+#import "PBGitDefaults.h"
+#import "PBDiffWindowController.h"
 
 @implementation PBRefController
 
 - (void)awakeFromNib
 {
 	[commitList registerForDraggedTypes:[NSArray arrayWithObject:@"PBGitRef"]];
-	[historyController addObserver:self forKeyPath:@"repository.branches" options:0 context:@"branchChange"];
-	[historyController addObserver:self forKeyPath:@"repository.currentBranch" options:0 context:@"currentBranchChange"];
-	[self updateBranchMenu];
-	[self selectCurrentBranch];
-}
-
-- (void) observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
-{
-    if ([(NSString *)context isEqualToString: @"branchChange"]) {
-		[self updateBranchMenu];
-	}
-	else if ([(NSString *)context isEqualToString:@"currentBranchChange"]) {
-		[self selectCurrentBranch];
-	}
-	else {
-		[super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
-	}
 }
 
 
-- (void) removeRef:(PBRefMenuItem *) sender
-{
-	NSString *ref_desc = [NSString stringWithFormat:@"%@ %@", [[sender ref] type], [[sender ref] shortName]];
-	NSString *question = [NSString stringWithFormat:@"Are you sure you want to remove the %@?", ref_desc];
-	int choice = NSRunAlertPanel([NSString stringWithFormat:@"Delete %@?", ref_desc], question, @"Delete", @"Cancel", nil);
-	// TODO: Use a non-modal alert here, so we don't block all the GitX windows
+#pragma mark Fetch
 
-	if(choice) {
-		int ret = 1;
-		[historyController.repository outputForArguments:[NSArray arrayWithObjects:@"update-ref", @"-d", [[sender ref] ref], nil] retValue: &ret];
-		if (ret) {
-			NSLog(@"Removing ref failed!");
-			return;
-		}
-		[historyController.repository removeBranch:[[PBGitRevSpecifier alloc] initWithRef:[sender ref]]];
-		[[sender commit] removeRef:[sender ref]];
-		[commitController rearrangeObjects];
-	}
-}
-
-- (void) checkoutRef:(PBRefMenuItem *)sender
+- (void) fetchRemote:(PBRefMenuItem *)sender
 {
-	int ret = 1;
-	[historyController.repository outputInWorkdirForArguments:[NSArray arrayWithObjects:@"checkout", [[sender ref] shortName], nil] retValue: &ret];
-	if (ret) {
-		[[historyController.repository windowController] showMessageSheet:@"Checking out branch failed" infoText:@"There was an error checking out the branch. Perhaps your working directory is not clean?"];
+	id <PBGitRefish> refish = [sender refish];
+	if ([refish refishType] == kGitXCommitType)
 		return;
+
+	[historyController.repository beginFetchFromRemoteForRef:refish];
+}
+
+
+#pragma mark Pull
+
+- (void) pullRemote:(PBRefMenuItem *)sender
+{
+	id <PBGitRefish> refish = [sender refish];
+	[historyController.repository beginPullFromRemote:nil forRef:refish];
+}
+
+
+#pragma mark Push
+
+- (void) showConfirmPushRefSheet:(PBGitRef *)ref remote:(PBGitRef *)remoteRef
+{
+	if ((!ref && !remoteRef)
+		|| (ref && ![ref isBranch] && ![ref isRemoteBranch])
+		|| (remoteRef && !([remoteRef refishType] == kGitXRemoteType)))
+		return;
+
+	NSString *description = nil;
+	if (ref && remoteRef)
+		description = [NSString stringWithFormat:@"Push %@ '%@' to remote %@", [ref refishType], [ref shortName], [remoteRef remoteName]];
+	else if (ref)
+		description = [NSString stringWithFormat:@"Push %@ '%@' to default remote", [ref refishType], [ref shortName]];
+	else
+		description = [NSString stringWithFormat:@"Push updates to remote %@", [remoteRef remoteName]];
+
+    NSString * sdesc = [NSString stringWithFormat:@"p%@", [description substringFromIndex:1]]; 
+	NSAlert *alert = [NSAlert alertWithMessageText:description
+									 defaultButton:@"Push"
+								   alternateButton:@"Cancel"
+									   otherButton:nil
+						 informativeTextWithFormat:@"Are you sure you want to %@?", sdesc];
+
+	NSMutableDictionary *info = [NSMutableDictionary dictionary];
+	if (ref)
+		[info setObject:ref forKey:kGitXBranchType];
+	if (remoteRef)
+		[info setObject:remoteRef forKey:kGitXRemoteType];
+
+	[alert beginSheetModalForWindow:[historyController.repository.windowController window]
+					  modalDelegate:self
+					 didEndSelector:@selector(confirmPushRefSheetDidEnd:returnCode:contextInfo:)
+						contextInfo:info];
+}
+
+- (void) confirmPushRefSheetDidEnd:(NSAlert *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo
+{
+    [[sheet window] orderOut:nil];
+
+	if (returnCode == NSAlertDefaultReturn) {
+		PBGitRef *ref = [(NSDictionary *)contextInfo objectForKey:kGitXBranchType];
+		PBGitRef *remoteRef = [(NSDictionary *)contextInfo objectForKey:kGitXRemoteType];
+
+		[historyController.repository beginPushRef:ref toRemote:remoteRef];
 	}
-	[historyController.repository reloadRefs];
-	[commitController rearrangeObjects];
 }
 
-- (void) tagInfo:(PBRefMenuItem *)sender
+- (void) pushUpdatesToRemote:(PBRefMenuItem *)sender
 {
-    NSString *message = [NSString stringWithFormat:@"Info for tag: %@", [[sender ref] shortName]];
+	PBGitRef *remoteRef = [(PBGitRef *)[sender refish] remoteRef];
 
-    int ret = 1;
-    NSString *info = [historyController.repository outputInWorkdirForArguments:[NSArray arrayWithObjects:@"tag", @"-n50", @"-l", [[sender ref] shortName], nil] retValue: &ret];
-
-    if (!ret) {
-	    [[historyController.repository windowController] showMessageSheet:message infoText:info];
-    }
-    return;
+	[self showConfirmPushRefSheet:nil remote:remoteRef];
 }
 
-- (NSArray *) menuItemsForRef:(PBGitRef *)ref commit:(PBGitCommit *)commit
+- (void) pushDefaultRemoteForRef:(PBRefMenuItem *)sender
 {
-	return [PBRefMenuItem defaultMenuItemsForRef:ref commit:commit target:self];
+	PBGitRef *ref = (PBGitRef *)[sender refish];
+
+	[self showConfirmPushRefSheet:ref remote:nil];
 }
+
+- (void) pushToRemote:(PBRefMenuItem *)sender
+{
+	PBGitRef *ref = (PBGitRef *)[sender refish];
+	NSString *remoteName = [sender representedObject];
+	PBGitRef *remoteRef = [PBGitRef refFromString:[kGitXRemoteRefPrefix stringByAppendingString:remoteName]];
+
+	[self showConfirmPushRefSheet:ref remote:remoteRef];
+}
+
+
+#pragma mark Merge
+
+- (void) merge:(PBRefMenuItem *)sender
+{
+	id <PBGitRefish> refish = [sender refish];
+	[historyController.repository mergeWithRefish:refish];
+}
+
+
+#pragma mark Checkout
+
+- (void) checkout:(PBRefMenuItem *)sender
+{
+	id <PBGitRefish> refish = [sender refish];
+	[historyController.repository checkoutRefish:refish];
+}
+
+
+#pragma mark Cherry Pick
+
+- (void) cherryPick:(PBRefMenuItem *)sender
+{
+	id <PBGitRefish> refish = [sender refish];
+	[historyController.repository cherryPickRefish:refish];
+}
+
+
+#pragma mark Rebase
+
+- (void) rebaseHeadBranch:(PBRefMenuItem *)sender
+{
+	id <PBGitRefish> refish = [sender refish];
+	PBGitRef *headRef = [[historyController.repository headRef] ref];
+
+	[historyController.repository rebaseBranch:headRef onRefish:refish];
+}
+
+
+#pragma mark Create Branch
+
+- (void) createBranch:(PBRefMenuItem *)sender
+{
+	id <PBGitRefish> refish = [sender refish];
+	[PBCreateBranchSheet beginCreateBranchSheetAtRefish:refish inRepository:historyController.repository];
+}
+
+
+#pragma mark Copy info
+
+- (void) copySHA:(PBRefMenuItem *)sender
+{
+	PBGitCommit *commit = nil;
+	if ([[sender refish] refishType] == kGitXCommitType)
+		commit = (PBGitCommit *)[sender refish];
+	else
+		commit = [historyController.repository commitForRef:[sender refish]];
+
+	NSPasteboard *pasteboard = [NSPasteboard generalPasteboard];
+	[pasteboard declareTypes:[NSArray arrayWithObject:NSStringPboardType] owner:nil];
+	[pasteboard setString:[commit realSha] forType:NSStringPboardType];
+}
+
+- (void) copyPatch:(PBRefMenuItem *)sender
+{
+	PBGitCommit *commit = nil;
+	if ([[sender refish] refishType] == kGitXCommitType)
+		commit = (PBGitCommit *)[sender refish];
+	else
+		commit = [historyController.repository commitForRef:[sender refish]];
+
+	NSPasteboard *pasteboard = [NSPasteboard generalPasteboard];
+	[pasteboard declareTypes:[NSArray arrayWithObject:NSStringPboardType] owner:nil];
+	[pasteboard setString:[commit patch] forType:NSStringPboardType];
+}
+
+
+#pragma mark Diff
+
+- (void) diffWithHEAD:(PBRefMenuItem *)sender
+{
+	PBGitCommit *commit = nil;
+	if ([[sender refish] refishType] == kGitXCommitType)
+		commit = (PBGitCommit *)[sender refish];
+	else
+		commit = [historyController.repository commitForRef:[sender refish]];
+
+	[PBDiffWindowController showDiffWindowWithFiles:nil fromCommit:commit diffCommit:nil];
+}
+
+#pragma mark Tags
+
+- (void) createTag:(PBRefMenuItem *)sender
+{
+	id <PBGitRefish> refish = [sender refish];
+	[PBCreateTagSheet beginCreateTagSheetAtRefish:refish inRepository:historyController.repository];
+}
+
+- (void) showTagInfoSheet:(PBRefMenuItem *)sender
+{
+	if ([[sender refish] refishType] != kGitXTagType)
+		return;
+
+	NSString *tagName = [(PBGitRef *)[sender refish] tagName];
+
+	int retValue = 1;
+	NSArray *args = [NSArray arrayWithObjects:@"tag", @"-n50", @"-l", tagName, nil];
+	NSString *info = [historyController.repository outputInWorkdirForArguments:args retValue:&retValue];
+	if (!retValue) {
+		NSString *message = [NSString stringWithFormat:@"Info for tag: %@", tagName];
+		[historyController.repository.windowController showMessageSheet:message infoText:info];
+	}
+}
+
+
+#pragma mark Remove a branch, remote or tag
+
+- (void) showDeleteRefSheet:(PBRefMenuItem *)sender
+{
+	if ([[sender refish] refishType] == kGitXCommitType)
+		return;
+
+	PBGitRef *ref = (PBGitRef *)[sender refish];
+	NSString *ref_desc = [NSString stringWithFormat:@"%@ '%@'", [ref refishType], [ref shortName]];
+
+	NSAlert *alert = [NSAlert alertWithMessageText:[NSString stringWithFormat:@"Delete %@?", ref_desc]
+									 defaultButton:@"Delete"
+								   alternateButton:@"Cancel"
+									   otherButton:nil
+						 informativeTextWithFormat:@"Are you sure you want to remove the %@?", ref_desc];
+	
+	[alert beginSheetModalForWindow:[historyController.repository.windowController window]
+					  modalDelegate:self
+					 didEndSelector:@selector(deleteRefSheetDidEnd:returnCode:contextInfo:)
+						contextInfo:ref];
+}
+
+- (void) deleteRefSheetDidEnd:(NSAlert *)sheet returnCode:(int)returnCode contextInfo:(void  *)contextInfo
+{
+    [[sheet window] orderOut:nil];
+
+	if (returnCode == NSAlertDefaultReturn) {
+		PBGitRef *ref = (PBGitRef *)contextInfo;
+		[historyController.repository deleteRef:ref];
+	}
+}
+
+
+
+#pragma mark Contextual menus
+
+- (NSArray *) menuItemsForRef:(PBGitRef *)ref
+{
+	return [PBRefMenuItem defaultMenuItemsForRef:ref inRepository:historyController.repository target:self];
+}
+
+- (NSArray *) menuItemsForCommit:(PBGitCommit *)commit
+{
+	return [PBRefMenuItem defaultMenuItemsForCommit:commit target:self];
+}
+
+// - (BOOL) addRemoteImplWithName:(NSString *)remoteName forURL:(NSString *)remoteURL
+// {
+//  int ret = 1;
+//     BOOL success = NO;
+//     if (!remoteName || !remoteURL) {
+//         return success;
+//     }
+//  NSString *rval = [historyController.repository outputInWorkdirForArguments:[NSArray arrayWithObjects:@"remote",  @"add", @"-f", remoteName, remoteURL, nil] retValue: &ret];
+//  if (ret) {
+//      NSString *info = [NSString stringWithFormat:@"There was an error adding the remote.\n\n%d\n%@", ret, rval];
+//      [[historyController.repository windowController] showMessageSheet:@"Adding Remote failed" infoText:info];
+//      return success;
+//  }
+//  [historyController.repository reloadRefs];
+//  [commitController rearrangeObjects];
+//     success = YES;
+//     return success;
+// }
+// 
+// - (void) toggleToolbarItems:(NSToolbar *)tb matchingLabels:(NSArray *)labels enabledState:(BOOL)state  {
+//     NSArray * tbItems = [tb items];
+//     
+//     /* if labels is nil, assume all toolbar items */
+//     if (!labels) {
+//         for (NSToolbarItem * curItem in tbItems) {
+//             [curItem setEnabled:state];
+//         }
+//     } else {
+//         for (NSToolbarItem * curItem in tbItems) {
+//             for (NSString * curLabel in labels) {
+//                 if ([[curItem label] isEqualToString:curLabel]) {
+//                     [curItem setEnabled:state];
+//                 }
+//             }
+//         }
+//     }
+// }
 
 # pragma mark Tableview delegate methods
 
@@ -92,12 +320,14 @@
 	NSPoint location = [tv convertPointFromBase:[(PBCommitList *)tv mouseDownPoint]];
 	int row = [tv rowAtPoint:location];
 	int column = [tv columnAtPoint:location];
-	if (column != 0)
+	int subjectColumn = [tv columnWithIdentifier:@"SubjectColumn"];
+	if (column != subjectColumn)
 		return NO;
 	
 	PBGitRevisionCell *cell = (PBGitRevisionCell *)[tv preparedCellAtColumn:column row:row];
+	NSRect cellFrame = [tv frameOfCellAtColumn:column row:row];
 	
-	int index = [cell indexAtX:location.x];
+	int index = [cell indexAtX:(location.x - cellFrame.origin.x)];
 	
 	if (index == -1)
 		return NO;
@@ -124,6 +354,23 @@
 	return NSDragOperationNone;
 }
 
+- (void) dropRef:(NSDictionary *)dropInfo
+{
+	PBGitRef *ref = [dropInfo objectForKey:@"dragRef"];
+	PBGitCommit *oldCommit = [dropInfo objectForKey:@"oldCommit"];
+	PBGitCommit *dropCommit = [dropInfo objectForKey:@"dropCommit"];
+	if (!ref || ! oldCommit || !dropCommit)
+		return;
+
+	int retValue = 1;
+	[historyController.repository outputForArguments:[NSArray arrayWithObjects:@"update-ref", @"-mUpdate from GitX", [ref ref], [dropCommit realSha], NULL] retValue:&retValue];
+	if (retValue)
+		return;
+
+	[dropCommit addRef:ref];
+	[oldCommit removeRef:ref];
+}
+
 - (BOOL)tableView:(NSTableView *)aTableView
 	   acceptDrop:(id <NSDraggingInfo>)info
 			  row:(NSInteger)row
@@ -139,190 +386,56 @@
 	
 	NSArray *numbers = [NSKeyedUnarchiver unarchiveObjectWithData:data];
 	int oldRow = [[numbers objectAtIndex:0] intValue];
+	if (oldRow == row)
+		return NO;
+
 	int oldRefIndex = [[numbers objectAtIndex:1] intValue];
-	PBGitCommit *oldCommit = [[commitController arrangedObjects] objectAtIndex: oldRow];
+	PBGitCommit *oldCommit = [[commitController arrangedObjects] objectAtIndex:oldRow];
 	PBGitRef *ref = [[oldCommit refs] objectAtIndex:oldRefIndex];
-	
+
 	PBGitCommit *dropCommit = [[commitController arrangedObjects] objectAtIndex:row];
-	
-	int a = [[NSAlert alertWithMessageText:@"Change branch"
-							 defaultButton:@"Change"
-						   alternateButton:@"Cancel"
-							   otherButton:nil
-				 informativeTextWithFormat:@"Do you want to change branch\n\n\t'%@'\n\n to point to commit\n\n\t'%@'", [ref shortName], [dropCommit subject]] runModal];
-	if (a != NSAlertDefaultReturn)
-		return NO;
-	
-	int retValue = 1;
-	[historyController.repository outputForArguments:[NSArray arrayWithObjects:@"update-ref", @"-mUpdate from GitX", [ref ref], [dropCommit realSha], NULL] retValue:&retValue];
-	if (retValue)
-		return NO;
-	
-	[dropCommit addRef:ref];
-	[oldCommit removeRef:ref];
-	
-	[commitController rearrangeObjects];
-	[aTableView needsToDrawRect:[aTableView rectOfRow:oldRow]];
+
+	NSDictionary *dropInfo = [NSDictionary dictionaryWithObjectsAndKeys:
+							  ref, @"dragRef",
+							  oldCommit, @"oldCommit",
+							  dropCommit, @"dropCommit",
+							  nil];
+
+	if ([PBGitDefaults suppressAcceptDropRef]) {
+		[self dropRef:dropInfo];
+		return YES;
+	}
+
+	NSString *subject = [dropCommit subject];
+	if ([subject length] > 99)
+		subject = [[subject substringToIndex:99] stringByAppendingString:@"…"];
+	NSString *infoText = [NSString stringWithFormat:@"Move the %@ to point to the commit: %@", [ref refishType], subject];
+
+	NSAlert *alert = [NSAlert alertWithMessageText:[NSString stringWithFormat:@"Move %@: %@", [ref refishType], [ref shortName]]
+									 defaultButton:@"Move"
+								   alternateButton:@"Cancel"
+									   otherButton:nil
+						 informativeTextWithFormat:infoText];
+    [alert setShowsSuppressionButton:YES];
+
+	[alert beginSheetModalForWindow:[historyController.repository.windowController window]
+					  modalDelegate:self
+					 didEndSelector:@selector(acceptDropInfoAlertDidEnd:returnCode:contextInfo:)
+						contextInfo:dropInfo];
+
 	return YES;
 }
 
-# pragma mark Add ref methods
--(void)addRef:(id)sender
+- (void) acceptDropInfoAlertDidEnd:(NSAlert *)alert returnCode:(NSInteger)returnCode contextInfo:(void *)contextInfo
 {
-	[errorMessage setStringValue:@""];
-	[NSApp beginSheet:newBranchSheet
-	   modalForWindow:[[historyController view] window]
-		modalDelegate:NULL
-	   didEndSelector:NULL
-		  contextInfo:NULL];
-}
+    [[alert window] orderOut:nil];
 
--(void)saveSheet:(id) sender
-{
-	NSString *branchName = [@"refs/heads/" stringByAppendingString:[newBranchName stringValue]];
-	
-	if ([[commitController selectedObjects] count] == 0)
-		return;
+	if (returnCode == NSAlertDefaultReturn)
+		[self dropRef:contextInfo];
 
-	PBGitCommit *commit = [[commitController selectedObjects] objectAtIndex:0];
-
-	int retValue = 1;
-	[historyController.repository outputForArguments:[NSArray arrayWithObjects:@"check-ref-format", branchName, nil] retValue:&retValue];
-	if (retValue != 0) {
-		[errorMessage setStringValue:@"Invalid name"];
-		return;
-	}
-
-	retValue = 1;
-	[historyController.repository outputForArguments:[NSArray arrayWithObjects:@"update-ref", @"-mCreate branch from GitX", branchName, [commit realSha], @"0000000000000000000000000000000000000000", NULL] retValue:&retValue];
-	if (retValue)
-	{
-		[errorMessage setStringValue:@"Branch exists"];
-		return;
-	}
-	[historyController.repository addBranch:[[PBGitRevSpecifier alloc] initWithRef:[PBGitRef refFromString:branchName]]];
-	[self closeSheet:sender];
-	[commit addRef:[PBGitRef refFromString:branchName]];
-	[commitController rearrangeObjects];
-}
-
--(void)closeSheet:(id) sender
-{	
-	[NSApp endSheet:newBranchSheet];
-	[newBranchName setStringValue:@""];
-	[newBranchSheet orderOut:self];
-}
-
-# pragma mark Branches menu
-
-- (void) updateBranchMenu
-{
-	if (!branchPopUp)
-		return;
-
-	NSMutableArray *localBranches = [NSMutableArray array];
-	NSMutableArray *remoteBranches = [NSMutableArray array];
-	NSMutableArray *tags = [NSMutableArray array];
-	NSMutableArray *other = [NSMutableArray array];
-
-	NSMenu *menu = [[NSMenu alloc] initWithTitle:@"Branch menu"];
-	for (PBGitRevSpecifier *rev in historyController.repository.branches)
-	{
-		if (![rev isSimpleRef])
-		{
-			[other addObject:rev];
-			continue;
-		}
-
-		NSString *ref = [rev simpleRef];
-
-		if ([ref hasPrefix:@"refs/heads"])
-			[localBranches addObject:rev];
-		else if ([ref hasPrefix:@"refs/tags"])
-			[tags addObject:rev];
-		else if ([ref hasPrefix:@"refs/remote"])
-			[remoteBranches addObject:rev];
-	}
-
-	for (PBGitRevSpecifier *rev in localBranches)
-	{
-		NSMenuItem *item = [[NSMenuItem alloc] initWithTitle:[rev description] action:@selector(changeBranch:) keyEquivalent:@""];
-		[item setRepresentedObject:rev];
-		[item setTarget:self];
-		[menu addItem:item];
-	}
-
-	[menu addItem:[NSMenuItem separatorItem]];
-
-	// Remotes
-	NSMenu *remoteMenu = [[NSMenu alloc] initWithTitle:@"Remotes"];
-	NSMenu *currentMenu = NULL;
-	for (PBGitRevSpecifier *rev in remoteBranches)
-	{
-		NSString *ref = [rev simpleRef];
-		NSArray *components = [ref componentsSeparatedByString:@"/"];
-		
-		NSString *remoteName = [components objectAtIndex:2];
-		NSString *branchName = [[components subarrayWithRange:NSMakeRange(3, [components count] - 3)] componentsJoinedByString:@"/"];
-
-		if (![[currentMenu title] isEqualToString:remoteName])
-		{
-			currentMenu = [[NSMenu alloc] initWithTitle:remoteName];
-			NSMenuItem *item = [[NSMenuItem alloc] initWithTitle:remoteName action:NULL keyEquivalent:@""];
-			[item setSubmenu:currentMenu];
-			[remoteMenu addItem:item];
-		}
-
-		NSMenuItem *item = [[NSMenuItem alloc] initWithTitle:branchName action:@selector(changeBranch:) keyEquivalent:@""];
-		[item setTarget:self];
-		[item setRepresentedObject:rev];
-		[currentMenu addItem:item];
-	}
-
-	NSMenuItem *remoteItem = [[NSMenuItem alloc] initWithTitle:@"Remotes" action:NULL keyEquivalent:@""];
-	[remoteItem setSubmenu:remoteMenu];
-	[menu addItem:remoteItem];
-
-	// Tags
-	NSMenu *tagMenu = [[NSMenu alloc] initWithTitle:@"Tags"];
-	for (PBGitRevSpecifier *rev in tags)
-	{
-		NSMenuItem *item = [[NSMenuItem alloc] initWithTitle:[rev description] action:@selector(changeBranch:) keyEquivalent:@""];
-		[item setTarget:self];
-		[item setRepresentedObject:rev];
-		[tagMenu addItem:item];
-	}		
-	
-	NSMenuItem *tagItem = [[NSMenuItem alloc] initWithTitle:@"Tags" action:NULL keyEquivalent:@""];
-	[tagItem setSubmenu:tagMenu];
-	[menu addItem:tagItem];
-
-
-	// Others
-	[menu addItem:[NSMenuItem separatorItem]];
-
-	for (PBGitRevSpecifier *rev in other)
-	{
-		NSMenuItem *item = [[NSMenuItem alloc] initWithTitle:[rev description] action:@selector(changeBranch:) keyEquivalent:@""];
-		[item setRepresentedObject:rev];
-		[item setTarget:self];
-		[menu addItem:item];
-	}
-	
-	[[branchPopUp cell] setMenu: menu];
-}
-
-- (void) changeBranch:(NSMenuItem *)sender
-{
-	PBGitRevSpecifier *rev = [sender representedObject];
-	historyController.repository.currentBranch = rev;
-}
-
-- (void) selectCurrentBranch
-{
-	PBGitRevSpecifier *rev = historyController.repository.currentBranch;
-	if (rev)
-		[branchPopUp setTitle:[rev description]];
+	if ([[alert suppressionButton] state] == NSOnState)
+        [PBGitDefaults setSuppressAcceptDropRef:YES];
 }
 
 @end
+

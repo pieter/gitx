@@ -9,29 +9,46 @@
 #import <Cocoa/Cocoa.h>
 #import "PBGitRepository.h"
 
-@class PBViewController;
+@class PBViewController, PBGitSidebarController, PBGitHistoryController;
+
 @interface PBGitWindowController : NSWindowController {
 	__weak PBGitRepository* repository;
-	int selectedViewIndex;
-	IBOutlet NSView* contentView;
 
-	PBViewController *historyViewController;
-	PBViewController *commitViewController;
+	__weak PBViewController *contentController;
+	__weak PBViewController* viewController;
+	__weak PBGitSidebarController *sidebarController;
+	__weak PBGitHistoryController *historyController;
 
-	PBViewController* viewController;
+	IBOutlet NSView *sourceListControlsView;
+	IBOutlet NSSplitView *splitView;
+	IBOutlet NSView *sourceSplitView;
+	IBOutlet NSView *contentSplitView;
+
+	IBOutlet NSTextField *statusField;
+	IBOutlet NSProgressIndicator *progressIndicator;
+
+	IBOutlet NSToolbarItem *terminalItem;
+	IBOutlet NSToolbarItem *finderItem;
 }
 
 @property (assign) __weak PBGitRepository *repository;
-@property (readonly) NSViewController *viewController;
-@property (assign) int selectedViewIndex;
+@property (assign) __weak PBViewController * viewController;
+@property (assign) __weak PBViewController * contentController;
+@property (assign) __weak PBGitSidebarController * sidebarController;
+@property (assign) __weak PBGitHistoryController * historyController;
 
 - (id)initWithRepository:(PBGitRepository*)theRepository displayDefault:(BOOL)display;
 
-- (void)changeViewController:(NSInteger)whichViewTag;
-- (void)useToolbar:(NSToolbar *)toolbar;
+- (void)changeContentController:(PBViewController *)controller;
+
 - (void)showMessageSheet:(NSString *)messageText infoText:(NSString *)infoText;
 - (void)showErrorSheet:(NSError *)error;
+- (void)showErrorSheetTitle:(NSString *)title message:(NSString *)message arguments:(NSArray *)arguments output:(NSString *)output;
 
 - (IBAction) showCommitView:(id)sender;
 - (IBAction) showHistoryView:(id)sender;
+- (IBAction) revealInFinder:(id)sender;
+- (IBAction) openInTerminal:(id)sender;
+- (IBAction) cloneTo:(id)sender;
+- (IBAction) refresh:(id)sender;
 @end

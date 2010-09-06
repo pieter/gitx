@@ -9,9 +9,14 @@
 #import <Cocoa/Cocoa.h>
 #import "PBGitRepository.h"
 #import "PBGitTree.h"
+#import "PBGitRefish.h"
 #include "git/oid.h"
 
-@interface PBGitCommit : NSObject {
+
+extern NSString * const kGitXCommitType;
+
+
+@interface PBGitCommit : NSObject <PBGitRefish> {
 	git_oid sha;
 	git_oid *parentShas;
 	int nParents;
@@ -21,6 +26,7 @@
 	NSString* details;
 	NSString *_patch;
 	NSArray* parents;
+	NSString *realSHA;
 
 	int timestamp;
 	char sign;
@@ -28,12 +34,21 @@
 	PBGitRepository* repository;
 }
 
-- initWithRepository:(PBGitRepository *)repo andSha:(git_oid)sha;
++ (id) commitWithRepository:(PBGitRepository*)repo andSha:(git_oid)newSha;
+- (id) initWithRepository:(PBGitRepository *)repo andSha:(git_oid)sha;
 
-- (void)addRef:(PBGitRef *)ref;
-- (void)removeRef:(id)ref;
+- (void) addRef:(PBGitRef *)ref;
+- (void) removeRef:(id)ref;
+- (BOOL) hasRef:(PBGitRef *)ref;
 
 - (NSString *)realSha;
+- (BOOL) isOnSameBranchAs:(PBGitCommit *)other;
+- (BOOL) isOnHeadBranch;
+
+// <PBGitRefish>
+- (NSString *) refishName;
+- (NSString *) shortName;
+- (NSString *) refishType;
 
 @property (readonly) git_oid *sha;
 @property (copy) NSString* subject;

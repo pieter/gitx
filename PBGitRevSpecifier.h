@@ -9,21 +9,26 @@
 #import <Cocoa/Cocoa.h>
 #import <PBGitRef.h>
 
-@interface PBGitRevSpecifier : NSObject {
+@interface PBGitRevSpecifier : NSObject  <NSCopying> {
 	NSString *description;
 	NSArray *parameters;
 	NSURL *workingDirectory;
+	BOOL isSimpleRef;
 }
 
+- (id) initWithParameters:(NSArray *)params description:(NSString *)descrip;
 - (id) initWithParameters:(NSArray*) params;
 - (id) initWithRef: (PBGitRef*) ref;
 
-- (BOOL) isSimpleRef;
 - (NSString*) simpleRef;
+- (PBGitRef *) ref;
 - (BOOL) hasPathLimiter;
 - (BOOL) hasLeftRight;
+- (NSString *) title;
 
-- (BOOL) isEqualTo: (PBGitRevSpecifier*) other;
+- (BOOL) isEqual: (PBGitRevSpecifier*) other;
+- (BOOL) isAllBranchesRev;
+- (BOOL) isLocalBranchesRev;
 
 + (PBGitRevSpecifier *)allBranchesRevSpec;
 + (PBGitRevSpecifier *)localBranchesRevSpec;
@@ -31,5 +36,6 @@
 @property(retain)   NSString *description;
 @property(readonly) NSArray *parameters;
 @property(retain)   NSURL *workingDirectory;
+@property(readonly) BOOL isSimpleRef;
 
 @end

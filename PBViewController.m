@@ -11,7 +11,10 @@
 
 @implementation PBViewController
 
-@synthesize repository, viewToolbar;
+@synthesize repository;
+@synthesize status;
+@synthesize isBusy;
+@synthesize superController;
 
 - (id)initWithRepository:(PBGitRepository *)theRepository superController:(PBGitWindowController *)controller
 {
@@ -44,5 +47,10 @@
 - (NSResponder *)firstResponder;
 {
 	return nil;
+}
+
+- (IBAction) refresh:(id)sender
+{
+    return;
 }
 @end

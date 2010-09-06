@@ -13,26 +13,38 @@
 #import "PBGitCommit.h"
 #import "PBRefContextDelegate.h"
 
+@class PBRefMenuItem;
+
 @interface PBRefController : NSObject <PBRefContextDelegate> {
 	IBOutlet __weak PBGitHistoryController *historyController;
 	IBOutlet NSArrayController *commitController;
 	IBOutlet PBCommitList *commitList;
-
-	IBOutlet NSWindow *newBranchSheet;
-	IBOutlet NSTextField *newBranchName;
-	IBOutlet NSTextField *errorMessage;
-
 	IBOutlet NSPopUpButton *branchPopUp;
 }
 
-- (IBAction)addRef:(id)sender;
-- (IBAction)closeSheet:(id) sender;
-- (IBAction)saveSheet:(id) sender;
+- (void) fetchRemote:(PBRefMenuItem *)sender;
+- (void) pullRemote:(PBRefMenuItem *)sender;
+- (void) pushUpdatesToRemote:(PBRefMenuItem *)sender;
+- (void) pushDefaultRemoteForRef:(PBRefMenuItem *)sender;
+- (void) pushToRemote:(PBRefMenuItem *)sender;
+- (void) showConfirmPushRefSheet:(PBGitRef *)ref remote:(PBGitRef *)remoteRef;
 
-- (NSArray *) menuItemsForRef:(PBGitRef *)ref commit:(PBGitCommit *)commit;
+- (void) checkout:(PBRefMenuItem *)sender;
+- (void) merge:(PBRefMenuItem *)sender;
+- (void) cherryPick:(PBRefMenuItem *)sender;
+- (void) rebaseHeadBranch:(PBRefMenuItem *)sender;
+- (void) createBranch:(PBRefMenuItem *)sender;
+- (void) copySHA:(PBRefMenuItem *)sender;
+- (void) copyPatch:(PBRefMenuItem *)sender;
+- (void) diffWithHEAD:(PBRefMenuItem *)sender;
+- (void) createTag:(PBRefMenuItem *)sender;
+- (void) showTagInfoSheet:(PBRefMenuItem *)sender;
 
-- (void) changeBranch:(NSMenuItem *)sender;
-- (void) selectCurrentBranch;
-- (void) updateBranchMenu;
+- (NSArray *) menuItemsForRef:(PBGitRef *)ref;
+- (NSArray *) menuItemsForCommit:(PBGitCommit *)commit;
 
+@end
+
+@interface NSString (PBRefSpecAdditions)
+- (NSString *) refForSpec;
 @end

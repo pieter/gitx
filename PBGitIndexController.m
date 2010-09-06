@@ -196,19 +196,30 @@
 	[ws selectFile: path inFileViewerRootedAtPath:nil];
 }
 
-- (void)discardChangesForFiles:(NSArray *)files force:(BOOL)force
+- (void) discardChangesForFilesAlertDidEnd:(NSAlert *)alert returnCode:(NSInteger)returnCode contextInfo:(void *)contextInfo
+{
+    [[alert window] orderOut:nil];
+
+	if (returnCode == NSAlertDefaultReturn) {
+        [commitController.index discardChangesForFiles:contextInfo];
+	}
+}
+
+- (void) discardChangesForFiles:(NSArray *)files force:(BOOL)force
 {
 	if (!force) {
-		int ret = [[NSAlert alertWithMessageText:@"Discard changes"
-								   defaultButton:nil
-								 alternateButton:@"Cancel"
-									 otherButton:nil
-					   informativeTextWithFormat:@"Are you sure you wish to discard the changes to this file?\n\nYou cannot undo this operation."] runModal];
-		if (ret != NSAlertDefaultReturn)
-			return;
-	}
-	
-	[commitController.index discardChangesForFiles:files];
+		NSAlert *alert = [NSAlert alertWithMessageText:@"Discard changes"
+                                         defaultButton:nil
+                                       alternateButton:@"Cancel"
+                                           otherButton:nil
+                             informativeTextWithFormat:@"Are you sure you wish to discard the changes to this file?\n\nYou cannot undo this operation."];
+        [alert beginSheetModalForWindow:[[commitController view] window]
+                          modalDelegate:self
+                         didEndSelector:@selector(discardChangesForFilesAlertDidEnd:returnCode:contextInfo:)
+                            contextInfo:files];
+	} else {
+        [commitController.index discardChangesForFiles:files];
+    }
 }
 
 # pragma mark TableView icon delegate

@@ -24,7 +24,7 @@
 
 @implementation PBGitCommitController
 
-@synthesize status, index, busy;
+@synthesize index;
 
 - (id)initWithRepository:(PBGitRepository *)theRepository superController:(PBGitWindowController *)controller
 {
@@ -93,7 +93,7 @@
 
 - (void) refresh:(id) sender
 {
-	self.busy = YES;
+	self.isBusy = YES;
 	self.status = @"Refreshing index…";
 	[index refresh];
 
@@ -108,7 +108,7 @@
 
 - (IBAction) commit:(id) sender
 {
-	if ([[NSFileManager defaultManager] fileExistsAtPath:[repository.fileURL.path stringByAppendingPathComponent:@"MERGE_HEAD"]]) {
+	if ([[NSFileManager defaultManager] fileExistsAtPath:[[[repository fileURL] path] stringByAppendingPathComponent:@"MERGE_HEAD"]]) {
 		[[repository windowController] showMessageSheet:@"Cannot commit merges" infoText:@"GitX cannot commit merges yet. Please commit your changes from the command line."];
 		return;
 	}
@@ -127,7 +127,7 @@
 	[cachedFilesController setSelectionIndexes:[NSIndexSet indexSet]];
 	[unstagedFilesController setSelectionIndexes:[NSIndexSet indexSet]];
 
-	self.busy = YES;
+	self.isBusy = YES;
 	[commitMessageView setEditable:NO];
 
 	[index commitWithMessage:commitMessage];
@@ -137,7 +137,7 @@
 # pragma mark PBGitIndex Notification handling
 - (void)refreshFinished:(NSNotification *)notification
 {
-	self.busy = NO;
+	self.isBusy = NO;
 	self.status = @"Index refresh finished";
 }
 
@@ -150,12 +150,12 @@
 {
 	[commitMessageView setEditable:YES];
 	[commitMessageView setString:@""];
-	[webController setStateMessage:[NSString stringWithFormat:[[notification userInfo] objectForKey:@"description"]]];
+	[webController setStateMessage:[NSString stringWithString:[[notification userInfo] objectForKey:@"description"]]];
 }	
 
 - (void)commitFailed:(NSNotification *)notification
 {
-	self.busy = NO;
+	self.isBusy = NO;
 	NSString *reason = [[notification userInfo] objectForKey:@"description"];
 	self.status = [@"Commit failed: " stringByAppendingString:reason];
 	[commitMessageView setEditable:YES];
@@ -177,6 +177,12 @@
 {
 	[cachedFilesController rearrangeObjects];
 	[unstagedFilesController rearrangeObjects];
+    if ([[cachedFilesController arrangedObjects] count]) {
+        [commitButton setEnabled:YES];
+    } else {
+        [commitButton setEnabled:NO];
+    }
+
 }
 
 - (void)indexOperationFailed:(NSNotification *)notification

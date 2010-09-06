@@ -9,35 +9,41 @@
 #import "PBCLIProxy.h"
 #import "PBGitBinary.h"
 #import "PBEasyPipe.h"
+#import "PBGitRepository.h"
+#include <sys/syslimits.h>      /* for ARG_MAX */
 
-NSDistantObject* connect()
+NSDistantObject* connectToProxy()
 {
-	id proxy = [NSConnection rootProxyForConnectionWithRegisteredName:ConnectionName host:nil];
+	id proxy = [NSConnection rootProxyForConnectionWithRegisteredName:PBDOConnectionName host:nil];
 	[proxy setProtocolForProxy:@protocol(GitXCliToolProtocol)];
 	return proxy;
 }
 
 NSDistantObject *createProxy()
 {
-	NSDistantObject *proxy = connect();
+	NSDistantObject * proxy = connectToProxy();
 
-	if (proxy)
-		return proxy;
+	if (proxy) {
+        return proxy;
+    }
 
 	// The connection failed, so try to launch the app
-	[[NSWorkspace sharedWorkspace] launchAppWithBundleIdentifier: @"nl.frim.GitX"
-														 options: NSWorkspaceLaunchWithoutActivation
-								  additionalEventParamDescriptor: nil
-												launchIdentifier: nil];
+	[[NSWorkspace sharedWorkspace] launchAppWithBundleIdentifier:@"nl.frim.GitX"
+														 options:NSWorkspaceLaunchWithoutActivation
+								  additionalEventParamDescriptor:nil
+												launchIdentifier:nil];
 
 	// Now attempt to connect, allowing the app time to startup
 	int attempt;
 	for (attempt = 0; proxy == nil && attempt < 50; ++attempt) {
-		if ( (proxy = connect()) != nil )
+		if ( (proxy = connectToProxy()) != nil )
 			return proxy;
-
 		usleep(15000);
 	}
+    
+    if (proxy) {
+        return proxy;
+    }
 
 	// not succesful!
 	fprintf(stderr, "Couldn't connect to app server!\n");
@@ -48,8 +54,9 @@ NSDistantObject *createProxy()
 void usage(char const *programName)
 {
 
-	printf("Usage: %s (--help|--version)\n", programName);
-	printf("   or: %s (--commit|-h)\n", programName);
+	printf("Usage: %s (-h|--help|--version)\n", programName);
+	printf("   or: %s (--commit)\n", programName);
+	printf("   or: %s (--subject=<subject>|--sha=<sha>|--author=<author>)\n", programName);
 	printf("   or: %s <revlist options>\n", programName);
 	printf("\n");
 	printf("\t-h, --help          print this help\n");
@@ -59,6 +66,11 @@ void usage(char const *programName)
 	printf("\tSee 'man git-log' and 'man git-rev-list' for options you can pass to gitx\n");
 	printf("\n");
 	printf("\t--all                  show all branches\n");
+    printf("\t--local                show local branches\n");
+    printf("\t--sha=<sha>            filter the current branch for <sha>\n");
+    printf("\t--author=<author>      filter the current branch for <author>\n");
+    printf("\t--subject=<subject>    filter the current branch for <subject>\n");
+    printf("\t-S<subject>            same as above (included for legacy compatibility)\n");
 	printf("\t<branch>               show specific branch\n");
 	printf("\t -- <path>             show commits touching paths\n");
 	exit(1);
@@ -121,20 +133,32 @@ int main(int argc, const char** argv)
 		git_path();
 
 	if (![PBGitBinary path]) {
-		printf("%s\n", [[PBGitBinary notFoundError] cStringUsingEncoding:NSUTF8StringEncoding]);
+		printf("%s\n", [[PBGitBinary notFoundError] UTF8String]);
 		exit(2);
 	}
-
-	// Attempt to connect to the app
-	id proxy = createProxy();
-
+    
 	// Create arguments
 	argv++; argc--;
-	NSMutableArray* arguments = [NSMutableArray arrayWithCapacity:argc];
-	int i = 0;
-	for (i = 0; i < argc; i++)
-		[arguments addObject: [NSString stringWithUTF8String:argv[i]]];
-
+    
+    NSMutableArray* arguments = [NSMutableArray arrayWithCapacity:argc];
+    int i = 0;
+    for (i = 0; i < argc; i++)
+        [arguments addObject: [NSString stringWithUTF8String:argv[i]]];
+    
+    // I hate using env vars for this but I don't see how else we get the parameters
+    // to the Application client as the proxy connection routines above start up the
+    // ApplicationController which in turn initializes the PBCLIProxy and starts with
+    // the usual business of calling -populateList from PBGitSidebarController.
+    NSString * fullargs = [arguments componentsJoinedByString:@" "];
+    if ([fullargs length] <= ARG_MAX) {
+        setenv("GITX_CLI_ARGUMENTS", [fullargs UTF8String], 1);
+        setenv("GITX_LAUNCHED_FROM_CLI", "YES", 1);
+    } else {
+        fprintf(stderr, "Argument size exceeds system limit of (%d)! Ignoring args.", ARG_MAX);
+    }
+    
+   id proxy = createProxy();
+    
 	if (!isatty(STDIN_FILENO) && fdopen(STDIN_FILENO, "r"))
 		handleSTDINDiff(proxy);
 
@@ -148,14 +172,14 @@ int main(int argc, const char** argv)
 		handleDiffWithArguments([arguments subarrayWithRange:NSMakeRange(1, [arguments count] - 1)], pwd, proxy);
 
 	// No diff, just open the current dir
-	NSURL* url = [NSURL fileURLWithPath:pwd];
 	NSError* error = nil;
 
-	if (![proxy openRepository:url arguments: arguments error:&error]) {
-		fprintf(stderr, "Error opening repository at %s\n", [[url path] UTF8String]);
+	if (![proxy openRepository:pwd arguments: arguments error:&error]) {
+		fprintf(stderr, "Error opening repository at %s\n", [pwd UTF8String]);
 		if (error)
 			fprintf(stderr, "\t%s\n", [[error localizedFailureReason] UTF8String]);
+        return 1;
 	}
-
+        
 	return 0;
 }

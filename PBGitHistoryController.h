@@ -12,37 +12,79 @@
 #import "PBViewController.h"
 #import "PBCollapsibleSplitView.h"
 
+@class PBQLOutlineView;
+@class PBGitSidebarController;
+@class PBGitGradientBarView;
+@class PBRefController;
+@class QLPreviewPanel;
+@class PBCommitList;
+@class PBSourceViewItem;
+
 @interface PBGitHistoryController : PBViewController {
+	IBOutlet PBRefController *refController;
+	IBOutlet PBCommitList* commitList;
+	IBOutlet PBCollapsibleSplitView *historySplitView;
+	IBOutlet PBGitGradientBarView *upperToolbarView;
+	IBOutlet PBGitGradientBarView *scopeBarView;
+
 	IBOutlet NSSearchField *searchField;
 	IBOutlet NSArrayController* commitController;
 	IBOutlet NSTreeController* treeController;
 	IBOutlet NSOutlineView* fileBrowser;
-	IBOutlet NSTableView* commitList;
-	IBOutlet PBCollapsibleSplitView *historySplitView;
+	IBOutlet NSButton *mergeButton;
+	IBOutlet NSButton *cherryPickButton;
+	IBOutlet NSButton *rebaseButton;
+	IBOutlet NSButton *allBranchesFilterItem;
+	IBOutlet NSButton *localRemoteBranchesFilterItem;
+	IBOutlet NSButton *selectedBranchFilterItem;
 
 	IBOutlet id webView;
-	int selectedTab;
-	
-	PBGitTree* gitTree;
-	PBGitCommit* webCommit;
-	PBGitCommit* rawCommit;
-	PBGitCommit* realCommit;
+
+    // moved from PBGitSidebarController
+    IBOutlet NSSegmentedControl * remoteControls;
+
+    __weak QLPreviewPanel* previewPanel;
+
+	int selectedCommitDetailsIndex;
+	BOOL forceSelectionUpdate;
+	NSArray *currentFileBrowserSelectionPath;
+
+	PBGitTree *gitTree;
+	PBGitCommit *webCommit;
+	PBGitCommit *selectedCommit;
+
+    PBSourceViewItem * sidebarRemotes;
+    NSOutlineView * sidebarSourceView;
 }
 
-@property (assign) int selectedTab;
-@property (retain) PBGitCommit *webCommit, *rawCommit;
+@property (assign) int selectedCommitDetailsIndex;
+@property (retain) PBGitCommit *webCommit;
 @property (retain) PBGitTree* gitTree;
 @property (readonly) NSArrayController *commitController;
+@property (readonly) PBCommitList *commitList;
+@property (readonly) PBRefController *refController;
+@property (assign) NSOutlineView * sidebarSourceView;
+@property (assign) PBSourceViewItem * sidebarRemotes;
+@property (readonly) NSSearchField *searchField;
+@property (retain) IBOutlet id webView;
 
-- (IBAction) setDetailedView: sender;
-- (IBAction) setRawView: sender;
-- (IBAction) setTreeView: sender;
+- (IBAction) setDetailedView:(id)sender;
+- (IBAction) setTreeView:(id)sender;
+- (IBAction) setBranchFilter:(id)sender;
+- (IBAction) refresh:(id)sender;
+- (IBAction) toggleQLPreviewPanel:(id)sender;
+- (IBAction) openSelectedFile:(id)sender;
 
-- (void) selectCommit: (NSString*) commit;
-- (IBAction) refresh: sender;
-- (IBAction) toggleQuickView: sender;
-- (IBAction) openSelectedFile: sender;
+- (BOOL) selectCommit: (NSString*) commit;
+- (void) updateKeys;
+
 - (void) updateQuicklookForce: (BOOL) force;
+
+- (void) scrollSelectionToTopOfViewFrom:(NSInteger)oldIndex;
+
+// Moved over Sidebar methods
+- (IBAction) fetchPullPushAction:(id)sender;
+- (void) updateRemoteControls:(PBGitRef *)forRef;
 
 // Context menu methods
 - (NSMenu *)contextMenuForTreeView;
@@ -50,6 +92,14 @@
 - (void)showCommitsFromTree:(id)sender;
 - (void)showInFinderAction:(id)sender;
 - (void)openFilesAction:(id)sender;
+
+// Repository Methods
+- (IBAction) createBranch:(id)sender;
+- (IBAction) createTag:(id)sender;
+- (IBAction) showAddRemoteSheet:(id)sender;
+- (IBAction) merge:(id)sender;
+- (IBAction) cherryPick:(id)sender;
+- (IBAction) rebase:(id)sender;
 
 - (void) copyCommitInfo;
 

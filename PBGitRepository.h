@@ -7,25 +7,65 @@
 //
 
 #import <Cocoa/Cocoa.h>
-#import "PBGitRevList.h"
+#import "PBGitHistoryList.h"
 #import "PBGitRevSpecifier.h"
 #import "PBGitConfig.h"
+#import "PBGitXErrors.h"
+#import "PBGitRefish.h"
 
-extern NSString* PBGitRepositoryErrorDomain;
+typedef enum branchFilterTypes {
+	kGitXAllBranchesFilter = 0,
+	kGitXLocalRemoteBranchesFilter,
+	kGitXSelectedBranchFilter
+} PBGitXBranchFilterType;
+
+static NSString * PBStringFromBranchFilterType(PBGitXBranchFilterType type) {
+    switch (type) {
+        case kGitXAllBranchesFilter:
+            return @"All";
+            break;
+        case kGitXLocalRemoteBranchesFilter:
+            return @"Local";
+            break;
+        case kGitXSelectedBranchFilter:
+            return @"Selected";
+            break;
+        default:
+            break;
+    }
+    return @"Not a branch filter type";
+}
 
 @class PBGitWindowController;
+@class PBGitCommit;
 
 @interface PBGitRepository : NSDocument {
-	PBGitRevList* revisionList;
+	PBGitHistoryList* revisionList;
 	PBGitConfig *config;
 
 	BOOL hasChanged;
 	NSMutableArray *branches;
 	PBGitRevSpecifier *currentBranch;
+	NSInteger currentBranchFilter;
 	NSMutableDictionary *refs;
 
 	PBGitRevSpecifier *_headRef; // Caching
 }
+
+- (void) cloneRepositoryToPath:(NSString *)path bare:(BOOL)isBare;
+- (void) beginAddRemote:(NSString *)remoteName forURL:(NSString *)remoteURL;
+- (void) beginFetchFromRemoteForRef:(PBGitRef *)ref;
+- (void) beginPullFromRemote:(PBGitRef *)remoteRef forRef:(PBGitRef *)ref;
+- (void) beginPushRef:(PBGitRef *)ref toRemote:(PBGitRef *)remoteRef;
+- (BOOL) checkoutRefish:(id <PBGitRefish>)ref;
+- (BOOL) checkoutFiles:(NSArray *)files fromRefish:(id <PBGitRefish>)ref;
+- (BOOL) mergeWithRefish:(id <PBGitRefish>)ref;
+- (BOOL) cherryPickRefish:(id <PBGitRefish>)ref;
+- (BOOL) rebaseBranch:(id <PBGitRefish>)branch onRefish:(id <PBGitRefish>)upstream;
+- (BOOL) createBranch:(NSString *)branchName atRefish:(id <PBGitRefish>)ref;
+- (BOOL) createTag:(NSString *)tagName message:(NSString *)message atRefish:(id <PBGitRefish>)commitSHA;
+- (BOOL) deleteRemote:(PBGitRef *)ref;
+- (BOOL) deleteRef:(PBGitRef *)ref;
 
 - (NSFileHandle*) handleForCommand:(NSString*) cmd;
 - (NSFileHandle*) handleForArguments:(NSArray*) args;
@@ -40,17 +80,39 @@ extern NSString* PBGitRepositoryErrorDomain;
 - (NSString*) outputForArguments:(NSArray*) args retValue:(int *)ret;
 - (NSString *)outputInWorkdirForArguments:(NSArray*) arguments;
 - (NSString *)outputInWorkdirForArguments:(NSArray*) arguments retValue:(int *)ret;
+- (NSString *) outputForShellScriptTemplate:(NSString *)scriptTemplate keywordDict:(NSDictionary *)keywordDict retValue:(NSInteger *)retValue;
+- (NSString *) outputForShellScript:(NSString *)script retValue:(NSInteger *)retValue;
 - (BOOL)executeHook:(NSString *)name output:(NSString **)output;
 - (BOOL)executeHook:(NSString *)name withArgs:(NSArray*) arguments output:(NSString **)output;
 
 - (NSString *)workingDirectory;
+- (NSString *) projectName;
 - (NSString *)gitIgnoreFilename;
 - (BOOL)isBareRepository;
 
-- (BOOL) reloadRefs;
+- (void) reloadRefs;
 - (void) addRef:(PBGitRef *)ref fromParameters:(NSArray *)params;
 - (void) lazyReload;
 - (PBGitRevSpecifier*) headRef;
+- (NSString *) headSHA;
+- (PBGitCommit *) headCommit;
+- (NSString *) shaForRef:(PBGitRef *)ref;
+- (PBGitCommit *) commitForRef:(PBGitRef *)ref;
+- (PBGitCommit *) commitForSHA:(NSString *)sha;
+- (BOOL) isOnSameBranch:(NSString *)baseSHA asSHA:(NSString *)testSHA;
+- (BOOL) isSHAOnHeadBranch:(NSString *)testSHA;
+- (BOOL) isRefOnHeadBranch:(PBGitRef *)testRef;
+- (BOOL) checkRefFormat:(NSString *)refName;
+- (BOOL) checkRefFormatForBranch:(NSString *)shaOrRefName;
+- (PBGitRef *) completeRefForString:(NSString *)partialRefString;
+- (BOOL) refExists:(PBGitRef *)ref;
+// checks to see if the ref or sha exists - returns nil if not found and the complete sha if found
+- (NSString *) shaExists:(NSString *)sha;
+
+- (NSArray *) remotes;
+- (BOOL) hasRemotes;
+- (PBGitRef *) remoteRefForBranch:(PBGitRef *)branch error:(NSError **)error;
+- (NSString *) infoForRemote:(NSString *)remoteName;
 
 - (void) readCurrentBranch;
 - (PBGitRevSpecifier*) addBranch: (PBGitRevSpecifier*) rev;
@@ -61,15 +123,19 @@ extern NSString* PBGitRepositoryErrorDomain;
 
 + (NSURL*)gitDirForURL:(NSURL*)repositoryURL;
 + (NSURL*)baseDirForURL:(NSURL*)repositoryURL;
++ (NSString *) basePath;
 
 - (id) initWithURL: (NSURL*) path;
 - (void) setup;
+- (void) forceUpdateRevisions;
 
 @property (assign) BOOL hasChanged;
 @property (readonly) PBGitWindowController *windowController;
 @property (readonly) PBGitConfig *config;
-@property (retain) PBGitRevList* revisionList;
+@property (retain) PBGitHistoryList *revisionList;
 @property (assign) NSMutableArray* branches;
 @property (assign) PBGitRevSpecifier *currentBranch;
+@property (assign) NSInteger currentBranchFilter;
 @property (retain) NSMutableDictionary* refs;
+
 @end

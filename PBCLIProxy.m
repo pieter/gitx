@@ -20,52 +20,80 @@
 - (id)init
 {
 	if (self = [super init]) {
-		self.connection = [NSConnection new];
-		[self.connection setRootObject:self];
+		connection = [NSConnection new];
+		[connection setRootObject:self];
 
-		if ([self.connection registerName:ConnectionName] == NO)
+		if ([connection registerName:PBDOConnectionName] == NO)
 			NSBeep();
-
 	}
 	return self;
 }
 
-- (BOOL)openRepository:(NSURL*)repositoryPath arguments: (NSArray*) args error:(NSError**)error;
+- (BOOL) openRepository:(in bycopy NSString *)repositoryPath arguments:(in bycopy NSArray *)args error:(byref NSError **)error
 {
+    // NSLog(@"============================== PBCLIProxy START ==============================");
+
+    if (!repositoryPath || !args) {
+        return NO;
+    }
+
 	// FIXME I found that creating this redundant NSURL reference was necessary to
 	// work around an apparent bug with GC and Distributed Objects
 	// I am not familiar with GC though, so perhaps I was doing something wrong.
-	NSURL* url = [NSURL fileURLWithPath:[repositoryPath path]];
-	NSArray* arguments = [NSArray arrayWithArray:args];
-
+    //
+    // !!! Andre Berg 20100326: This is because NSURL objects are passed as proxies
+    // See also http://jens.mooseyard.com/2009/07/the-subtle-dangers-of-distributed-objects/#comment-3069
+    // We should be able to adjust this by using bycopy modifiers.
+    //
+	NSURL* url = [NSURL fileURLWithPath:repositoryPath isDirectory:YES];
+    NSString * fullargs = [args componentsJoinedByString:@" "];
 	PBGitRepository *document = [[PBRepositoryDocumentController sharedDocumentController] documentForLocation:url];
-	if (!document) {
-		if (error) {
-			NSString *suggestion = [PBGitBinary path] ? @"this isn't a git repository" : @"GitX can't find your git binary";
 
+    if (!document) {
+		if (error) {
+            NSString *suggestion = nil;
+            NSInteger errCode = -1;
+            
+            if ([PBGitBinary path]) {
+                suggestion = @"this isn't a git repository";
+                errCode = PBNotAGitRepositoryErrorCode;
+            } else {
+                suggestion = @"GitX can't find your git binary";
+                errCode = PBGitBinaryNotFoundErrorCode;
+            }
 			NSDictionary *userInfo = [NSDictionary dictionaryWithObject:[NSString stringWithFormat:@"Could not create document. Perhaps %@", suggestion]
 																 forKey:NSLocalizedFailureReasonErrorKey];
 
-			*error = [NSError errorWithDomain:PBGitRepositoryErrorDomain code:2 userInfo:userInfo];
+			*error = [NSError errorWithDomain:PBCLIProxyErrorDomain code:errCode userInfo:userInfo];
 		}
+        // NSLog(@"============================== PBCLIProxy Abort ==============================");
 		return NO;
-	}
+	} else if (![document checkRefFormat:fullargs] &&
+             ![document checkRefFormatForBranch:fullargs]) {
 
-	if ([arguments count] > 0 && ([[arguments objectAtIndex:0] isEqualToString:@"--commit"] ||
-		[[arguments objectAtIndex:0] isEqualToString:@"-c"]))
-		[document.windowController showCommitView:self];
-	else {
-		PBGitRevSpecifier* rev = [[PBGitRevSpecifier alloc] initWithParameters:arguments];
-		rev.workingDirectory = repositoryPath;
-		document.currentBranch = [document addBranch: rev];
-		[document.windowController showHistoryView:self];
-	}
+        NSString * suggestion = @"the arguments passed do not constitute a valid ref format";
+        NSString * recoveryInfo = @"(see git help check-ref-format)";
+        NSInteger errCode = PBNotAValidRefFormatErrorCode;
+
+        NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:
+                                  [NSString stringWithFormat: @"Ignoring parameters passed to gitx. It appears %@.",
+                                   suggestion], NSLocalizedFailureReasonErrorKey,
+                                  recoveryInfo, NSLocalizedRecoverySuggestionErrorKey, nil];
+
+        *error = [NSError errorWithDomain:PBCLIProxyErrorDomain code:errCode userInfo:userInfo];
+
+        fprintf(stderr, "\t%s\n", [[*error localizedFailureReason] UTF8String]);
+    }
+
+    // NSLog(@"document = %@ at path = %@", document, repositoryPath);
+        
 	[NSApp activateIgnoringOtherApps:YES];
 
+    // NSLog(@"============================== PBCLIProxy END ==============================");
 	return YES;
 }
 
-- (void)openDiffWindowWithDiff:(NSString *)diff
+- (oneway void) openDiffWindowWithDiff:(in bycopy NSString *)diff
 {
 	PBDiffWindowController *diffController = [[PBDiffWindowController alloc] initWithDiff:[diff copy]];
 	[diffController showWindow:nil];

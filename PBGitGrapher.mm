@@ -53,6 +53,11 @@ void add_line(struct PBGitGraphLine *lines, int *nLines, int upper, int from, in
 		std::list<PBGitLane *>::iterator it = previousLanes->begin();
 		for (; it != previousLanes->end(); ++it) {
 			i++;
+			if(*it == (PBGitLane *)endLane) {
+				delete *it;
+				endLane = NULL;
+				continue;
+			}
 			// This is our commit! We should do a "merge": move the line from
 			// our upperMapping to their lowerMapping
 			if ((*it)->isCommit([commit sha])) {
@@ -141,7 +146,8 @@ void add_line(struct PBGitGraphLine *lines, int *nLines, int upper, int from, in
 	if (currentLane && commit.nParents > 0)
 		currentLane->setSha(commit.parentShas[0]);
 	else
-		currentLanes->remove(currentLane);
+		endLane = currentLane;
+		// currentLanes->remove(currentLane); // must be leaked without this changes
 
 	delete previousLanes;
 
