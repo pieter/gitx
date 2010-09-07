@@ -10,6 +10,7 @@
 #import "PBEasyPipe.h"
 #import "GitXScriptingConstants.h"
 #import "GitX.h"
+#import "PBHistorySearchController.h"
 
 
 
@@ -53,7 +54,6 @@ void usage(char const *programName)
 	printf("\n");
 	printf("    <branch>               select specific branch or tag\n");
 	printf("     -- <path(s)>          show commits touching paths\n");
-	printf("    -S<string>             show commits that introduce or remove an instance of <string>\n");
 	printf("\n");
 	printf("Diff options\n");
 	printf("    See 'man git-diff' for options you can pass to gitx --diff\n");
@@ -62,6 +62,15 @@ void usage(char const *programName)
 	printf("                            shows the diff in a window in GitX\n");
 	printf("    git diff [options] | gitx\n");
 	printf("                            use gitx to pipe diff output to a GitX window\n");
+	printf("\n");
+	printf("Search\n");
+	printf("\n");
+	printf("    -s<string>, --search=<string>\n");
+	printf("                           search for string in Subject, Author or SHA\n");
+	printf("    -S<string>, --Search=<string>\n");
+	printf("                           commits that introduce or remove an instance of <string>\n");
+	printf("    -r<regex>, --regex=<regex>\n");
+	printf("                           commits that introduce or remove strings that match <regex>\n");
 	printf("\n");
 	printf("Creating repositories\n");
 	printf("    These commands will create a git repository and then open it up in GitX\n");
@@ -199,6 +208,74 @@ void handleClone(NSURL *repositoryURL, NSMutableArray *arguments)
 	exit(0);
 }
 
+#define kShortBasicSearch @"-s"
+#define kBasicSearch @"--search="
+#define kShortPickaxeSearch @"-S"
+#define kPickaxeSearch @"--Search="
+#define kShortRegexSearch @"-r"
+#define kRegexSearch @"--regex="
+
+NSArray *commandLineSearchPrefixes()
+{
+	return [NSArray arrayWithObjects:kShortBasicSearch, kBasicSearch, kShortPickaxeSearch, kPickaxeSearch, kShortRegexSearch, kRegexSearch, nil];
+}
+
+PBHistorySearchMode searchModeForCommandLineArgument(NSString *argument)
+{
+	if ([argument hasPrefix:kShortBasicSearch] || [argument hasPrefix:kBasicSearch])
+		return kGitXBasicSeachMode;
+
+	if ([argument hasPrefix:kShortPickaxeSearch] || [argument hasPrefix:kPickaxeSearch])
+		return kGitXPickaxeSearchMode;
+
+	if ([argument hasPrefix:kShortRegexSearch] || [argument hasPrefix:kRegexSearch])
+		return kGitXRegexSearchMode;
+
+	return 0;
+}
+
+GitXDocument *documentForURL(SBElementArray *documents, NSURL *URL)
+{
+	NSString *path = [URL path];
+
+	for (GitXDocument *document in documents) {
+		NSString *documentPath = [[document file] path];
+		if ([[documentPath lastPathComponent] isEqualToString:@".git"])
+			documentPath = [documentPath stringByDeletingLastPathComponent];
+
+		if ([documentPath isEqualToString:path])
+			return document;
+	}
+
+	return nil;
+}
+
+void handleGitXSearch(NSURL *repositoryURL, NSMutableArray *arguments)
+{
+	NSString *searchString = [arguments componentsJoinedByString:@" "];
+	NSInteger mode = searchModeForCommandLineArgument(searchString);
+
+	// remove the prefix from search string before sending it
+	NSArray *prefixes = commandLineSearchPrefixes();
+	for (NSString *prefix in prefixes)
+		if ([searchString hasPrefix:prefix]) {
+			searchString = [searchString substringFromIndex:[prefix length]];
+			break;
+		}
+
+	if ([searchString isEqualToString:@""])
+		exit(0);
+
+	GitXApplication *gitXApp = [SBApplication applicationWithBundleIdentifier:kGitXBundleIdentifier];
+	[gitXApp open:[NSArray arrayWithObject:repositoryURL]];
+
+	// need to find the document after opening it
+	GitXDocument *repositoryDocument = documentForURL([gitXApp documents], repositoryURL);
+	[repositoryDocument searchString:searchString inMode:mode];
+
+	exit(0);
+}
+
 
 #pragma mark -
 #pragma mark main
@@ -286,6 +363,10 @@ int main(int argc, const char** argv)
 		if ([firstArgument isEqualToString:@"--clone"]) {
 			[arguments removeObjectAtIndex:0];
 			handleClone(wdURL, arguments);
+		}
+
+		if (searchModeForCommandLineArgument(firstArgument)) {
+			handleGitXSearch(wdURL, arguments);
 		}
 	}
 

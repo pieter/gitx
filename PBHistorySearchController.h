@@ -60,4 +60,6 @@ typedef enum historySearchModes {
 - (void)clearSearch;
 - (IBAction)updateSearch:(id)sender;
 
+- (void)setHistorySearch:(NSString *)searchString mode:(NSInteger)mode;
+
 @end

@@ -43,6 +43,7 @@
 - (void) delete;  // Delete an object.
 - (void) duplicateTo:(SBObject *)to withProperties:(NSDictionary *)withProperties;  // Copy an object.
 - (void) moveTo:(SBObject *)to;  // Move an object to a new location.
+- (void) searchString:(NSString *)string inMode:(NSInteger)inMode;  // Highlight commits that match the given search string.
 
 @end
 
@@ -66,6 +67,18 @@
 - (void) delete;  // Delete an object.
 - (void) duplicateTo:(SBObject *)to withProperties:(NSDictionary *)withProperties;  // Copy an object.
 - (void) moveTo:(SBObject *)to;  // Move an object to a new location.
+- (void) searchString:(NSString *)string inMode:(NSInteger)inMode;  // Highlight commits that match the given search string.
+
+@end
+
+
+
+/*
+ * GitX Suite
+ */
+
+// A document.
+@interface GitXDocument (GitXSuite)
 
 @end
 

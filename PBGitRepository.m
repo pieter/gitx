@@ -19,6 +19,7 @@
 #import "PBGitRevList.h"
 #import "PBGitDefaults.h"
 #import "GitXScriptingConstants.h"
+#import "PBHistorySearchController.h"
 
 NSString* PBGitRepositoryErrorDomain = @"GitXErrorDomain";
 
@@ -1006,6 +1007,19 @@ NSString* PBGitRepositoryErrorDomain = @"GitXErrorDomain";
 	}
 
 	[super showWindows];
+}
+
+// for the scripting bridge
+- (void)findInModeScriptCommand:(NSScriptCommand *)command
+{
+	NSDictionary *arguments = [command arguments];
+	NSString *searchString = [arguments objectForKey:kGitXFindSearchStringKey];
+	if (searchString) {
+		NSInteger mode = [[arguments objectForKey:kGitXFindInModeKey] integerValue];
+		[PBGitDefaults setShowStageView:NO];
+		[self.windowController showHistoryView:self];
+		[self.windowController setHistorySearch:searchString mode:mode];
+	}
 }
 
 

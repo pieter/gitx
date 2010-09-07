@@ -125,6 +125,10 @@ static NSString * PBStringFromBranchFilterType(PBGitXBranchFilterType type) {
 - (void) setup;
 - (void) forceUpdateRevisions;
 
+// for the scripting bridge
+- (void)findInModeScriptCommand:(NSScriptCommand *)command;
+
+
 @property (assign) BOOL hasChanged;
 @property (readonly) PBGitWindowController *windowController;
 @property (readonly) PBGitConfig *config;

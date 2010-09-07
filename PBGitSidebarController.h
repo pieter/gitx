@@ -38,6 +38,8 @@
 
 - (IBAction) fetchPullPushAction:(id)sender;
 
+- (void)setHistorySearch:(NSString *)searchString mode:(NSInteger)mode;
+
 @property(readonly) NSMutableArray *items;
 @property(readonly) NSView *sourceListControlsView;
 @end

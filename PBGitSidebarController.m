@@ -15,6 +15,7 @@
 #import "NSOutlineViewExt.h"
 #import "PBAddRemoteSheet.h"
 #import "PBGitDefaults.h"
+#import "PBHistorySearchController.h"
 
 @interface PBGitSidebarController ()
 
@@ -182,6 +183,11 @@
 	PBSourceViewItem *parent = item.parent;
 	[parent removeChild:item];
 	[sourceView reloadData];
+}
+
+- (void)setHistorySearch:(NSString *)searchString mode:(NSInteger)mode
+{
+	[historyViewController.searchController setHistorySearch:searchString mode:mode];
 }
 
 #pragma mark NSOutlineView delegate methods

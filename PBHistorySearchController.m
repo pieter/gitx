@@ -110,6 +110,16 @@
 		[self startBackgroundSearch];
 }
 
+- (void)setHistorySearch:(NSString *)searchString mode:(NSInteger)mode
+{
+	if (searchString && ![searchString isEqualToString:@""]) {
+		self.searchMode = mode;
+		[searchField setStringValue:searchString];
+		// use performClick: so that the search field will save it as a recent search
+		[searchField performClick:self];
+	}
+}
+
 - (void)awakeFromNib
 {
 	[self setupSearchMenuTemplate];

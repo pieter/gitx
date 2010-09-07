@@ -191,6 +191,11 @@
 	[super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
 }
 
+- (void)setHistorySearch:(NSString *)searchString mode:(NSInteger)mode
+{
+	[sidebarController setHistorySearch:searchString mode:mode];
+}
+
 
 
 #pragma mark -

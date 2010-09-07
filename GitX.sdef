@@ -173,6 +173,23 @@
 			</parameter>
 		</command>
 
+		<command name="search" code="GitXSrch" description="Highlight commits that match the given search string.">
+			<direct-parameter type="specifier" description="The repository document to search."/>
+			<parameter name="string" code="SRCH" type="text" optional="yes" description="The string to search for.">
+				<cocoa key="searchString"/>
+			</parameter>
+			<parameter name="in mode" code="Mode" type="integer" optional="yes" description="The type of search (defalts to basic [Subject, Author, SHA]).">
+				<cocoa key="inMode"/>
+			</parameter>
+		</command>
+
+		<class-extension extends="document" code="docu" description="A document.">
+			<cocoa class="PBGitRepository"/>
+			<responds-to name="search">
+				<cocoa method="findInModeScriptCommand:"/>
+			</responds-to>
+		</class-extension>
+
 	</suite>
 
 </dictionary>
