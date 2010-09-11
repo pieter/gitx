@@ -516,14 +516,8 @@
 
 - (void)showCommitsFromTree:(id)sender
 {
-	// TODO: Enable this from webview as well!
-
-	NSMutableArray *filePaths = [NSMutableArray arrayWithObjects:@"HEAD", @"--", NULL];
-	[filePaths addObjectsFromArray:[sender representedObject]];
-
-	PBGitRevSpecifier *revSpec = [[PBGitRevSpecifier alloc] initWithParameters:filePaths];
-
-	repository.currentBranch = [repository addBranch:revSpec];
+	NSString *searchString = [(NSArray *)[sender representedObject] componentsJoinedByString:@" "];
+	[searchController setHistorySearch:searchString mode:kGitXPathSearchMode];
 }
 
 - (void)showInFinderAction:(id)sender

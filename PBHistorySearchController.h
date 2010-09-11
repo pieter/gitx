@@ -13,6 +13,7 @@ typedef enum historySearchModes {
 	kGitXBasicSeachMode = 1,
 	kGitXPickaxeSearchMode,
 	kGitXRegexSearchMode,
+	kGitXPathSearchMode,
 	kGitXMaxSearchMode    // always keep this item last
 } PBHistorySearchMode;
 

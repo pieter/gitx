@@ -71,6 +71,8 @@ void usage(char const *programName)
 	printf("                           commits that introduce or remove an instance of <string>\n");
 	printf("    -r<regex>, --regex=<regex>\n");
 	printf("                           commits that introduce or remove strings that match <regex>\n");
+	printf("    -p<file path>, --path=<file path>\n");
+	printf("                           commits that modify the file at file path\n");
 	printf("\n");
 	printf("Creating repositories\n");
 	printf("    These commands will create a git repository and then open it up in GitX\n");
@@ -214,10 +216,12 @@ void handleClone(NSURL *repositoryURL, NSMutableArray *arguments)
 #define kPickaxeSearch @"--Search="
 #define kShortRegexSearch @"-r"
 #define kRegexSearch @"--regex="
+#define kShortPathSearch @"-p"
+#define kPathSearch @"--path="
 
 NSArray *commandLineSearchPrefixes()
 {
-	return [NSArray arrayWithObjects:kShortBasicSearch, kBasicSearch, kShortPickaxeSearch, kPickaxeSearch, kShortRegexSearch, kRegexSearch, nil];
+	return [NSArray arrayWithObjects:kShortBasicSearch, kBasicSearch, kShortPickaxeSearch, kPickaxeSearch, kShortRegexSearch, kRegexSearch, kShortPathSearch, kPathSearch, nil];
 }
 
 PBHistorySearchMode searchModeForCommandLineArgument(NSString *argument)
@@ -230,6 +234,9 @@ PBHistorySearchMode searchModeForCommandLineArgument(NSString *argument)
 
 	if ([argument hasPrefix:kShortRegexSearch] || [argument hasPrefix:kRegexSearch])
 		return kGitXRegexSearchMode;
+
+	if ([argument hasPrefix:kShortPathSearch] || [argument hasPrefix:kPathSearch])
+		return kGitXPathSearchMode;
 
 	return 0;
 }

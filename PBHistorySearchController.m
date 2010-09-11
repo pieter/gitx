@@ -35,6 +35,7 @@
 #define kGitXBasicSearchLabel @"Subject, Author, SHA"
 #define kGitXPickaxeSearchLabel @"Commit (pickaxe)"
 #define kGitXRegexSearchLabel @"Commit (pickaxe regex)"
+#define kGitXPathSearchLabel @"File path"
 
 #define kGitXSearchArrangedObjectsContext @"GitXSearchArrangedObjectsContext"
 
@@ -246,6 +247,11 @@
     [item setTag:kGitXRegexSearchMode];
     [searchMenu addItem:item];
 
+	item = [[NSMenuItem alloc] initWithTitle:kGitXPathSearchLabel action:@selector(selectSearchMode:) keyEquivalent:@""];
+	[item setTarget:self];
+    [item setTag:kGitXPathSearchMode];
+    [searchMenu addItem:item];
+
     item = [NSMenuItem separatorItem];
     [searchMenu addItem:item];
 
@@ -289,6 +295,9 @@
 	item = [searchMenu itemWithTag:kGitXRegexSearchMode];
 	[item setState:(searchMode == kGitXRegexSearchMode) ? NSOnState : NSOffState];
 
+	item = [searchMenu itemWithTag:kGitXPathSearchMode];
+	[item setState:(searchMode == kGitXPathSearchMode) ? NSOnState : NSOffState];
+
     [[searchField cell] setSearchMenuTemplate:searchMenu];
 
 	[PBGitDefaults setHistorySearchMode:searchMode];
@@ -302,6 +311,9 @@
 			break;
 		case kGitXRegexSearchMode:
 			[[searchField cell] setPlaceholderString:kGitXRegexSearchLabel];
+			break;
+		case kGitXPathSearchMode:
+			[[searchField cell] setPlaceholderString:kGitXPathSearchLabel];
 			break;
 		default:
 			[[searchField cell] setPlaceholderString:kGitXBasicSearchLabel];
@@ -372,7 +384,7 @@
 
 
 
-#pragma mark Pickaxe/Regex Search
+#pragma mark Background Search
 
 - (void)startBackgroundSearch
 {
@@ -390,9 +402,20 @@
 
 	results = nil;
 
-	NSMutableArray *searchArguments = [NSMutableArray arrayWithObjects:@"log", @"--pretty=format:%H", [NSString stringWithFormat:@"-S%@", searchString], nil];
-	if (self.searchMode == kGitXRegexSearchMode)
-		[searchArguments insertObject:@"--pickaxe-regex" atIndex:1];
+	NSMutableArray *searchArguments = [NSMutableArray arrayWithObjects:@"log", @"--pretty=format:%H", nil];
+	switch (self.searchMode) {
+		case kGitXRegexSearchMode:
+			[searchArguments addObject:@"--pickaxe-regex"];
+		case kGitXPickaxeSearchMode:
+			[searchArguments addObject:[NSString stringWithFormat:@"-S%@", searchString]];
+			break;
+		case kGitXPathSearchMode:
+			[searchArguments addObject:@"--"];
+			[searchArguments addObjectsFromArray:[searchString componentsSeparatedByCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]]];
+			break;
+		default:
+			return;
+	}
 
 	backgroundSearchTask = [PBEasyPipe taskForCommand:[PBGitBinary path] withArgs:searchArguments inDir:[[historyController.repository fileURL] path]];
 	[backgroundSearchTask launch];
