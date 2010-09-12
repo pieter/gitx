@@ -177,16 +177,23 @@ NSString *PBGitIndexOperationFailed = @"PBGitIndexOperationFailed";
 	int ret = 1;
 	
 	[self postCommitUpdate:@"Running hooks"];
-    NSString *preCommitHookOutput = nil;
-	if (![repository executeHook:@"pre-commit" output:&preCommitHookOutput]) {
-        NSString *preCommitFailureMessage = [NSString stringWithFormat:@"Pre-commit hook failed%@%@",
-                                                                                   [preCommitHookOutput length] > 0 ? @":\n" : @"",
-                                                                                   preCommitHookOutput];
-        return [self postCommitFailure:preCommitFailureMessage];
+    NSString *hookFailureMessage = nil;
+    NSString *hookOutput = nil;
+	if (![repository executeHook:@"pre-commit" output:&hookOutput]) {
+        hookFailureMessage = [NSString stringWithFormat:@"Pre-commit hook failed%@%@",
+                                                        [hookOutput length] > 0 ? @":\n" : @"",
+                                                        hookOutput];
     }
 	
-	if (![repository executeHook:@"commit-msg" withArgs:[NSArray arrayWithObject:commitMessageFile] output:nil])
-		return [self postCommitFailure:@"Commit-msg hook failed"];
+	if (![repository executeHook:@"commit-msg" withArgs:[NSArray arrayWithObject:commitMessageFile] output:nil]) {
+        hookFailureMessage = [NSString stringWithFormat:@"Commit-msg hook failed%@%@",
+                                                        [hookOutput length] > 0 ? @":\n" : @"",
+                                                        hookOutput];
+    }
+
+    if (hookFailureMessage != nil) {
+        return [self postCommitFailure:hookFailureMessage];
+    }
 	
 	commitMessage = [NSString stringWithContentsOfFile:commitMessageFile encoding:NSUTF8StringEncoding error:nil];
 	
