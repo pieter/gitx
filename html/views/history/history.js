@@ -219,6 +219,8 @@ var loadCommit = function(commitObject, currentRef) {
 
 var showDiff = function() {
 
+	$("files").innerHTML = "";
+
 	// Callback for the diff highlighter. Used to generate a filelist
 	var newfile = function(name1, name2, id, mode_change, old_mode, new_mode) {
 		var img = document.createElement("img");
