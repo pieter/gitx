@@ -102,7 +102,7 @@ using namespace std;
 	std::map<string, NSStringEncoding> encodingMap;
 	NSThread *currentThread = [NSThread currentThread];
 
-	NSString *formatString = @"--pretty=format:%H\01%e\01%an\01%cn\01%s\01%P\01%at";
+	NSString *formatString = @"--pretty=format:%H\01%e\01%aN\01%cN\01%s\01%P\01%at";
 	BOOL showSign = [rev hasLeftRight];
 
 	if (showSign)
