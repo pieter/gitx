@@ -161,7 +161,7 @@ var showRefs = function() {
 		refs.innerHTML = "";
 		for (var i = 0; i < commit.refs.length; i++) {
 			var ref = commit.refs[i];
-			refs.innerHTML += '<span class="refs ' + ref.type() + (commit.currentRef == ref.ref ? ' currentBranch' : '') + '">' + ref.shortName() + '</span>';
+			refs.innerHTML += '<span class="refs ' + ref.type() + (commit.currentRef == ref.ref ? ' currentBranch' : '') + '">' + ref.shortName() + '</span> ';
 		}
 	} else
 		refs.parentNode.style.display = "none";
