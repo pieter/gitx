@@ -183,6 +183,18 @@
 			</parameter>
 		</command>
 
+		<class-extension extends="application" description="The GitX application.">
+			<responds-to name="show diff">
+				<cocoa method="showDiffScriptCommand:"/>
+			</responds-to>
+			<responds-to name="init repository">
+				<cocoa method="initRepositoryScriptCommand:"/>
+			</responds-to>
+			<responds-to name="clone repository">
+				<cocoa method="cloneRepositoryScriptCommand:"/>
+			</responds-to>
+		</class-extension>
+
 		<class-extension extends="document" code="docu" description="A document.">
 			<cocoa class="PBGitRepository"/>
 			<responds-to name="search">

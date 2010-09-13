@@ -77,6 +77,11 @@
  * GitX Suite
  */
 
+// The GitX application.
+@interface GitXApplication (GitXSuite)
+
+@end
+
 // A document.
 @interface GitXDocument (GitXSuite)
 
