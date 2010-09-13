@@ -26,6 +26,7 @@ extern NSString *PBGitIndexIndexUpdated;
 // Committing files
 extern NSString *PBGitIndexCommitStatus;
 extern NSString *PBGitIndexCommitFailed;
+extern NSString *PBGitIndexCommitHookFailed;
 extern NSString *PBGitIndexFinishedCommit;
 
 // Changing to amend
@@ -66,7 +67,7 @@ extern NSString *PBGitIndexOperationFailed;
 // Refresh the index
 - (void)refresh;
 
-- (void)commitWithMessage:(NSString *)commitMessage;
+- (void)commitWithMessage:(NSString *)commitMessage andVerify:(BOOL) doVerify;
 
 // Inter-file changes:
 - (BOOL)stageFiles:(NSArray *)stageFiles;

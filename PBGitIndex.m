@@ -21,6 +21,7 @@ NSString *PBGitIndexIndexUpdated = @"GBGitIndexIndexUpdated";
 
 NSString *PBGitIndexCommitStatus = @"PBGitIndexCommitStatus";
 NSString *PBGitIndexCommitFailed = @"PBGitIndexCommitFailed";
+NSString *PBGitIndexCommitHookFailed = @"PBGitIndexCommitHookFailed";
 NSString *PBGitIndexFinishedCommit = @"PBGitIndexFinishedCommit";
 
 NSString *PBGitIndexAmendMessageAvailable = @"PBGitIndexAmendMessageAvailable";
@@ -48,6 +49,7 @@ NSString *PBGitIndexOperationFailed = @"PBGitIndexOperationFailed";
 - (NSString *) parentTree;
 - (void)postCommitUpdate:(NSString *)update;
 - (void)postCommitFailure:(NSString *)reason;
+- (void)postCommitHookFailure:(NSString *)reason;
 - (void)postIndexChange;
 - (void)postOperationFailed:(NSString *)description;
 @end
@@ -145,7 +147,7 @@ NSString *PBGitIndexOperationFailed = @"PBGitIndexOperationFailed";
 }
 
 // TODO: make Asynchronous
-- (void)commitWithMessage:(NSString *)commitMessage
+- (void)commitWithMessage:(NSString *)commitMessage andVerify:(BOOL) doVerify
 {
 	NSMutableString *commitSubject = [@"commit: " mutableCopy];
 	NSRange newLine = [commitMessage rangeOfString:@"\n"];
@@ -176,23 +178,25 @@ NSString *PBGitIndexOperationFailed = @"PBGitIndexOperationFailed";
 	[self postCommitUpdate:@"Creating commit"];
 	int ret = 1;
 	
-	[self postCommitUpdate:@"Running hooks"];
-    NSString *hookFailureMessage = nil;
-    NSString *hookOutput = nil;
-	if (![repository executeHook:@"pre-commit" output:&hookOutput]) {
-        hookFailureMessage = [NSString stringWithFormat:@"Pre-commit hook failed%@%@",
-                                                        [hookOutput length] > 0 ? @":\n" : @"",
-                                                        hookOutput];
-    }
-	
-	if (![repository executeHook:@"commit-msg" withArgs:[NSArray arrayWithObject:commitMessageFile] output:nil]) {
-        hookFailureMessage = [NSString stringWithFormat:@"Commit-msg hook failed%@%@",
-                                                        [hookOutput length] > 0 ? @":\n" : @"",
-                                                        hookOutput];
-    }
+    if (doVerify) {
+        [self postCommitUpdate:@"Running hooks"];
+        NSString *hookFailureMessage = nil;
+        NSString *hookOutput = nil;
+        if (![repository executeHook:@"pre-commit" output:&hookOutput]) {
+            hookFailureMessage = [NSString stringWithFormat:@"Pre-commit hook failed%@%@",
+                                  [hookOutput length] > 0 ? @":\n" : @"",
+                                  hookOutput];
+        }
 
-    if (hookFailureMessage != nil) {
-        return [self postCommitFailure:hookFailureMessage];
+        if (![repository executeHook:@"commit-msg" withArgs:[NSArray arrayWithObject:commitMessageFile] output:nil]) {
+            hookFailureMessage = [NSString stringWithFormat:@"Commit-msg hook failed%@%@",
+                                  [hookOutput length] > 0 ? @":\n" : @"",
+                                  hookOutput];
+        }
+
+        if (hookFailureMessage != nil) {
+            return [self postCommitHookFailure:hookFailureMessage];
+        }
     }
 	
 	commitMessage = [NSString stringWithContentsOfFile:commitMessageFile encoding:NSUTF8StringEncoding error:nil];
@@ -250,6 +254,13 @@ NSString *PBGitIndexOperationFailed = @"PBGitIndexOperationFailed";
 - (void)postCommitFailure:(NSString *)reason
 {
 	[[NSNotificationCenter defaultCenter] postNotificationName:PBGitIndexCommitFailed
+														object:self
+													  userInfo:[NSDictionary dictionaryWithObject:reason forKey:@"description"]];
+}
+
+- (void)postCommitHookFailure:(NSString *)reason
+{
+	[[NSNotificationCenter defaultCenter] postNotificationName:PBGitIndexCommitHookFailed
 														object:self
 													  userInfo:[NSDictionary dictionaryWithObject:reason forKey:@"description"]];
 }

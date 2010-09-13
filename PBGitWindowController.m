@@ -11,6 +11,7 @@
 #import "PBGitCommitController.h"
 #import "Terminal.h"
 #import "PBCloneRepsitoryToSheet.h"
+#import "PBCommitHookFailedSheet.h"
 #import "PBGitXMessageSheet.h"
 #import "PBGitSidebarController.h"
 
@@ -107,6 +108,11 @@
 - (void) showHistoryView:(id)sender
 {
 	[sidebarController selectCurrentBranch];
+}
+
+- (void)showCommitHookFailedSheet:(NSString *)messageText infoText:(NSString *)infoText commitController:(PBGitCommitController *)controller
+{
+	[PBCommitHookFailedSheet beginMessageSheetForWindow:[self window] withMessageText:messageText infoText:infoText commitController:controller];
 }
 
 - (void)showMessageSheet:(NSString *)messageText infoText:(NSString *)infoText
