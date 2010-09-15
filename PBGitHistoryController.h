@@ -54,6 +54,7 @@
 	PBGitCommit *selectedCommit;
 }
 
+@property (readonly) NSTreeController* treeController;
 @property (assign) int selectedCommitDetailsIndex;
 @property (retain) PBGitCommit *webCommit;
 @property (retain) PBGitTree* gitTree;

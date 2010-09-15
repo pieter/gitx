@@ -42,6 +42,7 @@
 @synthesize selectedCommitDetailsIndex, webCommit, gitTree, commitController, refController;
 @synthesize searchController;
 @synthesize commitList;
+@synthesize treeController;
 
 - (void)awakeFromNib
 {
