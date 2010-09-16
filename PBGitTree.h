@@ -27,6 +27,7 @@
 + (PBGitTree*) treeForTree: (PBGitTree*) tree andPath: (NSString*) path;
 - (void) saveToFolder: (NSString *) directory;
 - (NSString *)textContents;
+- (NSString *)blame;
 
 - (NSString*) tmpFileNameForContents;
 - (long long)fileSize;

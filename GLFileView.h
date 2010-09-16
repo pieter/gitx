@@ -8,14 +8,23 @@
 
 #import <Cocoa/Cocoa.h>
 #import "PBWebController.h"
-
+#import "MGScopeBarDelegateProtocol.h"
 #import "PBGitCommit.h"
 #import "PBGitHistoryController.h"
 #import "PBRefContextDelegate.h"
 
+@class PBGitGradientBarView;
 
-@interface GLFileView : PBWebController {
+@interface GLFileView : PBWebController <MGScopeBarDelegate> {
 	IBOutlet PBGitHistoryController* historyController;
+	IBOutlet MGScopeBar *typeBar;
+	NSMutableArray *groups;
 }
+
+- (void)showFile;
+- (void)didLoad;
+- (NSString *)parseBlame:(NSString *)txt;
+
+@property(retain) NSMutableArray *groups;
 
 @end

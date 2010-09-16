@@ -115,6 +115,26 @@
 	return [repository outputForArguments:[NSArray arrayWithObjects:@"show", [self refSpec], nil]];
 }
 
+- (NSString *) blame
+{
+	if (!leaf)
+		return [NSString stringWithFormat:@"This is a tree with path %@", [self fullPath]];
+
+	if ([self hasBinaryAttributes])
+		return [NSString stringWithFormat:@"%@ appears to be a binary file of %d bytes", [self fullPath], [self fileSize]];
+	
+	if ([self fileSize] > 52428800) // ~50MB
+		return [NSString stringWithFormat:@"%@ is too big to be displayed (%d bytes)", [self fullPath], [self fileSize]];
+	
+	NSString *contents=[repository outputInWorkdirForArguments:[NSArray arrayWithObjects:@"blame", @"-p", [self fullPath], sha, nil]];
+	
+	if ([self hasBinaryHeader:contents])
+		return [NSString stringWithFormat:@"%@ appears to be a binary file of %d bytes", [self fullPath], [self fileSize]];
+	
+	
+	return contents;
+}
+
 - (long long)fileSize
 {
 	if (_fileSize)

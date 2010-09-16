@@ -23,6 +23,12 @@
 /* Begin PBXBuildFile section */
 		056438B70ED0C40B00985397 /* DetailViewTemplate.png in Resources */ = {isa = PBXBuildFile; fileRef = 056438B60ED0C40B00985397 /* DetailViewTemplate.png */; };
 		310DC1D81240599E0017A0F7 /* GLFileView.m in Sources */ = {isa = PBXBuildFile; fileRef = 310DC1D71240599E0017A0F7 /* GLFileView.m */; };
+		31460CB2124185BA00B90AED /* AppController.m in Sources */ = {isa = PBXBuildFile; fileRef = 31460C7B124185BA00B90AED /* AppController.m */; };
+		31460CD2124185BA00B90AED /* MGRecessedPopUpButtonCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 31460CA7124185BA00B90AED /* MGRecessedPopUpButtonCell.m */; };
+		31460CD3124185BA00B90AED /* MGScopeBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 31460CA9124185BA00B90AED /* MGScopeBar.m */; };
+		31460CD4124185BA00B90AED /* ReadMe.txt in Resources */ = {isa = PBXBuildFile; fileRef = 31460CAF124185BA00B90AED /* ReadMe.txt */; };
+		31460CD5124185BA00B90AED /* Source Code License.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 31460CB0124185BA00B90AED /* Source Code License.rtf */; };
+		31460CD6124185BA00B90AED /* TODO in Resources */ = {isa = PBXBuildFile; fileRef = 31460CB1124185BA00B90AED /* TODO */; };
 		3BC07F4C0ED5A5C5009A7768 /* HistoryViewTemplate.png in Resources */ = {isa = PBXBuildFile; fileRef = 3BC07F4A0ED5A5C5009A7768 /* HistoryViewTemplate.png */; };
 		3BC07F4D0ED5A5C5009A7768 /* CommitViewTemplate.png in Resources */ = {isa = PBXBuildFile; fileRef = 3BC07F4B0ED5A5C5009A7768 /* CommitViewTemplate.png */; };
 		47DBDB580E94EDE700671A1E /* DBPrefsWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 47DBDB570E94EDE700671A1E /* DBPrefsWindowController.m */; };
@@ -246,6 +252,17 @@
 		29B97325FDCFA39411CA2CEA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
 		310DC1D61240599E0017A0F7 /* GLFileView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLFileView.h; sourceTree = "<group>"; };
 		310DC1D71240599E0017A0F7 /* GLFileView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLFileView.m; sourceTree = "<group>"; };
+		31460C7A124185BA00B90AED /* AppController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppController.h; sourceTree = "<group>"; };
+		31460C7B124185BA00B90AED /* AppController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppController.m; sourceTree = "<group>"; };
+		31460CA6124185BA00B90AED /* MGRecessedPopUpButtonCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MGRecessedPopUpButtonCell.h; sourceTree = "<group>"; };
+		31460CA7124185BA00B90AED /* MGRecessedPopUpButtonCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MGRecessedPopUpButtonCell.m; sourceTree = "<group>"; };
+		31460CA8124185BA00B90AED /* MGScopeBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MGScopeBar.h; sourceTree = "<group>"; };
+		31460CA9124185BA00B90AED /* MGScopeBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MGScopeBar.m; sourceTree = "<group>"; };
+		31460CAD124185BA00B90AED /* MGScopeBar_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MGScopeBar_Prefix.pch; sourceTree = "<group>"; };
+		31460CAE124185BA00B90AED /* MGScopeBarDelegateProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MGScopeBarDelegateProtocol.h; sourceTree = "<group>"; };
+		31460CAF124185BA00B90AED /* ReadMe.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = ReadMe.txt; sourceTree = "<group>"; };
+		31460CB0124185BA00B90AED /* Source Code License.rtf */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; path = "Source Code License.rtf"; sourceTree = "<group>"; };
+		31460CB1124185BA00B90AED /* TODO */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = TODO; sourceTree = "<group>"; };
 		32CA4F630368D1EE00C91783 /* GitX_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GitX_Prefix.pch; sourceTree = "<group>"; };
 		3BC07F4A0ED5A5C5009A7768 /* HistoryViewTemplate.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = HistoryViewTemplate.png; path = Images/HistoryViewTemplate.png; sourceTree = "<group>"; };
 		3BC07F4B0ED5A5C5009A7768 /* CommitViewTemplate.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = CommitViewTemplate.png; path = Images/CommitViewTemplate.png; sourceTree = "<group>"; };
@@ -568,6 +585,7 @@
 		29B97314FDCFA39411CA2CEA /* GitTest */ = {
 			isa = PBXGroup;
 			children = (
+				31460C79124185B900B90AED /* MGScopeBar */,
 				F5886A080ED5D26B0066E74C /* SpeedTest */,
 				913D5E420E5563FD00CECEA2 /* cli */,
 				D89E9B4C1218C22A0097A90B /* GitXScripting */,
@@ -666,6 +684,24 @@
 				310DC1D71240599E0017A0F7 /* GLFileView.m */,
 			);
 			name = FileView;
+			sourceTree = "<group>";
+		};
+		31460C79124185B900B90AED /* MGScopeBar */ = {
+			isa = PBXGroup;
+			children = (
+				31460C7A124185BA00B90AED /* AppController.h */,
+				31460C7B124185BA00B90AED /* AppController.m */,
+				31460CA6124185BA00B90AED /* MGRecessedPopUpButtonCell.h */,
+				31460CA7124185BA00B90AED /* MGRecessedPopUpButtonCell.m */,
+				31460CA8124185BA00B90AED /* MGScopeBar.h */,
+				31460CA9124185BA00B90AED /* MGScopeBar.m */,
+				31460CAD124185BA00B90AED /* MGScopeBar_Prefix.pch */,
+				31460CAE124185BA00B90AED /* MGScopeBarDelegateProtocol.h */,
+				31460CAF124185BA00B90AED /* ReadMe.txt */,
+				31460CB0124185BA00B90AED /* Source Code License.rtf */,
+				31460CB1124185BA00B90AED /* TODO */,
+			);
+			path = MGScopeBar;
 			sourceTree = "<group>";
 		};
 		47DBDB920E94F47200671A1E /* Preference Icons */ = {
@@ -1185,6 +1221,9 @@
 				D8022FE811E124A0003C21F6 /* PBGitXMessageSheet.xib in Resources */,
 				D8F01C4B12182F19007F729F /* GitX.sdef in Resources */,
 				D8F4AB7912298CE200D6D53C /* rewindImage.pdf in Resources */,
+				31460CD4124185BA00B90AED /* ReadMe.txt in Resources */,
+				31460CD5124185BA00B90AED /* Source Code License.rtf in Resources */,
+				31460CD6124185BA00B90AED /* TODO in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1335,6 +1374,9 @@
 				D8B4DC571220D1E4004166D6 /* PBHistorySearchController.m in Sources */,
 				D8712A00122B14EC00012334 /* GitXTextFieldCell.m in Sources */,
 				310DC1D81240599E0017A0F7 /* GLFileView.m in Sources */,
+				31460CB2124185BA00B90AED /* AppController.m in Sources */,
+				31460CD2124185BA00B90AED /* MGRecessedPopUpButtonCell.m in Sources */,
+				31460CD3124185BA00B90AED /* MGScopeBar.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

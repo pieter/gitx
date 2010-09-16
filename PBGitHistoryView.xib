@@ -21,7 +21,7 @@
 		</object>
 		<object class="NSMutableArray" key="IBDocument.EditedObjectIDs">
 			<bool key="EncodedWithXMLCoder">YES</bool>
-			<integer value="9"/>
+			<integer value="475"/>
 		</object>
 		<object class="NSArray" key="IBDocument.PluginDependencies">
 			<bool key="EncodedWithXMLCoder">YES</bool>
@@ -671,6 +671,7 @@
 												<int key="NSsFlags">1</int>
 												<reference key="NSTarget" ref="663765878"/>
 												<string key="NSAction">_doScroller:</string>
+												<double key="NSCurValue">0.19685863874345549</double>
 												<double key="NSPercent">0.99882769584655762</double>
 											</object>
 											<object class="NSClipView" id="906093892">
@@ -1105,6 +1106,13 @@
 																	<int key="NSvFlags">268</int>
 																	<object class="NSMutableArray" key="NSSubviews">
 																		<bool key="EncodedWithXMLCoder">YES</bool>
+																		<object class="NSCustomView" id="375746871">
+																			<reference key="NSNextResponder" ref="891500945"/>
+																			<int key="NSvFlags">266</int>
+																			<string key="NSFrame">{{0, 211}, {723, 24}}</string>
+																			<reference key="NSSuperview" ref="891500945"/>
+																			<string key="NSClassName">MGScopeBar</string>
+																		</object>
 																		<object class="WebView" id="979575572">
 																			<reference key="NSNextResponder" ref="891500945"/>
 																			<int key="NSvFlags">274</int>
@@ -1129,7 +1137,7 @@
 																					<string>public.url-name</string>
 																				</object>
 																			</object>
-																			<string key="NSFrameSize">{723, 235}</string>
+																			<string key="NSFrameSize">{723, 210}</string>
 																			<reference key="NSSuperview" ref="891500945"/>
 																			<reference key="NSNextKeyView"/>
 																			<string key="FrameName"/>
@@ -1933,6 +1941,22 @@
 					</object>
 					<int key="connectionID">454</int>
 				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
+						<string key="label">typeBar</string>
+						<reference key="source" ref="932676109"/>
+						<reference key="destination" ref="375746871"/>
+					</object>
+					<int key="connectionID">484</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
+						<string key="label">delegate</string>
+						<reference key="source" ref="375746871"/>
+						<reference key="destination" ref="932676109"/>
+					</object>
+					<int key="connectionID">485</int>
+				</object>
 			</object>
 			<object class="IBMutableOrderedSet" key="objectRecords">
 				<object class="NSArray" key="orderedObjects">
@@ -2244,12 +2268,12 @@
 						<object class="NSMutableArray" key="children">
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<reference ref="884073279"/>
-							<reference ref="1055854415"/>
 							<reference ref="832955200"/>
 							<reference ref="627778713"/>
 							<reference ref="354285291"/>
 							<reference ref="563692607"/>
 							<reference ref="354339555"/>
+							<reference ref="1055854415"/>
 						</object>
 						<reference key="parent" ref="24227530"/>
 						<string key="objectName">Commits Scope Bar</string>
@@ -2517,8 +2541,10 @@
 						<object class="NSMutableArray" key="children">
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<reference ref="979575572"/>
+							<reference ref="375746871"/>
 						</object>
 						<reference key="parent" ref="626906425"/>
+						<string key="objectName">Viewer</string>
 					</object>
 					<object class="IBObjectRecord">
 						<int key="objectID">450</int>
@@ -2530,6 +2556,15 @@
 						<int key="objectID">452</int>
 						<reference key="object" ref="932676109"/>
 						<reference key="parent" ref="0"/>
+					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">475</int>
+						<reference key="object" ref="375746871"/>
+						<object class="NSMutableArray" key="children">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+						</object>
+						<reference key="parent" ref="891500945"/>
+						<string key="objectName">TypeBar</string>
 					</object>
 				</object>
 			</object>
@@ -2639,6 +2674,7 @@
 					<string>450.IBPluginDependency</string>
 					<string>46.IBEditorWindowLastContentRect</string>
 					<string>46.IBPluginDependency</string>
+					<string>475.IBPluginDependency</string>
 					<string>48.IBPluginDependency</string>
 					<string>49.IBAttributePlaceholdersKey</string>
 					<string>49.IBPluginDependency</string>
@@ -2822,6 +2858,7 @@
 					<string>{{2069, 399}, {955, 434}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
+					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<object class="NSMutableDictionary">
 						<string key="NS.key.0">ToolTip</string>
 						<object class="IBToolTipAttribute" key="NS.object.0">
@@ -2855,7 +2892,7 @@
 				</object>
 			</object>
 			<nil key="sourceID"/>
-			<int key="maxID">454</int>
+			<int key="maxID">485</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<object class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -2864,14 +2901,35 @@
 					<string key="className">GLFileView</string>
 					<string key="superclassName">PBWebController</string>
 					<object class="NSMutableDictionary" key="outlets">
-						<string key="NS.key.0">historyController</string>
-						<string key="NS.object.0">PBGitHistoryController</string>
+						<bool key="EncodedWithXMLCoder">YES</bool>
+						<object class="NSArray" key="dict.sortedKeys">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+							<string>historyController</string>
+							<string>typeBar</string>
+						</object>
+						<object class="NSMutableArray" key="dict.values">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+							<string>PBGitHistoryController</string>
+							<string>PBGitGradientBarView</string>
+						</object>
 					</object>
 					<object class="NSMutableDictionary" key="toOneOutletInfosByName">
-						<string key="NS.key.0">historyController</string>
-						<object class="IBToOneOutletInfo" key="NS.object.0">
-							<string key="name">historyController</string>
-							<string key="candidateClassName">PBGitHistoryController</string>
+						<bool key="EncodedWithXMLCoder">YES</bool>
+						<object class="NSArray" key="dict.sortedKeys">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+							<string>historyController</string>
+							<string>typeBar</string>
+						</object>
+						<object class="NSMutableArray" key="dict.values">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+							<object class="IBToOneOutletInfo">
+								<string key="name">historyController</string>
+								<string key="candidateClassName">PBGitHistoryController</string>
+							</object>
+							<object class="IBToOneOutletInfo">
+								<string key="name">typeBar</string>
+								<string key="candidateClassName">PBGitGradientBarView</string>
+							</object>
 						</object>
 					</object>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
@@ -2904,6 +2962,25 @@
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
 						<string key="majorKey">IBProjectSource</string>
 						<string key="minorKey">GitXTextFieldCell.h</string>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
+					<string key="className">MGScopeBar</string>
+					<string key="superclassName">NSView</string>
+					<object class="NSMutableDictionary" key="outlets">
+						<string key="NS.key.0">delegate</string>
+						<string key="NS.object.0">id</string>
+					</object>
+					<object class="NSMutableDictionary" key="toOneOutletInfosByName">
+						<string key="NS.key.0">delegate</string>
+						<object class="IBToOneOutletInfo" key="NS.object.0">
+							<string key="name">delegate</string>
+							<string key="candidateClassName">id</string>
+						</object>
+					</object>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<string key="majorKey">IBProjectSource</string>
+						<string key="minorKey">MGScopeBar/MGScopeBar.h</string>
 					</object>
 				</object>
 				<object class="IBPartialClassDescription">
@@ -4215,13 +4292,6 @@
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
 						<string key="majorKey">IBFrameworkSource</string>
 						<string key="minorKey">QuartzCore.framework/Headers/CIImageProvider.h</string>
-					</object>
-				</object>
-				<object class="IBPartialClassDescription">
-					<string key="className">NSObject</string>
-					<object class="IBClassDescriptionSource" key="sourceIdentifier">
-						<string key="majorKey">IBFrameworkSource</string>
-						<string key="minorKey">ScriptingBridge.framework/Headers/SBApplication.h</string>
 					</object>
 				</object>
 				<object class="IBPartialClassDescription">
