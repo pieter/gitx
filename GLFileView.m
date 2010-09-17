@@ -20,6 +20,11 @@
 
 - (void) awakeFromNib
 {
+	NSString *formatFile = [[NSBundle mainBundle] pathForResource:@"format" ofType:@"html" inDirectory:@"html/views/log"];
+	if(formatFile!=nil)
+		logFormat=[NSString stringWithContentsOfURL:[NSURL fileURLWithPath:formatFile] encoding:NSUTF8StringEncoding error:nil];
+	
+	
 	startFile = @"fileview";
 	//repository = historyController.repository;
 	[super awakeFromNib];
@@ -35,6 +40,10 @@
 					  [NSDictionary dictionaryWithObjectsAndKeys:
 					   @"blame", ITEM_IDENTIFIER, 
 					   @"Blame", ITEM_NAME, 
+					   nil], 
+					  [NSDictionary dictionaryWithObjectsAndKeys:
+					   @"log", ITEM_IDENTIFIER, 
+					   @"History", ITEM_NAME, 
 					   nil], 
 					  nil];
 	[self.groups addObject:[NSDictionary dictionaryWithObjectsAndKeys:
@@ -60,16 +69,24 @@
 		NSString *fileTxt=@"";
 		if(startFile==@"fileview")
 			fileTxt=[file textContents];
-		if(startFile==@"blame")
+		else if(startFile==@"blame")
 			fileTxt=[self parseBlame:[file blame]];
+		else if(startFile==@"log")
+			fileTxt=[file log:logFormat];
 
 		id script = [view windowScriptObject];
 		[script callWebScriptMethod:@"showFile" withArguments:[NSArray arrayWithObject:fileTxt]];
 	}
 }
 
-#pragma mark MGScopeBarDelegate methods
+#pragma mark JavaScript log.js methods
 
+- (void) selectCommit:(NSString*)c
+{
+	[historyController selectCommit:[PBGitSHA shaWithString:c]];
+}
+
+#pragma mark MGScopeBarDelegate methods
 
 - (int)numberOfGroupsInScopeBar:(MGScopeBar *)theScopeBar
 {
@@ -114,7 +131,7 @@
 	startFile=identifier;
 	NSString *path = [NSString stringWithFormat:@"html/views/%@", identifier];
 	NSString *html = [[NSBundle mainBundle] pathForResource:@"index" ofType:@"html" inDirectory:path];
-	//NSLog(@"[FileViewerController scopeBar:selectedStateChanged] -> file: '%@' (%@)",html,identifier);
+	NSLog(@"[FileViewerController scopeBar:selectedStateChanged] -> file: '%@' (%@)",html,identifier);
 	NSURLRequest * request = [NSURLRequest requestWithURL:[NSURL fileURLWithPath:html]];
 	[[view mainFrame] loadRequest:request];
 }
@@ -189,5 +206,6 @@
 }
 
 @synthesize groups;
+@synthesize logFormat;
 
 @end

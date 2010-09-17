@@ -19,6 +19,7 @@
 	IBOutlet PBGitHistoryController* historyController;
 	IBOutlet MGScopeBar *typeBar;
 	NSMutableArray *groups;
+	NSString *logFormat;
 }
 
 - (void)showFile;
@@ -26,5 +27,6 @@
 - (NSString *)parseBlame:(NSString *)txt;
 
 @property(retain) NSMutableArray *groups;
+@property(retain) NSString *logFormat;
 
 @end
