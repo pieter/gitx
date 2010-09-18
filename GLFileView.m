@@ -161,12 +161,12 @@
 			[res appendFormat:@"<tr class='block l%d'>\n",nLines];
 			line=[lines objectAtIndex:++i];
 			if([[[line componentsSeparatedByString:@" "] objectAtIndex:0] isEqual:@"author"]){
-				NSString *author=line;
+				NSString *author=[line stringByReplacingOccurrencesOfString:@"author" withString:@""];
 				NSString *summary=nil;
 				while(summary==nil){
 					line=[lines objectAtIndex:i++];
 					if([[[line componentsSeparatedByString:@" "] objectAtIndex:0] isEqual:@"summary"]){
-						summary=line;
+						summary=[line stringByReplacingOccurrencesOfString:@"summary" withString:@""];
 					}
 				}
 				NSString *block=[NSString stringWithFormat:@"<td><p class='author'>%@</p><p class='summary'>%@</p></td>\n<td>\n",author,summary];
