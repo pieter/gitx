@@ -131,9 +131,13 @@
 	startFile=identifier;
 	NSString *path = [NSString stringWithFormat:@"html/views/%@", identifier];
 	NSString *html = [[NSBundle mainBundle] pathForResource:@"index" ofType:@"html" inDirectory:path];
-	NSLog(@"[FileViewerController scopeBar:selectedStateChanged] -> file: '%@' (%@)",html,identifier);
 	NSURLRequest * request = [NSURLRequest requestWithURL:[NSURL fileURLWithPath:html]];
 	[[view mainFrame] loadRequest:request];
+}
+
+- (NSView *)accessoryViewForScopeBar:(MGScopeBar *)scopeBar
+{
+	return accessoryView;
 }
 
 - (void) didLoad

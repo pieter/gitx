@@ -20,6 +20,7 @@
 	IBOutlet MGScopeBar *typeBar;
 	NSMutableArray *groups;
 	NSString *logFormat;
+	IBOutlet NSView *accessoryView;
 }
 
 - (void)showFile;
