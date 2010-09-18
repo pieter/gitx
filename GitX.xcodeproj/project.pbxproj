@@ -23,7 +23,6 @@
 /* Begin PBXBuildFile section */
 		056438B70ED0C40B00985397 /* DetailViewTemplate.png in Resources */ = {isa = PBXBuildFile; fileRef = 056438B60ED0C40B00985397 /* DetailViewTemplate.png */; };
 		310DC1D81240599E0017A0F7 /* GLFileView.m in Sources */ = {isa = PBXBuildFile; fileRef = 310DC1D71240599E0017A0F7 /* GLFileView.m */; };
-		31460CB2124185BA00B90AED /* AppController.m in Sources */ = {isa = PBXBuildFile; fileRef = 31460C7B124185BA00B90AED /* AppController.m */; };
 		31460CD2124185BA00B90AED /* MGRecessedPopUpButtonCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 31460CA7124185BA00B90AED /* MGRecessedPopUpButtonCell.m */; };
 		31460CD3124185BA00B90AED /* MGScopeBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 31460CA9124185BA00B90AED /* MGScopeBar.m */; };
 		31460CD4124185BA00B90AED /* ReadMe.txt in Resources */ = {isa = PBXBuildFile; fileRef = 31460CAF124185BA00B90AED /* ReadMe.txt */; };
@@ -252,8 +251,6 @@
 		29B97325FDCFA39411CA2CEA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
 		310DC1D61240599E0017A0F7 /* GLFileView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLFileView.h; sourceTree = "<group>"; };
 		310DC1D71240599E0017A0F7 /* GLFileView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLFileView.m; sourceTree = "<group>"; };
-		31460C7A124185BA00B90AED /* AppController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppController.h; sourceTree = "<group>"; };
-		31460C7B124185BA00B90AED /* AppController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppController.m; sourceTree = "<group>"; };
 		31460CA6124185BA00B90AED /* MGRecessedPopUpButtonCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MGRecessedPopUpButtonCell.h; sourceTree = "<group>"; };
 		31460CA7124185BA00B90AED /* MGRecessedPopUpButtonCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MGRecessedPopUpButtonCell.m; sourceTree = "<group>"; };
 		31460CA8124185BA00B90AED /* MGScopeBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MGScopeBar.h; sourceTree = "<group>"; };
@@ -585,7 +582,6 @@
 		29B97314FDCFA39411CA2CEA /* GitTest */ = {
 			isa = PBXGroup;
 			children = (
-				31460C79124185B900B90AED /* MGScopeBar */,
 				F5886A080ED5D26B0066E74C /* SpeedTest */,
 				913D5E420E5563FD00CECEA2 /* cli */,
 				D89E9B4C1218C22A0097A90B /* GitXScripting */,
@@ -689,8 +685,6 @@
 		31460C79124185B900B90AED /* MGScopeBar */ = {
 			isa = PBXGroup;
 			children = (
-				31460C7A124185BA00B90AED /* AppController.h */,
-				31460C7B124185BA00B90AED /* AppController.m */,
 				31460CA6124185BA00B90AED /* MGRecessedPopUpButtonCell.h */,
 				31460CA7124185BA00B90AED /* MGRecessedPopUpButtonCell.m */,
 				31460CA8124185BA00B90AED /* MGScopeBar.h */,
@@ -851,6 +845,7 @@
 		F57CC43E0E05E472000472E2 /* Aux */ = {
 			isa = PBXGroup;
 			children = (
+				31460C79124185B900B90AED /* MGScopeBar */,
 				47DBDBC80E95016F00671A1E /* PBNSURLPathUserDefaultsTransfomer.h */,
 				47DBDBC90E95016F00671A1E /* PBNSURLPathUserDefaultsTransfomer.m */,
 				F5AD56770E79B78100EDAAFE /* PBCommitList.h */,
@@ -1374,7 +1369,6 @@
 				D8B4DC571220D1E4004166D6 /* PBHistorySearchController.m in Sources */,
 				D8712A00122B14EC00012334 /* GitXTextFieldCell.m in Sources */,
 				310DC1D81240599E0017A0F7 /* GLFileView.m in Sources */,
-				31460CB2124185BA00B90AED /* AppController.m in Sources */,
 				31460CD2124185BA00B90AED /* MGRecessedPopUpButtonCell.m in Sources */,
 				31460CD3124185BA00B90AED /* MGScopeBar.m in Sources */,
 			);
