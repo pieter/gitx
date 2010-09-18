@@ -14,9 +14,11 @@
 
 @interface PBGitCommitController ()
 - (void)refreshFinished:(NSNotification *)notification;
+- (void)commitWithVerification:(BOOL) doVerify;
 - (void)commitStatusUpdated:(NSNotification *)notification;
 - (void)commitFinished:(NSNotification *)notification;
 - (void)commitFailed:(NSNotification *)notification;
+- (void)commitHookFailed:(NSNotification *)notification;
 - (void)amendCommit:(NSNotification *)notification;
 - (void)indexChanged:(NSNotification *)notification;
 - (void)indexOperationFailed:(NSNotification *)notification;
@@ -38,6 +40,7 @@
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(commitStatusUpdated:) name:PBGitIndexCommitStatus object:index];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(commitFinished:) name:PBGitIndexFinishedCommit object:index];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(commitFailed:) name:PBGitIndexCommitFailed object:index];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(commitHookFailed:) name:PBGitIndexCommitHookFailed object:index];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(amendCommit:) name:PBGitIndexAmendMessageAvailable object:index];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(indexChanged:) name:PBGitIndexIndexUpdated object:index];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(indexOperationFailed:) name:PBGitIndexOperationFailed object:index];
@@ -107,6 +110,16 @@
 
 - (IBAction) commit:(id) sender
 {
+    [self commitWithVerification:YES];
+}
+
+- (IBAction) forceCommit:(id) sender
+{
+    [self commitWithVerification:NO];
+}
+
+- (void) commitWithVerification:(BOOL) doVerify
+{
 	if ([[NSFileManager defaultManager] fileExistsAtPath:[repository.fileURL.path stringByAppendingPathComponent:@"MERGE_HEAD"]]) {
 		[[repository windowController] showMessageSheet:@"Cannot commit merges" infoText:@"GitX cannot commit merges yet. Please commit your changes from the command line."];
 		return;
@@ -129,7 +142,7 @@
 	self.isBusy = YES;
 	[commitMessageView setEditable:NO];
 
-	[index commitWithMessage:commitMessage];
+	[index commitWithMessage:commitMessage andVerify:doVerify];
 }
 
 
@@ -159,6 +172,15 @@
 	self.status = [@"Commit failed: " stringByAppendingString:reason];
 	[commitMessageView setEditable:YES];
 	[[repository windowController] showMessageSheet:@"Commit failed" infoText:reason];
+}
+
+- (void)commitHookFailed:(NSNotification *)notification
+{
+	self.isBusy = NO;
+	NSString *reason = [[notification userInfo] objectForKey:@"description"];
+	self.status = [@"Commit hook failed: " stringByAppendingString:reason];
+	[commitMessageView setEditable:YES];
+	[[repository windowController] showCommitHookFailedSheet:@"Commit hook failed" infoText:reason commitController:self];
 }
 
 - (void)amendCommit:(NSNotification *)notification

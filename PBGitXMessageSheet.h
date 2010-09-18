@@ -21,6 +21,7 @@
 + (void)beginMessageSheetForWindow:(NSWindow *)parentWindow withError:(NSError *)error;
 
 
+- (void)beginMessageSheetForWindow:(NSWindow *)parentWindow withMessageText:(NSString *)message infoText:(NSString *)info;
 - (IBAction)closeMessageSheet:(id)sender;
 
 
