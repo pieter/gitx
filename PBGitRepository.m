@@ -625,24 +625,7 @@ NSString* PBGitRepositoryErrorDomain = @"GitXErrorDomain";
 	NSString *remoteName = [remoteRef remoteName];
 	[arguments addObject:remoteName];
 
-	NSString *branchName = nil;
-	NSString *refSpec = nil;
-	if ([ref isRemoteBranch]) {
-		branchName = [ref shortName];
-		refSpec = [ref remoteBranchName];
-	}
-	else if ([ref isRemote] || !ref) {
-		branchName = @"all tracking branches";
-	}
-	else {
-		branchName = [ref shortName];
-		refSpec = [NSString stringWithFormat:@"%@:%@", branchName, branchName];
-	}
-	if (refSpec)
-		[arguments addObject:refSpec];
-
-	NSString *headRefName = [[[self headRef] ref] shortName];
-	NSString *description = [NSString stringWithFormat:@"Pulling %@ from %@ and updating %@", branchName, remoteName, headRefName];
+	NSString *description = [NSString stringWithFormat:@"Pulling all tracking branches from %@", remoteName];
 	NSString *title = @"Pulling from remote";
 	[PBRemoteProgressSheet beginRemoteProgressSheetForArguments:arguments title:title description:description inRepository:self];
 }
