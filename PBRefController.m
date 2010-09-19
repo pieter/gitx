@@ -147,9 +147,8 @@
 - (void) rebaseHeadBranch:(PBRefMenuItem *)sender
 {
 	id <PBGitRefish> refish = [sender refish];
-	PBGitRef *headRef = [[historyController.repository headRef] ref];
 
-	[historyController.repository rebaseBranch:headRef onRefish:refish];
+	[historyController.repository rebaseBranch:nil onRefish:refish];
 }
 
 
