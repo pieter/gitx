@@ -199,6 +199,7 @@
 				do{
 					line=[lines objectAtIndex:i++];
 				}while([line characterAtIndex:0]!='\t');
+				line=[line substringFromIndex:1];
 				line=[line stringByReplacingOccurrencesOfString:@"\t" withString:@"&nbsp;&nbsp;&nbsp;&nbsp;"];
 				[code appendString:line];
 				[code appendString:@"\n"];
