@@ -68,7 +68,7 @@
 
 		NSString *fileTxt=@"";
 		if(startFile==@"fileview")
-			fileTxt=[file textContents];
+			fileTxt=[self parseHTML:[file textContents]];
 		else if(startFile==@"blame")
 			fileTxt=[self parseBlame:[file blame]];
 		else if(startFile==@"log")
@@ -145,10 +145,17 @@
 	[self showFile];
 }
 
-- (NSString *) parseBlame:(NSString *)txt
+- (NSString *) parseHTML:(NSString *)txt
 {
 	txt=[txt stringByReplacingOccurrencesOfString:@"<" withString:@"&lt;"];
 	txt=[txt stringByReplacingOccurrencesOfString:@">" withString:@"&gt;"];
+	
+	return txt;
+}
+
+- (NSString *) parseBlame:(NSString *)txt
+{
+	txt=[self parseHTML:txt];
 	
 	NSArray *lines = [txt componentsSeparatedByString:@"\n"];
 	NSString *line;

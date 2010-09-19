@@ -7,3 +7,10 @@ var showFile = function(txt) {
 	
 	return;
 }
+
+var test=function(txt) {
+	SyntaxHighlighter.defaults['toolbar'] = false;
+	SyntaxHighlighter.highlight();
+	
+	return;
+}
