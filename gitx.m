@@ -120,9 +120,8 @@ void handleSTDINDiff()
 	if (diff && [diff length] > 0) {
 		GitXApplication *gitXApp = [SBApplication applicationWithBundleIdentifier:kGitXBundleIdentifier];
 		[gitXApp showDiff:diff];
+		exit(0);
 	}
-
-	exit(0);
 }
 
 void handleDiffWithArguments(NSURL *repositoryURL, NSMutableArray *arguments)
