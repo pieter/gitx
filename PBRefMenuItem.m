@@ -59,7 +59,8 @@
 		[items addObject:[PBRefMenuItem separatorItem]];
 
 		// create branch
-		[items addObject:[PBRefMenuItem itemWithTitle:@"Create branch…" action:@selector(createBranch:) enabled:YES]];
+		NSString *createBranchTitle = [ref isRemoteBranch] ? [NSString stringWithFormat:@"Create branch that tracks %@…", targetRefName] : @"Create branch…";
+		[items addObject:[PBRefMenuItem itemWithTitle:createBranchTitle action:@selector(createBranch:) enabled:YES]];
 
 		// create tag
 		[items addObject:[PBRefMenuItem itemWithTitle:@"Create Tag…" action:@selector(createTag:) enabled:YES]];
@@ -89,8 +90,7 @@
 	[items addObject:[PBRefMenuItem itemWithTitle:fetchTitle action:@selector(fetchRemote:) enabled:hasRemote]];
 
 	// pull
-	NSString *pullRemoteName = [ref isRemoteBranch] ? [ref shortName] : remoteName;
-	NSString *pullTitle = hasRemote ? [NSString stringWithFormat:@"Pull %@ and update %@", pullRemoteName, headRefName] : @"Pull";
+	NSString *pullTitle = hasRemote ? [NSString stringWithFormat:@"Pull %@ and update %@", remoteName, headRefName] : @"Pull";
 	[items addObject:[PBRefMenuItem itemWithTitle:pullTitle action:@selector(pullRemote:) enabled:hasRemote]];
 
 	// push

@@ -672,10 +672,8 @@
 
 - (IBAction) rebase:(id)sender
 {
-	if (selectedCommit) {
-		PBGitRef *headRef = [[repository headRef] ref];
-		[repository rebaseBranch:headRef onRefish:selectedCommit];
-	}
+	if (selectedCommit)
+		[repository rebaseBranch:nil onRefish:selectedCommit];
 }
 
 #pragma mark -

@@ -26,12 +26,21 @@ body {
 	float: left;
 }
 
-#gist {
-	-webkit-appearance: button;
-	font: 13px bold 'Lucida Grande';
-	width: 80px;
-	height: 23px;
-	margin-right: 5px;
+a.servicebutton {
+    display: block;
+    width: 80px;
+    padding: 2px;
+    margin-bottom: 4px;
+
+    border: 1px solid #3465a4;
+    background-color: #cce5ff;
+    color: #204a87;
+
+    font-size: 65%;
+    text-decoration: none;
+    text-align: center;
+
+    -webkit-border-radius: 2px;
 }
 
 .gravatar {
@@ -130,7 +139,7 @@ a.showdiff {
 	font-size: 9px;
 	font-family: Helvetica;
 	border: 1px solid black;
-	margin-right: 5px;
+	margin-right: 2px;
 	padding: 1px 3px 1px 3px;
 	-webkit-border-radius: 2px;
 }

@@ -21,6 +21,8 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
+		02B41A5E123E307200DFC531 /* PBCommitHookFailedSheet.m in Sources */ = {isa = PBXBuildFile; fileRef = 02B41A5D123E307200DFC531 /* PBCommitHookFailedSheet.m */; };
+		02B41A60123E307F00DFC531 /* PBCommitHookFailedSheet.xib in Resources */ = {isa = PBXBuildFile; fileRef = 02B41A5F123E307F00DFC531 /* PBCommitHookFailedSheet.xib */; };
 		056438B70ED0C40B00985397 /* DetailViewTemplate.png in Resources */ = {isa = PBXBuildFile; fileRef = 056438B60ED0C40B00985397 /* DetailViewTemplate.png */; };
 		310DC1D81240599E0017A0F7 /* GLFileView.m in Sources */ = {isa = PBXBuildFile; fileRef = 310DC1D71240599E0017A0F7 /* GLFileView.m */; };
 		31460CD2124185BA00B90AED /* MGRecessedPopUpButtonCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 31460CA7124185BA00B90AED /* MGRecessedPopUpButtonCell.m */; };
@@ -243,6 +245,9 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		02B41A5C123E307200DFC531 /* PBCommitHookFailedSheet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PBCommitHookFailedSheet.h; sourceTree = "<group>"; };
+		02B41A5D123E307200DFC531 /* PBCommitHookFailedSheet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PBCommitHookFailedSheet.m; sourceTree = "<group>"; };
+		02B41A5F123E307F00DFC531 /* PBCommitHookFailedSheet.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PBCommitHookFailedSheet.xib; sourceTree = "<group>"; };
 		056438B60ED0C40B00985397 /* DetailViewTemplate.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = DetailViewTemplate.png; path = Images/DetailViewTemplate.png; sourceTree = "<group>"; };
 		089C165DFE840E0CC02AAC07 /* English */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = English; path = English.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
@@ -637,6 +642,7 @@
 		29B97317FDCFA39411CA2CEA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				02B41A5F123E307F00DFC531 /* PBCommitHookFailedSheet.xib */,
 				F5F7D0641062E7940072C81C /* UpdateKey.pem */,
 				F50A41130EBB872D00208746 /* Widgets */,
 				47DBDB920E94F47200671A1E /* Preference Icons */,
@@ -733,6 +739,8 @@
 		D82F435F111B9C6D00A25A39 /* Sheets */ = {
 			isa = PBXGroup;
 			children = (
+				02B41A5C123E307200DFC531 /* PBCommitHookFailedSheet.h */,
+				02B41A5D123E307200DFC531 /* PBCommitHookFailedSheet.m */,
 				D854948410D5C01B0083B917 /* PBCreateBranchSheet.h */,
 				D854948510D5C01B0083B917 /* PBCreateBranchSheet.m */,
 				D8E3B34B10DCA958001096A3 /* PBCreateTagSheet.h */,
@@ -1219,6 +1227,7 @@
 				31460CD4124185BA00B90AED /* ReadMe.txt in Resources */,
 				31460CD5124185BA00B90AED /* Source Code License.rtf in Resources */,
 				31460CD6124185BA00B90AED /* TODO in Resources */,
+				02B41A60123E307F00DFC531 /* PBCommitHookFailedSheet.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1371,6 +1380,7 @@
 				310DC1D81240599E0017A0F7 /* GLFileView.m in Sources */,
 				31460CD2124185BA00B90AED /* MGRecessedPopUpButtonCell.m in Sources */,
 				31460CD3124185BA00B90AED /* MGScopeBar.m in Sources */,
+				02B41A5E123E307200DFC531 /* PBCommitHookFailedSheet.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

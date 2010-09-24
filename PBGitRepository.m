@@ -625,24 +625,7 @@ NSString* PBGitRepositoryErrorDomain = @"GitXErrorDomain";
 	NSString *remoteName = [remoteRef remoteName];
 	[arguments addObject:remoteName];
 
-	NSString *branchName = nil;
-	NSString *refSpec = nil;
-	if ([ref isRemoteBranch]) {
-		branchName = [ref shortName];
-		refSpec = [ref remoteBranchName];
-	}
-	else if ([ref isRemote] || !ref) {
-		branchName = @"all tracking branches";
-	}
-	else {
-		branchName = [ref shortName];
-		refSpec = [NSString stringWithFormat:@"%@:%@", branchName, branchName];
-	}
-	if (refSpec)
-		[arguments addObject:refSpec];
-
-	NSString *headRefName = [[[self headRef] ref] shortName];
-	NSString *description = [NSString stringWithFormat:@"Pulling %@ from %@ and updating %@", branchName, remoteName, headRefName];
+	NSString *description = [NSString stringWithFormat:@"Pulling all tracking branches from %@", remoteName];
 	NSString *title = @"Pulling from remote";
 	[PBRemoteProgressSheet beginRemoteProgressSheetForArguments:arguments title:title description:description inRepository:self];
 }
@@ -905,7 +888,7 @@ NSString* PBGitRepositoryErrorDomain = @"GitXErrorDomain";
 
 #pragma mark GitX Scripting
 
-- (void)handleRevListArguments:(NSArray *)arguments
+- (void)handleRevListArguments:(NSArray *)arguments inWorkingDirectory:(NSURL *)workingDirectory
 {
 	if (![arguments count])
 		return;
@@ -915,19 +898,23 @@ NSString* PBGitRepositoryErrorDomain = @"GitXErrorDomain";
 	// the argument may be a branch or tag name but will probably not be the full reference
 	if ([arguments count] == 1) {
 		PBGitRef *refArgument = [self refForName:[arguments lastObject]];
-		if (refArgument)
+		if (refArgument) {
 			revListSpecifier = [[PBGitRevSpecifier alloc] initWithRef:refArgument];
+			revListSpecifier.workingDirectory = workingDirectory;
+		}
 	}
 
-	if (!revListSpecifier)
+	if (!revListSpecifier) {
 		revListSpecifier = [[PBGitRevSpecifier alloc] initWithParameters:arguments];
+		revListSpecifier.workingDirectory = workingDirectory;
+	}
 
 	self.currentBranch = [self addBranch:revListSpecifier];
 	[PBGitDefaults setShowStageView:NO];
 	[self.windowController showHistoryView:self];
 }
 
-- (void)handleBranchFilterEventForFilter:(PBGitXBranchFilterType)filter additionalArguments:(NSMutableArray *)arguments
+- (void)handleBranchFilterEventForFilter:(PBGitXBranchFilterType)filter additionalArguments:(NSMutableArray *)arguments inWorkingDirectory:(NSURL *)workingDirectory
 {
 	self.currentBranchFilter = filter;
 	[PBGitDefaults setShowStageView:NO];
@@ -936,11 +923,11 @@ NSString* PBGitRepositoryErrorDomain = @"GitXErrorDomain";
 	// treat any additional arguments as a rev-list specifier
 	if ([arguments count] > 1) {
 		[arguments removeObjectAtIndex:0];
-		[self handleRevListArguments:arguments];
+		[self handleRevListArguments:arguments inWorkingDirectory:workingDirectory];
 	}
 }
 
-- (void)handleGitXScriptingArguments:(NSAppleEventDescriptor *)argumentsList
+- (void)handleGitXScriptingArguments:(NSAppleEventDescriptor *)argumentsList inWorkingDirectory:(NSURL *)workingDirectory
 {
 	NSMutableArray *arguments = [NSMutableArray array];
 	uint argumentsIndex = 1; // AppleEvent list descriptor's are one based
@@ -964,22 +951,22 @@ NSString* PBGitRepositoryErrorDomain = @"GitXErrorDomain";
 	}
 
 	if ([firstArgument isEqualToString:@"--all"]) {
-		[self handleBranchFilterEventForFilter:kGitXAllBranchesFilter additionalArguments:arguments];
+		[self handleBranchFilterEventForFilter:kGitXAllBranchesFilter additionalArguments:arguments inWorkingDirectory:workingDirectory];
 		return;
 	}
 
 	if ([firstArgument isEqualToString:@"--local"]) {
-		[self handleBranchFilterEventForFilter:kGitXLocalRemoteBranchesFilter additionalArguments:arguments];
+		[self handleBranchFilterEventForFilter:kGitXLocalRemoteBranchesFilter additionalArguments:arguments inWorkingDirectory:workingDirectory];
 		return;
 	}
 
 	if ([firstArgument isEqualToString:@"--branch"]) {
-		[self handleBranchFilterEventForFilter:kGitXSelectedBranchFilter additionalArguments:arguments];
+		[self handleBranchFilterEventForFilter:kGitXSelectedBranchFilter additionalArguments:arguments inWorkingDirectory:workingDirectory];
 		return;
 	}
 
 	// if the argument is not a known command then treat it as a rev-list specifier
-	[self handleRevListArguments:arguments];
+	[self handleRevListArguments:arguments inWorkingDirectory:workingDirectory];
 }
 
 // see if the current appleEvent has the command line arguments from the gitx cli
@@ -996,9 +983,10 @@ NSString* PBGitRepositoryErrorDomain = @"GitXErrorDomain";
 		// on app launch there may be many repositories opening, so double check that this is the right repo
 		NSString *path = [[eventRecord paramDescriptorForKeyword:typeFileURL] stringValue];
 		if (path) {
-			if ([[PBGitRepository gitDirForURL:[NSURL URLWithString:path]] isEqual:[self fileURL]]) {
+			NSURL *workingDirectory = [NSURL URLWithString:path];
+			if ([[PBGitRepository gitDirForURL:workingDirectory] isEqual:[self fileURL]]) {
 				NSAppleEventDescriptor *argumentsList = [eventRecord paramDescriptorForKeyword:kGitXAEKeyArgumentsList];
-				[self handleGitXScriptingArguments:argumentsList];
+				[self handleGitXScriptingArguments:argumentsList inWorkingDirectory:workingDirectory];
 
 				// showWindows may be called more than once during app launch so remove the CLI data after we handle the event
 				[currentAppleEvent removeDescriptorWithKeyword:keyAEPropData];

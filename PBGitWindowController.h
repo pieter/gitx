@@ -9,7 +9,7 @@
 #import <Cocoa/Cocoa.h>
 #import "PBGitRepository.h"
 
-@class PBViewController, PBGitSidebarController;
+@class PBViewController, PBGitSidebarController, PBGitCommitController;
 
 @interface PBGitWindowController : NSWindowController {
 	__weak PBGitRepository* repository;
@@ -37,6 +37,7 @@
 
 - (void)changeContentController:(PBViewController *)controller;
 
+- (void)showCommitHookFailedSheet:(NSString *)messageText infoText:(NSString *)infoText commitController:(PBGitCommitController *)controller;
 - (void)showMessageSheet:(NSString *)messageText infoText:(NSString *)infoText;
 - (void)showErrorSheet:(NSError *)error;
 - (void)showErrorSheetTitle:(NSString *)title message:(NSString *)message arguments:(NSArray *)arguments output:(NSString *)output;

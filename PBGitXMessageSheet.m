@@ -14,8 +14,6 @@
 
 @interface PBGitXMessageSheet ()
 
-- (void)beginMessageSheetForWindow:(NSWindow *)parentWindow withMessageText:(NSString *)message infoText:(NSString *)info;
-
 - (void)setInfoString:(NSString *)info;
 - (void)resizeWindow;
 
