@@ -13,13 +13,19 @@ body,th, td {
 	background: transparent !important;
 }
 
+p.summary {
+}
+
 p{
 	margin: 0 !important;
 	padding: 0 !important;
+	font-size: 11px;
+	font-family: Menlo, Consolas, 'Bitstream Vera Sans Mono', 'Courier New', Courier, monospace;
+	white-space: nowrap;
 }
 
-tr.block.l2 p.summary,
 tr.block.l3 p.summary,
+tr.block.l2 p.summary,
 tr.block.l1 p.summary{
 	display: none !important;
 }

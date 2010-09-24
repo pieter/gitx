@@ -77,6 +77,12 @@
 		id script = [view windowScriptObject];
 		[script callWebScriptMethod:@"showFile" withArguments:[NSArray arrayWithObject:fileTxt]];
 	}
+	
+#ifdef DEBUG 
+	NSString *dom=[[[[view mainFrame] DOMDocument] documentElement] outerHTML];
+	NSString *tmpFile=@"~/tmp/test.html";
+	[dom writeToFile:[tmpFile stringByExpandingTildeInPath] atomically:true encoding:NSUTF8StringEncoding error:nil];
+#endif 
 }
 
 #pragma mark JavaScript log.js methods
@@ -147,6 +153,7 @@
 
 - (NSString *) parseHTML:(NSString *)txt
 {
+	txt=[txt stringByReplacingOccurrencesOfString:@"&" withString:@"&amp;"];
 	txt=[txt stringByReplacingOccurrencesOfString:@"<" withString:@"&lt;"];
 	txt=[txt stringByReplacingOccurrencesOfString:@">" withString:@"&gt;"];
 	
@@ -180,7 +187,16 @@
 						summary=[line stringByReplacingOccurrencesOfString:@"summary" withString:@""];
 					}
 				}
-				NSString *block=[NSString stringWithFormat:@"<td><p class='author'>%@</p><p class='summary'>%@</p></td>\n<td>\n",author,summary];
+				NSRange trunc={0,30};
+				NSString *truncate_a=author;
+				if([author length]>30){
+					truncate_a=[author substringWithRange:trunc];
+				}
+				NSString *truncate_s=summary;
+				if([summary length]>30){
+					truncate_s=[summary substringWithRange:trunc];
+				}
+				NSString *block=[NSString stringWithFormat:@"<td><p class='author'>%@</p><p class='summary'>%@</p></td>\n<td>\n",truncate_a,truncate_s];
 				[headers setObject:block forKey:[header objectAtIndex:0]];
 			}
 			[res appendString:[headers objectForKey:[header objectAtIndex:0]]];
@@ -189,6 +205,7 @@
 			do{
 				line=[lines objectAtIndex:i++];
 			}while([line characterAtIndex:0]!='\t');
+			line=[line substringFromIndex:1];
 			line=[line stringByReplacingOccurrencesOfString:@"\t" withString:@"&nbsp;&nbsp;&nbsp;&nbsp;"];
 			[code appendString:line];
 			[code appendString:@"\n"];
