@@ -197,11 +197,6 @@
     former cannot be found), the system's temporary directory.
  */
 
-- (IBAction) showHelp:(id) sender
-{
-	[[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:@"http://gitx.frim.nl/user_manual.html"]];
-}
-
 - (NSString *)applicationSupportFolder {
 
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory, NSUserDomainMask, YES);
@@ -405,5 +400,20 @@
 
     return feedParameters;
 }
+
+
+#pragma mark Help menu
+
+- (IBAction)showHelp:(id)sender
+{
+	[[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:@"http://gitx.frim.nl/user_manual.html"]];
+}
+
+- (IBAction)reportAProblem:(id)sender
+{
+    [[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:@"http://gitx.lighthouseapp.com/tickets"]];
+}
+
+
 
 @end

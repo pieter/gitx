@@ -32,7 +32,8 @@
 - (IBAction)installCliTool:(id)sender;
 
 - (IBAction)saveAction:sender;
-- (IBAction) showHelp:(id) sender;
+- (IBAction)showHelp:(id)sender;
+- (IBAction)reportAProblem:(id)sender;
 
-- (IBAction) showCloneRepository:(id)sender;
+- (IBAction)showCloneRepository:(id)sender;
 @end
