@@ -1,5 +1,4 @@
-.diff .file,
-#log .commit {
+.diff .file {
 	margin: 10px;
 	padding: 10px;
 	-webkit-border-radius: 10px;
@@ -15,8 +14,7 @@
 
 .diff .file .diffContent {
 	white-space: pre;
-	font-family: Meslo, "Andale Mono", Menlo, Monaco;
-    font-size: 11px;
+	font-family: Menlo, Monaco;
 }
 
 .diff .file .diffcontent .lineno {

@@ -9,7 +9,6 @@
 #import <Cocoa/Cocoa.h>
 #import "PBGitCommitController.h"
 #import "PBChangedFile.h"
-#import "PBGitGradientBarView.h"
 
 @interface PBGitIndexController : NSObject {
 	IBOutlet NSArrayController *stagedFilesController, *unstagedFilesController;
@@ -17,7 +16,6 @@
 
 	IBOutlet NSTableView *unstagedTable;
 	IBOutlet NSTableView *stagedTable;	
-	IBOutlet PBGitGradientBarView *upperToolbarView;
 }
 
 - (IBAction) rowClicked:(NSCell *) sender;

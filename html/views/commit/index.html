@@ -8,36 +8,20 @@
 	<script src="../../lib/keyboardNavigation.js" type="text/javascript" charset="utf-8"></script>
 	
 	<link rel="stylesheet" href="commit.css" type="text/css" media="screen" title="no title" charset="utf-8">
-	
-	<script type="text/javascript" src="../../lib/jquery-1.3.2.min.js"></script> 
-	<script src="multipleSelection.js" type="text/javascript" charset="utf-8"></script>
-	<script src="commit.js" type="text/javascript" charset="utf-8"></script>
-	<script type="text/javascript" charset="utf-8">
-	    jQuery.noConflict();
-	    jQuery(document).ready(function() {
-	        var fadeInTime = 3;
-	        var timeoutTime = 3;
-	        setTimeout(function(){
-	            jQuery('body').css("visibility", "visible").hide().fadeIn(fadeInTime);
-	        }, timeoutTime);
-	        document.getElementById("contextSize").value = getCookie("GitXContextLines");
-	        jQuery('#contextSize').mouseup(function(){
-	            setCookie("GitXContextLines", document.getElementById("contextSize").value, 10);
-	            document.location.reload();   
-	        });
-	    });
-	</script>
+	<script src="commit.js" type="text/javascript" chahrset="utf-8"></script>
+	<script src="multipleSelection.js" type="text/javascript" chahrset="utf-8"></script>
 </head>
 
-<body style="visibility: hidden;">
+<body>
 	<h1 id='title'>
-		<input type="range" min="1" value="2" max="10" id="contextSize" onLoad="this.value = getCookie('GitXContextLines');">
+		<input type="range" min="0" max="10" value="3" id="contextSize">
 		<span id="contextTitle">Context:</span>
 		<span id="status">Nothing to commit</span>
+
 	</h1>
 
-	<div id="notification" style="display: none;">
-		<img src="../../images/spinner.gif" alt="Spinner" id="spinner"/>
+	<div id="notification" style="display:none">
+		<img src="../../images/spinner.gif" alt="Spinner" id="spinner"></img>
 		<div id="notification_message"></div>
 	</div>
 

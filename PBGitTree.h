@@ -7,11 +7,9 @@
 //
 
 #import <Cocoa/Cocoa.h>
-#import <Quartz/Quartz.h>
 #import "PBGitRepository.h"
 
 @interface PBGitTree : NSObject {
-
 	long long _fileSize;
 
 	NSString* sha;
@@ -23,14 +21,14 @@
 
 	NSString* localFileName;
 	NSDate* localMtime;
-    
-    NSString * absolutePath;
-    NSImage * iconImage;
-	
 }
+
 + (PBGitTree*) rootForCommit: (id) commit;
 + (PBGitTree*) treeForTree: (PBGitTree*) tree andPath: (NSString*) path;
 - (void) saveToFolder: (NSString *) directory;
+- (NSString *)textContents;
+- (NSString *)blame;
+- (NSString *) log:(NSString *)format;
 
 - (NSString*) tmpFileNameForContents;
 - (long long)fileSize;
@@ -38,17 +36,11 @@
 @property(copy) NSString* sha;
 @property(copy) NSString* path;
 @property(assign) BOOL leaf;
-@property(assign) BOOL onlyCommit;
 @property(retain) PBGitRepository* repository;
 @property(assign) __weak PBGitTree* parent;
 
 @property(readonly) NSArray* children;
 @property(readonly) NSString* fullPath;
 @property(readonly) NSString* contents;
-- (NSString*) contents:(NSInteger)option;
-+(NSString *)parseBlame:(NSString *)blame;
 
-
-@property (copy) NSString *absolutePath;
-@property (retain) NSImage *iconImage;
 @end

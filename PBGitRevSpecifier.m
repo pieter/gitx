@@ -21,23 +21,18 @@
 	parameters = params;
 	description = descrip;
 
-	if (([parameters count] > 1) || ([parameters count] == 0)) {
-        isSimpleRef =  NO;
-    } else {
-        NSString *param = [parameters objectAtIndex:0];
+	if (([parameters count] > 1) || ([parameters count] == 0))
+		isSimpleRef =  NO;
+	else {
+		NSString *param = [parameters objectAtIndex:0];
 		if ([param hasPrefix:@"-"] ||
 			[param rangeOfCharacterFromSet:[NSCharacterSet characterSetWithCharactersInString:@"^@{}~:"]].location != NSNotFound ||
-			[param rangeOfString:@".."].location != NSNotFound) {
-            isSimpleRef =  NO;
-        } else {
-            if ([param hasPrefix:@"refs/"]) {
-                isSimpleRef = YES;
-            } else {
-                isSimpleRef = NO;
-            }
-        }
+			[param rangeOfString:@".."].location != NSNotFound)
+			isSimpleRef =  NO;
+		else
+			isSimpleRef =  YES;
 	}
-    // NSLog(@"paramters = %@, isSimpleRef = %@", parameters, (isSimpleRef ? @"YES" : @"NO"));
+
 	return self;
 }
 
@@ -49,7 +44,7 @@
 
 - (id) initWithRef:(PBGitRef *)ref
 {
-	[self initWithParameters:[NSArray arrayWithObject:ref.ref] description:[ref shortName]];
+	[self initWithParameters:[NSArray arrayWithObject:ref.ref] description:ref.shortName];
 	return self;
 }
 
@@ -92,11 +87,6 @@
 	return description;
 }
 
-- (NSString *) debugDescription {
-    return [NSString stringWithFormat:@"<%@: %p> description = %@, parameters = %@", 
-            NSStringFromClass([self class]), self, description, parameters];
-}
-
 - (NSString *) title
 {
 	NSString *title = nil;
@@ -105,6 +95,8 @@
 		title = @"detached HEAD";
 	else if ([self isSimpleRef])
 		title = [[self ref] shortName];
+	else if ([self.description hasPrefix:@"-S"])
+		title = [self.description substringFromIndex:[@"-S" length]];
 	else if ([self.description hasPrefix:@"HEAD -- "])
 		title = [self.description substringFromIndex:[@"HEAD -- " length]];
 	else if ([self.description hasPrefix:@"-- "])

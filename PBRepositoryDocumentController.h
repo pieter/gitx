@@ -12,13 +12,9 @@
 
 @interface PBRepositoryDocumentController : NSDocumentController
 {
-	IBOutlet NSWindow *cloneWindow;
-	IBOutlet NSTextField *cloneURLField;
+
 }
 
 - (id) documentForLocation:(NSURL*) url;
-- (IBAction) cloneURL:(id)sender;
-- (IBAction) showClone:(id)sender;
-- (IBAction) hideClone:(id)sender;
-
+- (void)initNewRepositoryAtURL:(NSURL *)url;
 @end

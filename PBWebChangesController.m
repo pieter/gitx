@@ -12,8 +12,6 @@
 
 @implementation PBWebChangesController
 
-@synthesize fileViewerController;
-
 - (void) awakeFromNib
 {
 	selectedFile = nil;
@@ -24,6 +22,15 @@
 
 	[unstagedFilesController addObserver:self forKeyPath:@"selection" options:0 context:@"UnstagedFileSelected"];
 	[cachedFilesController addObserver:self forKeyPath:@"selection" options:0 context:@"cachedFileSelected"];
+}
+
+- (void)closeView
+{
+	[[self script] removeWebScriptKey:@"Index"];
+	[unstagedFilesController removeObserver:self forKeyPath:@"selection"];
+	[cachedFilesController removeObserver:self forKeyPath:@"selection"];
+
+	[super closeView];
 }
 
 - (void) didLoad
@@ -68,29 +75,15 @@
 	[[self script] callWebScriptMethod:@"showMultipleFilesSelection" withArguments:[NSArray arrayWithObject:objects]];
 }
 
--(IBAction)displayControlChanged:(id)sender{
-	[self refresh];
-}
-
 - (void) refresh
 {
-	[fileViewerController showFile:[selectedFile path] sha:nil];
-	/*if (!finishedLoading)
+	if (!finishedLoading)
 		return;
-	
-	[fileViewerController showFile:selectedFile sha:@""];
 
 	id script = [view windowScriptObject];
-	
-	if([displayControl selectedSegment]==0){
-		[script callWebScriptMethod:@"showFileChanges"
-					  withArguments:[NSArray arrayWithObjects:selectedFile ?: (id)[NSNull null],
-									 [NSNumber numberWithBool:selectedFileIsCached], nil]];
-	}else{
-		[script callWebScriptMethod:@"showFileBlame"
-					  withArguments:[NSArray arrayWithObjects:selectedFile ?: (id)[NSNull null],
-									 [NSNumber numberWithBool:selectedFileIsCached], nil]];
-	}*/
+	[script callWebScriptMethod:@"showFileChanges"
+		      withArguments:[NSArray arrayWithObjects:selectedFile ?: (id)[NSNull null],
+				     [NSNumber numberWithBool:selectedFileIsCached], nil]];
 }
 
 - (void)stageHunk:(NSString *)hunk reverse:(BOOL)reverse

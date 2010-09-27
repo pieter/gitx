@@ -8,7 +8,6 @@
 
 #import <Cocoa/Cocoa.h>
 #import "PBViewController.h"
-#import "FileViewerController.h"
 
 @class PBGitIndexController, PBIconAndTextCell, PBWebChangesController, PBGitIndex;
 
@@ -22,9 +21,6 @@
 	IBOutlet NSArrayController *cachedFilesController;
 	IBOutlet NSButton *commitButton;
 
-	IBOutlet NSView *fileViewer;
-	FileViewerController *fileViewerController;
-
 	IBOutlet PBGitIndexController *indexController;
 	IBOutlet PBWebChangesController *webController;
 }
@@ -33,5 +29,6 @@
 
 - (IBAction) refresh:(id) sender;
 - (IBAction) commit:(id) sender;
+- (IBAction) forceCommit:(id) sender;
 - (IBAction)signOff:(id)sender;
 @end

@@ -10,9 +10,9 @@
 #import "PBGitHistoryList.h"
 #import "PBGitRevSpecifier.h"
 #import "PBGitConfig.h"
-#import "PBGitXErrors.h"
 #import "PBGitRefish.h"
 
+extern NSString* PBGitRepositoryErrorDomain;
 typedef enum branchFilterTypes {
 	kGitXAllBranchesFilter = 0,
 	kGitXLocalRemoteBranchesFilter,
@@ -38,6 +38,7 @@ static NSString * PBStringFromBranchFilterType(PBGitXBranchFilterType type) {
 
 @class PBGitWindowController;
 @class PBGitCommit;
+@class PBGitSHA;
 
 @interface PBGitRepository : NSDocument {
 	PBGitHistoryList* revisionList;
@@ -50,6 +51,7 @@ static NSString * PBStringFromBranchFilterType(PBGitXBranchFilterType type) {
 	NSMutableDictionary *refs;
 
 	PBGitRevSpecifier *_headRef; // Caching
+	PBGitSHA* _headSha;
 }
 
 - (void) cloneRepositoryToPath:(NSString *)path bare:(BOOL)isBare;
@@ -80,8 +82,6 @@ static NSString * PBStringFromBranchFilterType(PBGitXBranchFilterType type) {
 - (NSString*) outputForArguments:(NSArray*) args retValue:(int *)ret;
 - (NSString *)outputInWorkdirForArguments:(NSArray*) arguments;
 - (NSString *)outputInWorkdirForArguments:(NSArray*) arguments retValue:(int *)ret;
-- (NSString *) outputForShellScriptTemplate:(NSString *)scriptTemplate keywordDict:(NSDictionary *)keywordDict retValue:(NSInteger *)retValue;
-- (NSString *) outputForShellScript:(NSString *)script retValue:(NSInteger *)retValue;
 - (BOOL)executeHook:(NSString *)name output:(NSString **)output;
 - (BOOL)executeHook:(NSString *)name withArgs:(NSArray*) arguments output:(NSString **)output;
 
@@ -93,21 +93,18 @@ static NSString * PBStringFromBranchFilterType(PBGitXBranchFilterType type) {
 - (void) reloadRefs;
 - (void) addRef:(PBGitRef *)ref fromParameters:(NSArray *)params;
 - (void) lazyReload;
-- (PBGitRevSpecifier*) headRef;
-- (NSString *) headSHA;
-- (PBGitCommit *) headCommit;
-- (NSString *) shaForRef:(PBGitRef *)ref;
-- (PBGitCommit *) commitForRef:(PBGitRef *)ref;
-- (PBGitCommit *) commitForSHA:(NSString *)sha;
-- (BOOL) isOnSameBranch:(NSString *)baseSHA asSHA:(NSString *)testSHA;
-- (BOOL) isSHAOnHeadBranch:(NSString *)testSHA;
-- (BOOL) isRefOnHeadBranch:(PBGitRef *)testRef;
-- (BOOL) checkRefFormat:(NSString *)refName;
-- (BOOL) checkRefFormatForBranch:(NSString *)shaOrRefName;
-- (PBGitRef *) completeRefForString:(NSString *)partialRefString;
-- (BOOL) refExists:(PBGitRef *)ref;
-// checks to see if the ref or sha exists - returns nil if not found and the complete sha if found
-- (NSString *) shaExists:(NSString *)sha;
+- (PBGitRevSpecifier*)headRef;
+- (PBGitSHA *)headSHA;
+- (PBGitCommit *)headCommit;
+- (PBGitSHA *)shaForRef:(PBGitRef *)ref;
+- (PBGitCommit *)commitForRef:(PBGitRef *)ref;
+- (PBGitCommit *)commitForSHA:(PBGitSHA *)sha;
+- (BOOL)isOnSameBranch:(PBGitSHA *)baseSHA asSHA:(PBGitSHA *)testSHA;
+- (BOOL)isSHAOnHeadBranch:(PBGitSHA *)testSHA;
+- (BOOL)isRefOnHeadBranch:(PBGitRef *)testRef;
+- (BOOL)checkRefFormat:(NSString *)refName;
+- (BOOL)refExists:(PBGitRef *)ref;
+- (PBGitRef *)refForName:(NSString *)name;
 
 - (NSArray *) remotes;
 - (BOOL) hasRemotes;
@@ -123,11 +120,14 @@ static NSString * PBStringFromBranchFilterType(PBGitXBranchFilterType type) {
 
 + (NSURL*)gitDirForURL:(NSURL*)repositoryURL;
 + (NSURL*)baseDirForURL:(NSURL*)repositoryURL;
-+ (NSString *) basePath;
 
 - (id) initWithURL: (NSURL*) path;
 - (void) setup;
 - (void) forceUpdateRevisions;
+
+// for the scripting bridge
+- (void)findInModeScriptCommand:(NSScriptCommand *)command;
+
 
 @property (assign) BOOL hasChanged;
 @property (readonly) PBGitWindowController *windowController;
@@ -137,5 +137,4 @@ static NSString * PBStringFromBranchFilterType(PBGitXBranchFilterType type) {
 @property (assign) PBGitRevSpecifier *currentBranch;
 @property (assign) NSInteger currentBranchFilter;
 @property (retain) NSMutableDictionary* refs;
-
 @end

@@ -12,16 +12,12 @@
 }
 
 + (int) commitMessageViewVerticalLineLength;
-+ (NSInteger) truncateInfoTextSize;
-+ (BOOL) truncateInfoText;
 + (BOOL) commitMessageViewHasVerticalLine;
 + (BOOL) isGistEnabled;
 + (BOOL) isGravatarEnabled;
 + (BOOL) confirmPublicGists;
 + (BOOL) isGistPublic;
-+ (BOOL) showWhitespaceDifferences;
-+ (BOOL) showRelativeDates;
-+ (BOOL) refreshAutomatically;
++ (BOOL)showWhitespaceDifferences;
 + (BOOL)openCurDirOnLaunch;
 + (BOOL)showOpenPanelOnLaunch;
 + (BOOL) shouldCheckoutBranch;
@@ -38,5 +34,7 @@
 + (void) removePreviousDocumentPaths;
 + (NSInteger) branchFilter;
 + (void) setBranchFilter:(NSInteger)state;
++ (NSInteger)historySearchMode;
++ (void)setHistorySearchMode:(NSInteger)mode;
 
 @end

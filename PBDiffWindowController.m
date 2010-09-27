@@ -9,6 +9,7 @@
 #import "PBDiffWindowController.h"
 #import "PBGitRepository.h"
 #import "PBGitCommit.h"
+#import "PBGitDefaults.h"
 
 
 @implementation PBDiffWindowController
@@ -34,6 +35,10 @@
 
 	NSString *commitSelector = [NSString stringWithFormat:@"%@..%@", [startCommit realSha], [diffCommit realSha]];
 	NSMutableArray *arguments = [NSMutableArray arrayWithObjects:@"diff", commitSelector, nil];
+
+	if (![PBGitDefaults showWhitespaceDifferences])
+		[arguments insertObject:@"-w" atIndex:1];
+
 	if (filePaths) {
 		[arguments addObject:@"--"];
 		[arguments addObjectsFromArray:filePaths];

@@ -13,12 +13,9 @@
 #define CONN_TIMEOUT 5
 #define BUFFER_SIZE 256
 
-#import <objc/objc-auto.h> /* for objc_collect */
-
 @implementation NSFileHandle(NSFileHandleExt)
 
 -(NSString*)readLine {
-    
 	// If the socket is closed, return an empty string
 	if ([self fileDescriptor] <= 0)
 		return @"";
@@ -30,28 +27,26 @@
 	char *buffer = (char*)malloc(bufferSize + 1);
 	if (buffer == NULL)
 		[[NSException exceptionWithName:@"No memory left" reason:@"No more memory for allocating buffer" userInfo:nil] raise];
-    buffer[0] = '\0';
+	buffer[0] = '\0';
 	
-	int bytesReceived = 0, n = 1;
+	int bytesReceived = 0, n = 0;
 	
-	while (n > 0) {
+	while (1) {
 		n = read(fd, buffer + bytesReceived, 1);
 		
 		if (n == 0)
-            break;
-        
-        if (n < 0) {
-            if (errno == EINTR) {
-                n = 1;
-                continue;
-            } else {
-                free(buffer);
-                NSString *reason = [NSString stringWithFormat:@"%s:%d: read() error: %s", __PRETTY_FUNCTION__, __LINE__, strerror(errno)];
-                [[NSException exceptionWithName:@"Socket error" reason:reason userInfo:nil] raise];
-            }
-        }
-        
-        bytesReceived++;
+			break;
+		
+		if (n < 0) {
+			if (errno == EINTR)
+				continue;
+			
+			free(buffer);
+			NSString *reason = [NSString stringWithFormat:@"%s:%d: read() error: %s", __PRETTY_FUNCTION__, __LINE__, strerror(errno)];
+			[[NSException exceptionWithName:@"Socket error" reason:reason userInfo:nil] raise];
+		}
+		
+		bytesReceived++;
 		
 		if (bytesReceived >= bufferSize) {
 			// Make buffer bigger
@@ -61,17 +56,14 @@
 				[[NSException exceptionWithName:@"No memory left" reason:@"No more memory for allocating buffer" userInfo:nil] raise];
 		}       
 		
-		switch (*(buffer + bytesReceived - 1)) {
-			case '\n':
-				buffer[bytesReceived-1] = '\0';
-				NSString* s = [NSString stringWithCString: buffer encoding: NSUTF8StringEncoding];
-				if ([s length] == 0)
-					s = [NSString stringWithCString: buffer encoding: NSISOLatin1StringEncoding];
-                free(buffer);
-				return s;
-			case '\r':
-				bytesReceived--;
+		char receivedByte = buffer[bytesReceived-1];
+		if (receivedByte == '\n') {
+			bytesReceived--;
+			break;
 		}
+		
+		if (receivedByte == '\r')
+			bytesReceived--;
 	}       
 	
 	buffer[bytesReceived] = '\0';
@@ -80,8 +72,6 @@
 		retVal = [NSString stringWithCString: buffer encoding: NSISOLatin1StringEncoding];
 	
 	free(buffer);
-    
-    [[NSGarbageCollector defaultCollector] collectExhaustively];
 	return retVal;
 }
 

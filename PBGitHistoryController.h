@@ -7,91 +7,71 @@
 //
 
 #import <Cocoa/Cocoa.h>
-#import <WebKit/WebKit.h>
 #import "PBGitCommit.h"
 #import "PBGitTree.h"
 #import "PBViewController.h"
 #import "PBCollapsibleSplitView.h"
-#import "FileViewerController.h"
 
-@class PBQLOutlineView;
 @class PBGitSidebarController;
+@class PBWebHistoryController;
 @class PBGitGradientBarView;
 @class PBRefController;
 @class QLPreviewPanel;
 @class PBCommitList;
-@class PBSourceViewItem;
+@class PBGitSHA;
 
-@interface PBGitHistoryController : PBViewController <MGScopeBarDelegate>{
+@class PBHistorySearchController;
+
+@interface PBGitHistoryController : PBViewController {
 	IBOutlet PBRefController *refController;
-	IBOutlet PBCommitList* commitList;
-	IBOutlet PBCollapsibleSplitView *historySplitView;
-	IBOutlet PBGitGradientBarView *upperToolbarView;
-	IBOutlet PBGitGradientBarView *scopeBarView;
-
 	IBOutlet NSSearchField *searchField;
 	IBOutlet NSArrayController* commitController;
 	IBOutlet NSTreeController* treeController;
 	IBOutlet NSOutlineView* fileBrowser;
+	NSArray *currentFileBrowserSelectionPath;
+	IBOutlet PBCommitList* commitList;
+	IBOutlet PBCollapsibleSplitView *historySplitView;
+	IBOutlet PBWebHistoryController *webHistoryController;
+    QLPreviewPanel* previewPanel;
+	IBOutlet PBHistorySearchController *searchController;
+
+	IBOutlet PBGitGradientBarView *upperToolbarView;
 	IBOutlet NSButton *mergeButton;
 	IBOutlet NSButton *cherryPickButton;
 	IBOutlet NSButton *rebaseButton;
+
+	IBOutlet PBGitGradientBarView *scopeBarView;
 	IBOutlet NSButton *allBranchesFilterItem;
 	IBOutlet NSButton *localRemoteBranchesFilterItem;
 	IBOutlet NSButton *selectedBranchFilterItem;
-	
-	IBOutlet NSView *fileViewer;
-	FileViewerController *fileViewerController;
-	
+
 	IBOutlet id webView;
-
-    // moved from PBGitSidebarController
-    IBOutlet NSSegmentedControl * remoteControls;
-
-    __weak QLPreviewPanel* previewPanel;
-
 	int selectedCommitDetailsIndex;
 	BOOL forceSelectionUpdate;
-	NSArray *currentFileBrowserSelectionPath;
-
-	IBOutlet MGScopeBar *treeStyle;
-	NSArray *treeOpts;
+	
 	PBGitTree *gitTree;
 	PBGitCommit *webCommit;
 	PBGitCommit *selectedCommit;
-
-    PBSourceViewItem * sidebarRemotes;
-    NSOutlineView * sidebarSourceView;
 }
 
+@property (readonly) NSTreeController* treeController;
 @property (assign) int selectedCommitDetailsIndex;
 @property (retain) PBGitCommit *webCommit;
 @property (retain) PBGitTree* gitTree;
 @property (readonly) NSArrayController *commitController;
-@property (readonly) PBCommitList *commitList;
 @property (readonly) PBRefController *refController;
-@property (assign) NSOutlineView * sidebarSourceView;
-@property (assign) PBSourceViewItem * sidebarRemotes;
-@property (readonly) NSSearchField *searchField;
-@property (retain) IBOutlet id webView;
+@property (readonly) PBHistorySearchController *searchController;
+@property (readonly) PBCommitList *commitList;
 
 - (IBAction) setDetailedView:(id)sender;
 - (IBAction) setTreeView:(id)sender;
 - (IBAction) setBranchFilter:(id)sender;
+
+- (void)selectCommit:(PBGitSHA *)commit;
 - (IBAction) refresh:(id)sender;
 - (IBAction) toggleQLPreviewPanel:(id)sender;
 - (IBAction) openSelectedFile:(id)sender;
-
-- (BOOL) selectCommit: (NSString*) commit;
-- (void) updateKeys;
-
 - (void) updateQuicklookForce: (BOOL) force;
-
-- (void) scrollSelectionToTopOfViewFrom:(NSInteger)oldIndex;
-
-// Moved over Sidebar methods
-- (IBAction) fetchPullPushAction:(id)sender;
-- (void) updateRemoteControls:(PBGitRef *)forRef;
 
 // Context menu methods
 - (NSMenu *)contextMenuForTreeView;
@@ -108,7 +88,12 @@
 - (IBAction) cherryPick:(id)sender;
 - (IBAction) rebase:(id)sender;
 
+// Find/Search methods
+- (IBAction)selectNext:(id)sender;
+- (IBAction)selectPrevious:(id)sender;
+
 - (void) copyCommitInfo;
+- (void) copyCommitSHA;
 
 - (BOOL) hasNonlinearPath;
 
@@ -119,5 +104,4 @@
 - (CGFloat)splitView:(NSSplitView *)sender constrainMinCoordinate:(CGFloat)proposedMin ofSubviewAt:(NSInteger)offset;
 - (CGFloat)splitView:(NSSplitView *)sender constrainMaxCoordinate:(CGFloat)proposedMax ofSubviewAt:(NSInteger)offset;
 
-- (IBAction)updateFileViwer:(id)sender;
 @end

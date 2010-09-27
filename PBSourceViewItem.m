@@ -9,7 +9,6 @@
 #import "PBSourceViewItem.h"
 #import "PBSourceViewItems.h"
 #import "PBGitRef.h"
-#import "BMScript.h"
 
 @implementation PBSourceViewItem
 @synthesize parent, title, isGroupItem, children, revSpecifier, isUncollapsible;
@@ -23,18 +22,6 @@
 	children = [NSMutableArray array];
 	return self;
 }
-
-- (NSString *) description {
-    return [NSString stringWithFormat:@"<%@ %p> title = %@, rev = %@, children = %@", 
-            NSStringFromClass([self class]), self, title, revSpecifier, children];
-}
-
-- (NSString *) debugDescription {
-    return [NSString stringWithFormat:@"%@, p = %@, ch = %@, grp? %@, unc? %@", 
-            [self description], parent, children, BMStringFromBOOL(isGroupItem), BMStringFromBOOL(isUncollapsible)];
-}
-
-
 
 + (id)itemWithTitle:(NSString *)title
 {
@@ -109,15 +96,14 @@
 	[node addRev:theRevSpecifier toPath:[path subarrayWithRange:NSMakeRange(1, [path count] - 1)]];
 }
 
-- (PBSourceViewItem *) findRev:(PBGitRevSpecifier *)rev
+- (PBSourceViewItem *)findRev:(PBGitRevSpecifier *)rev
 {
-    // NSLog(@"[%@ %s] rev = %@, revSpecifier = %@", [self class], _cmd, rev, revSpecifier);
-	if (rev == revSpecifier || [rev isEqual:revSpecifier])
+	if (rev == revSpecifier)
 		return self;
 
 	PBSourceViewItem *item = nil;
 	for (PBSourceViewItem *child in children)
-		if (item = [child findRev:rev])
+		if ( (item = [child findRev:rev]) != nil )
 			return item;
 
 	return nil;

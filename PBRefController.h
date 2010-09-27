@@ -19,6 +19,7 @@
 	IBOutlet __weak PBGitHistoryController *historyController;
 	IBOutlet NSArrayController *commitController;
 	IBOutlet PBCommitList *commitList;
+
 	IBOutlet NSPopUpButton *branchPopUp;
 }
 
@@ -42,9 +43,7 @@
 
 - (NSArray *) menuItemsForRef:(PBGitRef *)ref;
 - (NSArray *) menuItemsForCommit:(PBGitCommit *)commit;
+- (NSArray *)menuItemsForRow:(NSInteger)rowIndex;
 
-@end
 
-@interface NSString (PBRefSpecAdditions)
-- (NSString *) refForSpec;
 @end

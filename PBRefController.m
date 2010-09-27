@@ -147,9 +147,8 @@
 - (void) rebaseHeadBranch:(PBRefMenuItem *)sender
 {
 	id <PBGitRefish> refish = [sender refish];
-	PBGitRef *headRef = [[historyController.repository headRef] ref];
 
-	[historyController.repository rebaseBranch:headRef onRefish:refish];
+	[historyController.repository rebaseBranch:nil onRefish:refish];
 }
 
 
@@ -275,43 +274,15 @@
 	return [PBRefMenuItem defaultMenuItemsForCommit:commit target:self];
 }
 
-// - (BOOL) addRemoteImplWithName:(NSString *)remoteName forURL:(NSString *)remoteURL
-// {
-//  int ret = 1;
-//     BOOL success = NO;
-//     if (!remoteName || !remoteURL) {
-//         return success;
-//     }
-//  NSString *rval = [historyController.repository outputInWorkdirForArguments:[NSArray arrayWithObjects:@"remote",  @"add", @"-f", remoteName, remoteURL, nil] retValue: &ret];
-//  if (ret) {
-//      NSString *info = [NSString stringWithFormat:@"There was an error adding the remote.\n\n%d\n%@", ret, rval];
-//      [[historyController.repository windowController] showMessageSheet:@"Adding Remote failed" infoText:info];
-//      return success;
-//  }
-//  [historyController.repository reloadRefs];
-//  [commitController rearrangeObjects];
-//     success = YES;
-//     return success;
-// }
-// 
-// - (void) toggleToolbarItems:(NSToolbar *)tb matchingLabels:(NSArray *)labels enabledState:(BOOL)state  {
-//     NSArray * tbItems = [tb items];
-//     
-//     /* if labels is nil, assume all toolbar items */
-//     if (!labels) {
-//         for (NSToolbarItem * curItem in tbItems) {
-//             [curItem setEnabled:state];
-//         }
-//     } else {
-//         for (NSToolbarItem * curItem in tbItems) {
-//             for (NSString * curLabel in labels) {
-//                 if ([[curItem label] isEqualToString:curLabel]) {
-//                     [curItem setEnabled:state];
-//                 }
-//             }
-//         }
-//     }
-// }
+- (NSArray *)menuItemsForRow:(NSInteger)rowIndex
+{
+	NSArray *commits = [commitController arrangedObjects];
+	if ([commits count] <= rowIndex)
+		return nil;
+
+	return [self menuItemsForCommit:[commits objectAtIndex:rowIndex]];
+}
+
 
 # pragma mark Tableview delegate methods
 
@@ -330,6 +301,13 @@
 	int index = [cell indexAtX:(location.x - cellFrame.origin.x)];
 	
 	if (index == -1)
+		return NO;
+
+	PBGitRef *ref = [[[cell objectValue] refs] objectAtIndex:index];
+	if ([ref isTag] || [ref isRemoteBranch])
+		return NO;
+
+	if ([[[historyController.repository headRef] ref] isEqualToRef:ref])
 		return NO;
 	
 	NSData *data = [NSKeyedArchiver archivedDataWithRootObject:[NSArray arrayWithObjects:[NSNumber numberWithInt:row], [NSNumber numberWithInt:index], NULL]];
@@ -438,4 +416,3 @@
 }
 
 @end
-

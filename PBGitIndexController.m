@@ -29,9 +29,6 @@
 
 	[unstagedTable registerForDraggedTypes: [NSArray arrayWithObject:FileChangesTableViewType]];
 	[stagedTable registerForDraggedTypes: [NSArray arrayWithObject:FileChangesTableViewType]];
-
-	[upperToolbarView setTopShade:237/255.0 bottomShade:216/255.0];
-
 }
 
 // FIXME: Find a proper place for this method -- this is not it.

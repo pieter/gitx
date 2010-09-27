@@ -150,7 +150,8 @@
 			NSRect ctrlRect = NSZeroRect;
 			BOOL providesImages = [delegate respondsToSelector:@selector(scopeBar:imageForItem:inGroup:)];
 			
-			for (int groupNum = 0; groupNum < numGroups; groupNum++) {
+			int groupNum;
+			for (groupNum = 0; groupNum < numGroups; groupNum++) {
 				// Add separator if appropriate.
 				BOOL addSeparator = (groupNum > 0); // default behavior.
 				if ([delegate respondsToSelector:@selector(scopeBar:showSeparatorBeforeGroup:)]) {
@@ -494,7 +495,8 @@
 			//NSLog(@"Got %@ - modifying groups %@", ((narrower) ? @"narrower" : @"wider"), NSStringFromRange(changedRange));
 			NSInteger nextXCoord = NSNotFound;
 			if (adjusting) {
-				for (int i = changedRange.location; i < NSMaxRange(changedRange); i++) {
+				int i;
+				for (i = changedRange.location; i < NSMaxRange(changedRange); i++) {
 					NSMutableDictionary *groupInfo = [_groups objectAtIndex:i];
 					
 					if (nextXCoord == NSNotFound) {
@@ -547,7 +549,8 @@
 						float buttonX = nextXCoord;
 						NSMutableArray *menuItems = [groupInfo objectForKey:GROUP_BUTTONS];
 						NSArray *selectedItems = [_selectedItems objectAtIndex:i];
-						for (int i = 0; i < [menuItems count]; i++) {
+						int i;
+						for (i = 0; i < [menuItems count]; i++) {
 							NSMenuItem *menuItem = [menuItems objectAtIndex:i];
 							NSString *itemIdentifier = [menuItem representedObject];
 							NSButton *button = [self buttonForItem:itemIdentifier 
@@ -579,7 +582,8 @@
 			if (shouldAdjustPopups) {
 				perGroupDelta = ((_totalGroupsWidthForPopups - availableWidth) / [_groups count]);
 			}
-			for (int i = startIndex; i < [_groups count]; i++) {
+			int i;
+			for (i = startIndex; i < [_groups count]; i++) {
 				NSDictionary *groupInfo = [_groups objectAtIndex:i];
 				BOOL menuMode = [[groupInfo objectForKey:GROUP_MENU_MODE] boolValue];
 				
@@ -760,7 +764,8 @@
 	// Add appropriate items.
 	[popup removeAllItems];
 	NSMutableArray *buttons = [group objectForKey:GROUP_BUTTONS];
-	for (int i = 0; i < [buttons count]; i++) {
+	int i;
+	for (i = 0; i < [buttons count]; i++) {
 		NSButton *button = (NSButton *)[buttons objectAtIndex:i];
 		NSMenuItem *menuItem = [self menuItemForItem:[[button cell] representedObject] 
 											 inGroup:[button tag] 
@@ -798,7 +803,8 @@
 	int count = [identArray count];
 	if (groupNumber >= count) {
 		// Pad identArray with nulls if appropriate, so this control lies at index groupNumber.
-		for (int i = count; i < groupNumber; i++) {
+		int i;
+		for (i = count; i < groupNumber; i++) {
 			[identArray addObject:[NSNull null]];
 		}
 		[identArray addObject:control];
