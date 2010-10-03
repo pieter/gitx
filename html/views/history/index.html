@@ -19,12 +19,15 @@
         	</a>
 		</div>
 	</div>
-	<table id="commit_header">
+	
+	<table>
 	<tr>
-		<td class="property_name">SHA:</td>
-		<td id="commitID"></td>
-	</tr>
-	<tr>
+	<td width="50%">
+	<table >
+		<tr>
+			<td class="property_name">Subject:</td>
+			<td id="subjectID" style="font-weight:bold"></td>
+		</tr>
 		<td colspan="2">
 			<table id="authorTable">
 				<tr>
@@ -44,22 +47,32 @@
 						<img id="committer_gravatar" src=""></img>
 					</td>
 					<td id="committerID"></td>
+				</tr>
 				<tr style="display:none">
 					<td class="property_name">Date:</td>
 					<td id="committerDate"></td>
 				</tr>
 			</table>
 		</td>
-	</tr>
+	</table>
+	</td>
+	<td width="50%">
+	<table  id="commit_header">
 	<tr>
-		<td class="property_name">Subject:</td>
-		<td id="subjectID" style="font-weight:bold"></td>
 	</tr>
-	<tr style="display:none">
-		<td class="property_name">Refs:</td>
-		<td id="refs"></td>
+		<tr>
+			<td class="property_name">SHA:</td>
+			<td id="commitID"></td>
+		</tr>
+		<tr style="display:none">
+			<td class="property_name">Refs:</td>
+			<td id="refs"></td>
+		</tr>
+	</table>	
+	</td>
 	</tr>
 	</table>
+	
 	<div id="notification" style="display:none;">
 		<img src="../../images/spinner.gif" alt="Spinner" id="spinner"></img>
 		<div id="notification_message"></div>
