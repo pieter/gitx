@@ -627,7 +627,7 @@ NSString* PBGitRepositoryErrorDomain = @"GitXErrorDomain";
 
 	NSString *description = [NSString stringWithFormat:@"Pulling all tracking branches from %@", remoteName];
 	NSString *title = @"Pulling from remote";
-	[PBRemoteProgressSheet beginRemoteProgressSheetForArguments:arguments title:title description:description inRepository:self];
+	[PBRemoteProgressSheet beginRemoteProgressSheetForArguments:arguments title:title description:description inRepository:self hideSuccessScreen:true];
 }
 
 - (void) beginPushRef:(PBGitRef *)ref toRemote:(PBGitRef *)remoteRef
@@ -663,7 +663,7 @@ NSString* PBGitRepositoryErrorDomain = @"GitXErrorDomain";
 
 	NSString *description = [NSString stringWithFormat:@"Pushing %@ to %@", branchName, remoteName];
 	NSString *title = @"Pushing to remote";
-	[PBRemoteProgressSheet beginRemoteProgressSheetForArguments:arguments title:title description:description inRepository:self];
+	[PBRemoteProgressSheet beginRemoteProgressSheetForArguments:arguments title:title description:description inRepository:self hideSuccessScreen:true];
 }
 
 - (BOOL) checkoutRefish:(id <PBGitRefish>)ref

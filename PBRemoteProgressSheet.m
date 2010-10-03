@@ -24,7 +24,7 @@ NSString * const kGitXProgressErrorInfo          = @"PBGitXProgressErrorInfo";
 
 @interface PBRemoteProgressSheet ()
 
-- (void) beginRemoteProgressSheetForArguments:(NSArray *)args title:(NSString *)theTitle description:(NSString *)theDescription inDir:(NSString *)dir windowController:(NSWindowController *)windowController;
+- (void) beginRemoteProgressSheetForArguments:(NSArray *)args title:(NSString *)theTitle description:(NSString *)theDescription inDir:(NSString *)dir windowController:(NSWindowController *)windowController hideSuccessScreen:(bool)hideSucc;
 - (void) showSuccessMessage;
 - (void) showErrorMessage;
 
@@ -55,7 +55,13 @@ NSString * const kGitXProgressErrorInfo          = @"PBGitXProgressErrorInfo";
 + (void) beginRemoteProgressSheetForArguments:(NSArray *)args title:(NSString *)theTitle description:(NSString *)theDescription inDir:(NSString *)dir windowController:(NSWindowController *)windowController
 {
 	PBRemoteProgressSheet *sheet = [[self alloc] initWithWindowNibName:@"PBRemoteProgressSheet"];
-	[sheet beginRemoteProgressSheetForArguments:args title:theTitle description:theDescription inDir:dir windowController:windowController];
+	[sheet beginRemoteProgressSheetForArguments:args title:theTitle description:theDescription inDir:dir windowController:windowController hideSuccessScreen:false];
+}
+
++ (void) beginRemoteProgressSheetForArguments:(NSArray *)args title:(NSString *)theTitle description:(NSString *)theDescription inDir:(NSString *)dir windowController:(NSWindowController *)windowController  hideSuccessScreen:(bool)hideSucc
+{
+	PBRemoteProgressSheet *sheet = [[self alloc] initWithWindowNibName:@"PBRemoteProgressSheet"];
+	[sheet beginRemoteProgressSheetForArguments:args title:theTitle description:theDescription inDir:dir windowController:windowController hideSuccessScreen:hideSucc];
 }
 
 
@@ -64,13 +70,19 @@ NSString * const kGitXProgressErrorInfo          = @"PBGitXProgressErrorInfo";
 	[PBRemoteProgressSheet beginRemoteProgressSheetForArguments:args title:theTitle description:theDescription inDir:[repo workingDirectory] windowController:repo.windowController];
 }
 
++ (void) beginRemoteProgressSheetForArguments:(NSArray *)args title:(NSString *)theTitle description:(NSString *)theDescription  inRepository:(PBGitRepository *)repo hideSuccessScreen:(bool)hideSucc
+{
+	[PBRemoteProgressSheet beginRemoteProgressSheetForArguments:args title:theTitle description:theDescription inDir:[repo workingDirectory] windowController:repo.windowController hideSuccessScreen:hideSucc];
+}
 
-- (void) beginRemoteProgressSheetForArguments:(NSArray *)args title:(NSString *)theTitle description:(NSString *)theDescription inDir:(NSString *)dir windowController:(NSWindowController *)windowController
+
+- (void) beginRemoteProgressSheetForArguments:(NSArray *)args title:(NSString *)theTitle description:(NSString *)theDescription inDir:(NSString *)dir windowController:(NSWindowController *)windowController hideSuccessScreen:(bool)hideSucc
 {
 	controller  = windowController;
 	arguments   = args;
 	title       = theTitle;
 	description = theDescription;
+	hideSuccessScreen = hideSucc;
 
 	[self window]; // loads the window (if it wasn't already)
 
@@ -141,6 +153,8 @@ NSString * const kGitXProgressErrorInfo          = @"PBGitXProgressErrorInfo";
 
 - (void) showSuccessMessage
 {
+	if(hideSuccessScreen) return;
+	
 	NSMutableString *info = [NSMutableString string];
 	[info appendString:[self successDescription]];
 	[info appendString:[self commandDescription]];

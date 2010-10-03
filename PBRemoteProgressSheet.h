@@ -24,6 +24,7 @@ extern NSString * const kGitXProgressErrorInfo;
 	NSArray  *arguments;
 	NSString *title;
 	NSString *description;
+	bool hideSuccessScreen;
 
 	NSTask    *gitTask;
 	NSInteger  returnCode;
@@ -35,8 +36,9 @@ extern NSString * const kGitXProgressErrorInfo;
 }
 
 + (void) beginRemoteProgressSheetForArguments:(NSArray *)args title:(NSString *)theTitle description:(NSString *)theDescription inDir:(NSString *)dir windowController:(NSWindowController *)windowController;
-
++ (void) beginRemoteProgressSheetForArguments:(NSArray *)args title:(NSString *)theTitle description:(NSString *)theDescription inDir:(NSString *)dir windowController:(NSWindowController *)windowController hideSuccessScreen:(bool)hideSucc;
 + (void) beginRemoteProgressSheetForArguments:(NSArray *)args title:(NSString *)theTitle description:(NSString *)theDescription inRepository:(PBGitRepository *)repo;
++ (void) beginRemoteProgressSheetForArguments:(NSArray *)args title:(NSString *)theTitle description:(NSString *)theDescription inRepository:(PBGitRepository *)repo hideSuccessScreen:(bool)hideSucc;
 
 
 @property (assign) IBOutlet NSTextField         *progressDescription;
