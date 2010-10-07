@@ -52,6 +52,8 @@
 		91B103CC0E898EC300C84364 /* PBIconAndTextCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 91B103CB0E898EC300C84364 /* PBIconAndTextCell.m */; };
 		93CB42C20EAB7B2200530609 /* PBGitDefaults.m in Sources */ = {isa = PBXBuildFile; fileRef = 93CB42C10EAB7B2200530609 /* PBGitDefaults.m */; };
 		93F7857F0EA3ABF100C1F443 /* PBCommitMessageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 93F7857E0EA3ABF100C1F443 /* PBCommitMessageView.m */; };
+		C4514A87125E35A8009D9F42 /* OpenRecentController.m in Sources */ = {isa = PBXBuildFile; fileRef = C4514A86125E35A8009D9F42 /* OpenRecentController.m */; };
+		C4514AAB125E38C5009D9F42 /* OpenRecentPopup.xib in Resources */ = {isa = PBXBuildFile; fileRef = C4514AAA125E38C5009D9F42 /* OpenRecentPopup.xib */; };
 		D26DC6450E782C9000C777B2 /* gitx.icns in Resources */ = {isa = PBXBuildFile; fileRef = D26DC6440E782C9000C777B2 /* gitx.icns */; };
 		D8022FE811E124A0003C21F6 /* PBGitXMessageSheet.xib in Resources */ = {isa = PBXBuildFile; fileRef = D8022FE711E124A0003C21F6 /* PBGitXMessageSheet.xib */; };
 		D8022FED11E124C8003C21F6 /* PBGitXMessageSheet.m in Sources */ = {isa = PBXBuildFile; fileRef = D8022FEC11E124C8003C21F6 /* PBGitXMessageSheet.m */; };
@@ -297,6 +299,9 @@
 		93F7857D0EA3ABF100C1F443 /* PBCommitMessageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PBCommitMessageView.h; sourceTree = "<group>"; };
 		93F7857E0EA3ABF100C1F443 /* PBCommitMessageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PBCommitMessageView.m; sourceTree = "<group>"; };
 		93FCCBA80EA8AF450061B02B /* PBGitConfig.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PBGitConfig.m; sourceTree = "<group>"; };
+		C4514A85125E35A8009D9F42 /* OpenRecentController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OpenRecentController.h; sourceTree = "<group>"; };
+		C4514A86125E35A8009D9F42 /* OpenRecentController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OpenRecentController.m; sourceTree = "<group>"; };
+		C4514AAA125E38C5009D9F42 /* OpenRecentPopup.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = OpenRecentPopup.xib; sourceTree = "<group>"; };
 		D26DC6440E782C9000C777B2 /* gitx.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = gitx.icns; sourceTree = "<group>"; };
 		D8022A3411DFCCA5003C21F6 /* build_libgit2.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = build_libgit2.sh; sourceTree = "<group>"; };
 		D8022FE711E124A0003C21F6 /* PBGitXMessageSheet.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PBGitXMessageSheet.xib; sourceTree = "<group>"; };
@@ -665,6 +670,7 @@
 				F569AE920F2CBD7C00C2FFA7 /* Credits.html */,
 				F58DB55F10566E3900CFDF4A /* PBGitSidebarView.xib */,
 				D8022FE711E124A0003C21F6 /* PBGitXMessageSheet.xib */,
+				C4514AAA125E38C5009D9F42 /* OpenRecentPopup.xib */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -846,6 +852,8 @@
 				47DBDB570E94EDE700671A1E /* DBPrefsWindowController.m */,
 				47DBDB650E94EE8B00671A1E /* PBPrefsWindowController.h */,
 				47DBDB660E94EE8B00671A1E /* PBPrefsWindowController.m */,
+				C4514A85125E35A8009D9F42 /* OpenRecentController.h */,
+				C4514A86125E35A8009D9F42 /* OpenRecentController.m */,
 			);
 			name = Controllers;
 			sourceTree = "<group>";
@@ -1228,6 +1236,7 @@
 				31460CD5124185BA00B90AED /* Source Code License.rtf in Resources */,
 				31460CD6124185BA00B90AED /* TODO in Resources */,
 				02B41A60123E307F00DFC531 /* PBCommitHookFailedSheet.xib in Resources */,
+				C4514AAB125E38C5009D9F42 /* OpenRecentPopup.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1381,6 +1390,7 @@
 				31460CD2124185BA00B90AED /* MGRecessedPopUpButtonCell.m in Sources */,
 				31460CD3124185BA00B90AED /* MGScopeBar.m in Sources */,
 				02B41A5E123E307200DFC531 /* PBCommitHookFailedSheet.m in Sources */,
+				C4514A87125E35A8009D9F42 /* OpenRecentController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1606,7 +1616,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				INFOPLIST_PREPROCESS = YES;
 				PREBINDING = NO;
-				SDKROOT = "$(DEVELOPER_SDK_DIR)/MacOSX10.5.sdk";
+				SDKROOT = macosx10.6;
 			};
 			name = Debug;
 		};
@@ -1624,7 +1634,7 @@
 				INFOPLIST_PREFIX_HEADER = $PROJECT_TEMP_DIR/revision;
 				INFOPLIST_PREPROCESS = YES;
 				PREBINDING = NO;
-				SDKROOT = "$(DEVELOPER_SDK_DIR)/MacOSX10.5.sdk";
+				SDKROOT = macosx10.6;
 			};
 			name = Release;
 		};

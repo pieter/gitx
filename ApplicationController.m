@@ -17,6 +17,7 @@
 #import "PBGitDefaults.h"
 #import "PBCloneRepositoryPanel.h"
 #import "Sparkle/SUUpdater.h"
+#import "OpenRecentController.h"
 
 @implementation ApplicationController
 
@@ -82,12 +83,16 @@
 
     // open any documents that were open the last time the app quit
     if ([PBGitDefaults openPreviousDocumentsOnLaunch]) {
-        for (NSString *path in [PBGitDefaults previousDocumentPaths]) {
-            NSURL *url = [NSURL fileURLWithPath:path isDirectory:YES];
-            NSError *error = nil;
-            if (url && [[PBRepositoryDocumentController sharedDocumentController] openDocumentWithContentsOfURL:url display:YES error:&error])
-                hasOpenedDocuments = YES;
-        }
+		if([OpenRecentController run])
+			hasOpenedDocuments = YES;
+
+		
+//        for (NSString *path in [PBGitDefaults previousDocumentPaths]) {
+//            NSURL *url = [NSURL fileURLWithPath:path isDirectory:YES];
+//            NSError *error = nil;
+//            if (url && [[PBRepositoryDocumentController sharedDocumentController] openDocumentWithContentsOfURL:url display:YES error:&error])
+//                hasOpenedDocuments = YES;
+//        }
     }
 
 	// Try to find the current directory, to open that as a repository
