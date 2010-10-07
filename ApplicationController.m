@@ -40,6 +40,8 @@
 	
 	// Make sure the PBGitDefaults is initialized, by calling a random method
 	[PBGitDefaults class];
+	
+	started = NO;
 	return self;
 }
 
@@ -60,6 +62,20 @@
 		NSUpdateDynamicServices();
 		[[NSUserDefaults standardUserDefaults] setInteger:2 forKey:@"Services Version"];
 	}
+}
+
+- (BOOL)applicationShouldOpenUntitledFile:(NSApplication *)sender
+{
+	if(!started || [[[PBRepositoryDocumentController sharedDocumentController] documents] count])
+		return NO;
+	return YES;
+}
+
+- (BOOL)applicationOpenUntitledFile:(NSApplication *)theApplication
+{
+	if([OpenRecentController run])
+		return YES;
+	return NO;
 }
 
 - (void)applicationDidFinishLaunching:(NSNotification*)notification
@@ -83,16 +99,12 @@
 
     // open any documents that were open the last time the app quit
     if ([PBGitDefaults openPreviousDocumentsOnLaunch]) {
-		if([OpenRecentController run])
-			hasOpenedDocuments = YES;
-
-		
-//        for (NSString *path in [PBGitDefaults previousDocumentPaths]) {
-//            NSURL *url = [NSURL fileURLWithPath:path isDirectory:YES];
-//            NSError *error = nil;
-//            if (url && [[PBRepositoryDocumentController sharedDocumentController] openDocumentWithContentsOfURL:url display:YES error:&error])
-//                hasOpenedDocuments = YES;
-//        }
+        for (NSString *path in [PBGitDefaults previousDocumentPaths]) {
+            NSURL *url = [NSURL fileURLWithPath:path isDirectory:YES];
+            NSError *error = nil;
+            if (url && [[PBRepositoryDocumentController sharedDocumentController] openDocumentWithContentsOfURL:url display:YES error:&error])
+                hasOpenedDocuments = YES;
+        }
     }
 
 	// Try to find the current directory, to open that as a repository
@@ -118,6 +130,10 @@
 	// show an open panel for the user to select a repository to view
 	if ([PBGitDefaults showOpenPanelOnLaunch] && !hasOpenedDocuments)
 		[[PBRepositoryDocumentController sharedDocumentController] openDocument:self];
+	else if(!hasOpenedDocuments) 
+		[self applicationOpenUntitledFile:nil];
+	
+	started = YES;
 }
 
 - (void) windowWillClose: sender

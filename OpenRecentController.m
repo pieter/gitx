@@ -77,7 +77,7 @@
 	if(selectedResult != nil) {
 		[OpenRecentController openUrl:selectedResult];
 	}
-	[searchWindow makeKeyAndOrderFront: nil];
+	[searchWindow orderOut:nil];
 }
 
 - (BOOL)control:(NSControl*)control textView:(NSTextView*)textView doCommandBySelector:(SEL)commandSelector {
@@ -86,8 +86,8 @@
 		if(selectedResult != nil) {
 			[OpenRecentController openUrl:selectedResult];
 		}
-//		[searchWindow orderOut:nil];
-		[searchWindow makeKeyAndOrderFront: nil];
+		[searchWindow orderOut:nil];
+//		[searchWindow makeKeyAndOrderFront: nil];
 		result = YES;
     }
 	else if(commandSelector == @selector(cancelOperation:)) {
