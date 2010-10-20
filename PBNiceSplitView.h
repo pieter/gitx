@@ -12,4 +12,7 @@
 
 }
 
+- (void) restoreDefault: (NSString *) defaultName;
+- (void) saveDefault: (NSString *) defaultName;
+
 @end
