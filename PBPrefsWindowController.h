@@ -27,5 +27,6 @@
 - (void)pathCell:(NSPathCell *)pathCell willDisplayOpenPanel:(NSOpenPanel *)openPanel;
 - (IBAction) showHideAllFiles: sender;
 - (IBAction) resetGitPath: sender;
+- (IBAction)resetAllDialogWarnings:(id)sender;
 
 @end
