@@ -78,7 +78,7 @@
 		[script callWebScriptMethod:@"showFile" withArguments:[NSArray arrayWithObject:fileTxt]];
 	}
 	
-#ifdef DEBUG 
+#if 0
 	NSString *dom=[[[[view mainFrame] DOMDocument] documentElement] outerHTML];
 	NSString *tmpFile=@"~/tmp/test.html";
 	[dom writeToFile:[tmpFile stringByExpandingTildeInPath] atomically:true encoding:NSUTF8StringEncoding error:nil];
@@ -149,6 +149,13 @@
 - (void) didLoad
 {
 	[self showFile];
+}
+
+- (void)closeView
+{
+	[historyController.treeController removeObserver:self forKeyPath:@"selection"];
+
+	[super closeView];
 }
 
 - (NSString *) parseHTML:(NSString *)txt

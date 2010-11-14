@@ -23,6 +23,7 @@
 #import "PBHistorySearchController.h"
 #define QLPreviewPanel NSClassFromString(@"QLPreviewPanel")
 #import "PBQLTextView.h"
+#import "GLFileView.h"
 
 
 #define kHistorySelectedDetailIndexKey @"PBHistorySelectedDetailIndex"
@@ -493,6 +494,7 @@
 	}
 
 	[webHistoryController closeView];
+	[fileView closeView];
 
 	[super closeView];
 }
