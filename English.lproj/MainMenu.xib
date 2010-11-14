@@ -12,6 +12,7 @@
 		</object>
 		<object class="NSMutableArray" key="IBDocument.EditedObjectIDs">
 			<bool key="EncodedWithXMLCoder">YES</bool>
+			<integer value="106"/>
 		</object>
 		<object class="NSArray" key="IBDocument.PluginDependencies">
 			<bool key="EncodedWithXMLCoder">YES</bool>
@@ -929,6 +930,14 @@
 									<reference key="NSOnImage" ref="889736156"/>
 									<reference key="NSMixedImage" ref="37108609"/>
 								</object>
+								<object class="NSMenuItem" id="480405559">
+									<reference key="NSMenu" ref="612917469"/>
+									<string key="NSTitle">Discuss GitX</string>
+									<string key="NSKeyEquiv"/>
+									<int key="NSMnemonicLoc">2147483647</int>
+									<reference key="NSOnImage" ref="889736156"/>
+									<reference key="NSMixedImage" ref="37108609"/>
+								</object>
 							</object>
 						</object>
 					</object>
@@ -1383,6 +1392,14 @@
 					</object>
 					<int key="connectionID">971</int>
 				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">discussGitX:</string>
+						<reference key="source" ref="859235683"/>
+						<reference key="destination" ref="480405559"/>
+					</object>
+					<int key="connectionID">973</int>
+				</object>
 			</object>
 			<object class="IBMutableOrderedSet" key="objectRecords">
 				<object class="NSArray" key="orderedObjects">
@@ -1642,6 +1659,7 @@
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<reference ref="303385276"/>
 							<reference ref="669832662"/>
+							<reference ref="480405559"/>
 						</object>
 						<reference key="parent" ref="180968013"/>
 					</object>
@@ -2100,6 +2118,11 @@
 						<reference key="object" ref="669832662"/>
 						<reference key="parent" ref="612917469"/>
 					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">972</int>
+						<reference key="object" ref="480405559"/>
+						<reference key="parent" ref="612917469"/>
+					</object>
 				</object>
 			</object>
 			<object class="NSMutableDictionary" key="flattenedProperties">
@@ -2303,6 +2326,7 @@
 					<string>964.IBPluginDependency</string>
 					<string>964.ImportedFromIB2</string>
 					<string>969.IBPluginDependency</string>
+					<string>972.IBPluginDependency</string>
 				</object>
 				<object class="NSMutableArray" key="dict.values">
 					<bool key="EncodedWithXMLCoder">YES</bool>
@@ -2310,7 +2334,7 @@
 					<integer value="1"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<integer value="1"/>
-					<string>{{778, 987}, {190, 43}}</string>
+					<string>{{778, 967}, {190, 63}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<integer value="1"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -2503,6 +2527,7 @@
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<integer value="1"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
+					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 				</object>
 			</object>
 			<object class="NSMutableDictionary" key="unlocalizedProperties">
@@ -2521,7 +2546,7 @@
 				</object>
 			</object>
 			<nil key="sourceID"/>
-			<int key="maxID">971</int>
+			<int key="maxID">973</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<object class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -2533,6 +2558,7 @@
 						<bool key="EncodedWithXMLCoder">YES</bool>
 						<object class="NSArray" key="dict.sortedKeys">
 							<bool key="EncodedWithXMLCoder">YES</bool>
+							<string>discussGitX:</string>
 							<string>installCliTool:</string>
 							<string>openPreferencesWindow:</string>
 							<string>reportAProblem:</string>
@@ -2543,6 +2569,7 @@
 						</object>
 						<object class="NSMutableArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
+							<string>id</string>
 							<string>id</string>
 							<string>id</string>
 							<string>id</string>
@@ -2556,6 +2583,7 @@
 						<bool key="EncodedWithXMLCoder">YES</bool>
 						<object class="NSArray" key="dict.sortedKeys">
 							<bool key="EncodedWithXMLCoder">YES</bool>
+							<string>discussGitX:</string>
 							<string>installCliTool:</string>
 							<string>openPreferencesWindow:</string>
 							<string>reportAProblem:</string>
@@ -2566,6 +2594,10 @@
 						</object>
 						<object class="NSMutableArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
+							<object class="IBActionInfo">
+								<string key="name">discussGitX:</string>
+								<string key="candidateClassName">id</string>
+							</object>
 							<object class="IBActionInfo">
 								<string key="name">installCliTool:</string>
 								<string key="candidateClassName">id</string>
