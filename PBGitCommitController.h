@@ -10,6 +10,7 @@
 #import "PBViewController.h"
 
 @class PBGitIndexController, PBIconAndTextCell, PBWebChangesController, PBGitIndex;
+@class PBNiceSplitView;
 
 @interface PBGitCommitController : PBViewController {
 	// This might have to transfer over to the PBGitRepository
@@ -23,6 +24,7 @@
 
 	IBOutlet PBGitIndexController *indexController;
 	IBOutlet PBWebChangesController *webController;
+	IBOutlet PBNiceSplitView *commitSplitView;
 }
 
 @property(readonly) PBGitIndex *index;
