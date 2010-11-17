@@ -21,7 +21,7 @@
 		</object>
 		<object class="NSMutableArray" key="IBDocument.EditedObjectIDs">
 			<bool key="EncodedWithXMLCoder">YES</bool>
-			<integer value="486"/>
+			<integer value="475"/>
 		</object>
 		<object class="NSArray" key="IBDocument.PluginDependencies">
 			<bool key="EncodedWithXMLCoder">YES</bool>
@@ -1074,7 +1074,7 @@
 																</object>
 																<object class="NSCustomView" id="891500945">
 																	<reference key="NSNextResponder" ref="626906425"/>
-																	<int key="NSvFlags">268</int>
+																	<int key="NSvFlags">274</int>
 																	<object class="NSMutableArray" key="NSSubviews">
 																		<bool key="EncodedWithXMLCoder">YES</bool>
 																		<object class="NSCustomView" id="375746871">
@@ -1084,7 +1084,7 @@
 																				<bool key="EncodedWithXMLCoder">YES</bool>
 																				<object class="NSCustomView" id="951933530">
 																					<reference key="NSNextResponder" ref="375746871"/>
-																					<int key="NSvFlags">268</int>
+																					<int key="NSvFlags">265</int>
 																					<object class="NSMutableArray" key="NSSubviews">
 																						<bool key="EncodedWithXMLCoder">YES</bool>
 																						<object class="NSButton" id="16222431">
@@ -1983,6 +1983,22 @@
 						<reference key="destination" ref="932676109"/>
 					</object>
 					<int key="connectionID">488</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
+						<string key="label">fileListSplitView</string>
+						<reference key="source" ref="932676109"/>
+						<reference key="destination" ref="626906425"/>
+					</object>
+					<int key="connectionID">489</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
+						<string key="label">delegate</string>
+						<reference key="source" ref="626906425"/>
+						<reference key="destination" ref="932676109"/>
+					</object>
+					<int key="connectionID">490</int>
 				</object>
 			</object>
 			<object class="IBMutableOrderedSet" key="objectRecords">
@@ -2894,7 +2910,7 @@
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.WebKitIBPlugin</string>
-					<string>{{1559, 241}, {955, 434}}</string>
+					<string>{{1084, 241}, {955, 434}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -2932,7 +2948,7 @@
 				</object>
 			</object>
 			<nil key="sourceID"/>
-			<int key="maxID">488</int>
+			<int key="maxID">490</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<object class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -2945,12 +2961,14 @@
 						<object class="NSArray" key="dict.sortedKeys">
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<string>accessoryView</string>
+							<string>fileListSplitView</string>
 							<string>historyController</string>
 							<string>typeBar</string>
 						</object>
 						<object class="NSMutableArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<string>NSView</string>
+							<string>NSSplitView</string>
 							<string>PBGitHistoryController</string>
 							<string>MGScopeBar</string>
 						</object>
@@ -2960,6 +2978,7 @@
 						<object class="NSArray" key="dict.sortedKeys">
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<string>accessoryView</string>
+							<string>fileListSplitView</string>
 							<string>historyController</string>
 							<string>typeBar</string>
 						</object>
@@ -2968,6 +2987,10 @@
 							<object class="IBToOneOutletInfo">
 								<string key="name">accessoryView</string>
 								<string key="candidateClassName">NSView</string>
+							</object>
+							<object class="IBToOneOutletInfo">
+								<string key="name">fileListSplitView</string>
+								<string key="candidateClassName">NSSplitView</string>
 							</object>
 							<object class="IBToOneOutletInfo">
 								<string key="name">historyController</string>

@@ -21,6 +21,7 @@
 	NSMutableArray *groups;
 	NSString *logFormat;
 	IBOutlet NSView *accessoryView;
+	IBOutlet NSSplitView *fileListSplitView;
 }
 
 - (void)showFile;
