@@ -55,5 +55,5 @@ SyntaxHighlighter.brushes.ObjC = function()
 };
 
 SyntaxHighlighter.brushes.ObjC.prototype	= new SyntaxHighlighter.Highlighter();
-SyntaxHighlighter.brushes.ObjC.aliases		= ['objc'];
+SyntaxHighlighter.brushes.ObjC.aliases		= ['objc', 'm', 'h'];
 
