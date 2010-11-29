@@ -24,7 +24,7 @@ NSString * const kGitXProgressErrorInfo          = @"PBGitXProgressErrorInfo";
 
 @interface PBRemoteProgressSheet ()
 
-- (void) beginRemoteProgressSheetForArguments:(NSArray *)args title:(NSString *)theTitle description:(NSString *)theDescription inDir:(NSString *)dir windowController:(PBGitWindowController *)controller;
+- (void) beginRemoteProgressSheetForArguments:(NSArray *)args title:(NSString *)theTitle description:(NSString *)theDescription inDir:(NSString *)dir windowController:(NSWindowController *)windowController;
 - (void) showSuccessMessage;
 - (void) showErrorMessage;
 
@@ -52,7 +52,7 @@ NSString * const kGitXProgressErrorInfo          = @"PBGitXProgressErrorInfo";
 #pragma mark -
 #pragma mark PBRemoteProgressSheet
 
-+ (void) beginRemoteProgressSheetForArguments:(NSArray *)args title:(NSString *)theTitle description:(NSString *)theDescription inDir:(NSString *)dir windowController:(PBGitWindowController *)windowController
++ (void) beginRemoteProgressSheetForArguments:(NSArray *)args title:(NSString *)theTitle description:(NSString *)theDescription inDir:(NSString *)dir windowController:(NSWindowController *)windowController
 {
 	PBRemoteProgressSheet *sheet = [[self alloc] initWithWindowNibName:@"PBRemoteProgressSheet"];
 	[sheet beginRemoteProgressSheetForArguments:args title:theTitle description:theDescription inDir:dir windowController:windowController];
@@ -65,7 +65,7 @@ NSString * const kGitXProgressErrorInfo          = @"PBGitXProgressErrorInfo";
 }
 
 
-- (void) beginRemoteProgressSheetForArguments:(NSArray *)args title:(NSString *)theTitle description:(NSString *)theDescription inDir:(NSString *)dir windowController:(PBGitWindowController *)windowController
+- (void) beginRemoteProgressSheetForArguments:(NSArray *)args title:(NSString *)theTitle description:(NSString *)theDescription inDir:(NSString *)dir windowController:(NSWindowController *)windowController
 {
 	controller  = windowController;
 	arguments   = args;
@@ -120,7 +120,7 @@ NSString * const kGitXProgressErrorInfo          = @"PBGitXProgressErrorInfo";
 		[self showSuccessMessage];
 
 	if ([controller respondsToSelector:@selector(repository)])
-		[controller.repository reloadRefs];
+		[[(PBGitWindowController *)controller repository] reloadRefs];
 }
 
 
@@ -130,7 +130,7 @@ NSString * const kGitXProgressErrorInfo          = @"PBGitXProgressErrorInfo";
 - (void) checkTask:(NSTimer *)timer
 {
 	if (![gitTask isRunning]) {
-		NSLog(@"[%@ %s] gitTask terminated without notification", [self class], _cmd);
+		NSLog(@"[%@ %@] gitTask terminated without notification", [self class], NSStringFromSelector(_cmd));
 		[self taskCompleted:nil];
 	}
 }
@@ -146,7 +146,8 @@ NSString * const kGitXProgressErrorInfo          = @"PBGitXProgressErrorInfo";
 	[info appendString:[self commandDescription]];
 	[info appendString:[self standardOutputDescription]];
 
-	[(PBGitWindowController *)controller showMessageSheet:[self successTitle] infoText:info];
+	if ([controller respondsToSelector:@selector(showMessageSheet:infoText:)])
+		[(PBGitWindowController *)controller showMessageSheet:[self successTitle] infoText:info];
 }
 
 
@@ -164,7 +165,8 @@ NSString * const kGitXProgressErrorInfo          = @"PBGitXProgressErrorInfo";
 								   nil];
 	NSError *error = [NSError errorWithDomain:PBGitRepositoryErrorDomain code:0 userInfo:errorUserInfo];
 
-	[(PBGitWindowController *)controller showErrorSheet:error];
+	if ([controller respondsToSelector:@selector(showErrorSheet:)])
+		[(PBGitWindowController *)controller showErrorSheet:error];
 }
 
 

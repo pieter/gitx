@@ -51,6 +51,16 @@
 	[self.errorMessageField setStringValue:@""];
 	self.shouldCheckoutBranch = [PBGitDefaults shouldCheckoutBranch];
 
+	// when creating a local branch tracking a remote branch preset the branch name to the name of the remote branch
+	if ([self.startRefish refishType] == kGitXRemoteBranchType) {
+		NSMutableArray *components = [[[self.startRefish shortName] componentsSeparatedByString:@"/"] mutableCopy];
+		if ([components count] > 1) {
+			[components removeObjectAtIndex:0];
+			NSString *branchName = [components componentsJoinedByString:@"/"];
+			[self.branchNameField setStringValue:branchName];
+		}
+	}
+
 	[NSApp beginSheet:[self window] modalForWindow:[self.repository.windowController window] modalDelegate:self didEndSelector:nil contextInfo:NULL];
 }
 

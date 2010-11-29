@@ -102,7 +102,7 @@ using namespace std;
 	std::map<string, NSStringEncoding> encodingMap;
 	NSThread *currentThread = [NSThread currentThread];
 
-	NSString *formatString = @"--pretty=format:%H\01%e\01%an\01%cn\01%s\01%P\01%at";
+	NSString *formatString = @"--pretty=format:%H\01%e\01%aN\01%cN\01%s\01%P\01%at";
 	BOOL showSign = [rev hasLeftRight];
 
 	if (showSign)
@@ -165,7 +165,7 @@ using namespace std;
 		if (parentString.size() != 0)
 		{
 			if (((parentString.size() + 1) % 41) != 0) {
-				NSLog(@"invalid parents: %i", parentString.size());
+				NSLog(@"invalid parents: %zu", parentString.size());
 				continue;
 			}
 			int nParents = (parentString.size() + 1) / 41;
@@ -225,7 +225,7 @@ using namespace std;
 		[self performSelectorOnMainThread:@selector(finishedParsing) withObject:nil waitUntilDone:NO];
 	}
 	else {
-		NSLog(@"[%@ %s] thread has been canceled", [self class], _cmd);
+		NSLog(@"[%@ %s] thread has been canceled", [self class], NSStringFromSelector(_cmd));
 	}
 
 	[task terminate];

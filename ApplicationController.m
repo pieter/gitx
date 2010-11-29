@@ -10,7 +10,6 @@
 #import "PBGitRevisionCell.h"
 #import "PBGitWindowController.h"
 #import "PBRepositoryDocumentController.h"
-#import "PBCLIProxy.h"
 #import "PBServicesController.h"
 #import "PBGitXProtocol.h"
 #import "PBPrefsWindowController.h"
@@ -20,7 +19,6 @@
 #import "Sparkle/SUUpdater.h"
 
 @implementation ApplicationController
-@synthesize cliProxy;
 
 - (ApplicationController*)init
 {
@@ -28,13 +26,12 @@
 	[NSApp activateIgnoringOtherApps:YES];
 #endif
 
-	if(self = [super init]) {
-        if(![[NSBundle bundleWithPath:@"/System/Library/Frameworks/Quartz.framework/Frameworks/QuickLookUI.framework"] load])
-			if(![[NSBundle bundleWithPath:@"/System/Library/PrivateFrameworks/QuickLookUI.framework"] load])
-				NSLog(@"Could not load QuickLook");
+	if(!(self = [super init]))
+		return nil;
 
-		self.cliProxy = [PBCLIProxy new];
-	}
+	if(![[NSBundle bundleWithPath:@"/System/Library/Frameworks/Quartz.framework/Frameworks/QuickLookUI.framework"] load])
+		if(![[NSBundle bundleWithPath:@"/System/Library/PrivateFrameworks/QuickLookUI.framework"] load])
+			NSLog(@"Could not load QuickLook");
 
 	/* Value Transformers */
 	NSValueTransformer *transformer = [[PBNSURLPathUserDefaultsTransfomer alloc] init];
@@ -67,6 +64,7 @@
 - (void)applicationDidFinishLaunching:(NSNotification*)notification
 {
 	[[SUUpdater sharedUpdater] setSendsSystemProfile:YES];
+    [[SUUpdater sharedUpdater] setDelegate:self];
 
 	// Make sure Git's SSH password requests get forwarded to our little UI tool:
 	setenv( "SSH_ASKPASS", [[[NSBundle mainBundle] pathForResource: @"gitx_askpasswd" ofType: @""] UTF8String], 1 );
@@ -198,11 +196,6 @@
     the content, either in the NSApplicationSupportDirectory location or (if the
     former cannot be found), the system's temporary directory.
  */
-
-- (IBAction) showHelp:(id) sender
-{
-	[[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:@"http://gitx.frim.nl/user_manual.html"]];
-}
 
 - (NSString *)applicationSupportFolder {
 
@@ -383,4 +376,44 @@
     [managedObjectModel release], managedObjectModel = nil;
     [super dealloc];
 }
+
+
+#pragma mark Sparkle delegate methods
+
+- (NSArray *)feedParametersForUpdater:(SUUpdater *)updater sendingSystemProfile:(BOOL)sendingProfile
+{
+	NSArray *keys = [NSArray arrayWithObjects:@"key", @"displayKey", @"value", @"displayValue", nil];
+	NSMutableArray *feedParameters = [NSMutableArray array];
+
+    // only add parameters if the profile is being sent this time
+    if (sendingProfile) {
+        NSString *CFBundleGitVersion = [[[NSBundle mainBundle] infoDictionary] valueForKey:@"CFBundleGitVersion"];
+		if (CFBundleGitVersion)
+			[feedParameters addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:@"CFBundleGitVersion", @"Full Version", CFBundleGitVersion, CFBundleGitVersion, nil] 
+																  forKeys:keys]];
+
+        NSString *gitVersion = [PBGitBinary version];
+		if (gitVersion)
+			[feedParameters addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:@"gitVersion", @"git Version", gitVersion, gitVersion, nil] 
+																  forKeys:keys]];
+	}
+
+    return feedParameters;
+}
+
+
+#pragma mark Help menu
+
+- (IBAction)showHelp:(id)sender
+{
+	[[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:@"http://gitx.frim.nl/user_manual.html"]];
+}
+
+- (IBAction)reportAProblem:(id)sender
+{
+    [[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:@"http://gitx.lighthouseapp.com/tickets"]];
+}
+
+
+
 @end

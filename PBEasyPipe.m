@@ -120,7 +120,7 @@
 		data = [handle readDataToEndOfFile];
 	}
 	@catch (NSException * e) {
-		NSLog(@"Got a bad file descriptor in %s!", _cmd);
+		NSLog(@"Got a bad file descriptor in %@!", NSStringFromSelector(_cmd));
 		if ([NSThread currentThread] != [NSThread mainThread])
 			[task waitUntilExit];
 

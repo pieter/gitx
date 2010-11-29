@@ -9,7 +9,6 @@
 #import <Cocoa/Cocoa.h>
 #import "PBGitRepository.h"
 
-@class PBCLIProxy;
 @class PBCloneRepositoryPanel;
 
 @interface ApplicationController : NSObject
@@ -20,10 +19,8 @@
 	NSManagedObjectModel *managedObjectModel;
 	NSManagedObjectContext *managedObjectContext;
 
-	PBCLIProxy *cliProxy;
 	PBCloneRepositoryPanel *cloneRepositoryPanel;
 }
-@property (retain) PBCLIProxy* cliProxy;
 
 - (NSPersistentStoreCoordinator *)persistentStoreCoordinator;
 - (NSManagedObjectModel *)managedObjectModel;
@@ -35,7 +32,8 @@
 - (IBAction)installCliTool:(id)sender;
 
 - (IBAction)saveAction:sender;
-- (IBAction) showHelp:(id) sender;
+- (IBAction)showHelp:(id)sender;
+- (IBAction)reportAProblem:(id)sender;
 
-- (IBAction) showCloneRepository:(id)sender;
+- (IBAction)showCloneRepository:(id)sender;
 @end

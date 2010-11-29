@@ -18,7 +18,10 @@
 @class PBRefController;
 @class QLPreviewPanel;
 @class PBCommitList;
+@class GLFileView;
 @class PBGitSHA;
+
+@class PBHistorySearchController;
 
 @interface PBGitHistoryController : PBViewController {
 	IBOutlet PBRefController *refController;
@@ -31,6 +34,8 @@
 	IBOutlet PBCollapsibleSplitView *historySplitView;
 	IBOutlet PBWebHistoryController *webHistoryController;
     QLPreviewPanel* previewPanel;
+	IBOutlet PBHistorySearchController *searchController;
+	IBOutlet GLFileView *fileView;
 
 	IBOutlet PBGitGradientBarView *upperToolbarView;
 	IBOutlet NSButton *mergeButton;
@@ -51,11 +56,14 @@
 	PBGitCommit *selectedCommit;
 }
 
+@property (readonly) NSTreeController* treeController;
 @property (assign) int selectedCommitDetailsIndex;
 @property (retain) PBGitCommit *webCommit;
 @property (retain) PBGitTree* gitTree;
 @property (readonly) NSArrayController *commitController;
 @property (readonly) PBRefController *refController;
+@property (readonly) PBHistorySearchController *searchController;
+@property (readonly) PBCommitList *commitList;
 
 - (IBAction) setDetailedView:(id)sender;
 - (IBAction) setTreeView:(id)sender;
@@ -82,7 +90,12 @@
 - (IBAction) cherryPick:(id)sender;
 - (IBAction) rebase:(id)sender;
 
+// Find/Search methods
+- (IBAction)selectNext:(id)sender;
+- (IBAction)selectPrevious:(id)sender;
+
 - (void) copyCommitInfo;
+- (void) copyCommitSHA;
 
 - (BOOL) hasNonlinearPath;
 

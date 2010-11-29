@@ -23,6 +23,7 @@
 }
 
 + (id) panel;
++ (void)beginCloneRepository:(NSString *)repository toURL:(NSURL *)targetURL isBare:(BOOL)bare;
 
 - (void)showMessageSheet:(NSString *)messageText infoText:(NSString *)infoText;
 - (void)showErrorSheet:(NSError *)error;
@@ -37,5 +38,7 @@
 @property (assign) IBOutlet NSTextField *destinationPath;
 @property (assign) IBOutlet NSTextField *errorMessage;
 @property (assign) IBOutlet NSView      *repositoryAccessoryView;
+
+@property (assign) BOOL isBare;
 
 @end

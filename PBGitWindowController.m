@@ -11,6 +11,7 @@
 #import "PBGitCommitController.h"
 #import "Terminal.h"
 #import "PBCloneRepsitoryToSheet.h"
+#import "PBCommitHookFailedSheet.h"
 #import "PBGitXMessageSheet.h"
 #import "PBGitSidebarController.h"
 
@@ -42,7 +43,11 @@
 
 - (BOOL)validateMenuItem:(NSMenuItem *)menuItem
 {
-	if ([menuItem action] == @selector(showCommitView:) || [menuItem action] == @selector(showHistoryView:)) {
+	if ([menuItem action] == @selector(showCommitView:)) {
+		[menuItem setState:(contentController == sidebarController.commitViewController) ? YES : NO];
+		return ![repository isBareRepository];
+	} else if ([menuItem action] == @selector(showHistoryView:)) {
+		[menuItem setState:(contentController != sidebarController.commitViewController) ? YES : NO];
 		return ![repository isBareRepository];
 	}
 	return YES;
@@ -107,6 +112,11 @@
 - (void) showHistoryView:(id)sender
 {
 	[sidebarController selectCurrentBranch];
+}
+
+- (void)showCommitHookFailedSheet:(NSString *)messageText infoText:(NSString *)infoText commitController:(PBGitCommitController *)controller
+{
+	[PBCommitHookFailedSheet beginMessageSheetForWindow:[self window] withMessageText:messageText infoText:infoText commitController:controller];
 }
 
 - (void)showMessageSheet:(NSString *)messageText infoText:(NSString *)infoText
@@ -189,6 +199,11 @@
 	}
 
 	[super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
+}
+
+- (void)setHistorySearch:(NSString *)searchString mode:(NSInteger)mode
+{
+	[sidebarController setHistorySearch:searchString mode:mode];
 }
 
 

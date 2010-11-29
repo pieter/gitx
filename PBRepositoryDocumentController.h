@@ -16,4 +16,5 @@
 }
 
 - (id) documentForLocation:(NSURL*) url;
+- (void)initNewRepositoryAtURL:(NSURL *)url;
 @end

@@ -9,6 +9,7 @@
 #import "PBGitRevisionCell.h"
 #import "PBGitRef.h"
 #import "RoundedRectangle.h"
+#import "GitXTextFieldCell.h"
 
 @implementation PBGitRevisionCell
 
@@ -16,7 +17,7 @@
 - (id) initWithCoder: (id) coder
 {
 	self = [super initWithCoder:coder];
-	textCell = [[NSTextFieldCell alloc] initWithCoder:coder];
+	textCell = [[GitXTextFieldCell alloc] initWithCoder:coder];
 	return self;
 }
 
@@ -208,7 +209,7 @@
 {
 	[[NSColor blackColor] setStroke];
 
-	NSRect lastRect;
+	NSRect lastRect = NSMakeRect(0, 0, 0, 0);
 	int index = 0;
 	for (NSValue *rectValue in [self rectsForRefsinRect:*refRect])
 	{

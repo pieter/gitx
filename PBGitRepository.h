@@ -104,6 +104,7 @@ static NSString * PBStringFromBranchFilterType(PBGitXBranchFilterType type) {
 - (BOOL)isRefOnHeadBranch:(PBGitRef *)testRef;
 - (BOOL)checkRefFormat:(NSString *)refName;
 - (BOOL)refExists:(PBGitRef *)ref;
+- (PBGitRef *)refForName:(NSString *)name;
 
 - (NSArray *) remotes;
 - (BOOL) hasRemotes;
@@ -123,6 +124,10 @@ static NSString * PBStringFromBranchFilterType(PBGitXBranchFilterType type) {
 - (id) initWithURL: (NSURL*) path;
 - (void) setup;
 - (void) forceUpdateRevisions;
+
+// for the scripting bridge
+- (void)findInModeScriptCommand:(NSScriptCommand *)command;
+
 
 @property (assign) BOOL hasChanged;
 @property (readonly) PBGitWindowController *windowController;

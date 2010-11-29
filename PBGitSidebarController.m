@@ -15,6 +15,7 @@
 #import "NSOutlineViewExt.h"
 #import "PBAddRemoteSheet.h"
 #import "PBGitDefaults.h"
+#import "PBHistorySearchController.h"
 
 @interface PBGitSidebarController ()
 
@@ -29,6 +30,8 @@
 @implementation PBGitSidebarController
 @synthesize items;
 @synthesize sourceListControlsView;
+@synthesize historyViewController;
+@synthesize commitViewController;
 
 - (id)initWithRepository:(PBGitRepository *)theRepository superController:(PBGitWindowController *)controller
 {
@@ -125,7 +128,7 @@
 	
 	PBSourceViewItem *item = nil;
 	for (PBSourceViewItem *it in items)
-		if (item = [it findRev:rev])
+		if ( (item = [it findRev:rev]) != nil )
 			break;
 	
 	if (!item) {
@@ -133,7 +136,7 @@
 		// Try to find the just added item again.
 		// TODO: refactor with above.
 		for (PBSourceViewItem *it in items)
-			if (item = [it findRev:rev])
+			if ( (item = [it findRev:rev]) != nil )
 				break;
 	}
 	
@@ -147,7 +150,7 @@
 {
 	PBSourceViewItem *foundItem = nil;
 	for (PBSourceViewItem *item in items)
-		if (foundItem = [item findRev:rev])
+		if ( (foundItem = [item findRev:rev]) != nil )
 			return foundItem;
 	return nil;
 }
@@ -182,6 +185,11 @@
 	PBSourceViewItem *parent = item.parent;
 	[parent removeChild:item];
 	[sourceView reloadData];
+}
+
+- (void)setHistorySearch:(NSString *)searchString mode:(NSInteger)mode
+{
+	[historyViewController.searchController setHistorySearch:searchString mode:mode];
 }
 
 #pragma mark NSOutlineView delegate methods

@@ -20,24 +20,33 @@
 #import "PBDiffWindowController.h"
 #import "PBGitDefaults.h"
 #import "PBGitRevList.h"
+#import "PBHistorySearchController.h"
 #define QLPreviewPanel NSClassFromString(@"QLPreviewPanel")
+#import "PBQLTextView.h"
+#import "GLFileView.h"
 
 
 #define kHistorySelectedDetailIndexKey @"PBHistorySelectedDetailIndex"
 #define kHistoryDetailViewIndex 0
 #define kHistoryTreeViewIndex 1
 
+#define kHistorySplitViewPositionDefault @"History SplitView Position"
+
 @interface PBGitHistoryController ()
 
 - (void) updateBranchFilterMatrix;
 - (void) restoreFileBrowserSelection;
 - (void) saveFileBrowserSelection;
+- (void)saveSplitViewPosition;
 
 @end
 
 
 @implementation PBGitHistoryController
 @synthesize selectedCommitDetailsIndex, webCommit, gitTree, commitController, refController;
+@synthesize searchController;
+@synthesize commitList;
+@synthesize treeController;
 
 - (void)awakeFromNib
 {
@@ -50,6 +59,7 @@
 	[repository.revisionList addObserver:self forKeyPath:@"isUpdating" options:0 context:@"revisionListUpdating"];
 	[repository addObserver:self forKeyPath:@"currentBranch" options:0 context:@"branchChange"];
 	[repository addObserver:self forKeyPath:@"refs" options:0 context:@"updateRefs"];
+	[repository addObserver:self forKeyPath:@"currentBranchFilter" options:0 context:@"branchFilterChange"];
 
 	forceSelectionUpdate = YES;
 	NSSize cellSpacing = [commitList intercellSpacing];
@@ -67,16 +77,17 @@
 
 	// Set a sort descriptor for the subject column in the history list, as
 	// It can't be sorted by default (because it's bound to a PBGitCommit)
-	[[commitList tableColumnWithIdentifier:@"subject"] setSortDescriptorPrototype:[[NSSortDescriptor alloc] initWithKey:@"subject" ascending:YES]];
+	[[commitList tableColumnWithIdentifier:@"SubjectColumn"] setSortDescriptorPrototype:[[NSSortDescriptor alloc] initWithKey:@"subject" ascending:YES]];
 	// Add a menu that allows a user to select which columns to view
 	[[commitList headerView] setMenu:[self tableColumnMenu]];
+
 	[historySplitView setTopMin:58.0 andBottomMin:100.0];
-	[historySplitView uncollapse];
+	[historySplitView setHidden:YES];
+	[self performSelector:@selector(restoreSplitViewPositiion) withObject:nil afterDelay:0];
 
 	[upperToolbarView setTopShade:237/255.0 bottomShade:216/255.0];
 	[scopeBarView setTopColor:[NSColor colorWithCalibratedHue:0.579 saturation:0.068 brightness:0.898 alpha:1.000] 
 				  bottomColor:[NSColor colorWithCalibratedHue:0.579 saturation:0.119 brightness:0.765 alpha:1.000]];
-	//[scopeBarView setTopShade:207/255.0 bottomShade:180/255.0];
 	[self updateBranchFilterMatrix];
 
 	[super awakeFromNib];
@@ -240,6 +251,12 @@
 		return;
 	}
 
+	if ([(NSString *)context isEqualToString:@"branchFilterChange"]) {
+		[PBGitDefaults setBranchFilter:repository.currentBranchFilter];
+		[self updateBranchFilterMatrix];
+		return;
+	}
+
 	if([(NSString *)context isEqualToString:@"updateCommitCount"] || [(NSString *)context isEqualToString:@"revisionListUpdating"]) {
 		[self updateStatus];
 
@@ -261,6 +278,16 @@
 	PBGitTree* tree = [selectedFiles objectAtIndex:0];
 	NSString* name = [tree tmpFileNameForContents];
 	[[NSWorkspace sharedWorkspace] openTempFile:name];
+}
+
+- (BOOL)validateMenuItem:(NSMenuItem *)menuItem
+{
+    if ([menuItem action] == @selector(setDetailedView:)) {
+		[menuItem setState:(self.selectedCommitDetailsIndex == kHistoryDetailViewIndex) ? NSOnState : NSOffState];
+    } else if ([menuItem action] == @selector(setTreeView:)) {
+		[menuItem setState:(self.selectedCommitDetailsIndex == kHistoryTreeViewIndex) ? NSOnState : NSOffState];
+    }
+    return YES;
 }
 
 - (IBAction) setDetailedView:(id)sender
@@ -291,6 +318,30 @@
 		[super keyDown: event];
 }
 
+// NSSearchField (actually textfields in general) prevent the normal Find operations from working. Setup custom actions for the
+// next and previous menuitems (in MainMenu.nib) so they will work when the search field is active. When searching for text in
+// a file make sure to call the Find panel's action method instead.
+- (IBAction)selectNext:(id)sender
+{
+	NSResponder *firstResponder = [[[self view] window] firstResponder];
+	if ([firstResponder isKindOfClass:[PBQLTextView class]]) {
+		[(PBQLTextView *)firstResponder performFindPanelAction:sender];
+		return;
+	}
+
+	[searchController selectNextResult];
+}
+- (IBAction)selectPrevious:(id)sender
+{
+	NSResponder *firstResponder = [[[self view] window] firstResponder];
+	if ([firstResponder isKindOfClass:[PBQLTextView class]]) {
+		[(PBQLTextView *)firstResponder performFindPanelAction:sender];
+		return;
+	}
+
+	[searchController selectPreviousResult];
+}
+
 - (void) copyCommitInfo
 {
 	PBGitCommit *commit = [[commitController selectedObjects] objectAtIndex:0];
@@ -302,6 +353,19 @@
 	[a declareTypes:[NSArray arrayWithObject:NSStringPboardType] owner:self];
 	[a setString:info forType: NSStringPboardType];
 	
+}
+
+- (void) copyCommitSHA
+{
+	PBGitCommit *commit = [[commitController selectedObjects] objectAtIndex:0];
+	if (!commit)
+		return;
+	NSString *info = [[commit realSha] substringWithRange:NSMakeRange(0, 7)];
+
+	NSPasteboard *a =[NSPasteboard generalPasteboard];
+	[a declareTypes:[NSArray arrayWithObject:NSStringPboardType] owner:self];
+	[a setString:info forType: NSStringPboardType];
+
 }
 
 - (IBAction) toggleQLPreviewPanel:(id)sender
@@ -359,13 +423,6 @@
 	[self updateKeys];
 }
 
-- (void)viewLoaded
-{
-	float position = [[NSUserDefaults standardUserDefaults] floatForKey:@"PBGitSplitViewPosition"];
-	if (position)
-		[historySplitView setPosition:position ofDividerAtIndex:0];
-}
-
 - (NSResponder *)firstResponder;
 {
 	return commitList;
@@ -416,8 +473,7 @@
 	NSArray *selectedCommits = [self selectedObjectsForSHA:commitSHA];
 	[commitController setSelectedObjects:selectedCommits];
 
-	if (repository.currentBranchFilter != kGitXSelectedBranchFilter)
-		[self scrollSelectionToTopOfViewFrom:oldIndex];
+	[self scrollSelectionToTopOfViewFrom:oldIndex];
 
 	forceSelectionUpdate = NO;
 }
@@ -429,9 +485,7 @@
 
 - (void)closeView
 {
-	float position = [[[historySplitView subviews] objectAtIndex:0] frame].size.height;
-	[[NSUserDefaults standardUserDefaults] setFloat:position forKey:@"PBGitSplitViewPosition"];
-	[[NSUserDefaults standardUserDefaults] synchronize];
+	[self saveSplitViewPosition];
 
 	if (commitController) {
 		[commitController removeObserver:self forKeyPath:@"selection"];
@@ -441,9 +495,11 @@
 		[repository.revisionList removeObserver:self forKeyPath:@"isUpdating"];
 		[repository removeObserver:self forKeyPath:@"currentBranch"];
 		[repository removeObserver:self forKeyPath:@"refs"];
+		[repository removeObserver:self forKeyPath:@"currentBranchFilter"];
 	}
 
 	[webHistoryController closeView];
+	[fileView closeView];
 
 	[super closeView];
 }
@@ -468,14 +524,8 @@
 
 - (void)showCommitsFromTree:(id)sender
 {
-	// TODO: Enable this from webview as well!
-
-	NSMutableArray *filePaths = [NSMutableArray arrayWithObjects:@"HEAD", @"--", NULL];
-	[filePaths addObjectsFromArray:[sender representedObject]];
-
-	PBGitRevSpecifier *revSpec = [[PBGitRevSpecifier alloc] initWithParameters:filePaths];
-
-	repository.currentBranch = [repository addBranch:revSpec];
+	NSString *searchString = [(NSArray *)[sender representedObject] componentsJoinedByString:@" "];
+	[searchController setHistorySearch:searchString mode:kGitXPathSearchMode];
 }
 
 - (void)showInFinderAction:(id)sender
@@ -565,12 +615,17 @@
 	return menuItems;
 }
 
-- (BOOL)splitView:(NSSplitView *)sender canCollapseSubview:(NSView *)subview {
+
+#pragma mark NSSplitView delegate methods
+
+- (BOOL)splitView:(NSSplitView *)splitView canCollapseSubview:(NSView *)subview
+{
 	return TRUE;
 }
 
-- (BOOL)splitView:(NSSplitView *)splitView shouldCollapseSubview:(NSView *)subview forDoubleClickOnDividerAtIndex:(NSInteger)dividerIndex {
-	int index = [[splitView subviews] indexOfObject:subview];
+- (BOOL)splitView:(NSSplitView *)splitView shouldCollapseSubview:(NSView *)subview forDoubleClickOnDividerAtIndex:(NSInteger)dividerIndex
+{
+	NSUInteger index = [[splitView subviews] indexOfObject:subview];
 	// this method (and canCollapse) are called by the splitView to decide how to collapse on double-click
 	// we compare our two subviews, so that always the smaller one is collapsed.
 	if([[[splitView subviews] objectAtIndex:index] frame].size.height < [[[splitView subviews] objectAtIndex:((index+1)%2)] frame].size.height) {
@@ -579,14 +634,59 @@
 	return FALSE;
 }
 
-- (CGFloat)splitView:(NSSplitView *)sender constrainMinCoordinate:(CGFloat)proposedMin ofSubviewAt:(NSInteger)offset {
-	return proposedMin + historySplitView.topViewMin;
+- (CGFloat)splitView:(NSSplitView *)splitView constrainMinCoordinate:(CGFloat)proposedMin ofSubviewAt:(NSInteger)dividerIndex
+{
+	return historySplitView.topViewMin;
 }
 
-- (CGFloat)splitView:(NSSplitView *)sender constrainMaxCoordinate:(CGFloat)proposedMax ofSubviewAt:(NSInteger)offset {
-	if(offset == 1)
-		return proposedMax - historySplitView.bottomViewMin;
-	return [sender frame].size.height;
+- (CGFloat)splitView:(NSSplitView *)splitView constrainMaxCoordinate:(CGFloat)proposedMax ofSubviewAt:(NSInteger)dividerIndex
+{
+	return [splitView frame].size.height - [splitView dividerThickness] - historySplitView.bottomViewMin;
+}
+
+// while the user resizes the window keep the upper (history) view constant and just resize the lower view
+// unless the lower view gets too small
+- (void)splitView:(NSSplitView *)splitView resizeSubviewsWithOldSize:(NSSize)oldSize
+{
+	NSRect newFrame = [splitView frame];
+
+	float dividerThickness = [splitView dividerThickness];
+
+	NSView *upperView = [[splitView subviews] objectAtIndex:0];
+	NSRect upperFrame = [upperView frame];
+	upperFrame.size.width = newFrame.size.width;
+
+	if ((newFrame.size.height - upperFrame.size.height - dividerThickness) < historySplitView.bottomViewMin) {
+		upperFrame.size.height = newFrame.size.height - historySplitView.bottomViewMin - dividerThickness;
+	}
+
+	NSView *lowerView = [[splitView subviews] objectAtIndex:1];
+	NSRect lowerFrame = [lowerView frame];
+	lowerFrame.origin.y = upperFrame.size.height + dividerThickness;
+	lowerFrame.size.height = newFrame.size.height - lowerFrame.origin.y;
+	lowerFrame.size.width = newFrame.size.width;
+
+	[upperView setFrame:upperFrame];
+	[lowerView setFrame:lowerFrame];
+}
+
+// NSSplitView does not save and restore the position of the SplitView correctly so do it manually
+- (void)saveSplitViewPosition
+{
+	float position = [[[historySplitView subviews] objectAtIndex:0] frame].size.height;
+	[[NSUserDefaults standardUserDefaults] setFloat:position forKey:kHistorySplitViewPositionDefault];
+	[[NSUserDefaults standardUserDefaults] synchronize];
+}
+
+// make sure this happens after awakeFromNib
+- (void)restoreSplitViewPositiion
+{
+	float position = [[NSUserDefaults standardUserDefaults] floatForKey:kHistorySplitViewPositionDefault];
+	if (position < 1.0)
+		position = 175;
+
+	[historySplitView setPosition:position ofDividerAtIndex:0];
+	[historySplitView setHidden:NO];
 }
 
 
@@ -629,10 +729,8 @@
 
 - (IBAction) rebase:(id)sender
 {
-	if (selectedCommit) {
-		PBGitRef *headRef = [[repository headRef] ref];
-		[repository rebaseBranch:headRef onRefish:selectedCommit];
-	}
+	if (selectedCommit)
+		[repository rebaseBranch:nil onRefish:selectedCommit];
 }
 
 #pragma mark -
@@ -676,7 +774,7 @@
 	PBGitTree *treeItem = (PBGitTree *)[[treeController selectedObjects] objectAtIndex:index];
 	NSURL *previewURL = [NSURL fileURLWithPath:[treeItem tmpFileNameForContents]];
 
-    return (<QLPreviewItem>)previewURL;
+    return (id <QLPreviewItem>)previewURL;
 }
 
 #pragma mark <QLPreviewPanelDelegate>

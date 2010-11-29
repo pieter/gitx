@@ -103,7 +103,7 @@
 
 	PBSourceViewItem *item = nil;
 	for (PBSourceViewItem *child in children)
-		if (item = [child findRev:rev])
+		if ( (item = [child findRev:rev]) != nil )
 			return item;
 
 	return nil;

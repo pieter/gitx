@@ -107,7 +107,7 @@ var gistie = function() {
 	var t = new XMLHttpRequest();
 	t.onreadystatechange = function() {
 		if (t.readyState == 4 && t.status >= 200 && t.status < 300) {
-			if (m = t.responseText.match(/gist: ([a-f0-9]+)/))
+			if (m = t.responseText.match(/<a href="\/gists\/([a-f0-9]+)\/edit">/))
 				notify("Code uploaded to gistie <a target='_new' href='http://gist.github.com/" + m[1] + "'>#" + m[1] + "</a>", 1);
 			else {
 				notify("Pasting to Gistie failed :(.", -1);
@@ -116,7 +116,7 @@ var gistie = function() {
 		}
 	}
 
-	t.open('POST', "http://gist.github.com/gists");
+	t.open('POST', "https://gist.github.com/gists");
 	t.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
 	t.setRequestHeader('Accept', 'text/javascript, text/html, application/xml, text/xml, */*');
 	t.setRequestHeader('Content-type', 'application/x-www-form-urlencoded;charset=UTF-8');
@@ -129,9 +129,6 @@ var gistie = function() {
 }
 
 var setGravatar = function(email, image) {
-	if (Controller && !Controller.isReachable_("www.gravatar.com"))
-		return;
-
 	if(Controller && !Controller.isFeatureEnabled_("gravatar")) {
 		image.src = "";
 		return;
@@ -164,7 +161,7 @@ var showRefs = function() {
 		refs.innerHTML = "";
 		for (var i = 0; i < commit.refs.length; i++) {
 			var ref = commit.refs[i];
-			refs.innerHTML += '<span class="refs ' + ref.type() + (commit.currentRef == ref.ref ? ' currentBranch' : '') + '">' + ref.shortName() + '</span>';
+			refs.innerHTML += '<span class="refs ' + ref.type() + (commit.currentRef == ref.ref ? ' currentBranch' : '') + '">' + ref.shortName() + '</span> ';
 		}
 	} else
 		refs.parentNode.style.display = "none";
@@ -221,6 +218,8 @@ var loadCommit = function(commitObject, currentRef) {
 }
 
 var showDiff = function() {
+
+	$("files").innerHTML = "";
 
 	// Callback for the diff highlighter. Used to generate a filelist
 	var newfile = function(name1, name2, id, mode_change, old_mode, new_mode) {

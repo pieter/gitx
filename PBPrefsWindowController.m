@@ -8,6 +8,7 @@
 
 #import "PBPrefsWindowController.h"
 #import "PBGitRepository.h"
+#import "PBGitDefaults.h"
 
 #define kPreferenceViewIdentifier @"PBGitXPreferenceViewIdentifier"
 
@@ -62,9 +63,15 @@
 	[openPanel setAllowsMultipleSelection:NO];
 	[openPanel setTreatsFilePackagesAsDirectories:YES];
 	[openPanel setAccessoryView:gitPathOpenAccessory];
+	[openPanel setResolvesAliases:NO];
 	//[[openPanel _navView] setShowsHiddenFiles:YES];
 
 	gitPathOpenPanel = openPanel;
+}
+
+- (IBAction)resetAllDialogWarnings:(id)sender
+{
+	[PBGitDefaults resetAllDialogWarnings];
 }
 
 #pragma mark -

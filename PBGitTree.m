@@ -65,10 +65,12 @@
 
 - (BOOL)hasBinaryHeader:(NSString*)contents
 {
-	if(!contents)
+	if (!contents)
 		return NO;
 
-	return [contents rangeOfString:@"\0" options:0 range:NSMakeRange(0, ([contents length] >= 8000) ? 7999 : [contents length])].location != NSNotFound;
+	return [contents rangeOfString:@"\0"
+						   options:0
+							 range:NSMakeRange(0, ([contents length] >= 8000) ? 7999 : [contents length])].location != NSNotFound;
 }
 
 - (BOOL)hasBinaryAttributes
@@ -111,6 +113,46 @@
 	}
 	
 	return [repository outputForArguments:[NSArray arrayWithObjects:@"show", [self refSpec], nil]];
+}
+
+- (NSString *) blame
+{
+	if (!leaf)
+		return [NSString stringWithFormat:@"This is a tree with path %@", [self fullPath]];
+	
+	if ([self hasBinaryAttributes])
+		return [NSString stringWithFormat:@"%@ appears to be a binary file of %d bytes", [self fullPath], [self fileSize]];
+	
+	if ([self fileSize] > 52428800) // ~50MB
+		return [NSString stringWithFormat:@"%@ is too big to be displayed (%d bytes)", [self fullPath], [self fileSize]];
+	
+	NSString *contents=[repository outputInWorkdirForArguments:[NSArray arrayWithObjects:@"blame", @"-p",  sha, @"--", [self fullPath], nil]];
+	
+	if ([self hasBinaryHeader:contents])
+		return [NSString stringWithFormat:@"%@ appears to be a binary file of %d bytes", [self fullPath], [self fileSize]];
+	
+	
+	return contents;
+}
+
+- (NSString *) log:(NSString *)format
+{
+	if (!leaf)
+		return [NSString stringWithFormat:@"This is a tree with path %@", [self fullPath]];
+	
+	if ([self hasBinaryAttributes])
+		return [NSString stringWithFormat:@"%@ appears to be a binary file of %d bytes", [self fullPath], [self fileSize]];
+	
+	if ([self fileSize] > 52428800) // ~50MB
+		return [NSString stringWithFormat:@"%@ is too big to be displayed (%d bytes)", [self fullPath], [self fileSize]];
+
+	NSString *contents=[repository outputInWorkdirForArguments:[NSArray arrayWithObjects:@"log", [NSString stringWithFormat:@"--pretty=format:%@",format], @"--", [self fullPath], nil]];
+	
+	if ([self hasBinaryHeader:contents])
+		return [NSString stringWithFormat:@"%@ appears to be a binary file of %d bytes", [self fullPath], [self fileSize]];
+	
+	
+	return contents;
 }
 
 - (long long)fileSize
