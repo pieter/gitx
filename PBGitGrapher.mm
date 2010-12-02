@@ -18,8 +18,6 @@ using namespace std;
 
 @implementation PBGitGrapher
 
-#define MAX_LANES 32
-
 - (id) initWithRepository: (PBGitRepository*) repo
 {
 	pl = new std::list<PBGitLane *>;
@@ -91,7 +89,7 @@ void add_line(struct PBGitGraphLine *lines, int *nLines, int upper, int from, in
 	//Add your own parents
 
 	// If we already did the first parent, don't do so again
-	if (!didFirst && currentLanes->size() < MAX_LANES && nParents) {
+	if (!didFirst && nParents) {
 		git_oid parentOID = [[parents objectAtIndex:0] oid];
 		PBGitLane *newLane = new PBGitLane(&parentOID);
 		currentLanes->push_back(newLane);
@@ -122,9 +120,6 @@ void add_line(struct PBGitGraphLine *lines, int *nLines, int upper, int from, in
 		if (was_displayed)
 			continue;
 		
-		if (currentLanes->size() >= MAX_LANES)
-			break;
-
 		// Really add this parent
 		addedParent = YES;
 		PBGitLane *newLane = new PBGitLane(&parentOID);
