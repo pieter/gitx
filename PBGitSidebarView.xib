@@ -2,18 +2,17 @@
 <archive type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="7.10">
 	<data>
 		<int key="IBDocument.SystemTarget">1050</int>
-		<string key="IBDocument.SystemVersion">10F569</string>
-		<string key="IBDocument.InterfaceBuilderVersion">788</string>
-		<string key="IBDocument.AppKitVersion">1038.29</string>
+		<string key="IBDocument.SystemVersion">10H574</string>
+		<string key="IBDocument.InterfaceBuilderVersion">804</string>
+		<string key="IBDocument.AppKitVersion">1038.35</string>
 		<string key="IBDocument.HIToolboxVersion">461.00</string>
 		<object class="NSMutableDictionary" key="IBDocument.PluginVersions">
 			<string key="NS.key.0">com.apple.InterfaceBuilder.CocoaPlugin</string>
-			<string key="NS.object.0">788</string>
+			<string key="NS.object.0">804</string>
 		</object>
 		<object class="NSMutableArray" key="IBDocument.EditedObjectIDs">
 			<bool key="EncodedWithXMLCoder">YES</bool>
-			<integer value="36"/>
-			<integer value="38"/>
+			<integer value="48"/>
 		</object>
 		<object class="NSArray" key="IBDocument.PluginDependencies">
 			<bool key="EncodedWithXMLCoder">YES</bool>
@@ -59,6 +58,7 @@
 										<int key="NSvFlags">4352</int>
 										<string key="NSFrameSize">{153, 354}</string>
 										<reference key="NSSuperview" ref="973377808"/>
+										<reference key="NSWindow"/>
 										<bool key="NSEnabled">YES</bool>
 										<object class="_NSCornerView" key="NSCornerView">
 											<nil key="NSNextResponder"/>
@@ -161,6 +161,7 @@
 								</object>
 								<string key="NSFrameSize">{153, 354}</string>
 								<reference key="NSSuperview" ref="631607481"/>
+								<reference key="NSWindow"/>
 								<reference key="NSNextKeyView" ref="971239525"/>
 								<reference key="NSDocView" ref="971239525"/>
 								<reference key="NSBGColor" ref="272980874"/>
@@ -171,6 +172,7 @@
 								<int key="NSvFlags">-2147483392</int>
 								<string key="NSFrame">{{137, 1}, {15, 338}}</string>
 								<reference key="NSSuperview" ref="631607481"/>
+								<reference key="NSWindow"/>
 								<reference key="NSTarget" ref="631607481"/>
 								<string key="NSAction">_doScroller:</string>
 								<double key="NSPercent">0.99698790000000004</double>
@@ -180,6 +182,7 @@
 								<int key="NSvFlags">-2147483392</int>
 								<string key="NSFrame">{{-100, -100}, {196, 15}}</string>
 								<reference key="NSSuperview" ref="631607481"/>
+								<reference key="NSWindow"/>
 								<int key="NSsFlags">1</int>
 								<reference key="NSTarget" ref="631607481"/>
 								<string key="NSAction">_doScroller:</string>
@@ -188,6 +191,7 @@
 						</object>
 						<string key="NSFrameSize">{153, 354}</string>
 						<reference key="NSSuperview" ref="694945622"/>
+						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="973377808"/>
 						<int key="NSsFlags">528</int>
 						<reference key="NSVScroller" ref="636071848"/>
@@ -198,6 +202,7 @@
 				</object>
 				<string key="NSFrameSize">{153, 354}</string>
 				<reference key="NSSuperview"/>
+				<reference key="NSWindow"/>
 				<string key="NSClassName">NSView</string>
 			</object>
 			<object class="NSCustomView" id="790712736">
@@ -208,7 +213,7 @@
 					<object class="NSSegmentedControl" id="200965348">
 						<reference key="NSNextResponder" ref="790712736"/>
 						<int key="NSvFlags">268</int>
-						<string key="NSFrame">{{52, 1}, {227, 25}}</string>
+						<string key="NSFrame">{{96, 1}, {147, 25}}</string>
 						<reference key="NSSuperview" ref="790712736"/>
 						<bool key="NSEnabled">YES</bool>
 						<object class="NSSegmentedCell" key="NSCell" id="431684212">
@@ -227,7 +232,6 @@
 										<string key="NSClassName">NSImage</string>
 										<string key="NSResourceName">AddRemote</string>
 									</object>
-									<string key="NSSegmentItemLabel"/>
 									<string key="NSSegmentItemTooltip">Add remote</string>
 									<int key="NSSegmentItemImageScaling">0</int>
 								</object>
@@ -236,16 +240,8 @@
 										<string key="NSClassName">NSImage</string>
 										<string key="NSResourceName">FetchTemplate</string>
 									</object>
-									<string key="NSSegmentItemLabel"/>
 									<string key="NSSegmentItemTooltip">Fetch from default remote</string>
 									<int key="NSSegmentItemTag">1</int>
-									<int key="NSSegmentItemImageScaling">0</int>
-								</object>
-								<object class="NSSegmentItem">
-									<double key="NSSegmentItemWidth">10</double>
-									<string key="NSSegmentItemLabel"/>
-									<int key="NSSegmentItemTag">-1</int>
-									<bool key="NSSegmentItemDisabled">YES</bool>
 									<int key="NSSegmentItemImageScaling">0</int>
 								</object>
 								<object class="NSSegmentItem">
@@ -253,7 +249,7 @@
 										<string key="NSClassName">NSImage</string>
 										<string key="NSResourceName">PullTemplate</string>
 									</object>
-									<string key="NSSegmentItemLabel">Pull</string>
+									<string key="NSSegmentItemLabel"/>
 									<string key="NSSegmentItemTooltip">Pull from default remote</string>
 									<int key="NSSegmentItemTag">2</int>
 									<int key="NSSegmentItemImageScaling">0</int>
@@ -263,13 +259,13 @@
 										<string key="NSClassName">NSImage</string>
 										<string key="NSResourceName">PushTemplate</string>
 									</object>
-									<string key="NSSegmentItemLabel">Push</string>
-									<string key="NSSegmentItemTooltip">Push to default remote</string>
+									<string key="NSSegmentItemLabel"/>
+									<string key="NSSegmentItemTooltip">Push to remote</string>
 									<int key="NSSegmentItemTag">3</int>
 									<int key="NSSegmentItemImageScaling">0</int>
 								</object>
 							</object>
-							<int key="NSSelectedSegment">3</int>
+							<int key="NSSelectedSegment">2</int>
 							<int key="NSTrackingMode">2</int>
 							<int key="NSSegmentStyle">2</int>
 						</object>
@@ -624,9 +620,9 @@
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>PBSourceViewCell</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<string>{{720, 649}, {153, 354}}</string>
+					<string>{{720, 402}, {153, 354}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<string>{{626, 510}, {367, 28}}</string>
+					<string>{{515, 541}, {367, 28}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -638,7 +634,7 @@
 					<integer value="2"/>
 					<integer value="1"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<integer value="2"/>
+					<integer value="0"/>
 					<string>{{105, 545}, {153, 354}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>

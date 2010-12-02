@@ -358,8 +358,8 @@
 enum  {
 	kAddRemoteSegment = 0,
 	kFetchSegment = 1,
-	kPullSegment = 3,
-	kPushSegment = 4
+	kPullSegment = 2,
+	kPushSegment = 3
 };
 
 - (void) updateRemoteControls
