@@ -77,7 +77,7 @@
 	if ([files count]>0) {
 		PBGitTree *file=[files objectAtIndex:0];
 
-		NSString *fileTxt=@"";
+		NSString *fileTxt = @"";
 		if(startFile==@"fileview")
 			fileTxt=[self parseHTML:[file textContents]];
 		else if(startFile==@"blame")
@@ -86,7 +86,8 @@
 			fileTxt=[file log:logFormat];
 
 		id script = [view windowScriptObject];
-		[script callWebScriptMethod:@"showFile" withArguments:[NSArray arrayWithObject:fileTxt]];
+		NSString *filePath = [file fullPath];
+    [script callWebScriptMethod:@"showFile" withArguments:[NSArray arrayWithObjects:fileTxt, filePath, nil]];
 	}
 	
 #if 0
