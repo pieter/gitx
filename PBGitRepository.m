@@ -20,6 +20,7 @@
 #import "PBGitDefaults.h"
 #import "GitXScriptingConstants.h"
 #import "PBHistorySearchController.h"
+#import "PBGitRepositoryWatcher.h"
 
 NSString* PBGitRepositoryErrorDomain = @"GitXErrorDomain";
 
@@ -125,6 +126,7 @@ NSString* PBGitRepositoryErrorDomain = @"GitXErrorDomain";
 
 	[self setFileURL:gitDirURL];
 	[self setup];
+  watcher = [[PBGitRepositoryWatcher alloc] initWithRepository:self];
 	return YES;
 }
 
@@ -166,6 +168,8 @@ NSString* PBGitRepositoryErrorDomain = @"GitXErrorDomain";
 
 	[self showWindows];
 
+  // Setup the FSEvents watcher to fire notifications when things change
+  watcher = [[PBGitRepositoryWatcher alloc] initWithRepository:self];
 	return self;
 }
 

@@ -39,6 +39,7 @@ static NSString * PBStringFromBranchFilterType(PBGitXBranchFilterType type) {
 @class PBGitWindowController;
 @class PBGitCommit;
 @class PBGitSHA;
+@class PBGitRepositoryWatcher;
 
 @interface PBGitRepository : NSDocument {
 	PBGitHistoryList* revisionList;
@@ -50,6 +51,7 @@ static NSString * PBStringFromBranchFilterType(PBGitXBranchFilterType type) {
 	NSInteger currentBranchFilter;
 	NSMutableDictionary *refs;
 
+  PBGitRepositoryWatcher *watcher;
 	PBGitRevSpecifier *_headRef; // Caching
 	PBGitSHA* _headSha;
 }

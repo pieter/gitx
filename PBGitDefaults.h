@@ -34,6 +34,7 @@
 + (void) setBranchFilter:(NSInteger)state;
 + (NSInteger)historySearchMode;
 + (void)setHistorySearchMode:(NSInteger)mode;
++ (BOOL)useRepositoryWatcher;
 
 
 // Suppressed Dialog Warnings

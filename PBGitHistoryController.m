@@ -21,6 +21,7 @@
 #import "PBGitDefaults.h"
 #import "PBGitRevList.h"
 #import "PBHistorySearchController.h"
+#import "PBGitRepositoryWatcher.h"
 #define QLPreviewPanel NSClassFromString(@"QLPreviewPanel")
 #import "PBQLTextView.h"
 #import "GLFileView.h"
@@ -90,7 +91,18 @@
 				  bottomColor:[NSColor colorWithCalibratedHue:0.579 saturation:0.119 brightness:0.765 alpha:1.000]];
 	[self updateBranchFilterMatrix];
 
+  // listen for updates
+  [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_repositoryUpdatedNotification:) name:PBGitRepositoryEventNotification object:repository];
+
 	[super awakeFromNib];
+}
+
+- (void) _repositoryUpdatedNotification:(NSNotification *)notification {
+    PBGitRepositoryWatcherEventType eventType = [(NSNumber *)[[notification userInfo] objectForKey:kPBGitRepositoryEventTypeUserInfoKey] unsignedIntValue];
+    if(eventType & PBGitRepositoryWatcherEventTypeGitDirectory){
+      // refresh if the .git repository is modified
+      [self refresh:NULL];
+    }
 }
 
 - (void)updateKeys
@@ -488,6 +500,7 @@
 	[self saveSplitViewPosition];
 
 	if (commitController) {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 		[commitController removeObserver:self forKeyPath:@"selection"];
 		[commitController removeObserver:self forKeyPath:@"arrangedObjects.@count"];
 		[treeController removeObserver:self forKeyPath:@"selection"];
