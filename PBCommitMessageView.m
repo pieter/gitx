@@ -22,13 +22,12 @@
         float lineWidth = characterWidth * [PBGitDefaults commitMessageViewVerticalLineLength];
 
         [[NSColor lightGrayColor] set];
-        // This depends upon the fact that NSTextView always redraws complete lines.
         float padding = [[self textContainer] lineFragmentPadding];
         NSRect line;
-        line.origin.x = padding + aRect.origin.x + lineWidth;
-        line.origin.y = aRect.origin.y;
+        line.origin.x = padding + lineWidth;
+        line.origin.y = 0;
         line.size.width = 1;
-        line.size.height = aRect.size.height;
+        line.size.height = [self bounds].size.height;
         NSRectFill(line);
     }
 }

@@ -24,8 +24,6 @@
 + (void) setShouldCheckoutBranch:(BOOL)shouldCheckout;
 + (NSString *) recentCloneDestination;
 + (void) setRecentCloneDestination:(NSString *)path;
-+ (BOOL) suppressAcceptDropRef;
-+ (void) setSuppressAcceptDropRef:(BOOL)suppress;
 + (BOOL) showStageView;
 + (void) setShowStageView:(BOOL)suppress;
 + (BOOL) openPreviousDocumentsOnLaunch;
@@ -36,5 +34,11 @@
 + (void) setBranchFilter:(NSInteger)state;
 + (NSInteger)historySearchMode;
 + (void)setHistorySearchMode:(NSInteger)mode;
+
+
+// Suppressed Dialog Warnings
++ (void)suppressDialogWarningForDialog:(NSString *)dialog;
++ (BOOL)isDialogWarningSuppressedForDialog:(NSString *)dialog;
++ (void)resetAllDialogWarnings;
 
 @end

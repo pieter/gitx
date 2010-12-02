@@ -124,9 +124,9 @@ void handleSTDINDiff()
 	}
 }
 
-void handleDiffWithArguments(NSURL *repositoryURL, NSMutableArray *arguments)
+void handleDiffWithArguments(NSURL *repositoryURL, NSArray *arguments)
 {
-	[arguments insertObject:@"diff" atIndex:0];
+	arguments = [[NSArray arrayWithObjects:@"diff", @"--no-ext-diff", nil] arrayByAddingObjectsFromArray:arguments];
 
 	int retValue = 1;
 	NSString *diffOutput = [PBEasyPipe outputForCommand:[PBGitBinary path] withArgs:arguments inDir:[repositoryURL path] retValue:&retValue];

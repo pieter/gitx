@@ -18,12 +18,12 @@ body {
 }
 
 #rightcontent {
-	float: right;
-	margin: 5px;
+	position: absolute;
+	right: 5px;
+	top: 5px;
 }
 
 #buttons {
-	float: left;
 }
 
 a.servicebutton {
@@ -43,8 +43,16 @@ a.servicebutton {
     -webkit-border-radius: 2px;
 }
 
-.gravatar {
-	padding: 0.1em;
+a.servicebutton:hover {
+	padding: 1px;
+	border: 2px solid #3465a4;
+}
+
+#gravatar {
+	margin-left: 5px;
+	padding: 2px;
+	width: 60px;
+	height: 60px;
 
 	border: solid gray 1px;
 	-webkit-border-radius: 2px;

@@ -34,7 +34,7 @@
 		diffCommit = [startCommit.repository headCommit];
 
 	NSString *commitSelector = [NSString stringWithFormat:@"%@..%@", [startCommit realSha], [diffCommit realSha]];
-	NSMutableArray *arguments = [NSMutableArray arrayWithObjects:@"diff", commitSelector, nil];
+	NSMutableArray *arguments = [NSMutableArray arrayWithObjects:@"diff", @"--no-ext-diff", commitSelector, nil];
 
 	if (![PBGitDefaults showWhitespaceDifferences])
 		[arguments insertObject:@"-w" atIndex:1];

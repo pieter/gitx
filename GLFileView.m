@@ -16,6 +16,14 @@
 #define ITEM_IDENTIFIER			@"Identifier"		// string
 #define ITEM_NAME				@"Name"				// string
 
+
+@interface GLFileView ()
+
+- (void)saveSplitViewPosition;
+
+@end
+
+
 @implementation GLFileView
 
 - (void) awakeFromNib
@@ -52,6 +60,9 @@
 							items, GROUP_ITEMS, 
 							nil]];
 	[typeBar reloadData];
+
+	[fileListSplitView setHidden:YES];
+	[self performSelector:@selector(restoreSplitViewPositiion) withObject:nil afterDelay:0];
 }
 
 - (void) observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
@@ -78,7 +89,7 @@
 		[script callWebScriptMethod:@"showFile" withArguments:[NSArray arrayWithObject:fileTxt]];
 	}
 	
-#ifdef DEBUG 
+#if 0
 	NSString *dom=[[[[view mainFrame] DOMDocument] documentElement] outerHTML];
 	NSString *tmpFile=@"~/tmp/test.html";
 	[dom writeToFile:[tmpFile stringByExpandingTildeInPath] atomically:true encoding:NSUTF8StringEncoding error:nil];
@@ -149,6 +160,14 @@
 - (void) didLoad
 {
 	[self showFile];
+}
+
+- (void)closeView
+{
+	[historyController.treeController removeObserver:self forKeyPath:@"selection"];
+	[self saveSplitViewPosition];
+
+	[super closeView];
 }
 
 - (NSString *) parseHTML:(NSString *)txt
@@ -233,6 +252,71 @@
 	
 	return (NSString *)res;
 }
+
+
+
+#pragma mark NSSplitView delegate methods
+
+#define kFileListSplitViewLeftMin 120
+#define kFileListSplitViewRightMin 180
+#define kHFileListSplitViewPositionDefault @"File List SplitView Position"
+
+- (CGFloat)splitView:(NSSplitView *)splitView constrainMinCoordinate:(CGFloat)proposedMin ofSubviewAt:(NSInteger)dividerIndex
+{
+	return kFileListSplitViewLeftMin;
+}
+
+- (CGFloat)splitView:(NSSplitView *)splitView constrainMaxCoordinate:(CGFloat)proposedMax ofSubviewAt:(NSInteger)dividerIndex
+{
+	return [splitView frame].size.width - [splitView dividerThickness] - kFileListSplitViewRightMin;
+}
+
+// while the user resizes the window keep the left (file list) view constant and just resize the right view
+// unless the right view gets too small
+- (void)splitView:(NSSplitView *)splitView resizeSubviewsWithOldSize:(NSSize)oldSize
+{
+	NSRect newFrame = [splitView frame];
+
+	float dividerThickness = [splitView dividerThickness];
+
+	NSView *leftView = [[splitView subviews] objectAtIndex:0];
+	NSRect leftFrame = [leftView frame];
+	leftFrame.size.height = newFrame.size.height;
+
+	if ((newFrame.size.width - leftFrame.size.width - dividerThickness) < kFileListSplitViewRightMin) {
+		leftFrame.size.width = newFrame.size.width - kFileListSplitViewRightMin - dividerThickness;
+	}
+
+	NSView *rightView = [[splitView subviews] objectAtIndex:1];
+	NSRect rightFrame = [rightView frame];
+	rightFrame.origin.x = leftFrame.size.width + dividerThickness;
+	rightFrame.size.width = newFrame.size.width - rightFrame.origin.x;
+	rightFrame.size.height = newFrame.size.height;
+
+	[leftView setFrame:leftFrame];
+	[rightView setFrame:rightFrame];
+}
+
+// NSSplitView does not save and restore the position of the SplitView correctly so do it manually
+- (void)saveSplitViewPosition
+{
+	float position = [[[fileListSplitView subviews] objectAtIndex:0] frame].size.width;
+	[[NSUserDefaults standardUserDefaults] setFloat:position forKey:kHFileListSplitViewPositionDefault];
+	[[NSUserDefaults standardUserDefaults] synchronize];
+}
+
+// make sure this happens after awakeFromNib
+- (void)restoreSplitViewPositiion
+{
+	float position = [[NSUserDefaults standardUserDefaults] floatForKey:kHFileListSplitViewPositionDefault];
+	if (position < 1.0)
+		position = 200;
+
+	[fileListSplitView setPosition:position ofDividerAtIndex:0];
+	[fileListSplitView setHidden:NO];
+}
+
+
 
 @synthesize groups;
 @synthesize logFormat;

@@ -12,12 +12,11 @@
 #import "PBGitGraphLine.h"
 #import <list>
 #import "git/oid.h"
+#include <algorithm>
 
 using namespace std;
 
 @implementation PBGitGrapher
-
-#define MAX_LANES 32
 
 - (id) initWithRepository: (PBGitRepository*) repo
 {
@@ -56,6 +55,9 @@ void add_line(struct PBGitGraphLine *lines, int *nLines, int upper, int from, in
 		std::list<PBGitLane *>::iterator it = previousLanes->begin();
 		for (; it != previousLanes->end(); ++it) {
 			i++;
+			if (!*it) // This is an empty lane, created when the lane previously had a parentless(root) commit
+				continue;
+
 			// This is our commit! We should do a "merge": move the line from
 			// our upperMapping to their lowerMapping
 			if ((*it)->isCommit(commit_oid)) {
@@ -87,7 +89,7 @@ void add_line(struct PBGitGraphLine *lines, int *nLines, int upper, int from, in
 	//Add your own parents
 
 	// If we already did the first parent, don't do so again
-	if (!didFirst && currentLanes->size() < MAX_LANES && nParents) {
+	if (!didFirst && nParents) {
 		git_oid parentOID = [[parents objectAtIndex:0] oid];
 		PBGitLane *newLane = new PBGitLane(&parentOID);
 		currentLanes->push_back(newLane);
@@ -118,9 +120,6 @@ void add_line(struct PBGitGraphLine *lines, int *nLines, int upper, int from, in
 		if (was_displayed)
 			continue;
 		
-		if (currentLanes->size() >= MAX_LANES)
-			break;
-
 		// Really add this parent
 		addedParent = YES;
 		PBGitLane *newLane = new PBGitLane(&parentOID);
@@ -149,10 +148,20 @@ void add_line(struct PBGitGraphLine *lines, int *nLines, int upper, int from, in
 		previous.numColumns = currentLanes->size();
 
 	// Update the current lane to point to the new parent
-	if (currentLane && nParents > 0)
-		currentLane->setSha([[parents objectAtIndex:0] oid]);
-	else
-		currentLanes->remove(currentLane);
+	if (currentLane) {
+		if (nParents > 0)
+			currentLane->setSha([[parents objectAtIndex:0] oid]);
+		else {
+			// The current lane's commit does not have any parents
+			// AKA, this is a first commit
+			// Empty the entry and free the lane.
+			// We empty the lane in the case of a subtree merge, where
+			// multiple first commits can be present. By emptying the lane,
+			// we allow room to create a nice merge line.
+			std::replace(currentLanes->begin(), currentLanes->end(), currentLane, (PBGitLane *)0);
+			delete currentLane;
+		}
+	}
 
 	delete previousLanes;
 
