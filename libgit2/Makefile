@@ -1,24 +1,72 @@
 all::
 
-DOXYGEN = doxygen
+# Define NO_VISIBILITY if your compiler does not support symbol
+# visibility in general (and the -fvisibility switch in particular).
+#
+# Define OPENSSL_SHA1 if you want use the SHA1 routines from the
+# OpenSSL crypto library, rather than the built-in C versions.
+#
+# Define PPC_SHA1 if you want to use the bundled SHA1 routines that
+# are optimized for PowerPC, rather than the built-in C versions.
+#
 
-CFLAGS = -g -O2 -Wall
+DOXYGEN = doxygen
+INSTALL = install
+RANLIB  = ranlib
+AR      = ar cr
+
+prefix=/usr/local
+libdir=$(prefix)/lib
+
+uname_S := $(shell sh -c 'uname -s 2>/dev/null || echo no')
+
+ifdef MSVC
+	# avoid the MinGW and Cygwin configuration sections
+	uname_S := Windows
+endif
+
+CFLAGS = -g -O2 -Wall -Wextra
 OS     = unix
 
-BASIC_CFLAGS := -Isrc
-BASIC_CFLAGS += -fvisibility=hidden
-ALL_CFLAGS = $(CFLAGS) $(BASIC_CFLAGS)
+EXTRA_SRC =
+EXTRA_OBJ =
+EXTRA_CFLAGS =
+
+AR_OUT=
+CC_OUT=-o # add a space
+
+# Platform specific tweaks
+
+ifeq ($(uname_S),Windows)
+	OS=win32
+	RANLIB = echo
+	CC = cl -nologo
+	AR = lib -nologo
+	CFLAGS = -TC -W4 -RTC1 -Zi -DWIN32 -D_DEBUG -D_LIB
+	AR_OUT=-out:
+	CC_OUT=-Fo
+	NO_VISIBILITY=YesPlease
+endif
+
+ifneq (,$(findstring CYGWIN,$(uname_S)))
+	NO_VISIBILITY=YesPlease
+endif
+
+ifneq (,$(findstring MINGW,$(uname_S)))
+	OS=win32
+	NO_VISIBILITY=YesPlease
+	SPARSE_FLAGS=-Wno-one-bit-signed-bitfield
+endif
+
+-include config.mak
 
 SRC_C = $(wildcard src/*.c)
-OBJS = $(patsubst %.c,%.o,$(SRC_C))
+OS_SRC = $(wildcard src/$(OS)/*.c)
+SRC_C += $(OS_SRC) $(EXTRA_SRC)
+OBJS = $(patsubst %.c,%.o,$(SRC_C)) $(EXTRA_OBJ)
 HDRS = $(wildcard src/*.h)
 PUBLIC_HEADERS = $(wildcard src/git/*.h)
 HDRS += $(PUBLIC_HEADERS)
-CONFIG_H = src/git/config.h
-
-OBJS += src/os/$(OS).o
-HDRS += src/git/config.h
-HDRS += src/git/os/$(OS).h
 
 GIT_LIB = libgit2.a
 
@@ -26,75 +74,142 @@ TEST_OBJ = $(patsubst %.c,%.o,\
            $(wildcard tests/t[0-9][0-9][0-9][0-9]-*.c))
 TEST_EXE = $(patsubst %.o,%.exe,$(TEST_OBJ))
 TEST_RUN = $(patsubst %.exe,%.run,$(TEST_EXE))
+TEST_VAL = $(patsubst %.exe,%.val,$(TEST_EXE))
+
+ifdef PPC_SHA1
+	EXTRA_SRC += src/ppc/sha1.c
+	EXTRA_OBJ += src/ppc/sha1ppc.o
+	EXTRA_CFLAGS += -DPPC_SHA1
+else
+ifdef OPENSSL_SHA1
+	EXTRA_CFLAGS += -DOPENSSL_SHA1
+else
+	EXTRA_SRC += src/block-sha1/sha1.c
+endif
+endif
+
+BASIC_CFLAGS := -Isrc
+ifndef NO_VISIBILITY
+BASIC_CFLAGS += -fvisibility=hidden
+endif
+
+ALL_CFLAGS = $(CFLAGS) $(BASIC_CFLAGS) $(EXTRA_CFLAGS)
 
 all:: $(GIT_LIB)
 
 clean:
 	rm -f $(GIT_LIB)
-	rm -f src/*.o
-	rm -f tests/*.o tests/*.exe tests/*.toc
-	rm -f src/git/config.h
+	rm -f libgit2.pc
+	rm -f *.pdb
+	rm -f src/*.[oi] src/*/*.[oi]
 	rm -rf apidocs
+	rm -f *~ src/*~ src/*/*~
+	@$(MAKE) -C tests -s --no-print-directory clean
+	@$(MAKE) -s --no-print-directory cov-clean
+
+test-clean:
+	@$(MAKE) -C tests -s --no-print-directory clean
 
 apidocs:
 	$(DOXYGEN) api.doxygen
 	cp CONVENTIONS apidocs/
 
-test: $(TEST_RUN)
+test: $(GIT_LIB)
+	@$(MAKE) -C tests --no-print-directory test
 
-sparse: $(CONFIG_H)
-	sparse -DSPARSE_IS_RUNNING $(ALL_CFLAGS) $(SPARSE_FLAGS) $(SRC_C)
+valgrind: $(GIT_LIB)
+	@$(MAKE) -C tests --no-print-directory valgrind
+
+sparse:
+	cgcc -no-compile $(ALL_CFLAGS) $(SPARSE_FLAGS) $(SRC_C)
 
 install-headers: $(PUBLIC_HEADERS)
-	@mkdir -p /tmp/gitinc/git
+	@$(INSTALL) -d /tmp/gitinc/git
 	@for i in $^; do cat .HEADER $$i > /tmp/gitinc/$${i##src/}; done
 
-.c.o:
-	$(CC) $(ALL_CFLAGS) -c $< -o $@
+install: $(GIT_LIB) $(PUBLIC_HEADERS) libgit2.pc
+	@$(INSTALL) -d $(DESTDIR)/$(prefix)/include/git
+	@for i in $(PUBLIC_HEADERS); do \
+		cat .HEADER $$i > $(DESTDIR)/$(prefix)/include/$${i##src/}; \
+	done
+	@$(INSTALL) -d $(DESTDIR)/$(libdir)
+	@$(INSTALL) $(GIT_LIB) $(DESTDIR)/$(libdir)/libgit2.a
+	@$(INSTALL) -d $(DESTDIR)/$(libdir)/pkgconfig
+	@$(INSTALL) libgit2.pc $(DESTDIR)/$(libdir)/pkgconfig/libgit2.pc
 
-$(CONFIG_H): $(CONFIG_H).in
-	sed 's/@@OS@@/$(OS)/g' $< >$@+
-	mv $@+ $@
+uninstall:
+	@rm -f $(DESTDIR)/$(libdir)/libgit2.a
+	@rm -f $(DESTDIR)/$(libdir)/pkgconfig/libgit2.pc
+	@for i in $(PUBLIC_HEADERS); do \
+		rm -f $(DESTDIR)/$(prefix)/include/$${i##src/}; \
+	done
+	@rmdir $(DESTDIR)/$(prefix)/include/git
+
+.c.o:
+	$(CC) $(ALL_CFLAGS) -c $< $(CC_OUT)$@
+
+.S.o:
+	$(CC) $(ALL_CFLAGS) -c $< $(CC_OUT)$@
+
+%.i: %.c FORCE
+	$(CC) $(ALL_CFLAGS) -E $< >$*.i
 
 $(OBJS): $(HDRS)
 $(GIT_LIB): $(OBJS)
-	rm -f $(LIB)
-	$(AR) cr $(GIT_LIB) $(OBJS)
+	rm -f $(GIT_LIB)
+	$(AR) $(AR_OUT)$(GIT_LIB) $(OBJS)
+	$(RANLIB) $(GIT_LIB)
 
-T_HDR         = tests/test_lib.h
-T_LIB         = tests/test_lib.o
-T_MAIN_C      = tests/test_main.c
+$(TEST_OBJ) $(TEST_EXE) $(TEST_RUN) $(TEST_VAL): $(GIT_LIB)
+	@$(MAKE) -C tests --no-print-directory \
+		OS=$(OS) $(@F)
 
-$(T_LIB):    $(T_HDR) $(HDRS)
-$(TEST_OBJ): $(T_HDR) $(HDRS)
-
-$(patsubst %.exe,%.toc,$(TEST_EXE)): tests/%.toc: tests/%.c
-	grep BEGIN_TEST $< >$@+
-	mv $@+ $@
-
-$(TEST_OBJ): tests/%.o: tests/%.c
-	$(CC) $(ALL_CFLAGS) -c $< -o $@
-
-$(patsubst %.exe,%_main.o,$(TEST_EXE)): tests/%_main.o: $(HDRS)
-$(patsubst %.exe,%_main.o,$(TEST_EXE)): tests/%_main.o: $(T_MAIN_C)
-$(patsubst %.exe,%_main.o,$(TEST_EXE)): tests/%_main.o: tests/%.toc
-	$(CC) -Isrc -I. '-DTEST_TOC="$<"' \
-		-c $(T_MAIN_C) \
-		-o $@
-
-$(TEST_EXE): tests/%.exe: $(T_LIB) $(GIT_LIB)
-$(TEST_EXE): tests/%.exe: tests/%.o tests/%_main.o
-	$(CC) -o $@ \
-		$(patsubst %.exe,%_main.o,$@) \
-		$(patsubst %.exe,%.o,$@) \
-		$(T_LIB) -L. -lgit2
-
-$(TEST_RUN): tests/%.run: tests/%.exe
-	@$<
+libgit2.pc: libgit2.pc.in
+	sed -e 's#@prefix@#$(prefix)#' -e 's#@libdir@#$(libdir)#' $< > $@
 
 .PHONY: all
 .PHONY: clean
-.PHONY: test $(TEST_RUN)
+.PHONY: test $(TEST_VAL) $(TEST_RUN) $(TEST_EXE) $(TEST_OBJ)
 .PHONY: apidocs
 .PHONY: install-headers
+.PHONY: install uninstall
 .PHONY: sparse
+.PHONY: FORCE
+
+### Test suite coverage testing
+#
+.PHONY: coverage cov-clean cov-build cov-report
+
+COV_GCDA = $(patsubst %.c,%.gcda,$(SRC_C))
+COV_GCNO = $(patsubst %.c,%.gcno,$(SRC_C))
+
+coverage:
+	@$(MAKE) -s --no-print-directory clean
+	@$(MAKE) --no-print-directory cov-build
+	@$(MAKE) --no-print-directory cov-report
+
+cov-clean:
+	rm -f $(COV_GCDA) $(COV_GCNO) *.gcov untested
+
+COV_CFLAGS = $(CFLAGS) -O0 -ftest-coverage -fprofile-arcs
+
+cov-build:
+	$(MAKE) CFLAGS="$(COV_CFLAGS)" all
+	$(MAKE) TEST_COVERAGE=1 test
+
+cov-report:
+	@echo "--- untested files:" | tee untested
+	@{ for f in $(SRC_C); do \
+		gcda=$$(dirname $$f)"/"$$(basename $$f .c)".gcda"; \
+		if test -f $$gcda; then \
+			gcov -b -p -o $$(dirname $$f) $$f >/dev/null; \
+		else \
+			echo $$f | tee -a untested; \
+		fi; \
+	   done; }
+	@rm -f *.h.gcov
+	@echo "--- untested functions:" | tee -a untested
+	@grep '^function .* called 0' *.c.gcov \
+	| sed -e 's/\([^:]*\)\.gcov:function \([^ ]*\) called.*/\1: \2/' \
+	| sed -e 's|#|/|g' | tee -a untested
+

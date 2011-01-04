@@ -1,3 +1,4 @@
+#include "common.h"
 #include "thread-utils.h"
 
 #ifdef _WIN32
@@ -18,24 +19,6 @@
 #  elif defined _SC_CRAY_NCPU
 #    define _SC_NPROCESSORS_ONLN _SC_CRAY_NCPU
 #  endif
-#endif
-
-#ifdef GIT_PTHREAD_TLS
-int git_tls_get_int(pthread_key_t key)
-{
-	int *ptr = (int *)pthread_getspecific(key);
-	if (!ptr)
-		return 0;
-	return *ptr;
-}
-
-void git_tls_set_int(pthread_key_t key, int value)
-{
-	int *ptr = (int *)pthread_getspecific(key);
-	if (!ptr)
-		ptr = malloc(sizeof(int));
-	*ptr = value;
-}
 #endif
 
 int git_online_cpus(void)

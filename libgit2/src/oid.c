@@ -23,6 +23,7 @@
  * Boston, MA 02110-1301, USA.
  */
 
+#include "common.h"
 #include "git/oid.h"
 #include <string.h>
 
@@ -44,10 +45,11 @@ static signed char from_hex[] = {
 -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, /* e0 */
 -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, /* f0 */
 };
+static char to_hex[] = "0123456789abcdef";
 
 int git_oid_mkstr(git_oid *out, const char *str)
 {
-	int p;
+	size_t p;
 	for (p = 0; p < sizeof(out->id); p++, str += 2) {
 		int v = (from_hex[(unsigned char)str[0]] << 4)
 		       | from_hex[(unsigned char)str[1]];
@@ -58,32 +60,59 @@ int git_oid_mkstr(git_oid *out, const char *str)
 	return GIT_SUCCESS;
 }
 
-int git_oid_fill_hex(git_oid *oid, char *str)
+GIT_INLINE(char) *fmt_one(char *str, unsigned int val)
 {
-	const unsigned char *sha1 = oid->id;
-	int i;
-
-	for (i = 0; i < 20; i++) {
-		static char hex[] = "0123456789abcdef";
-		unsigned int val = sha1[i];
-		*str++ = hex[val >> 4];
-		*str++ = hex[val & 0xf];
-	}
-
-	return GIT_SUCCESS;
-}
-
-char *git_oid_mkhex(git_oid *oid)
-{
-	char *str = malloc(sizeof(char) * 41);
-	if (!str)
-		return NULL;
-	str[40] = '\0';
-	if (git_oid_fill_hex(oid, str))
-	{
-		free(str);
-		return NULL;
-	}
-
+	*str++ = to_hex[val >> 4];
+	*str++ = to_hex[val & 0xf];
 	return str;
 }
+
+void git_oid_fmt(char *str, const git_oid *oid)
+{
+	size_t i;
+
+	for (i = 0; i < sizeof(oid->id); i++)
+		str = fmt_one(str, oid->id[i]);
+}
+
+void git_oid_pathfmt(char *str, const git_oid *oid)
+{
+	size_t i;
+
+	str = fmt_one(str, oid->id[0]);
+	*str++ = '/';
+	for (i = 1; i < sizeof(oid->id); i++)
+		str = fmt_one(str, oid->id[i]);
+}
+
+char *git_oid_allocfmt(const git_oid *oid)
+{
+	char *str = git__malloc(GIT_OID_HEXSZ + 1);
+	if (!str)
+		return NULL;
+	git_oid_fmt(str, oid);
+	str[GIT_OID_HEXSZ] = '\0';
+	return str;
+}
+
+char *git_oid_to_string(char *out, size_t n, const git_oid *oid)
+{
+	char str[GIT_OID_HEXSZ];
+
+	if (!out || n == 0 || !oid)
+		return "";
+
+	n--;  /* allow room for terminating NUL */
+
+	if (n > 0) {
+		git_oid_fmt(str, oid);
+		if (n > GIT_OID_HEXSZ)
+			n = GIT_OID_HEXSZ;
+		memcpy(out, str, n);
+	}
+
+	out[n] = '\0';
+
+	return out;
+}
+

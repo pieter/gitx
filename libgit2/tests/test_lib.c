@@ -23,14 +23,10 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <stdarg.h>
-#include <string.h>
+#define GIT__NO_HIDE_MALLOC
 #include "test_lib.h"
 
-struct test_info
-{
+struct test_info {
 	struct test_info *next;
 	const char *test_name;
 	const char *file_name;
@@ -43,9 +39,9 @@ static struct test_info *current_test;
 static void show_test_result(const char *status)
 {
 	fprintf(stderr, "* %-6s %5d: %s\n",
-	        status,
-			current_test->line_no,
-			current_test->test_name);
+		status,
+		current_test->line_no,
+		current_test->test_name);
 }
 
 void test_die(const char *fmt, ...)

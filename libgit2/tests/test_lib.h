@@ -23,12 +23,19 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include <stdio.h>
+#include "common.h"
 #include <git/common.h>
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdarg.h>
+#include <string.h>
 
 /** Declare a function never returns to the caller. */
 #ifdef __GNUC__
 # define NORETURN __attribute__((__noreturn__))
+#elif defined(_MSC_VER)
+# define NORETURN __declspec(noreturn)
 #else
 # define NORETURN /* noreturn */
 #endif
@@ -38,7 +45,7 @@
  * @param name C symbol to assign to this test's function.
  */
 #define BEGIN_TEST(name) \
-	void testfunc__##name (void) \
+	void testfunc__##name(void) \
 	{ \
 		test_begin(#name, __FILE__, __LINE__); \
 	{
@@ -61,8 +68,7 @@ extern void test_end(void);
  *
  * @param fmt printf style format string.
  */
-extern void test_die(const char *fmt, ...)
-	NORETURN
+extern void NORETURN test_die(const char *fmt, ...)
 	GIT_FORMAT_PRINTF(1, 2);
 
 /**

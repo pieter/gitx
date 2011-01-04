@@ -82,12 +82,12 @@
 - (NSString *)string
 {
 	if (!string) {
-		char *hex = malloc(41);
+		char *hex = malloc(GIT_OID_HEXSZ+1);
 		if (hex == NULL)
 			return nil;
 
-		git_oid_fill_hex(&oid, hex);
-		hex[40] = '\0';
+		git_oid_to_string(hex, GIT_OID_HEXSZ+1, &oid);
+		hex[GIT_OID_HEXSZ] = '\0';
 		string = [NSString stringWithUTF8String:hex];
 		free(hex);
 	}
