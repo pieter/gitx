@@ -8,6 +8,7 @@
 
 #import "PBUnsortableTableHeader.h"
 
+
 @implementation PBUnsortableTableHeader
 
 - (void)mouseDown:(NSEvent *)theEvent
@@ -29,7 +30,7 @@
 	if (++clickCount == 3)
 	{
 		clickCount = 0;
-		[controller setSortDescriptors:[NSArray array]];
+		controller.sortDescriptors = [NSArray array];
 		[controller rearrangeObjects];
 		return;
 	}

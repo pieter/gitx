@@ -21,6 +21,7 @@ NSString *PBGitIndexIndexUpdated = @"GBGitIndexIndexUpdated";
 
 NSString *PBGitIndexCommitStatus = @"PBGitIndexCommitStatus";
 NSString *PBGitIndexCommitFailed = @"PBGitIndexCommitFailed";
+NSString *PBGitIndexCommitHookFailed = @"PBGitIndexCommitHookFailed";
 NSString *PBGitIndexFinishedCommit = @"PBGitIndexFinishedCommit";
 
 NSString *PBGitIndexAmendMessageAvailable = @"PBGitIndexAmendMessageAvailable";
@@ -48,6 +49,7 @@ NSString *PBGitIndexOperationFailed = @"PBGitIndexOperationFailed";
 - (NSString *) parentTree;
 - (void)postCommitUpdate:(NSString *)update;
 - (void)postCommitFailure:(NSString *)reason;
+- (void)postCommitHookFailure:(NSString *)reason;
 - (void)postIndexChange;
 - (void)postOperationFailed:(NSString *)description;
 @end
@@ -145,7 +147,7 @@ NSString *PBGitIndexOperationFailed = @"PBGitIndexOperationFailed";
 }
 
 // TODO: make Asynchronous
-- (void)commitWithMessage:(NSString *)commitMessage
+- (void)commitWithMessage:(NSString *)commitMessage andVerify:(BOOL) doVerify
 {
 	NSMutableString *commitSubject = [@"commit: " mutableCopy];
 	NSRange newLine = [commitMessage rangeOfString:@"\n"];
@@ -155,7 +157,7 @@ NSString *PBGitIndexOperationFailed = @"PBGitIndexOperationFailed";
 		[commitSubject appendString:[commitMessage substringToIndex:newLine.location]];
 	
 	NSString *commitMessageFile;
-	commitMessageFile = [[[repository fileURL] path] stringByAppendingPathComponent:@"COMMIT_EDITMSG"];
+	commitMessageFile = [repository.fileURL.path stringByAppendingPathComponent:@"COMMIT_EDITMSG"];
 	
 	[commitMessage writeToFile:commitMessageFile atomically:YES encoding:NSUTF8StringEncoding error:nil];
 
@@ -175,6 +177,30 @@ NSString *PBGitIndexOperationFailed = @"PBGitIndexOperationFailed";
 
 	[self postCommitUpdate:@"Creating commit"];
 	int ret = 1;
+	
+    if (doVerify) {
+        [self postCommitUpdate:@"Running hooks"];
+        NSString *hookFailureMessage = nil;
+        NSString *hookOutput = nil;
+        if (![repository executeHook:@"pre-commit" output:&hookOutput]) {
+            hookFailureMessage = [NSString stringWithFormat:@"Pre-commit hook failed%@%@",
+                                  [hookOutput length] > 0 ? @":\n" : @"",
+                                  hookOutput];
+        }
+
+        if (![repository executeHook:@"commit-msg" withArgs:[NSArray arrayWithObject:commitMessageFile] output:nil]) {
+            hookFailureMessage = [NSString stringWithFormat:@"Commit-msg hook failed%@%@",
+                                  [hookOutput length] > 0 ? @":\n" : @"",
+                                  hookOutput];
+        }
+
+        if (hookFailureMessage != nil) {
+            return [self postCommitHookFailure:hookFailureMessage];
+        }
+    }
+	
+	commitMessage = [NSString stringWithContentsOfFile:commitMessageFile encoding:NSUTF8StringEncoding error:nil];
+	
 	NSString *commit = [repository outputForArguments:arguments
 										  inputString:commitMessage
 							   byExtendingEnvironment:amendEnvironment
@@ -182,13 +208,6 @@ NSString *PBGitIndexOperationFailed = @"PBGitIndexOperationFailed";
 	
 	if (ret || [commit length] != 40)
 		return [self postCommitFailure:@"Could not create a commit object"];
-	
-	[self postCommitUpdate:@"Running hooks"];
-	if (![repository executeHook:@"pre-commit" output:nil])
-		return [self postCommitFailure:@"Pre-commit hook failed"];
-	
-	if (![repository executeHook:@"commit-msg" withArgs:[NSArray arrayWithObject:commitMessageFile] output:nil])
-		return [self postCommitFailure:@"Commit-msg hook failed"];
 	
 	[self postCommitUpdate:@"Updating HEAD"];
 	[repository outputForArguments:[NSArray arrayWithObjects:@"update-ref", @"-m", commitSubject, @"HEAD", commit, nil]
@@ -239,6 +258,13 @@ NSString *PBGitIndexOperationFailed = @"PBGitIndexOperationFailed";
 													  userInfo:[NSDictionary dictionaryWithObject:reason forKey:@"description"]];
 }
 
+- (void)postCommitHookFailure:(NSString *)reason
+{
+	[[NSNotificationCenter defaultCenter] postNotificationName:PBGitIndexCommitHookFailed
+														object:self
+													  userInfo:[NSDictionary dictionaryWithObject:reason forKey:@"description"]];
+}
+
 - (void)postOperationFailed:(NSString *)description
 {
 	[[NSNotificationCenter defaultCenter] postNotificationName:PBGitIndexOperationFailed
@@ -248,30 +274,57 @@ NSString *PBGitIndexOperationFailed = @"PBGitIndexOperationFailed";
 
 - (BOOL)stageFiles:(NSArray *)stageFiles
 {
-	// Input string for update-index
-	// This will be a list of filenames that
-	// should be updated. It's similar to
-	// "git add -- <files>
-	NSMutableString *input = [NSMutableString string];
-
-	for (PBChangedFile *file in stageFiles) {
-		[input appendFormat:@"%@\0", file.path];
-	}
+	// Do staging files by chunks of 1000 files each, to prevent program freeze (because NSPipe has limited capacity)
 	
-	int ret = 1;
-	[repository outputForArguments:[NSArray arrayWithObjects:@"update-index", @"--add", @"--remove", @"-z", @"--stdin", nil]
-					   inputString:input
-						  retValue:&ret];
+	int filesCount = [stageFiles count];
+	
+	// Prepare first iteration
+	int loopFrom = 0;
+	int loopTo = 1000;
+	if (loopTo > filesCount)
+		loopTo = filesCount;
+	int loopCount = 0;
+	int i = 0;
+	
+	// Staging
+	while (loopCount < filesCount) {
+		// Input string for update-index
+		// This will be a list of filenames that
+		// should be updated. It's similar to
+		// "git add -- <files>
+		NSMutableString *input = [NSMutableString string];
 
-	if (ret) {
-		[self postOperationFailed:[NSString stringWithFormat:@"Error in staging files. Return value: %i", ret]];
-		return NO;
-	}
+		for (i = loopFrom; i < loopTo; i++) {
+			loopCount++;
+			
+			PBChangedFile *file = [stageFiles objectAtIndex:i];
+			
+			[input appendFormat:@"%@\0", file.path];
+		}
+		
+			
+		int ret = 1;
+		[repository outputForArguments:[NSArray arrayWithObjects:@"update-index", @"--add", @"--remove", @"-z", @"--stdin", nil]
+						   inputString:input
+							  retValue:&ret];
 
-	for (PBChangedFile *file in stageFiles)
-	{
-		file.hasUnstagedChanges = NO;
-		file.hasStagedChanges = YES;
+		if (ret) {
+			[self postOperationFailed:[NSString stringWithFormat:@"Error in staging files. Return value: %i", ret]];
+			return NO;
+		}
+
+		for (i = loopFrom; i < loopTo; i++) {
+			PBChangedFile *file = [stageFiles objectAtIndex:i];
+			
+			file.hasUnstagedChanges = NO;
+			file.hasStagedChanges = YES;
+		}
+		
+		// Prepare next iteration
+		loopFrom = loopCount;
+		loopTo = loopFrom + 1000;
+		if (loopTo > filesCount)
+			loopTo = filesCount;
 	}
 
 	[self postIndexChange];
@@ -281,27 +334,53 @@ NSString *PBGitIndexOperationFailed = @"PBGitIndexOperationFailed";
 // TODO: Refactor with above. What's a better name for this?
 - (BOOL)unstageFiles:(NSArray *)unstageFiles
 {
-	NSMutableString *input = [NSMutableString string];
-
-	for (PBChangedFile *file in unstageFiles) {
-		[input appendString:[file indexInfo]];
-	}
-
-	int ret = 1;
-	[repository outputForArguments:[NSArray arrayWithObjects:@"update-index", @"-z", @"--index-info", nil]
-					   inputString:input 
-						  retValue:&ret];
-
-	if (ret)
-	{
-		[self postOperationFailed:[NSString stringWithFormat:@"Error in unstaging files. Return value: %i", ret]];
-		return NO;
-	}
-
-	for (PBChangedFile *file in unstageFiles)
-	{
-		file.hasUnstagedChanges = YES;
-		file.hasStagedChanges = NO;
+	// Do unstaging files by chunks of 1000 files each, to prevent program freeze (because NSPipe has limited capacity)
+	
+	int filesCount = [unstageFiles count];
+	
+	// Prepare first iteration
+	int loopFrom = 0;
+	int loopTo = 1000;
+	if (loopTo > filesCount)
+		loopTo = filesCount;
+	int loopCount = 0;
+	int i = 0;
+	
+	// Unstaging
+	while (loopCount < filesCount) {
+		NSMutableString *input = [NSMutableString string];
+		
+		for (i = loopFrom; i < loopTo; i++) {
+			loopCount++;
+			
+			PBChangedFile *file = [unstageFiles objectAtIndex:i];
+			
+			[input appendString:[file indexInfo]];
+		}
+		
+		int ret = 1;
+		[repository outputForArguments:[NSArray arrayWithObjects:@"update-index", @"-z", @"--index-info", nil]
+						   inputString:input
+							  retValue:&ret];
+		
+		if (ret)
+		{
+			[self postOperationFailed:[NSString stringWithFormat:@"Error in unstaging files. Return value: %i", ret]];
+			return NO;
+		}
+		
+		for (i = loopFrom; i < loopTo; i++) {
+			PBChangedFile *file = [unstageFiles objectAtIndex:i];
+			
+			file.hasUnstagedChanges = YES;
+			file.hasStagedChanges = NO;
+		}
+		
+		// Prepare next iteration
+		loopFrom = loopCount;
+		loopTo = loopFrom + 1000;
+		if (loopTo > filesCount)
+			loopTo = filesCount;
 	}
 
 	[self postIndexChange];
@@ -324,7 +403,8 @@ NSString *PBGitIndexOperationFailed = @"PBGitIndexOperationFailed";
 	}
 
 	for (PBChangedFile *file in discardFiles)
-		file.hasUnstagedChanges = NO;
+		if (file.status != NEW)
+			file.hasUnstagedChanges = NO;
 
 	[self postIndexChange];
 }

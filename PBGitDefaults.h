@@ -12,24 +12,18 @@
 }
 
 + (int) commitMessageViewVerticalLineLength;
-+ (NSInteger) truncateInfoTextSize;
-+ (BOOL) truncateInfoText;
 + (BOOL) commitMessageViewHasVerticalLine;
 + (BOOL) isGistEnabled;
 + (BOOL) isGravatarEnabled;
 + (BOOL) confirmPublicGists;
 + (BOOL) isGistPublic;
-+ (BOOL) showWhitespaceDifferences;
-+ (BOOL) showRelativeDates;
-+ (BOOL) refreshAutomatically;
++ (BOOL)showWhitespaceDifferences;
 + (BOOL)openCurDirOnLaunch;
 + (BOOL)showOpenPanelOnLaunch;
 + (BOOL) shouldCheckoutBranch;
 + (void) setShouldCheckoutBranch:(BOOL)shouldCheckout;
 + (NSString *) recentCloneDestination;
 + (void) setRecentCloneDestination:(NSString *)path;
-+ (BOOL) suppressAcceptDropRef;
-+ (void) setSuppressAcceptDropRef:(BOOL)suppress;
 + (BOOL) showStageView;
 + (void) setShowStageView:(BOOL)suppress;
 + (BOOL) openPreviousDocumentsOnLaunch;
@@ -38,5 +32,14 @@
 + (void) removePreviousDocumentPaths;
 + (NSInteger) branchFilter;
 + (void) setBranchFilter:(NSInteger)state;
++ (NSInteger)historySearchMode;
++ (void)setHistorySearchMode:(NSInteger)mode;
++ (BOOL)useRepositoryWatcher;
+
+
+// Suppressed Dialog Warnings
++ (void)suppressDialogWarningForDialog:(NSString *)dialog;
++ (BOOL)isDialogWarningSuppressedForDialog:(NSString *)dialog;
++ (void)resetAllDialogWarnings;
 
 @end

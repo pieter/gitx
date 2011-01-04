@@ -11,15 +11,23 @@
 #import "PBChangedFile.h"
 #import "PBWebChangesController.h"
 #import "PBGitIndex.h"
+#import "PBNiceSplitView.h"
+#import "PBGitRepositoryWatcher.h"
+
+
+#define kCommitSplitViewPositionDefault @"Commit SplitView Position"
 
 @interface PBGitCommitController ()
 - (void)refreshFinished:(NSNotification *)notification;
+- (void)commitWithVerification:(BOOL) doVerify;
 - (void)commitStatusUpdated:(NSNotification *)notification;
 - (void)commitFinished:(NSNotification *)notification;
 - (void)commitFailed:(NSNotification *)notification;
+- (void)commitHookFailed:(NSNotification *)notification;
 - (void)amendCommit:(NSNotification *)notification;
 - (void)indexChanged:(NSNotification *)notification;
 - (void)indexOperationFailed:(NSNotification *)notification;
+- (void)saveCommitSplitViewPosition;
 @end
 
 @implementation PBGitCommitController
@@ -38,6 +46,7 @@
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(commitStatusUpdated:) name:PBGitIndexCommitStatus object:index];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(commitFinished:) name:PBGitIndexFinishedCommit object:index];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(commitFailed:) name:PBGitIndexCommitFailed object:index];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(commitHookFailed:) name:PBGitIndexCommitHookFailed object:index];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(amendCommit:) name:PBGitIndexAmendMessageAvailable object:index];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(indexChanged:) name:PBGitIndexIndexUpdated object:index];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(indexOperationFailed:) name:PBGitIndexOperationFailed object:index];
@@ -60,14 +69,29 @@
 	[cachedFilesController setSortDescriptors:[NSArray arrayWithObject:
 		[[NSSortDescriptor alloc] initWithKey:@"path" ascending:true]]];
 
+  // listen for updates
+  [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_repositoryUpdatedNotification:) name:PBGitRepositoryEventNotification object:repository];
+
 	[cachedFilesController setAutomaticallyRearrangesObjects:NO];
 	[unstagedFilesController setAutomaticallyRearrangesObjects:NO];
+
+	[commitSplitView setHidden:YES];
+	[self performSelector:@selector(restoreCommitSplitViewPositiion) withObject:nil afterDelay:0];
 }
 
-- (void) removeView
+- (void) _repositoryUpdatedNotification:(NSNotification *)notification {
+    PBGitRepositoryWatcherEventType eventType = [(NSNumber *)[[notification userInfo] objectForKey:kPBGitRepositoryEventTypeUserInfoKey] unsignedIntValue];
+    if(eventType & (PBGitRepositoryWatcherEventTypeWorkingDirectory | PBGitRepositoryWatcherEventTypeIndex)){
+      // refresh if the working directory or index is modified
+      [self refresh:NULL];
+    }
+}
+
+- (void)closeView
 {
+	[self saveCommitSplitViewPosition];
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 	[webController closeView];
-	[super finalize];
 }
 
 - (NSResponder *)firstResponder;
@@ -108,7 +132,17 @@
 
 - (IBAction) commit:(id) sender
 {
-	if ([[NSFileManager defaultManager] fileExistsAtPath:[[[repository fileURL] path] stringByAppendingPathComponent:@"MERGE_HEAD"]]) {
+    [self commitWithVerification:YES];
+}
+
+- (IBAction) forceCommit:(id) sender
+{
+    [self commitWithVerification:NO];
+}
+
+- (void) commitWithVerification:(BOOL) doVerify
+{
+	if ([[NSFileManager defaultManager] fileExistsAtPath:[repository.fileURL.path stringByAppendingPathComponent:@"MERGE_HEAD"]]) {
 		[[repository windowController] showMessageSheet:@"Cannot commit merges" infoText:@"GitX cannot commit merges yet. Please commit your changes from the command line."];
 		return;
 	}
@@ -130,7 +164,7 @@
 	self.isBusy = YES;
 	[commitMessageView setEditable:NO];
 
-	[index commitWithMessage:commitMessage];
+	[index commitWithMessage:commitMessage andVerify:doVerify];
 }
 
 
@@ -150,7 +184,7 @@
 {
 	[commitMessageView setEditable:YES];
 	[commitMessageView setString:@""];
-	[webController setStateMessage:[NSString stringWithString:[[notification userInfo] objectForKey:@"description"]]];
+	[webController setStateMessage:[NSString stringWithFormat:[[notification userInfo] objectForKey:@"description"]]];
 }	
 
 - (void)commitFailed:(NSNotification *)notification
@@ -160,6 +194,15 @@
 	self.status = [@"Commit failed: " stringByAppendingString:reason];
 	[commitMessageView setEditable:YES];
 	[[repository windowController] showMessageSheet:@"Commit failed" infoText:reason];
+}
+
+- (void)commitHookFailed:(NSNotification *)notification
+{
+	self.isBusy = NO;
+	NSString *reason = [[notification userInfo] objectForKey:@"description"];
+	self.status = [@"Commit hook failed: " stringByAppendingString:reason];
+	[commitMessageView setEditable:YES];
+	[[repository windowController] showCommitHookFailedSheet:@"Commit hook failed" infoText:reason commitController:self];
 }
 
 - (void)amendCommit:(NSNotification *)notification
@@ -188,6 +231,80 @@
 - (void)indexOperationFailed:(NSNotification *)notification
 {
 	[[repository windowController] showMessageSheet:@"Index operation failed" infoText:[[notification userInfo] objectForKey:@"description"]];
+}
+
+
+#pragma mark NSSplitView delegate methods
+
+#define kCommitSplitViewTopViewMin 150
+#define kCommitSplitViewBottomViewMin 100
+
+- (CGFloat)splitView:(NSSplitView *)splitView constrainMinCoordinate:(CGFloat)proposedMin ofSubviewAt:(NSInteger)dividerIndex
+{
+	if (splitView == commitSplitView)
+		return kCommitSplitViewTopViewMin;
+
+	return proposedMin;
+}
+
+- (CGFloat)splitView:(NSSplitView *)splitView constrainMaxCoordinate:(CGFloat)proposedMax ofSubviewAt:(NSInteger)dividerIndex
+{
+	if (splitView == commitSplitView)
+		return [splitView frame].size.height - [splitView dividerThickness] - kCommitSplitViewBottomViewMin;
+
+	return proposedMax;
+}
+
+// while the user resizes the window keep the lower (changes/message) view constant and just resize the upper view
+// unless the upper view gets too small
+- (void)resizeCommitSplitView
+{
+	NSRect newFrame = [commitSplitView frame];
+
+	float dividerThickness = [commitSplitView dividerThickness];
+
+	NSView *upperView = [[commitSplitView subviews] objectAtIndex:0];
+	NSRect upperFrame = [upperView frame];
+	upperFrame.size.width = newFrame.size.width;
+
+	NSView *lowerView = [[commitSplitView subviews] objectAtIndex:1];
+	NSRect lowerFrame = [lowerView frame];
+	lowerFrame.size.width = newFrame.size.width;
+
+	upperFrame.size.height = newFrame.size.height - lowerFrame.size.height - dividerThickness;
+	if (upperFrame.size.height < kCommitSplitViewTopViewMin)
+		upperFrame.size.height = kCommitSplitViewTopViewMin;
+
+	lowerFrame.size.height = newFrame.size.height - upperFrame.size.height - dividerThickness;
+	lowerFrame.origin.y = newFrame.size.height - lowerFrame.size.height;
+
+	[upperView setFrame:upperFrame];
+	[lowerView setFrame:lowerFrame];
+}
+
+- (void)splitView:(NSSplitView *)splitView resizeSubviewsWithOldSize:(NSSize)oldSize
+{
+	if (splitView == commitSplitView)
+		[self resizeCommitSplitView];
+}
+
+// NSSplitView does not save and restore the position of the splitView correctly so do it manually
+- (void)saveCommitSplitViewPosition
+{
+	float position = [[[commitSplitView subviews] objectAtIndex:0] frame].size.height;
+	[[NSUserDefaults standardUserDefaults] setFloat:position forKey:kCommitSplitViewPositionDefault];
+	[[NSUserDefaults standardUserDefaults] synchronize];
+}
+
+// make sure this happens after awakeFromNib
+- (void)restoreCommitSplitViewPositiion
+{
+	float position = [[NSUserDefaults standardUserDefaults] floatForKey:kCommitSplitViewPositionDefault];
+	if (position < 1.0)
+		position = [commitSplitView frame].size.height - 225;
+
+	[commitSplitView setPosition:position ofDividerAtIndex:0];
+	[commitSplitView setHidden:NO];
 }
 
 @end

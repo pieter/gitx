@@ -7,7 +7,7 @@
 //
 
 #import <Cocoa/Cocoa.h>
-#import "PBGitXErrors.h"
+
 
 @interface PBCLIProxy : NSObject
 {
@@ -16,12 +16,10 @@
 @property (retain) NSConnection* connection;
 @end
 
-#define PBDOConnectionName @"GitXDOConnection"
+#define ConnectionName @"GitX DO Connection"
 #define PBCLIProxyErrorDomain @"PBCLIProxyErrorDomain"
 
 @protocol GitXCliToolProtocol
-
-- (BOOL) openRepository:(in bycopy NSString *)repositoryPath arguments:(in bycopy NSArray *) args error:(byref NSError**)error;
-- (oneway void) openDiffWindowWithDiff:(in bycopy NSString *)diff;
-
+- (BOOL)openRepository:(NSURL*)repositoryPath arguments: (NSArray*) args error:(NSError**)error;
+- (void)openDiffWindowWithDiff:(NSString *)diff;
 @end

@@ -46,10 +46,14 @@
 	return [view windowScriptObject];
 }
 
-- (void) closeView
+- (void)closeView
 {
-	if (view)
+	if (view) {
+		[[self script] setValue:nil forKey:@"Controller"];
 		[view close];
+	}
+
+	[[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 # pragma mark Delegate methods
@@ -115,7 +119,8 @@
     Boolean reachable;
     target = SCNetworkReachabilityCreateWithName(NULL, [hostname cStringUsingEncoding:NSASCIIStringEncoding]);
     reachable = SCNetworkReachabilityGetFlags(target, &flags);
-    
+	CFRelease(target);
+
 	if (!reachable)
 		return FALSE;
 
@@ -136,8 +141,6 @@
 		return [PBGitDefaults confirmPublicGists];
 	else if([feature isEqualToString:@"publicGist"])
 		return [PBGitDefaults isGistPublic];
-    else if ([feature isEqualToString:@"showWhitespaceDifferences"])
-        return [PBGitDefaults showWhitespaceDifferences];
 	else
 		return YES;
 }

@@ -188,11 +188,10 @@ var highlightDiff = function(diff, element, callbacks) {
 
 		sindex = "index=" + lindex.toString() + " ";
 		if (firstChar == "+") {
-            if (Controller.isFeatureEnabled_("showWhitespaceDifferences")) {
-                // Highlight trailing whitespace
-                if (m = l.match(/\s+$/))
-                    l = l.replace(/\s+$/, "<span class='whitespace'>" + m + "</span>"); 
-            }
+			// Highlight trailing whitespace
+			if (m = l.match(/\s+$/))
+				l = l.replace(/\s+$/, "<span class='whitespace'>" + m + "</span>");
+
 			line1 += "\n";
 			line2 += ++hunk_start_line_2 + "\n";
 			diffContent += "<div " + sindex + "class='addline'>" + l + "</div>";

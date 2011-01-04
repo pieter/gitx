@@ -24,7 +24,7 @@ NSString * const kGitXProgressErrorInfo          = @"PBGitXProgressErrorInfo";
 
 @interface PBRemoteProgressSheet ()
 
-- (void) beginRemoteProgressSheetForArguments:(NSArray *)args title:(NSString *)theTitle description:(NSString *)theDescription inDirectory:(NSString *)dir windowController:(PBGitWindowController *)controller;
+- (void) beginRemoteProgressSheetForArguments:(NSArray *)args title:(NSString *)theTitle description:(NSString *)theDescription inDir:(NSString *)dir windowController:(NSWindowController *)windowController hideSuccessScreen:(bool)hideSucc;
 - (void) showSuccessMessage;
 - (void) showErrorMessage;
 
@@ -52,10 +52,16 @@ NSString * const kGitXProgressErrorInfo          = @"PBGitXProgressErrorInfo";
 #pragma mark -
 #pragma mark PBRemoteProgressSheet
 
-+ (void) beginRemoteProgressSheetForArguments:(NSArray *)args title:(NSString *)theTitle description:(NSString *)theDescription inDir:(NSString *)dir windowController:(PBGitWindowController *)windowController
++ (void) beginRemoteProgressSheetForArguments:(NSArray *)args title:(NSString *)theTitle description:(NSString *)theDescription inDir:(NSString *)dir windowController:(NSWindowController *)windowController
 {
 	PBRemoteProgressSheet *sheet = [[self alloc] initWithWindowNibName:@"PBRemoteProgressSheet"];
-	[sheet beginRemoteProgressSheetForArguments:args title:theTitle description:theDescription inDirectory:dir windowController:windowController];
+	[sheet beginRemoteProgressSheetForArguments:args title:theTitle description:theDescription inDir:dir windowController:windowController hideSuccessScreen:false];
+}
+
++ (void) beginRemoteProgressSheetForArguments:(NSArray *)args title:(NSString *)theTitle description:(NSString *)theDescription inDir:(NSString *)dir windowController:(NSWindowController *)windowController  hideSuccessScreen:(bool)hideSucc
+{
+	PBRemoteProgressSheet *sheet = [[self alloc] initWithWindowNibName:@"PBRemoteProgressSheet"];
+	[sheet beginRemoteProgressSheetForArguments:args title:theTitle description:theDescription inDir:dir windowController:windowController hideSuccessScreen:hideSucc];
 }
 
 
@@ -64,16 +70,36 @@ NSString * const kGitXProgressErrorInfo          = @"PBGitXProgressErrorInfo";
 	[PBRemoteProgressSheet beginRemoteProgressSheetForArguments:args title:theTitle description:theDescription inDir:[repo workingDirectory] windowController:repo.windowController];
 }
 
++ (void) beginRemoteProgressSheetForArguments:(NSArray *)args title:(NSString *)theTitle description:(NSString *)theDescription  inRepository:(PBGitRepository *)repo hideSuccessScreen:(bool)hideSucc
+{
+	[PBRemoteProgressSheet beginRemoteProgressSheetForArguments:args title:theTitle description:theDescription inDir:[repo workingDirectory] windowController:repo.windowController hideSuccessScreen:hideSucc];
+}
 
-- (void) beginRemoteProgressSheetForArguments:(NSArray *)args title:(NSString *)theTitle description:(NSString *)theDescription inDirectory:(NSString *)dir windowController:(PBGitWindowController *)windowController
+
+- (void) beginRemoteProgressSheetForArguments:(NSArray *)args title:(NSString *)theTitle description:(NSString *)theDescription inDir:(NSString *)dir windowController:(NSWindowController *)windowController hideSuccessScreen:(bool)hideSucc
 {
 	controller  = windowController;
 	arguments   = args;
 	title       = theTitle;
 	description = theDescription;
+	hideSuccessScreen = hideSucc;
 
 	[self window]; // loads the window (if it wasn't already)
+
+	// resize window if the description is larger than the default text field
+	NSRect originalFrame = [self.progressDescription frame];
 	[self.progressDescription setStringValue:[self progressTitle]];
+	NSAttributedString *attributedTitle = [self.progressDescription attributedStringValue];
+	NSSize boundingSize = originalFrame.size;
+	boundingSize.height = 0.0f;
+	NSRect boundingRect = [attributedTitle boundingRectWithSize:boundingSize options:NSStringDrawingUsesLineFragmentOrigin];
+	CGFloat heightDelta = boundingRect.size.height - originalFrame.size.height;
+	if (heightDelta > 0.0f) {
+		NSRect windowFrame = [[self window] frame];
+		windowFrame.size.height += heightDelta;
+		[[self window] setFrame:windowFrame display:NO];
+	}
+
 	[self.progressIndicator startAnimation:nil];
 	[NSApp beginSheet:[self window] modalForWindow:[controller window] modalDelegate:self didEndSelector:nil contextInfo:nil];
 
@@ -106,7 +132,7 @@ NSString * const kGitXProgressErrorInfo          = @"PBGitXProgressErrorInfo";
 		[self showSuccessMessage];
 
 	if ([controller respondsToSelector:@selector(repository)])
-		[controller.repository reloadRefs];
+		[[(PBGitWindowController *)controller repository] reloadRefs];
 }
 
 
@@ -116,7 +142,7 @@ NSString * const kGitXProgressErrorInfo          = @"PBGitXProgressErrorInfo";
 - (void) checkTask:(NSTimer *)timer
 {
 	if (![gitTask isRunning]) {
-		NSLog(@"[%@ %s] gitTask terminated without notification", [self class], _cmd);
+		NSLog(@"[%@ %@] gitTask terminated without notification", [self class], NSStringFromSelector(_cmd));
 		[self taskCompleted:nil];
 	}
 }
@@ -127,12 +153,15 @@ NSString * const kGitXProgressErrorInfo          = @"PBGitXProgressErrorInfo";
 
 - (void) showSuccessMessage
 {
+	if(hideSuccessScreen) return;
+	
 	NSMutableString *info = [NSMutableString string];
 	[info appendString:[self successDescription]];
 	[info appendString:[self commandDescription]];
 	[info appendString:[self standardOutputDescription]];
 
-	[(PBGitWindowController *)controller showMessageSheet:[self successTitle] infoText:info];
+	if ([controller respondsToSelector:@selector(showMessageSheet:infoText:)])
+		[(PBGitWindowController *)controller showMessageSheet:[self successTitle] infoText:info];
 }
 
 
@@ -150,7 +179,8 @@ NSString * const kGitXProgressErrorInfo          = @"PBGitXProgressErrorInfo";
 								   nil];
 	NSError *error = [NSError errorWithDomain:PBGitRepositoryErrorDomain code:0 userInfo:errorUserInfo];
 
-	[(PBGitWindowController *)controller showErrorSheet:error];
+	if ([controller respondsToSelector:@selector(showErrorSheet:)])
+		[(PBGitWindowController *)controller showErrorSheet:error];
 }
 
 

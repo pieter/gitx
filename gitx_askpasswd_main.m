@@ -16,6 +16,7 @@
 #define CANCELBUTTONHEIGHT		24.0
 #define	PASSHEIGHT				22.0
 #define	PASSLABELHEIGHT			16.0
+#define WINDOWAUTOSAVENAME		@"GitXAskPasswordWindowFrame"
 
 
 @interface GAPAppDelegate : NSObject
@@ -24,7 +25,7 @@
 	NSSecureTextField*	mPasswordField;
 }
 
--(NSPanel*)		passwordPanel:(NSString *)title;
+-(NSPanel*)		passwordPanel;
 
 -(IBAction)	doOKButton: (id)sender;
 -(IBAction)	doCancelButton: (id)sender;
@@ -34,39 +35,31 @@
 
 @implementation GAPAppDelegate
 
--(void)	dealloc
-{
-	[mPasswordPanel release];
-	mPasswordPanel = nil;
-	
-	[mPasswordField release];
-	mPasswordField = nil;
-
-	[super dealloc];
-}
-
--(NSPanel*)	passwordPanel:(NSString *)title
+-(NSPanel*)	passwordPanel
 {
 	if( !mPasswordPanel )
 	{
-		NSRect			box = NSMakeRect( 100, 100, 250, 100 );
-        mPasswordPanel = [[NSPanel alloc] initWithContentRect: box
-                                                    styleMask: NSTitledWindowMask
-                                                      backing: NSBackingStoreBuffered 
-                                                        defer: NO];
+		NSRect box = NSMakeRect( 100, 100, 400, 134 );
+		mPasswordPanel = [[NSPanel alloc] initWithContentRect: box
+													styleMask: NSTitledWindowMask
+													  backing: NSBackingStoreBuffered defer: NO];
 		[mPasswordPanel setHidesOnDeactivate: NO];
 		[mPasswordPanel setLevel: NSFloatingWindowLevel];
-		[mPasswordPanel center];
+		[mPasswordPanel setTitle: @"GitX SSH Remote Login"];
+        if (![mPasswordPanel setFrameUsingName: WINDOWAUTOSAVENAME]) {
+            [mPasswordPanel center];
+            [mPasswordPanel setFrameAutosaveName: WINDOWAUTOSAVENAME];
+        }
 		
 		box.origin = NSZeroPoint;	// Only need local coords from now on.
 		
 		// OK:
-		NSRect		okBox = box;
-		okBox.origin.x = NSMaxX( box ) -OKBUTTONWIDTH -10;
+		NSRect okBox = box;
+		okBox.origin.x = NSMaxX( box ) -OKBUTTONWIDTH -20;
 		okBox.size.width = OKBUTTONWIDTH;
-		okBox.origin.y += 10;
+		okBox.origin.y += 20;
 		okBox.size.height = OKBUTTONHEIGHT;
-		NSButton*	okButton = [[[NSButton alloc] initWithFrame: okBox] autorelease];
+		NSButton *okButton = [[NSButton alloc] initWithFrame: okBox];
 		[okButton setTarget: self];
 		[okButton setAction: @selector(doOKButton:)];
 		[okButton setTitle: @"OK"];			// +++ Localize.
@@ -79,22 +72,22 @@
 		NSRect	cancelBox = box;
 		cancelBox.origin.x = NSMinX( okBox ) -CANCELBUTTONWIDTH -6;
 		cancelBox.size.width = CANCELBUTTONWIDTH;
-		cancelBox.origin.y += 10;
+		cancelBox.origin.y += 20;
 		cancelBox.size.height = CANCELBUTTONHEIGHT;
-		okButton = [[[NSButton alloc] initWithFrame: cancelBox] autorelease];
-		[okButton setTarget: self];
-		[okButton setAction: @selector(doCancelButton:)];
-		[okButton setTitle: @"Cancel"];			// +++ Localize.
-		[okButton setBordered: YES];
-		[okButton setBezelStyle: NSRoundedBezelStyle];
-		[[mPasswordPanel contentView] addSubview: okButton];
+		NSButton *cancleButton = [[NSButton alloc] initWithFrame: cancelBox];
+		[cancleButton setTarget: self];
+		[cancleButton setAction: @selector(doCancelButton:)];
+		[cancleButton setTitle: @"Cancel"];			// +++ Localize.
+		[cancleButton setBordered: YES];
+		[cancleButton setBezelStyle: NSRoundedBezelStyle];
+		[[mPasswordPanel contentView] addSubview: cancleButton];
 		
 		// Password field:
-		NSRect				passBox = box;
-		passBox.origin.y = NSMaxY(okBox) + 12;
+		NSRect passBox = box;
+		passBox.origin.y = NSMaxY(okBox) + 24;
 		passBox.size.height = PASSHEIGHT;
-		passBox.origin.x += 12;
-		passBox.size.width -= 12 * 2;
+		passBox.origin.x += 104;
+		passBox.size.width -= 104 + 20;
 		mPasswordField = [[NSSecureTextField alloc] initWithFrame: passBox];
 		[mPasswordField setSelectable: YES];
 		[mPasswordField setEditable: YES];
@@ -105,19 +98,32 @@
 		[[mPasswordPanel contentView] addSubview: mPasswordField];
 		
 		// Password label:
-		NSRect				passLabelBox = box;
-		passLabelBox.origin.y = NSMaxY(passBox) + 6;
+		NSRect passLabelBox = box;
+		passLabelBox.origin.y = NSMaxY(passBox) + 8;
 		passLabelBox.size.height = PASSLABELHEIGHT;
-		passLabelBox.origin.x += 12;
-		passLabelBox.size.width -= 12 * 2;
-		NSTextField*		passwordLabel = [[[NSTextField alloc] initWithFrame: passLabelBox] autorelease];
+		passLabelBox.origin.x += 100;
+		passLabelBox.size.width -= 100 + 20;
+		NSTextField *passwordLabel = [[NSTextField alloc] initWithFrame: passLabelBox];
 		[passwordLabel setSelectable: YES];
 		[passwordLabel setEditable: NO];
 		[passwordLabel setBordered: NO];
 		[passwordLabel setBezeled: NO];
 		[passwordLabel setDrawsBackground: NO];
-		[passwordLabel setStringValue: title];	// +++ Localize.
+		[passwordLabel setStringValue: @"Please enter your password:"];	// +++ Localize.
 		[[mPasswordPanel contentView] addSubview: passwordLabel];
+		
+		// GitX icon:
+		NSRect gitxIconBox = box;
+		gitxIconBox.origin.y = NSMaxY(box) - 78;
+		gitxIconBox.size.height = 64;
+		gitxIconBox.origin.x += 20;
+		gitxIconBox.size.width = 64;
+		NSImageView *gitxIconView = [[NSImageView alloc] initWithFrame: gitxIconBox];
+		[gitxIconView setEditable: NO];
+		NSString *gitxIconPath = [[[NSBundle mainBundle] bundlePath] stringByAppendingPathComponent: @"gitx.icns"];
+		NSImage *gitxIcon = [[NSImage alloc] initWithContentsOfFile: gitxIconPath];
+		[gitxIconView setImage: gitxIcon];
+		[[mPasswordPanel contentView] addSubview: gitxIconView];
 	}
 	
 	return mPasswordPanel;
@@ -127,14 +133,16 @@
 -(IBAction)	doOKButton: (id)sender
 {
 	printf( "%s\n", [[mPasswordField stringValue] UTF8String] );
-	[[NSApplication sharedApplication] terminate: self];
+	[[NSApplication sharedApplication] stopModalWithCode: 0];
 }
 
 
+// TODO: Need to find out how to get SSH to cancel.
+//       When the user cancels the window it is opened again for however
+//       many times the remote server allows failed attempts.
 -(IBAction)	doCancelButton: (id)sender
 {
-	printf("\n");
-	[[NSApplication sharedApplication] terminate: self];
+	[[NSApplication sharedApplication] stopModalWithCode: 1];
 }
 
 @end
@@ -143,32 +151,25 @@
 
 int	main( int argc, const char** argv )
 {
+	// close stderr to stop cocoa log messages from being picked up by GitX
+	close(STDERR_FILENO);
+	
+	NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+	
 	ProcessSerialNumber	myPSN = { 0, kCurrentProcess };
 	TransformProcessType( &myPSN, kProcessTransformToForegroundApplication );
 	
-	NSApplication	*	app = [NSApplication sharedApplication];
-	GAPAppDelegate	*	appDel = [[GAPAppDelegate alloc] init];
+	NSApplication *app = [NSApplication sharedApplication];
+	GAPAppDelegate *appDel = [[GAPAppDelegate alloc] init];
 	[app setDelegate: appDel];
-    
-    NSString * title;
-    const char * envtitle = getenv("GITX_ASKPASSWD_DIALOG_TITLE");
-    
-    if (envtitle != NULL) {
-        title = [NSString stringWithUTF8String:envtitle];
-    } else {
-        if (argc > 1) {
-            title = [NSString stringWithUTF8String:argv[1]];
-        } else {
-            title = @"Please enter your password:";
-        }
-    }
-    
-	NSWindow*			passPanel = [appDel passwordPanel:title];
+	NSWindow *passPanel = [appDel passwordPanel];
 	
 	[app activateIgnoringOtherApps: YES];
 	[passPanel makeKeyAndOrderFront: nil];
-	[app runModalForWindow: passPanel];
+	NSInteger code = [app runModalForWindow: passPanel];
 	
-	return 0;
+	[defaults synchronize];
+	
+	return code;
 }
 

@@ -7,8 +7,9 @@ var Commit = function(obj) {
 
 	this.refs = obj.refs();
 	this.author_name = obj.author;
-    this.sha = obj.realSha();
-    this.parents = obj.parents;
+	this.committer_name = obj.committer;
+	this.sha = obj.realSha();
+	this.parents = obj.parents;
 	this.subject = obj.subject;
 	this.notificationID = null;
 
@@ -37,21 +38,17 @@ var Commit = function(obj) {
             if (typeof match !== 'undefined' && typeof match[2] !== 'undefined') {
                 if (!(match[2].match(/@[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}/)))
                     this.author_email = match[2];
-                
-                this.author_date = new Date(parseInt(match[3]) * 1000);
-                
+
+				if (typeof match[3] !== 'undefined')
+                	this.author_date = new Date(parseInt(match[3]) * 1000);
+
                 match = this.header.match(/\ncommitter (.*) <(.*@.*|.*)> ([0-9].*)/);
-                if (typeof match !== 'undefined') {
-                    this.committer_name = match[1];
-                    this.committer_email = match[2];
-                } else {
-                    this.committer_name = "undefined";
-                    this.committer_email = "undefined";
-                }
+				if (typeof match[2] !== 'undefined')
+					this.committer_email = match[2];
+				if (typeof match[3] !== 'undefined')
+					this.committer_date = new Date(parseInt(match[3]) * 1000);
             } 
         }
-
-		this.committer_date = new Date(parseInt(match[3]) * 1000);		
 	}
 
 	this.reloadRefs = function() {
@@ -110,7 +107,7 @@ var gistie = function() {
 	var t = new XMLHttpRequest();
 	t.onreadystatechange = function() {
 		if (t.readyState == 4 && t.status >= 200 && t.status < 300) {
-			if (m = t.responseText.match(/gist: ([a-f0-9]+)/))
+			if (m = t.responseText.match(/<a href="\/gists\/([a-f0-9]+)\/edit">/))
 				notify("Code uploaded to gistie <a target='_new' href='http://gist.github.com/" + m[1] + "'>#" + m[1] + "</a>", 1);
 			else {
 				notify("Pasting to Gistie failed :(.", -1);
@@ -119,7 +116,7 @@ var gistie = function() {
 		}
 	}
 
-	t.open('POST', "http://gist.github.com/gists");
+	t.open('POST', "https://gist.github.com/gists");
 	t.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
 	t.setRequestHeader('Accept', 'text/javascript, text/html, application/xml, text/xml, */*');
 	t.setRequestHeader('Content-type', 'application/x-www-form-urlencoded;charset=UTF-8');
@@ -132,9 +129,6 @@ var gistie = function() {
 }
 
 var setGravatar = function(email, image) {
-	if (Controller && !Controller.isReachable_("www.gravatar.com"))
-		return;
-
 	if(Controller && !Controller.isFeatureEnabled_("gravatar")) {
 		image.src = "";
 		return;
@@ -167,7 +161,7 @@ var showRefs = function() {
 		refs.innerHTML = "";
 		for (var i = 0; i < commit.refs.length; i++) {
 			var ref = commit.refs[i];
-			refs.innerHTML += '<span class="refs ' + ref.type() + (commit.currentRef == ref.ref ? ' currentBranch' : '') + '">' + ref.shortName() + '</span>';
+			refs.innerHTML += '<span class="refs ' + ref.type() + (commit.currentRef == ref.ref ? ' currentBranch' : '') + '">' + ref.shortName() + '</span> ';
 		}
 	} else
 		refs.parentNode.style.display = "none";
@@ -212,7 +206,7 @@ var loadCommit = function(commitObject, currentRef) {
 		var newRow = $("commit_header").insertRow(-1);
 		newRow.innerHTML = "<td class='property_name'>Parent:</td><td>" +
 			"<a href='' onclick='selectCommit(this.innerHTML); return false;'>" +
-			commit.parents[i] + "</a></td>";
+			commit.parents[i].string + "</a></td>";
 	}
 
 	commit.notificationID = setTimeout(function() { 
@@ -224,6 +218,8 @@ var loadCommit = function(commitObject, currentRef) {
 }
 
 var showDiff = function() {
+
+	$("files").innerHTML = "";
 
 	// Callback for the diff highlighter. Used to generate a filelist
 	var newfile = function(name1, name2, id, mode_change, old_mode, new_mode) {

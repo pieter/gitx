@@ -18,7 +18,7 @@
 	char sign;	
 }
 
-@property(readonly) struct PBGitGraphLine *lines;
+@property(assign) struct PBGitGraphLine *lines;
 @property(assign) int nLines;
 @property(assign) int position, numColumns;
 @property(assign) char sign;

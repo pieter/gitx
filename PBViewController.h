@@ -16,16 +16,26 @@
 
 	NSString *status;
 	BOOL isBusy;
+	BOOL hasViewLoaded;
 }
 
 @property (readonly) __weak PBGitRepository *repository;
-@property (readonly) __weak PBGitWindowController *superController;
 @property(copy) NSString *status;
 @property(assign) BOOL isBusy;
 
 - (id)initWithRepository:(PBGitRepository *)theRepository superController:(PBGitWindowController *)controller;
-- (void) removeView;
+
+/* closeView is called when the repository window will be closed */
+- (void)closeView;
+
+/* Updateview is called every time it is loaded into the main view */
 - (void) updateView;
+
+/* Called after awakeFromNib:, and the view has been loaded into the main view.
+ * Useful for resizing stuff after everything has been set in the right position
+ */
+- (void)viewLoaded;
+
 - (NSResponder *)firstResponder;
 - (IBAction) refresh:(id)sender;
 

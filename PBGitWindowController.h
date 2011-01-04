@@ -9,16 +9,14 @@
 #import <Cocoa/Cocoa.h>
 #import "PBGitRepository.h"
 
-@class PBViewController, PBGitSidebarController, PBGitHistoryController;
+@class PBViewController, PBGitSidebarController, PBGitCommitController;
 
 @interface PBGitWindowController : NSWindowController {
 	__weak PBGitRepository* repository;
 
-	__weak PBViewController *contentController;
-	__weak PBViewController* viewController;
-	__weak PBGitSidebarController *sidebarController;
-	__weak PBGitHistoryController *historyController;
+	PBViewController *contentController;
 
+	PBGitSidebarController *sidebarController;
 	IBOutlet NSView *sourceListControlsView;
 	IBOutlet NSSplitView *splitView;
 	IBOutlet NSView *sourceSplitView;
@@ -27,20 +25,19 @@
 	IBOutlet NSTextField *statusField;
 	IBOutlet NSProgressIndicator *progressIndicator;
 
+	PBViewController* viewController;
+
 	IBOutlet NSToolbarItem *terminalItem;
 	IBOutlet NSToolbarItem *finderItem;
 }
 
 @property (assign) __weak PBGitRepository *repository;
-@property (assign) __weak PBViewController * viewController;
-@property (assign) __weak PBViewController * contentController;
-@property (assign) __weak PBGitSidebarController * sidebarController;
-@property (assign) __weak PBGitHistoryController * historyController;
 
 - (id)initWithRepository:(PBGitRepository*)theRepository displayDefault:(BOOL)display;
 
 - (void)changeContentController:(PBViewController *)controller;
 
+- (void)showCommitHookFailedSheet:(NSString *)messageText infoText:(NSString *)infoText commitController:(PBGitCommitController *)controller;
 - (void)showMessageSheet:(NSString *)messageText infoText:(NSString *)infoText;
 - (void)showErrorSheet:(NSError *)error;
 - (void)showErrorSheetTitle:(NSString *)title message:(NSString *)message arguments:(NSArray *)arguments output:(NSString *)output;
@@ -51,4 +48,7 @@
 - (IBAction) openInTerminal:(id)sender;
 - (IBAction) cloneTo:(id)sender;
 - (IBAction) refresh:(id)sender;
+
+- (void)setHistorySearch:(NSString *)searchString mode:(NSInteger)mode;
+
 @end

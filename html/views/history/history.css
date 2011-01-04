@@ -3,9 +3,14 @@ body {
 }
 
 #commit_header {
+	width: auto;
 	font-size: 12px;
 	padding-left: 5px;
 	padding-right: 5px;
+}
+
+#commit_header tr {
+        vertical-align: top;
 }
 
 #authorTable {
@@ -13,24 +18,41 @@ body {
 }
 
 #rightcontent {
-	float: right;
-	margin: 5px;
+	position: absolute;
+	right: 5px;
+	top: 5px;
 }
 
 #buttons {
-	float: left;
 }
 
-#gist {
-	-webkit-appearance: button;
-	font: 13px bold 'Lucida Grande';
-	width: 80px;
-	height: 23px;
-	margin-right: 5px;
+a.servicebutton {
+    display: block;
+    width: 80px;
+    padding: 2px;
+    margin-bottom: 4px;
+
+    border: 1px solid #3465a4;
+    background-color: #cce5ff;
+    color: #204a87;
+
+    font-size: 65%;
+    text-decoration: none;
+    text-align: center;
+
+    -webkit-border-radius: 2px;
 }
 
-.gravatar {
-	padding: 0.1em;
+a.servicebutton:hover {
+	padding: 1px;
+	border: 2px solid #3465a4;
+}
+
+#gravatar {
+	margin-left: 5px;
+	padding: 2px;
+	width: 60px;
+	height: 60px;
 
 	border: solid gray 1px;
 	-webkit-border-radius: 2px;
@@ -61,10 +83,7 @@ body {
 	font-family: Monaco;
 	font-size: 10px;
 	white-space: pre-wrap;
-	padding-top: 12px;
-	word-wrap: break-word; /* make the commit message word wrap (doesn't affect diffs) */
-	padding: 3px; /* don't let the commit message hit the edge of the window */
-	margin: 1em;
+	padding-top: 10px;
 }
 
 #files {
@@ -129,7 +148,7 @@ a.showdiff {
 	font-size: 9px;
 	font-family: Helvetica;
 	border: 1px solid black;
-	margin-right: 5px;
+	margin-right: 2px;
 	padding: 1px 3px 1px 3px;
 	-webkit-border-radius: 2px;
 }
@@ -150,47 +169,47 @@ a.showdiff {
 	background-color: #fca64f;
 }
 
-
+/*
 div.button
 {
-   color: #666666;
+	color: #666666;
 
-   font-size: 60%;
-   text-align: center;
+	font-size: 60%;
+	text-align: center;
 
-   width: 70px;
+	width: 70px;
 
-   margin-right: 10px;
+	margin-right: 10px;
 
-   padding: 2px;
+	padding: 2px;
 
-   float: left;
-   clear: both;
+	float: left;
+	clear: both;
 
-   border: 1px solid;
-   -webkit-border-radius: 3px;
+	border: 1px solid;
+	-webkit-border-radius: 3px;
 }
 
 div.created
 {
-   background-color: #ccffcc;
-   border-color: #66ff66;
+	background-color: #ccffcc;
+	border-color: #66ff66;
 }
 
 div.changed
 {
-   background-color: #ffcc99;
-   border-color: #ff9933;
+	background-color: #ffcc99;
+	border-color: #ff9933;
 }
 
 div.deleted
 {
-   background-color: #ffcccc;
-   border-color: #ff6666;
+	background-color: #ffcccc;
+	border-color: #ff6666;
 }
 
 div.renamed
 {
-   // No colour needed right now.
+	// No colour needed right now.
 }
-
+*/

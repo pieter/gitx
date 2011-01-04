@@ -7,12 +7,11 @@
 //
 
 #import "PBGitHistoryController.h"
+#import "PBWebHistoryController.h"
 #import "CWQuickLook.h"
 #import "PBGitGrapher.h"
 #import "PBGitRevisionCell.h"
 #import "PBCommitList.h"
-#import "ApplicationController.h"
-#import "PBQLOutlineView.h"
 #import "PBCreateBranchSheet.h"
 #import "PBCreateTagSheet.h"
 #import "PBAddRemoteSheet.h"
@@ -21,53 +20,34 @@
 #import "PBDiffWindowController.h"
 #import "PBGitDefaults.h"
 #import "PBGitRevList.h"
-#import "PBCommitList.h"
-#import "PBSourceViewItem.h"
-#import "PBRefController.h"
-
+#import "PBHistorySearchController.h"
+#import "PBGitRepositoryWatcher.h"
 #define QLPreviewPanel NSClassFromString(@"QLPreviewPanel")
+#import "PBQLTextView.h"
+#import "GLFileView.h"
+
+
 #define kHistorySelectedDetailIndexKey @"PBHistorySelectedDetailIndex"
 #define kHistoryDetailViewIndex 0
 #define kHistoryTreeViewIndex 1
+
+#define kHistorySplitViewPositionDefault @"History SplitView Position"
 
 @interface PBGitHistoryController ()
 
 - (void) updateBranchFilterMatrix;
 - (void) restoreFileBrowserSelection;
 - (void) saveFileBrowserSelection;
+- (void)saveSplitViewPosition;
 
 @end
 
 
 @implementation PBGitHistoryController
-@synthesize selectedCommitDetailsIndex, webCommit, gitTree;
-@synthesize commitController, refController;
-@synthesize sidebarSourceView, sidebarRemotes;
-@synthesize searchField;
+@synthesize selectedCommitDetailsIndex, webCommit, gitTree, commitController, refController;
+@synthesize searchController;
 @synthesize commitList;
-@synthesize webView;
-
-#pragma mark NSToolbarItemValidation Methods
-
-- (BOOL) validateToolbarItem:(NSToolbarItem *)theItem {
-    
-    NSString * curBranchDesc = [[repository currentBranch] description];
-    NSArray * candidates = [NSArray arrayWithObjects:@"Push", @"Pull", @"Rebase", nil];
-    BOOL res;
-    
-    if (([candidates containsObject:[theItem label]]) && 
-        (([curBranchDesc isEqualToString:@"All branches"]) || 
-         ([curBranchDesc isEqualToString:@"Local branches"])))
-    {
-        res = NO;
-    } else {
-        res = YES;
-    }
-    
-    return res;
-}
-
-#pragma mark PBGitHistoryController
+@synthesize treeController;
 
 - (void)awakeFromNib
 {
@@ -78,15 +58,9 @@
 	[treeController addObserver:self forKeyPath:@"selection" options:0 context:@"treeChange"];
 
 	[repository.revisionList addObserver:self forKeyPath:@"isUpdating" options:0 context:@"revisionListUpdating"];
-	[repository.revisionList addObserver:self forKeyPath:@"updatedGraph" options:0 context:@"revisionListUpdatedGraph"];
 	[repository addObserver:self forKeyPath:@"currentBranch" options:0 context:@"branchChange"];
 	[repository addObserver:self forKeyPath:@"refs" options:0 context:@"updateRefs"];
-
-	NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
-	[nc addObserver:self
-	       selector:@selector(preferencesChangedWithNotification:)
-               name:NSUserDefaultsDidChangeNotification
-             object:nil];
+	[repository addObserver:self forKeyPath:@"currentBranchFilter" options:0 context:@"branchFilterChange"];
 
 	forceSelectionUpdate = YES;
 	NSSize cellSpacing = [commitList intercellSpacing];
@@ -94,49 +68,71 @@
 	[commitList setIntercellSpacing:cellSpacing];
 	[fileBrowser setTarget:self];
 	[fileBrowser setDoubleAction:@selector(openSelectedFile:)];
-    
+
 	if (!repository.currentBranch) {
 		[repository reloadRefs];
 		[repository readCurrentBranch];
 	}
 	else
 		[repository lazyReload];
-    
+
 	// Set a sort descriptor for the subject column in the history list, as
 	// It can't be sorted by default (because it's bound to a PBGitCommit)
-	[[commitList tableColumnWithIdentifier:@"subject"] setSortDescriptorPrototype:[[NSSortDescriptor alloc] initWithKey:@"subject" ascending:YES]];
+	[[commitList tableColumnWithIdentifier:@"SubjectColumn"] setSortDescriptorPrototype:[[NSSortDescriptor alloc] initWithKey:@"subject" ascending:YES]];
 	// Add a menu that allows a user to select which columns to view
 	[[commitList headerView] setMenu:[self tableColumnMenu]];
+
 	[historySplitView setTopMin:58.0 andBottomMin:100.0];
-	[historySplitView uncollapse];
+	[historySplitView setHidden:YES];
+	[self performSelector:@selector(restoreSplitViewPositiion) withObject:nil afterDelay:0];
 
 	[upperToolbarView setTopShade:237/255.0 bottomShade:216/255.0];
 	[scopeBarView setTopColor:[NSColor colorWithCalibratedHue:0.579 saturation:0.068 brightness:0.898 alpha:1.000] 
 				  bottomColor:[NSColor colorWithCalibratedHue:0.579 saturation:0.119 brightness:0.765 alpha:1.000]];
-	//[scopeBarView setTopShade:207/255.0 bottomShade:180/255.0];
 	[self updateBranchFilterMatrix];
+
+  // listen for updates
+  [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_repositoryUpdatedNotification:) name:PBGitRepositoryEventNotification object:repository];
 
 	[super awakeFromNib];
 }
 
-- (void) updateKeys
-{
-	PBGitCommit * lastObject = [[commitController selectedObjects] lastObject];
-    if (lastObject) {
-        selectedCommit = lastObject;
+- (void) _repositoryUpdatedNotification:(NSNotification *)notification {
+    PBGitRepositoryWatcherEventType eventType = [(NSNumber *)[[notification userInfo] objectForKey:kPBGitRepositoryEventTypeUserInfoKey] unsignedIntValue];
+    if(eventType & PBGitRepositoryWatcherEventTypeGitDirectory){
+      // refresh if the .git repository is modified
+      [self refresh:NULL];
     }
+}
+
+- (void)updateKeys
+{
+	PBGitCommit *lastObject = [[commitController selectedObjects] lastObject];
+	if (lastObject) {
+		if (![selectedCommit isEqual:lastObject]) {
+			selectedCommit = lastObject;
+
+			BOOL isOnHeadBranch = [selectedCommit isOnHeadBranch];
+			[mergeButton setEnabled:!isOnHeadBranch];
+			[cherryPickButton setEnabled:!isOnHeadBranch];
+			[rebaseButton setEnabled:!isOnHeadBranch];
+		}
+	}
+	else {
+		[mergeButton setEnabled:NO];
+		[cherryPickButton setEnabled:NO];
+		[rebaseButton setEnabled:NO];
+	}
 
 	if (self.selectedCommitDetailsIndex == kHistoryTreeViewIndex) {
 		self.gitTree = selectedCommit.tree;
 		[self restoreFileBrowserSelection];
 	}
-	else // kHistoryDetailViewIndex
+	else {
+		// kHistoryDetailViewIndex
+		if (![self.webCommit isEqual:selectedCommit])
 		self.webCommit = selectedCommit;
-
-	BOOL isOnHeadBranch = [selectedCommit isOnHeadBranch];
-	[mergeButton setEnabled:!isOnHeadBranch];
-	[cherryPickButton setEnabled:!isOnHeadBranch];
-	[rebaseButton setEnabled:!isOnHeadBranch];
+	}
 }
 
 - (void) updateBranchFilterMatrix
@@ -175,6 +171,11 @@
 	return nil;
 }
 
+- (BOOL)isCommitSelected
+{
+	return [selectedCommit isEqual:[[commitController selectedObjects] lastObject]];
+}
+
 - (void) setSelectedCommitDetailsIndex:(int)detailsIndex
 {
 	if (selectedCommitDetailsIndex == detailsIndex)
@@ -190,10 +191,6 @@
 {
 	self.isBusy = repository.revisionList.isUpdating;
 	self.status = [NSString stringWithFormat:@"%d commits loaded", [[commitController arrangedObjects] count]];
-}
-
-- (void) preferencesChangedWithNotification:(NSNotification *)notification {
-    [[[repository windowForSheet] contentView] setNeedsDisplay:YES];
 }
 
 - (void) restoreFileBrowserSelection
@@ -241,10 +238,6 @@
 
 - (void) observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
 {
-    if ([ApplicationController sharedApplicationController].launchedFromGitx) {
-        return;
-    }
-
     if ([(NSString *)context isEqualToString: @"commitChange"]) {
 		[self updateKeys];
 		[self restoreFileBrowserSelection];
@@ -270,16 +263,19 @@
 		return;
 	}
 
-	if([(NSString *)context isEqualToString:@"updateCommitCount"] || [(NSString *)context isEqualToString:@"revisionListUpdating"]) {
-		[self updateStatus];
+	if ([(NSString *)context isEqualToString:@"branchFilterChange"]) {
+		[PBGitDefaults setBranchFilter:repository.currentBranchFilter];
+		[self updateBranchFilterMatrix];
 		return;
 	}
 
-	if([(NSString *)context isEqualToString:@"revisionListUpdatedGraph"]) {
+	if([(NSString *)context isEqualToString:@"updateCommitCount"] || [(NSString *)context isEqualToString:@"revisionListUpdating"]) {
+		[self updateStatus];
+
 		if ([repository.currentBranch isSimpleRef])
 			[self selectCommit:[repository shaForRef:[repository.currentBranch ref]]];
 		else
-			[self selectCommit:[[self firstCommit] realSha]];
+			[self selectCommit:[[self firstCommit] sha]];
 		return;
 	}
 
@@ -293,7 +289,17 @@
 		return;
 	PBGitTree* tree = [selectedFiles objectAtIndex:0];
 	NSString* name = [tree tmpFileNameForContents];
-	[[NSWorkspace sharedWorkspace] openFile:name];
+	[[NSWorkspace sharedWorkspace] openTempFile:name];
+}
+
+- (BOOL)validateMenuItem:(NSMenuItem *)menuItem
+{
+    if ([menuItem action] == @selector(setDetailedView:)) {
+		[menuItem setState:(self.selectedCommitDetailsIndex == kHistoryDetailViewIndex) ? NSOnState : NSOffState];
+    } else if ([menuItem action] == @selector(setTreeView:)) {
+		[menuItem setState:(self.selectedCommitDetailsIndex == kHistoryTreeViewIndex) ? NSOnState : NSOffState];
+    }
+    return YES;
 }
 
 - (IBAction) setDetailedView:(id)sender
@@ -318,17 +324,34 @@
 
 - (void)keyDown:(NSEvent*)event
 {
-	if ([[event charactersIgnoringModifiers] isEqualToString: @"f"] 
-        && [event modifierFlags] & NSAlternateKeyMask 
-        && [event modifierFlags] & NSCommandKeyMask) 
-    {
-        // command+alt+f
-        [[superController window] makeFirstResponder: searchField];
-    }
-	else 
-    {
-        [super keyDown: event];
-    }
+	if ([[event charactersIgnoringModifiers] isEqualToString: @"f"] && [event modifierFlags] & NSAlternateKeyMask && [event modifierFlags] & NSCommandKeyMask)
+		[superController.window makeFirstResponder: searchField];
+	else
+		[super keyDown: event];
+}
+
+// NSSearchField (actually textfields in general) prevent the normal Find operations from working. Setup custom actions for the
+// next and previous menuitems (in MainMenu.nib) so they will work when the search field is active. When searching for text in
+// a file make sure to call the Find panel's action method instead.
+- (IBAction)selectNext:(id)sender
+{
+	NSResponder *firstResponder = [[[self view] window] firstResponder];
+	if ([firstResponder isKindOfClass:[PBQLTextView class]]) {
+		[(PBQLTextView *)firstResponder performFindPanelAction:sender];
+		return;
+	}
+
+	[searchController selectNextResult];
+}
+- (IBAction)selectPrevious:(id)sender
+{
+	NSResponder *firstResponder = [[[self view] window] firstResponder];
+	if ([firstResponder isKindOfClass:[PBQLTextView class]]) {
+		[(PBQLTextView *)firstResponder performFindPanelAction:sender];
+		return;
+	}
+
+	[searchController selectPreviousResult];
 }
 
 - (void) copyCommitInfo
@@ -337,11 +360,24 @@
 	if (!commit)
 		return;
 	NSString *info = [NSString stringWithFormat:@"%@ (%@)", [[commit realSha] substringToIndex:10], [commit subject]];
-    
+
 	NSPasteboard *a =[NSPasteboard generalPasteboard];
 	[a declareTypes:[NSArray arrayWithObject:NSStringPboardType] owner:self];
 	[a setString:info forType: NSStringPboardType];
 	
+}
+
+- (void) copyCommitSHA
+{
+	PBGitCommit *commit = [[commitController selectedObjects] objectAtIndex:0];
+	if (!commit)
+		return;
+	NSString *info = [[commit realSha] substringWithRange:NSMakeRange(0, 7)];
+
+	NSPasteboard *a =[NSPasteboard generalPasteboard];
+	[a declareTypes:[NSArray arrayWithObject:NSStringPboardType] owner:self];
+	[a setString:info forType: NSStringPboardType];
+
 }
 
 - (IBAction) toggleQLPreviewPanel:(id)sender
@@ -368,7 +404,7 @@
 {
 	if (!force && ![[QLPreviewPanel sharedPreviewPanel] isOpen])
 		return;
-    
+
 	if ([[QLPreviewPanel sharedPreviewPanel] respondsToSelector:@selector(setDataSource:)]) {
 		// Public QL API
 		[previewPanel reloadData];
@@ -376,14 +412,14 @@
 	else {
 		// Private QL API (10.5 only)
 		NSArray *selectedFiles = [treeController selectedObjects];
-        
+
 		NSMutableArray *fileNames = [NSMutableArray array];
 		for (PBGitTree *tree in selectedFiles) {
 			NSString *filePath = [tree tmpFileNameForContents];
 			if (filePath)
 				[fileNames addObject:[NSURL fileURLWithPath:filePath]];
 		}
-        
+
 		if ([fileNames count])
 			[[QLPreviewPanel sharedPreviewPanel] setURLs:fileNames currentIndex:0 preservingDisplayState:YES];
 	}
@@ -424,15 +460,13 @@
         commitList.useAdjustScroll = YES;
     }
 
-    // NSLog(@"[%@ %s] newIndex = %d, oldIndex = %d", [self class], _cmd, newIndex, oldIndex);
-
 	[commitList scrollRowToVisible:newIndex];
     commitList.useAdjustScroll = NO;
 }
 
-- (NSArray *) selectedObjectsForSHA:(NSString *)commitSHA
+- (NSArray *) selectedObjectsForSHA:(PBGitSHA *)commitSHA
 {
-	NSPredicate *selection = [NSPredicate predicateWithFormat:@"realSha == %@", commitSHA];
+	NSPredicate *selection = [NSPredicate predicateWithFormat:@"sha == %@", commitSHA];
 	NSArray *selectedCommits = [[commitController content] filteredArrayUsingPredicate:selection];
 
 	if (([selectedCommits count] == 0) && [self firstCommit])
@@ -441,32 +475,19 @@
 	return selectedCommits;
 }
 
-- (BOOL) selectCommit:(NSString *)commitSHA
+- (void)selectCommit:(PBGitSHA *)commitSHA
 {
-    ApplicationController * appController = [ApplicationController sharedApplicationController];
-    if (appController.launchedFromGitx && [appController.cliArgs isEqualToString:@"--commit"]) {
-        return NO;
-    }
-    // NSLog(@"[%@ %s]: SHA = %@", [self class], _cmd, commitSHA);
-	if (!forceSelectionUpdate && [[selectedCommit realSha] isEqualToString:commitSHA])
-		return NO;
+	if (!forceSelectionUpdate && [[[[commitController selectedObjects] lastObject] sha] isEqual:commitSHA])
+		return;
 
 	NSInteger oldIndex = [[commitController selectionIndexes] firstIndex];
-    if (oldIndex == NSNotFound) {
-        oldIndex = [[commitController content] indexOfObject:selectedCommit];
-    }
 
 	NSArray *selectedCommits = [self selectedObjectsForSHA:commitSHA];
-    selectedCommit = [selectedCommits objectAtIndex:0];
-
 	[commitController setSelectedObjects:selectedCommits];
 
-	if (repository.currentBranchFilter != kGitXSelectedBranchFilter) {
-        // NSLog(@"[%@ %s] currentBranchFilter = %@", [self class], _cmd, PBStringFromBranchFilterType(repository.currentBranchFilter));
-        [self scrollSelectionToTopOfViewFrom:oldIndex];
-    }
+	[self scrollSelectionToTopOfViewFrom:oldIndex];
 
-    return YES;
+	forceSelectionUpdate = NO;
 }
 
 - (BOOL) hasNonlinearPath
@@ -474,14 +495,26 @@
 	return [commitController filterPredicate] || [[commitController sortDescriptors] count] > 0;
 }
 
-- (void) removeView
+- (void)closeView
 {
-	[webView close];
-	[commitController removeObserver:self forKeyPath:@"selection"];
-	[treeController removeObserver:self forKeyPath:@"selection"];
-	[repository removeObserver:self forKeyPath:@"currentBranch"];
-    
-	[super removeView];
+	[self saveSplitViewPosition];
+
+	if (commitController) {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+		[commitController removeObserver:self forKeyPath:@"selection"];
+		[commitController removeObserver:self forKeyPath:@"arrangedObjects.@count"];
+		[treeController removeObserver:self forKeyPath:@"selection"];
+
+		[repository.revisionList removeObserver:self forKeyPath:@"isUpdating"];
+		[repository removeObserver:self forKeyPath:@"currentBranch"];
+		[repository removeObserver:self forKeyPath:@"refs"];
+		[repository removeObserver:self forKeyPath:@"currentBranchFilter"];
+	}
+
+	[webHistoryController closeView];
+	[fileView closeView];
+
+	[super closeView];
 }
 
 #pragma mark Table Column Methods
@@ -504,14 +537,8 @@
 
 - (void)showCommitsFromTree:(id)sender
 {
-	// TODO: Enable this from webview as well!
-    
-	NSMutableArray *filePaths = [NSMutableArray arrayWithObjects:@"HEAD", @"--", NULL];
-	[filePaths addObjectsFromArray:[sender representedObject]];
-    
-	PBGitRevSpecifier *revSpec = [[PBGitRevSpecifier alloc] initWithParameters:filePaths];
-    
-	repository.currentBranch = [repository addBranch:revSpec];
+	NSString *searchString = [(NSArray *)[sender representedObject] componentsJoinedByString:@" "];
+	[searchController setHistorySearch:searchString mode:kGitXPathSearchMode];
 }
 
 - (void)showInFinderAction:(id)sender
@@ -519,12 +546,12 @@
 	NSString *workingDirectory = [[repository workingDirectory] stringByAppendingString:@"/"];
 	NSString *path;
 	NSWorkspace *ws = [NSWorkspace sharedWorkspace];
-    
+
 	for (NSString *filePath in [sender representedObject]) {
 		path = [workingDirectory stringByAppendingPathComponent:filePath];
 		[ws selectFile: path inFileViewerRootedAtPath:path];
 	}
-    
+
 }
 
 - (void)openFilesAction:(id)sender
@@ -532,7 +559,7 @@
 	NSString *workingDirectory = [[repository workingDirectory] stringByAppendingString:@"/"];
 	NSString *path;
 	NSWorkspace *ws = [NSWorkspace sharedWorkspace];
-    
+
 	for (NSString *filePath in [sender representedObject]) {
 		path = [workingDirectory stringByAppendingPathComponent:filePath];
 		[ws openFile:path];
@@ -556,7 +583,7 @@
 - (NSMenu *)contextMenuForTreeView
 {
 	NSArray *filePaths = [[treeController selectedObjects] valueForKey:@"fullPath"];
-    
+
 	NSMenu *menu = [[NSMenu alloc] init];
 	for (NSMenuItem *item in [self menuItemsForPaths:filePaths])
 		[menu addItem:item];
@@ -577,7 +604,7 @@
 	PBGitRef *headRef = [[repository headRef] ref];
 	NSString *headRefName = [headRef shortName];
 	NSString *diffTitle = [NSString stringWithFormat:@"Diff %@ with %@", multiple ? @"files" : @"file", headRefName];
-	BOOL isHead = [[selectedCommit realSha] isEqualToString:[repository headSHA]];
+	BOOL isHead = [[selectedCommit sha] isEqual:[repository headSHA]];
 	NSMenuItem *diffItem = [[NSMenuItem alloc] initWithTitle:diffTitle
 													  action:isHead ? nil : @selector(diffFilesAction:)
 											   keyEquivalent:@""];
@@ -597,16 +624,21 @@
 		[item setTarget:self];
 		[item setRepresentedObject:filePaths];
 	}
-    
+
 	return menuItems;
 }
 
-- (BOOL)splitView:(NSSplitView *)sender canCollapseSubview:(NSView *)subview {
+
+#pragma mark NSSplitView delegate methods
+
+- (BOOL)splitView:(NSSplitView *)splitView canCollapseSubview:(NSView *)subview
+{
 	return TRUE;
 }
 
-- (BOOL)splitView:(NSSplitView *)splitView shouldCollapseSubview:(NSView *)subview forDoubleClickOnDividerAtIndex:(NSInteger)dividerIndex {
-	int index = [[splitView subviews] indexOfObject:subview];
+- (BOOL)splitView:(NSSplitView *)splitView shouldCollapseSubview:(NSView *)subview forDoubleClickOnDividerAtIndex:(NSInteger)dividerIndex
+{
+	NSUInteger index = [[splitView subviews] indexOfObject:subview];
 	// this method (and canCollapse) are called by the splitView to decide how to collapse on double-click
 	// we compare our two subviews, so that always the smaller one is collapsed.
 	if([[[splitView subviews] objectAtIndex:index] frame].size.height < [[[splitView subviews] objectAtIndex:((index+1)%2)] frame].size.height) {
@@ -615,14 +647,59 @@
 	return FALSE;
 }
 
-- (CGFloat)splitView:(NSSplitView *)sender constrainMinCoordinate:(CGFloat)proposedMin ofSubviewAt:(NSInteger)offset {
-	return proposedMin + historySplitView.topViewMin;
+- (CGFloat)splitView:(NSSplitView *)splitView constrainMinCoordinate:(CGFloat)proposedMin ofSubviewAt:(NSInteger)dividerIndex
+{
+	return historySplitView.topViewMin;
 }
 
-- (CGFloat)splitView:(NSSplitView *)sender constrainMaxCoordinate:(CGFloat)proposedMax ofSubviewAt:(NSInteger)offset {
-	if(offset == 1)
-		return proposedMax - historySplitView.bottomViewMin;
-	return [sender frame].size.height;
+- (CGFloat)splitView:(NSSplitView *)splitView constrainMaxCoordinate:(CGFloat)proposedMax ofSubviewAt:(NSInteger)dividerIndex
+{
+	return [splitView frame].size.height - [splitView dividerThickness] - historySplitView.bottomViewMin;
+}
+
+// while the user resizes the window keep the upper (history) view constant and just resize the lower view
+// unless the lower view gets too small
+- (void)splitView:(NSSplitView *)splitView resizeSubviewsWithOldSize:(NSSize)oldSize
+{
+	NSRect newFrame = [splitView frame];
+
+	float dividerThickness = [splitView dividerThickness];
+
+	NSView *upperView = [[splitView subviews] objectAtIndex:0];
+	NSRect upperFrame = [upperView frame];
+	upperFrame.size.width = newFrame.size.width;
+
+	if ((newFrame.size.height - upperFrame.size.height - dividerThickness) < historySplitView.bottomViewMin) {
+		upperFrame.size.height = newFrame.size.height - historySplitView.bottomViewMin - dividerThickness;
+	}
+
+	NSView *lowerView = [[splitView subviews] objectAtIndex:1];
+	NSRect lowerFrame = [lowerView frame];
+	lowerFrame.origin.y = upperFrame.size.height + dividerThickness;
+	lowerFrame.size.height = newFrame.size.height - lowerFrame.origin.y;
+	lowerFrame.size.width = newFrame.size.width;
+
+	[upperView setFrame:upperFrame];
+	[lowerView setFrame:lowerFrame];
+}
+
+// NSSplitView does not save and restore the position of the SplitView correctly so do it manually
+- (void)saveSplitViewPosition
+{
+	float position = [[[historySplitView subviews] objectAtIndex:0] frame].size.height;
+	[[NSUserDefaults standardUserDefaults] setFloat:position forKey:kHistorySplitViewPositionDefault];
+	[[NSUserDefaults standardUserDefaults] synchronize];
+}
+
+// make sure this happens after awakeFromNib
+- (void)restoreSplitViewPositiion
+{
+	float position = [[NSUserDefaults standardUserDefaults] floatForKey:kHistorySplitViewPositionDefault];
+	if (position < 1.0)
+		position = 175;
+
+	[historySplitView setPosition:position ofDividerAtIndex:0];
+	[historySplitView setHidden:NO];
 }
 
 
@@ -665,71 +742,8 @@
 
 - (IBAction) rebase:(id)sender
 {
-	if (selectedCommit) {
-		PBGitRef *headRef = [[repository headRef] ref];
-		[repository rebaseBranch:headRef onRefish:selectedCommit];
-	}
-}
-
-#pragma mark Remote controls
-
-// !!! Andre Berg 20100330: moved these over from the PBGitSidebarController
-// since I grew tired of having to go all the way down with the mouse just
-// to do some basic actions I need to frequently (YMMV) =)
-
-enum  {
-	kAddRemoteSegment = 0,
-	kFetchSegment,
-	kPullSegment,
-	kPushSegment
-};
-
-- (void) updateRemoteControls:(PBGitRef *)forRef
-{
-	BOOL hasRemote = NO;
-
-	PBGitRef *ref = forRef;
-	if ([ref isRemote] || ([ref isBranch] && [[repository remoteRefForBranch:ref error:NULL] remoteName]))
-		hasRemote = YES;
-
-	[remoteControls setEnabled:hasRemote forSegment:kFetchSegment];
-	[remoteControls setEnabled:hasRemote forSegment:kPullSegment];
-	[remoteControls setEnabled:hasRemote forSegment:kPushSegment];
-}
-
-- (IBAction) fetchPullPushAction:(id)sender
-{
-	NSInteger selectedSegment = [sender selectedSegment];
-
-	if (selectedSegment == kAddRemoteSegment) {
-		[PBAddRemoteSheet beginAddRemoteSheetForRepository:repository];
-		return;
-	}
-    NSOutlineView * sourceView = sidebarSourceView;
-	NSInteger index = [sourceView selectedRow];
-	PBSourceViewItem *item = [sourceView itemAtRow:index];
-	PBGitRef *ref = [[item revSpecifier] ref];
-
-	if (!ref && (item.parent == sidebarRemotes))
-		ref = [PBGitRef refFromString:[kGitXRemoteRefPrefix stringByAppendingString:[item title]]];
-
-	if (![ref isRemote] && ![ref isBranch])
-		return;
-
-	PBGitRef *remoteRef = [repository remoteRefForBranch:ref error:NULL];
-	if (!remoteRef)
-		return;
-
-	if (selectedSegment == kFetchSegment)
-		[repository beginFetchFromRemoteForRef:ref];
-	else if (selectedSegment == kPullSegment)
-		[repository beginPullFromRemote:remoteRef forRef:ref];
-	else if (selectedSegment == kPushSegment) {
-		if ([ref isRemote])
-			[refController showConfirmPushRefSheet:nil remote:remoteRef];
-		else if ([ref isBranch])
-			[refController showConfirmPushRefSheet:ref remote:remoteRef];
-	}
+	if (selectedCommit)
+		[repository rebaseBranch:nil onRefish:selectedCommit];
 }
 
 #pragma mark -
@@ -813,4 +827,3 @@ enum  {
 }
 
 @end
-

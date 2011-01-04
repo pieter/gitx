@@ -14,7 +14,7 @@
 
 @implementation PBGitTree
 
-@synthesize sha, path, repository, leaf, parent, iconImage, absolutePath;
+@synthesize sha, path, repository, leaf, parent;
 
 + (PBGitTree*) rootForCommit:(id) commit
 {
@@ -38,14 +38,11 @@
 	return tree;
 }
 
-- (id) init
+- init
 {
-    if (self = [super init]) {
-        children = nil;
-        localFileName = nil;
-        leaf = YES;
-        absolutePath = [PBGitRepository basePath];
-    }
+	children = nil;
+	localFileName = nil;
+	leaf = YES;
 	return self;
 }
 
@@ -68,10 +65,12 @@
 
 - (BOOL)hasBinaryHeader:(NSString*)contents
 {
-	if(!contents)
+	if (!contents)
 		return NO;
 
-	return [contents rangeOfString:@"\0" options:0 range:NSMakeRange(0, ([contents length] >= 8000) ? 7999 : [contents length])].location != NSNotFound;
+	return [contents rangeOfString:@"\0"
+						   options:0
+							 range:NSMakeRange(0, ([contents length] >= 8000) ? 7999 : [contents length])].location != NSNotFound;
 }
 
 - (BOOL)hasBinaryAttributes
@@ -114,6 +113,46 @@
 	}
 	
 	return [repository outputForArguments:[NSArray arrayWithObjects:@"show", [self refSpec], nil]];
+}
+
+- (NSString *) blame
+{
+	if (!leaf)
+		return [NSString stringWithFormat:@"This is a tree with path %@", [self fullPath]];
+	
+	if ([self hasBinaryAttributes])
+		return [NSString stringWithFormat:@"%@ appears to be a binary file of %d bytes", [self fullPath], [self fileSize]];
+	
+	if ([self fileSize] > 52428800) // ~50MB
+		return [NSString stringWithFormat:@"%@ is too big to be displayed (%d bytes)", [self fullPath], [self fileSize]];
+	
+	NSString *contents=[repository outputInWorkdirForArguments:[NSArray arrayWithObjects:@"blame", @"-p",  sha, @"--", [self fullPath], nil]];
+	
+	if ([self hasBinaryHeader:contents])
+		return [NSString stringWithFormat:@"%@ appears to be a binary file of %d bytes", [self fullPath], [self fileSize]];
+	
+	
+	return contents;
+}
+
+- (NSString *) log:(NSString *)format
+{
+	if (!leaf)
+		return [NSString stringWithFormat:@"This is a tree with path %@", [self fullPath]];
+	
+	if ([self hasBinaryAttributes])
+		return [NSString stringWithFormat:@"%@ appears to be a binary file of %d bytes", [self fullPath], [self fileSize]];
+	
+	if ([self fileSize] > 52428800) // ~50MB
+		return [NSString stringWithFormat:@"%@ is too big to be displayed (%d bytes)", [self fullPath], [self fileSize]];
+
+	NSString *contents=[repository outputInWorkdirForArguments:[NSArray arrayWithObjects:@"log", [NSString stringWithFormat:@"--pretty=format:%@",format], @"--", [self fullPath], nil]];
+	
+	if ([self hasBinaryHeader:contents])
+		return [NSString stringWithFormat:@"%@ appears to be a binary file of %d bytes", [self fullPath], [self fileSize]];
+	
+	
+	return contents;
 }
 
 - (long long)fileSize
@@ -160,7 +199,7 @@
 		NSData* data = [handle readDataToEndOfFile];
 		[data writeToFile:newName atomically:YES];
 	} else { // Directory
-		[[NSFileManager defaultManager] createDirectoryAtPath:newName withIntermediateDirectories:YES attributes:nil error:nil];
+		[[NSFileManager defaultManager] createDirectoryAtPath:newName attributes:nil];
 		for (PBGitTree* child in [self children])
 			[child saveToFolder: newName];
 	}
@@ -218,13 +257,10 @@
 	NSMutableArray* c = [NSMutableArray array];
 	
 	NSString* p = [handle readLine];
-	while ([p length] > 0) {
-		if ([p isEqualToString:@"\r"])
-			break;
-
+	while (p.length > 0) {
 		BOOL isLeaf = ([p characterAtIndex:p.length - 1] != '/');
 		if (!isLeaf)
-			p = [p substringToIndex:[p length]-1];
+			p = [p substringToIndex:p.length -1];
 
 		PBGitTree* child = [PBGitTree treeForTree:self andPath:p];
 		child.leaf = isLeaf;
@@ -241,20 +277,16 @@
 	if (!parent)
 		return @"";
 	
-	if ([[parent fullPath] isEqualToString:@""])
+	if ([parent.fullPath isEqualToString:@""])
 		return self.path;
 	
-	return [[parent fullPath] stringByAppendingPathComponent: self.path];
+	return [parent.fullPath stringByAppendingPathComponent: self.path];
 }
 
-// !!! Andre Berg 20100324: finalize seldomly causes the following error message:
-// malloc: resurrection error for object 0x12b1110 while assigning NSFilesystemItemRemoveOperation._removePath[32](0x12a0170)[16] = NSPathStore2[240](0x12b1110)
-// garbage pointer stored into reachable memory, break on auto_zone_resurrection_error to debug
-// objc[40604]: **resurrected** object 0x12b1110 of class NSPathStore2 being finalized
-// - (void) finalize
-// {
-// 	if (localFileName)
-// 		[[NSFileManager defaultManager] removeItemAtPath:localFileName error:nil];
-// 	[super finalize];
-// }
+- (void) finalize
+{
+	if (localFileName)
+		[[NSFileManager defaultManager] removeFileAtPath:localFileName handler:nil];
+	[super finalize];
+}
 @end

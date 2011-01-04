@@ -11,6 +11,7 @@
 #import "PBGitRevList.h"
 #import "PBGitGrapher.h"
 #import "PBGitHistoryGrapher.h"
+#import "PBGitSHA.h"
 
 
 
@@ -35,7 +36,6 @@
 @synthesize projectRevList;
 @synthesize commits;
 @synthesize isUpdating;
-@synthesize updatedGraph;
 @dynamic projectCommits;
 
 
@@ -81,6 +81,20 @@
 }
 
 
+- (void)cleanup
+{
+	if (currentRevList) {
+		[currentRevList removeObserver:self forKeyPath:@"commits"];
+		[currentRevList cancel];
+	}
+	[graphQueue cancelAllOperations];
+
+	[repository removeObserver:self forKeyPath:@"currentBranch"];
+	[repository removeObserver:self forKeyPath:@"currentBranchFilter"];
+	[repository removeObserver:self forKeyPath:@"hasChanged"];
+}
+
+
 - (NSArray *) projectCommits
 {
 	return [projectRevList.commits copy];
@@ -95,6 +109,7 @@
 {
 	if (!array || [array count] == 0)
 		return;
+
 	if (resetCommits) {
 		self.commits = [NSMutableArray array];
 		resetCommits = NO;
@@ -109,11 +124,18 @@
 }
 
 
+- (void) updateCommitsFromGrapher:(NSDictionary *)commitData
+{
+	if ([commitData objectForKey:kCurrentQueueKey] != graphQueue)
+		return;
+
+	[self addCommitsFromArray:[commitData objectForKey:kNewCommitsKey]];
+}
+
 - (void) finishedGraphing
 {
 	if (!currentRevList.isParsing && ([[graphQueue operations] count] == 0)) {
 		self.isUpdating = NO;
-		[self performSelector:@selector(setUpdatedGraph:) withObject:[NSDate date] afterDelay:0];
 	}
 }
 
@@ -127,12 +149,9 @@
 	resetCommits = YES;
 	self.isUpdating = YES;
 
-	[graphQueue setSuspended:YES];
-	if (graphQueue)
-		[graphQueue removeObserver:self forKeyPath:@"operations"];
+	[graphQueue cancelAllOperations];
 	graphQueue = [[NSOperationQueue alloc] init];
-	[graphQueue addObserver:self forKeyPath:@"operations" options:0 context:@"operations"];
-	lastOperation = nil;
+	[graphQueue setMaxConcurrentOperationCount:1];
 
 	grapher = [self grapher];
 }
@@ -140,12 +159,7 @@
 
 - (NSInvocationOperation *) operationForCommits:(NSArray *)newCommits
 {
-	NSInvocationOperation *graphOperation = [[NSInvocationOperation alloc] initWithTarget:grapher selector:@selector(graphCommits:) object:newCommits];
-	if (lastOperation)
-		[graphOperation addDependency:lastOperation];
-	lastOperation = graphOperation;
-
-	return graphOperation;
+	return [[NSInvocationOperation alloc] initWithTarget:grapher selector:@selector(graphCommits:) object:newCommits];
 }
 
 
@@ -154,10 +168,13 @@
 	NSMutableSet *baseCommitSHAs = [NSMutableSet set];
 	NSDictionary *refs = repository.refs;
 
-	for (NSString *sha in refs)
+	for (PBGitSHA *sha in refs)
 		for (PBGitRef *ref in [refs objectForKey:sha])
 			if ([ref isBranch] || [ref isTag])
 				[baseCommitSHAs addObject:sha];
+
+	if (![[PBGitRef refFromString:[[repository headRef] simpleRef]] type])
+		[baseCommitSHAs addObject:[repository headSHA]];
 
 	return baseCommitSHAs;
 }
@@ -170,7 +187,7 @@
 
 	PBGitRef *remoteRef = [[repository.currentBranch ref] remoteRef];
 
-	for (NSString *sha in refs)
+	for (PBGitSHA *sha in refs)
 		for (PBGitRef *ref in [refs objectForKey:sha])
 			if ([remoteRef isEqualToRef:[ref remoteRef]])
 				[baseCommitSHAs addObject:sha];
@@ -186,7 +203,7 @@
 			return [NSMutableSet setWithObject:lastSHA];
 		else if ([repository.currentBranch isSimpleRef]) {
 			PBGitRef *currentRef = [repository.currentBranch ref];
-			NSString *sha = [repository shaForRef:currentRef];
+			PBGitSHA *sha = [repository shaForRef:currentRef];
 			if (sha)
 				return [NSMutableSet setWithObject:sha];
 		}
@@ -206,7 +223,7 @@
 {
 	BOOL viewAllBranches = (repository.currentBranchFilter == kGitXAllBranchesFilter);
 
-	return [[PBGitHistoryGrapher alloc] initWithBaseCommits:[self baseCommits] viewAllBranches:viewAllBranches delegate:self];
+	return [[PBGitHistoryGrapher alloc] initWithBaseCommits:[self baseCommits] viewAllBranches:viewAllBranches queue:graphQueue delegate:self];
 }
 
 
@@ -215,15 +232,12 @@
 	if (currentRevList == parser)
 		return;
 
-	if (currentRevList) {
+	if (currentRevList)
 		[currentRevList removeObserver:self forKeyPath:@"commits"];
-		[currentRevList removeObserver:self forKeyPath:@"isParsing"];
-	}
 
 	currentRevList = parser;
 
 	[currentRevList addObserver:self forKeyPath:@"commits" options:NSKeyValueObservingOptionNew context:@"commitsUpdated"];
-	[currentRevList addObserver:self forKeyPath:@"isParsing" options:0 context:@"revListParsing"];
 }
 
 
@@ -256,12 +270,11 @@
 		lastRemoteRef = [[rev ref] remoteRef];
 		lastSHA = nil;
 		self.isUpdating = NO;
-		self.updatedGraph = [NSDate date];
 		return NO;
 	}
 
-	NSString *revSHA = [repository shaForRef:[rev ref]];
-	if ([revSHA isEqualToString:lastSHA] && (lastBranchFilter == repository.currentBranchFilter))
+	PBGitSHA *revSHA = [repository shaForRef:[rev ref]];
+	if ([revSHA isEqual:lastSHA] && (lastBranchFilter == repository.currentBranchFilter))
 		return NO;
 
 	lastBranchFilter = repository.currentBranchFilter;
@@ -303,6 +316,7 @@
 		lastBranchFilter = -1;
 		lastRemoteRef = nil;
 		lastSHA = nil;
+		self.commits = [NSMutableArray array];
 		[projectRevList loadRevisons];
 		return;
 	}
@@ -320,6 +334,7 @@
 	lastBranchFilter = -1;
 	lastRemoteRef = nil;
 	lastSHA = nil;
+	self.commits = [NSMutableArray array];
 
 	[otherRevListParser loadRevisons];
 }
@@ -328,21 +343,6 @@
 
 #pragma mark -
 #pragma mark Key Value Observing
-
-- (void) removeObservers
-{
-	[repository removeObserver:self forKeyPath:@"currentBranch"];
-	[repository removeObserver:self forKeyPath:@"hasChanged"];
-
-	if (currentRevList) {
-		[currentRevList removeObserver:self forKeyPath:@"commits"];
-		[currentRevList removeObserver:self forKeyPath:@"isParsing"];
-	}
-
-	if (graphQueue)
-		[graphQueue removeObserver:self forKeyPath:@"operations"];
-}
-
 
 - (void) observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
 {
@@ -365,11 +365,6 @@
 			else
 				[self addCommitsFromArray:newCommits];
 		}
-		return;
-	}
-
-	if ([@"revListParsing" isEqualToString:context] || [@"operations" isEqualToString:context]) {
-		[self finishedGraphing];
 		return;
 	}
 

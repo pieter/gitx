@@ -9,7 +9,6 @@
 #import <Cocoa/Cocoa.h>
 #import "PBGitRepository.h"
 
-@class PBCLIProxy;
 @class PBCloneRepositoryPanel;
 
 @interface ApplicationController : NSObject
@@ -20,22 +19,9 @@
 	NSManagedObjectModel *managedObjectModel;
 	NSManagedObjectContext *managedObjectContext;
 
-	PBCLIProxy *cliProxy;
-    NSString * cliArgs;
-
-    // CLI set state
-    BOOL launchedFromGitx;
-    NSString * deferredSelectSha;
-    NSArray * launchedDocuments;
-
 	PBCloneRepositoryPanel *cloneRepositoryPanel;
+	bool started;
 }
-@property (retain) PBCLIProxy* cliProxy;
-@property (copy) NSString *cliArgs;
-@property (assign) BOOL launchedFromGitx;
-@property (copy) NSString *deferredSelectSha;
-
-+ (ApplicationController *) sharedApplicationController;
 
 - (NSPersistentStoreCoordinator *)persistentStoreCoordinator;
 - (NSManagedObjectModel *)managedObjectModel;
@@ -47,7 +33,8 @@
 - (IBAction)installCliTool:(id)sender;
 
 - (IBAction)saveAction:sender;
-- (IBAction) showHelp:(id) sender;
+- (IBAction)showHelp:(id)sender;
+- (IBAction)reportAProblem:(id)sender;
 
-- (IBAction) showCloneRepository:(id)sender;
+- (IBAction)showCloneRepository:(id)sender;
 @end

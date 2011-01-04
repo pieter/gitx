@@ -14,6 +14,7 @@
 @class PBGitRef;
 @class PBGitRevList;
 @class PBGitHistoryGrapher;
+@class PBGitSHA;
 
 @interface PBGitHistoryList : NSObject {
 	PBGitRepository *repository;
@@ -21,17 +22,15 @@
 	PBGitRevList *projectRevList;
 	PBGitRevList *currentRevList;
 
-	NSString *lastSHA;
+	PBGitSHA *lastSHA;
 	NSSet *lastRefSHAs;
 	NSInteger lastBranchFilter;
 	PBGitRef *lastRemoteRef;
 	BOOL resetCommits;
 	BOOL shouldReloadProjectHistory;
-	NSDate *updatedGraph;
 
 	PBGitHistoryGrapher *grapher;
 	NSOperationQueue *graphQueue;
-	NSInvocationOperation *lastOperation;
 
 	NSMutableArray *commits;
 	BOOL isUpdating;
@@ -40,14 +39,14 @@
 - (id) initWithRepository:(PBGitRepository *)repo;
 - (void) forceUpdate;
 - (void) updateHistory;
+- (void)cleanup;
 
-- (void) addCommitsFromArray:(NSArray *)array;
+- (void) updateCommitsFromGrapher:(NSDictionary *)commitData;
 
 
 @property (retain) PBGitRevList *projectRevList;
 @property (retain) NSMutableArray *commits;
 @property (readonly) NSArray *projectCommits;
 @property (assign) BOOL isUpdating;
-@property (retain) NSDate *updatedGraph;
 
 @end

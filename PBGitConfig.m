@@ -10,15 +10,14 @@
 
 
 @implementation PBGitConfig
-@synthesize repositoryPath;
 
-- (id) init
+- init
 {
 	repositoryPath = nil;
 	return self;
 }
 
-- (id) initWithRepositoryPath:(NSString *)path
+- initWithRepositoryPath:(NSString *)path
 {
 	repositoryPath = path;
 	return self;

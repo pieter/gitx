@@ -14,7 +14,7 @@
 @interface PBGitGrapher : NSObject {
 	PBGraphCellInfo *previous;
 	void *pl;
-	void *endLane;
+	int curLane;
 }
 
 - (id) initWithRepository:(PBGitRepository *)repo;

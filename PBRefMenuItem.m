@@ -44,6 +44,7 @@
 	NSString *headRefName = [headRef shortName];
 	BOOL isHead = [ref isEqualToRef:headRef];
 	BOOL isOnHeadBranch = isHead ? YES : [repo isRefOnHeadBranch:ref];
+	BOOL isDetachedHead = (isHead && [headRefName isEqualToString:@"HEAD"]);
 
 	NSString *remoteName = [ref remoteName];
 	if (!remoteName && [ref isBranch])
@@ -58,7 +59,8 @@
 		[items addObject:[PBRefMenuItem separatorItem]];
 
 		// create branch
-		[items addObject:[PBRefMenuItem itemWithTitle:@"Create branch…" action:@selector(createBranch:) enabled:YES]];
+		NSString *createBranchTitle = [ref isRemoteBranch] ? [NSString stringWithFormat:@"Create branch that tracks %@…", targetRefName] : @"Create branch…";
+		[items addObject:[PBRefMenuItem itemWithTitle:createBranchTitle action:@selector(createBranch:) enabled:YES]];
 
 		// create tag
 		[items addObject:[PBRefMenuItem itemWithTitle:@"Create Tag…" action:@selector(createTag:) enabled:YES]];
@@ -88,8 +90,7 @@
 	[items addObject:[PBRefMenuItem itemWithTitle:fetchTitle action:@selector(fetchRemote:) enabled:hasRemote]];
 
 	// pull
-	NSString *pullRemoteName = [ref isRemoteBranch] ? [ref shortName] : remoteName;
-	NSString *pullTitle = hasRemote ? [NSString stringWithFormat:@"Pull %@ and update %@", pullRemoteName, headRefName] : @"Pull";
+	NSString *pullTitle = hasRemote ? [NSString stringWithFormat:@"Pull %@ and update %@", remoteName, headRefName] : @"Pull";
 	[items addObject:[PBRefMenuItem itemWithTitle:pullTitle action:@selector(pullRemote:) enabled:hasRemote]];
 
 	// push
@@ -97,6 +98,9 @@
 		// push updates to remote
 		NSString *pushTitle = [NSString stringWithFormat:@"Push updates to %@", remoteName];
 		[items addObject:[PBRefMenuItem itemWithTitle:pushTitle action:@selector(pushUpdatesToRemote:) enabled:YES]];
+	}
+	else if (isDetachedHead) {
+		[items addObject:[PBRefMenuItem itemWithTitle:@"Push" action:nil enabled:NO]];
 	}
 	else {
 		// push to default remote
@@ -128,7 +132,7 @@
 	// delete ref
 	[items addObject:[PBRefMenuItem separatorItem]];
 	NSString *deleteTitle = [NSString stringWithFormat:@"Delete %@…", targetRefName];
-	[items addObject:[PBRefMenuItem itemWithTitle:deleteTitle action:@selector(showDeleteRefSheet:) enabled:YES]];
+	[items addObject:[PBRefMenuItem itemWithTitle:deleteTitle action:@selector(showDeleteRefSheet:) enabled:!isDetachedHead]];
 
 	for (PBRefMenuItem *item in items) {
 		[item setTarget:target];
@@ -145,7 +149,7 @@
 
 	NSString *headBranchName = [[[commit.repository headRef] ref] shortName];
 	BOOL isOnHeadBranch = [commit isOnHeadBranch];
-	BOOL isHead = [[commit realSha] isEqualToString:[commit.repository headSHA]];
+	BOOL isHead = [[commit sha] isEqual:[commit.repository headSHA]];
 
 	[items addObject:[PBRefMenuItem itemWithTitle:@"Checkout Commit" action:@selector(checkout:) enabled:YES]];
 	[items addObject:[PBRefMenuItem separatorItem]];

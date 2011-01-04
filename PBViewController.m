@@ -14,7 +14,6 @@
 @synthesize repository;
 @synthesize status;
 @synthesize isBusy;
-@synthesize superController;
 
 - (id)initWithRepository:(PBGitRepository *)theRepository superController:(PBGitWindowController *)controller
 {
@@ -28,20 +27,16 @@
 	return self;
 }
 
-- (void) removeView
+- (void)closeView
 {
 	[self unbind:@"repository"];
-	[[self view] removeFromSuperview];	// remove the current view
+	if (hasViewLoaded)
+		[[self view] removeFromSuperview];	// remove the current view
 }
 
-- (void) awakeFromNib
+- (void)awakeFromNib
 {
-}
-
-// This is called when the view is displayed again; it 
-// should be updated to show the most recent information
-- (void) updateView
-{
+	hasViewLoaded = YES;
 }
 
 - (NSResponder *)firstResponder;
@@ -49,8 +44,17 @@
 	return nil;
 }
 
-- (IBAction) refresh:(id)sender
+- (IBAction) refresh: sender
 {
-    return;
 }
+
+// The next methods should be implemented in the subclass if necessary
+- (void)updateView
+{
+}
+
+- (void)viewLoaded
+{
+}
+
 @end
