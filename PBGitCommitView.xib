@@ -21,7 +21,7 @@
 		</object>
 		<object class="NSMutableArray" key="IBDocument.EditedObjectIDs">
 			<bool key="EncodedWithXMLCoder">YES</bool>
-			<integer value="225"/>
+			<integer value="289"/>
 			<integer value="186"/>
 		</object>
 		<object class="NSArray" key="IBDocument.PluginDependencies">
@@ -844,13 +844,13 @@
 							<object class="NSMutableString" key="NSToolbarItemIdentifier">
 								<characters key="NS.bytes">AC28E6C2-1911-4F5A-9E4A-BC2F3B95D69C</characters>
 							</object>
-							<string key="NSToolbarItemLabel">Refresh Button</string>
-							<string key="NSToolbarItemPaletteLabel">Refresh Button</string>
+							<string key="NSToolbarItemLabel">Refresh</string>
+							<string key="NSToolbarItemPaletteLabel">Refresh</string>
 							<nil key="NSToolbarItemToolTip"/>
 							<object class="NSButton" key="NSToolbarItemView" id="968366856">
 								<reference key="NSNextResponder"/>
 								<int key="NSvFlags">268</int>
-								<string key="NSFrame">{{26, 14}, {34, 25}}</string>
+								<string key="NSFrame">{{7, 14}, {34, 25}}</string>
 								<reference key="NSSuperview"/>
 								<bool key="NSEnabled">YES</bool>
 								<object class="NSButtonCell" key="NSCell" id="402223926">
@@ -861,7 +861,7 @@
 									<reference key="NSControlView" ref="968366856"/>
 									<int key="NSButtonFlags">-2033958657</int>
 									<int key="NSButtonFlags2">163</int>
-									<object class="NSCustomResource" key="NSNormalImage" id="513887225">
+									<object class="NSCustomResource" key="NSNormalImage" id="228247296">
 										<string key="NSClassName">NSImage</string>
 										<string key="NSResourceName">reload</string>
 									</object>
@@ -871,7 +871,7 @@
 									<int key="NSPeriodicInterval">75</int>
 								</object>
 							</object>
-							<reference key="NSToolbarItemImage" ref="513887225"/>
+							<reference key="NSToolbarItemImage" ref="228247296"/>
 							<nil key="NSToolbarItemTarget"/>
 							<nil key="NSToolbarItemAction"/>
 							<string key="NSToolbarItemMinSize">{34, 25}</string>
@@ -1697,7 +1697,7 @@
 				<object class="NSMutableArray" key="dict.values">
 					<bool key="EncodedWithXMLCoder">YES</bool>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<string>{{319, 424}, {852, 432}}</string>
+					<string>{{325, 316}, {852, 432}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<integer value="0"/>
 					<integer value="0"/>
@@ -1727,7 +1727,7 @@
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<string>{{415, 197}, {616, 169}}</string>
+					<string>{{336, 79}, {616, 169}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>{{132, 614}, {616, 0}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -1809,10 +1809,12 @@
 						<object class="NSArray" key="dict.sortedKeys">
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<string>commit:</string>
+							<string>refresh:</string>
 							<string>signOff:</string>
 						</object>
 						<object class="NSMutableArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
+							<string>id</string>
 							<string>id</string>
 							<string>id</string>
 						</object>
@@ -1822,12 +1824,17 @@
 						<object class="NSArray" key="dict.sortedKeys">
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<string>commit:</string>
+							<string>refresh:</string>
 							<string>signOff:</string>
 						</object>
 						<object class="NSMutableArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<object class="IBActionInfo">
 								<string key="name">commit:</string>
+								<string key="candidateClassName">id</string>
+							</object>
+							<object class="IBActionInfo">
+								<string key="name">refresh:</string>
 								<string key="candidateClassName">id</string>
 							</object>
 							<object class="IBActionInfo">
