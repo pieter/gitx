@@ -6,7 +6,7 @@
 //  Copyright 2008 __MyCompanyName__. All rights reserved.
 //
 #import <Cocoa/Cocoa.h>
-#include "git/oid.h"
+#include <git2/oid.h>
 
 class PBGitLane {
 	static int s_colorIndex;
@@ -24,7 +24,7 @@ public:
 
 	PBGitLane(NSString *sha)
 	{
-		git_oid_mkstr(&d_sha, [sha UTF8String]);
+		git_oid_fromstr(&d_sha, [sha UTF8String]);
 		d_index = s_colorIndex++;
 	}
 	

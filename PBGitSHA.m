@@ -8,6 +8,7 @@
 
 #import "PBGitSHA.h"
 
+#import <git2/errors.h>
 
 @interface PBGitSHA ()
 
@@ -32,7 +33,7 @@
 + (PBGitSHA *)shaWithString:(NSString *)shaString
 {
 	git_oid oid;
-	int err = git_oid_mkstr(&oid, [shaString UTF8String]);
+	int err = git_oid_fromstr(&oid, [shaString UTF8String]);
 	if (err == GIT_ENOTOID)
 		return nil;
 
@@ -43,7 +44,7 @@
 + (PBGitSHA *)shaWithCString:(const char *)shaCString
 {
 	git_oid oid;
-	int err = git_oid_mkstr(&oid, shaCString);
+	int err = git_oid_fromstr(&oid, shaCString);
 	if (err == GIT_ENOTOID)
 		return nil;
 

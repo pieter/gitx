@@ -7,7 +7,7 @@
 //
 
 #import <Cocoa/Cocoa.h>
-#include "git/oid.h"
+#include <git2/oid.h>
 
 
 @interface PBGitSHA : NSObject <NSCopying> {

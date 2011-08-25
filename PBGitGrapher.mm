@@ -11,7 +11,7 @@
 #import "PBGitLane.h"
 #import "PBGitGraphLine.h"
 #import <list>
-#import "git/oid.h"
+#import <git2/oid.h>
 #include <algorithm>
 
 using namespace std;

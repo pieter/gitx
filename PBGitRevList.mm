@@ -148,7 +148,7 @@ using namespace std;
 		}
 
 		git_oid oid;
-		git_oid_mkstr(&oid, sha.c_str());
+		git_oid_fromstr(&oid, sha.c_str());
 		PBGitCommit *newCommit = [PBGitCommit commitWithRepository:repository andSha:[PBGitSHA shaWithOID:oid]];
 
 		string author;
