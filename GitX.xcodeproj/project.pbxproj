@@ -2022,7 +2022,6 @@
 		26FC0A860875C7B200E6366F /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				FRAMEWORK_SEARCH_PATHS = "\"$(SOURCE_ROOT)\"";
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
 				GCC_MODEL_TUNING = G5;
@@ -2044,6 +2043,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+				DEBUG_INFORMATION_FORMAT = dwarf;
 				GCC_ENABLE_OBJC_GC = required;
 				GCC_PREPROCESSOR_DEFINITIONS = "DEBUG=1";
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
@@ -2060,6 +2060,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				GCC_ENABLE_OBJC_GC = required;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
@@ -2136,7 +2137,6 @@
 					AppKit,
 				);
 				PRODUCT_NAME = gitx_askpasswd;
-				SDKROOT = macosx;
 			};
 			name = Debug;
 		};
@@ -2162,7 +2162,6 @@
 					AppKit,
 				);
 				PRODUCT_NAME = gitx_askpasswd;
-				SDKROOT = macosx;
 				ZERO_LINK = NO;
 			};
 			name = Release;
@@ -2180,7 +2179,6 @@
 					AppKit,
 				);
 				PRODUCT_NAME = gitx_askpasswd;
-				SDKROOT = macosx;
 			};
 			name = Install;
 		};
@@ -2200,7 +2198,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				COPY_PHASE_STRIP = YES;
-				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				INSTALL_PATH = /usr/local/bin;
 				LIBRARY_SEARCH_PATHS = libgit2;
 				PRODUCT_NAME = gitx;
@@ -2210,9 +2207,6 @@
 		F56439F80F792B2100A579C2 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				COPY_PHASE_STRIP = NO;
-				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_OPTIMIZATION_LEVEL = 0;
 				PRODUCT_NAME = "Generate PList Prefix";
 			};
 			name = Debug;
@@ -2220,11 +2214,7 @@
 		F56439F90F792B2100A579C2 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				COPY_PHASE_STRIP = YES;
-				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				INFOPLIST_PREPROCESS = YES;
 				PRODUCT_NAME = "Generate PList Prefix";
-				ZERO_LINK = NO;
 			};
 			name = Release;
 		};
