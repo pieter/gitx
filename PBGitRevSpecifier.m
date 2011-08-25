@@ -18,6 +18,7 @@
 // internal designated init
 - (id) initWithParameters:(NSArray *)params description:(NSString *)descrip
 {
+    self = [super init];
 	parameters = params;
 	description = descrip;
 
@@ -38,18 +39,21 @@
 
 - (id) initWithParameters:(NSArray *)params
 {
+    self = [super init];
 	[self initWithParameters:params description:nil];
 	return self;
 }
 
 - (id) initWithRef:(PBGitRef *)ref
 {
+    self = [super init];
 	[self initWithParameters:[NSArray arrayWithObject:ref.ref] description:ref.shortName];
 	return self;
 }
 
 - (id) initWithCoder:(NSCoder *)coder
 {
+    self = [super init];
 	[self initWithParameters:[coder decodeObjectForKey:@"Parameters"] description:[coder decodeObjectForKey:@"Description"]];
 	return self;
 }

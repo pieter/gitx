@@ -115,7 +115,7 @@
 	
 	[task launch];
 	// This can cause a "Bad file descriptor"... when?
-	NSData *data;
+	NSData *data = nil;
 	@try {
 		data = [handle readDataToEndOfFile];
 	}

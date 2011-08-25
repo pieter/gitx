@@ -45,6 +45,8 @@
 
 - (id) initWithRepository:(PBGitRepository *)repo
 {
+    self = [super init];
+    
 	commits = [NSMutableArray array];
 	repository = repo;
 	lastBranchFilter = -1;

@@ -17,10 +17,11 @@
 
 - (id) initWithDiff:(NSString *)aDiff
 {
-	if (![super initWithWindowNibName:@"PBDiffWindow"])
-		return nil;
+    self = [super initWithWindowNibName:@"PBDiffWindow"];
 
-	diff = aDiff;
+    if (self)
+        diff = aDiff;
+    
 	return self;
 }
 

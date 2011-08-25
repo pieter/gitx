@@ -119,7 +119,7 @@
 
 - (id)tableView:(NSTableView *)aTableView objectValueForTableColumn:(NSTableColumn *)aTableColumn row:(int)rowIndex
 {	
-    id theValue;
+    id theValue = nil;
     NSParameterAssert(rowIndex >= 0 && rowIndex < [currentResults count]);
 	
     NSURL* row = [currentResults objectAtIndex:rowIndex];
