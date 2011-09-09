@@ -7,7 +7,7 @@
 //
 
 #import "PBGitSVTagItem.h"
-
+#import "PBGitRevSpecifier.h"
 
 @implementation PBGitSVTagItem
 

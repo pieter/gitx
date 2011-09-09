@@ -10,6 +10,7 @@
 #import "PBGitHistoryController.h"
 #import "PBGitRepository.h"
 #import "PBGitDefaults.h"
+#import "PBCommitList.h"
 #import <QuartzCore/CoreAnimation.h>
 
 

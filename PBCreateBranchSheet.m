@@ -11,6 +11,7 @@
 #import "PBGitDefaults.h"
 #import "PBGitCommit.h"
 #import "PBGitRef.h"
+#import "PBGitWindowController.h"
 
 @interface PBCreateBranchSheet ()
 

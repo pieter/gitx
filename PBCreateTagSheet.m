@@ -9,7 +9,7 @@
 #import "PBCreateTagSheet.h"
 #import "PBGitRepository.h"
 #import "PBGitCommit.h"
-
+#import "PBGitWindowController.h"
 
 @interface PBCreateTagSheet ()
 

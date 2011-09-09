@@ -7,7 +7,7 @@
 //
 
 #import "PBGitSVBranchItem.h"
-
+#import "PBGitRevSpecifier.h"
 
 @implementation PBGitSVBranchItem
 

@@ -8,7 +8,7 @@
 
 #import "PBCloneRepsitoryToSheet.h"
 #import "PBGitRepository.h"
-
+#import "PBGitWindowController.h"
 
 
 @interface PBCloneRepsitoryToSheet ()
