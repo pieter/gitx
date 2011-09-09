@@ -83,7 +83,7 @@
     PBGitRepositoryWatcherEventType eventType = [(NSNumber *)[[notification userInfo] objectForKey:kPBGitRepositoryEventTypeUserInfoKey] unsignedIntValue];
     if(eventType & (PBGitRepositoryWatcherEventTypeWorkingDirectory | PBGitRepositoryWatcherEventTypeIndex)){
       // refresh if the working directory or index is modified
-      [self refresh:NULL];
+      [self refresh:self];
     }
 }
 

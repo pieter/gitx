@@ -35,6 +35,7 @@
 - (void) selectCurrentBranch;
 
 - (NSMenu *) menuForRow:(NSInteger)row;
+- (void) menuNeedsUpdate:(NSMenu *)menu;
 
 - (IBAction) fetchPullPushAction:(id)sender;
 
