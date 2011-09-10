@@ -225,7 +225,7 @@ using namespace std;
 		[self performSelectorOnMainThread:@selector(finishedParsing) withObject:nil waitUntilDone:NO];
 	}
 	else {
-		NSLog(@"[%@ %s] thread has been canceled", [self class], NSStringFromSelector(_cmd));
+		NSLog(@"[%@ %@] thread has been canceled", [self class], NSStringFromSelector(_cmd));
 	}
 
 	[task terminate];
