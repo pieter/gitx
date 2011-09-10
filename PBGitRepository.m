@@ -22,6 +22,10 @@
 #import "PBHistorySearchController.h"
 #import "PBGitRepositoryWatcher.h"
 
+
+#import <ObjectiveGit/GTRepository.h>
+#import <ObjectiveGit/git2/repository.h>
+
 NSString* PBGitRepositoryErrorDomain = @"GitXErrorDomain";
 
 @implementation PBGitRepository
@@ -39,9 +43,17 @@ NSString* PBGitRepositoryErrorDomain = @"GitXErrorDomain";
 	return NO;
 }
 
-+ (BOOL) isBareRepository: (NSString*) path
++ (BOOL) isBareRepository: (NSURL*) url
 {
-	return [[PBEasyPipe outputForCommand:[PBGitBinary path] withArgs:[NSArray arrayWithObjects:@"rev-parse", @"--is-bare-repository", nil] inDir:path] isEqualToString:@"true"];
+	NSError* pError;
+	GTRepository* gitRepo = [[GTRepository alloc] initWithURL:url error:&pError];
+
+	return gitRepo && git_repository_is_bare([gitRepo repo]);
+}
+
+- (BOOL) isBareRepository
+{
+	return [PBGitRepository isBareRepository:[self fileURL]];
 }
 
 + (NSURL *)gitDirForURL:(NSURL *)repositoryURL;
@@ -49,11 +61,10 @@ NSString* PBGitRepositoryErrorDomain = @"GitXErrorDomain";
 	if (![PBGitBinary path])
 		return nil;
 
-	NSString* repositoryPath = [repositoryURL path];
-
-	if ([self isBareRepository:repositoryPath])
+	if ([self isBareRepository:repositoryURL])
 		return repositoryURL;
 
+	NSString* repositoryPath = [repositoryURL path];
 	// Use rev-parse to find the .git dir for the repository being opened
 	int retValue = 1;
 	NSString *newPath = [PBEasyPipe outputForCommand:[PBGitBinary path] withArgs:[NSArray arrayWithObjects:@"rev-parse", @"--git-dir", nil] inDir:repositoryPath retValue:&retValue];
@@ -79,7 +90,7 @@ NSString* PBGitRepositoryErrorDomain = @"GitXErrorDomain";
 	NSURL* gitDirURL         = [self gitDirForURL:repositoryURL];
 	NSString* repositoryPath = [gitDirURL path];
 
-	if (![self isBareRepository:repositoryPath]) {
+	if (![PBGitRepository isBareRepository:repositoryURL]) {
 		repositoryURL = [NSURL fileURLWithPath:[[repositoryURL path] stringByDeletingLastPathComponent]];
 	}
 
@@ -207,15 +218,6 @@ NSString* PBGitRepositoryErrorDomain = @"GitXErrorDomain";
 - (NSString*)gitIgnoreFilename
 {
 	return [[self workingDirectory] stringByAppendingPathComponent:@".gitignore"];
-}
-
-- (BOOL)isBareRepository
-{
-	if([self workingDirectory]) {
-		return [PBGitRepository isBareRepository:[self workingDirectory]];
-	} else {
-		return true;
-	}
 }
 
 // Overridden to create our custom window controller
