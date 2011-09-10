@@ -8,32 +8,34 @@
 
 #import <Cocoa/Cocoa.h>
 
+#define DNU __attribute__ ((deprecated))
 
-@interface PBEasyPipe : NSObject {
+@interface PBEasyPipe: NSObject {
 
 }
-+ (NSTask *) taskForCommand:(NSString *)cmd withArgs:(NSArray *)args inDir:(NSString *)dir;
 
-+ (NSFileHandle*) handleForCommand: (NSString*) cmd withArgs: (NSArray*) args;
-+ (NSFileHandle*) handleForCommand: (NSString*) cmd withArgs: (NSArray*) args inDir: (NSString*) dir;
++ (NSTask *) taskForCommand:(NSString *)cmd withArgs:(NSArray *)args inDir:(NSString *)dir DNU;
 
-+ (NSString*) outputForCommand: (NSString*) cmd withArgs: (NSArray*) args;
-+ (NSString*) outputForCommand: (NSString*) cmd withArgs: (NSArray*) args inDir: (NSString*) dir;
++ (NSFileHandle*) handleForCommand: (NSString*) cmd withArgs: (NSArray*) args DNU;
++ (NSFileHandle*) handleForCommand: (NSString*) cmd withArgs: (NSArray*) args inDir: (NSString*) dir DNU;
+
++ (NSString*) outputForCommand: (NSString*) cmd withArgs: (NSArray*) args DNU;
++ (NSString*) outputForCommand: (NSString*) cmd withArgs: (NSArray*) args inDir: (NSString*) dir DNU;
 + (NSString*) outputForCommand:(NSString *) cmd
 					  withArgs:(NSArray *)  args
 						 inDir:(NSString *) dir
-				      retValue:(int *)      ret;
+				      retValue:(int *)      ret DNU;
 + (NSString*) outputForCommand:(NSString *) cmd
 					  withArgs:(NSArray *)  args
 						 inDir:(NSString *) dir
 				   inputString:(NSString *)input
-				      retValue:(int *)      ret;
+				      retValue:(int *)      ret DNU;
 + (NSString*) outputForCommand:(NSString *) cmd
 					  withArgs:(NSArray *)  args
 						 inDir:(NSString *) dir
 		byExtendingEnvironment:(NSDictionary *)dict
 				   inputString:(NSString *)input
-				      retValue:(int *)      ret;
+				      retValue:(int *)      ret DNU;
 
 
 @end
