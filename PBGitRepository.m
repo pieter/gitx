@@ -88,9 +88,8 @@ NSString* PBGitRepositoryErrorDomain = @"GitXErrorDomain";
 + (NSURL*)baseDirForURL:(NSURL*)repositoryURL;
 {
 	NSURL* gitDirURL         = [self gitDirForURL:repositoryURL];
-	NSString* repositoryPath = [gitDirURL path];
 
-	if (![PBGitRepository isBareRepository:repositoryURL]) {
+	if (![PBGitRepository isBareRepository:gitDirURL]) {
 		repositoryURL = [NSURL fileURLWithPath:[[repositoryURL path] stringByDeletingLastPathComponent]];
 	}
 
