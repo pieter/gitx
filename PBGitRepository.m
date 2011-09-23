@@ -58,28 +58,12 @@ NSString* PBGitRepositoryErrorDomain = @"GitXErrorDomain";
 
 + (NSURL *)gitDirForURL:(NSURL *)repositoryURL;
 {
-	if (![PBGitBinary path])
-		return nil;
-
-	if ([self isBareRepository:repositoryURL])
-		return repositoryURL;
-
-	NSString* repositoryPath = [repositoryURL path];
-	// Use rev-parse to find the .git dir for the repository being opened
-	int retValue = 1;
-	NSString *newPath = [PBEasyPipe outputForCommand:[PBGitBinary path] withArgs:[NSArray arrayWithObjects:@"rev-parse", @"--git-dir", nil] inDir:repositoryPath retValue:&retValue];
-	if (retValue) {
-		// The current directory does not contain a git repository
-		return nil;
+	NSError* repoInitError;
+	GTRepository* objgRepo = [[GTRepository alloc] initWithURL:repositoryURL error:&repoInitError];
+	if (objgRepo != NULL) {
+		NSURL* repoPath = objgRepo.fileUrl;
+		return repoPath;
 	}
-
-	if ([newPath isEqualToString:@".git"])
-		return [NSURL fileURLWithPath:[repositoryPath stringByAppendingPathComponent:@".git"]];
-	if ([newPath isEqualToString:@"."])
-		return [NSURL fileURLWithPath:repositoryPath];
-	if ([newPath length] > 0)
-		return [NSURL fileURLWithPath:newPath];
-
 	return nil;
 }
 
