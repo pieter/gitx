@@ -24,7 +24,7 @@
 
 
 #import <ObjectiveGit/GTRepository.h>
-#import <ObjectiveGit/git2/repository.h>
+#import <git2/repository.h>
 
 NSString* PBGitRepositoryErrorDomain = @"GitXErrorDomain";
 

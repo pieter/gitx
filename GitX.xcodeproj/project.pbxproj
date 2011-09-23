@@ -6,32 +6,6 @@
 	objectVersion = 46;
 	objects = {
 
-/* Begin PBXAggregateTarget section */
-		4A5D16B414066ED6002ED242 /* Git submodules */ = {
-			isa = PBXAggregateTarget;
-			buildConfigurationList = 4A5D16B514066ED6002ED242 /* Build configuration list for PBXAggregateTarget "Git submodules" */;
-			buildPhases = (
-				4A5D16BA14066EE2002ED242 /* ShellScript */,
-			);
-			dependencies = (
-			);
-			name = "Git submodules";
-			productName = "Update submodules";
-		};
-		F56439F70F792B2100A579C2 /* Generate PList Prefix */ = {
-			isa = PBXAggregateTarget;
-			buildConfigurationList = F56439FD0F792B3600A579C2 /* Build configuration list for PBXAggregateTarget "Generate PList Prefix" */;
-			buildPhases = (
-				F56439F60F792B2100A579C2 /* ShellScript */,
-			);
-			dependencies = (
-				4A5D15E214066983002ED242 /* PBXTargetDependency */,
-			);
-			name = "Generate PList Prefix";
-			productName = "Generate PList Prefix";
-		};
-/* End PBXAggregateTarget section */
-
 /* Begin PBXBuildFile section */
 		02B41A5E123E307200DFC531 /* PBCommitHookFailedSheet.m in Sources */ = {isa = PBXBuildFile; fileRef = 02B41A5D123E307200DFC531 /* PBCommitHookFailedSheet.m */; };
 		02B41A60123E307F00DFC531 /* PBCommitHookFailedSheet.xib in Resources */ = {isa = PBXBuildFile; fileRef = 02B41A5F123E307F00DFC531 /* PBCommitHookFailedSheet.xib */; };
@@ -52,64 +26,11 @@
 		47DBDB6A0E94EF6500671A1E /* Preferences.xib in Resources */ = {isa = PBXBuildFile; fileRef = 47DBDB680E94EF6500671A1E /* Preferences.xib */; };
 		47DBDBB10E94F6CA00671A1E /* Updates.png in Resources */ = {isa = PBXBuildFile; fileRef = 47DBDBB00E94F6CA00671A1E /* Updates.png */; };
 		47DBDBCA0E95016F00671A1E /* PBNSURLPathUserDefaultsTransfomer.m in Sources */ = {isa = PBXBuildFile; fileRef = 47DBDBC90E95016F00671A1E /* PBNSURLPathUserDefaultsTransfomer.m */; };
-		4A4014E71406758D00DB9C07 /* adler32.c in Sources */ = {isa = PBXBuildFile; fileRef = 4A40136A1406758C00DB9C07 /* adler32.c */; };
-		4A4014E81406758D00DB9C07 /* crc32.c in Sources */ = {isa = PBXBuildFile; fileRef = 4A40136B1406758C00DB9C07 /* crc32.c */; };
-		4A4014EA1406758D00DB9C07 /* deflate.c in Sources */ = {isa = PBXBuildFile; fileRef = 4A40136D1406758C00DB9C07 /* deflate.c */; };
-		4A4014EC1406758D00DB9C07 /* inffast.c in Sources */ = {isa = PBXBuildFile; fileRef = 4A40136F1406758C00DB9C07 /* inffast.c */; };
-		4A4014EF1406758D00DB9C07 /* inflate.c in Sources */ = {isa = PBXBuildFile; fileRef = 4A4013721406758C00DB9C07 /* inflate.c */; };
-		4A4014F11406758D00DB9C07 /* inftrees.c in Sources */ = {isa = PBXBuildFile; fileRef = 4A4013741406758C00DB9C07 /* inftrees.c */; };
-		4A4014F31406758D00DB9C07 /* trees.c in Sources */ = {isa = PBXBuildFile; fileRef = 4A4013761406758C00DB9C07 /* trees.c */; };
-		4A4014F71406758D00DB9C07 /* zutil.c in Sources */ = {isa = PBXBuildFile; fileRef = 4A40137A1406758C00DB9C07 /* zutil.c */; };
-		4A4015181406758D00DB9C07 /* blob.c in Sources */ = {isa = PBXBuildFile; fileRef = 4A4013A41406758C00DB9C07 /* blob.c */; };
-		4A40151B1406758D00DB9C07 /* buffer.c in Sources */ = {isa = PBXBuildFile; fileRef = 4A4013A71406758C00DB9C07 /* buffer.c */; };
-		4A40151D1406758D00DB9C07 /* cache.c in Sources */ = {isa = PBXBuildFile; fileRef = 4A4013A91406758C00DB9C07 /* cache.c */; };
-		4A4015201406758D00DB9C07 /* commit.c in Sources */ = {isa = PBXBuildFile; fileRef = 4A4013AC1406758C00DB9C07 /* commit.c */; };
-		4A4015231406758D00DB9C07 /* config.c in Sources */ = {isa = PBXBuildFile; fileRef = 4A4013AF1406758C00DB9C07 /* config.c */; };
-		4A4015251406758D00DB9C07 /* config_file.c in Sources */ = {isa = PBXBuildFile; fileRef = 4A4013B11406758C00DB9C07 /* config_file.c */; };
-		4A4015261406758D00DB9C07 /* delta-apply.c in Sources */ = {isa = PBXBuildFile; fileRef = 4A4013B21406758C00DB9C07 /* delta-apply.c */; };
-		4A4015291406758D00DB9C07 /* errors.c in Sources */ = {isa = PBXBuildFile; fileRef = 4A4013B51406758C00DB9C07 /* errors.c */; };
-		4A40152A1406758D00DB9C07 /* fetch.c in Sources */ = {isa = PBXBuildFile; fileRef = 4A4013B61406758C00DB9C07 /* fetch.c */; };
-		4A40152C1406758D00DB9C07 /* filebuf.c in Sources */ = {isa = PBXBuildFile; fileRef = 4A4013B81406758C00DB9C07 /* filebuf.c */; };
-		4A40152E1406758D00DB9C07 /* fileops.c in Sources */ = {isa = PBXBuildFile; fileRef = 4A4013BA1406758C00DB9C07 /* fileops.c */; };
-		4A4015301406758D00DB9C07 /* hash.c in Sources */ = {isa = PBXBuildFile; fileRef = 4A4013BC1406758C00DB9C07 /* hash.c */; };
-		4A4015321406758D00DB9C07 /* hashtable.c in Sources */ = {isa = PBXBuildFile; fileRef = 4A4013BE1406758C00DB9C07 /* hashtable.c */; };
-		4A4015341406758D00DB9C07 /* index.c in Sources */ = {isa = PBXBuildFile; fileRef = 4A4013C01406758C00DB9C07 /* index.c */; };
-		4A4015361406758D00DB9C07 /* indexer.c in Sources */ = {isa = PBXBuildFile; fileRef = 4A4013C21406758C00DB9C07 /* indexer.c */; };
-		4A4015381406758D00DB9C07 /* mwindow.c in Sources */ = {isa = PBXBuildFile; fileRef = 4A4013C41406758C00DB9C07 /* mwindow.c */; };
-		4A40153A1406758D00DB9C07 /* netops.c in Sources */ = {isa = PBXBuildFile; fileRef = 4A4013C61406758C00DB9C07 /* netops.c */; };
-		4A40153C1406758D00DB9C07 /* object.c in Sources */ = {isa = PBXBuildFile; fileRef = 4A4013C81406758C00DB9C07 /* object.c */; };
-		4A40153D1406758D00DB9C07 /* odb.c in Sources */ = {isa = PBXBuildFile; fileRef = 4A4013C91406758C00DB9C07 /* odb.c */; };
-		4A40153F1406758D00DB9C07 /* odb_loose.c in Sources */ = {isa = PBXBuildFile; fileRef = 4A4013CB1406758C00DB9C07 /* odb_loose.c */; };
-		4A4015401406758D00DB9C07 /* odb_pack.c in Sources */ = {isa = PBXBuildFile; fileRef = 4A4013CC1406758C00DB9C07 /* odb_pack.c */; };
-		4A4015411406758D00DB9C07 /* oid.c in Sources */ = {isa = PBXBuildFile; fileRef = 4A4013CD1406758C00DB9C07 /* oid.c */; };
-		4A4015421406758D00DB9C07 /* pack.c in Sources */ = {isa = PBXBuildFile; fileRef = 4A4013CE1406758C00DB9C07 /* pack.c */; };
-		4A4015441406758D00DB9C07 /* path.c in Sources */ = {isa = PBXBuildFile; fileRef = 4A4013D01406758C00DB9C07 /* path.c */; };
-		4A4015461406758D00DB9C07 /* pkt.c in Sources */ = {isa = PBXBuildFile; fileRef = 4A4013D21406758C00DB9C07 /* pkt.c */; };
-		4A4015481406758D00DB9C07 /* posix.c in Sources */ = {isa = PBXBuildFile; fileRef = 4A4013D41406758C00DB9C07 /* posix.c */; };
-		4A40154D1406758D00DB9C07 /* pqueue.c in Sources */ = {isa = PBXBuildFile; fileRef = 4A4013DA1406758C00DB9C07 /* pqueue.c */; };
-		4A40154F1406758D00DB9C07 /* reflog.c in Sources */ = {isa = PBXBuildFile; fileRef = 4A4013DC1406758C00DB9C07 /* reflog.c */; };
-		4A4015511406758D00DB9C07 /* refs.c in Sources */ = {isa = PBXBuildFile; fileRef = 4A4013DE1406758C00DB9C07 /* refs.c */; };
-		4A4015531406758D00DB9C07 /* refspec.c in Sources */ = {isa = PBXBuildFile; fileRef = 4A4013E01406758C00DB9C07 /* refspec.c */; };
-		4A4015551406758D00DB9C07 /* remote.c in Sources */ = {isa = PBXBuildFile; fileRef = 4A4013E21406758C00DB9C07 /* remote.c */; };
-		4A4015571406758D00DB9C07 /* repository.c in Sources */ = {isa = PBXBuildFile; fileRef = 4A4013E41406758C00DB9C07 /* repository.c */; };
-		4A4015591406758D00DB9C07 /* revwalk.c in Sources */ = {isa = PBXBuildFile; fileRef = 4A4013E61406758C00DB9C07 /* revwalk.c */; };
-		4A40155A1406758D00DB9C07 /* sha1.c in Sources */ = {isa = PBXBuildFile; fileRef = 4A4013E71406758C00DB9C07 /* sha1.c */; };
-		4A40155C1406758D00DB9C07 /* sha1_lookup.c in Sources */ = {isa = PBXBuildFile; fileRef = 4A4013E91406758C00DB9C07 /* sha1_lookup.c */; };
-		4A40155E1406758D00DB9C07 /* signature.c in Sources */ = {isa = PBXBuildFile; fileRef = 4A4013EB1406758C00DB9C07 /* signature.c */; };
-		4A4015601406758D00DB9C07 /* status.c in Sources */ = {isa = PBXBuildFile; fileRef = 4A4013ED1406758C00DB9C07 /* status.c */; };
-		4A4015611406758D00DB9C07 /* tag.c in Sources */ = {isa = PBXBuildFile; fileRef = 4A4013EE1406758C00DB9C07 /* tag.c */; };
-		4A4015631406758D00DB9C07 /* thread-utils.c in Sources */ = {isa = PBXBuildFile; fileRef = 4A4013F01406758C00DB9C07 /* thread-utils.c */; };
-		4A4015651406758D00DB9C07 /* transport.c in Sources */ = {isa = PBXBuildFile; fileRef = 4A4013F21406758C00DB9C07 /* transport.c */; };
-		4A4015671406758D00DB9C07 /* transport_git.c in Sources */ = {isa = PBXBuildFile; fileRef = 4A4013F41406758C00DB9C07 /* transport_git.c */; };
-		4A4015681406758D00DB9C07 /* transport_local.c in Sources */ = {isa = PBXBuildFile; fileRef = 4A4013F51406758C00DB9C07 /* transport_local.c */; };
-		4A4015691406758D00DB9C07 /* tree.c in Sources */ = {isa = PBXBuildFile; fileRef = 4A4013F61406758C00DB9C07 /* tree.c */; };
-		4A40156B1406758D00DB9C07 /* tsort.c in Sources */ = {isa = PBXBuildFile; fileRef = 4A4013F81406758C00DB9C07 /* tsort.c */; };
-		4A40156C1406758D00DB9C07 /* map.c in Sources */ = {isa = PBXBuildFile; fileRef = 4A4013FA1406758C00DB9C07 /* map.c */; };
-		4A40156E1406758D00DB9C07 /* util.c in Sources */ = {isa = PBXBuildFile; fileRef = 4A4013FC1406758C00DB9C07 /* util.c */; };
-		4A4015701406758D00DB9C07 /* vector.c in Sources */ = {isa = PBXBuildFile; fileRef = 4A4013FE1406758C00DB9C07 /* vector.c */; };
 		4A40159714067B6300DB9C07 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4A40159614067B6300DB9C07 /* CoreFoundation.framework */; };
 		4A40159914067B7A00DB9C07 /* AppKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4A40159814067B7A00DB9C07 /* AppKit.framework */; };
-		4A476AA5141B05010080A85F /* ObjectiveGit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4A476AA4141B05010080A85F /* ObjectiveGit.framework */; };
+		4A4EF0BB142CBBC2001B8CDF /* ObjectiveGit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4A4EF0AF142CBAD5001B8CDF /* ObjectiveGit.framework */; };
+		4A4EF0BC142CBC25001B8CDF /* libgit2.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4A4EF0B9142CBAD5001B8CDF /* libgit2.a */; };
+		4A4EF0BE142CBC59001B8CDF /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 4A4EF0BD142CBC59001B8CDF /* libz.dylib */; };
 		4A5D15DC140668C6002ED242 /* PBGitSidebarView.xib in Resources */ = {isa = PBXBuildFile; fileRef = F58DB55F10566E3900CFDF4A /* PBGitSidebarView.xib */; };
 		551BF11E112F376C00265053 /* gitx_askpasswd_main.m in Sources */ = {isa = PBXBuildFile; fileRef = 551BF11D112F376C00265053 /* gitx_askpasswd_main.m */; };
 		551BF176112F3F4B00265053 /* gitx_askpasswd in Resources */ = {isa = PBXBuildFile; fileRef = 551BF111112F371800265053 /* gitx_askpasswd */; };
@@ -200,14 +121,6 @@
 		F56526240E03D85900F03B52 /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F56526230E03D85900F03B52 /* WebKit.framework */; };
 		F565262B0E03D89B00F03B52 /* PBWebHistoryController.m in Sources */ = {isa = PBXBuildFile; fileRef = F565262A0E03D89B00F03B52 /* PBWebHistoryController.m */; };
 		F567B88D1057FA9F000DB976 /* NSOutlineViewExt.m in Sources */ = {isa = PBXBuildFile; fileRef = F567B88C1057FA9F000DB976 /* NSOutlineViewExt.m */; };
-		F567CC64106E6BC80059BB9D /* PBGitRepository.m in Sources */ = {isa = PBXBuildFile; fileRef = F5945E160E02B0C200706420 /* PBGitRepository.m */; };
-		F567CC65106E6BC90059BB9D /* PBGitBinary.m in Sources */ = {isa = PBXBuildFile; fileRef = F53C4DF60E97FC630022AD59 /* PBGitBinary.m */; };
-		F567CC66106E6BC90059BB9D /* PBGitConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = 93FCCBA80EA8AF450061B02B /* PBGitConfig.m */; };
-		F567CC67106E6BD00059BB9D /* PBGitRepository.h in Headers */ = {isa = PBXBuildFile; fileRef = F5945E150E02B0C200706420 /* PBGitRepository.h */; };
-		F567CC68106E6BD00059BB9D /* PBGitBinary.h in Headers */ = {isa = PBXBuildFile; fileRef = F53C4DF50E97FC630022AD59 /* PBGitBinary.h */; };
-		F567CC69106E6BD00059BB9D /* PBGitConfig.h in Headers */ = {isa = PBXBuildFile; fileRef = F5D2DC850EA401A80034AD24 /* PBGitConfig.h */; };
-		F567CC7B106E6BF70059BB9D /* PBGitRef.h in Headers */ = {isa = PBXBuildFile; fileRef = F5C007730E731B48007B84B2 /* PBGitRef.h */; };
-		F567CC8E106E6FC40059BB9D /* PBEasyPipe.m in Sources */ = {isa = PBXBuildFile; fileRef = F57CC3900E05DDF2000472E2 /* PBEasyPipe.m */; };
 		F569AE930F2CBD7C00C2FFA7 /* Credits.html in Resources */ = {isa = PBXBuildFile; fileRef = F569AE920F2CBD7C00C2FFA7 /* Credits.html */; };
 		F56ADDD90ED19F9E002AC78F /* AddBranchTemplate.png in Resources */ = {isa = PBXBuildFile; fileRef = F56ADDD70ED19F9E002AC78F /* AddBranchTemplate.png */; };
 		F56ADDDA0ED19F9E002AC78F /* AddLabelTemplate.png in Resources */ = {isa = PBXBuildFile; fileRef = F56ADDD80ED19F9E002AC78F /* AddLabelTemplate.png */; };
@@ -230,13 +143,6 @@
 		F5B721C40E05CF7E00AF29DC /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = F5B721C20E05CF7E00AF29DC /* MainMenu.xib */; };
 		F5C007750E731B48007B84B2 /* PBGitRef.m in Sources */ = {isa = PBXBuildFile; fileRef = F5C007740E731B48007B84B2 /* PBGitRef.m */; };
 		F5C6F68D0E65FF9300478D97 /* PBGitLane.mm in Sources */ = {isa = PBXBuildFile; fileRef = F5C6F68C0E65FF9300478D97 /* PBGitLane.mm */; };
-		F5D376B9107511C500AAAC80 /* PBGitIndex.m in Sources */ = {isa = PBXBuildFile; fileRef = F59F1DD4105C4FF300115F88 /* PBGitIndex.m */; };
-		F5D376C91075134D00AAAC80 /* PBGitRevList.mm in Sources */ = {isa = PBXBuildFile; fileRef = F5FF4E170E0829C20006317A /* PBGitRevList.mm */; };
-		F5D376CF1075139B00AAAC80 /* PBGitRef.m in Sources */ = {isa = PBXBuildFile; fileRef = F5C007740E731B48007B84B2 /* PBGitRef.m */; };
-		F5D376D01075139B00AAAC80 /* PBGitRevSpecifier.m in Sources */ = {isa = PBXBuildFile; fileRef = F53FF2040E7ABB5300389171 /* PBGitRevSpecifier.m */; };
-		F5D376E0107516A700AAAC80 /* PBChangedFile.m in Sources */ = {isa = PBXBuildFile; fileRef = F5E927F70E883E7200056E75 /* PBChangedFile.m */; };
-		F5D3772610753BD700AAAC80 /* PBChangedFile.h in Headers */ = {isa = PBXBuildFile; fileRef = F5E927F60E883E7200056E75 /* PBChangedFile.h */; };
-		F5D3772710753BD700AAAC80 /* PBGitIndex.h in Headers */ = {isa = PBXBuildFile; fileRef = F59F1DD3105C4FF300115F88 /* PBGitIndex.h */; };
 		F5DFFA6C0E075D8800617813 /* PBEasyFS.m in Sources */ = {isa = PBXBuildFile; fileRef = F5DFFA6B0E075D8800617813 /* PBEasyFS.m */; };
 		F5E424110EA3E4D60046E362 /* PBDiffWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = F5E424100EA3E4D60046E362 /* PBDiffWindow.xib */; };
 		F5E424150EA3E4E10046E362 /* PBDiffWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = F5E424130EA3E4E10046E362 /* PBDiffWindowController.m */; };
@@ -256,33 +162,47 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		4A5D15DD14066973002ED242 /* PBXContainerItemProxy */ = {
+		4A4EF0AE142CBAD5001B8CDF /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = F56439F70F792B2100A579C2;
-			remoteInfo = "Generate PList Prefix";
+			containerPortal = 4A4EF09F142CBAD5001B8CDF /* ObjectiveGitFramework.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 8DC2EF5B0486A6940098B216;
+			remoteInfo = ObjectiveGit;
 		};
-		4A5D15E114066983002ED242 /* PBXContainerItemProxy */ = {
+		4A4EF0B0142CBAD5001B8CDF /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 913D5E480E55644600CECEA2;
-			remoteInfo = "cli tool";
+			containerPortal = 4A4EF09F142CBAD5001B8CDF /* ObjectiveGitFramework.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = BDD8AEDF1313311100CB5D40;
+			remoteInfo = Tests;
 		};
-		4A5D16B214066EB4002ED242 /* PBXContainerItemProxy */ = {
+		4A4EF0B2142CBAD5001B8CDF /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 4A5D15F614066E2B002ED242;
-			remoteInfo = git2;
+			containerPortal = 4A4EF09F142CBAD5001B8CDF /* ObjectiveGitFramework.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 04DB4645133AB57600D9C624;
+			remoteInfo = "ObjectiveGit-iOS";
 		};
-		4A5D16B814066EDD002ED242 /* PBXContainerItemProxy */ = {
+		4A4EF0B4142CBAD5001B8CDF /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 4A5D16B414066ED6002ED242;
-			remoteInfo = "Update submodules";
+			containerPortal = 4A4EF09F142CBAD5001B8CDF /* ObjectiveGitFramework.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = BDD9C3D5133BA556003708E7;
+			remoteInfo = "Tests-iOS";
+		};
+		4A4EF0B6142CBAD5001B8CDF /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 4A4EF09F142CBAD5001B8CDF /* ObjectiveGitFramework.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = DDB97BA9141C90F60001F17A;
+			remoteInfo = "libgit2-ios";
+		};
+		4A4EF0B8142CBAD5001B8CDF /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 4A4EF09F142CBAD5001B8CDF /* ObjectiveGitFramework.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = DD5695E7141C934800E1B1CA;
+			remoteInfo = libgit2;
 		};
 		551BF174112F3F3500265053 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -343,143 +263,10 @@
 		47DBDBB00E94F6CA00671A1E /* Updates.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Updates.png; path = Images/Preferences/Updates.png; sourceTree = "<group>"; };
 		47DBDBC80E95016F00671A1E /* PBNSURLPathUserDefaultsTransfomer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PBNSURLPathUserDefaultsTransfomer.h; sourceTree = "<group>"; };
 		47DBDBC90E95016F00671A1E /* PBNSURLPathUserDefaultsTransfomer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PBNSURLPathUserDefaultsTransfomer.m; sourceTree = "<group>"; };
-		4A40136A1406758C00DB9C07 /* adler32.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = adler32.c; sourceTree = "<group>"; };
-		4A40136B1406758C00DB9C07 /* crc32.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = crc32.c; sourceTree = "<group>"; };
-		4A40136C1406758C00DB9C07 /* crc32.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = crc32.h; sourceTree = "<group>"; };
-		4A40136D1406758C00DB9C07 /* deflate.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = deflate.c; sourceTree = "<group>"; };
-		4A40136E1406758C00DB9C07 /* deflate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = deflate.h; sourceTree = "<group>"; };
-		4A40136F1406758C00DB9C07 /* inffast.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = inffast.c; sourceTree = "<group>"; };
-		4A4013701406758C00DB9C07 /* inffast.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = inffast.h; sourceTree = "<group>"; };
-		4A4013711406758C00DB9C07 /* inffixed.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = inffixed.h; sourceTree = "<group>"; };
-		4A4013721406758C00DB9C07 /* inflate.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = inflate.c; sourceTree = "<group>"; };
-		4A4013731406758C00DB9C07 /* inflate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = inflate.h; sourceTree = "<group>"; };
-		4A4013741406758C00DB9C07 /* inftrees.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = inftrees.c; sourceTree = "<group>"; };
-		4A4013751406758C00DB9C07 /* inftrees.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = inftrees.h; sourceTree = "<group>"; };
-		4A4013761406758C00DB9C07 /* trees.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = trees.c; sourceTree = "<group>"; };
-		4A4013771406758C00DB9C07 /* trees.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = trees.h; sourceTree = "<group>"; };
-		4A4013781406758C00DB9C07 /* zconf.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = zconf.h; sourceTree = "<group>"; };
-		4A4013791406758C00DB9C07 /* zlib.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = zlib.h; sourceTree = "<group>"; };
-		4A40137A1406758C00DB9C07 /* zutil.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = zutil.c; sourceTree = "<group>"; };
-		4A40137B1406758C00DB9C07 /* zutil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = zutil.h; sourceTree = "<group>"; };
-		4A4013841406758C00DB9C07 /* blob.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = blob.h; sourceTree = "<group>"; };
-		4A4013851406758C00DB9C07 /* branch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = branch.h; sourceTree = "<group>"; };
-		4A4013861406758C00DB9C07 /* commit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = commit.h; sourceTree = "<group>"; };
-		4A4013871406758C00DB9C07 /* common.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = common.h; sourceTree = "<group>"; };
-		4A4013881406758C00DB9C07 /* config.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = config.h; sourceTree = "<group>"; };
-		4A4013891406758C00DB9C07 /* errors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = errors.h; sourceTree = "<group>"; };
-		4A40138A1406758C00DB9C07 /* index.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = index.h; sourceTree = "<group>"; };
-		4A40138B1406758C00DB9C07 /* indexer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = indexer.h; sourceTree = "<group>"; };
-		4A40138C1406758C00DB9C07 /* net.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = net.h; sourceTree = "<group>"; };
-		4A40138D1406758C00DB9C07 /* object.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = object.h; sourceTree = "<group>"; };
-		4A40138E1406758C00DB9C07 /* odb.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = odb.h; sourceTree = "<group>"; };
-		4A40138F1406758C00DB9C07 /* odb_backend.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = odb_backend.h; sourceTree = "<group>"; };
-		4A4013901406758C00DB9C07 /* oid.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = oid.h; sourceTree = "<group>"; };
-		4A4013911406758C00DB9C07 /* reflog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = reflog.h; sourceTree = "<group>"; };
-		4A4013921406758C00DB9C07 /* refs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = refs.h; sourceTree = "<group>"; };
-		4A4013931406758C00DB9C07 /* refspec.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = refspec.h; sourceTree = "<group>"; };
-		4A4013941406758C00DB9C07 /* remote.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = remote.h; sourceTree = "<group>"; };
-		4A4013951406758C00DB9C07 /* repository.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = repository.h; sourceTree = "<group>"; };
-		4A4013961406758C00DB9C07 /* revwalk.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = revwalk.h; sourceTree = "<group>"; };
-		4A4013971406758C00DB9C07 /* signature.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = signature.h; sourceTree = "<group>"; };
-		4A4013981406758C00DB9C07 /* status.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = status.h; sourceTree = "<group>"; };
-		4A4013991406758C00DB9C07 /* tag.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tag.h; sourceTree = "<group>"; };
-		4A40139A1406758C00DB9C07 /* thread-utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "thread-utils.h"; sourceTree = "<group>"; };
-		4A40139B1406758C00DB9C07 /* transport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = transport.h; sourceTree = "<group>"; };
-		4A40139C1406758C00DB9C07 /* tree.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tree.h; sourceTree = "<group>"; };
-		4A40139D1406758C00DB9C07 /* types.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = types.h; sourceTree = "<group>"; };
-		4A40139E1406758C00DB9C07 /* zlib.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = zlib.h; sourceTree = "<group>"; };
-		4A40139F1406758C00DB9C07 /* git2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = git2.h; sourceTree = "<group>"; };
-		4A4013A41406758C00DB9C07 /* blob.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = blob.c; sourceTree = "<group>"; };
-		4A4013A51406758C00DB9C07 /* blob.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = blob.h; sourceTree = "<group>"; };
-		4A4013A61406758C00DB9C07 /* bswap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = bswap.h; sourceTree = "<group>"; };
-		4A4013A71406758C00DB9C07 /* buffer.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = buffer.c; sourceTree = "<group>"; };
-		4A4013A81406758C00DB9C07 /* buffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = buffer.h; sourceTree = "<group>"; };
-		4A4013A91406758C00DB9C07 /* cache.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = cache.c; sourceTree = "<group>"; };
-		4A4013AA1406758C00DB9C07 /* cache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = cache.h; sourceTree = "<group>"; };
-		4A4013AB1406758C00DB9C07 /* cc-compat.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "cc-compat.h"; sourceTree = "<group>"; };
-		4A4013AC1406758C00DB9C07 /* commit.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = commit.c; sourceTree = "<group>"; };
-		4A4013AD1406758C00DB9C07 /* commit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = commit.h; sourceTree = "<group>"; };
-		4A4013AE1406758C00DB9C07 /* common.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = common.h; sourceTree = "<group>"; };
-		4A4013AF1406758C00DB9C07 /* config.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = config.c; sourceTree = "<group>"; };
-		4A4013B01406758C00DB9C07 /* config.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = config.h; sourceTree = "<group>"; };
-		4A4013B11406758C00DB9C07 /* config_file.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = config_file.c; sourceTree = "<group>"; };
-		4A4013B21406758C00DB9C07 /* delta-apply.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = "delta-apply.c"; sourceTree = "<group>"; };
-		4A4013B31406758C00DB9C07 /* delta-apply.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "delta-apply.h"; sourceTree = "<group>"; };
-		4A4013B41406758C00DB9C07 /* dir.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dir.h; sourceTree = "<group>"; };
-		4A4013B51406758C00DB9C07 /* errors.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = errors.c; sourceTree = "<group>"; };
-		4A4013B61406758C00DB9C07 /* fetch.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = fetch.c; sourceTree = "<group>"; };
-		4A4013B71406758C00DB9C07 /* fetch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = fetch.h; sourceTree = "<group>"; };
-		4A4013B81406758C00DB9C07 /* filebuf.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = filebuf.c; sourceTree = "<group>"; };
-		4A4013B91406758C00DB9C07 /* filebuf.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = filebuf.h; sourceTree = "<group>"; };
-		4A4013BA1406758C00DB9C07 /* fileops.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = fileops.c; sourceTree = "<group>"; };
-		4A4013BB1406758C00DB9C07 /* fileops.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = fileops.h; sourceTree = "<group>"; };
-		4A4013BC1406758C00DB9C07 /* hash.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = hash.c; sourceTree = "<group>"; };
-		4A4013BD1406758C00DB9C07 /* hash.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = hash.h; sourceTree = "<group>"; };
-		4A4013BE1406758C00DB9C07 /* hashtable.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = hashtable.c; sourceTree = "<group>"; };
-		4A4013BF1406758C00DB9C07 /* hashtable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = hashtable.h; sourceTree = "<group>"; };
-		4A4013C01406758C00DB9C07 /* index.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = index.c; sourceTree = "<group>"; };
-		4A4013C11406758C00DB9C07 /* index.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = index.h; sourceTree = "<group>"; };
-		4A4013C21406758C00DB9C07 /* indexer.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = indexer.c; sourceTree = "<group>"; };
-		4A4013C31406758C00DB9C07 /* map.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = map.h; sourceTree = "<group>"; };
-		4A4013C41406758C00DB9C07 /* mwindow.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = mwindow.c; sourceTree = "<group>"; };
-		4A4013C51406758C00DB9C07 /* mwindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mwindow.h; sourceTree = "<group>"; };
-		4A4013C61406758C00DB9C07 /* netops.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = netops.c; sourceTree = "<group>"; };
-		4A4013C71406758C00DB9C07 /* netops.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = netops.h; sourceTree = "<group>"; };
-		4A4013C81406758C00DB9C07 /* object.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = object.c; sourceTree = "<group>"; };
-		4A4013C91406758C00DB9C07 /* odb.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = odb.c; sourceTree = "<group>"; };
-		4A4013CA1406758C00DB9C07 /* odb.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = odb.h; sourceTree = "<group>"; };
-		4A4013CB1406758C00DB9C07 /* odb_loose.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = odb_loose.c; sourceTree = "<group>"; };
-		4A4013CC1406758C00DB9C07 /* odb_pack.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = odb_pack.c; sourceTree = "<group>"; };
-		4A4013CD1406758C00DB9C07 /* oid.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = oid.c; sourceTree = "<group>"; };
-		4A4013CE1406758C00DB9C07 /* pack.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = pack.c; sourceTree = "<group>"; };
-		4A4013CF1406758C00DB9C07 /* pack.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pack.h; sourceTree = "<group>"; };
-		4A4013D01406758C00DB9C07 /* path.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = path.c; sourceTree = "<group>"; };
-		4A4013D11406758C00DB9C07 /* path.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = path.h; sourceTree = "<group>"; };
-		4A4013D21406758C00DB9C07 /* pkt.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = pkt.c; sourceTree = "<group>"; };
-		4A4013D31406758C00DB9C07 /* pkt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pkt.h; sourceTree = "<group>"; };
-		4A4013D41406758C00DB9C07 /* posix.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = posix.c; sourceTree = "<group>"; };
-		4A4013D51406758C00DB9C07 /* posix.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = posix.h; sourceTree = "<group>"; };
-		4A4013DA1406758C00DB9C07 /* pqueue.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = pqueue.c; sourceTree = "<group>"; };
-		4A4013DB1406758C00DB9C07 /* pqueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pqueue.h; sourceTree = "<group>"; };
-		4A4013DC1406758C00DB9C07 /* reflog.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = reflog.c; sourceTree = "<group>"; };
-		4A4013DD1406758C00DB9C07 /* reflog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = reflog.h; sourceTree = "<group>"; };
-		4A4013DE1406758C00DB9C07 /* refs.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = refs.c; sourceTree = "<group>"; };
-		4A4013DF1406758C00DB9C07 /* refs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = refs.h; sourceTree = "<group>"; };
-		4A4013E01406758C00DB9C07 /* refspec.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = refspec.c; sourceTree = "<group>"; };
-		4A4013E11406758C00DB9C07 /* refspec.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = refspec.h; sourceTree = "<group>"; };
-		4A4013E21406758C00DB9C07 /* remote.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = remote.c; sourceTree = "<group>"; };
-		4A4013E31406758C00DB9C07 /* remote.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = remote.h; sourceTree = "<group>"; };
-		4A4013E41406758C00DB9C07 /* repository.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = repository.c; sourceTree = "<group>"; };
-		4A4013E51406758C00DB9C07 /* repository.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = repository.h; sourceTree = "<group>"; };
-		4A4013E61406758C00DB9C07 /* revwalk.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = revwalk.c; sourceTree = "<group>"; };
-		4A4013E71406758C00DB9C07 /* sha1.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = sha1.c; sourceTree = "<group>"; };
-		4A4013E81406758C00DB9C07 /* sha1.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sha1.h; sourceTree = "<group>"; };
-		4A4013E91406758C00DB9C07 /* sha1_lookup.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = sha1_lookup.c; sourceTree = "<group>"; };
-		4A4013EA1406758C00DB9C07 /* sha1_lookup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sha1_lookup.h; sourceTree = "<group>"; };
-		4A4013EB1406758C00DB9C07 /* signature.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = signature.c; sourceTree = "<group>"; };
-		4A4013EC1406758C00DB9C07 /* signature.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = signature.h; sourceTree = "<group>"; };
-		4A4013ED1406758C00DB9C07 /* status.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = status.c; sourceTree = "<group>"; };
-		4A4013EE1406758C00DB9C07 /* tag.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = tag.c; sourceTree = "<group>"; };
-		4A4013EF1406758C00DB9C07 /* tag.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tag.h; sourceTree = "<group>"; };
-		4A4013F01406758C00DB9C07 /* thread-utils.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = "thread-utils.c"; sourceTree = "<group>"; };
-		4A4013F11406758C00DB9C07 /* thread-utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "thread-utils.h"; sourceTree = "<group>"; };
-		4A4013F21406758C00DB9C07 /* transport.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = transport.c; sourceTree = "<group>"; };
-		4A4013F31406758C00DB9C07 /* transport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = transport.h; sourceTree = "<group>"; };
-		4A4013F41406758C00DB9C07 /* transport_git.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = transport_git.c; sourceTree = "<group>"; };
-		4A4013F51406758C00DB9C07 /* transport_local.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = transport_local.c; sourceTree = "<group>"; };
-		4A4013F61406758C00DB9C07 /* tree.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = tree.c; sourceTree = "<group>"; };
-		4A4013F71406758C00DB9C07 /* tree.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tree.h; sourceTree = "<group>"; };
-		4A4013F81406758C00DB9C07 /* tsort.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = tsort.c; sourceTree = "<group>"; };
-		4A4013FA1406758C00DB9C07 /* map.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = map.c; sourceTree = "<group>"; };
-		4A4013FB1406758C00DB9C07 /* posix.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = posix.h; sourceTree = "<group>"; };
-		4A4013FC1406758C00DB9C07 /* util.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = util.c; sourceTree = "<group>"; };
-		4A4013FD1406758C00DB9C07 /* util.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = util.h; sourceTree = "<group>"; };
-		4A4013FE1406758C00DB9C07 /* vector.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = vector.c; sourceTree = "<group>"; };
-		4A4013FF1406758C00DB9C07 /* vector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = vector.h; sourceTree = "<group>"; };
 		4A40159614067B6300DB9C07 /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
 		4A40159814067B7A00DB9C07 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
-		4A476AA4141B05010080A85F /* ObjectiveGit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ObjectiveGit.framework; path = "objective-git/build/Release/ObjectiveGit.framework"; sourceTree = "<group>"; };
-		4A5D15F714066E2B002ED242 /* libgit2.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libgit2.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		4A4EF09F142CBAD5001B8CDF /* ObjectiveGitFramework.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ObjectiveGitFramework.xcodeproj; path = "objective-git/ObjectiveGitFramework.xcodeproj"; sourceTree = "<group>"; };
+		4A4EF0BD142CBC59001B8CDF /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
 		551BF111112F371800265053 /* gitx_askpasswd */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = gitx_askpasswd; sourceTree = BUILT_PRODUCTS_DIR; };
 		551BF11D112F376C00265053 /* gitx_askpasswd_main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = gitx_askpasswd_main.m; sourceTree = "<group>"; };
 		770B37EC0679A11B001EADE2 /* GitTest_DataModel.xcdatamodel */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = wrapper.xcdatamodel; path = GitTest_DataModel.xcdatamodel; sourceTree = "<group>"; };
@@ -621,7 +408,6 @@
 		F565262A0E03D89B00F03B52 /* PBWebHistoryController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PBWebHistoryController.m; sourceTree = "<group>"; };
 		F567B88B1057FA9F000DB976 /* NSOutlineViewExt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSOutlineViewExt.h; sourceTree = "<group>"; };
 		F567B88C1057FA9F000DB976 /* NSOutlineViewExt.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSOutlineViewExt.m; sourceTree = "<group>"; };
-		F567CC39106E6B910059BB9D /* GitXTesting.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = GitXTesting.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		F567CC3A106E6B910059BB9D /* GitXTesting-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GitXTesting-Info.plist"; sourceTree = "<group>"; };
 		F569AE920F2CBD7C00C2FFA7 /* Credits.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = Credits.html; sourceTree = "<group>"; };
 		F56ADDD70ED19F9E002AC78F /* AddBranchTemplate.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = AddBranchTemplate.png; path = Images/AddBranchTemplate.png; sourceTree = "<group>"; };
@@ -694,13 +480,6 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		4A5D15F414066E2B002ED242 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		551BF10F112F371800265053 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -712,7 +491,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4A476AA5141B05010080A85F /* ObjectiveGit.framework in Frameworks */,
+				4A4EF0BE142CBC59001B8CDF /* libz.dylib in Frameworks */,
+				4A4EF0BC142CBC25001B8CDF /* libgit2.a in Frameworks */,
+				4A4EF0BB142CBBC2001B8CDF /* ObjectiveGit.framework in Frameworks */,
 				8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */,
 				F56526240E03D85900F03B52 /* WebKit.framework in Frameworks */,
 				911112370E5A097800BF76B4 /* Security.framework in Frameworks */,
@@ -731,13 +512,6 @@
 				4A40159914067B7A00DB9C07 /* AppKit.framework in Frameworks */,
 				4A40159714067B6300DB9C07 /* CoreFoundation.framework in Frameworks */,
 				D89E9B141218BA260097A90B /* ScriptingBridge.framework in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		F567CC37106E6B910059BB9D /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -773,9 +547,7 @@
 			children = (
 				8D1107320486CEB800E47090 /* GitX.app */,
 				913D5E490E55644600CECEA2 /* gitx */,
-				F567CC39106E6B910059BB9D /* GitXTesting.framework */,
 				551BF111112F371800265053 /* gitx_askpasswd */,
-				4A5D15F714066E2B002ED242 /* libgit2.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -783,9 +555,8 @@
 		29B97314FDCFA39411CA2CEA /* GitTest */ = {
 			isa = PBXGroup;
 			children = (
-				4A40159814067B7A00DB9C07 /* AppKit.framework */,
-				4A40159614067B6300DB9C07 /* CoreFoundation.framework */,
-				4A4013601406758C00DB9C07 /* libgit2 */,
+				4A4EF0BD142CBC59001B8CDF /* libz.dylib */,
+				4A4EF09F142CBAD5001B8CDF /* ObjectiveGitFramework.xcodeproj */,
 				913D5E420E5563FD00CECEA2 /* cli */,
 				D89E9B4C1218C22A0097A90B /* GitXScripting */,
 				F57CC43E0E05E472000472E2 /* Aux */,
@@ -800,7 +571,6 @@
 				19C28FACFE9D520D11CA2CBB /* Products */,
 				F5886A120ED5D33D0066E74C /* SpeedTest-Info.plist */,
 				F567CC3A106E6B910059BB9D /* GitXTesting-Info.plist */,
-				D89E9AB21218A9DA0097A90B /* ScriptingBridge.framework */,
 			);
 			name = GitTest;
 			sourceTree = "<group>";
@@ -869,10 +639,12 @@
 		29B97323FDCFA39411CA2CEA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				4A476AA4141B05010080A85F /* ObjectiveGit.framework */,
 				1058C7A0FEA54F0111CA2CBB /* Linked Frameworks */,
 				1058C7A2FEA54F0111CA2CBB /* Other Frameworks */,
+				4A40159814067B7A00DB9C07 /* AppKit.framework */,
 				0A6858C611F7EA8A00AC2BE4 /* CoreServices.framework */,
+				4A40159614067B6300DB9C07 /* CoreFoundation.framework */,
+				D89E9AB21218A9DA0097A90B /* ScriptingBridge.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -910,192 +682,17 @@
 			name = "Preference Icons";
 			sourceTree = "<group>";
 		};
-		4A4013601406758C00DB9C07 /* libgit2 */ = {
+		4A4EF0A0142CBAD5001B8CDF /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				4A4013681406758C00DB9C07 /* deps */,
-				4A4013821406758C00DB9C07 /* include */,
-				4A4013A31406758C00DB9C07 /* src */,
+				4A4EF0AF142CBAD5001B8CDF /* ObjectiveGit.framework */,
+				4A4EF0B1142CBAD5001B8CDF /* Tests.app */,
+				4A4EF0B3142CBAD5001B8CDF /* ObjectiveGit */,
+				4A4EF0B5142CBAD5001B8CDF /* Tests-iOS.app */,
+				4A4EF0B7142CBAD5001B8CDF /* libgit2-ios.a */,
+				4A4EF0B9142CBAD5001B8CDF /* libgit2.a */,
 			);
-			path = libgit2;
-			sourceTree = "<group>";
-		};
-		4A4013681406758C00DB9C07 /* deps */ = {
-			isa = PBXGroup;
-			children = (
-				4A4013691406758C00DB9C07 /* zlib */,
-			);
-			path = deps;
-			sourceTree = "<group>";
-		};
-		4A4013691406758C00DB9C07 /* zlib */ = {
-			isa = PBXGroup;
-			children = (
-				4A40136A1406758C00DB9C07 /* adler32.c */,
-				4A40136B1406758C00DB9C07 /* crc32.c */,
-				4A40136C1406758C00DB9C07 /* crc32.h */,
-				4A40136D1406758C00DB9C07 /* deflate.c */,
-				4A40136E1406758C00DB9C07 /* deflate.h */,
-				4A40136F1406758C00DB9C07 /* inffast.c */,
-				4A4013701406758C00DB9C07 /* inffast.h */,
-				4A4013711406758C00DB9C07 /* inffixed.h */,
-				4A4013721406758C00DB9C07 /* inflate.c */,
-				4A4013731406758C00DB9C07 /* inflate.h */,
-				4A4013741406758C00DB9C07 /* inftrees.c */,
-				4A4013751406758C00DB9C07 /* inftrees.h */,
-				4A4013761406758C00DB9C07 /* trees.c */,
-				4A4013771406758C00DB9C07 /* trees.h */,
-				4A4013781406758C00DB9C07 /* zconf.h */,
-				4A4013791406758C00DB9C07 /* zlib.h */,
-				4A40137A1406758C00DB9C07 /* zutil.c */,
-				4A40137B1406758C00DB9C07 /* zutil.h */,
-			);
-			path = zlib;
-			sourceTree = "<group>";
-		};
-		4A4013821406758C00DB9C07 /* include */ = {
-			isa = PBXGroup;
-			children = (
-				4A4013831406758C00DB9C07 /* git2 */,
-				4A40139F1406758C00DB9C07 /* git2.h */,
-			);
-			path = include;
-			sourceTree = "<group>";
-		};
-		4A4013831406758C00DB9C07 /* git2 */ = {
-			isa = PBXGroup;
-			children = (
-				4A4013841406758C00DB9C07 /* blob.h */,
-				4A4013851406758C00DB9C07 /* branch.h */,
-				4A4013861406758C00DB9C07 /* commit.h */,
-				4A4013871406758C00DB9C07 /* common.h */,
-				4A4013881406758C00DB9C07 /* config.h */,
-				4A4013891406758C00DB9C07 /* errors.h */,
-				4A40138A1406758C00DB9C07 /* index.h */,
-				4A40138B1406758C00DB9C07 /* indexer.h */,
-				4A40138C1406758C00DB9C07 /* net.h */,
-				4A40138D1406758C00DB9C07 /* object.h */,
-				4A40138E1406758C00DB9C07 /* odb.h */,
-				4A40138F1406758C00DB9C07 /* odb_backend.h */,
-				4A4013901406758C00DB9C07 /* oid.h */,
-				4A4013911406758C00DB9C07 /* reflog.h */,
-				4A4013921406758C00DB9C07 /* refs.h */,
-				4A4013931406758C00DB9C07 /* refspec.h */,
-				4A4013941406758C00DB9C07 /* remote.h */,
-				4A4013951406758C00DB9C07 /* repository.h */,
-				4A4013961406758C00DB9C07 /* revwalk.h */,
-				4A4013971406758C00DB9C07 /* signature.h */,
-				4A4013981406758C00DB9C07 /* status.h */,
-				4A4013991406758C00DB9C07 /* tag.h */,
-				4A40139A1406758C00DB9C07 /* thread-utils.h */,
-				4A40139B1406758C00DB9C07 /* transport.h */,
-				4A40139C1406758C00DB9C07 /* tree.h */,
-				4A40139D1406758C00DB9C07 /* types.h */,
-				4A40139E1406758C00DB9C07 /* zlib.h */,
-			);
-			path = git2;
-			sourceTree = "<group>";
-		};
-		4A4013A31406758C00DB9C07 /* src */ = {
-			isa = PBXGroup;
-			children = (
-				4A4013A41406758C00DB9C07 /* blob.c */,
-				4A4013A51406758C00DB9C07 /* blob.h */,
-				4A4013A61406758C00DB9C07 /* bswap.h */,
-				4A4013A71406758C00DB9C07 /* buffer.c */,
-				4A4013A81406758C00DB9C07 /* buffer.h */,
-				4A4013A91406758C00DB9C07 /* cache.c */,
-				4A4013AA1406758C00DB9C07 /* cache.h */,
-				4A4013AB1406758C00DB9C07 /* cc-compat.h */,
-				4A4013AC1406758C00DB9C07 /* commit.c */,
-				4A4013AD1406758C00DB9C07 /* commit.h */,
-				4A4013AE1406758C00DB9C07 /* common.h */,
-				4A4013AF1406758C00DB9C07 /* config.c */,
-				4A4013B01406758C00DB9C07 /* config.h */,
-				4A4013B11406758C00DB9C07 /* config_file.c */,
-				4A4013B21406758C00DB9C07 /* delta-apply.c */,
-				4A4013B31406758C00DB9C07 /* delta-apply.h */,
-				4A4013B41406758C00DB9C07 /* dir.h */,
-				4A4013B51406758C00DB9C07 /* errors.c */,
-				4A4013B61406758C00DB9C07 /* fetch.c */,
-				4A4013B71406758C00DB9C07 /* fetch.h */,
-				4A4013B81406758C00DB9C07 /* filebuf.c */,
-				4A4013B91406758C00DB9C07 /* filebuf.h */,
-				4A4013BA1406758C00DB9C07 /* fileops.c */,
-				4A4013BB1406758C00DB9C07 /* fileops.h */,
-				4A4013BC1406758C00DB9C07 /* hash.c */,
-				4A4013BD1406758C00DB9C07 /* hash.h */,
-				4A4013BE1406758C00DB9C07 /* hashtable.c */,
-				4A4013BF1406758C00DB9C07 /* hashtable.h */,
-				4A4013C01406758C00DB9C07 /* index.c */,
-				4A4013C11406758C00DB9C07 /* index.h */,
-				4A4013C21406758C00DB9C07 /* indexer.c */,
-				4A4013C31406758C00DB9C07 /* map.h */,
-				4A4013C41406758C00DB9C07 /* mwindow.c */,
-				4A4013C51406758C00DB9C07 /* mwindow.h */,
-				4A4013C61406758C00DB9C07 /* netops.c */,
-				4A4013C71406758C00DB9C07 /* netops.h */,
-				4A4013C81406758C00DB9C07 /* object.c */,
-				4A4013C91406758C00DB9C07 /* odb.c */,
-				4A4013CA1406758C00DB9C07 /* odb.h */,
-				4A4013CB1406758C00DB9C07 /* odb_loose.c */,
-				4A4013CC1406758C00DB9C07 /* odb_pack.c */,
-				4A4013CD1406758C00DB9C07 /* oid.c */,
-				4A4013CE1406758C00DB9C07 /* pack.c */,
-				4A4013CF1406758C00DB9C07 /* pack.h */,
-				4A4013D01406758C00DB9C07 /* path.c */,
-				4A4013D11406758C00DB9C07 /* path.h */,
-				4A4013D21406758C00DB9C07 /* pkt.c */,
-				4A4013D31406758C00DB9C07 /* pkt.h */,
-				4A4013D41406758C00DB9C07 /* posix.c */,
-				4A4013D51406758C00DB9C07 /* posix.h */,
-				4A4013DA1406758C00DB9C07 /* pqueue.c */,
-				4A4013DB1406758C00DB9C07 /* pqueue.h */,
-				4A4013DC1406758C00DB9C07 /* reflog.c */,
-				4A4013DD1406758C00DB9C07 /* reflog.h */,
-				4A4013DE1406758C00DB9C07 /* refs.c */,
-				4A4013DF1406758C00DB9C07 /* refs.h */,
-				4A4013E01406758C00DB9C07 /* refspec.c */,
-				4A4013E11406758C00DB9C07 /* refspec.h */,
-				4A4013E21406758C00DB9C07 /* remote.c */,
-				4A4013E31406758C00DB9C07 /* remote.h */,
-				4A4013E41406758C00DB9C07 /* repository.c */,
-				4A4013E51406758C00DB9C07 /* repository.h */,
-				4A4013E61406758C00DB9C07 /* revwalk.c */,
-				4A4013E71406758C00DB9C07 /* sha1.c */,
-				4A4013E81406758C00DB9C07 /* sha1.h */,
-				4A4013E91406758C00DB9C07 /* sha1_lookup.c */,
-				4A4013EA1406758C00DB9C07 /* sha1_lookup.h */,
-				4A4013EB1406758C00DB9C07 /* signature.c */,
-				4A4013EC1406758C00DB9C07 /* signature.h */,
-				4A4013ED1406758C00DB9C07 /* status.c */,
-				4A4013EE1406758C00DB9C07 /* tag.c */,
-				4A4013EF1406758C00DB9C07 /* tag.h */,
-				4A4013F01406758C00DB9C07 /* thread-utils.c */,
-				4A4013F11406758C00DB9C07 /* thread-utils.h */,
-				4A4013F21406758C00DB9C07 /* transport.c */,
-				4A4013F31406758C00DB9C07 /* transport.h */,
-				4A4013F41406758C00DB9C07 /* transport_git.c */,
-				4A4013F51406758C00DB9C07 /* transport_local.c */,
-				4A4013F61406758C00DB9C07 /* tree.c */,
-				4A4013F71406758C00DB9C07 /* tree.h */,
-				4A4013F81406758C00DB9C07 /* tsort.c */,
-				4A4013F91406758C00DB9C07 /* unix */,
-				4A4013FC1406758C00DB9C07 /* util.c */,
-				4A4013FD1406758C00DB9C07 /* util.h */,
-				4A4013FE1406758C00DB9C07 /* vector.c */,
-				4A4013FF1406758C00DB9C07 /* vector.h */,
-			);
-			path = src;
-			sourceTree = "<group>";
-		};
-		4A4013F91406758C00DB9C07 /* unix */ = {
-			isa = PBXGroup;
-			children = (
-				4A4013FA1406758C00DB9C07 /* map.c */,
-				4A4013FB1406758C00DB9C07 /* posix.h */,
-			);
-			path = unix;
+			name = Products;
 			sourceTree = "<group>";
 		};
 		551BF118112F373E00265053 /* gitx_asskpasswd */ = {
@@ -1411,40 +1008,7 @@
 		};
 /* End PBXGroup section */
 
-/* Begin PBXHeadersBuildPhase section */
-		F567CC34106E6B910059BB9D /* Headers */ = {
-			isa = PBXHeadersBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				F567CC7B106E6BF70059BB9D /* PBGitRef.h in Headers */,
-				F5D3772610753BD700AAAC80 /* PBChangedFile.h in Headers */,
-				F5D3772710753BD700AAAC80 /* PBGitIndex.h in Headers */,
-				F567CC67106E6BD00059BB9D /* PBGitRepository.h in Headers */,
-				F567CC68106E6BD00059BB9D /* PBGitBinary.h in Headers */,
-				F567CC69106E6BD00059BB9D /* PBGitConfig.h in Headers */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXHeadersBuildPhase section */
-
 /* Begin PBXNativeTarget section */
-		4A5D15F614066E2B002ED242 /* git2 */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 4A5D15F814066E2B002ED242 /* Build configuration list for PBXNativeTarget "git2" */;
-			buildPhases = (
-				4A5D15F314066E2B002ED242 /* Sources */,
-				4A5D15F414066E2B002ED242 /* Frameworks */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				4A5D16B914066EDD002ED242 /* PBXTargetDependency */,
-			);
-			name = git2;
-			productName = git2;
-			productReference = 4A5D15F714066E2B002ED242 /* libgit2.a */;
-			productType = "com.apple.product-type.library.static";
-		};
 		551BF110112F371800265053 /* gitx_askpasswd */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 551BF119112F373E00265053 /* Build configuration list for PBXNativeTarget "gitx_askpasswd" */;
@@ -1475,8 +1039,6 @@
 			buildRules = (
 			);
 			dependencies = (
-				4A5D16B314066EB4002ED242 /* PBXTargetDependency */,
-				4A5D15DE14066973002ED242 /* PBXTargetDependency */,
 				551BF175112F3F3500265053 /* PBXTargetDependency */,
 			);
 			name = GitX;
@@ -1501,24 +1063,6 @@
 			productReference = 913D5E490E55644600CECEA2 /* gitx */;
 			productType = "com.apple.product-type.tool";
 		};
-		F567CC38106E6B910059BB9D /* GitXTesting */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = F567CC3D106E6B920059BB9D /* Build configuration list for PBXNativeTarget "GitXTesting" */;
-			buildPhases = (
-				F567CC34106E6B910059BB9D /* Headers */,
-				F567CC35106E6B910059BB9D /* Resources */,
-				F567CC36106E6B910059BB9D /* Sources */,
-				F567CC37106E6B910059BB9D /* Frameworks */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = GitXTesting;
-			productName = GitXTesting;
-			productReference = F567CC39106E6B910059BB9D /* GitXTesting.framework */;
-			productType = "com.apple.product-type.framework";
-		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -1539,18 +1083,65 @@
 			);
 			mainGroup = 29B97314FDCFA39411CA2CEA /* GitTest */;
 			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = 4A4EF0A0142CBAD5001B8CDF /* Products */;
+					ProjectRef = 4A4EF09F142CBAD5001B8CDF /* ObjectiveGitFramework.xcodeproj */;
+				},
+			);
 			projectRoot = "";
 			targets = (
 				8D1107260486CEB800E47090 /* GitX */,
 				913D5E480E55644600CECEA2 /* cli tool */,
-				F56439F70F792B2100A579C2 /* Generate PList Prefix */,
-				F567CC38106E6B910059BB9D /* GitXTesting */,
 				551BF110112F371800265053 /* gitx_askpasswd */,
-				4A5D15F614066E2B002ED242 /* git2 */,
-				4A5D16B414066ED6002ED242 /* Git submodules */,
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		4A4EF0AF142CBAD5001B8CDF /* ObjectiveGit.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = ObjectiveGit.framework;
+			remoteRef = 4A4EF0AE142CBAD5001B8CDF /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		4A4EF0B1142CBAD5001B8CDF /* Tests.app */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.application;
+			path = Tests.app;
+			remoteRef = 4A4EF0B0142CBAD5001B8CDF /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		4A4EF0B3142CBAD5001B8CDF /* ObjectiveGit */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = ObjectiveGit;
+			remoteRef = 4A4EF0B2142CBAD5001B8CDF /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		4A4EF0B5142CBAD5001B8CDF /* Tests-iOS.app */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.application;
+			path = "Tests-iOS.app";
+			remoteRef = 4A4EF0B4142CBAD5001B8CDF /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		4A4EF0B7142CBAD5001B8CDF /* libgit2-ios.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = "libgit2-ios.a";
+			remoteRef = 4A4EF0B6142CBAD5001B8CDF /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		4A4EF0B9142CBAD5001B8CDF /* libgit2.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libgit2.a;
+			remoteRef = 4A4EF0B8142CBAD5001B8CDF /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
 		8D1107290486CEB800E47090 /* Resources */ = {
@@ -1609,30 +1200,9 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		F567CC35106E6B910059BB9D /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		4A5D16BA14066EE2002ED242 /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/bash;
-			shellScript = "git submodule init\ngit submodule update --init\n";
-			showEnvVarsInLog = 0;
-		};
 		D81E15ED121CE83D00269E61 /* Scripting Bridge Header Script  */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -1648,19 +1218,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "# Build the scripting bridge header GitX.h if the GitX.sdef file changes\nsdef $TARGET_BUILD_DIR/GitX.app | sdp -fh --basename GitX";
-		};
-		F56439F60F792B2100A579C2 /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "export PATH=$PATH:$HOME/bin:$HOME/local/bin:/sw/bin:/opt/local/bin:`\"$TARGET_BUILD_DIR\"/gitx --git-path`\nVERSION=$(cd \"$PROJECT_DIR\";git describe)\nLONG_VERSION=$(echo $VERSION | sed -e \"s/\\-/\\./\" -e \"s/^v//\" -e \"s/-.*//\")\nSHORT_VERSION=$(echo $VERSION | sed -e \"s/\\-.*//\" -e \"s/^v//\")\n\necho -n \"#define LONG_VERSION $LONG_VERSION\n#define GIT_VERSION $VERSION\n#define SHORT_VERSION $SHORT_VERSION\" > \"$PROJECT_TEMP_DIR/revision\"\ntouch Info.plist";
 		};
 		F5CF04A20EAE696C00D75C81 /* Copy HTML files */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -1680,68 +1237,6 @@
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		4A5D15F314066E2B002ED242 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				4A4014E71406758D00DB9C07 /* adler32.c in Sources */,
-				4A4014E81406758D00DB9C07 /* crc32.c in Sources */,
-				4A4014EA1406758D00DB9C07 /* deflate.c in Sources */,
-				4A4014EC1406758D00DB9C07 /* inffast.c in Sources */,
-				4A4014EF1406758D00DB9C07 /* inflate.c in Sources */,
-				4A4014F11406758D00DB9C07 /* inftrees.c in Sources */,
-				4A4014F31406758D00DB9C07 /* trees.c in Sources */,
-				4A4014F71406758D00DB9C07 /* zutil.c in Sources */,
-				4A4015181406758D00DB9C07 /* blob.c in Sources */,
-				4A40151B1406758D00DB9C07 /* buffer.c in Sources */,
-				4A40151D1406758D00DB9C07 /* cache.c in Sources */,
-				4A4015201406758D00DB9C07 /* commit.c in Sources */,
-				4A4015231406758D00DB9C07 /* config.c in Sources */,
-				4A4015251406758D00DB9C07 /* config_file.c in Sources */,
-				4A4015261406758D00DB9C07 /* delta-apply.c in Sources */,
-				4A4015291406758D00DB9C07 /* errors.c in Sources */,
-				4A40152A1406758D00DB9C07 /* fetch.c in Sources */,
-				4A40152C1406758D00DB9C07 /* filebuf.c in Sources */,
-				4A40152E1406758D00DB9C07 /* fileops.c in Sources */,
-				4A4015301406758D00DB9C07 /* hash.c in Sources */,
-				4A4015321406758D00DB9C07 /* hashtable.c in Sources */,
-				4A4015341406758D00DB9C07 /* index.c in Sources */,
-				4A4015361406758D00DB9C07 /* indexer.c in Sources */,
-				4A4015381406758D00DB9C07 /* mwindow.c in Sources */,
-				4A40153A1406758D00DB9C07 /* netops.c in Sources */,
-				4A40153C1406758D00DB9C07 /* object.c in Sources */,
-				4A40153D1406758D00DB9C07 /* odb.c in Sources */,
-				4A40153F1406758D00DB9C07 /* odb_loose.c in Sources */,
-				4A4015401406758D00DB9C07 /* odb_pack.c in Sources */,
-				4A4015411406758D00DB9C07 /* oid.c in Sources */,
-				4A4015421406758D00DB9C07 /* pack.c in Sources */,
-				4A4015441406758D00DB9C07 /* path.c in Sources */,
-				4A4015461406758D00DB9C07 /* pkt.c in Sources */,
-				4A4015481406758D00DB9C07 /* posix.c in Sources */,
-				4A40154D1406758D00DB9C07 /* pqueue.c in Sources */,
-				4A40154F1406758D00DB9C07 /* reflog.c in Sources */,
-				4A4015511406758D00DB9C07 /* refs.c in Sources */,
-				4A4015531406758D00DB9C07 /* refspec.c in Sources */,
-				4A4015551406758D00DB9C07 /* remote.c in Sources */,
-				4A4015571406758D00DB9C07 /* repository.c in Sources */,
-				4A4015591406758D00DB9C07 /* revwalk.c in Sources */,
-				4A40155A1406758D00DB9C07 /* sha1.c in Sources */,
-				4A40155C1406758D00DB9C07 /* sha1_lookup.c in Sources */,
-				4A40155E1406758D00DB9C07 /* signature.c in Sources */,
-				4A4015601406758D00DB9C07 /* status.c in Sources */,
-				4A4015611406758D00DB9C07 /* tag.c in Sources */,
-				4A4015631406758D00DB9C07 /* thread-utils.c in Sources */,
-				4A4015651406758D00DB9C07 /* transport.c in Sources */,
-				4A4015671406758D00DB9C07 /* transport_git.c in Sources */,
-				4A4015681406758D00DB9C07 /* transport_local.c in Sources */,
-				4A4015691406758D00DB9C07 /* tree.c in Sources */,
-				4A40156B1406758D00DB9C07 /* tsort.c in Sources */,
-				4A40156C1406758D00DB9C07 /* map.c in Sources */,
-				4A40156E1406758D00DB9C07 /* util.c in Sources */,
-				4A4015701406758D00DB9C07 /* vector.c in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		551BF10E112F371800265053 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -1851,45 +1346,9 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		F567CC36106E6B910059BB9D /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				F567CC64106E6BC80059BB9D /* PBGitRepository.m in Sources */,
-				F567CC65106E6BC90059BB9D /* PBGitBinary.m in Sources */,
-				F5D376B9107511C500AAAC80 /* PBGitIndex.m in Sources */,
-				F567CC66106E6BC90059BB9D /* PBGitConfig.m in Sources */,
-				F5D376E0107516A700AAAC80 /* PBChangedFile.m in Sources */,
-				F5D376CF1075139B00AAAC80 /* PBGitRef.m in Sources */,
-				F5D376D01075139B00AAAC80 /* PBGitRevSpecifier.m in Sources */,
-				F5D376C91075134D00AAAC80 /* PBGitRevList.mm in Sources */,
-				F567CC8E106E6FC40059BB9D /* PBEasyPipe.m in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		4A5D15DE14066973002ED242 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = F56439F70F792B2100A579C2 /* Generate PList Prefix */;
-			targetProxy = 4A5D15DD14066973002ED242 /* PBXContainerItemProxy */;
-		};
-		4A5D15E214066983002ED242 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 913D5E480E55644600CECEA2 /* cli tool */;
-			targetProxy = 4A5D15E114066983002ED242 /* PBXContainerItemProxy */;
-		};
-		4A5D16B314066EB4002ED242 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 4A5D15F614066E2B002ED242 /* git2 */;
-			targetProxy = 4A5D16B214066EB4002ED242 /* PBXContainerItemProxy */;
-		};
-		4A5D16B914066EDD002ED242 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 4A5D16B414066ED6002ED242 /* Git submodules */;
-			targetProxy = 4A5D16B814066EDD002ED242 /* PBXContainerItemProxy */;
-		};
 		551BF175112F3F3500265053 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 551BF110112F371800265053 /* gitx_askpasswd */;
@@ -2056,56 +1515,6 @@
 			};
 			name = Release;
 		};
-		4A5D15F914066E2B002ED242 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				COPY_PHASE_STRIP = NO;
-				EXECUTABLE_PREFIX = lib;
-				GCC_C_LANGUAGE_STANDARD = gnu99;
-				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
-				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
-				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
-				HEADER_SEARCH_PATHS = "$(SOURCE_ROOT)/libgit2/include";
-				MACOSX_DEPLOYMENT_TARGET = 10.7;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-			};
-			name = Debug;
-		};
-		4A5D15FA14066E2B002ED242 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				COPY_PHASE_STRIP = YES;
-				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				EXECUTABLE_PREFIX = lib;
-				GCC_C_LANGUAGE_STANDARD = gnu99;
-				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
-				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
-				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
-				HEADER_SEARCH_PATHS = "$(SOURCE_ROOT)/libgit2/include";
-				MACOSX_DEPLOYMENT_TARGET = 10.7;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-			};
-			name = Release;
-		};
-		4A5D16B614066ED6002ED242 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				PRODUCT_NAME = "$(TARGET_NAME)";
-			};
-			name = Debug;
-		};
-		4A5D16B714066ED6002ED242 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				PRODUCT_NAME = "$(TARGET_NAME)";
-			};
-			name = Release;
-		};
 		551BF113112F371800265053 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -2189,82 +1598,6 @@
 			};
 			name = Release;
 		};
-		F56439F80F792B2100A579C2 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				PRODUCT_NAME = "Generate PList Prefix";
-			};
-			name = Debug;
-		};
-		F56439F90F792B2100A579C2 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				PRODUCT_NAME = "Generate PList Prefix";
-			};
-			name = Release;
-		};
-		F567CC3B106E6B920059BB9D /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				COPY_PHASE_STRIP = NO;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				FRAMEWORK_VERSION = A;
-				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_MODEL_TUNING = G5;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/AppKit.framework/Headers/AppKit.h";
-				HEADER_SEARCH_PATHS = libgit2/src;
-				INFOPLIST_FILE = "GitXTesting-Info.plist";
-				INSTALL_PATH = "$(HOME)/Library/Frameworks";
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/libgit2\"",
-				);
-				OTHER_CFLAGS = "-DCLI";
-				OTHER_LDFLAGS = (
-					"-undefined",
-					dynamic_lookup,
-					"-framework",
-					Foundation,
-					"-framework",
-					AppKit,
-				);
-				PRODUCT_NAME = GitXTesting;
-			};
-			name = Debug;
-		};
-		F567CC3C106E6B920059BB9D /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				COPY_PHASE_STRIP = YES;
-				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				FRAMEWORK_VERSION = A;
-				GCC_MODEL_TUNING = G5;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/AppKit.framework/Headers/AppKit.h";
-				INFOPLIST_FILE = "GitXTesting-Info.plist";
-				INSTALL_PATH = "$(HOME)/Library/Frameworks";
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/libgit2\"",
-				);
-				OTHER_LDFLAGS = (
-					"-framework",
-					Foundation,
-					"-framework",
-					AppKit,
-				);
-				PRODUCT_NAME = GitXTesting;
-				ZERO_LINK = NO;
-			};
-			name = Release;
-		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -2286,24 +1619,6 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		4A5D15F814066E2B002ED242 /* Build configuration list for PBXNativeTarget "git2" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				4A5D15F914066E2B002ED242 /* Debug */,
-				4A5D15FA14066E2B002ED242 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		4A5D16B514066ED6002ED242 /* Build configuration list for PBXAggregateTarget "Git submodules" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				4A5D16B614066ED6002ED242 /* Debug */,
-				4A5D16B714066ED6002ED242 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
 		551BF119112F373E00265053 /* Build configuration list for PBXNativeTarget "gitx_askpasswd" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -2319,24 +1634,6 @@
 			buildConfigurations = (
 				913D5E4B0E55644600CECEA2 /* Debug */,
 				913D5E4C0E55644600CECEA2 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		F56439FD0F792B3600A579C2 /* Build configuration list for PBXAggregateTarget "Generate PList Prefix" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				F56439F80F792B2100A579C2 /* Debug */,
-				F56439F90F792B2100A579C2 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		F567CC3D106E6B920059BB9D /* Build configuration list for PBXNativeTarget "GitXTesting" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				F567CC3B106E6B920059BB9D /* Debug */,
-				F567CC3C106E6B920059BB9D /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
