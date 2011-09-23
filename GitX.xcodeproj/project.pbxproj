@@ -518,30 +518,6 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		1058C7A0FEA54F0111CA2CBB /* Linked Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-				F5E4DBFA0EAB58D90013FAFC /* SystemConfiguration.framework */,
-				F580E6AD0E733276009E2D3F /* Sparkle.framework */,
-				F56526230E03D85900F03B52 /* WebKit.framework */,
-				1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */,
-			);
-			name = "Linked Frameworks";
-			sourceTree = "<group>";
-		};
-		1058C7A2FEA54F0111CA2CBB /* Other Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-				911112360E5A097800BF76B4 /* Security.framework */,
-				77C82804067257F0000B614F /* CoreData.framework */,
-				29B97325FDCFA39411CA2CEA /* Foundation.framework */,
-				29B97324FDCFA39411CA2CEA /* AppKit.framework */,
-				D8E3B2B710DC9FB2001096A3 /* ScriptingBridge.framework */,
-				D87127001229A21C00012334 /* QuartzCore.framework */,
-			);
-			name = "Other Frameworks";
-			sourceTree = "<group>";
-		};
 		19C28FACFE9D520D11CA2CBB /* Products */ = {
 			isa = PBXGroup;
 			children = (
@@ -555,7 +531,6 @@
 		29B97314FDCFA39411CA2CEA /* GitTest */ = {
 			isa = PBXGroup;
 			children = (
-				4A4EF0BD142CBC59001B8CDF /* libz.dylib */,
 				4A4EF09F142CBAD5001B8CDF /* ObjectiveGitFramework.xcodeproj */,
 				913D5E420E5563FD00CECEA2 /* cli */,
 				D89E9B4C1218C22A0097A90B /* GitXScripting */,
@@ -639,12 +614,21 @@
 		29B97323FDCFA39411CA2CEA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				1058C7A0FEA54F0111CA2CBB /* Linked Frameworks */,
-				1058C7A2FEA54F0111CA2CBB /* Other Frameworks */,
+				29B97324FDCFA39411CA2CEA /* AppKit.framework */,
 				4A40159814067B7A00DB9C07 /* AppKit.framework */,
-				0A6858C611F7EA8A00AC2BE4 /* CoreServices.framework */,
+				1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */,
+				77C82804067257F0000B614F /* CoreData.framework */,
 				4A40159614067B6300DB9C07 /* CoreFoundation.framework */,
+				0A6858C611F7EA8A00AC2BE4 /* CoreServices.framework */,
+				29B97325FDCFA39411CA2CEA /* Foundation.framework */,
+				4A4EF0BD142CBC59001B8CDF /* libz.dylib */,
+				D87127001229A21C00012334 /* QuartzCore.framework */,
+				D8E3B2B710DC9FB2001096A3 /* ScriptingBridge.framework */,
 				D89E9AB21218A9DA0097A90B /* ScriptingBridge.framework */,
+				911112360E5A097800BF76B4 /* Security.framework */,
+				F580E6AD0E733276009E2D3F /* Sparkle.framework */,
+				F5E4DBFA0EAB58D90013FAFC /* SystemConfiguration.framework */,
+				F56526230E03D85900F03B52 /* WebKit.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
