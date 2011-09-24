@@ -128,6 +128,7 @@ static NSString * PBStringFromBranchFilterType(PBGitXBranchFilterType type) {
 - (id) initWithURL: (NSURL*) path;
 - (void) setup;
 - (void) forceUpdateRevisions;
+- (NSURL*) getIndexURL;
 
 // for the scripting bridge
 - (void)findInModeScriptCommand:(NSScriptCommand *)command;
@@ -141,5 +142,6 @@ static NSString * PBStringFromBranchFilterType(PBGitXBranchFilterType type) {
 @property (assign) PBGitRevSpecifier *currentBranch;
 @property (assign) NSInteger currentBranchFilter;
 @property (retain) NSMutableDictionary* refs;
+@property (readonly, getter = getIndexURL) NSURL* indexURL;
 
 @end
