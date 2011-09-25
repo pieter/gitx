@@ -32,6 +32,7 @@
 		4A4EF0BC142CBC25001B8CDF /* libgit2.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4A4EF0B9142CBAD5001B8CDF /* libgit2.a */; };
 		4A4EF0BE142CBC59001B8CDF /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 4A4EF0BD142CBC59001B8CDF /* libz.dylib */; };
 		4A5D15DC140668C6002ED242 /* PBGitSidebarView.xib in Resources */ = {isa = PBXBuildFile; fileRef = F58DB55F10566E3900CFDF4A /* PBGitSidebarView.xib */; };
+		4A774CC9142F482900E158CC /* ObjectiveGit.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4A4EF0AF142CBAD5001B8CDF /* ObjectiveGit.framework */; };
 		551BF11E112F376C00265053 /* gitx_askpasswd_main.m in Sources */ = {isa = PBXBuildFile; fileRef = 551BF11D112F376C00265053 /* gitx_askpasswd_main.m */; };
 		551BF176112F3F4B00265053 /* gitx_askpasswd in Resources */ = {isa = PBXBuildFile; fileRef = 551BF111112F371800265053 /* gitx_askpasswd */; };
 		770B37ED0679A11B001EADE2 /* GitTest_DataModel.xcdatamodel in Sources */ = {isa = PBXBuildFile; fileRef = 770B37EC0679A11B001EADE2 /* GitTest_DataModel.xcdatamodel */; };
@@ -227,6 +228,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				4A774CC9142F482900E158CC /* ObjectiveGit.framework in CopyFiles */,
 				F580E6B10E73328C009E2D3F /* Sparkle.framework in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
