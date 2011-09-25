@@ -2,12 +2,8 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>SUPublicDSAKeyFile</key>
-	<string>UpdateKey.pem</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>English</string>
-	<key>CFBundleName</key>
-	<string>${PRODUCT_NAME}</string>
 	<key>CFBundleDocumentTypes</key>
 	<array>
 		<dict>
@@ -46,22 +42,22 @@
 	<string>nl.frim.GitX</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
+	<key>CFBundleName</key>
+	<string>${PRODUCT_NAME}</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
+	<key>CFBundleShortVersionString</key>
+	<string>0.9</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleVersion</key>
-	<string>SHORT_VERSION</string>
-	<key>CFBundleGitVersion</key>
-	<string>GIT_VERSION</string>
-	<key>CFBundleShortVersionString</key>
-	<string>SHORT_VERSION</string>
+	<string>1</string>
+	<key>NSAppleScriptEnabled</key>
+	<true/>
 	<key>NSMainNibFile</key>
 	<string>MainMenu</string>
 	<key>NSPrincipalClass</key>
 	<string>NSApplication</string>
-	<key>SUFeedURL</key>
-	<string>http://gitx.frim.nl/Downloads/appcast.xml</string>
 	<key>NSServices</key>
 	<array>
 		<dict>
@@ -70,6 +66,13 @@
 				<key>default</key>
 				<string>&amp;</string>
 			</dict>
+			<key>NSMenuItem</key>
+			<dict>
+				<key>default</key>
+				<string>Complete SHA1</string>
+			</dict>
+			<key>NSMessage</key>
+			<string>completeSha</string>
 			<key>NSPortName</key>
 			<string>GitX</string>
 			<key>NSReturnTypes</key>
@@ -80,18 +83,13 @@
 			<array>
 				<string>NSStringPboardType</string>
 			</array>
-			<key>NSMessage</key>
-			<string>completeSha</string>
-			<key>NSMenuItem</key>
-			<dict>
-				<key>default</key>
-				<string>Complete SHA1</string>
-			</dict>
 		</dict>
 	</array>
-	<key>NSAppleScriptEnabled</key>
-	<true/>
 	<key>OSAScriptingDefinition</key>
 	<string>GitX.sdef</string>
+	<key>SUFeedURL</key>
+	<string>http://gitx.frim.nl/Downloads/appcast.xml</string>
+	<key>SUPublicDSAKeyFile</key>
+	<string>UpdateKey.pem</string>
 </dict>
 </plist>
