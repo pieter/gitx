@@ -11,6 +11,8 @@
 #import "PBGitDefaults.h"
 #import "PBGitRepositoryWatcherEventPath.h"
 
+#import <ObjectiveGit/ObjectiveGit.h>
+
 NSString *PBGitRepositoryEventNotification = @"PBGitRepositoryModifiedNotification";
 NSString *kPBGitRepositoryEventTypeUserInfoKey = @"kPBGitRepositoryEventTypeUserInfoKey";
 NSString *kPBGitRepositoryEventPathsUserInfoKey = @"kPBGitRepositoryEventPathsUserInfoKey";
@@ -110,9 +112,21 @@ static void PBGitRepositoryWatcherCallback(ConstFSEventStreamRef streamRef, void
 
 - (void) _handleEventCallback:(NSArray *)eventPaths {
 	PBGitRepositoryWatcherEventType event = 0x0;
-
+	
 	if ([self _indexChanged])
 		event |= PBGitRepositoryWatcherEventTypeIndex;
+	
+	NSString* ourRepo_ns = repository.fileURL.path;
+	// libgit2 API results for directories end with a '/'
+	if (![ourRepo_ns hasSuffix:@"/"])
+		ourRepo_ns = [NSString stringWithFormat:@"%@/", ourRepo_ns];
+	
+	const char* ourRepoPath = [ourRepo_ns UTF8String];
+	
+	// We only use the event path buffer for testing equality to our own repo
+	// so it's okay to consider failure due to buffer size as inequality.
+	const int eventPathRepoBufferSize = strlen(ourRepoPath) + 2;
+	char *eventPathRepoBuffer = malloc(eventPathRepoBufferSize);
 	
     NSMutableArray *paths = [NSMutableArray array];
     
@@ -142,12 +156,22 @@ static void PBGitRepositoryWatcherCallback(ConstFSEventStreamRef streamRef, void
 
 		// subdirs of working dir
 		else {
-			// Try to get the git status of the changed path using libgit2
-			if (![eventPath.path hasSuffix:@"/.git/"])
-			{
-				event |= PBGitRepositoryWatcherEventTypeWorkingDirectory;
-				[paths addObject:eventPath.path];
-			}
+			// check that the repo for the changed path is ours, otherwise
+			// it's most likely a submodule, or a nested clone.  Either way,
+			// we shouldn't be committing to it ourselves.
+
+		
+			int discoverStatus = git_repository_discover(eventPathRepoBuffer, eventPathRepoBufferSize,
+														 [eventPath.path UTF8String],
+														 1 /* cross filesystem boundaries, if necessary*/,
+														 ourRepoPath);
+			if (GIT_SUCCESS == discoverStatus &&
+				strcmp(ourRepoPath, eventPathRepoBuffer) == 0)
+				{
+					event |= PBGitRepositoryWatcherEventTypeWorkingDirectory;
+					[paths addObject:eventPath.path];
+				}
+//			}
 		}
 	}
 	
@@ -160,6 +184,8 @@ static void PBGitRepositoryWatcherCallback(ConstFSEventStreamRef streamRef, void
         
 		[[NSNotificationCenter defaultCenter] postNotificationName:PBGitRepositoryEventNotification object:repository userInfo:eventInfo];
 	}
+	
+	free(eventPathRepoBuffer);
 }
 
 - (void) start {
