@@ -204,6 +204,13 @@
 			remoteGlobalIDString = DD5695E7141C934800E1B1CA;
 			remoteInfo = libgit2;
 		};
+		4A774CBC142F464D00E158CC /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 913D5E480E55644600CECEA2;
+			remoteInfo = "cli tool";
+		};
 		551BF174112F3F3500265053 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
@@ -1023,6 +1030,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				4A774CBD142F464D00E158CC /* PBXTargetDependency */,
 				551BF175112F3F3500265053 /* PBXTargetDependency */,
 			);
 			name = GitX;
@@ -1333,6 +1341,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		4A774CBD142F464D00E158CC /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 913D5E480E55644600CECEA2 /* cli tool */;
+			targetProxy = 4A774CBC142F464D00E158CC /* PBXContainerItemProxy */;
+		};
 		551BF175112F3F3500265053 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 551BF110112F371800265053 /* gitx_askpasswd */;
@@ -1438,8 +1451,6 @@
 				HEADER_SEARCH_PATHS = "\"$(SOURCE_ROOT)/libgit2/include\"";
 				INFOPLIST_FILE = Info.plist;
 				INFOPLIST_OTHER_PREPROCESSOR_FLAGS = "-traditional";
-				INFOPLIST_PREFIX_HEADER = $PROJECT_TEMP_DIR/revision;
-				INFOPLIST_PREPROCESS = YES;
 				INSTALL_PATH = "$(HOME)/Applications";
 				PRODUCT_NAME = GitX;
 				WRAPPER_EXTENSION = app;
@@ -1459,8 +1470,6 @@
 				HEADER_SEARCH_PATHS = "\"$(SOURCE_ROOT)/libgit2/include\"";
 				INFOPLIST_FILE = Info.plist;
 				INFOPLIST_OTHER_PREPROCESSOR_FLAGS = "-traditional";
-				INFOPLIST_PREFIX_HEADER = $PROJECT_TEMP_DIR/revision;
-				INFOPLIST_PREPROCESS = YES;
 				INSTALL_PATH = "$(HOME)/Applications";
 				PRODUCT_NAME = GitX;
 				WRAPPER_EXTENSION = app;
@@ -1477,7 +1486,6 @@
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				INFOPLIST_PREPROCESS = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = macosx;
 				STRIP_INSTALLED_PRODUCT = NO;
@@ -1493,8 +1501,6 @@
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				INFOPLIST_PREFIX_HEADER = $PROJECT_TEMP_DIR/revision;
-				INFOPLIST_PREPROCESS = YES;
 				SDKROOT = macosx;
 			};
 			name = Release;
