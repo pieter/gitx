@@ -142,8 +142,12 @@ static void PBGitRepositoryWatcherCallback(ConstFSEventStreamRef streamRef, void
 
 		// subdirs of working dir
 		else {
-			event |= PBGitRepositoryWatcherEventTypeWorkingDirectory;
-            [paths addObject:eventPath.path];
+			// Try to get the git status of the changed path using libgit2
+			if (![eventPath.path hasSuffix:@"/.git/"])
+			{
+				event |= PBGitRepositoryWatcherEventTypeWorkingDirectory;
+				[paths addObject:eventPath.path];
+			}
 		}
 	}
 	
