@@ -11,7 +11,7 @@
 #import "PBGitRef.h"
 
 @implementation PBSourceViewItem
-@synthesize parent, title, isGroupItem, children, revSpecifier, isUncollapsible;
+@synthesize parent, isGroupItem, children, revSpecifier, isUncollapsible;
 @dynamic icon;
 
 - (id)init
@@ -120,6 +120,11 @@
 		return title;
 	
 	return [[revSpecifier description] lastPathComponent];
+}
+
+- (void) setTitle:(NSString *)_title
+{
+	title = [_title retain];
 }
 
 - (NSString *) stringValue

@@ -44,7 +44,7 @@
 
 
 @implementation PBGitHistoryController
-@synthesize selectedCommitDetailsIndex, webCommit, gitTree, commitController, refController;
+@synthesize webCommit, gitTree, commitController, refController;
 @synthesize searchController;
 @synthesize commitList;
 @synthesize treeController;
@@ -185,6 +185,11 @@
 	[[NSUserDefaults standardUserDefaults] setInteger:selectedCommitDetailsIndex forKey:kHistorySelectedDetailIndexKey];
 	forceSelectionUpdate = YES;
 	[self updateKeys];
+}
+
+- (int) selectedCommitDetailsIndex
+{
+	return selectedCommitDetailsIndex;
 }
 
 - (void) updateStatus

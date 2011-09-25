@@ -56,8 +56,6 @@ NSString *PBGitIndexOperationFailed = @"PBGitIndexOperationFailed";
 
 @implementation PBGitIndex
 
-@synthesize amend;
-
 - (id)initWithRepository:(PBGitRepository *)theRepository workingDirectory:(NSURL *)theWorkingDirectory
 {
 	if (!(self = [super init]))
@@ -111,6 +109,11 @@ NSString *PBGitIndexOperationFailed = @"PBGitIndexOperationFailed";
 														  userInfo:[NSDictionary dictionaryWithObject:commitMessage forKey:@"message"]];
 	}
 	
+}
+
+- (BOOL) amend
+{
+	return amend;
 }
 
 - (void)refresh
