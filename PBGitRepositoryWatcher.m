@@ -23,14 +23,12 @@ static void PBGitRepositoryWatcherCallback(ConstFSEventStreamRef streamRef, void
 										size_t numEvents, void *eventPaths, 
 										const FSEventStreamEventFlags eventFlags[], const FSEventStreamEventId eventIds[]){
     PBGitRepositoryWatcher *watcher = clientCallBackInfo;
-	int i;
-    char **paths = eventPaths;
 	NSMutableArray *changePaths = [[NSMutableArray alloc] init];
-	for (i = 0; i < numEvents; ++i) {
+	for (int i = 0; i < numEvents; ++i) {
 //		NSLog(@"FSEvent Watcher: %@ Change %llu in %s, flags %lu", watcher, eventIds[i], paths[i], eventFlags[i]);
 
 		PBGitRepositoryWatcherEventPath *ep = [[PBGitRepositoryWatcherEventPath alloc] init];
-		ep.path = [NSString stringWithFormat:@"%s", paths[i]];
+		ep.path = [[(NSArray*)eventPaths objectAtIndex:i] retain];
 		ep.flag = eventFlags[i];
 		[changePaths addObject:ep];
 		[ep release];
@@ -58,7 +56,8 @@ static void PBGitRepositoryWatcherCallback(ConstFSEventStreamRef streamRef, void
 	// Create and activate event stream
 	eventStream = FSEventStreamCreate(kCFAllocatorDefault, &PBGitRepositoryWatcherCallback, &context, 
 									  (CFArrayRef)paths,
-									  kFSEventStreamEventIdSinceNow, 1.0, kFSEventStreamCreateFlagNone);
+									  kFSEventStreamEventIdSinceNow, 1.0,
+									  kFSEventStreamCreateFlagUseCFTypes);
   if ([PBGitDefaults useRepositoryWatcher])
     [self start];
   return self;
