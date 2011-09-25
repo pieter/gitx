@@ -79,18 +79,29 @@ static void PBGitRepositoryWatcherCallback(ConstFSEventStreamRef streamRef, void
 }
 
 - (BOOL) _gitDirectoryChanged {
-	BOOL isDirectory;
-    NSDate *touchDate;
 
-	for (NSString *filename in [[NSFileManager defaultManager] directoryContentsAtPath:repository.fileURL.path]) {
-		NSString *filepath = [repository.fileURL.path stringByAppendingPathComponent:filename];
-		[[NSFileManager defaultManager] fileExistsAtPath:filepath isDirectory:&isDirectory];
+	for (NSURL* fileURL in [[NSFileManager defaultManager] contentsOfDirectoryAtURL:repository.fileURL
+														 includingPropertiesForKeys:[NSArray arrayWithObject:NSURLContentModificationDateKey]
+																			options:0
+						
+																			  error:nil])
+	{
+		BOOL isDirectory = NO;
+		[[NSFileManager defaultManager] fileExistsAtPath:[fileURL path] isDirectory:&isDirectory];
 		if (isDirectory) 
 			continue;
 
-		touchDate = [self _fileModificationDateAtPath:filepath];
-		if ([gitDirTouchDate isLessThan:touchDate]) {
-			gitDirTouchDate = touchDate;
+		NSDate* modTime = nil;
+		if (![fileURL getResourceValue:&modTime forKey:NSURLContentModificationDateKey error:nil])
+			continue;
+		
+		if (gitDirTouchDate == nil || [modTime compare:gitDirTouchDate] == NSOrderedDescending)
+		{
+			NSDate* newModTime = [[modTime laterDate:gitDirTouchDate] retain];
+			if (gitDirTouchDate)
+				[gitDirTouchDate release];
+			
+			gitDirTouchDate = newModTime;
 			return YES;
 		}
 	}
