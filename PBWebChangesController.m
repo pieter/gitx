@@ -119,7 +119,7 @@
 		[alert beginSheetModalForWindow:[[controller view] window]
                           modalDelegate:self
                          didEndSelector:@selector(discardHunkAlertDidEnd:returnCode:contextInfo:)
-                            contextInfo:(__bridge void*)hunk];
+                            contextInfo:(__bridge_retained void*)hunk];
 	} else {
         [self discardHunk:hunk];
     }

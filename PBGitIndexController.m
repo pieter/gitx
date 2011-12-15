@@ -216,7 +216,7 @@
         [alert beginSheetModalForWindow:[[commitController view] window]
                           modalDelegate:self
                          didEndSelector:@selector(discardChangesForFilesAlertDidEnd:returnCode:contextInfo:)
-                            contextInfo:(__bridge void*)files];
+                            contextInfo:(__bridge_retained void*)files];
 	} else {
         [commitController.index discardChangesForFiles:files];
     }

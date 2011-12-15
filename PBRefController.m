@@ -89,7 +89,7 @@
 	[alert beginSheetModalForWindow:[historyController.repository.windowController window]
 					  modalDelegate:self
 					 didEndSelector:@selector(confirmPushRefSheetDidEnd:returnCode:contextInfo:)
-						contextInfo:(__bridge void*)info];
+						contextInfo:(__bridge_retained void*)info];
 }
 
 - (void)confirmPushRefSheetDidEnd:(NSAlert *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo
@@ -270,7 +270,7 @@
 	[alert beginSheetModalForWindow:[historyController.repository.windowController window]
 					  modalDelegate:self
 					 didEndSelector:@selector(deleteRefSheetDidEnd:returnCode:contextInfo:)
-						contextInfo:(__bridge void*)ref];
+						contextInfo:(__bridge_retained void*)ref];
 }
 
 - (void)deleteRefSheetDidEnd:(NSAlert *)sheet returnCode:(int)returnCode contextInfo:(void  *)contextInfo
@@ -426,7 +426,7 @@
 	[alert beginSheetModalForWindow:[historyController.repository.windowController window]
 					  modalDelegate:self
 					 didEndSelector:@selector(acceptDropInfoAlertDidEnd:returnCode:contextInfo:)
-						contextInfo:(__bridge void*)dropInfo];
+						contextInfo:(__bridge_retained void*)dropInfo];
 
 	return YES;
 }
