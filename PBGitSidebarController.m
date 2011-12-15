@@ -75,13 +75,13 @@
 
 - (void) observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
 {
-	if ([@"currentBranchChange" isEqualToString:context]) {
+	if ([@"currentBranchChange" isEqualToString:(__bridge NSString*)context]) {
 		[sourceView reloadData];
 		[self selectCurrentBranch];
 		return;
 	}
 
-	if ([@"branchesModified" isEqualToString:context]) {
+	if ([@"branchesModified" isEqualToString:(__bridge NSString*)context]) {
 		NSInteger changeKind = [(NSNumber *)[change objectForKey:NSKeyValueChangeKindKey] intValue];
 
 		if (changeKind == NSKeyValueChangeInsertion) {

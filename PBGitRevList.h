@@ -27,7 +27,7 @@
 - (void) loadRevisons;
 - (void)cancel;
 
-@property (retain) NSMutableArray *commits;
+@property  NSMutableArray *commits;
 @property (readonly) BOOL isParsing;
 
 @end

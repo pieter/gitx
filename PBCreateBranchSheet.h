@@ -30,12 +30,12 @@
 - (IBAction) closeCreateBranchSheet:(id)sender;
 
 
-@property (retain) PBGitRepository *repository;
-@property (retain) id <PBGitRefish> startRefish;
+@property  PBGitRepository *repository;
+@property  id <PBGitRefish> startRefish;
 
 @property (assign) BOOL shouldCheckoutBranch;
 
-@property (assign) IBOutlet NSTextField *branchNameField;
-@property (assign) IBOutlet NSTextField *errorMessageField;
+@property  IBOutlet NSTextField *branchNameField;
+@property  IBOutlet NSTextField *errorMessageField;
 
 @end

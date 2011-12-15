@@ -41,8 +41,8 @@ extern NSString * const kGitXProgressErrorInfo;
 + (void) beginRemoteProgressSheetForArguments:(NSArray *)args title:(NSString *)theTitle description:(NSString *)theDescription inRepository:(PBGitRepository *)repo hideSuccessScreen:(bool)hideSucc;
 
 
-@property (assign) IBOutlet NSTextField         *progressDescription;
-@property (assign) IBOutlet NSProgressIndicator *progressIndicator;
+@property  IBOutlet NSTextField         *progressDescription;
+@property  IBOutlet NSProgressIndicator *progressIndicator;
 
 
 @end

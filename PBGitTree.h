@@ -15,7 +15,7 @@
 	NSString* sha;
 	NSString* path;
 	PBGitRepository* repository;
-	__weak PBGitTree* parent;
+	__unsafe_unretained PBGitTree* parent;
 	NSArray* children;
 	BOOL leaf;
 
@@ -36,8 +36,8 @@
 @property(copy) NSString* sha;
 @property(copy) NSString* path;
 @property(assign) BOOL leaf;
-@property(retain) PBGitRepository* repository;
-@property(assign) __weak PBGitTree* parent;
+@property PBGitRepository* repository;
+@property(unsafe_unretained)  PBGitTree* parent;
 
 @property(readonly) NSArray* children;
 @property(readonly) NSString* fullPath;

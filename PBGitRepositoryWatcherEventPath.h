@@ -15,6 +15,6 @@
 	FSEventStreamEventFlags flag;
 }
 
-@property (retain) NSString *path;
+@property  NSString *path;
 @property (assign) FSEventStreamEventFlags flag;
 @end

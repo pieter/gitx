@@ -137,11 +137,11 @@ static NSString * PBStringFromBranchFilterType(PBGitXBranchFilterType type) {
 @property (assign) BOOL hasChanged;
 @property (readonly) PBGitWindowController *windowController;
 @property (readonly) PBGitConfig *config;
-@property (retain) PBGitHistoryList *revisionList;
-@property (assign) NSMutableArray* branches;
-@property (assign) PBGitRevSpecifier *currentBranch;
+@property  PBGitHistoryList *revisionList;
+@property  NSMutableArray* branches;
+@property  PBGitRevSpecifier *currentBranch;
 @property (assign) NSInteger currentBranchFilter;
-@property (retain) NSMutableDictionary* refs;
+@property  NSMutableDictionary* refs;
 @property (readonly, getter = getIndexURL) NSURL* indexURL;
 
 @end

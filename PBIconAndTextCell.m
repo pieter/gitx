@@ -13,11 +13,6 @@
 @implementation PBIconAndTextCell
 @synthesize image;
 
-- (void)dealloc
-{
-	self.image = nil;
-	[super dealloc];
-}
 
 - (id)copyWithZone:(NSZone *)zone
 {

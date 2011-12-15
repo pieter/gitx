@@ -148,10 +148,6 @@ NSString * const kGitXCommitType = @"commit";
 	[[repository refs] setObject:refs forKey:[self sha]];
 }
 
-- (void)finalize
-{
-	[super finalize];
-}
 
 + (BOOL)isSelectorExcludedFromWebScript:(SEL)aSelector
 {

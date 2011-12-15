@@ -53,11 +53,11 @@ extern NSString * const kGitXCommitType;
 @property (copy) NSString* subject;
 @property (copy) NSString* author;
 @property (copy) NSString *committer;
-@property (retain) NSArray *parents;
+@property  NSArray *parents;
 
 @property (assign) int timestamp;
 
-@property (retain) NSMutableArray* refs;
+@property  NSMutableArray* refs;
 @property (readonly) NSDate *date;
 @property (readonly) NSString* dateString;
 @property (readonly) NSString* patch;
@@ -66,6 +66,6 @@ extern NSString * const kGitXCommitType;
 @property (readonly) NSString* details;
 @property (readonly) PBGitTree* tree;
 @property (readonly) NSArray* treeContents;
-@property (retain) PBGitRepository* repository;
-@property (retain) id lineInfo;
+@property  PBGitRepository* repository;
+@property  id lineInfo;
 @end

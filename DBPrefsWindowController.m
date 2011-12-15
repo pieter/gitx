@@ -74,14 +74,14 @@ static DBPrefsWindowController *_sharedPrefsWindowController = nil;
 		// Create a new window to display the preference views.
 		// If the developer attached a window to this controller
 		// in Interface Builder, it gets replaced with this one.
-	NSPanel *panel = [[[NSPanel alloc] initWithContentRect:NSMakeRect(0,0,1000,1000)
+	NSPanel *panel = [[NSPanel alloc] initWithContentRect:NSMakeRect(0,0,1000,1000)
 												    styleMask:(NSTitledWindowMask |
 															   NSClosableWindowMask |
 															   NSMiniaturizableWindowMask)
 													  backing:NSBackingStoreBuffered
-													    defer:YES] autorelease];
+													    defer:YES];
 	[self setWindow:panel];
-	contentSubview = [[[NSView alloc] initWithFrame:[[[self window] contentView] frame]] autorelease];
+	contentSubview = [[NSView alloc] initWithFrame:[[[self window] contentView] frame]];
 	[contentSubview setAutoresizingMask:(NSViewMinYMargin | NSViewWidthSizable)];
 	[[[self window] contentView] addSubview:contentSubview];
 	[[self window] setShowsToolbarButton:NO];
@@ -90,13 +90,6 @@ static DBPrefsWindowController *_sharedPrefsWindowController = nil;
 
 
 
-- (void) dealloc {
-	[toolbarIdentifiers release];
-	[toolbarViews release];
-	[toolbarItems release];
-	[viewAnimation release];
-	[super dealloc];
-}
 
 
 
@@ -129,12 +122,12 @@ static DBPrefsWindowController *_sharedPrefsWindowController = nil;
 	NSAssert (view != nil,
 			  @"Attempted to add a nil view when calling -addView:label:image:.");
 
-	NSString *identifier = [[label copy] autorelease];
+	NSString *identifier = [label copy];
 
 	[toolbarIdentifiers addObject:identifier];
 	[toolbarViews setObject:view forKey:identifier];
 
-	NSToolbarItem *item = [[[NSToolbarItem alloc] initWithItemIdentifier:identifier] autorelease];
+	NSToolbarItem *item = [[NSToolbarItem alloc] initWithItemIdentifier:identifier];
 	[item setLabel:label];
 	[item setImage:image];
 	[item setTarget:self];
@@ -208,7 +201,6 @@ static DBPrefsWindowController *_sharedPrefsWindowController = nil;
 		[toolbar setDisplayMode:NSToolbarDisplayModeIconAndLabel];
 		[toolbar setDelegate:self];
 		[[self window] setToolbar:toolbar];
-		[toolbar release];
 	}
 
 	NSString *identifier = [self defaultViewIdentifier];

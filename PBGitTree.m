@@ -283,10 +283,9 @@
 	return [parent.fullPath stringByAppendingPathComponent: self.path];
 }
 
-- (void) finalize
+- (void) dealloc
 {
 	if (localFileName)
 		[[NSFileManager defaultManager] removeFileAtPath:localFileName handler:nil];
-	[super finalize];
 }
 @end

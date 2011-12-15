@@ -21,8 +21,8 @@
 	IBOutlet id repository;
 }
 
-@property (retain) NSString *startFile;
-@property (retain) id repository;
+@property  NSString *startFile;
+@property  id repository;
 
 - (WebScriptObject *) script;
 - (void) closeView;

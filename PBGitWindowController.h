@@ -12,7 +12,7 @@
 @class PBViewController, PBGitSidebarController, PBGitCommitController;
 
 @interface PBGitWindowController : NSWindowController {
-	__weak PBGitRepository* repository;
+	__unsafe_unretained PBGitRepository* repository;
 
 	PBViewController *contentController;
 
@@ -31,7 +31,7 @@
 	IBOutlet NSToolbarItem *finderItem;
 }
 
-@property (assign) __weak PBGitRepository *repository;
+@property (unsafe_unretained)  PBGitRepository *repository;
 
 - (id)initWithRepository:(PBGitRepository*)theRepository displayDefault:(BOOL)display;
 

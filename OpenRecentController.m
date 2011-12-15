@@ -18,9 +18,9 @@
 {
 	OpenRecentController* new = [[OpenRecentController alloc] init];
 	new->currentResults = [NSMutableArray array];
-	[new->currentResults retain]; //FIXME: why ???
+	 //FIXME: why ???
 	new->possibleResults = [NSMutableArray array];
-	[new->possibleResults retain]; //FIXME: why ???
+	 //FIXME: why ???
 
 	for (NSURL *url in [[NSDocumentController sharedDocumentController] recentDocumentURLs]) {
 		[new->possibleResults addObject: url];

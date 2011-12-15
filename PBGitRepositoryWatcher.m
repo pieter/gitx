@@ -24,20 +24,18 @@ NSString *kPBGitRepositoryEventPathsUserInfoKey = @"kPBGitRepositoryEventPathsUs
 static void PBGitRepositoryWatcherCallback(ConstFSEventStreamRef streamRef, void *clientCallBackInfo, 
 										size_t numEvents, void *eventPaths, 
 										const FSEventStreamEventFlags eventFlags[], const FSEventStreamEventId eventIds[]){
-    PBGitRepositoryWatcher *watcher = clientCallBackInfo;
+    PBGitRepositoryWatcher *watcher = (__bridge PBGitRepositoryWatcher*)clientCallBackInfo;
 	NSMutableArray *changePaths = [[NSMutableArray alloc] init];
 	for (int i = 0; i < numEvents; ++i) {
 //		NSLog(@"FSEvent Watcher: %@ Change %llu in %s, flags %lu", watcher, eventIds[i], paths[i], eventFlags[i]);
 
 		PBGitRepositoryWatcherEventPath *ep = [[PBGitRepositoryWatcherEventPath alloc] init];
-		ep.path = [[(NSArray*)eventPaths objectAtIndex:i] retain];
+		ep.path = [(__bridge NSArray*)eventPaths objectAtIndex:i];
 		ep.flag = eventFlags[i];
 		[changePaths addObject:ep];
-		[ep release];
 		
 	}
     [watcher _handleEventCallback:changePaths];
-	[changePaths release];
 }
 
 @implementation PBGitRepositoryWatcher
@@ -50,14 +48,14 @@ static void PBGitRepositoryWatcherCallback(ConstFSEventStreamRef streamRef, void
         return nil;
 
 	repository = theRepository;
-	FSEventStreamContext context = {0, self, NULL, NULL, NULL};
+	FSEventStreamContext context = {0, (__bridge void *)(self), NULL, NULL, NULL};
 
 	NSString *path = [repository isBareRepository] ? repository.fileURL.path : [repository workingDirectory];
 	NSArray *paths = [NSArray arrayWithObject: path];
 
 	// Create and activate event stream
 	eventStream = FSEventStreamCreate(kCFAllocatorDefault, &PBGitRepositoryWatcherCallback, &context, 
-									  (CFArrayRef)paths,
+									  (__bridge CFArrayRef)paths,
 									  kFSEventStreamEventIdSinceNow, 1.0,
 									  kFSEventStreamCreateFlagUseCFTypes);
   if ([PBGitDefaults useRepositoryWatcher])
@@ -99,9 +97,7 @@ static void PBGitRepositoryWatcherCallback(ConstFSEventStreamRef streamRef, void
 		
 		if (gitDirTouchDate == nil || [modTime compare:gitDirTouchDate] == NSOrderedDescending)
 		{
-			NSDate* newModTime = [[modTime laterDate:gitDirTouchDate] retain];
-			if (gitDirTouchDate)
-				[gitDirTouchDate release];
+			NSDate* newModTime = [modTime laterDate:gitDirTouchDate];
 			
 			gitDirTouchDate = newModTime;
 			return YES;
@@ -209,20 +205,10 @@ static void PBGitRepositoryWatcherCallback(ConstFSEventStreamRef streamRef, void
 	_running = NO;
 }
 
-- (void) finalize {
-    // cleanup 
-    [self stop];
-    FSEventStreamInvalidate(eventStream);
-    FSEventStreamRelease(eventStream);
-	
-	[super finalize];
-}
 
 - (void) dealloc {
-	[self finalize];
+	self;
 	
-    [repository release];
-    [super dealloc];
 }
 
 @end

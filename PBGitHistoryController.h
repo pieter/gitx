@@ -58,8 +58,8 @@
 
 @property (readonly) NSTreeController* treeController;
 @property (assign) int selectedCommitDetailsIndex;
-@property (retain) PBGitCommit *webCommit;
-@property (retain) PBGitTree* gitTree;
+@property  PBGitCommit *webCommit;
+@property  PBGitTree* gitTree;
 @property (readonly) NSArrayController *commitController;
 @property (readonly) PBRefController *refController;
 @property (readonly) PBHistorySearchController *searchController;

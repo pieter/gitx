@@ -124,7 +124,7 @@
 
 - (void) setTitle:(NSString *)_title
 {
-	title = [_title retain];
+	title = _title;
 }
 
 - (NSString *) stringValue

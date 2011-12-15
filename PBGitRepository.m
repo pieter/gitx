@@ -1129,14 +1129,13 @@ NSString* PBGitRepositoryErrorDomain = @"GitXErrorDomain";
 
 - (NSURL*) getIndexURL
 {
-	GTRepository* gtRepo = [[GTRepository repositoryWithURL:self.fileURL error:nil] autorelease];
+	GTRepository* gtRepo = [GTRepository repositoryWithURL:self.fileURL error:nil];
 	NSString* indexPath = [NSString stringWithUTF8String:git_repository_path(gtRepo.repo, GIT_REPO_PATH_INDEX)];
 	NSURL* indexURL = [NSURL fileURLWithPath:indexPath];
-	return [indexURL autorelease];
+	return indexURL;
 }
-- (void) finalize
+- (void) dealloc
 {
 	NSLog(@"Dealloc of repository");
-	[super finalize];
 }
 @end

@@ -34,10 +34,10 @@
 - (IBAction) showHideHiddenFiles:(id)sender;
 - (IBAction) browseDestination:(id)sender;
 
-@property (assign) IBOutlet NSTextField *repositoryURL;
-@property (assign) IBOutlet NSTextField *destinationPath;
-@property (assign) IBOutlet NSTextField *errorMessage;
-@property (assign) IBOutlet NSView      *repositoryAccessoryView;
+@property  IBOutlet NSTextField *repositoryURL;
+@property  IBOutlet NSTextField *destinationPath;
+@property  IBOutlet NSTextField *errorMessage;
+@property  IBOutlet NSView      *repositoryAccessoryView;
 
 @property (assign) BOOL isBare;
 

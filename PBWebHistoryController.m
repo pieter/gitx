@@ -38,7 +38,7 @@
 
 - (void) observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
 {
-    if ([(NSString *)context isEqualToString: @"ChangedCommit"])
+    if ([(__bridge NSString *)context isEqualToString: @"ChangedCommit"])
 		[self changeContentTo: historyController.webCommit];
 	else
 		[super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
@@ -169,10 +169,6 @@ contextMenuItemsForElement:(NSDictionary *)element
 	return [historyController valueForKeyPath:[@"repository.config." stringByAppendingString:config]];
 }
 
-- (void)finalize
-{
-	[super finalize];
-}
 
 - (void) preferencesChanged
 {

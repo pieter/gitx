@@ -134,7 +134,7 @@
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
 {
-	if ([(NSString *)context isEqualToString:kGitXSearchArrangedObjectsContext]) {
+	if ([(__bridge NSString *)context isEqualToString:kGitXSearchArrangedObjectsContext]) {
 		// the objects in the commitlist changed so the result indexes are no longer valid
 		[self clearSearch];
 		return;

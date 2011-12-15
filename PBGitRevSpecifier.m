@@ -40,21 +40,21 @@
 - (id) initWithParameters:(NSArray *)params
 {
     self = [super init];
-	[self initWithParameters:params description:nil];
+	self = [self initWithParameters:params description:nil];
 	return self;
 }
 
 - (id) initWithRef:(PBGitRef *)ref
 {
     self = [super init];
-	[self initWithParameters:[NSArray arrayWithObject:ref.ref] description:ref.shortName];
+	self = [self initWithParameters:[NSArray arrayWithObject:ref.ref] description:ref.shortName];
 	return self;
 }
 
 - (id) initWithCoder:(NSCoder *)coder
 {
     self = [super init];
-	[self initWithParameters:[coder decodeObjectForKey:@"Parameters"] description:[coder decodeObjectForKey:@"Description"]];
+	self = [self initWithParameters:[coder decodeObjectForKey:@"Parameters"] description:[coder decodeObjectForKey:@"Description"]];
 	return self;
 }
 

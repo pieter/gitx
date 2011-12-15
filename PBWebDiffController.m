@@ -33,7 +33,7 @@
 
 - (void) observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
 {
-    if ([(NSString *)context isEqualToString: @"ChangedDiff"])
+    if ([(__bridge NSString *)context isEqualToString: @"ChangedDiff"])
 		[self showDiff:diffController.diff];
 }
 

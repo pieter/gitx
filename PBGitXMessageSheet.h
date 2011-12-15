@@ -25,9 +25,9 @@
 - (IBAction)closeMessageSheet:(id)sender;
 
 
-@property (assign) IBOutlet NSImageView *iconView;
-@property (assign) IBOutlet NSTextField *messageField;
-@property (assign) IBOutlet NSTextView *infoView;
-@property (assign) IBOutlet NSScrollView *scrollView;
+@property  IBOutlet NSImageView *iconView;
+@property  IBOutlet NSTextField *messageField;
+@property  IBOutlet NSTextView *infoView;
+@property  IBOutlet NSScrollView *scrollView;
 
 @end

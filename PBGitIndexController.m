@@ -201,7 +201,7 @@
     [[alert window] orderOut:nil];
 
 	if (returnCode == NSAlertDefaultReturn) {
-        [commitController.index discardChangesForFiles:contextInfo];
+        [commitController.index discardChangesForFiles:(__bridge NSArray*)contextInfo];
 	}
 }
 
@@ -216,7 +216,7 @@
         [alert beginSheetModalForWindow:[[commitController view] window]
                           modalDelegate:self
                          didEndSelector:@selector(discardChangesForFilesAlertDidEnd:returnCode:contextInfo:)
-                            contextInfo:files];
+                            contextInfo:(__bridge void*)files];
 	} else {
         [commitController.index discardChangesForFiles:files];
     }

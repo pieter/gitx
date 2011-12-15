@@ -348,17 +348,17 @@
 
 - (void) observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
 {
-	if ([@"currentBranch" isEqualToString:context]) {
+	if ([@"currentBranch" isEqualToString:(__bridge NSString*)context]) {
 		[self updateHistory];
 		return;
 	}
 
-	if ([@"repositoryHasChanged" isEqualToString:context]) {
+	if ([@"repositoryHasChanged" isEqualToString:(__bridge NSString*)context]) {
 		[self forceUpdate];
 		return;
 	}
 
-	if ([@"commitsUpdated" isEqualToString:context]) {
+	if ([@"commitsUpdated" isEqualToString:(__bridge NSString*)context]) {
 		NSInteger changeKind = [(NSNumber *)[change objectForKey:NSKeyValueChangeKindKey] intValue];
 		if (changeKind == NSKeyValueChangeInsertion) {
 			NSArray *newCommits = [change objectForKey:NSKeyValueChangeNewKey];

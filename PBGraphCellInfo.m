@@ -25,10 +25,9 @@
 	lines = l;
 }
 
--(void) finalize
+-(void) dealloc
 {
 	free(lines);
-	[super finalize];
 }
 
 @end

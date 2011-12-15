@@ -33,9 +33,9 @@
 + (PBGitRevSpecifier *)allBranchesRevSpec;
 + (PBGitRevSpecifier *)localBranchesRevSpec;
 
-@property(retain)   NSString *description;
+@property   NSString *description;
 @property(readonly) NSArray *parameters;
-@property(retain)   NSURL *workingDirectory;
+@property   NSURL *workingDirectory;
 @property(readonly) BOOL isSimpleRef;
 
 @end

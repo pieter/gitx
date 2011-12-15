@@ -96,12 +96,7 @@
 		[_accessoryView removeFromSuperview];
 		_accessoryView = nil; // weak ref
 	}
-	[_separatorPositions release];
-	[_groups release];
-	[_identifiers release];
-	[_selectedItems release];
 	
-	[super dealloc];
 }
 
 
@@ -121,15 +116,11 @@
 	
 	NSArray *subviews = [[self subviews] copy]; // so we don't mutate the collection we're iterating over.
 	[subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
-	[subviews release]; // because copies are retained.
+	 // because copies are retained.
 	
-	[_separatorPositions release];
 	_separatorPositions = nil;
-	[_groups release];
 	_groups = nil;
-	[_identifiers release];
 	_identifiers = nil;
-	[_selectedItems release];
 	_selectedItems = nil;
 	_firstCollapsedGroup = NSNotFound;
 	_lastWidth = NSNotFound;
@@ -185,7 +176,6 @@
 					ctrlRect.size = [labelField frame].size;
 					[labelField setFrame:ctrlRect];
 					[self addSubview:labelField];
-					[labelField release];
 					
 					xCoord += ctrlRect.size.width + SCOPE_BAR_ITEM_SPACING;
 					
@@ -713,7 +703,7 @@
 	
 	[self setControl:button forIdentifier:identifier inGroup:groupNumber];
 	
-	return [button autorelease];
+	return button;
 }
 
 
@@ -728,7 +718,7 @@
 	
 	[self setControl:menuItem forIdentifier:identifier inGroup:groupNumber];
 	
-	return [menuItem autorelease];
+	return menuItem;
 }
 
 
@@ -743,12 +733,10 @@
 	if (multiSelect) {
 		MGRecessedPopUpButtonCell *cell = [[MGRecessedPopUpButtonCell alloc] initTextCell:@"" pullsDown:NO];
 		[popup setCell:cell];
-		[cell release];
 		
 		[[popup cell] setUsesItemFromMenu:NO];
 		NSMenuItem *titleItem = [[NSMenuItem alloc] init];
 		[[popup cell] setMenuItem:titleItem];
-		[titleItem release];
 	}
 	
 	// Configure appearance and behaviour.
@@ -784,7 +772,7 @@
 	popFrame.origin.y = ceil(([self frame].size.height - popFrame.size.height) / 2.0);
 	[popup setFrame:popFrame];
 	
-	return [popup autorelease];
+	return popup;
 }
 
 
@@ -796,7 +784,7 @@
 	
 	NSMutableArray *identArray = [_identifiers objectForKey:identifier];
 	if (!identArray) {
-		identArray = [[[NSMutableArray alloc] initWithCapacity:groupNumber + 1] autorelease];
+		identArray = [[NSMutableArray alloc] initWithCapacity:groupNumber + 1];
 		[_identifiers setObject:identArray forKey:identifier];
 	}
 	
@@ -875,8 +863,8 @@
 - (void)drawRect:(NSRect)rect
 {
     // Draw gradient background.
-	NSGradient *gradient = [[[NSGradient alloc] initWithStartingColor:SCOPE_BAR_START_COLOR_GRAY 
-														  endingColor:SCOPE_BAR_END_COLOR_GRAY] autorelease];
+	NSGradient *gradient = [[NSGradient alloc] initWithStartingColor:SCOPE_BAR_START_COLOR_GRAY 
+														  endingColor:SCOPE_BAR_END_COLOR_GRAY];
 	[gradient drawInRect:[self bounds] angle:90.0];
 	
 	// Draw border.
@@ -935,7 +923,6 @@
 		BOOL informDelegate = YES;
 		
 		if (group) {
-			[group retain];
 			NSDisableScreenUpdates();
 			
 			// We found the group which this item belongs to. Obtain selection-mode and identifiers.
@@ -959,7 +946,6 @@
 						informDelegate = NO;
 					}
 				}
-				[groupSelections release];	
 			}
 			
 			// Change selected state of this item.
@@ -970,7 +956,6 @@
 				[self updateMenuTitleForGroupAtIndex:groupNumber];
 			}
 			
-			[group release];
 			NSEnableScreenUpdates();
 		}
 	}
@@ -1015,7 +1000,7 @@
 
 - (NSArray *)selectedItems
 {
-	return [[_selectedItems copy] autorelease];
+	return [_selectedItems copy];
 }
 
 

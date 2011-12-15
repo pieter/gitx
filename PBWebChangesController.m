@@ -105,7 +105,7 @@
     [[alert window] orderOut:nil];
 
 	if (returnCode == NSAlertDefaultReturn)
-		[self discardHunk:contextInfo];
+		[self discardHunk:(__bridge NSString*)contextInfo];
 }
 
 - (void)discardHunk:(NSString *)hunk altKey:(BOOL)altKey
@@ -119,7 +119,7 @@
 		[alert beginSheetModalForWindow:[[controller view] window]
                           modalDelegate:self
                          didEndSelector:@selector(discardHunkAlertDidEnd:returnCode:contextInfo:)
-                            contextInfo:hunk];
+                            contextInfo:(__bridge void*)hunk];
 	} else {
         [self discardHunk:hunk];
     }

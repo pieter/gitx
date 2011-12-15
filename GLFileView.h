@@ -29,7 +29,7 @@
 - (NSString *)parseBlame:(NSString *)txt;
 - (NSString *)parseHTML:(NSString *)txt;
 
-@property(retain) NSMutableArray *groups;
-@property(retain) NSString *logFormat;
+@property NSMutableArray *groups;
+@property NSString *logFormat;
 
 @end

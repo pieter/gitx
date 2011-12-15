@@ -28,11 +28,11 @@
 - (IBAction) closeCreateTagSheet:(id)sender;
 
 
-@property (retain) PBGitRepository *repository;
-@property (retain) id <PBGitRefish> targetRefish;
+@property  PBGitRepository *repository;
+@property  id <PBGitRefish> targetRefish;
 
-@property (assign) IBOutlet NSTextField *tagNameField;
-@property (assign) IBOutlet NSTextView  *tagMessageText;
-@property (assign) IBOutlet NSTextField *errorMessageField;
+@property  IBOutlet NSTextField *tagNameField;
+@property  IBOutlet NSTextView  *tagMessageText;
+@property  IBOutlet NSTextField *errorMessageField;
 
 @end
