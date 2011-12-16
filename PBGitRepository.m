@@ -24,7 +24,7 @@
 
 
 #import <ObjectiveGit/GTRepository.h>
-#import <git2/repository.h>
+#import <ObjectiveGit/GTIndex.h>
 
 NSString* PBGitRepositoryErrorDomain = @"GitXErrorDomain";
 
@@ -1130,9 +1130,9 @@ NSString* PBGitRepositoryErrorDomain = @"GitXErrorDomain";
 - (NSURL*) getIndexURL
 {
 	GTRepository* gtRepo = [GTRepository repositoryWithURL:self.fileURL error:nil];
-	NSString* indexPath = [NSString stringWithUTF8String:git_repository_path(gtRepo.repo, GIT_REPO_PATH_INDEX)];
-	NSURL* indexURL = [NSURL fileURLWithPath:indexPath];
-	return indexURL;
+
+	NSURL* result = [[gtRepo index] path];
+	return result;
 }
 - (void) dealloc
 {
