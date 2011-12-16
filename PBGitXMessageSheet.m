@@ -19,7 +19,7 @@
 
 @end
 
-
+NSMutableArray* allMessageSheets = nil;
 
 @implementation PBGitXMessageSheet
 
@@ -66,6 +66,12 @@
 	[self resizeWindow];
 	
 	[NSApp beginSheet:[self window] modalForWindow:parentWindow modalDelegate:self didEndSelector:nil contextInfo:NULL];
+	
+	if (!allMessageSheets)
+	{
+		allMessageSheets = [[NSMutableArray alloc] init];
+	}
+	[allMessageSheets addObject:self];
 }
 
 

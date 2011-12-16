@@ -20,7 +20,7 @@ NSString * const kGitXProgressSuccessInfo        = @"PBGitXProgressSuccessInfo";
 NSString * const kGitXProgressErrorDescription   = @"PBGitXProgressErrorDescription";
 NSString * const kGitXProgressErrorInfo          = @"PBGitXProgressErrorInfo";
 
-
+NSMutableArray* allProgressSheets = nil;
 
 @interface PBRemoteProgressSheet ()
 
@@ -110,6 +110,12 @@ NSString * const kGitXProgressErrorInfo          = @"PBGitXProgressErrorInfo";
 	taskTimer = [NSTimer scheduledTimerWithTimeInterval:0.2 target:self selector:@selector(checkTask:) userInfo:nil repeats:YES];
 
 	[gitTask launch];
+	
+	if (!allProgressSheets)
+	{
+		allProgressSheets = [[NSMutableArray alloc] init];
+	}
+	[allProgressSheets addObject:self];
 }
 
 
