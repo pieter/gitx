@@ -896,7 +896,7 @@
 	NSButton *button = (NSButton *)sender;
 	BOOL menuMode = [sender isKindOfClass:[NSMenuItem class]];
 	NSString *identifier = [((menuMode) ? sender : [sender cell]) representedObject];
-	int groupNumber = [sender tag];
+	int groupNumber = [(NSView*)sender tag];
 	BOOL nowSelected = YES;
 	if (menuMode) {
 		// MenuItem. Ensure item has appropriate state.

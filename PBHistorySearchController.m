@@ -70,7 +70,7 @@
 
 - (void)selectSearchMode:(id)sender
 {
-	self.searchMode = [sender tag];
+	self.searchMode = [(NSView*)sender tag];
 	[self updateSearch:self];
 }
 

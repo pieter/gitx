@@ -322,7 +322,7 @@
 
 - (IBAction) setBranchFilter:(id)sender
 {
-	repository.currentBranchFilter = [sender tag];
+	repository.currentBranchFilter = [(NSView*)sender tag];
 	[PBGitDefaults setBranchFilter:repository.currentBranchFilter];
 	[self updateBranchFilterMatrix];
 	forceSelectionUpdate = YES;
