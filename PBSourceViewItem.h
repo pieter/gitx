@@ -16,7 +16,6 @@
 
 	NSString *title;
 	PBGitRevSpecifier *revSpecifier;
-	PBSourceViewItem *parent;
 
 	BOOL isGroupItem;
 	BOOL isUncollapsible;
@@ -41,6 +40,6 @@
 @property(readonly) NSMutableArray *children;
 @property(assign) BOOL isGroupItem, isUncollapsible;
 @property PBGitRevSpecifier *revSpecifier;
-@property PBSourceViewItem *parent;
+@property (assign)PBSourceViewItem *parent;
 @property(readonly) NSImage *icon;
 @end
