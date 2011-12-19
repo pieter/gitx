@@ -29,7 +29,6 @@
 		4A40159714067B6300DB9C07 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4A40159614067B6300DB9C07 /* CoreFoundation.framework */; };
 		4A40159914067B7A00DB9C07 /* AppKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4A40159814067B7A00DB9C07 /* AppKit.framework */; };
 		4A4EF0BB142CBBC2001B8CDF /* ObjectiveGit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4A4EF0AF142CBAD5001B8CDF /* ObjectiveGit.framework */; };
-		4A4EF0BC142CBC25001B8CDF /* libgit2.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4A4EF0B9142CBAD5001B8CDF /* libgit2.a */; };
 		4A4EF0BE142CBC59001B8CDF /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 4A4EF0BD142CBC59001B8CDF /* libz.dylib */; };
 		4A5D15DC140668C6002ED242 /* PBGitSidebarView.xib in Resources */ = {isa = PBXBuildFile; fileRef = F58DB55F10566E3900CFDF4A /* PBGitSidebarView.xib */; };
 		4A774CC9142F482900E158CC /* ObjectiveGit.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4A4EF0AF142CBAD5001B8CDF /* ObjectiveGit.framework */; };
@@ -190,20 +189,6 @@
 			proxyType = 2;
 			remoteGlobalIDString = BDD9C3D5133BA556003708E7;
 			remoteInfo = "Tests-iOS";
-		};
-		4A4EF0B6142CBAD5001B8CDF /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 4A4EF09F142CBAD5001B8CDF /* ObjectiveGitFramework.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = DDB97BA9141C90F60001F17A;
-			remoteInfo = "libgit2-ios";
-		};
-		4A4EF0B8142CBAD5001B8CDF /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 4A4EF09F142CBAD5001B8CDF /* ObjectiveGitFramework.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = DD5695E7141C934800E1B1CA;
-			remoteInfo = libgit2;
 		};
 		4A774CBC142F464D00E158CC /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -501,7 +486,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				4A4EF0BE142CBC59001B8CDF /* libz.dylib in Frameworks */,
-				4A4EF0BC142CBC25001B8CDF /* libgit2.a in Frameworks */,
 				4A4EF0BB142CBBC2001B8CDF /* ObjectiveGit.framework in Frameworks */,
 				8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */,
 				F56526240E03D85900F03B52 /* WebKit.framework in Frameworks */,
@@ -682,8 +666,6 @@
 				4A4EF0B1142CBAD5001B8CDF /* Tests.app */,
 				4A4EF0B3142CBAD5001B8CDF /* ObjectiveGit */,
 				4A4EF0B5142CBAD5001B8CDF /* Tests-iOS.app */,
-				4A4EF0B7142CBAD5001B8CDF /* libgit2-ios.a */,
-				4A4EF0B9142CBAD5001B8CDF /* libgit2.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1110,7 +1092,7 @@
 		4A4EF0B3142CBAD5001B8CDF /* ObjectiveGit */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
-			path = ObjectiveGit;
+			path = "libObjectiveGit-iOS.a";
 			remoteRef = 4A4EF0B2142CBAD5001B8CDF /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
@@ -1119,20 +1101,6 @@
 			fileType = wrapper.application;
 			path = "Tests-iOS.app";
 			remoteRef = 4A4EF0B4142CBAD5001B8CDF /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		4A4EF0B7142CBAD5001B8CDF /* libgit2-ios.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = "libgit2-ios.a";
-			remoteRef = 4A4EF0B6142CBAD5001B8CDF /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		4A4EF0B9142CBAD5001B8CDF /* libgit2.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libgit2.a;
-			remoteRef = 4A4EF0B8142CBAD5001B8CDF /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 /* End PBXReferenceProxy section */
