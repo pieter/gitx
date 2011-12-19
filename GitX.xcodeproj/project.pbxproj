@@ -34,7 +34,6 @@
 		4A774CC9142F482900E158CC /* ObjectiveGit.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4A4EF0AF142CBAD5001B8CDF /* ObjectiveGit.framework */; };
 		551BF11E112F376C00265053 /* gitx_askpasswd_main.m in Sources */ = {isa = PBXBuildFile; fileRef = 551BF11D112F376C00265053 /* gitx_askpasswd_main.m */; };
 		551BF176112F3F4B00265053 /* gitx_askpasswd in Resources */ = {isa = PBXBuildFile; fileRef = 551BF111112F371800265053 /* gitx_askpasswd */; };
-		770B37ED0679A11B001EADE2 /* GitTest_DataModel.xcdatamodel in Sources */ = {isa = PBXBuildFile; fileRef = 770B37EC0679A11B001EADE2 /* GitTest_DataModel.xcdatamodel */; };
 		77C8280E06725ACE000B614F /* ApplicationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 77C8280C06725ACE000B614F /* ApplicationController.m */; };
 		8D11072B0486CEB800E47090 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C165CFE840E0CC02AAC07 /* InfoPlist.strings */; };
 		8D11072D0486CEB800E47090 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 29B97316FDCFA39411CA2CEA /* main.m */; settings = {ATTRIBUTES = (); }; };
@@ -263,7 +262,6 @@
 		4A4EF0BD142CBC59001B8CDF /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
 		551BF111112F371800265053 /* gitx_askpasswd */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = gitx_askpasswd; sourceTree = BUILT_PRODUCTS_DIR; };
 		551BF11D112F376C00265053 /* gitx_askpasswd_main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = gitx_askpasswd_main.m; sourceTree = "<group>"; };
-		770B37EC0679A11B001EADE2 /* GitTest_DataModel.xcdatamodel */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = wrapper.xcdatamodel; path = GitTest_DataModel.xcdatamodel; sourceTree = "<group>"; };
 		77C82804067257F0000B614F /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = /System/Library/Frameworks/CoreData.framework; sourceTree = "<absolute>"; };
 		77C8280B06725ACE000B614F /* ApplicationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ApplicationController.h; sourceTree = "<group>"; };
 		77C8280C06725ACE000B614F /* ApplicationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ApplicationController.m; sourceTree = "<group>"; };
@@ -531,7 +529,6 @@
 				F57CC3850E05DDC1000472E2 /* Controllers */,
 				F56174540E05887E001DCD79 /* Git */,
 				F5D619ED0EAE62EA00341D73 /* html */,
-				7756732906782D8800D1FEB8 /* Models */,
 				29B97315FDCFA39411CA2CEA /* Other Sources */,
 				551BF118112F373E00265053 /* gitx_asskpasswd */,
 				29B97317FDCFA39411CA2CEA /* Resources */,
@@ -676,14 +673,6 @@
 				551BF11D112F376C00265053 /* gitx_askpasswd_main.m */,
 			);
 			name = gitx_asskpasswd;
-			sourceTree = "<group>";
-		};
-		7756732906782D8800D1FEB8 /* Models */ = {
-			isa = PBXGroup;
-			children = (
-				770B37EC0679A11B001EADE2 /* GitTest_DataModel.xcdatamodel */,
-			);
-			name = Models;
 			sourceTree = "<group>";
 		};
 		913D5E420E5563FD00CECEA2 /* cli */ = {
@@ -1215,7 +1204,6 @@
 				8D11072D0486CEB800E47090 /* main.m in Sources */,
 				F574A2910EAE2FF4003F2CB1 /* PBGitConfig.m in Sources */,
 				77C8280E06725ACE000B614F /* ApplicationController.m in Sources */,
-				770B37ED0679A11B001EADE2 /* GitTest_DataModel.xcdatamodel in Sources */,
 				F5945E170E02B0C200706420 /* PBGitRepository.m in Sources */,
 				F56524BB0E02D22D00F03B52 /* NSFileHandleExt.m in Sources */,
 				F56524F00E02D45200F03B52 /* PBGitCommit.m in Sources */,
@@ -1411,7 +1399,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_ENABLE_OBJC_ARC = YES;
-				COPY_PHASE_STRIP = NO;
 				FRAMEWORK_SEARCH_PATHS = "\"$(PROJECT_DIR)\"";
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
@@ -1454,6 +1441,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				GCC_ENABLE_OBJC_GC = required;
 				GCC_PREPROCESSOR_DEFINITIONS = "DEBUG=1";
@@ -1472,6 +1460,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				GCC_ENABLE_OBJC_GC = required;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
@@ -1480,6 +1469,7 @@
 				HEADER_SEARCH_PATHS = "\"$(PROJECT_DIR)/objective-git/libgit2/include\"";
 				MACOSX_DEPLOYMENT_TARGET = 10.6;
 				SDKROOT = macosx;
+				STRIP_INSTALLED_PRODUCT = NO;
 			};
 			name = Release;
 		};
