@@ -90,7 +90,7 @@ void add_line(struct PBGitGraphLine *lines, int *nLines, int upper, int from, in
 
 	// If we already did the first parent, don't do so again
 	if (!didFirst && nParents) {
-		git_oid parentOID = [[parents objectAtIndex:0] oid];
+		git_oid parentOID = [(PBGitSHA*)[parents objectAtIndex:0] oid];
 		PBGitLane *newLane = new PBGitLane(&parentOID);
 		currentLanes->push_back(newLane);
 		newPos = currentLanes->size();
@@ -105,7 +105,7 @@ void add_line(struct PBGitGraphLine *lines, int *nLines, int upper, int from, in
 
 	int parentIndex = 0;
 	for (parentIndex = 1; parentIndex < nParents; ++parentIndex) {
-		git_oid parentOID = [[parents objectAtIndex:parentIndex] oid];
+		git_oid parentOID = [(PBGitSHA*)[parents objectAtIndex:parentIndex] oid];
 		int i = 0;
 		BOOL was_displayed = NO;
 		std::list<PBGitLane *>::iterator it = currentLanes->begin();
@@ -150,7 +150,7 @@ void add_line(struct PBGitGraphLine *lines, int *nLines, int upper, int from, in
 	// Update the current lane to point to the new parent
 	if (currentLane) {
 		if (nParents > 0)
-			currentLane->setSha([[parents objectAtIndex:0] oid]);
+			currentLane->setSha([(PBGitSHA*)[parents objectAtIndex:0] oid]);
 		else {
 			// The current lane's commit does not have any parents
 			// AKA, this is a first commit
