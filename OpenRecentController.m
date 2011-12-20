@@ -117,7 +117,7 @@
     return result;
 }
 
-- (id)tableView:(NSTableView *)aTableView objectValueForTableColumn:(NSTableColumn *)aTableColumn row:(int)rowIndex
+- (id)tableView:(NSTableView *)aTableView objectValueForTableColumn:(NSTableColumn *)aTableColumn row:(NSInteger)rowIndex
 {	
     id theValue = nil;
     NSParameterAssert(rowIndex >= 0 && rowIndex < [currentResults count]);
@@ -135,7 +135,7 @@
 	
 }
 
-- (int)numberOfRowsInTableView:(NSTableView *)aTableView
+- (NSInteger)numberOfRowsInTableView:(NSTableView *)aTableView
 
 {
 	
