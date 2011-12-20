@@ -124,15 +124,15 @@
     for (PBGitRepository *document in launchedDocuments)
         [document showWindows];
 
-	if (![[NSApplication sharedApplication] isActive])
-		return;
-
-	// The current directory was not enabled or could not be opened (most likely it’s not a git repository).
-	// show an open panel for the user to select a repository to view
-	if ([PBGitDefaults showOpenPanelOnLaunch] && !hasOpenedDocuments)
-		[[PBRepositoryDocumentController sharedDocumentController] openDocument:self];
-	else if(!hasOpenedDocuments) 
-		[self applicationOpenUntitledFile:nil];
+	if ([[NSApplication sharedApplication] isActive])
+	{
+		// The current directory was not enabled or could not be opened (most likely it’s not a git repository).
+		// show an open panel for the user to select a repository to view
+		if ([PBGitDefaults showOpenPanelOnLaunch] && !hasOpenedDocuments)
+			[[PBRepositoryDocumentController sharedDocumentController] openDocument:self];
+		else if(!hasOpenedDocuments) 
+			[self applicationOpenUntitledFile:nil];
+	}
 	
 	started = YES;
 }
