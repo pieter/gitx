@@ -10,6 +10,7 @@
 #import "PBGitDefaults.h"
 #import "PBRepositoryDocumentController.h"
 
+NSMutableArray* openRecentControllers = nil;
 
 @implementation OpenRecentController
 
@@ -25,8 +26,11 @@
 	for (NSURL *url in [[NSDocumentController sharedDocumentController] recentDocumentURLs]) {
 		[new->possibleResults addObject: url];
 	}
+	if (!openRecentControllers)
+		openRecentControllers = [NSMutableArray array];
 
 	[NSBundle loadNibNamed: @"OpenRecentPopup" owner: new ];
+	[openRecentControllers addObject:new];
 	
 	return [new->possibleResults count] > 0;
 }
