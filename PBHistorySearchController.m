@@ -51,9 +51,6 @@
 @synthesize numberOfMatchesField;
 @synthesize progressIndicator;
 
-@synthesize searchMode;
-
-
 
 #pragma mark -
 #pragma mark Public methods
@@ -320,6 +317,11 @@
 			[[searchField cell] setPlaceholderString:kGitXBasicSearchLabel];
 			break;
 	}
+}
+
+- (PBHistorySearchMode)searchMode
+{
+	return searchMode;
 }
 
 - (void)setSearchMode:(PBHistorySearchMode)mode

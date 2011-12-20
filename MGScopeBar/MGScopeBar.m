@@ -1003,6 +1003,10 @@
 	return [_selectedItems copy];
 }
 
+-(id)delegate
+{
+	return delegate;
+}
 
 - (void)setDelegate:(id)newDelegate
 {

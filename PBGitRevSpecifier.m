@@ -86,10 +86,16 @@
 - (NSString *) description
 {
 	if (!description)
-		description = [parameters componentsJoinedByString:@" "];
+		return [parameters componentsJoinedByString:@" "];
 
 	return description;
 }
+
+- (void) setDescription:(NSString *)newDescription
+{
+	description = newDescription;
+}
+
 
 - (NSString *) title
 {

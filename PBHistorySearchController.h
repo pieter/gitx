@@ -46,7 +46,7 @@ typedef enum historySearchModes {
 @property  IBOutlet NSTextField *numberOfMatchesField;
 @property  IBOutlet NSProgressIndicator *progressIndicator;
 
-@property (assign) PBHistorySearchMode searchMode;
+@property PBHistorySearchMode searchMode;
 
 
 - (BOOL)isRowInSearchResults:(NSInteger)rowIndex;
