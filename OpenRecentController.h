@@ -9,7 +9,7 @@
 #import <Cocoa/Cocoa.h>
 
 
-@interface OpenRecentController :NSObject {
+@interface OpenRecentController : NSViewController<NSTableViewDataSource, NSTableViewDelegate> {
 	IBOutlet NSSearchField* searchField;
 	IBOutlet NSWindow* searchWindow;
 	NSMutableArray* currentResults;
