@@ -4,4 +4,6 @@
     #import <Cocoa/Cocoa.h>
 #endif
 
-#import <ObjectiveGit/ObjectiveGit.h>
+#ifndef __cplusplus
+	#import <ObjectiveGit/ObjectiveGit.h>
+#endif
