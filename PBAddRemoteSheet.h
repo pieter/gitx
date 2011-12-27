@@ -22,7 +22,8 @@
 	NSView      *browseAccessoryView;
 }
 
-+ (void) beginAddRemoteSheetForRepository:(PBGitRepository *)repo;
+- (id) initWithRepository:(PBGitRepository*)repo;
+- (void) openAddRemoteSheet;
 
 - (IBAction) browseFolders:(id)sender;
 - (IBAction) addRemote:(id)sender;

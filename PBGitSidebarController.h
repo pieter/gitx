@@ -12,6 +12,7 @@
 @class PBSourceViewItem;
 @class PBGitHistoryController;
 @class PBGitCommitController;
+@class PBAddRemoteSheet;
 
 @interface PBGitSidebarController : PBViewController<NSOutlineViewDelegate> {
 	IBOutlet NSWindow *window;
@@ -29,6 +30,7 @@
 
 	PBGitHistoryController *historyViewController;
 	PBGitCommitController *commitViewController;
+	PBAddRemoteSheet *addRemoteSheet;
 }
 
 - (void) selectStage;

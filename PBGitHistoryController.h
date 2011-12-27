@@ -20,7 +20,7 @@
 @class PBCommitList;
 @class GLFileView;
 @class PBGitSHA;
-
+@class PBAddRemoteSheet;
 @class PBHistorySearchController;
 
 @interface PBGitHistoryController : PBViewController {
@@ -54,6 +54,8 @@
 	PBGitTree *gitTree;
 	PBGitCommit *webCommit;
 	PBGitCommit *selectedCommit;
+	
+	PBAddRemoteSheet* addRemoteSheet;
 }
 
 @property (readonly) NSTreeController* treeController;

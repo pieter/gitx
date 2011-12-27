@@ -10,16 +10,6 @@
 #import "PBGitWindowController.h"
 #import "PBGitRepository.h"
 
-
-
-@interface PBAddRemoteSheet ()
-
-- (void) beginAddRemoteSheetForRepository:(PBGitRepository *)repo;
-- (void) openAddRemoteSheet;
-
-@end
-
-
 @implementation PBAddRemoteSheet
 
 
@@ -37,21 +27,16 @@
 #pragma mark -
 #pragma mark PBAddRemoteSheet
 
-+ (void) beginAddRemoteSheetForRepository:(PBGitRepository *)repo
+- (id) initWithRepository:(PBGitRepository *)repo
 {
-	PBAddRemoteSheet *sheet = [[self alloc] initWithWindowNibName:@"PBAddRemoteSheet"];
-	[sheet beginAddRemoteSheetForRepository:repo];
-}
-
-
-- (void) beginAddRemoteSheetForRepository:(PBGitRepository *)repo
-{
+	self = [super initWithWindowNibName:@"PBAddRemoteSheet"];
+	if (!self)
+		return nil;
+	
 	self.repository = repo;
-
-	[self window];
-	[self openAddRemoteSheet];
+	
+	return self;
 }
-
 
 - (void) openAddRemoteSheet
 {
@@ -66,7 +51,11 @@
     [sheet orderOut:self];
 
     if (code == NSOKButton)
-		[self.remoteURL setStringValue:[(NSOpenPanel *)sheet filename]];
+	{
+		NSOpenPanel* panel = (NSOpenPanel*)sheet;
+		NSString* directory = panel.directoryURL.path;
+		[self.remoteURL setStringValue:directory];
+	}
 
 	[self openAddRemoteSheet];
 }
