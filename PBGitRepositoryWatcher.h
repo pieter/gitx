@@ -24,14 +24,14 @@ extern NSString *kPBGitRepositoryEventTypeUserInfoKey;
 extern NSString *kPBGitRepositoryEventPathsUserInfoKey;
 
 @interface PBGitRepositoryWatcher : NSObject {
-    PBGitRepository *repository;
     FSEventStreamRef eventStream;
 	NSDate *gitDirTouchDate;
 	NSDate *indexTouchDate;
     
     BOOL _running;
 }
-@property (readonly) PBGitRepository *repository;
+
+@property (readonly, RJ_WEAK_PROP) PBGitRepository *repository;
 
 - (id) initWithRepository:(PBGitRepository *)repository;
 - (void) start;

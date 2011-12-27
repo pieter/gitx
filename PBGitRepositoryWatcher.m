@@ -21,7 +21,7 @@ NSString *kPBGitRepositoryEventPathsUserInfoKey = @"kPBGitRepositoryEventPathsUs
 - (void) _handleEventCallback:(NSArray *)eventPaths;
 @end
 
-static void PBGitRepositoryWatcherCallback(ConstFSEventStreamRef streamRef, void *clientCallBackInfo, 
+void PBGitRepositoryWatcherCallback(ConstFSEventStreamRef streamRef, void *clientCallBackInfo, 
 										size_t numEvents, void *eventPaths, 
 										const FSEventStreamEventFlags eventFlags[], const FSEventStreamEventId eventIds[]){
     PBGitRepositoryWatcher *watcher = (__bridge PBGitRepositoryWatcher*)clientCallBackInfo;
@@ -54,13 +54,13 @@ static void PBGitRepositoryWatcherCallback(ConstFSEventStreamRef streamRef, void
 	NSArray *paths = [NSArray arrayWithObject: path];
 
 	// Create and activate event stream
-	eventStream = FSEventStreamCreate(kCFAllocatorDefault, &PBGitRepositoryWatcherCallback, &context, 
+	eventStream = FSEventStreamCreate(kCFAllocatorDefault, PBGitRepositoryWatcherCallback, &context, 
 									  (__bridge CFArrayRef)paths,
 									  kFSEventStreamEventIdSinceNow, 1.0,
 									  kFSEventStreamCreateFlagUseCFTypes);
-  if ([PBGitDefaults useRepositoryWatcher])
-    [self start];
-  return self;
+	if ([PBGitDefaults useRepositoryWatcher])
+		[self start];
+	return self;
 }
 
 - (NSDate *) _fileModificationDateAtPath:(NSString *)path {
@@ -203,12 +203,6 @@ static void PBGitRepositoryWatcherCallback(ConstFSEventStreamRef streamRef, void
 	FSEventStreamStop(eventStream);
 	FSEventStreamUnscheduleFromRunLoop(eventStream, CFRunLoopGetCurrent(), kCFRunLoopDefaultMode);
 	_running = NO;
-}
-
-
-- (void) dealloc {
-	self;
-	
 }
 
 @end
