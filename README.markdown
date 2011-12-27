@@ -3,16 +3,31 @@ GitX
 
 # What is GitX?
 
-GitX is a gitk like clone written specifically for OS X Leopard and higher.
+GitX is a graphical client for the `git` version control system, written
+specifically for OS X Snow Leopard (10.6) and higher.
 This means that it has a native interface and tries to integrate with the
 operating system as good as possible. Examples of this are drag and drop
 support and QuickLook support.
 
+# What is GitX (phere)?
+
+This fork (variant) of GitX focuses on programmer-oriented features for those
+working with the latest tools for developing software for current Apple platforms.
+As such, it only supports 64-bit Intel macs, and currently deploying versions
+of OS X and Xcode.
+
+Drawing several important early improvements from mainline "official" GitX 
+from GitX (L) and others, we are prioritizing moving away from deprecated
+or unreliable technologies like a dependency on command-line `git` usage
+to drive GitX features; and staying up-to-date with Apple and third-party
+frameworks and libraries that are used.
 
 # Features
 
-The project is currently still in its starting phases. As time goes on,
-hopefully more features will be added. Currently GitX supports the following:
+The project is well underway, and based on the solid foundations of GitX and
+GitX (L), used day-to-day by our developers.  We consider GitX (phere) to be
+close to feature-complete, with very few workflows dependant on manual
+command-line `git` usage.
 
   * History browsing of your repository
   * See a nicely formatted diff of any revision
@@ -20,7 +35,19 @@ hopefully more features will be added. Currently GitX supports the following:
   * Look at the complete tree of any revision
     * Preview any file in the tree in a text view or with QuickLook
     * Drag and drop files out of the tree view to copy them to your system
-   * Support for all parameters git rev-list has
+  * Support for all parameters git rev-list has
+  * Good performance on large (200+ MB) repositories
+  
+# Development
+
+Developing for GitX (phere) has a few requirements above and beyond those
+for mainline GitX.
+
+  * Very recent Xcode install, 4.2 release or 4.3 beta
+  * Most development is done on OS X Lion, Snow Leopard may or may not work
+  * `CMake` with a working command-line compiling environment for building `libgit2`
+  * `node.js` for building `SyntaxHighlighter`
+
 # License
 
 GitX is licensed under the GPL version 2. For more information, see the attached COPYING file.
@@ -34,16 +61,16 @@ http://github.com/pieter/gitx/wikis.
 If you wish to follow GitX development, you can download the source code
 through git:
 
-  git clone git://github.com/pieter/gitx
+  git clone git://github.com/rowanj/gitx
 
 # Installation
 
-The easiest way to get GitX running is to download the binary release from the
-wiki. If you wish to compile it yourself, you will need XCode 3.0 or later. As
-GitX makes use of features available only on Leopard (such as garbage
-collection), you will not be able to compile it on previous versions of OS X.
+The easiest way to get GitX running is to download the binary release from 
+the [GitHub page](https://github.com/rowanj/gitx).
 
-To compile GitX, open the GitX.xcodeproj file and hit "Build".
+GitX (phere) uses `Sparkle.framework` for built-in update support, so once
+you've installed the 0.11 release or later you should be able to update from
+the GitX menu.
 
 # Usage
 
