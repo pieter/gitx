@@ -103,7 +103,7 @@ NSMutableArray* openRecentControllers = nil;
 			int index = [currentResults indexOfObject: selectedResult]-1;
 			if(index < 0) index = 0;
 			selectedResult = [currentResults objectAtIndex:index];
-			[resultViewer selectRow:index byExtendingSelection:FALSE];
+			[resultViewer selectRowIndexes:[NSIndexSet indexSetWithIndex:index] byExtendingSelection:FALSE];
 			[resultViewer scrollRowToVisible:index];
 		}
 		result = YES;
@@ -113,7 +113,7 @@ NSMutableArray* openRecentControllers = nil;
 			int index = [currentResults indexOfObject: selectedResult]+1;
 			if(index >= [currentResults count]) index = [currentResults count] - 1;
 			selectedResult = [currentResults objectAtIndex:index];
-			[resultViewer selectRow:index byExtendingSelection:FALSE];
+			[resultViewer selectRowIndexes:[NSIndexSet indexSetWithIndex:index] byExtendingSelection:FALSE];
 			[resultViewer scrollRowToVisible:index];
 		}
 		result = YES;
