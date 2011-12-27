@@ -6,7 +6,7 @@
  * http://alexgorbatchev.com/SyntaxHighlighter/donate.html
  *
  * @version
- * 3.0.83 (July 02 2010)
+ * 3.0.83 (Tue, 27 Dec 2011 09:58:26 GMT)
  * 
  * @copyright
  * Copyright (C) 2004-2010 Alex Gorbatchev.
@@ -17,7 +17,7 @@
 ;(function()
 {
 	// CommonJS
-	typeof(require) != 'undefined' ? SyntaxHighlighter = require('shCore').SyntaxHighlighter : null;
+	SyntaxHighlighter = SyntaxHighlighter || (typeof require !== 'undefined'? require('shCore').SyntaxHighlighter : null);
 
 	function Brush()
 	{
