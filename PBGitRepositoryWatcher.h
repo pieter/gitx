@@ -27,7 +27,7 @@ extern NSString *kPBGitRepositoryEventPathsUserInfoKey;
     FSEventStreamRef eventStream;
 	NSDate *gitDirTouchDate;
 	NSDate *indexTouchDate;
-    
+	__strong PBGitRepositoryWatcher* ownRef;
     BOOL _running;
 }
 

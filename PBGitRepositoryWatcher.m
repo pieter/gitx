@@ -110,19 +110,20 @@ void PBGitRepositoryWatcherCallback(ConstFSEventStreamRef streamRef, void *clien
 	PBGitRepositoryWatcherEventType event = 0x0;
 	
 	if ([self _indexChanged])
+	{
+		NSLog(@"Watcher found an index change");
 		event |= PBGitRepositoryWatcherEventTypeIndex;
+	}
 	
 	NSString* ourRepo_ns = repository.fileURL.path;
 	// libgit2 API results for directories end with a '/'
 	if (![ourRepo_ns hasSuffix:@"/"])
 		ourRepo_ns = [NSString stringWithFormat:@"%@/", ourRepo_ns];
 	
-	const char* ourRepoPath = [ourRepo_ns UTF8String];
-	
 	// We only use the event path buffer for testing equality to our own repo
 	// so it's okay to consider failure due to buffer size as inequality.
-	const int eventPathRepoBufferSize = strlen(ourRepoPath) + 2;
-	char *eventPathRepoBuffer = malloc(eventPathRepoBufferSize);
+	const int eventPathRepoBufferSize = [ourRepo_ns length] + 2;
+	NSMutableData* eventPathRepoBuffer = [NSMutableData dataWithLength:eventPathRepoBufferSize];
 	
     NSMutableArray *paths = [NSMutableArray array];
     
@@ -155,19 +156,18 @@ void PBGitRepositoryWatcherCallback(ConstFSEventStreamRef streamRef, void *clien
 			// check that the repo for the changed path is ours, otherwise
 			// it's most likely a submodule, or a nested clone.  Either way,
 			// we shouldn't be committing to it ourselves.
-
-		
-			int discoverStatus = git_repository_discover(eventPathRepoBuffer, eventPathRepoBufferSize,
+			int discoverStatus = git_repository_discover((char*)eventPathRepoBuffer.bytes, eventPathRepoBuffer.length,
 														 [eventPath.path UTF8String],
 														 1 /* cross filesystem boundaries, if necessary*/,
-														 ourRepoPath);
+														 [ourRepo_ns UTF8String]);
+
+			((char*)eventPathRepoBuffer.bytes)[eventPathRepoBuffer.length - 1] = '\0';
 			if (GIT_SUCCESS == discoverStatus &&
-				strcmp(ourRepoPath, eventPathRepoBuffer) == 0)
-				{
-					event |= PBGitRepositoryWatcherEventTypeWorkingDirectory;
-					[paths addObject:eventPath.path];
-				}
-//			}
+				[[NSString stringWithUTF8String:eventPathRepoBuffer.bytes] compare:ourRepo_ns options:NSLiteralSearch] == NSOrderedSame)
+			{
+				event |= PBGitRepositoryWatcherEventTypeWorkingDirectory;
+				[paths addObject:eventPath.path];
+			}
 		}
 	}
 	
@@ -180,8 +180,6 @@ void PBGitRepositoryWatcherCallback(ConstFSEventStreamRef streamRef, void *clien
         
 		[[NSNotificationCenter defaultCenter] postNotificationName:PBGitRepositoryEventNotification object:repository userInfo:eventInfo];
 	}
-	
-	free(eventPathRepoBuffer);
 }
 
 - (void) start {
@@ -191,6 +189,7 @@ void PBGitRepositoryWatcherCallback(ConstFSEventStreamRef streamRef, void *clien
 	// set initial state
 	[self _gitDirectoryChanged];
 	[self _indexChanged];
+	ownRef = self; // The callback has no reference to us, so we need to stay alive as long as it may be called
 	FSEventStreamScheduleWithRunLoop(eventStream, CFRunLoopGetCurrent(), kCFRunLoopDefaultMode);
 	FSEventStreamStart(eventStream);
 	_running = YES;
@@ -202,6 +201,7 @@ void PBGitRepositoryWatcherCallback(ConstFSEventStreamRef streamRef, void *clien
 
 	FSEventStreamStop(eventStream);
 	FSEventStreamUnscheduleFromRunLoop(eventStream, CFRunLoopGetCurrent(), kCFRunLoopDefaultMode);
+	ownRef = nil; // Now that we can't be called anymore, we can allow ourself to be -dealloc'd
 	_running = NO;
 }
 
