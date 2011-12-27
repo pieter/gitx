@@ -21,30 +21,20 @@ typedef enum historySearchModes {
 
 
 @interface PBHistorySearchController : NSObject {
-	PBGitHistoryController *historyController;
-	NSArrayController *commitController;
-
 	PBHistorySearchMode searchMode;
 	NSIndexSet *results;
-
-	NSSearchField *searchField;
-	NSSegmentedControl *stepper;
-	NSTextField *numberOfMatchesField;
-	NSProgressIndicator *progressIndicator;
 	NSTimer *searchTimer;
-
 	NSTask *backgroundSearchTask;
-
 	NSPanel *rewindPanel;
 }
 
-@property  IBOutlet PBGitHistoryController *historyController;
-@property  IBOutlet NSArrayController *commitController;
+@property (assign) IBOutlet PBGitHistoryController *historyController;
+@property (assign) IBOutlet NSArrayController *commitController;
 
-@property  IBOutlet NSSearchField *searchField;
-@property  IBOutlet NSSegmentedControl *stepper;
-@property  IBOutlet NSTextField *numberOfMatchesField;
-@property  IBOutlet NSProgressIndicator *progressIndicator;
+@property (assign) IBOutlet NSSearchField *searchField;
+@property (assign) IBOutlet NSSegmentedControl *stepper;
+@property (assign) IBOutlet NSTextField *numberOfMatchesField;
+@property (assign) IBOutlet NSProgressIndicator *progressIndicator;
 
 @property PBHistorySearchMode searchMode;
 
