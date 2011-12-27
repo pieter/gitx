@@ -295,7 +295,7 @@
 		return;
 	PBGitTree* tree = [selectedFiles objectAtIndex:0];
 	NSString* name = [tree tmpFileNameForContents];
-	[[NSWorkspace sharedWorkspace] openTempFile:name];
+	[[NSWorkspace sharedWorkspace] openFile:name];
 }
 
 - (BOOL)validateMenuItem:(NSMenuItem *)menuItem
