@@ -8,7 +8,7 @@
 
 #import "GLFileView.h"
 #import "PBGitGradientBarView.h"
-#import "MGScopeBar.h"
+#import <MGScopeBarFramework/MGScopeBar.h>
 
 #define GROUP_LABEL				@"Label"			// string
 #define GROUP_SEPARATOR			@"HasSeparator"		// BOOL as NSNumber

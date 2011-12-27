@@ -8,6 +8,7 @@
 
 #import "PBGitGraphLine.h"
 
+/*
 @implementation PBGitGraphLine
 @synthesize upper, from, to, colorIndex;
 - (id)initWithUpper: (char) u From: (char) f to: (char) t  color: (char) c;
@@ -28,4 +29,4 @@
 {
 	return [[PBGitGraphLine alloc] initWithUpper:1 From:f to:t color: c];
 }
-@end
+@end */

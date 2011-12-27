@@ -26,8 +26,6 @@
 #import <ObjectiveGit/GTRepository.h>
 #import <ObjectiveGit/GTIndex.h>
 
-NSString* PBGitRepositoryErrorDomain = @"GitXErrorDomain";
-
 @implementation PBGitRepository
 
 @synthesize revisionList, branches, currentBranch, refs, hasChanged, config;
