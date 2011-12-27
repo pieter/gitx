@@ -585,9 +585,6 @@
 		4A5D76DD14A9A9CC00DF6C68 /* PBSourceViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PBSourceViewCell.m; sourceTree = "<group>"; };
 		4A5D76DE14A9A9CC00DF6C68 /* PBSourceViewItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PBSourceViewItem.h; sourceTree = "<group>"; };
 		4A5D76DF14A9A9CC00DF6C68 /* PBSourceViewItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PBSourceViewItem.m; sourceTree = "<group>"; };
-		4A5D774614A9AB9900DF6C68 /* FileViewer.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FileViewer.xib; sourceTree = "<group>"; };
-		4A5D774714A9AB9900DF6C68 /* FileViewerController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FileViewerController.h; sourceTree = "<group>"; };
-		4A5D774814A9AB9900DF6C68 /* FileViewerController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FileViewerController.m; sourceTree = "<group>"; };
 		4A5D776C14A9AEB000DF6C68 /* PBSourceViewAction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PBSourceViewAction.h; sourceTree = "<group>"; };
 		4A5D776D14A9AEB000DF6C68 /* PBSourceViewAction.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PBSourceViewAction.m; sourceTree = "<group>"; };
 		4A5D776E14A9AEB000DF6C68 /* PBSourceViewBadge.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PBSourceViewBadge.h; sourceTree = "<group>"; };
@@ -597,6 +594,12 @@
 		4A5D777214A9AEB000DF6C68 /* PBSourceViewRemote.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PBSourceViewRemote.m; sourceTree = "<group>"; };
 		4A68AD5814A0050E006DE321 /* Sparkle.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Sparkle.xcodeproj; path = Sparkle/Sparkle.xcodeproj; sourceTree = "<group>"; };
 		4A8F6B3B14A9B6100002F4D7 /* MGScopeBar.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = MGScopeBar.xcodeproj; path = MGScopeBar/MGScopeBar.xcodeproj; sourceTree = "<group>"; };
+		4A90A72714A9C12F00D0DA02 /* Common.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Common.xcconfig; sourceTree = SOURCE_ROOT; };
+		4A90A72814A9C12F00D0DA02 /* Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Debug.xcconfig; sourceTree = SOURCE_ROOT; };
+		4A90A72914A9C12F00D0DA02 /* GitX_Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GitX_Prefix.pch; sourceTree = SOURCE_ROOT; };
+		4A90A72A14A9C12F00D0DA02 /* Install.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Install.xcconfig; sourceTree = SOURCE_ROOT; };
+		4A90A72B14A9C12F00D0DA02 /* README.markdown */ = {isa = PBXFileReference; lastKnownFileType = text; path = README.markdown; sourceTree = SOURCE_ROOT; };
+		4A90A72C14A9C12F00D0DA02 /* Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Release.xcconfig; sourceTree = SOURCE_ROOT; };
 		551BF111112F371800265053 /* gitx_askpasswd */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = gitx_askpasswd; sourceTree = BUILT_PRODUCTS_DIR; };
 		77C82804067257F0000B614F /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = /System/Library/Frameworks/CoreData.framework; sourceTree = "<absolute>"; };
 		8D1107320486CEB800E47090 /* GitX.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GitX.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -663,8 +666,8 @@
 		29B97314FDCFA39411CA2CEA /* GitTest */ = {
 			isa = PBXGroup;
 			children = (
-				4A5D773E14A9AB3A00DF6C68 /* External Sources */,
 				4A5D762114A9A9CC00DF6C68 /* Classes */,
+				4A5D773E14A9AB3A00DF6C68 /* External Sources */,
 				4A5D757C14A9A90500DF6C68 /* Resources */,
 				29B97323FDCFA39411CA2CEA /* Frameworks */,
 				19C28FACFE9D520D11CA2CBB /* Products */,
@@ -708,15 +711,21 @@
 		4A5D757C14A9A90500DF6C68 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				4A5D757D14A9A90500DF6C68 /* Credits.html */,
-				4A5D760214A9A99E00DF6C68 /* English.lproj */,
-				4A5D757E14A9A90500DF6C68 /* gitx.icns */,
-				4A5D757F14A9A90500DF6C68 /* GitX.sdef */,
 				F5D619ED0EAE62EA00341D73 /* html */,
-				4A5D758114A9A90500DF6C68 /* Images */,
-				4A5D75B414A9A90500DF6C68 /* Info.plist */,
 				4A5D75B514A9A90500DF6C68 /* source.css */,
+				4A5D757D14A9A90500DF6C68 /* Credits.html */,
+				4A5D757E14A9A90500DF6C68 /* gitx.icns */,
+				4A90A72B14A9C12F00D0DA02 /* README.markdown */,
+				4A90A72914A9C12F00D0DA02 /* GitX_Prefix.pch */,
 				4A5D75B714A9A90500DF6C68 /* UpdateKey.pem */,
+				4A5D75B414A9A90500DF6C68 /* Info.plist */,
+				4A5D757F14A9A90500DF6C68 /* GitX.sdef */,
+				4A90A72714A9C12F00D0DA02 /* Common.xcconfig */,
+				4A90A72814A9C12F00D0DA02 /* Debug.xcconfig */,
+				4A90A72A14A9C12F00D0DA02 /* Install.xcconfig */,
+				4A90A72C14A9C12F00D0DA02 /* Release.xcconfig */,
+				4A5D760214A9A99E00DF6C68 /* English.lproj */,
+				4A5D758114A9A90500DF6C68 /* Images */,
 				4A5D75B914A9A90500DF6C68 /* XIBs */,
 			);
 			path = Resources;
@@ -1042,22 +1051,11 @@
 		4A5D773E14A9AB3A00DF6C68 /* External Sources */ = {
 			isa = PBXGroup;
 			children = (
-				4A5D774514A9AB9900DF6C68 /* FileViewer */,
 				4A8F6B3B14A9B6100002F4D7 /* MGScopeBar.xcodeproj */,
 				4A4EF09F142CBAD5001B8CDF /* ObjectiveGitFramework.xcodeproj */,
 				4A68AD5814A0050E006DE321 /* Sparkle.xcodeproj */,
 			);
 			name = "External Sources";
-			sourceTree = "<group>";
-		};
-		4A5D774514A9AB9900DF6C68 /* FileViewer */ = {
-			isa = PBXGroup;
-			children = (
-				4A5D774614A9AB9900DF6C68 /* FileViewer.xib */,
-				4A5D774714A9AB9900DF6C68 /* FileViewerController.h */,
-				4A5D774814A9AB9900DF6C68 /* FileViewerController.m */,
-			);
-			path = FileViewer;
 			sourceTree = "<group>";
 		};
 		4A68AD5914A0050E006DE321 /* Products */ = {
