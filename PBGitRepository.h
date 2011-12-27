@@ -71,21 +71,21 @@ static NSString * PBStringFromBranchFilterType(PBGitXBranchFilterType type) {
 - (BOOL) deleteRemote:(PBGitRef *)ref;
 - (BOOL) deleteRef:(PBGitRef *)ref;
 
-- (NSFileHandle*) handleForCommand:(NSString*) cmd;
-- (NSFileHandle*) handleForArguments:(NSArray*) args;
-- (NSFileHandle *) handleInWorkDirForArguments:(NSArray *)args;
-- (NSString*) outputForCommand:(NSString*) cmd;
-- (NSString *)outputForCommand:(NSString *)str retValue:(int *)ret;
-- (NSString *)outputForArguments:(NSArray *)arguments inputString:(NSString *)input retValue:(int *)ret;
-- (NSString *)outputForArguments:(NSArray *)arguments inputString:(NSString *)input byExtendingEnvironment:(NSDictionary *)dict retValue:(int *)ret;
+- (NSFileHandle*) handleForCommand:(NSString*) cmd DEPRECATED;
+- (NSFileHandle*) handleForArguments:(NSArray*) args DEPRECATED;
+- (NSFileHandle *) handleInWorkDirForArguments:(NSArray *)args DEPRECATED;
+- (NSString*) outputForCommand:(NSString*) cmd DEPRECATED;
+- (NSString *)outputForCommand:(NSString *)str retValue:(int *)ret DEPRECATED;
+- (NSString *)outputForArguments:(NSArray *)arguments inputString:(NSString *)input retValue:(int *)ret DEPRECATED;
+- (NSString *)outputForArguments:(NSArray *)arguments inputString:(NSString *)input byExtendingEnvironment:(NSDictionary *)dict retValue:(int *)ret DEPRECATED;
 
 
-- (NSString*) outputForArguments:(NSArray*) args;
-- (NSString*) outputForArguments:(NSArray*) args retValue:(int *)ret;
-- (NSString *)outputInWorkdirForArguments:(NSArray*) arguments;
-- (NSString *)outputInWorkdirForArguments:(NSArray*) arguments retValue:(int *)ret;
-- (BOOL)executeHook:(NSString *)name output:(NSString **)output;
-- (BOOL)executeHook:(NSString *)name withArgs:(NSArray*) arguments output:(NSString **)output;
+- (NSString*) outputForArguments:(NSArray*) args DEPRECATED;
+- (NSString*) outputForArguments:(NSArray*) args retValue:(int *)ret DEPRECATED;
+- (NSString *)outputInWorkdirForArguments:(NSArray*) arguments DEPRECATED;
+- (NSString *)outputInWorkdirForArguments:(NSArray*) arguments retValue:(int *)ret DEPRECATED;
+- (BOOL)executeHook:(NSString *)name output:(NSString **)output DEPRECATED;
+- (BOOL)executeHook:(NSString *)name withArgs:(NSArray*) arguments output:(NSString **)output DEPRECATED;
 
 - (NSString *)workingDirectory;
 - (NSString *) projectName;

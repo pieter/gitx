@@ -4,12 +4,10 @@
     #import <Cocoa/Cocoa.h>
 #endif
 
-#ifndef __cplusplus
-	#import <ObjectiveGit/ObjectiveGit.h>
-#endif
-
 #if __MAC_OS_X_VERSION_MIN_REQUIRED >= 1070
 #	define RJ_WEAK_PROP weak
 #else
 #	define RJ_WEAK_PROP assign
 #endif
+
+#define DEPRECATED __attribute__ ((deprecated))
