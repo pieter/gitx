@@ -35,7 +35,7 @@
 - (void) show
 {
 	[self doSearch:self];
-	[[self window] makeKeyAndOrderFront:self];
+	[self.window makeKeyAndOrderFront:self];
 }
 
 - (void) hide
@@ -75,7 +75,7 @@
 
 - (IBAction) tableDoubleClick:(id)sender 
 {
-	[self changeSelection:nil];
+	[self changeSelection:self];
 	if(selectedResult != nil) {
 		[[PBRepositoryDocumentController sharedDocumentController] openDocumentWithContentsOfURL:selectedResult
 																						 display:YES
@@ -156,7 +156,7 @@
 
 - (void) dealloc
 {
-	[[self window] close];
+	[self hide];
 }
 
 @end
