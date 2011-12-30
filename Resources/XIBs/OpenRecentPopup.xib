@@ -67,6 +67,7 @@
 											<string key="NSFrameSize">{330, 190}</string>
 											<reference key="NSSuperview" ref="517743194"/>
 											<reference key="NSWindow"/>
+											<reference key="NSNextKeyView" ref="352793763"/>
 											<bool key="NSEnabled">YES</bool>
 											<object class="_NSCornerView" key="NSCornerView">
 												<nil key="NSNextResponder"/>
@@ -203,6 +204,7 @@
 									<string key="NSFrame">{{424, 1}, {15, 210}}</string>
 									<reference key="NSSuperview" ref="148050189"/>
 									<reference key="NSWindow"/>
+									<reference key="NSNextKeyView" ref="56372800"/>
 									<reference key="NSTarget" ref="148050189"/>
 									<string key="NSAction">_doScroller:</string>
 									<double key="NSPercent">0.93333333333333335</double>
@@ -213,6 +215,7 @@
 									<string key="NSFrame">{{1, 211}, {449, 15}}</string>
 									<reference key="NSSuperview" ref="148050189"/>
 									<reference key="NSWindow"/>
+									<reference key="NSNextKeyView"/>
 									<int key="NSsFlags">1</int>
 									<reference key="NSTarget" ref="148050189"/>
 									<string key="NSAction">_doScroller:</string>
@@ -235,6 +238,7 @@
 							<string key="NSFrame">{{20, 225}, {332, 22}}</string>
 							<reference key="NSSuperview" ref="1006"/>
 							<reference key="NSWindow"/>
+							<reference key="NSNextKeyView" ref="148050189"/>
 							<bool key="NSEnabled">YES</bool>
 							<object class="NSSearchFieldCell" key="NSCell" id="1025621694">
 								<int key="NSCellFlags">343014977</int>
@@ -291,22 +295,15 @@
 					<string key="NSFrameSize">{372, 267}</string>
 					<reference key="NSSuperview"/>
 					<reference key="NSWindow"/>
+					<reference key="NSNextKeyView" ref="975315574"/>
 				</object>
-				<string key="NSScreenRect">{{0, 0}, {1920, 1178}}</string>
+				<string key="NSScreenRect">{{0, 0}, {1920, 1058}}</string>
 				<string key="NSMaxSize">{10000000000000, 10000000000000}</string>
 				<bool key="NSWindowIsRestorable">YES</bool>
 			</object>
 		</array>
 		<object class="IBObjectContainer" key="IBDocument.Objects">
 			<array class="NSMutableArray" key="connectionRecords">
-				<object class="IBConnectionRecord">
-					<object class="IBOutletConnection" key="connection">
-						<string key="label">searchWindow</string>
-						<reference key="source" ref="1001"/>
-						<reference key="destination" ref="1005"/>
-					</object>
-					<int key="connectionID">14</int>
-				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBOutletConnection" key="connection">
 						<string key="label">resultViewer</string>
@@ -337,7 +334,7 @@
 						<reference key="source" ref="1001"/>
 						<reference key="destination" ref="472706269"/>
 					</object>
-					<int key="connectionID">32</int>
+					<int key="connectionID">36</int>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBOutletConnection" key="connection">
@@ -500,16 +497,17 @@
 			<nil key="activeLocalization"/>
 			<dictionary class="NSMutableDictionary" key="localizations"/>
 			<nil key="sourceID"/>
-			<int key="maxID">32</int>
+			<int key="maxID">36</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<array class="NSMutableArray" key="referencedPartialClassDescriptions">
 				<object class="IBPartialClassDescription">
 					<string key="className">OpenRecentController</string>
-					<string key="superclassName">NSObject</string>
+					<string key="superclassName">NSWindowController</string>
 					<dictionary class="NSMutableDictionary" key="actions">
 						<string key="changeSelection:">id</string>
 						<string key="doSearch:">id</string>
+						<string key="tableDoubleClick:">id</string>
 					</dictionary>
 					<dictionary class="NSMutableDictionary" key="actionInfosByName">
 						<object class="IBActionInfo" key="changeSelection:">
@@ -520,11 +518,14 @@
 							<string key="name">doSearch:</string>
 							<string key="candidateClassName">id</string>
 						</object>
+						<object class="IBActionInfo" key="tableDoubleClick:">
+							<string key="name">tableDoubleClick:</string>
+							<string key="candidateClassName">id</string>
+						</object>
 					</dictionary>
 					<dictionary class="NSMutableDictionary" key="outlets">
 						<string key="resultViewer">NSTableView</string>
 						<string key="searchField">NSSearchField</string>
-						<string key="searchWindow">NSWindow</string>
 					</dictionary>
 					<dictionary class="NSMutableDictionary" key="toOneOutletInfosByName">
 						<object class="IBToOneOutletInfo" key="resultViewer">
@@ -534,10 +535,6 @@
 						<object class="IBToOneOutletInfo" key="searchField">
 							<string key="name">searchField</string>
 							<string key="candidateClassName">NSSearchField</string>
-						</object>
-						<object class="IBToOneOutletInfo" key="searchWindow">
-							<string key="name">searchWindow</string>
-							<string key="candidateClassName">NSWindow</string>
 						</object>
 					</dictionary>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">

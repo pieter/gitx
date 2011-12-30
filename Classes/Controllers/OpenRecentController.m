@@ -10,39 +10,40 @@
 #import "PBGitDefaults.h"
 #import "PBRepositoryDocumentController.h"
 
-NSMutableArray* openRecentControllers = nil;
-
 @implementation OpenRecentController
 
+@synthesize currentResults;
+@synthesize possibleResults;
 
-+ (bool)run 
+- (id)init
 {
-	OpenRecentController* new = [[OpenRecentController alloc] init];
-	new->currentResults = [NSMutableArray array];
-	 //FIXME: why ???
-	new->possibleResults = [NSMutableArray array];
-	 //FIXME: why ???
-
-	for (NSURL *url in [[NSDocumentController sharedDocumentController] recentDocumentURLs]) {
-		[new->possibleResults addObject: url];
-	}
-	if (!openRecentControllers)
-		openRecentControllers = [NSMutableArray array];
-
-	[NSBundle loadNibNamed: @"OpenRecentPopup" owner: new ];
-	[openRecentControllers addObject:new];
+	self = [super initWithWindowNibName:@"OpenRecentPopup"];
+	if (!self)
+		return nil;
 	
-	return [new->possibleResults count] > 0;
+	currentResults = [NSMutableArray array];
+	
+	possibleResults = [NSMutableArray array];
+	for (NSURL *url in [[NSDocumentController sharedDocumentController] recentDocumentURLs]) {
+		[possibleResults addObject: url];
+	}
+	
+	
+	return self;
 }
 
-+ (void)openUrl:(NSURL*)url 
+- (void) show
 {
-	NSError *error = nil;
-	[[PBRepositoryDocumentController sharedDocumentController] openDocumentWithContentsOfURL:url display:YES error:&error];
+	[self doSearch:self];
+	[[self window] makeKeyAndOrderFront:self];
 }
 
+- (void) hide
+{
+	[[self window] orderOut:self];
+}
 
-- (IBAction)doSearch: sender
+- (IBAction)doSearch:(id) sender
 {
 	NSString *searchString = [searchField stringValue];
 	
@@ -67,35 +68,36 @@ NSMutableArray* openRecentControllers = nil;
 
 - (void)awakeFromNib
 {
+	[super awakeFromNib];
     [resultViewer setTarget:self];
     [resultViewer setDoubleAction:@selector(tableDoubleClick:)];
-
-	[searchWindow makeKeyAndOrderFront: nil];
-	[self doSearch: nil];
 }
 
-
-- (void) tableDoubleClick:(id)sender 
+- (IBAction) tableDoubleClick:(id)sender 
 {
 	[self changeSelection:nil];
 	if(selectedResult != nil) {
-		[OpenRecentController openUrl:selectedResult];
+		[[PBRepositoryDocumentController sharedDocumentController] openDocumentWithContentsOfURL:selectedResult
+																						 display:YES
+																						   error:nil];
 	}
-	[searchWindow orderOut:nil];
+	[self hide];
 }
 
 - (BOOL)control:(NSControl*)control textView:(NSTextView*)textView doCommandBySelector:(SEL)commandSelector {
     BOOL result = NO;
     if (commandSelector == @selector(insertNewline:)) {
 		if(selectedResult != nil) {
-			[OpenRecentController openUrl:selectedResult];
+			[[PBRepositoryDocumentController sharedDocumentController] openDocumentWithContentsOfURL:selectedResult
+																							 display:YES
+																							   error:nil];
 		}
-		[searchWindow orderOut:nil];
+		[self hide];
 //		[searchWindow makeKeyAndOrderFront: nil];
 		result = YES;
     }
 	else if(commandSelector == @selector(cancelOperation:)) {
-		[searchWindow orderOut:nil];
+		[self hide];
 		result = YES;
 	}
 	else if(commandSelector == @selector(moveUp:)) {
@@ -140,14 +142,11 @@ NSMutableArray* openRecentControllers = nil;
 }
 
 - (NSInteger)numberOfRowsInTableView:(NSTableView *)aTableView
-
 {
-	
     return [currentResults count];
-	
 }
 
-- (IBAction)changeSelection: sender {
+- (IBAction)changeSelection:(id) sender {
 	int i = [resultViewer selectedRow];
 	if(i >= 0 && i < [currentResults count])
 		selectedResult = [currentResults objectAtIndex: i];
@@ -155,5 +154,9 @@ NSMutableArray* openRecentControllers = nil;
 		selectedResult = nil;
 }
 
+- (void) dealloc
+{
+	[[self window] close];
+}
 
 @end

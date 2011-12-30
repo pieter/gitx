@@ -19,6 +19,8 @@
 #import "Sparkle/SUUpdater.h"
 #import "OpenRecentController.h"
 
+static OpenRecentController* recentsDialog = nil;
+
 @implementation ApplicationController
 
 - (ApplicationController*)init
@@ -73,9 +75,16 @@
 
 - (BOOL)applicationOpenUntitledFile:(NSApplication *)theApplication
 {
-	if([OpenRecentController run])
+	recentsDialog = [[OpenRecentController alloc] init];
+	if ([recentsDialog.possibleResults count] > 0)
+	{
+		[recentsDialog show];
 		return YES;
-	return NO;
+	}
+	else
+	{
+		return NO;
+	}
 }
 
 - (void)applicationDidFinishLaunching:(NSNotification*)notification
