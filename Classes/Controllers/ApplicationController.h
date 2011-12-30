@@ -11,7 +11,7 @@
 
 @class PBCloneRepositoryPanel;
 
-@interface ApplicationController : NSObject
+@interface ApplicationController : NSObject<NSApplicationDelegate>
 {
 	IBOutlet NSWindow *window;
 	IBOutlet id firstResponder;
