@@ -46,7 +46,7 @@
 	NSError* pError;
 	GTRepository* gitRepo = [[GTRepository alloc] initWithURL:url error:&pError];
 
-	return gitRepo && git_repository_is_bare([gitRepo repo]);
+	return gitRepo && git_repository_is_bare([gitRepo git_repository]);
 }
 
 - (BOOL) isBareRepository
@@ -59,7 +59,7 @@
 	NSError* repoInitError;
 	GTRepository* objgRepo = [[GTRepository alloc] initWithURL:repositoryURL error:&repoInitError];
 	if (objgRepo != NULL) {
-		NSURL* repoPath = objgRepo.fileUrl;
+		NSURL* repoPath = [objgRepo fileURL];
 		return repoPath;
 	}
 	return nil;
@@ -1129,7 +1129,7 @@
 {
 	GTRepository* gtRepo = [GTRepository repositoryWithURL:self.fileURL error:nil];
 
-	NSURL* result = [[gtRepo index] path];
+	NSURL* result = [[gtRepo index] fileURL];
 	return result;
 }
 - (void) dealloc
