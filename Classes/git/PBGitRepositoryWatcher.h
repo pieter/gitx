@@ -31,7 +31,7 @@ extern NSString *kPBGitRepositoryEventPathsUserInfoKey;
     BOOL _running;
 }
 
-@property (readonly, RJ_WEAK_PROP) PBGitRepository *repository;
+@property (readonly, dct_weak) PBGitRepository *repository;
 
 - (id) initWithRepository:(PBGitRepository *)repository;
 - (void) start;

@@ -4,10 +4,6 @@
     #import <Cocoa/Cocoa.h>
 #endif
 
-#if __MAC_OS_X_VERSION_MIN_REQUIRED >= 1070
-#	define RJ_WEAK_PROP weak
-#else
-#	define RJ_WEAK_PROP assign
-#endif
+#import "dct_weak.h"
 
 #define DEPRECATED __attribute__ ((deprecated))
