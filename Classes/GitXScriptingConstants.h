@@ -6,7 +6,7 @@
 //  Copyright 2010 Nathan Kinsinger. All rights reserved.
 //
 
-#define kGitXBundleIdentifier @"nl.frim.GitX"
+#define kGitXBundleIdentifier @"net.phere.GitX"
 
 
 #define kGitXAEKeyArgumentsList 'ARGS'
