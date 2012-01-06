@@ -8,8 +8,7 @@
 
 #import <Cocoa/Cocoa.h>
 #import "PBWebController.h"
-//#import "MGScopeBarDelegateProtocol.h"
-#import <MGScopeBarFramework/MGScopeBarDelegateProtocol.h>
+#import <MGScopeBar/MGScopeBarDelegateProtocol.h>
 #import "PBGitCommit.h"
 #import "PBGitHistoryController.h"
 #import "PBRefContextDelegate.h"

@@ -8,7 +8,7 @@
 
 #import "GLFileView.h"
 #import "PBGitGradientBarView.h"
-#import <MGScopeBarFramework/MGScopeBar.h>
+#import <MGScopeBar/MGScopeBar.h>
 
 #define GROUP_LABEL				@"Label"			// string
 #define GROUP_SEPARATOR			@"HasSeparator"		// BOOL as NSNumber
@@ -57,7 +57,7 @@
 					  nil];
 	[self.groups addObject:[NSDictionary dictionaryWithObjectsAndKeys:
 							[NSNumber numberWithBool:NO], GROUP_SEPARATOR, 
-							[NSNumber numberWithInt:MGRadioSelectionMode], GROUP_SELECTION_MODE, // single selection group.
+							[NSNumber numberWithInt:MGScopeBarGroupSelectionModeRadio], GROUP_SELECTION_MODE, // single selection group.
 							items, GROUP_ITEMS, 
 							nil]];
 	[typeBar reloadData];
