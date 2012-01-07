@@ -8,20 +8,13 @@
 
 #import <Cocoa/Cocoa.h>
 #import "PBGitRefish.h"
+#import "RJModalRepoSheet.h"
 
 
 @class PBGitRepository;
 
 
-@interface PBCreateBranchSheet : NSWindowController {
-	PBGitRepository *repository;
-	id <PBGitRefish> startRefish;
-
-	BOOL shouldCheckoutBranch;
-
-	NSTextField *branchNameField;
-	NSTextField *errorMessageField;
-}
+@interface PBCreateBranchSheet : RJModalRepoSheet
 
 + (void) beginCreateBranchSheetAtRefish:(id <PBGitRefish>)ref inRepository:(PBGitRepository *)repo;
 
@@ -30,12 +23,11 @@
 - (IBAction) closeCreateBranchSheet:(id)sender;
 
 
-@property  PBGitRepository *repository;
-@property  id <PBGitRefish> startRefish;
+@property (nonatomic, strong) PBGitRepository *repository;
+@property (nonatomic, strong) id <PBGitRefish> startRefish;
+@property (nonatomic, assign) BOOL shouldCheckoutBranch;
 
-@property (assign) BOOL shouldCheckoutBranch;
-
-@property  IBOutlet NSTextField *branchNameField;
-@property  IBOutlet NSTextField *errorMessageField;
+@property (nonatomic, assign) IBOutlet NSTextField *branchNameField;
+@property (nonatomic, assign) IBOutlet NSTextField *errorMessageField;
 
 @end

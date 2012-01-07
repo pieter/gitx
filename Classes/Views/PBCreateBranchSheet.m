@@ -16,6 +16,7 @@
 @interface PBCreateBranchSheet ()
 
 - (void) beginCreateBranchSheetAtRefish:(id <PBGitRefish>)ref inRepository:(PBGitRepository *)repo;
+- (id) initWithRepositoryWindow:(PBGitWindowController*)parent atRefish:(id <PBGitRefish>)ref;
 
 @end
 
@@ -25,7 +26,6 @@
 
 @synthesize repository;
 @synthesize startRefish;
-
 @synthesize shouldCheckoutBranch;
 
 @synthesize branchNameField;
@@ -38,21 +38,30 @@
 
 + (void) beginCreateBranchSheetAtRefish:(id <PBGitRefish>)ref inRepository:(PBGitRepository *)repo
 {
-	PBCreateBranchSheet *sheet = [[self alloc] initWithWindowNibName:@"PBCreateBranchSheet"];
+	PBCreateBranchSheet *sheet = [[self alloc] initWithRepositoryWindow:repo.windowController
+															   atRefish:ref];
 	[sheet beginCreateBranchSheetAtRefish:ref inRepository:repo];
 }
 
+- (id) initWithRepositoryWindow:(PBGitWindowController *)parent atRefish:(id<PBGitRefish>)ref
+{
+	self = [super initWithWindowNibName:@"PBCreateBranchSheet" inRepoWindow:parent];
+	if (!self)
+		return nil;
+	
+	self.repository = parent.repository;
+	self.startRefish = ref;
+	
+	return self;
+}
 
 - (void) beginCreateBranchSheetAtRefish:(id <PBGitRefish>)ref inRepository:(PBGitRepository *)repo
 {
-	self.repository = repo;
-	self.startRefish = ref;
-
 	[self window]; // loads the window (if it wasn't already)
 	[self.errorMessageField setStringValue:@""];
 	self.shouldCheckoutBranch = [PBGitDefaults shouldCheckoutBranch];
 
-	// when creating a local branch tracking a remote branch preset the branch name to the name of the remote branch
+	// when creating a local branch tracking a remote branch preset the branch name to the 	name of the remote branch
 	if ([self.startRefish refishType] == kGitXRemoteBranchType) {
 		NSMutableArray *components = [[[self.startRefish shortName] componentsSeparatedByString:@"/"] mutableCopy];
 		if ([components count] > 1) {
@@ -61,8 +70,8 @@
 			[self.branchNameField setStringValue:branchName];
 		}
 	}
-
-	[NSApp beginSheet:[self window] modalForWindow:[self.repository.windowController window] modalDelegate:self didEndSelector:nil contextInfo:NULL];
+	
+	[self show];
 }
 
 
@@ -99,10 +108,7 @@
 
 - (IBAction) closeCreateBranchSheet:(id)sender
 {
-	[NSApp endSheet:[self window]];
-	[[self window] orderOut:self];
+	[self hide];
 }
-
-
 
 @end

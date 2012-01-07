@@ -56,6 +56,8 @@
 							<int key="NSvFlags">268</int>
 							<string key="NSFrame">{{17, 130}, {98, 17}}</string>
 							<reference key="NSSuperview" ref="1006"/>
+							<reference key="NSWindow"/>
+							<reference key="NSNextKeyView" ref="599625527"/>
 							<bool key="NSEnabled">YES</bool>
 							<object class="NSTextFieldCell" key="NSCell" id="779371538">
 								<int key="NSCellFlags">68288064</int>
@@ -92,6 +94,8 @@
 							<int key="NSvFlags">268</int>
 							<string key="NSFrame">{{29, 90}, {90, 17}}</string>
 							<reference key="NSSuperview" ref="1006"/>
+							<reference key="NSWindow"/>
+							<reference key="NSNextKeyView" ref="477350582"/>
 							<bool key="NSEnabled">YES</bool>
 							<object class="NSTextFieldCell" key="NSCell" id="103200389">
 								<int key="NSCellFlags">68288064</int>
@@ -112,6 +116,8 @@
 							<int key="NSvFlags">266</int>
 							<string key="NSFrame">{{124, 88}, {327, 22}}</string>
 							<reference key="NSSuperview" ref="1006"/>
+							<reference key="NSWindow"/>
+							<reference key="NSNextKeyView" ref="502264956"/>
 							<bool key="NSEnabled">YES</bool>
 							<object class="NSTextFieldCell" key="NSCell" id="184549146">
 								<int key="NSCellFlags">-1804468671</int>
@@ -142,6 +148,8 @@
 							<int key="NSvFlags">289</int>
 							<string key="NSFrame">{{370, 12}, {96, 32}}</string>
 							<reference key="NSSuperview" ref="1006"/>
+							<reference key="NSWindow"/>
+							<reference key="NSNextKeyView"/>
 							<bool key="NSEnabled">YES</bool>
 							<object class="NSButtonCell" key="NSCell" id="880224896">
 								<int key="NSCellFlags">67239424</int>
@@ -162,6 +170,8 @@
 							<int key="NSvFlags">289</int>
 							<string key="NSFrame">{{274, 12}, {96, 32}}</string>
 							<reference key="NSSuperview" ref="1006"/>
+							<reference key="NSWindow"/>
+							<reference key="NSNextKeyView" ref="199621706"/>
 							<bool key="NSEnabled">YES</bool>
 							<object class="NSButtonCell" key="NSCell" id="323730273">
 								<int key="NSCellFlags">67239424</int>
@@ -182,6 +192,8 @@
 							<int key="NSvFlags">-2147483380</int>
 							<string key="NSFrame">{{29, 22}, {226, 17}}</string>
 							<reference key="NSSuperview" ref="1006"/>
+							<reference key="NSWindow"/>
+							<reference key="NSNextKeyView" ref="616021219"/>
 							<bool key="NSEnabled">YES</bool>
 							<object class="NSTextFieldCell" key="NSCell" id="296663936">
 								<int key="NSCellFlags">68288064</int>
@@ -201,6 +213,8 @@
 							<int key="NSvFlags">268</int>
 							<string key="NSFrame">{{122, 58}, {129, 18}}</string>
 							<reference key="NSSuperview" ref="1006"/>
+							<reference key="NSWindow"/>
+							<reference key="NSNextKeyView" ref="900626215"/>
 							<bool key="NSEnabled">YES</bool>
 							<object class="NSButtonCell" key="NSCell" id="742397723">
 								<int key="NSCellFlags">-2080244224</int>
@@ -226,6 +240,8 @@
 					</array>
 					<string key="NSFrameSize">{480, 167}</string>
 					<reference key="NSSuperview"/>
+					<reference key="NSWindow"/>
+					<reference key="NSNextKeyView" ref="569247284"/>
 				</object>
 				<string key="NSScreenRect">{{0, 0}, {1920, 1058}}</string>
 				<string key="NSMinSize">{480, 189}</string>
@@ -470,7 +486,54 @@
 			<nil key="sourceID"/>
 			<int key="maxID">59</int>
 		</object>
-		<object class="IBClassDescriber" key="IBDocument.Classes"/>
+		<object class="IBClassDescriber" key="IBDocument.Classes">
+			<array class="NSMutableArray" key="referencedPartialClassDescriptions">
+				<object class="IBPartialClassDescription">
+					<string key="className">PBCreateBranchSheet</string>
+					<string key="superclassName">RJModalRepoSheet</string>
+					<dictionary class="NSMutableDictionary" key="actions">
+						<string key="closeCreateBranchSheet:">id</string>
+						<string key="createBranch:">id</string>
+					</dictionary>
+					<dictionary class="NSMutableDictionary" key="actionInfosByName">
+						<object class="IBActionInfo" key="closeCreateBranchSheet:">
+							<string key="name">closeCreateBranchSheet:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="createBranch:">
+							<string key="name">createBranch:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+					</dictionary>
+					<dictionary class="NSMutableDictionary" key="outlets">
+						<string key="branchNameField">NSTextField</string>
+						<string key="errorMessageField">NSTextField</string>
+					</dictionary>
+					<dictionary class="NSMutableDictionary" key="toOneOutletInfosByName">
+						<object class="IBToOneOutletInfo" key="branchNameField">
+							<string key="name">branchNameField</string>
+							<string key="candidateClassName">NSTextField</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="errorMessageField">
+							<string key="name">errorMessageField</string>
+							<string key="candidateClassName">NSTextField</string>
+						</object>
+					</dictionary>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<string key="majorKey">IBProjectSource</string>
+						<string key="minorKey">./Classes/PBCreateBranchSheet.h</string>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
+					<string key="className">RJModalRepoSheet</string>
+					<string key="superclassName">NSWindowController</string>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<string key="majorKey">IBProjectSource</string>
+						<string key="minorKey">./Classes/RJModalRepoSheet.h</string>
+					</object>
+				</object>
+			</array>
+		</object>
 		<int key="IBDocument.localizationMode">0</int>
 		<string key="IBDocument.TargetRuntimeIdentifier">IBCocoaFramework</string>
 		<object class="NSMutableDictionary" key="IBDocument.PluginDeclaredDependencies">
