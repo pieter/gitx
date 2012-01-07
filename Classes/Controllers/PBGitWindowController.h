@@ -32,6 +32,7 @@
 }
 
 @property (unsafe_unretained)  PBGitRepository *repository;
+@property (nonatomic, strong) NSWindowController* currentModalSheet;
 
 - (id)initWithRepository:(PBGitRepository*)theRepository displayDefault:(BOOL)display;
 
@@ -41,6 +42,9 @@
 - (void)showMessageSheet:(NSString *)messageText infoText:(NSString *)infoText;
 - (void)showErrorSheet:(NSError *)error;
 - (void)showErrorSheetTitle:(NSString *)title message:(NSString *)message arguments:(NSArray *)arguments output:(NSString *)output;
+
+- (void)showModalSheet:(NSWindowController*)sheet;
+- (void)hideModalSheet:(NSWindowController*)sheet;
 
 - (IBAction) showCommitView:(id)sender;
 - (IBAction) showHistoryView:(id)sender;
