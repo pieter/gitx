@@ -7,9 +7,9 @@
 //
 
 #import <Cocoa/Cocoa.h>
-#import "PBGitRepository.h"
 
-@class PBViewController, PBGitSidebarController, PBGitCommitController;
+@class PBViewController, PBGitSidebarController, PBGitCommitController, PBGitRepository;
+@class RJModalRepoSheet;
 
 @interface PBGitWindowController : NSWindowController<NSWindowDelegate> {
 	__unsafe_unretained PBGitRepository* repository;
@@ -32,7 +32,7 @@
 }
 
 @property (unsafe_unretained)  PBGitRepository *repository;
-@property (nonatomic, strong) NSWindowController* currentModalSheet;
+@property (nonatomic, strong) RJModalRepoSheet* currentModalSheet;
 
 - (id)initWithRepository:(PBGitRepository*)theRepository displayDefault:(BOOL)display;
 
@@ -43,8 +43,8 @@
 - (void)showErrorSheet:(NSError *)error;
 - (void)showErrorSheetTitle:(NSString *)title message:(NSString *)message arguments:(NSArray *)arguments output:(NSString *)output;
 
-- (void)showModalSheet:(NSWindowController*)sheet;
-- (void)hideModalSheet:(NSWindowController*)sheet;
+- (void)showModalSheet:(RJModalRepoSheet*)sheet;
+- (void)hideModalSheet:(RJModalRepoSheet*)sheet;
 
 - (IBAction) showCommitView:(id)sender;
 - (IBAction) showHistoryView:(id)sender;

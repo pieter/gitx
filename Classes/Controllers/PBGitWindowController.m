@@ -14,9 +14,9 @@
 #import "PBCommitHookFailedSheet.h"
 #import "PBGitXMessageSheet.h"
 #import "PBGitSidebarController.h"
+#import "RJModalRepoSheet.h"
 
 @implementation PBGitWindowController
-
 
 @synthesize repository;
 @synthesize currentModalSheet;
@@ -207,7 +207,7 @@
 	[sidebarController setHistorySearch:searchString mode:mode];
 }
 
-- (void)showModalSheet:(NSWindowController *)sheet
+- (void)showModalSheet:(RJModalRepoSheet *)sheet
 {
 	if (self.currentModalSheet == nil) {
 		[NSApp beginSheet:[sheet window]
@@ -221,7 +221,7 @@
 	}
 }
 
-- (void)hideModalSheet:(NSWindowController *)sheet
+- (void)hideModalSheet:(RJModalRepoSheet *)sheet
 {
 	if (self.currentModalSheet == sheet) {
 		[NSApp endSheet:sheet.window];
