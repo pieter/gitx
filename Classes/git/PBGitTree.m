@@ -75,28 +75,39 @@
 
 - (BOOL)hasBinaryAttributes
 {
-	// First ask git check-attr if the file has a binary attribute custom set
-	NSFileHandle *handle = [repository handleInWorkDirForArguments:[NSArray arrayWithObjects:@"check-attr", @"binary", [self fullPath], nil]];
-	NSData *data = [handle readDataToEndOfFile];
-	NSString *string = [[NSString alloc] initWithData:data encoding:NSISOLatin1StringEncoding];
+	@try {
+		// First ask git check-attr if the file has a binary attribute custom set
+		NSFileHandle *handle = [repository handleInWorkDirForArguments:
+								[NSArray arrayWithObjects:
+								 @"check-attr",
+								 @"binary",
+								 [self fullPath],
+								 nil]];
 
-	if (!string)
-		return NO;
-	string = [string stringByTrimmingCharactersInSet:[NSCharacterSet newlineCharacterSet]];
-
-	if ([string hasSuffix:@"binary: set"])
-		return YES;
-
-	if ([string hasSuffix:@"binary: unset"])
-		return NO;
-
-	// Binary state unknown, do a check on common filename-extensions
-	for (NSString *extension in [NSArray arrayWithObjects:@".pdf", @".jpg", @".jpeg", @".png", @".bmp", @".gif", @".o", nil]) {
-		if ([[self fullPath] hasSuffix:extension])
+		NSData *data = [handle readDataToEndOfFile];
+		NSString *string = [[NSString alloc] initWithData:data encoding:NSISOLatin1StringEncoding];
+		
+		if (!string)
+			return NO;
+		string = [string stringByTrimmingCharactersInSet:[NSCharacterSet newlineCharacterSet]];
+		
+		if ([string hasSuffix:@"binary: set"])
 			return YES;
+		
+		if ([string hasSuffix:@"binary: unset"])
+			return NO;
+		
+		// Binary state unknown, do a check on common filename-extensions
+		for (NSString *extension in [NSArray arrayWithObjects:@".pdf", @".jpg", @".jpeg", @".png", @".bmp", @".gif", @".o", nil]) {
+			if ([[self fullPath] hasSuffix:extension])
+				return YES;
+		}
+		
+		return NO;
 	}
-
-	return NO;
+	@catch (NSException *exception) {
+		return NO;
+	}
 }
 
 - (NSString*) contents
