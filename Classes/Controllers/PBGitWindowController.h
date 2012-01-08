@@ -12,8 +12,6 @@
 @class RJModalRepoSheet;
 
 @interface PBGitWindowController : NSWindowController<NSWindowDelegate> {
-	__unsafe_unretained PBGitRepository* repository;
-
 	PBViewController *contentController;
 
 	PBGitSidebarController *sidebarController;
@@ -31,7 +29,7 @@
 	IBOutlet NSToolbarItem *finderItem;
 }
 
-@property (unsafe_unretained)  PBGitRepository *repository;
+@property (nonatomic, dct_weak)  PBGitRepository *repository;
 @property (nonatomic, strong) RJModalRepoSheet* currentModalSheet;
 
 - (id)initWithRepository:(PBGitRepository*)theRepository displayDefault:(BOOL)display;
