@@ -8,19 +8,22 @@
 
 #import "RJModalRepoSheet.h"
 
+#import "PBGitRepository.h"
 #import "PBGitWindowController.h"
 
 @implementation RJModalRepoSheet
 
+@synthesize repository;
 @synthesize repoWindow;
 
-- (id) initWithWindowNibName:(NSString *)windowNibName inRepoWindow:(PBGitWindowController *)parent
+- (id) initWithWindowNibName:(NSString *)windowNibName forRepo:(PBGitRepository*)repo
 {
 	self = [super initWithWindowNibName:windowNibName];
 	if (!self)
 		return nil;
-	
-	self.repoWindow = parent;
+
+	self.repository = repo;
+	self.repoWindow = repo.windowController;
 	
 	return self;
 }

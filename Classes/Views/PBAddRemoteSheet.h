@@ -8,36 +8,23 @@
 
 #import <Cocoa/Cocoa.h>
 
-
+#import "RJModalRepoSheet.h"
 @class PBGitRepository;
 
-@interface PBAddRemoteSheet : NSWindowController {
-	PBGitRepository *repository;
-
-	NSTextField *remoteName;
-	NSTextField *remoteURL;
-	NSTextField *errorMessage;
-
-	NSOpenPanel *browseSheet;
-	NSView      *browseAccessoryView;
-}
+@interface PBAddRemoteSheet : RJModalRepoSheet
 
 - (id) initWithRepository:(PBGitRepository*)repo;
-- (void) openAddRemoteSheet;
 
 - (IBAction) browseFolders:(id)sender;
 - (IBAction) addRemote:(id)sender;
 - (IBAction) orderOutAddRemoteSheet:(id)sender;
 - (IBAction) showHideHiddenFiles:(id)sender;
 
+@property (readwrite, dct_weak) IBOutlet NSTextField *remoteName;
+@property (readwrite, dct_weak) IBOutlet NSTextField *remoteURL;
+@property (readwrite, dct_weak) IBOutlet NSTextField *errorMessage;
 
-@property (readwrite) PBGitRepository *repository;
-
-@property (readwrite) IBOutlet NSTextField *remoteName;
-@property (readwrite) IBOutlet NSTextField *remoteURL;
-@property (readwrite) IBOutlet NSTextField *errorMessage;
-
-@property (readwrite)          NSOpenPanel *browseSheet;
-@property (readwrite) IBOutlet NSView      *browseAccessoryView;
+@property (readwrite, dct_weak)          NSOpenPanel *browseSheet;
+@property (readwrite, dct_weak) IBOutlet NSView      *browseAccessoryView;
 
 @end

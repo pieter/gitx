@@ -12,9 +12,6 @@
 
 @implementation PBAddRemoteSheet
 
-
-@synthesize repository;
-
 @synthesize remoteName;
 @synthesize remoteURL;
 @synthesize errorMessage;
@@ -29,26 +26,23 @@
 
 - (id) initWithRepository:(PBGitRepository *)repo
 {
-	self = [super initWithWindowNibName:@"PBAddRemoteSheet"];
+	self = [super initWithWindowNibName:@"PBAddRemoteSheet" forRepo:repo];
 	if (!self)
 		return nil;
-	
-	self.repository = repo;
-	
+
 	return self;
 }
 
-- (void) openAddRemoteSheet
+- (void) show
 {
 	[self.errorMessage setStringValue:@""];
-
-	[NSApp beginSheet:[self window] modalForWindow:[self.repository.windowController window] modalDelegate:self didEndSelector:nil contextInfo:NULL];
+	[super show];
 }
 
 
 - (void) browseSheetDidEnd:(NSWindow *)sheet returnCode:(NSInteger)code contextInfo:(void *)info
 {
-    [sheet orderOut:self];
+	[self hide];
 
     if (code == NSOKButton)
 	{
@@ -57,7 +51,7 @@
 		[self.remoteURL setStringValue:directory];
 	}
 
-	[self openAddRemoteSheet];
+	[self show];
 }
 
 

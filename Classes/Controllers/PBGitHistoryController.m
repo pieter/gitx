@@ -731,8 +731,7 @@
 
 - (IBAction) showAddRemoteSheet:(id)sender
 {
-	addRemoteSheet = [[PBAddRemoteSheet alloc] initWithRepository:self.repository];
-	[addRemoteSheet openAddRemoteSheet];
+	[[[PBAddRemoteSheet alloc] initWithRepository:self.repository] show];
 }
 
 - (IBAction) merge:(id)sender

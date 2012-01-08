@@ -380,8 +380,7 @@ enum  {
 	NSInteger selectedSegment = [sender selectedSegment];
 
 	if (selectedSegment == kAddRemoteSegment) {
-		addRemoteSheet = [[PBAddRemoteSheet alloc] initWithRepository:repository];
-		[addRemoteSheet openAddRemoteSheet];
+		[[[PBAddRemoteSheet alloc] initWithRepository:repository] show];
 		return;
 	}
 

@@ -8,13 +8,15 @@
 
 #import <Cocoa/Cocoa.h>
 
+@class PBGitRepository;
 @class PBGitWindowController;
 
 @interface RJModalRepoSheet : NSWindowController
 
-@property (nonatomic, assign) PBGitWindowController* repoWindow;
+@property (nonatomic, strong) PBGitRepository* repository;
+@property (nonatomic, strong) PBGitWindowController* repoWindow;
 
-- (id) initWithWindowNibName:(NSString *)windowNibName inRepoWindow:(PBGitWindowController*)parent;
+- (id) initWithWindowNibName:(NSString *)windowNibName forRepo:(PBGitRepository*)repo;
 
 - (void) show;
 - (void) hide;
