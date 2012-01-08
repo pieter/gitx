@@ -36,10 +36,10 @@
 
 - (void)changeContentController:(PBViewController *)controller;
 
-- (void)showCommitHookFailedSheet:(NSString *)messageText infoText:(NSString *)infoText commitController:(PBGitCommitController *)controller;
-- (void)showMessageSheet:(NSString *)messageText infoText:(NSString *)infoText;
-- (void)showErrorSheet:(NSError *)error;
-- (void)showErrorSheetTitle:(NSString *)title message:(NSString *)message arguments:(NSArray *)arguments output:(NSString *)output;
+- (void)showCommitHookFailedSheet:(NSString *)messageText infoText:(NSString *)infoText commitController:(PBGitCommitController *)controller DEPRECATED;
+- (void)showMessageSheet:(NSString *)messageText infoText:(NSString *)infoText DEPRECATED;
+- (void)showErrorSheet:(NSError *)error DEPRECATED;
+- (void)showErrorSheetTitle:(NSString *)title message:(NSString *)message arguments:(NSArray *)arguments output:(NSString *)output DEPRECATED;
 
 - (void)showModalSheet:(RJModalRepoSheet*)sheet;
 - (void)hideModalSheet:(RJModalRepoSheet*)sheet;
