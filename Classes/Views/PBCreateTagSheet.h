@@ -14,12 +14,8 @@
 @class PBGitRepository;
 
 
-@interface PBCreateTagSheet : RJModalRepoSheet {
-	id <PBGitRefish> targetRefish;
-
-	NSTextField *tagNameField;
-	NSTextView  *tagMessageText;
-	NSTextField *errorMessageField;
+@interface PBCreateTagSheet : RJModalRepoSheet
+{
 }
 
 + (void) beginCreateTagSheetAtRefish:(id <PBGitRefish>)refish inRepository:(PBGitRepository *)repo;
@@ -27,10 +23,10 @@
 - (IBAction) createTag:(id)sender;
 - (IBAction) closeCreateTagSheet:(id)sender;
 
-@property  id <PBGitRefish> targetRefish;
+@property (nonatomic, strong) id <PBGitRefish> targetRefish;
 
-@property  IBOutlet NSTextField *tagNameField;
-@property  IBOutlet NSTextView  *tagMessageText;
-@property  IBOutlet NSTextField *errorMessageField;
+@property (nonatomic, dct_weak) IBOutlet NSTextField *tagNameField;
+@property (nonatomic, dct_weak) IBOutlet NSTextView  *tagMessageText;
+@property (nonatomic, dct_weak) IBOutlet NSTextField *errorMessageField;
 
 @end

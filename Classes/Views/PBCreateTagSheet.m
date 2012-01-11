@@ -13,7 +13,7 @@
 
 @interface PBCreateTagSheet ()
 
-- (void) beginCreateTagSheetAtRefish:(id <PBGitRefish>)refish inRepository:(PBGitRepository *)repo;
+- (void) beginCreateTagSheetAtRefish:(id <PBGitRefish>)refish;
 
 @end
 
@@ -34,20 +34,19 @@
 
 + (void) beginCreateTagSheetAtRefish:(id <PBGitRefish>)refish inRepository:(PBGitRepository *)repo
 {
-	PBCreateTagSheet *sheet = [[self alloc] initWithWindowNibName:@"PBCreateTagSheet"];
-	[sheet beginCreateTagSheetAtRefish:refish inRepository:repo];
+	PBCreateTagSheet *sheet = [[self alloc] initWithWindowNibName:@"PBCreateTagSheet" forRepo:repo];
+	[sheet beginCreateTagSheetAtRefish:refish];
 }
 
 
-- (void) beginCreateTagSheetAtRefish:(id <PBGitRefish>)refish inRepository:(PBGitRepository *)repo
+- (void) beginCreateTagSheetAtRefish:(id <PBGitRefish>)refish
 {
-	self.repository = repo;
 	self.targetRefish  = refish;
 
-	[self window]; // loads the window (if it wasn't already)
+	[self window];
 	[self.errorMessageField setStringValue:@""];
 
-	[NSApp beginSheet:[self window] modalForWindow:[self.repository.windowController window] modalDelegate:self didEndSelector:nil contextInfo:NULL];
+	[self show];
 }
 
 
@@ -75,17 +74,17 @@
 		}
 	}
 
-	[self closeCreateTagSheet:sender];
 
 	NSString *message = [self.tagMessageText string];
 	[self.repository createTag:tagName message:message atRefish:self.targetRefish];
+	
+	[self closeCreateTagSheet:sender];
 }
 
 
 - (IBAction) closeCreateTagSheet:(id)sender
 {
-	[NSApp endSheet:[self window]];
-	[[self window] orderOut:self];
+	[self hide];
 }
 
 
