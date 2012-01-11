@@ -8,7 +8,11 @@
 
 #import <Cocoa/Cocoa.h>
 
-int main(int argc, char *argv[])
+int main(int argc, const char **argv)
 {
-    return NSApplicationMain(argc,  (const char **) argv);
+	int result;
+	@autoreleasepool {
+		result = NSApplicationMain(argc, argv);
+	}
+	return result;
 }
