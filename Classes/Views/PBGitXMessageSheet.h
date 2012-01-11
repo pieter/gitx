@@ -8,8 +8,9 @@
 
 #import <Cocoa/Cocoa.h>
 
+#import "RJModalRepoSheet.h"
 
-@interface PBGitXMessageSheet : NSWindowController
+@interface PBGitXMessageSheet : RJModalRepoSheet
 {
 	NSImageView *iconView;
 	NSTextField *messageField;
@@ -17,11 +18,15 @@
 	NSScrollView *scrollView;
 }
 
-+ (void)beginMessageSheetForWindow:(NSWindow *)parentWindow withMessageText:(NSString *)message infoText:(NSString *)info;
-+ (void)beginMessageSheetForWindow:(NSWindow *)parentWindow withError:(NSError *)error;
++ (void)beginMessageSheetForRepo:(PBGitRepository *)repo
+				 withMessageText:(NSString *)message
+						infoText:(NSString *)info;
++ (void)beginMessageSheetForRepo:(PBGitRepository *)repo
+					   withError:(NSError *)error;
 
 
-- (void)beginMessageSheetForWindow:(NSWindow *)parentWindow withMessageText:(NSString *)message infoText:(NSString *)info;
+- (void)beginMessageSheetWithMessageText:(NSString *)message
+								infoText:(NSString *)info;
 - (IBAction)closeMessageSheet:(id)sender;
 
 

@@ -131,7 +131,11 @@
 	
 	NSString *description = [NSString stringWithFormat:@"Cloning repository at: %@", url];
 	NSString *title = @"Cloning Repository";
-	[PBRemoteProgressSheet beginRemoteProgressSheetForArguments:arguments title:title description:description inDir:nil windowController:self];
+	[PBRemoteProgressSheet beginRemoteProgressSheetForArguments:arguments
+														  title:title
+													description:description
+														  inDir:nil
+											   windowController:nil/*self?*/];
 }
 
 

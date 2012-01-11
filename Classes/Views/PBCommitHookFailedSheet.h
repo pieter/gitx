@@ -13,13 +13,17 @@
 
 
 @interface PBCommitHookFailedSheet : PBGitXMessageSheet
-{
-    PBGitCommitController *commitController;
-}
+{}
 
-+ (void)beginMessageSheetForWindow:(NSWindow *)parentWindow withMessageText:(NSString *)message infoText:(NSString *)info commitController:(PBGitCommitController *)controller;
++ (void)beginWithMessageText:(NSString *)message
+					infoText:(NSString *)info
+			commitController:(PBGitCommitController *)controller;
 
-- (id)initWithWindowNibName:(NSString *)windowNibName andController:(PBGitCommitController *)controller;
+- (id)initWithWindowNibName:(NSString*)windowNibName
+			  andController:(PBGitCommitController*)controller;
+
 - (IBAction)forceCommit:(id)sender;
+
+@property (nonatomic, strong) PBGitCommitController* commitController;
 
 @end

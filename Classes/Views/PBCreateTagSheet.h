@@ -7,14 +7,14 @@
 //
 
 #import <Cocoa/Cocoa.h>
-#import "PBGitRefish.h"
 
+#import "PBGitRefish.h"
+#import "RJModalRepoSheet.h"
 
 @class PBGitRepository;
 
 
-@interface PBCreateTagSheet : NSWindowController {
-	PBGitRepository *repository;
+@interface PBCreateTagSheet : RJModalRepoSheet {
 	id <PBGitRefish> targetRefish;
 
 	NSTextField *tagNameField;
@@ -27,8 +27,6 @@
 - (IBAction) createTag:(id)sender;
 - (IBAction) closeCreateTagSheet:(id)sender;
 
-
-@property  PBGitRepository *repository;
 @property  id <PBGitRefish> targetRefish;
 
 @property  IBOutlet NSTextField *tagNameField;

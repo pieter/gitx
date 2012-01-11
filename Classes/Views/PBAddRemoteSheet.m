@@ -60,7 +60,7 @@
 
 - (IBAction) browseFolders:(id)sender
 {
-	[self orderOutAddRemoteSheet:nil];
+	[self hide];
 
     self.browseSheet = [NSOpenPanel openPanel];
 
@@ -73,7 +73,7 @@
 	[browseSheet setAccessoryView:browseAccessoryView];
 
     [browseSheet beginSheetForDirectory:nil file:nil types:nil
-						 modalForWindow:[self.repository.windowController window]
+						 modalForWindow:self.repoWindow.window
 						  modalDelegate:self
 						 didEndSelector:@selector(browseSheetDidEnd:returnCode:contextInfo:)
 							contextInfo:NULL];
@@ -102,17 +102,9 @@
 		return;
 	}
 
-	[self orderOutAddRemoteSheet:self];
+	[self hide];
 	[self.repository beginAddRemote:name forURL:url];
 }
-
-
-- (IBAction) orderOutAddRemoteSheet:(id)sender
-{
-	[NSApp endSheet:[self window]];
-    [[self window] orderOut:self];
-}
-
 
 - (IBAction) showHideHiddenFiles:(id)sender
 {
@@ -121,5 +113,10 @@
 	[[self.browseSheet valueForKey:@"_navView"] setValue:showHidden forKey:@"showsHiddenFiles"];
 }
 
+- (IBAction) cancelOperation:(id)sender
+{
+	[super cancelOperation:sender];
+	[self hide];
+}
 
 @end

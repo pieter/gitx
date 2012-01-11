@@ -260,7 +260,7 @@
 					<string key="NSFrameSize">{480, 193}</string>
 					<reference key="NSSuperview"/>
 				</object>
-				<string key="NSScreenRect">{{0, 0}, {1680, 1028}}</string>
+				<string key="NSScreenRect">{{0, 0}, {1920, 1058}}</string>
 				<string key="NSMinSize">{480, 215}</string>
 				<string key="NSMaxSize">{2000, 215}</string>
 				<bool key="NSWindowIsRestorable">YES</bool>
@@ -336,14 +336,6 @@
 					<int key="connectionID">31</int>
 				</object>
 				<object class="IBConnectionRecord">
-					<object class="IBActionConnection" key="connection">
-						<string key="label">orderOutAddRemoteSheet:</string>
-						<reference key="source" ref="1001"/>
-						<reference key="destination" ref="563717339"/>
-					</object>
-					<int key="connectionID">41</int>
-				</object>
-				<object class="IBConnectionRecord">
 					<object class="IBOutletConnection" key="connection">
 						<string key="label">browseAccessoryView</string>
 						<reference key="source" ref="1001"/>
@@ -374,6 +366,14 @@
 						<reference key="destination" ref="653377053"/>
 					</object>
 					<int key="connectionID">51</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">cancelOperation:</string>
+						<reference key="source" ref="1001"/>
+						<reference key="destination" ref="563717339"/>
+					</object>
+					<int key="connectionID">56</int>
 				</object>
 			</array>
 			<object class="IBMutableOrderedSet" key="objectRecords">
@@ -613,7 +613,7 @@ dGgvdG8vcmVwby5naXQvCnNzaDovL1t1c2VyQF1ob3N0Lnh6L3BhdGgvdG8vcmVwby5naXQvA</strin
 			<nil key="activeLocalization"/>
 			<dictionary class="NSMutableDictionary" key="localizations"/>
 			<nil key="sourceID"/>
-			<int key="maxID">55</int>
+			<int key="maxID">56</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes"/>
 		<int key="IBDocument.localizationMode">0</int>

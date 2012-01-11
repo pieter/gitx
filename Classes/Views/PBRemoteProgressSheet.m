@@ -24,7 +24,12 @@ NSMutableArray* allProgressSheets = nil;
 
 @interface PBRemoteProgressSheet ()
 
-- (void) beginRemoteProgressSheetForArguments:(NSArray *)args title:(NSString *)theTitle description:(NSString *)theDescription inDir:(NSString *)dir windowController:(NSWindowController *)windowController hideSuccessScreen:(bool)hideSucc;
+- (void) beginRemoteProgressSheetForArguments:(NSArray *)args
+										title:(NSString *)theTitle
+								  description:(NSString *)theDescription
+										inDir:(NSString *)dir
+							 windowController:(PBGitWindowController *)windowController
+							hideSuccessScreen:(bool)hideSucc;
 - (void) showSuccessMessage;
 - (void) showErrorMessage;
 
@@ -52,33 +57,74 @@ NSMutableArray* allProgressSheets = nil;
 #pragma mark -
 #pragma mark PBRemoteProgressSheet
 
-+ (void) beginRemoteProgressSheetForArguments:(NSArray *)args title:(NSString *)theTitle description:(NSString *)theDescription inDir:(NSString *)dir windowController:(NSWindowController *)windowController
++ (void) beginRemoteProgressSheetForArguments:(NSArray *)args
+										title:(NSString *)theTitle
+								  description:(NSString *)theDescription
+										inDir:(NSString *)dir
+							 windowController:(PBGitWindowController *)windowController
 {
-	PBRemoteProgressSheet *sheet = [[self alloc] initWithWindowNibName:@"PBRemoteProgressSheet"];
-	[sheet beginRemoteProgressSheetForArguments:args title:theTitle description:theDescription inDir:dir windowController:windowController hideSuccessScreen:false];
+	PBRemoteProgressSheet *sheet = [[self alloc] initWithWindowNibName:@"PBRemoteProgressSheet"
+															   forRepo:windowController.repository];
+	[sheet beginRemoteProgressSheetForArguments:args
+										  title:theTitle
+									description:theDescription
+										  inDir:dir
+							   windowController:windowController
+							  hideSuccessScreen:false];
 }
 
-+ (void) beginRemoteProgressSheetForArguments:(NSArray *)args title:(NSString *)theTitle description:(NSString *)theDescription inDir:(NSString *)dir windowController:(NSWindowController *)windowController  hideSuccessScreen:(bool)hideSucc
++ (void) beginRemoteProgressSheetForArguments:(NSArray *)args
+										title:(NSString *)theTitle
+								  description:(NSString *)theDescription
+										inDir:(NSString *)dir
+							 windowController:(PBGitWindowController *)windowController
+							hideSuccessScreen:(bool)hideSucc
 {
-	PBRemoteProgressSheet *sheet = [[self alloc] initWithWindowNibName:@"PBRemoteProgressSheet"];
-	[sheet beginRemoteProgressSheetForArguments:args title:theTitle description:theDescription inDir:dir windowController:windowController hideSuccessScreen:hideSucc];
+	PBRemoteProgressSheet *sheet = [[self alloc] initWithWindowNibName:@"PBRemoteProgressSheet"
+															   forRepo:windowController.repository];
+	[sheet beginRemoteProgressSheetForArguments:args
+										  title:theTitle
+									description:theDescription
+										  inDir:dir
+							   windowController:windowController
+							  hideSuccessScreen:hideSucc];
 }
 
 
-+ (void) beginRemoteProgressSheetForArguments:(NSArray *)args title:(NSString *)theTitle description:(NSString *)theDescription  inRepository:(PBGitRepository *)repo
++ (void) beginRemoteProgressSheetForArguments:(NSArray *)args
+										title:(NSString *)theTitle
+								  description:(NSString *)theDescription
+								 inRepository:(PBGitRepository *)repo
 {
-	[PBRemoteProgressSheet beginRemoteProgressSheetForArguments:args title:theTitle description:theDescription inDir:[repo workingDirectory] windowController:repo.windowController];
+	[PBRemoteProgressSheet beginRemoteProgressSheetForArguments:args
+														  title:theTitle
+													description:theDescription
+														  inDir:[repo workingDirectory]
+											   windowController:repo.windowController];
 }
 
-+ (void) beginRemoteProgressSheetForArguments:(NSArray *)args title:(NSString *)theTitle description:(NSString *)theDescription  inRepository:(PBGitRepository *)repo hideSuccessScreen:(bool)hideSucc
++ (void) beginRemoteProgressSheetForArguments:(NSArray *)args
+										title:(NSString *)theTitle
+								  description:(NSString *)theDescription
+								 inRepository:(PBGitRepository *)repo
+							hideSuccessScreen:(bool)hideSucc
 {
-	[PBRemoteProgressSheet beginRemoteProgressSheetForArguments:args title:theTitle description:theDescription inDir:[repo workingDirectory] windowController:repo.windowController hideSuccessScreen:hideSucc];
+	[PBRemoteProgressSheet beginRemoteProgressSheetForArguments:args
+														  title:theTitle
+													description:theDescription
+														  inDir:[repo workingDirectory]
+											   windowController:repo.windowController
+											  hideSuccessScreen:hideSucc];
 }
 
 
-- (void) beginRemoteProgressSheetForArguments:(NSArray *)args title:(NSString *)theTitle description:(NSString *)theDescription inDir:(NSString *)dir windowController:(NSWindowController *)windowController hideSuccessScreen:(bool)hideSucc
+- (void) beginRemoteProgressSheetForArguments:(NSArray *)args
+										title:(NSString *)theTitle
+								  description:(NSString *)theDescription
+										inDir:(NSString *)dir
+							 windowController:(PBGitWindowController *)windowController
+							hideSuccessScreen:(bool)hideSucc
 {
-	controller  = windowController;
 	arguments   = args;
 	title       = theTitle;
 	description = theDescription;
@@ -92,7 +138,8 @@ NSMutableArray* allProgressSheets = nil;
 	NSAttributedString *attributedTitle = [self.progressDescription attributedStringValue];
 	NSSize boundingSize = originalFrame.size;
 	boundingSize.height = 0.0f;
-	NSRect boundingRect = [attributedTitle boundingRectWithSize:boundingSize options:NSStringDrawingUsesLineFragmentOrigin];
+	NSRect boundingRect = [attributedTitle boundingRectWithSize:boundingSize
+														options:NSStringDrawingUsesLineFragmentOrigin];
 	CGFloat heightDelta = boundingRect.size.height - originalFrame.size.height;
 	if (heightDelta > 0.0f) {
 		NSRect windowFrame = [[self window] frame];
@@ -101,10 +148,15 @@ NSMutableArray* allProgressSheets = nil;
 	}
 
 	[self.progressIndicator startAnimation:nil];
-	[NSApp beginSheet:[self window] modalForWindow:[controller window] modalDelegate:self didEndSelector:nil contextInfo:nil];
+	[self show];
 
-	gitTask = [PBEasyPipe taskForCommand:[PBGitBinary path] withArgs:arguments inDir:dir];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(taskCompleted:) name:NSTaskDidTerminateNotification object:gitTask];
+	gitTask = [PBEasyPipe taskForCommand:[PBGitBinary path]
+								withArgs:arguments
+								   inDir:dir];
+	[[NSNotificationCenter defaultCenter] addObserver:self
+											 selector:@selector(taskCompleted:)
+												 name:NSTaskDidTerminateNotification
+											   object:gitTask];
 
 	// having intermittent problem with long running git tasks not sending a termination notice, so periodically check whether the task is done
 	taskTimer = [NSTimer scheduledTimerWithTimeInterval:0.2 target:self selector:@selector(checkTask:) userInfo:nil repeats:YES];
@@ -137,8 +189,7 @@ NSMutableArray* allProgressSheets = nil;
 	else
 		[self showSuccessMessage];
 
-	if ([controller respondsToSelector:@selector(repository)])
-		[[(PBGitWindowController *)controller repository] reloadRefs];
+	[self.repository reloadRefs];
 }
 
 
@@ -166,8 +217,7 @@ NSMutableArray* allProgressSheets = nil;
 	[info appendString:[self commandDescription]];
 	[info appendString:[self standardOutputDescription]];
 
-	if ([controller respondsToSelector:@selector(showMessageSheet:infoText:)])
-		[(PBGitWindowController *)controller showMessageSheet:[self successTitle] infoText:info];
+	[self.repoWindow showMessageSheet:self.successTitle infoText:info];
 }
 
 
@@ -185,8 +235,7 @@ NSMutableArray* allProgressSheets = nil;
 								   nil];
 	NSError *error = [NSError errorWithDomain:PBGitRepositoryErrorDomain code:0 userInfo:errorUserInfo];
 
-	if ([controller respondsToSelector:@selector(showErrorSheet:)])
-		[(PBGitWindowController *)controller showErrorSheet:error];
+	[self.repoWindow showErrorSheet:error];
 }
 
 

@@ -116,20 +116,31 @@
 
 - (void)showCommitHookFailedSheet:(NSString *)messageText infoText:(NSString *)infoText commitController:(PBGitCommitController *)controller
 {
-	[PBCommitHookFailedSheet beginMessageSheetForWindow:[self window] withMessageText:messageText infoText:infoText commitController:controller];
+	[PBCommitHookFailedSheet beginWithMessageText:messageText
+										 infoText:infoText
+								 commitController:controller];
 }
 
 - (void)showMessageSheet:(NSString *)messageText infoText:(NSString *)infoText
 {
-	[PBGitXMessageSheet beginMessageSheetForWindow:[self window] withMessageText:messageText infoText:infoText];
+	[PBGitXMessageSheet beginMessageSheetForRepo:self.repository
+								 withMessageText:messageText
+										infoText:infoText];
 }
 
 - (void)showErrorSheet:(NSError *)error
 {
 	if ([[error domain] isEqualToString:PBGitRepositoryErrorDomain])
-		[PBGitXMessageSheet beginMessageSheetForWindow:[self window] withError:error];
+	{
+		[PBGitXMessageSheet beginMessageSheetForRepo:self.repository withError:error];
+	}
 	else
-		[[NSAlert alertWithError:error] beginSheetModalForWindow:[self window] modalDelegate:self didEndSelector:nil contextInfo:nil];
+	{
+		[[NSAlert alertWithError:error] beginSheetModalForWindow:[self window]
+												   modalDelegate:self
+												  didEndSelector:nil
+													 contextInfo:nil];
+	}
 }
 
 - (void)showErrorSheetTitle:(NSString *)title message:(NSString *)message arguments:(NSArray *)arguments output:(NSString *)output

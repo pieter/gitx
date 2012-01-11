@@ -45,7 +45,7 @@
 
 - (id) initWithRepositoryWindow:(PBGitWindowController *)parent atRefish:(id<PBGitRefish>)ref
 {
-	self = [super initWithWindowNibName:@"PBCreateBranchSheet" inRepoWindow:parent];
+	self = [super initWithWindowNibName:@"PBCreateBranchSheet" forRepo:parent.repository];
 	if (!self)
 		return nil;
 	

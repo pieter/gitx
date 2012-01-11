@@ -8,6 +8,7 @@
 
 #import <Cocoa/Cocoa.h>
 
+#import "RJModalRepoSheet.h"
 
 extern NSString * const kGitXProgressDescription;
 extern NSString * const kGitXProgressSuccessDescription;
@@ -15,12 +16,10 @@ extern NSString * const kGitXProgressSuccessInfo;
 extern NSString * const kGitXProgressErrorDescription;
 extern NSString * const kGitXProgressErrorInfo;
 
-
+@class PBGitWindowController;
 @class PBGitRepository;
 
-@interface PBRemoteProgressSheet : NSWindowController {
-	NSWindowController *controller;
-
+@interface PBRemoteProgressSheet : RJModalRepoSheet {
 	NSArray  *arguments;
 	NSString *title;
 	NSString *description;
@@ -35,14 +34,29 @@ extern NSString * const kGitXProgressErrorInfo;
 	NSTimer *taskTimer;
 }
 
-+ (void) beginRemoteProgressSheetForArguments:(NSArray *)args title:(NSString *)theTitle description:(NSString *)theDescription inDir:(NSString *)dir windowController:(NSWindowController *)windowController;
-+ (void) beginRemoteProgressSheetForArguments:(NSArray *)args title:(NSString *)theTitle description:(NSString *)theDescription inDir:(NSString *)dir windowController:(NSWindowController *)windowController hideSuccessScreen:(bool)hideSucc;
-+ (void) beginRemoteProgressSheetForArguments:(NSArray *)args title:(NSString *)theTitle description:(NSString *)theDescription inRepository:(PBGitRepository *)repo;
-+ (void) beginRemoteProgressSheetForArguments:(NSArray *)args title:(NSString *)theTitle description:(NSString *)theDescription inRepository:(PBGitRepository *)repo hideSuccessScreen:(bool)hideSucc;
++ (void) beginRemoteProgressSheetForArguments:(NSArray *)args
+										title:(NSString *)theTitle
+								  description:(NSString *)theDescription
+										inDir:(NSString *)dir
+							 windowController:(PBGitWindowController *)windowController;
++ (void) beginRemoteProgressSheetForArguments:(NSArray *)args
+										title:(NSString *)theTitle
+								  description:(NSString *)theDescription
+										inDir:(NSString *)dir
+							 windowController:(PBGitWindowController *)windowController 
+							hideSuccessScreen:(bool)hideSucc;
 
++ (void) beginRemoteProgressSheetForArguments:(NSArray *)args
+										title:(NSString *)theTitle
+								  description:(NSString *)theDescription
+								 inRepository:(PBGitRepository *)repo;
++ (void) beginRemoteProgressSheetForArguments:(NSArray *)args
+										title:(NSString *)theTitle
+								  description:(NSString *)theDescription
+								 inRepository:(PBGitRepository *)repo
+							hideSuccessScreen:(bool)hideSucc;
 
 @property  IBOutlet NSTextField         *progressDescription;
 @property  IBOutlet NSProgressIndicator *progressIndicator;
-
 
 @end

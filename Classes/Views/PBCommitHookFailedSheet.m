@@ -12,19 +12,30 @@
 
 @implementation PBCommitHookFailedSheet
 
+@synthesize commitController;
+
 #pragma mark -
 #pragma mark PBCommitHookFailedSheet
 
-+ (void)beginMessageSheetForWindow:(NSWindow *)parentWindow withMessageText:(NSString *)message infoText:(NSString *)info commitController:(PBGitCommitController *)controller 
+
++ (void)beginWithMessageText:(NSString *)message
+					infoText:(NSString *)info
+			commitController:(PBGitCommitController *)controller;
 {
-	PBCommitHookFailedSheet *sheet = [[self alloc] initWithWindowNibName:@"PBCommitHookFailedSheet" andController:controller];
-	[sheet beginMessageSheetForWindow:parentWindow withMessageText:message infoText:info];
+	PBCommitHookFailedSheet* sheet = [[self alloc] initWithWindowNibName:@"PBCommitHookFailedSheet"
+														   andController:controller];
+	[sheet beginMessageSheetWithMessageText:message
+								   infoText:info];
 }
 
-- (id)initWithWindowNibName:(NSString *)windowNibName andController:(PBGitCommitController *)controller;
+- (id)initWithWindowNibName:(NSString*)windowNibName
+			  andController:(PBGitCommitController*)controller;
 {
-    self = [self initWithWindowNibName:windowNibName];
-    commitController = controller;
+    self = [self initWithWindowNibName:windowNibName forRepo:controller.repository];
+	if (!self)
+		return nil;
+	
+	self.commitController = controller;
 
     return self;
 }
@@ -32,7 +43,7 @@
 - (IBAction)forceCommit:(id)sender
 {
 	[self closeMessageSheet:self];
-    [commitController forceCommit:sender];
+	[self.commitController forceCommit:sender];
 }
 
 @end

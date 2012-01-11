@@ -17,14 +17,14 @@
 
 - (IBAction) browseFolders:(id)sender;
 - (IBAction) addRemote:(id)sender;
-- (IBAction) orderOutAddRemoteSheet:(id)sender;
 - (IBAction) showHideHiddenFiles:(id)sender;
+- (IBAction) cancelOperation:(id)sender;
 
 @property (readwrite, dct_weak) IBOutlet NSTextField *remoteName;
 @property (readwrite, dct_weak) IBOutlet NSTextField *remoteURL;
 @property (readwrite, dct_weak) IBOutlet NSTextField *errorMessage;
 
-@property (readwrite, dct_weak)          NSOpenPanel *browseSheet;
+@property (readwrite, strong)          NSOpenPanel *browseSheet;
 @property (readwrite, dct_weak) IBOutlet NSView      *browseAccessoryView;
 
 @end

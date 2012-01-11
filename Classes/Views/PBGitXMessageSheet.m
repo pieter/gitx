@@ -19,10 +19,7 @@
 
 @end
 
-NSMutableArray* allMessageSheets = nil;
-
 @implementation PBGitXMessageSheet
-
 
 @synthesize iconView;
 @synthesize messageField;
@@ -33,19 +30,36 @@ NSMutableArray* allMessageSheets = nil;
 #pragma mark -
 #pragma mark PBGitXMessageSheet
 
-+ (void)beginMessageSheetForWindow:(NSWindow *)parentWindow withMessageText:(NSString *)message infoText:(NSString *)info
++ (void)beginMessageSheetForRepo:(PBGitRepository *)repo
+				 withMessageText:(NSString *)message
+						infoText:(NSString *)info
 {
-	PBGitXMessageSheet *sheet = [[self alloc] initWithWindowNibName:@"PBGitXMessageSheet"];
-	[sheet beginMessageSheetForWindow:parentWindow withMessageText:message infoText:info];
+	PBGitXMessageSheet *sheet = [[self alloc] initWithWindowNibName:@"PBGitXMessageSheet"
+															forRepo:repo];
+	[sheet beginMessageSheetWithMessageText:message
+								   infoText:info];
 }
 
 
-+ (void)beginMessageSheetForWindow:(NSWindow *)parentWindow withError:(NSError *)error
++ (void)beginMessageSheetForRepo:(PBGitRepository *)repo
+					   withError:(NSError *)error
 {
 	PBGitXMessageSheet *sheet = [[self alloc] initWithWindowNibName:@"PBGitXMessageSheet"];
-	[sheet beginMessageSheetForWindow:parentWindow withMessageText:[error localizedDescription] infoText:[error localizedRecoverySuggestion]];
+	[sheet beginMessageSheetWithMessageText:[error localizedDescription]
+								   infoText:[error localizedRecoverySuggestion]];
 }
 
+- (id)initWithWindowNibName:(NSString *)windowNibName
+					forRepo:(PBGitRepository *)repo
+{
+	self = [super initWithWindowNibName:windowNibName forRepo:repo];
+	if (!self)
+		return nil;
+	
+	
+	
+	return self;
+}
 
 - (IBAction)closeMessageSheet:(id)sender
 {
@@ -57,21 +71,15 @@ NSMutableArray* allMessageSheets = nil;
 
 #pragma mark Private
 
-- (void)beginMessageSheetForWindow:(NSWindow *)parentWindow withMessageText:(NSString *)message infoText:(NSString *)info;
+- (void)beginMessageSheetWithMessageText:(NSString *)message infoText:(NSString *)info;
 {
 	[self window];
 	
 	[self.messageField setStringValue:message];
 	[self setInfoString:info];
 	[self resizeWindow];
-	
-	[NSApp beginSheet:[self window] modalForWindow:parentWindow modalDelegate:self didEndSelector:nil contextInfo:NULL];
-	
-	if (!allMessageSheets)
-	{
-		allMessageSheets = [[NSMutableArray alloc] init];
-	}
-	[allMessageSheets addObject:self];
+		
+	[self show];
 }
 
 
