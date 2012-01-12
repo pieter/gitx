@@ -16,8 +16,9 @@
 #import "PBNSURLPathUserDefaultsTransfomer.h"
 #import "PBGitDefaults.h"
 #import "PBCloneRepositoryPanel.h"
-#import "Sparkle/SUUpdater.h"
 #import "OpenRecentController.h"
+
+#import <Sparkle/SUUpdater.h>
 
 static OpenRecentController* recentsDialog = nil;
 
