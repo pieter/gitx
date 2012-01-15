@@ -20,8 +20,6 @@ NSString * const kGitXProgressSuccessInfo        = @"PBGitXProgressSuccessInfo";
 NSString * const kGitXProgressErrorDescription   = @"PBGitXProgressErrorDescription";
 NSString * const kGitXProgressErrorInfo          = @"PBGitXProgressErrorInfo";
 
-NSMutableArray* allProgressSheets = nil;
-
 @interface PBRemoteProgressSheet ()
 
 - (void) beginRemoteProgressSheetForArguments:(NSArray *)args
@@ -162,12 +160,6 @@ NSMutableArray* allProgressSheets = nil;
 	taskTimer = [NSTimer scheduledTimerWithTimeInterval:0.2 target:self selector:@selector(checkTask:) userInfo:nil repeats:YES];
 
 	[gitTask launch];
-	
-	if (!allProgressSheets)
-	{
-		allProgressSheets = [[NSMutableArray alloc] init];
-	}
-	[allProgressSheets addObject:self];
 }
 
 
@@ -180,8 +172,6 @@ NSMutableArray* allProgressSheets = nil;
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 
 	[self.progressIndicator stopAnimation:nil];
-	[NSApp endSheet:[self window]];
-	[[self window] orderOut:self];
 
 	returnCode = [gitTask terminationStatus];
 	if (returnCode)
@@ -190,6 +180,8 @@ NSMutableArray* allProgressSheets = nil;
 		[self showSuccessMessage];
 
 	[self.repository reloadRefs];
+	
+	[self hide];
 }
 
 
