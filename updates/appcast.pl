@@ -21,7 +21,7 @@ my $template_text = <<EO_TMPL;
     <language>en</language>
 
     <item>
-      <title>Version <TMPL_VAR BUILD_TYPE> <TMPL_VAR CFBUNDLEVERSION></title>
+      <title><TMPL_VAR APP_TITLE> <TMPL_VAR BUILD_TYPE> <TMPL_VAR CFBUNDLEVERSION></title>
       <sparkle:releaseNotesLink><TMPL_VAR BASE_URL><TMPL_VAR BUILD_BASENAME>-<TMPL_VAR BUILD_NUMBER>.html</sparkle:releaseNotesLink>
       <sparkle:minimumSystemVersion>10.6.0</sparkle:minimumSystemVersion>
       <pubDate><TMPL_VAR PUBDATE></pubDate>
@@ -41,7 +41,9 @@ $tmpl->param(
 	     CFBundleVersion => $ENV{BUILD_BASENAME},
 	     build_number => $ENV{BUILD_NUMBER},
 	     PubDate => time2str(),
-	     file_size=> $ENV{BUILD_FILESIZE},
+	     file_size => $ENV{BUILD_FILESIZE},
+    file_sig => $ENV{BUILD_SIGNATURE},
+    build_type => $ENV{BULID_TYPE},
 	    );
 
 print $tmpl->output;
