@@ -7,10 +7,7 @@ use HTML::Template;
 use HTTP::Date;
 
 my %config = (
-	      app_title => $ENV{APP_TITLE},
-	      build_type => $ENV{BUILD_TYPE},
-	      build_basename => $ENV{BUILD_BASENAME},
-	      build_number => $ENV{BUILD_NUMBER},
+	      app_title => "GitX (R)",
 	      base_url => "http://builds.phere.net/"
 	     );
 
@@ -39,12 +36,12 @@ my $tmpl = HTML::Template->new( scalarref => \$template_text );
 
 $tmpl->param(
 	     base_url => $config{base_url},
-	     app_title => $config{app_name},
-	     build_basename => $config{build_basename},
-	     CFBundleVersion => $config{build_number},
-	     build_number => $config{build_number},
+	     app_title => $config{app_title},
+	     build_basename => $ENV{BUILD_BASENAME},
+	     CFBundleVersion => $ENV{BUILD_BASENAME},
+	     build_number => $ENV{BUILD_NUMBER},
 	     PubDate => time2str(),
-	     file_size=> '2345678',
+	     file_size=> $ENV{BUILD_FILESIZE},
 	    );
 
 print $tmpl->output;
