@@ -151,25 +151,27 @@
 
 int	main( int argc, const char** argv )
 {
-	// close stderr to stop cocoa log messages from being picked up by GitX
-	close(STDERR_FILENO);
-	
-	NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-	
-	ProcessSerialNumber	myPSN = { 0, kCurrentProcess };
-	TransformProcessType( &myPSN, kProcessTransformToForegroundApplication );
-	
-	NSApplication *app = [NSApplication sharedApplication];
-	GAPAppDelegate *appDel = [[GAPAppDelegate alloc] init];
-	[app setDelegate: appDel];
-	NSWindow *passPanel = [appDel passwordPanel];
-	
-	[app activateIgnoringOtherApps: YES];
-	[passPanel makeKeyAndOrderFront: nil];
-	NSInteger code = [app runModalForWindow: passPanel];
-	
-	[defaults synchronize];
-	
-	return code;
+	@autoreleasepool {
+		// close stderr to stop cocoa log messages from being picked up by GitX
+		close(STDERR_FILENO);
+		
+		NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+		
+		ProcessSerialNumber	myPSN = { 0, kCurrentProcess };
+		TransformProcessType( &myPSN, kProcessTransformToForegroundApplication );
+		
+		NSApplication *app = [NSApplication sharedApplication];
+		GAPAppDelegate *appDel = [[GAPAppDelegate alloc] init];
+		[app setDelegate: appDel];
+		NSWindow *passPanel = [appDel passwordPanel];
+		
+		[app activateIgnoringOtherApps: YES];
+		[passPanel makeKeyAndOrderFront: nil];
+		NSInteger code = [app runModalForWindow: passPanel];
+		
+		[defaults synchronize];
+		
+		return code;
+	}
 }
 
