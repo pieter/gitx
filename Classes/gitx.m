@@ -332,52 +332,54 @@ NSMutableArray *argumentsArray()
 
 int main(int argc, const char** argv)
 {
-	if (argc >= 2 && (!strcmp(argv[1], "--help") || !strcmp(argv[1], "-h")))
-		usage(argv[0]);
-	if (argc >= 2 && (!strcmp(argv[1], "--version") || !strcmp(argv[1], "-v")))
-		version_info();
-	if (argc >= 2 && !strcmp(argv[1], "--git-path"))
-		git_path();
-
-	// From here on everything needs to access git, so make sure it's installed
-	if (![PBGitBinary path]) {
-		printf("%s\n", [[PBGitBinary notFoundError] cStringUsingEncoding:NSUTF8StringEncoding]);
-		exit(2);
+	@autoreleasepool {
+		if (argc >= 2 && (!strcmp(argv[1], "--help") || !strcmp(argv[1], "-h")))
+			usage(argv[0]);
+		if (argc >= 2 && (!strcmp(argv[1], "--version") || !strcmp(argv[1], "-v")))
+			version_info();
+		if (argc >= 2 && !strcmp(argv[1], "--git-path"))
+			git_path();
+		
+		// From here on everything needs to access git, so make sure it's installed
+		if (![PBGitBinary path]) {
+			printf("%s\n", [[PBGitBinary notFoundError] cStringUsingEncoding:NSUTF8StringEncoding]);
+			exit(2);
+		}
+		
+		// gitx can be used to pipe diff output to be displayed in GitX
+		if (!isatty(STDIN_FILENO) && fdopen(STDIN_FILENO, "r"))
+			handleSTDINDiff();
+		
+		// From this point, we require a working directory and the arguments
+		NSMutableArray *arguments = argumentsArray();
+		NSURL *wdURL = workingDirectoryURL(arguments);
+		
+		if ([arguments count]) {
+			NSString *firstArgument = [arguments objectAtIndex:0];
+			
+			if ([firstArgument isEqualToString:@"--diff"] || [firstArgument isEqualToString:@"-d"]) {
+				[arguments removeObjectAtIndex:0];
+				handleDiffWithArguments(wdURL, arguments);
+			}
+			
+			if ([firstArgument isEqualToString:@"--init"]) {
+				[arguments removeObjectAtIndex:0];
+				handleInit(wdURL);
+			}
+			
+			if ([firstArgument isEqualToString:@"--clone"]) {
+				[arguments removeObjectAtIndex:0];
+				handleClone(wdURL, arguments);
+			}
+			
+			if (searchModeForCommandLineArgument(firstArgument)) {
+				handleGitXSearch(wdURL, arguments);
+			}
+		}
+		
+		// No commands handled by gitx, open the current dir in GitX with the arguments
+		handleOpenRepository(wdURL, arguments);
+		
+		return 0;
 	}
-
-	// gitx can be used to pipe diff output to be displayed in GitX
-	if (!isatty(STDIN_FILENO) && fdopen(STDIN_FILENO, "r"))
-		handleSTDINDiff();
-
-	// From this point, we require a working directory and the arguments
-	NSMutableArray *arguments = argumentsArray();
-	NSURL *wdURL = workingDirectoryURL(arguments);
-
-	if ([arguments count]) {
-		NSString *firstArgument = [arguments objectAtIndex:0];
-
-		if ([firstArgument isEqualToString:@"--diff"] || [firstArgument isEqualToString:@"-d"]) {
-			[arguments removeObjectAtIndex:0];
-			handleDiffWithArguments(wdURL, arguments);
-		}
-
-		if ([firstArgument isEqualToString:@"--init"]) {
-			[arguments removeObjectAtIndex:0];
-			handleInit(wdURL);
-		}
-
-		if ([firstArgument isEqualToString:@"--clone"]) {
-			[arguments removeObjectAtIndex:0];
-			handleClone(wdURL, arguments);
-		}
-
-		if (searchModeForCommandLineArgument(firstArgument)) {
-			handleGitXSearch(wdURL, arguments);
-		}
-	}
-
-	// No commands handled by gitx, open the current dir in GitX with the arguments
-	handleOpenRepository(wdURL, arguments);
-
-	return 0;
 }
