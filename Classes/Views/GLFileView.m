@@ -196,6 +196,7 @@
 		line=[lines objectAtIndex:i];
 		NSArray *header=[line componentsSeparatedByString:@" "];
 		if([header count]==4){
+			NSString *commitID = (NSString *)[header objectAtIndex:0];
 			int nLines=[(NSString *)[header objectAtIndex:3] intValue];
 			[res appendFormat:@"<tr class='block l%d'>\n",nLines];
 			line=[lines objectAtIndex:++i];
@@ -208,16 +209,21 @@
 						summary=[line stringByReplacingOccurrencesOfString:@"summary" withString:@""];
 					}
 				}
-				NSRange trunc={0,30};
+				NSRange trunc_c={0,7};
+				NSString *truncate_c=commitID;
+				if([commitID length]>8){
+					truncate_c=[commitID substringWithRange:trunc_c];
+				}
+				NSRange trunc={0,22};
 				NSString *truncate_a=author;
-				if([author length]>30){
+				if([author length]>22){
 					truncate_a=[author substringWithRange:trunc];
 				}
 				NSString *truncate_s=summary;
 				if([summary length]>30){
 					truncate_s=[summary substringWithRange:trunc];
 				}
-				NSString *block=[NSString stringWithFormat:@"<td><p class='author'>%@</p><p class='summary'>%@</p></td>\n<td>\n",truncate_a,truncate_s];
+				NSString *block=[NSString stringWithFormat:@"<td><p class='author'><a href='' onclick='selectCommit(\"%@\"); return false;'>%@</a> %@</p><p class='summary'>%@</p></td>\n<td>\n",commitID,truncate_c,truncate_a,truncate_s];
 				[headers setObject:block forKey:[header objectAtIndex:0]];
 			}
 			[res appendString:[headers objectForKey:[header objectAtIndex:0]]];

@@ -7,3 +7,7 @@ var showFile = function(txt) {
 	SyntaxHighlighter.highlight();
 	return;
 }
+
+var selectCommit = function(a) {
+	Controller.selectCommit_(a);
+}
