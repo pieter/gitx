@@ -1135,5 +1135,6 @@
 - (void) dealloc
 {
 	NSLog(@"Dealloc of repository");
+	[watcher stop];
 }
 @end
