@@ -42,19 +42,24 @@ static NSString * PBStringFromBranchFilterType(PBGitXBranchFilterType type) {
 @class PBGitRepositoryWatcher;
 
 @interface PBGitRepository : NSDocument {
-	PBGitHistoryList* revisionList;
-	PBGitConfig *config;
-
-	BOOL hasChanged;
-	NSMutableArray *branches;
-	PBGitRevSpecifier *currentBranch;
-	NSInteger currentBranchFilter;
-	NSMutableDictionary *refs;
-
-  PBGitRepositoryWatcher *watcher;
-	PBGitRevSpecifier *_headRef; // Caching
-	PBGitSHA* _headSha;
+	__strong PBGitRepositoryWatcher *watcher;
+	__strong PBGitRevSpecifier *_headRef; // Caching
+	__strong PBGitSHA* _headSha;
 }
+
+
+@property (assign) BOOL hasChanged;
+@property (assign) NSInteger currentBranchFilter;
+
+@property (readonly, strong) PBGitWindowController *windowController;
+@property (readonly, getter = getIndexURL) NSURL* indexURL;
+@property (readonly, strong) PBGitConfig *config;
+
+@property (nonatomic, strong) PBGitHistoryList *revisionList;
+@property (nonatomic, strong) NSMutableArray* branches;
+@property (nonatomic, strong) PBGitRevSpecifier *currentBranch;
+@property (nonatomic, strong) NSMutableDictionary* refs;
+
 
 - (void) cloneRepositoryToPath:(NSString *)path bare:(BOOL)isBare;
 - (void) beginAddRemote:(NSString *)remoteName forURL:(NSString *)remoteURL;
@@ -132,16 +137,5 @@ static NSString * PBStringFromBranchFilterType(PBGitXBranchFilterType type) {
 
 // for the scripting bridge
 - (void)findInModeScriptCommand:(NSScriptCommand *)command;
-
-
-@property (assign) BOOL hasChanged;
-@property (readonly) PBGitWindowController *windowController;
-@property (readonly) PBGitConfig *config;
-@property  PBGitHistoryList *revisionList;
-@property  NSMutableArray* branches;
-@property  PBGitRevSpecifier *currentBranch;
-@property (assign) NSInteger currentBranchFilter;
-@property  NSMutableDictionary* refs;
-@property (readonly, getter = getIndexURL) NSURL* indexURL;
 
 @end

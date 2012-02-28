@@ -15,10 +15,10 @@
 @end
 
 @interface NSURLRequest (PBGitXProtocol)
-@property (readonly) PBGitRepository *repository;
+@property (nonatomic, dct_weak) PBGitRepository *repository;
 @end
 
 @interface NSMutableURLRequest (PBGitXProtocol)
-@property (retain) PBGitRepository *repository;
+@property (nonatomic, dct_weak) PBGitRepository *repository;
 @end
 

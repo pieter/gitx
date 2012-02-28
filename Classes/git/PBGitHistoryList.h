@@ -17,7 +17,7 @@
 @class PBGitSHA;
 
 @interface PBGitHistoryList : NSObject {
-	PBGitRepository *repository;
+	__dct_weak PBGitRepository *repository;
 
 	PBGitRevList *projectRevList;
 	PBGitRevList *currentRevList;
