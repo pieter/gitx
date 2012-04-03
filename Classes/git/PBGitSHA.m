@@ -83,14 +83,11 @@
 - (NSString *)string
 {
 	if (!string) {
-		char *hex = malloc(GIT_OID_HEXSZ+1);
-		if (hex == NULL)
-			return nil;
+		const size_t buffer_size = GIT_OID_HEXSZ + 1;
+		char hex[buffer_size] = {0};
 
-		git_oid_to_string(hex, GIT_OID_HEXSZ+1, &oid);
-		hex[GIT_OID_HEXSZ] = '\0';
-		string = [NSString stringWithUTF8String:hex];
-		free(hex);
+		char const* result = git_oid_tostr(hex, buffer_size, &oid);
+		string = [NSString stringWithUTF8String:result];
 	}
 
 	return string;
