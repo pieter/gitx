@@ -174,14 +174,15 @@ NSString * const kGitXProgressErrorInfo          = @"PBGitXProgressErrorInfo";
 	[self.progressIndicator stopAnimation:nil];
 
 	returnCode = [gitTask terminationStatus];
-	if (returnCode)
-		[self showErrorMessage];
-	else
-		[self showSuccessMessage];
-
-	[self.repository reloadRefs];
-	
+	PBRemoteProgressSheet* ownRef = self;
 	[self hide];
+	
+	if (returnCode)
+		[ownRef showErrorMessage];
+	else
+		[ownRef showSuccessMessage];
+
+	[ownRef.repository reloadRefs];
 }
 
 
@@ -322,5 +323,9 @@ NSString * const kGitXProgressErrorInfo          = @"PBGitXProgressErrorInfo";
 	return [NSString stringWithFormat:@"\n\n%@\nerror = %d", standardError, returnCode];
 }
 
+-(void) dealloc
+{
+	[[NSNotificationCenter defaultCenter] removeObserver:self];
+}
 
 @end
