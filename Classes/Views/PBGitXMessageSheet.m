@@ -63,8 +63,7 @@
 
 - (IBAction)closeMessageSheet:(id)sender
 {
-	[NSApp endSheet:[self window]];
-	[[self window] orderOut:self];
+	[self hide];
 }
 
 
