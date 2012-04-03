@@ -8,7 +8,7 @@ use HTTP::Date;
 
 my %config = (
 	      app_title => "GitX (R)",
-	      base_url => "http://builds.phere.net/"
+	      base_url => "http://builds.phere.net/GitX/$ENV{BUILD_TYPE}/"
 	     );
 
 my $template_text = <<EO_TMPL;
@@ -43,7 +43,7 @@ $tmpl->param(
 	     PubDate => time2str(),
 	     file_size => $ENV{BUILD_FILESIZE},
     file_sig => $ENV{BUILD_SIGNATURE},
-    build_type => $ENV{BULID_TYPE},
+    build_type => $ENV{BUILD_TYPE},
 	    );
 
 print $tmpl->output;
