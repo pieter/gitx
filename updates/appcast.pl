@@ -38,7 +38,7 @@ $tmpl->param(
 	     base_url => $config{base_url},
 	     app_title => $config{app_title},
 	     build_basename => $ENV{BUILD_BASENAME},
-	     CFBundleVersion => $ENV{BUILD_BASENAME},
+	     CFBundleVersion => $ENV{BUNDLE_VERSION},
 	     build_number => $ENV{BUILD_NUMBER},
 	     PubDate => time2str(),
 	     file_size => $ENV{BUILD_FILESIZE},
