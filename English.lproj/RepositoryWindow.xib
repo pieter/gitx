@@ -2,13 +2,13 @@
 <archive type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="8.00">
 	<data>
 		<int key="IBDocument.SystemTarget">1060</int>
-		<string key="IBDocument.SystemVersion">11C74</string>
-		<string key="IBDocument.InterfaceBuilderVersion">2148</string>
-		<string key="IBDocument.AppKitVersion">1138.23</string>
-		<string key="IBDocument.HIToolboxVersion">567.00</string>
+		<string key="IBDocument.SystemVersion">11D50</string>
+		<string key="IBDocument.InterfaceBuilderVersion">2182</string>
+		<string key="IBDocument.AppKitVersion">1138.32</string>
+		<string key="IBDocument.HIToolboxVersion">568.00</string>
 		<object class="NSMutableDictionary" key="IBDocument.PluginVersions">
 			<string key="NS.key.0">com.apple.InterfaceBuilder.CocoaPlugin</string>
-			<string key="NS.object.0">2148</string>
+			<string key="NS.object.0">2182</string>
 		</object>
 		<array key="IBDocument.IntegratedClassDependencies">
 			<string>NSTextField</string>
@@ -62,6 +62,8 @@
 									<int key="NSvFlags">272</int>
 									<string key="NSFrameSize">{184, 483}</string>
 									<reference key="NSSuperview" ref="120427370"/>
+									<reference key="NSWindow"/>
+									<reference key="NSNextKeyView" ref="933485175"/>
 									<string key="NSClassName">NSView</string>
 								</object>
 								<object class="NSCustomView" id="933485175">
@@ -69,11 +71,15 @@
 									<int key="NSvFlags">274</int>
 									<string key="NSFrame">{{185, 0}, {705, 483}}</string>
 									<reference key="NSSuperview" ref="120427370"/>
+									<reference key="NSWindow"/>
+									<reference key="NSNextKeyView" ref="207262158"/>
 									<string key="NSClassName">NSView</string>
 								</object>
 							</array>
 							<string key="NSFrame">{{0, 31}, {890, 483}}</string>
 							<reference key="NSSuperview" ref="751230759"/>
+							<reference key="NSWindow"/>
+							<reference key="NSNextKeyView" ref="3950721"/>
 							<bool key="NSIsVertical">YES</bool>
 							<int key="NSDividerStyle">2</int>
 							<string key="NSAutosaveName">sourceSplitView</string>
@@ -83,6 +89,8 @@
 							<int key="NSvFlags">292</int>
 							<string key="NSFrame">{{0, 1}, {333, 31}}</string>
 							<reference key="NSSuperview" ref="751230759"/>
+							<reference key="NSWindow"/>
+							<reference key="NSNextKeyView" ref="44848571"/>
 							<string key="NSClassName">NSView</string>
 						</object>
 						<object class="NSCustomView" id="44848571">
@@ -95,6 +103,8 @@
 									<object class="NSPSMatrix" key="NSDrawMatrix"/>
 									<string key="NSFrame">{{20, 7}, {16, 16}}</string>
 									<reference key="NSSuperview" ref="44848571"/>
+									<reference key="NSWindow"/>
+									<reference key="NSNextKeyView" ref="508249619"/>
 									<int key="NSpiFlags">20746</int>
 									<double key="NSMaxValue">100</double>
 								</object>
@@ -103,6 +113,8 @@
 									<int key="NSvFlags">266</int>
 									<string key="NSFrame">{{41, 8}, {188, 14}}</string>
 									<reference key="NSSuperview" ref="44848571"/>
+									<reference key="NSWindow"/>
+									<reference key="NSNextKeyView" ref="595346420"/>
 									<bool key="NSEnabled">YES</bool>
 									<object class="NSTextFieldCell" key="NSCell" id="708164574">
 										<int key="NSCellFlags">67239488</int>
@@ -137,6 +149,8 @@
 							</array>
 							<string key="NSFrame">{{364, 0}, {246, 31}}</string>
 							<reference key="NSSuperview" ref="751230759"/>
+							<reference key="NSWindow"/>
+							<reference key="NSNextKeyView" ref="490597384"/>
 							<string key="NSClassName">NSView</string>
 						</object>
 						<object class="NSCustomView" id="595346420">
@@ -148,6 +162,8 @@
 									<int key="NSvFlags">268</int>
 									<string key="NSFrame">{{221, 3}, {25, 25}}</string>
 									<reference key="NSSuperview" ref="595346420"/>
+									<reference key="NSWindow"/>
+									<reference key="NSNextKeyView"/>
 									<bool key="NSEnabled">YES</bool>
 									<object class="NSButtonCell" key="NSCell" id="13545808">
 										<int key="NSCellFlags">-2080244224</int>
@@ -176,6 +192,8 @@
 									<int key="NSvFlags">268</int>
 									<string key="NSFrame">{{143, 3}, {70, 25}}</string>
 									<reference key="NSSuperview" ref="595346420"/>
+									<reference key="NSWindow"/>
+									<reference key="NSNextKeyView" ref="928885003"/>
 									<bool key="NSEnabled">YES</bool>
 									<object class="NSButtonCell" key="NSCell" id="1072322736">
 										<int key="NSCellFlags">-2080244224</int>
@@ -196,6 +214,8 @@
 									<int key="NSvFlags">268</int>
 									<string key="NSFrame">{{110, 3}, {25, 25}}</string>
 									<reference key="NSSuperview" ref="595346420"/>
+									<reference key="NSWindow"/>
+									<reference key="NSNextKeyView" ref="1013117443"/>
 									<bool key="NSEnabled">YES</bool>
 									<object class="NSButtonCell" key="NSCell" id="350298421">
 										<int key="NSCellFlags">-2080244224</int>
@@ -218,17 +238,22 @@
 							</array>
 							<string key="NSFrame">{{624, 0}, {246, 31}}</string>
 							<reference key="NSSuperview" ref="751230759"/>
+							<reference key="NSWindow"/>
+							<reference key="NSNextKeyView" ref="740979162"/>
 							<string key="NSClassName">NSView</string>
 						</object>
 					</array>
 					<string key="NSFrameSize">{890, 514}</string>
 					<reference key="NSSuperview"/>
+					<reference key="NSWindow"/>
+					<reference key="NSNextKeyView" ref="120427370"/>
 				</object>
 				<string key="NSScreenRect">{{0, 0}, {1920, 1058}}</string>
 				<string key="NSMinSize">{600, 472}</string>
 				<string key="NSMaxSize">{10000000000000, 10000000000000}</string>
 				<string key="NSFrameAutosaveName">GitX</string>
 				<double key="NSContentBorderThicknessMinY">31</double>
+				<int key="NSWindowCollectionBehavior">128</int>
 				<bool key="NSWindowIsRestorable">YES</bool>
 			</object>
 		</array>
@@ -508,7 +533,91 @@
 			<nil key="sourceID"/>
 			<int key="maxID">443</int>
 		</object>
-		<object class="IBClassDescriber" key="IBDocument.Classes"/>
+		<object class="IBClassDescriber" key="IBDocument.Classes">
+			<array class="NSMutableArray" key="referencedPartialClassDescriptions">
+				<object class="IBPartialClassDescription">
+					<string key="className">PBGitWindowController</string>
+					<string key="superclassName">NSWindowController</string>
+					<dictionary class="NSMutableDictionary" key="actions">
+						<string key="openInTerminal:">id</string>
+						<string key="refresh:">id</string>
+						<string key="revealInFinder:">id</string>
+						<string key="showCommitView:">id</string>
+						<string key="showHistoryView:">id</string>
+					</dictionary>
+					<dictionary class="NSMutableDictionary" key="actionInfosByName">
+						<object class="IBActionInfo" key="openInTerminal:">
+							<string key="name">openInTerminal:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="refresh:">
+							<string key="name">refresh:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="revealInFinder:">
+							<string key="name">revealInFinder:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="showCommitView:">
+							<string key="name">showCommitView:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="showHistoryView:">
+							<string key="name">showHistoryView:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+					</dictionary>
+					<dictionary class="NSMutableDictionary" key="outlets">
+						<string key="contentSplitView">NSView</string>
+						<string key="finderItem">NSToolbarItem</string>
+						<string key="progressIndicator">NSProgressIndicator</string>
+						<string key="sourceListControlsView">NSView</string>
+						<string key="sourceSplitView">NSView</string>
+						<string key="splitView">NSSplitView</string>
+						<string key="statusField">NSTextField</string>
+						<string key="terminalItem">NSToolbarItem</string>
+					</dictionary>
+					<dictionary class="NSMutableDictionary" key="toOneOutletInfosByName">
+						<object class="IBToOneOutletInfo" key="contentSplitView">
+							<string key="name">contentSplitView</string>
+							<string key="candidateClassName">NSView</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="finderItem">
+							<string key="name">finderItem</string>
+							<string key="candidateClassName">NSToolbarItem</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="progressIndicator">
+							<string key="name">progressIndicator</string>
+							<string key="candidateClassName">NSProgressIndicator</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="sourceListControlsView">
+							<string key="name">sourceListControlsView</string>
+							<string key="candidateClassName">NSView</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="sourceSplitView">
+							<string key="name">sourceSplitView</string>
+							<string key="candidateClassName">NSView</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="splitView">
+							<string key="name">splitView</string>
+							<string key="candidateClassName">NSSplitView</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="statusField">
+							<string key="name">statusField</string>
+							<string key="candidateClassName">NSTextField</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="terminalItem">
+							<string key="name">terminalItem</string>
+							<string key="candidateClassName">NSToolbarItem</string>
+						</object>
+					</dictionary>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<string key="majorKey">IBProjectSource</string>
+						<string key="minorKey">./Classes/PBGitWindowController.h</string>
+					</object>
+				</object>
+			</array>
+		</object>
 		<int key="IBDocument.localizationMode">0</int>
 		<string key="IBDocument.TargetRuntimeIdentifier">IBCocoaFramework</string>
 		<object class="NSMutableDictionary" key="IBDocument.PluginDeclaredDependencies">
