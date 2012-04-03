@@ -102,8 +102,9 @@
 		return;
 	}
 
-	[self hide];
-	[self.repository beginAddRemote:name forURL:url];
+	PBGitRepository* repo = self.repository;
+	[self hide]; // may deallocate self
+	[repo beginAddRemote:name forURL:url];
 }
 
 - (IBAction) showHideHiddenFiles:(id)sender
@@ -115,7 +116,7 @@
 
 - (IBAction) cancelOperation:(id)sender
 {
-	[super cancelOperation:sender];
+//	[super cancelOperation:sender];
 	[self hide];
 }
 
