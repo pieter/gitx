@@ -1,3 +1,5 @@
+struct _NSRect;
+
 @interface QLPreviewPanel : NSPanel
 + (id)sharedPreviewPanel;
 
