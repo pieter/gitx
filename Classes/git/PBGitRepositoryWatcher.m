@@ -64,7 +64,14 @@ void PBGitRepositoryWatcherCallback(ConstFSEventStreamRef streamRef, void *clien
 }
 
 - (NSDate *) _fileModificationDateAtPath:(NSString *)path {
-    NSDictionary *attrs = [[NSFileManager defaultManager] fileAttributesAtPath:path traverseLink:YES];
+	NSError* error;
+    NSDictionary *attrs = [[NSFileManager defaultManager] attributesOfItemAtPath:path
+																		   error:&error];
+	if (error)
+	{
+		NSLog(@"Unable to get attributes of \"%@\"", path);
+		return nil;
+	}
 	return [attrs objectForKey:NSFileModificationDate];
 }
 
