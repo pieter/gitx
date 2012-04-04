@@ -313,19 +313,28 @@
 {
 	if (!ref)
 		return nil;
-
-	for (PBGitSHA *sha in refs)
-		for (PBGitRef *existingRef in [refs objectForKey:sha])
-			if ([existingRef isEqualToRef:ref])
-				return sha;
-
-	int retValue = 1;
-	NSArray *args = [NSArray arrayWithObjects:@"rev-list", @"-1", [ref ref], nil];
-	NSString *shaForRef = [self outputInWorkdirForArguments:args retValue:&retValue];
-	if (retValue || [shaForRef isEqualToString:@""])
+	
+	NSError* error = nil;
+	GTReference* gtRef = [GTReference referenceByLookingUpReferencedNamed:ref.ref
+															 inRepository:self.gtRepo
+																	error:&error];
+	if (error)
+	{
+		NSLog(@"Error looking up ref for %@", ref.ref);
 		return nil;
-
-	return [PBGitSHA shaWithString:shaForRef];
+	}
+	const git_oid* refOid = gtRef.oid;
+	
+	if (refOid)
+	{
+		char buffer[41];
+		buffer[40] = '\0';
+		git_oid_fmt(buffer, refOid);
+		NSString* shaForRef = [NSString stringWithUTF8String:buffer];
+		PBGitSHA* result = [PBGitSHA shaWithString:shaForRef];
+		return result;
+	}
+	return nil;
 }
 
 - (PBGitCommit *)commitForRef:(PBGitRef *)ref
