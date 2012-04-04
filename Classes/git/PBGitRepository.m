@@ -1127,11 +1127,25 @@
 
 - (NSURL*) getIndexURL
 {
-	GTRepository* gtRepo = [GTRepository repositoryWithURL:self.fileURL error:nil];
-
-	NSURL* result = [[gtRepo index] fileURL];
+	NSURL* result = self.gtRepo.index.fileURL;
 	return result;
 }
+
+-(GTRepository*) gtRepo
+{
+	if (!_gtRepo)
+	{
+		NSError* error = nil;
+		_gtRepo = [GTRepository repositoryWithURL:self.fileURL error:&error];
+		if (error)
+		{
+			_gtRepo = nil;
+			NSLog(@"Error opening GTRepository for %@\n%@", self.fileURL, [error userInfo]);
+		}
+	}
+	return _gtRepo;
+}
+
 - (void) dealloc
 {
 	NSLog(@"Dealloc of repository");

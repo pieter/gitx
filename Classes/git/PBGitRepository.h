@@ -12,6 +12,8 @@
 #import "PBGitConfig.h"
 #import "PBGitRefish.h"
 
+@class GTRepository;
+
 extern NSString* PBGitRepositoryErrorDomain;
 typedef enum branchFilterTypes {
 	kGitXAllBranchesFilter = 0,
@@ -45,6 +47,7 @@ static NSString * PBStringFromBranchFilterType(PBGitXBranchFilterType type) {
 	__strong PBGitRepositoryWatcher *watcher;
 	__strong PBGitRevSpecifier *_headRef; // Caching
 	__strong PBGitSHA* _headSha;
+	__strong GTRepository* _gtRepo;
 }
 
 
@@ -59,7 +62,7 @@ static NSString * PBStringFromBranchFilterType(PBGitXBranchFilterType type) {
 @property (nonatomic, strong) NSMutableArray* branches;
 @property (nonatomic, strong) PBGitRevSpecifier *currentBranch;
 @property (nonatomic, strong) NSMutableDictionary* refs;
-
+@property (readonly, strong) GTRepository* gtRepo;
 
 - (void) cloneRepositoryToPath:(NSString *)path bare:(BOOL)isBare;
 - (void) beginAddRemote:(NSString *)remoteName forURL:(NSString *)remoteURL;
