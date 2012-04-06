@@ -314,6 +314,18 @@
 	if (!ref)
 		return nil;
 	
+	for (PBGitSHA *sha in refs)
+	{
+		for (PBGitRef *existingRef in [refs objectForKey:sha])
+		{
+			if ([existingRef isEqualToRef:ref])
+			{
+				return sha;
+			}
+		}
+    }
+    
+	
 	NSError* error = nil;
 	GTReference* gtRef = [GTReference referenceByLookingUpReferencedNamed:ref.ref
 															 inRepository:self.gtRepo
