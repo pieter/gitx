@@ -86,7 +86,7 @@
 		const size_t buffer_size = GIT_OID_HEXSZ + 1;
 		char hex[buffer_size] = {0};
 
-		char const* result = git_oid_tostr(hex, buffer_size, &oid);
+		const char* result = git_oid_to_string(hex, buffer_size, &oid);
 		string = [NSString stringWithUTF8String:result];
 	}
 
