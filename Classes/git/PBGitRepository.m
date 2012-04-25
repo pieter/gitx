@@ -217,16 +217,17 @@
 	return [[self windowControllers] objectAtIndex:0];
 }
 
-- (void) addRef: (PBGitRef *) ref fromParameters: (NSArray *) components
+- (void) addRef:(GTReference*)gtRef
 {
-	NSString* type = [components objectAtIndex:1];
-
-	PBGitSHA *sha;
-	if ([type isEqualToString:@"tag"] && [components count] == 4)
-		sha = [PBGitSHA shaWithString:[components objectAtIndex:3]];
-	else
-		sha = [PBGitSHA shaWithString:[components objectAtIndex:2]];
-
+	if (!([gtRef.type compare:@"commit"] == NSOrderedSame||
+		 [gtRef.type compare:@"tag"] == NSOrderedSame))
+	{
+//		NSLog(@"Can't addRef for unsupported type: %@", gtRef.type);
+		return;
+	}
+	git_oid refOid = *(gtRef.oid);
+	PBGitSHA *sha = [PBGitSHA shaWithOID:refOid];
+	PBGitRef* ref = [[PBGitRef alloc] initWithString:gtRef.name];
 	NSMutableArray* curRefs;
 	if ( (curRefs = [refs objectForKey:sha]) != nil )
 		[curRefs addObject:ref];
@@ -236,34 +237,35 @@
 
 - (void) reloadRefs
 {
+	// clear out ref caches
 	_headRef = nil;
 	_headSha = nil;
-
-	refs = [NSMutableDictionary dictionary];
+	self->refs = [NSMutableDictionary dictionary];
+	
+	NSError* error = nil;
+	NSArray* allRefs = [self.gtRepo referenceNamesWithError:&error];
+	
+	// load all named refs
 	NSMutableArray *oldBranches = [branches mutableCopy];
-
-	NSArray *arguments = [NSArray arrayWithObjects:@"for-each-ref", @"--format=%(refname) %(objecttype) %(objectname) %(*objectname)", @"refs", nil];
-	NSString *output = [self outputForArguments:arguments];
-	NSArray *lines = [output componentsSeparatedByString:@"\n"];
-
-	for (NSString *line in lines) {
-		// If its an empty line, skip it (e.g. with empty repositories)
-		if ([line length] == 0)
-			continue;
-
-		NSArray *components = [line componentsSeparatedByString:@" "];
-
-		PBGitRef *newRef = [PBGitRef refFromString:[components objectAtIndex:0]];
-		PBGitRevSpecifier *revSpec = [[PBGitRevSpecifier alloc] initWithRef:newRef];
+	for (NSString* referenceName in allRefs)
+	{
+		PBGitRef* gitRef = [PBGitRef refFromString:referenceName];
+		PBGitRevSpecifier* revSpec = 
+		[[PBGitRevSpecifier alloc] initWithRef:gitRef];
+		GTReference* gtRef =
+		[[GTReference alloc] initByLookingUpReferenceNamed:referenceName
+											  inRepository:self.gtRepo
+													 error:&error];
 
 		[self addBranch:revSpec];
-		[self addRef:newRef fromParameters:components];
+		[self addRef:gtRef];
 		[oldBranches removeObject:revSpec];
 	}
-
+	
 	for (PBGitRevSpecifier *branch in oldBranches)
 		if ([branch isSimpleRef] && ![branch isEqual:[self headRef]])
 			[self removeBranch:branch];
+
 
 	[self willChangeValueForKey:@"refs"];
 	[self didChangeValueForKey:@"refs"];

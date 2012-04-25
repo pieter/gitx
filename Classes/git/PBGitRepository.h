@@ -103,7 +103,6 @@ static NSString * PBStringFromBranchFilterType(PBGitXBranchFilterType type) {
 
 
 - (void) reloadRefs;
-- (void) addRef:(PBGitRef *)ref fromParameters:(NSArray *)params;
 - (void) lazyReload;
 - (PBGitRevSpecifier*)headRef;
 - (PBGitSHA *)headSHA;
