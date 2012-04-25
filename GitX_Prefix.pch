@@ -2,6 +2,9 @@
 
 #ifdef __OBJC__
     #import <Cocoa/Cocoa.h>
+	#ifndef __cplusplus
+		#import <ObjectiveGit/ObjectiveGit.h>
+	#endif
 #endif
 
 #import "dct_weak.h"
