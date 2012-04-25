@@ -273,12 +273,23 @@ static OpenRecentController* recentsDialog = nil;
     fileManager = [NSFileManager defaultManager];
     applicationSupportFolder = [self applicationSupportFolder];
     if ( ![fileManager fileExistsAtPath:applicationSupportFolder isDirectory:NULL] ) {
-        [fileManager createDirectoryAtPath:applicationSupportFolder attributes:nil];
+		[fileManager createDirectoryAtPath:applicationSupportFolder
+			   withIntermediateDirectories:YES
+								attributes:nil
+									 error:&error];
+		if (error)
+		{
+			[[NSApplication sharedApplication] presentError:error];
+		}
     }
     
     url = [NSURL fileURLWithPath: [applicationSupportFolder stringByAppendingPathComponent: @"GitTest.xml"]];
     persistentStoreCoordinator = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel: [self managedObjectModel]];
-    if (![persistentStoreCoordinator addPersistentStoreWithType:NSXMLStoreType configuration:nil URL:url options:nil error:&error]){
+    if (![persistentStoreCoordinator addPersistentStoreWithType:NSXMLStoreType
+												  configuration:nil
+															URL:url
+														options:nil
+														  error:&error]){
         [[NSApplication sharedApplication] presentError:error];
     }    
 
