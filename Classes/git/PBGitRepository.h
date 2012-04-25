@@ -9,10 +9,10 @@
 #import <Cocoa/Cocoa.h>
 #import "PBGitHistoryList.h"
 #import "PBGitRevSpecifier.h"
-#import "PBGitConfig.h"
 #import "PBGitRefish.h"
 
 @class GTRepository;
+@class GTConfiguration;
 
 extern NSString* PBGitRepositoryErrorDomain;
 typedef enum branchFilterTypes {
@@ -56,7 +56,7 @@ static NSString * PBStringFromBranchFilterType(PBGitXBranchFilterType type) {
 
 @property (readonly, strong) PBGitWindowController *windowController;
 @property (readonly, getter = getIndexURL) NSURL* indexURL;
-@property (readonly, strong) PBGitConfig *config;
+@property (readonly, nonatomic) GTConfiguration* configuration;
 
 @property (nonatomic, strong) PBGitHistoryList *revisionList;
 @property (nonatomic, strong) NSMutableArray* branches;

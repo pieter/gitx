@@ -14,6 +14,7 @@
 #import "PBNiceSplitView.h"
 #import "PBGitRepositoryWatcher.h"
 
+#import <ObjectiveGit/GTConfiguration.h>
 
 #define kCommitSplitViewPositionDefault @"Commit SplitView Position"
 
@@ -101,11 +102,13 @@
 
 - (IBAction)signOff:(id)sender
 {
-	if (![repository.config valueForKeyPath:@"user.name"] || ![repository.config valueForKeyPath:@"user.email"])
+	NSString* userName = [repository.configuration stringForKey:@"user.name"];
+	NSString* userEmail = [repository.configuration stringForKey:@"user.email"];
+	if (!(userName && userEmail))
 		return [[repository windowController] showMessageSheet:@"User's name not set" infoText:@"Signing off a commit requires setting user.name and user.email in your git config"];
 	NSString *SOBline = [NSString stringWithFormat:@"Signed-off-by: %@ <%@>",
-				[repository.config valueForKeyPath:@"user.name"],
-				[repository.config valueForKeyPath:@"user.email"]];
+				userName,
+				userEmail];
 
 	if([commitMessageView.string rangeOfString:SOBline].location == NSNotFound) {
 		NSArray *selectedRanges = [commitMessageView selectedRanges];

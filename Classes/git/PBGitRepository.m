@@ -25,10 +25,11 @@
 
 #import <ObjectiveGit/GTRepository.h>
 #import <ObjectiveGit/GTIndex.h>
+#import <ObjectiveGit/GTConfiguration.h>
 
 @implementation PBGitRepository
 
-@synthesize revisionList, branches, currentBranch, refs, hasChanged, config;
+@synthesize revisionList, branches, currentBranch, refs, hasChanged, configuration;
 @synthesize currentBranchFilter;
 
 - (BOOL)readFromData:(NSData *)data ofType:(NSString *)typeName error:(NSError **)outError
@@ -124,7 +125,7 @@
 
 - (void) setup
 {
-	config = [[PBGitConfig alloc] initWithRepositoryPath:[[self fileURL] path]];
+	self->configuration = self.gtRepo.configuration;
 	self.branches = [NSMutableArray array];
 	[self reloadRefs];
 	currentBranchFilter = [PBGitDefaults branchFilter];
@@ -542,7 +543,7 @@
 
 	NSString *branchName = [branch branchName];
 	if (branchName) {
-		NSString *remoteName = [[self config] valueForKeyPath:[NSString stringWithFormat:@"branch.%@.remote", branchName]];
+		NSString *remoteName = [self.configuration stringForKey:[NSString stringWithFormat:@"branch.%@.remote", branchName]];
 		if (remoteName && ([remoteName isKindOfClass:[NSString class]] && ![remoteName isEqualToString:@""])) {
 			PBGitRef *remoteRef = [PBGitRef refFromString:[kGitXRemoteRefPrefix stringByAppendingString:remoteName]];
 			// check that the remote is a valid ref and exists

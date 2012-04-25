@@ -17,6 +17,7 @@
 #import "PBGitDefaults.h"
 #import "PBCloneRepositoryPanel.h"
 #import "OpenRecentController.h"
+#import "PBGitBinary.h"
 
 #import <Sparkle/SUUpdater.h>
 

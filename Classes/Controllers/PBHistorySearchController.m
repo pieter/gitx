@@ -11,6 +11,9 @@
 #import "PBGitRepository.h"
 #import "PBGitDefaults.h"
 #import "PBCommitList.h"
+#import "PBEasyPipe.h"
+#import "PBGitBinary.h"
+
 #import <QuartzCore/CoreAnimation.h>
 
 

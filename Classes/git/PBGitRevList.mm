@@ -11,6 +11,8 @@
 #import "PBGitCommit.h"
 #import "PBGitGrapher.h"
 #import "PBGitRevSpecifier.h"
+#import "PBEasyPipe.h"
+#import "PBGitBinary.h"
 
 #include <ext/stdio_filebuf.h>
 #include <iostream>

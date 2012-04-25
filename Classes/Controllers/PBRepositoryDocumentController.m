@@ -9,6 +9,8 @@
 #import "PBRepositoryDocumentController.h"
 #import "PBGitRepository.h"
 #import "PBGitRevList.h"
+#import "PBEasyPipe.h"
+#import "PBGitBinary.h"
 
 @implementation PBRepositoryDocumentController
 // This method is overridden to configure the open panel to only allow
