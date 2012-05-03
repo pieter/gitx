@@ -59,17 +59,6 @@ Most third-party code is referenced with Git submodules, so [read up](http://boo
 
 GitX is licensed under the GPL version 2. For more information, see the attached COPYING file.
 
-# Downloading
-
-GitX is currently hosted at GitHub. It's project page can be found at
-http://github.com/pieter/gitx. Recent binary releases can be found at
-http://github.com/pieter/gitx/wikis.
-
-If you wish to follow GitX development, you can download the source code
-through git:
-
-  git clone git://github.com/rowanj/gitx
-
 # Usage
 
 GitX itself is fairly simple. Most of its power is in the 'gitx' binary, which
@@ -85,9 +74,7 @@ v0.2.1..', you will get a list of all commits since version 0.2.1.
 Any help on GitX is welcome. GitX is programmed in Objective-C, but even if
 you are not a programmer you can do useful things. A short selection:
 
-  * Create a nice icon;
-  * Help with the Javascript/HTML views, such as the diff view;
-  * File bug reports and feature requests.
+  * Give feedback
+  * File [bug reports](https://github.com/rowanj/gitx/issues?labels=Bug) and [feature requests](https://github.com/rowanj/gitx/issues?labels=Feature).
 
-A TODO list can be found on the wiki: http://github.com/pieter/gitx/wikis/todo
-
+Currently known issues are i
