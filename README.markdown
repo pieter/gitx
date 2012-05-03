@@ -9,12 +9,11 @@ This means that it has a native interface and tries to integrate with the
 operating system as good as possible. Examples of this are drag and drop
 support and QuickLook support.
 
-# What is GitX (phere)?
+# What is GitX (R)?
 
 This fork (variant) of GitX focuses on programmer-oriented features for those
 working with the latest tools for developing software for current Apple platforms.
-As such, it only supports 64-bit Intel macs, and currently deploying versions
-of OS X and Xcode.
+As such, it only supports 64-bit Intel macs, and currently deploying versions of OS X and Xcode.
 
 Drawing several important early improvements from mainline "official" GitX 
 from GitX (L) and others, we are prioritizing moving away from deprecated
@@ -22,10 +21,16 @@ or unreliable technologies like a dependency on command-line `git` usage
 to drive GitX features; and staying up-to-date with Apple and third-party
 frameworks and libraries that are used.
 
+# Getting GitX (R)
+
+The latest binaries are available on the [GitHub project downloads page](http://github.com/rowanj/gitx/downloads).
+
+GitX (R) uses the [Sparkle](http://sparkle.andymatuschak.org/) framework for in-app updates; so once you have version 0.11 or later, you can check for or update to new builds from the GitX menu at any time, or opt-in for automatic updates.
+
 # Features
 
 The project is well underway, and based on the solid foundations of GitX and
-GitX (L), used day-to-day by our developers.  We consider GitX (phere) to be
+GitX (L), used day-to-day by our developers.  We consider GitX (R) to be
 close to feature-complete, with very few workflows dependant on manual
 command-line `git` usage.
 
@@ -40,13 +45,15 @@ command-line `git` usage.
   
 # Development
 
-Developing for GitX (phere) has a few requirements above and beyond those
+Developing for GitX (R) has a few requirements above and beyond those
 for mainline GitX.
 
-  * Very recent Xcode install, 4.2 release or 4.3 beta
+Most third-party code is referenced with Git submodules, so [read up](http://book.git-scm.com/5_submodules.html) on those if you're not familiar.
+
+  * Very recent Xcode install, 4.3 release strongly recommended.
   * Most development is done on OS X Lion, Snow Leopard may or may not work
   * `CMake` with a working command-line compiling environment for building `libgit2`
-  * `node.js` for building `SyntaxHighlighter`
+  * `node.js` for building `SyntaxHighlighter` (not necessary unless you're updating SyntaxHighlighter itself)
 
 # License
 
@@ -62,15 +69,6 @@ If you wish to follow GitX development, you can download the source code
 through git:
 
   git clone git://github.com/rowanj/gitx
-
-# Installation
-
-The easiest way to get GitX running is to download the binary release from 
-the [GitHub page](https://github.com/rowanj/gitx).
-
-GitX (phere) uses `Sparkle.framework` for built-in update support, so once
-you've installed the 0.11 release or later you should be able to update from
-the GitX menu.
 
 # Usage
 
