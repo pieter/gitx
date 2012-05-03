@@ -321,29 +321,27 @@ NSURL *workingDirectoryURL(NSMutableArray *arguments)
 
     // otherwise, determine current working directory
     NSString *path = [[[NSProcessInfo processInfo] environment] objectForKey:@"PWD"];
-    NSURL *url = [NSURL fileURLWithPath:path isDirectory:YES];
 
-    // try to find git repository that contains the current working directory
-    NSURL *rootURL = [NSURL fileURLWithPath:@"/"];
-    while (1) {
-        // return if there exists a .git subdirectory
-        NSString *gitDir = [[url URLByAppendingPathComponent:@".git" isDirectory:YES] path];
+	NSMutableData* repoPathBuffer = [NSMutableData dataWithLength:GIT_PATH_MAX];
+
+	int result = git_repository_discover(repoPathBuffer.mutableBytes,
+										 repoPathBuffer.length,
+										 [path UTF8String],
+										 GIT_REPOSITORY_OPEN_CROSS_FS,
+										 nil);
+
+	if (result == GIT_SUCCESS)
+	{
+		NSString* repoPath = [NSString stringWithUTF8String:repoPathBuffer.bytes];
 		BOOL isDirectory;
-		if ([[NSFileManager defaultManager] fileExistsAtPath:gitDir isDirectory:&isDirectory] && isDirectory) {
-            return url;
-        }
-
-        // otherwise, if current path ends with .git, guess that we found a bare repository
-        if ([[url lastPathComponent] hasSuffix:@".git"]) {
-            return url;
-        }
-
-        if ([url isEqual:rootURL]) {
-            printf("Cannot determine git repository containing path: '%s'\n", [path UTF8String]);
-            exit(3);
-        }
-        url = [url URLByDeletingLastPathComponent];
-    }
+		if ([[NSFileManager defaultManager] fileExistsAtPath:repoPath
+												 isDirectory:&isDirectory] && isDirectory)
+		{
+			NSURL* result = [NSURL fileURLWithPath:repoPath isDirectory:isDirectory];
+			return result;
+		}
+	}
+	return nil;
 }
 
 NSMutableArray *argumentsArray()
