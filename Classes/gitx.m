@@ -375,6 +375,11 @@ int main(int argc, const char** argv)
 		// From this point, we require a working directory and the arguments
 		NSMutableArray *arguments = argumentsArray();
 		NSURL *wdURL = workingDirectoryURL(arguments);
+		if (!wdURL)
+		{
+			printf("Could not find a git working directory.\n");
+			exit(0);
+		}
 		
 		if ([arguments count]) {
 			NSString *firstArgument = [arguments objectAtIndex:0];
