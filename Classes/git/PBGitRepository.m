@@ -220,6 +220,11 @@
 
 - (void) addRef:(GTReference*)gtRef
 {
+	if (gtRef == nil)
+	{
+		NSLog(@"Sneaky attempt to add nil GTReference");
+		return;
+	}
 	if (!([gtRef.type compare:@"commit"] == NSOrderedSame||
 		 [gtRef.type compare:@"tag"] == NSOrderedSame))
 	{
@@ -258,6 +263,11 @@
 											  inRepository:self.gtRepo
 													 error:&error];
 
+		if (gtRef == nil)
+		{
+			NSLog(@"Reference \"%@\" could not be found in the repository", referenceName);
+			continue;
+		}
 		[self addBranch:revSpec];
 		[self addRef:gtRef];
 		[oldBranches removeObject:revSpec];
