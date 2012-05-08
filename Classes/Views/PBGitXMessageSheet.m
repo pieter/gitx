@@ -44,7 +44,7 @@
 + (void)beginMessageSheetForRepo:(PBGitRepository *)repo
 					   withError:(NSError *)error
 {
-	PBGitXMessageSheet *sheet = [[self alloc] initWithWindowNibName:@"PBGitXMessageSheet"];
+	PBGitXMessageSheet *sheet = [[self alloc] initWithWindowNibName:@"PBGitXMessageSheet" forRepo:repo];
 	[sheet beginMessageSheetWithMessageText:[error localizedDescription]
 								   infoText:[error localizedRecoverySuggestion]];
 }
