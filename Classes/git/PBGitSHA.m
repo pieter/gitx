@@ -34,7 +34,7 @@
 {
 	git_oid oid;
 	int err = git_oid_fromstr(&oid, [shaString UTF8String]);
-	if (err == GIT_ENOTOID)
+	if (err != GIT_SUCCESS)
 		return nil;
 
 	return [self shaWithOID:oid];
@@ -45,7 +45,7 @@
 {
 	git_oid oid;
 	int err = git_oid_fromstr(&oid, shaCString);
-	if (err == GIT_ENOTOID)
+	if (err != GIT_SUCCESS)
 		return nil;
 
 	return [self shaWithOID:oid];
@@ -86,7 +86,7 @@
 		const size_t buffer_size = GIT_OID_HEXSZ + 1;
 		char hex[buffer_size] = {0};
 
-		const char* result = git_oid_to_string(hex, buffer_size, &oid);
+		const char* result = git_oid_tostr(hex, buffer_size, &oid);
 		string = [NSString stringWithUTF8String:result];
 	}
 
