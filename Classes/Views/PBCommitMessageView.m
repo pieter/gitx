@@ -11,6 +11,31 @@
 
 @implementation PBCommitMessageView
 
+- (void) awakeFromNib
+{
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+
+    [defaults addObserver:self
+               forKeyPath:@"PBCommitMessageViewHasVerticalLine"
+                  options:NSKeyValueObservingOptionNew
+                  context:NULL];
+
+    [defaults addObserver:self
+               forKeyPath:@"PBCommitMessageViewVerticalLineLength"
+                  options:NSKeyValueObservingOptionNew
+                  context:NULL];
+
+    [defaults addObserver:self
+               forKeyPath:@"PBCommitMessageViewVerticalBodyLineLength"
+                  options:NSKeyValueObservingOptionNew
+                  context:NULL];
+}
+
+-(void) observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
+{
+    [self setNeedsDisplay:YES];
+}
+
 - (void)drawRect:(NSRect)aRect
 {
 	[super drawRect:aRect];

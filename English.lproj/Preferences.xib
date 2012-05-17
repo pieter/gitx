@@ -1133,10 +1133,14 @@
 							<string key="NSLabel">value: values.PBCommitMessageViewVerticalLineLength</string>
 							<string key="NSBinding">value</string>
 							<string key="NSKeyPath">values.PBCommitMessageViewVerticalLineLength</string>
+							<object class="NSDictionary" key="NSOptions">
+								<string key="NS.key.0">NSContinuouslyUpdatesValue</string>
+								<boolean value="YES" key="NS.object.0"/>
+							</object>
 							<int key="NSNibBindingConnectorVersion">2</int>
 						</object>
 					</object>
-					<int key="connectionID">135</int>
+					<int key="connectionID">151</int>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBBindingConnection" key="connection">
@@ -1165,10 +1169,14 @@
 							<string key="NSLabel">value: values.PBCommitMessageViewVerticalBodyLineLength</string>
 							<string key="NSBinding">value</string>
 							<string key="NSKeyPath">values.PBCommitMessageViewVerticalBodyLineLength</string>
+							<object class="NSDictionary" key="NSOptions">
+								<string key="NS.key.0">NSContinuouslyUpdatesValue</string>
+								<boolean value="YES" key="NS.object.0"/>
+							</object>
 							<int key="NSNibBindingConnectorVersion">2</int>
 						</object>
 					</object>
-					<int key="connectionID">150</int>
+					<int key="connectionID">152</int>
 				</object>
 			</array>
 			<object class="IBMutableOrderedSet" key="objectRecords">
@@ -1209,13 +1217,13 @@
 							<reference ref="170094602"/>
 							<reference ref="258144035"/>
 							<reference ref="1023682480"/>
-							<reference ref="496035612"/>
 							<reference ref="1032928366"/>
 							<reference ref="617839596"/>
 							<reference ref="525163949"/>
 							<reference ref="441589300"/>
 							<reference ref="83909567"/>
 							<reference ref="63761450"/>
+							<reference ref="496035612"/>
 						</array>
 						<reference key="parent" ref="0"/>
 						<string key="objectName">General</string>
@@ -1742,7 +1750,7 @@
 			<nil key="activeLocalization"/>
 			<dictionary class="NSMutableDictionary" key="localizations"/>
 			<nil key="sourceID"/>
-			<int key="maxID">150</int>
+			<int key="maxID">152</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<array class="NSMutableArray" key="referencedPartialClassDescriptions">
