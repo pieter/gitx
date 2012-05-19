@@ -228,9 +228,10 @@
 	if (!([gtRef.type compare:@"commit"] == NSOrderedSame||
 		 [gtRef.type compare:@"tag"] == NSOrderedSame))
 	{
-//		NSLog(@"Can't addRef for unsupported type: %@", gtRef.type);
+//		NSLog(@"Can't addRef for %@ ref of unsupported type \"%@\"", gtRef.name, gtRef.type);
 		return;
 	}
+	
 	git_oid refOid = *(gtRef.oid);
 	git_object* gitTarget = NULL;
 	git_tag* gitTag = NULL;
@@ -246,6 +247,7 @@
 	}
 	
 	PBGitRef* ref = [[PBGitRef alloc] initWithString:gtRef.name];
+	NSLog(@"addRef %@ %@ at %@", ref.type, gtRef.name, [sha string]);
 	NSMutableArray* curRefs;
 	if ( (curRefs = [refs objectForKey:sha]) != nil )
 		[curRefs addObject:ref];
@@ -267,19 +269,23 @@
 	NSMutableArray *oldBranches = [branches mutableCopy];
 	for (NSString* referenceName in allRefs)
 	{
-		PBGitRef* gitRef = [PBGitRef refFromString:referenceName];
-		PBGitRevSpecifier* revSpec = 
-		[[PBGitRevSpecifier alloc] initWithRef:gitRef];
 		GTReference* gtRef =
 		[[GTReference alloc] initByLookingUpReferenceNamed:referenceName
 											  inRepository:self.gtRepo
 													 error:&error];
-
+		
+		if (error)
+		{
+			[[NSApplication sharedApplication] presentError:error];
+			error = nil;
+		}
 		if (gtRef == nil)
 		{
 			NSLog(@"Reference \"%@\" could not be found in the repository", referenceName);
 			continue;
 		}
+		PBGitRef* gitRef = [PBGitRef refFromString:referenceName];
+		PBGitRevSpecifier* revSpec = [[PBGitRevSpecifier alloc] initWithRef:gitRef];
 		[self addBranch:revSpec];
 		[self addRef:gtRef];
 		[oldBranches removeObject:revSpec];
