@@ -36,8 +36,11 @@
 
     // Point window proxy icon at project directory, not internal .git dir
     NSString *workingDirectory = [self.repository workingDirectory];
-    [[self window] setRepresentedURL:[NSURL fileURLWithPath:workingDirectory
-                                                isDirectory:YES]];
+	if (workingDirectory)
+	{
+		[[self window] setRepresentedURL:[NSURL fileURLWithPath:workingDirectory
+													isDirectory:YES]];
+	}
 }
 
 - (void)windowWillClose:(NSNotification *)notification
