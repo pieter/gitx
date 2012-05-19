@@ -56,16 +56,19 @@ NSString *PBGitIndexOperationFailed = @"PBGitIndexOperationFailed";
 
 @implementation PBGitIndex
 
-- (id)initWithRepository:(PBGitRepository *)theRepository workingDirectory:(NSURL *)theWorkingDirectory
+- (id)initWithRepository:(PBGitRepository *)theRepository
 {
 	if (!(self = [super init]))
 		return nil;
 
-	NSAssert(theWorkingDirectory, @"PBGitIndex requires a working directory");
 	NSAssert(theRepository, @"PBGitIndex requires a repository");
 
 	repository = theRepository;
-	workingDirectory = theWorkingDirectory;
+	NSString* workingPath = theRepository.workingDirectory;
+	if (workingPath)
+	{
+		workingDirectory = [NSURL fileURLWithPath:workingPath];
+	}
 	files = [NSMutableArray array];
 
 	return self;

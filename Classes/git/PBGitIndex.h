@@ -57,7 +57,7 @@ extern NSString *PBGitIndexOperationFailed;
 // or for
 @property BOOL amend;
 
-- (id)initWithRepository:(PBGitRepository *)repository workingDirectory:(NSURL *)workingDirectory;
+- (id)initWithRepository:(PBGitRepository *)repository;
 
 // A list of PBChangedFile's with differences between the work tree and the index
 // This method is KVO-aware, so changes when any of the index-modifying methods are called

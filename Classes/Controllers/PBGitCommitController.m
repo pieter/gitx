@@ -40,7 +40,7 @@
 	if (!(self = [super initWithRepository:theRepository superController:controller]))
 		return nil;
 
-	index = [[PBGitIndex alloc] initWithRepository:theRepository workingDirectory:[NSURL fileURLWithPath:[theRepository workingDirectory]]];
+	index = [[PBGitIndex alloc] initWithRepository:theRepository];
 	[index refresh];
 
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refreshFinished:) name:PBGitIndexFinishedIndexRefresh object:index];
