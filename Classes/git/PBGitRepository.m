@@ -232,7 +232,19 @@
 		return;
 	}
 	git_oid refOid = *(gtRef.oid);
+	git_object* gitTarget = NULL;
+	git_tag* gitTag = NULL;
 	PBGitSHA *sha = [PBGitSHA shaWithOID:refOid];
+	if (git_tag_lookup(&gitTag, self.gtRepo.git_repository, gtRef.oid) == GIT_SUCCESS)
+	{
+		if (git_tag_peel(&gitTarget, gitTag) == GIT_SUCCESS)
+		{
+			GTObject* peeledObject = [GTObject objectWithObj:gitTarget inRepository:self.gtRepo];
+			NSLog(@"peeled sha:%@", peeledObject.sha);
+			sha = [PBGitSHA shaWithString:peeledObject.sha];
+		}
+	}
+	
 	PBGitRef* ref = [[PBGitRef alloc] initWithString:gtRef.name];
 	NSMutableArray* curRefs;
 	if ( (curRefs = [refs objectForKey:sha]) != nil )
