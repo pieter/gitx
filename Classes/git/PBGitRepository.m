@@ -241,13 +241,13 @@
 		if (git_tag_peel(&gitTarget, gitTag) == GIT_OK)
 		{
 			GTObject* peeledObject = [GTObject objectWithObj:gitTarget inRepository:self.gtRepo];
-			NSLog(@"peeled sha:%@", peeledObject.sha);
+//			NSLog(@"peeled sha:%@", peeledObject.sha);
 			sha = [PBGitSHA shaWithString:peeledObject.sha];
 		}
 	}
 	
 	PBGitRef* ref = [[PBGitRef alloc] initWithString:gtRef.name];
-	NSLog(@"addRef %@ %@ at %@", ref.type, gtRef.name, [sha string]);
+//	NSLog(@"addRef %@ %@ at %@", ref.type, gtRef.name, [sha string]);
 	NSMutableArray* curRefs;
 	if ( (curRefs = [refs objectForKey:sha]) != nil )
 		[curRefs addObject:ref];
