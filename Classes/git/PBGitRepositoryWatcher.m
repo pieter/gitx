@@ -21,9 +21,12 @@ NSString *kPBGitRepositoryEventPathsUserInfoKey = @"kPBGitRepositoryEventPathsUs
 - (void) _handleEventCallback:(NSArray *)eventPaths;
 @end
 
-void PBGitRepositoryWatcherCallback(ConstFSEventStreamRef streamRef, void *clientCallBackInfo, 
-										size_t numEvents, void *eventPaths, 
-										const FSEventStreamEventFlags eventFlags[], const FSEventStreamEventId eventIds[]){
+void PBGitRepositoryWatcherCallback(ConstFSEventStreamRef streamRef,
+									void *clientCallBackInfo,
+									size_t numEvents,
+									void *eventPaths,
+									const FSEventStreamEventFlags eventFlags[],
+									const FSEventStreamEventId eventIds[]){
     PBGitRepositoryWatcher *watcher = (__bridge PBGitRepositoryWatcher*)clientCallBackInfo;
 	NSMutableArray *changePaths = [[NSMutableArray alloc] init];
 	for (int i = 0; i < numEvents; ++i) {
@@ -57,7 +60,9 @@ void PBGitRepositoryWatcherCallback(ConstFSEventStreamRef streamRef, void *clien
 	eventStream = FSEventStreamCreate(kCFAllocatorDefault, PBGitRepositoryWatcherCallback, &context, 
 									  (__bridge CFArrayRef)paths,
 									  kFSEventStreamEventIdSinceNow, 1.0,
-									  kFSEventStreamCreateFlagUseCFTypes);
+									  kFSEventStreamCreateFlagUseCFTypes |
+									  kFSEventStreamCreateFlagIgnoreSelf |
+									  kFSEventStreamCreateFlagFileEvents);
 	if ([PBGitDefaults useRepositoryWatcher])
 		[self start];
 	return self;
@@ -140,6 +145,7 @@ void PBGitRepositoryWatcherCallback(ConstFSEventStreamRef streamRef, void *clien
 			if ([self _gitDirectoryChanged] || eventPath.flag != kFSEventStreamEventFlagNone) {
 				event |= PBGitRepositoryWatcherEventTypeGitDirectory;
                 [paths addObject:eventPath.path];
+				NSLog(@"Watcher: git dir change in %@", eventPath.path);
 			}
 		}
 
@@ -147,6 +153,7 @@ void PBGitRepositoryWatcherCallback(ConstFSEventStreamRef streamRef, void *clien
 		else if ([eventPath.path rangeOfString:repository.fileURL.path].location != NSNotFound) {
 			event |= PBGitRepositoryWatcherEventTypeGitDirectory;
             [paths addObject:eventPath.path];
+			NSLog(@"Watcher: git dir subdir change in %@", eventPath.path);
 		}
 
 		// working dir
@@ -156,6 +163,7 @@ void PBGitRepositoryWatcherCallback(ConstFSEventStreamRef streamRef, void *clien
 
 			event |= PBGitRepositoryWatcherEventTypeWorkingDirectory;
             [paths addObject:eventPath.path];
+			NSLog(@"Watcher: working dir change in %@", eventPath.path);
 		}
 
 		// subdirs of working dir
@@ -174,6 +182,7 @@ void PBGitRepositoryWatcherCallback(ConstFSEventStreamRef streamRef, void *clien
 			{
 				event |= PBGitRepositoryWatcherEventTypeWorkingDirectory;
 				[paths addObject:eventPath.path];
+				NSLog(@"Watcher: working dir subdir change in %@", eventPath.path);
 			}
 		}
 	}
