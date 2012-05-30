@@ -34,7 +34,7 @@
 {
 	git_oid oid;
 	int err = git_oid_fromstr(&oid, [shaString UTF8String]);
-	if (err != GIT_SUCCESS)
+	if (err != GIT_OK)
 		return nil;
 
 	return [self shaWithOID:oid];
@@ -45,7 +45,7 @@
 {
 	git_oid oid;
 	int err = git_oid_fromstr(&oid, shaCString);
-	if (err != GIT_SUCCESS)
+	if (err != GIT_OK)
 		return nil;
 
 	return [self shaWithOID:oid];

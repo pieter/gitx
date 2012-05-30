@@ -330,7 +330,7 @@ NSURL *workingDirectoryURL(NSMutableArray *arguments)
 										 GIT_REPOSITORY_OPEN_CROSS_FS,
 										 nil);
 
-	if (result == GIT_SUCCESS)
+	if (result == GIT_OK)
 	{
 		NSString* repoPath = [NSString stringWithUTF8String:repoPathBuffer.bytes];
 		BOOL isDirectory;

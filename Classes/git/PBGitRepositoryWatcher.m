@@ -169,7 +169,7 @@ void PBGitRepositoryWatcherCallback(ConstFSEventStreamRef streamRef, void *clien
 														 [ourRepo_ns UTF8String]);
 
 			((char*)eventPathRepoBuffer.bytes)[eventPathRepoBuffer.length - 1] = '\0';
-			if (GIT_SUCCESS == discoverStatus &&
+			if (GIT_OK == discoverStatus &&
 				[[NSString stringWithUTF8String:eventPathRepoBuffer.bytes] compare:ourRepo_ns options:NSLiteralSearch] == NSOrderedSame)
 			{
 				event |= PBGitRepositoryWatcherEventTypeWorkingDirectory;
