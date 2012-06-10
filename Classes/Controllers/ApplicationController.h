@@ -34,6 +34,7 @@
 
 - (IBAction)saveAction:sender;
 - (IBAction)showHelp:(id)sender;
+- (IBAction)showChangeLog:(id)sender;
 - (IBAction)reportAProblem:(id)sender;
 
 - (IBAction)showCloneRepository:(id)sender;
