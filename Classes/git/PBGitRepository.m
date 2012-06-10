@@ -274,14 +274,13 @@
 											  inRepository:self.gtRepo
 													 error:&error];
 		
-		if (error)
-		{
-			[[NSApplication sharedApplication] presentError:error];
-			error = nil;
-		}
 		if (gtRef == nil)
 		{
 			NSLog(@"Reference \"%@\" could not be found in the repository", referenceName);
+			if (error)
+			{
+				NSLog(@"Error loading reference was: %@", error);
+			}
 			continue;
 		}
 		PBGitRef* gitRef = [PBGitRef refFromString:referenceName];
