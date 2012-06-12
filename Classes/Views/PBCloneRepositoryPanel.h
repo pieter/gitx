@@ -10,11 +10,6 @@
 
 
 @interface PBCloneRepositoryPanel : NSWindowController {
-	NSTextField *repositoryURL;
-	NSTextField *destinationPath;
-	NSTextField *errorMessage;
-	NSView      *repositoryAccessoryView;
-
 	NSOpenPanel *browseRepositoryPanel;
 	NSOpenPanel *browseDestinationPanel;
 
@@ -34,10 +29,10 @@
 - (IBAction) showHideHiddenFiles:(id)sender;
 - (IBAction) browseDestination:(id)sender;
 
-@property  IBOutlet NSTextField *repositoryURL;
-@property  IBOutlet NSTextField *destinationPath;
-@property  IBOutlet NSTextField *errorMessage;
-@property  IBOutlet NSView      *repositoryAccessoryView;
+@property (nonatomic, dct_weak) IBOutlet NSTextField *repositoryURL;
+@property (nonatomic, dct_weak) IBOutlet NSTextField *destinationPath;
+@property (nonatomic, dct_weak) IBOutlet NSTextField *errorMessage;
+@property (nonatomic, dct_weak) IBOutlet NSView      *repositoryAccessoryView;
 
 @property (assign) BOOL isBare;
 
