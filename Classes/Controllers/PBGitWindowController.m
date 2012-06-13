@@ -234,8 +234,6 @@
 		   didEndSelector:nil
 			  contextInfo:NULL];
 		self.currentModalSheet = sheet;
-	} else {
-		assert(self.currentModalSheet == nil);
 	}
 }
 
