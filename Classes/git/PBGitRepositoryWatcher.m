@@ -142,6 +142,13 @@ void PBGitRepositoryWatcherCallback(ConstFSEventStreamRef streamRef,
 	for (PBGitRepositoryWatcherEventPath *eventPath in eventPaths) {
 		// .git dir
 		if ([[eventPath.path stringByStandardizingPath] isEqual:[repository.fileURL.path stringByStandardizingPath]]) {
+			// ignore changes to lock files
+			if ([eventPath.path hasSuffix:@".lock"])
+			{
+				NSLog(@"Watcher: ignoring change to lock file: %@", eventPath.path);
+				continue;
+			}
+			
 			if ([self _gitDirectoryChanged] || eventPath.flag != kFSEventStreamEventFlagNone) {
 				event |= PBGitRepositoryWatcherEventTypeGitDirectory;
                 [paths addObject:eventPath.path];
@@ -151,6 +158,12 @@ void PBGitRepositoryWatcherCallback(ConstFSEventStreamRef streamRef,
 
 		// subdirs of .git dir
 		else if ([eventPath.path rangeOfString:repository.fileURL.path].location != NSNotFound) {
+			// ignore changes to lock files
+			if ([eventPath.path hasSuffix:@".lock"])
+			{
+				NSLog(@"Watcher: ignoring change to lock file: %@", eventPath.path);
+				continue;
+			}
 			event |= PBGitRepositoryWatcherEventTypeGitDirectory;
             [paths addObject:eventPath.path];
 			NSLog(@"Watcher: git dir subdir change in %@", eventPath.path);
