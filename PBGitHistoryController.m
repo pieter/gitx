@@ -17,6 +17,15 @@
 @implementation PBGitHistoryController
 @synthesize selectedTab, webCommit, rawCommit, gitTree, commitController;
 
+- (id)initWithRepository:(PBGitRepository *)theRepository superController:(PBGitWindowController *)controller
+{
+    if((self = [super initWithRepository:theRepository superController:controller]))
+    {
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refresh:) name:NSApplicationDidBecomeActiveNotification object:nil];
+    }
+    return self;
+}
+
 - (void)awakeFromNib
 {
 	self.selectedTab = [[NSUserDefaults standardUserDefaults] integerForKey:@"Repository Window Selected Tab Index"];;
