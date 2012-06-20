@@ -43,6 +43,7 @@
 	[[commitList headerView] setMenu:[self tableColumnMenu]];
 	[historySplitView setTopMin:33.0 andBottomMin:100.0];
 	[historySplitView uncollapse];
+	[historySplitView restoreDefault:@"splitpos"];
 	[super awakeFromNib];
 }
 
@@ -205,7 +206,7 @@
 	[commitController removeObserver:self forKeyPath:@"selection"];
 	[treeController removeObserver:self forKeyPath:@"selection"];
 	[repository removeObserver:self forKeyPath:@"currentBranch"];
-
+	[historySplitView saveDefault:@"splitpos"];
 	[super removeView];
 }
 
