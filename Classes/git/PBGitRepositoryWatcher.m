@@ -168,37 +168,32 @@ void PBGitRepositoryWatcherCallback(ConstFSEventStreamRef streamRef,
             [paths addObject:eventPath.path];
 			NSLog(@"Watcher: git dir subdir change in %@", eventPath.path);
 		}
-
-		// working dir
-		else if([[eventPath.path stringByStandardizingPath] isEqual:[[repository workingDirectory] stringByStandardizingPath]]){
-			if (eventPath.flag != kFSEventStreamEventFlagNone)
-				event |= PBGitRepositoryWatcherEventTypeGitDirectory;
-
-			event |= PBGitRepositoryWatcherEventTypeWorkingDirectory;
-            [paths addObject:eventPath.path];
-			NSLog(@"Watcher: working dir change in %@", eventPath.path);
+	}
+	
+	// working dir
+	NSMutableDictionary* newStatus = [NSMutableDictionary dictionary];
+	[self.repository.gtRepo enumerateFileStatusUsingBlock:^(NSURL *fileURL, GTRepositoryFileStatus status, BOOL *stop) {
+		if (status != GIT_STATUS_IGNORED)
+		{
+			NSNumber* nsStatus = [NSNumber numberWithInt:status];
+			NSString* nsKey = [fileURL path];
+			[newStatus setValue:nsStatus forKey:nsKey];
 		}
-
-		// subdirs of working dir
-		else {
-			// check that the repo for the changed path is ours, otherwise
-			// it's most likely a submodule, or a nested clone.  Either way,
-			// we shouldn't be committing to it ourselves.
-			int discoverStatus = git_repository_discover((char*)eventPathRepoBuffer.bytes, eventPathRepoBuffer.length,
-														 [eventPath.path UTF8String],
-														 1 /* cross filesystem boundaries, if necessary*/,
-														 [ourRepo_ns UTF8String]);
-
-			((char*)eventPathRepoBuffer.bytes)[eventPathRepoBuffer.length - 1] = '\0';
-			if (GIT_OK == discoverStatus &&
-				[[NSString stringWithUTF8String:eventPathRepoBuffer.bytes] compare:ourRepo_ns options:NSLiteralSearch] == NSOrderedSame)
-			{
-				event |= PBGitRepositoryWatcherEventTypeWorkingDirectory;
-				[paths addObject:eventPath.path];
-				NSLog(@"Watcher: working dir subdir change in %@", eventPath.path);
-			}
+	}];
+	if (lastStatus)
+	{
+		if ([lastStatus isEqualToDictionary:newStatus])
+		{
+			NSLog(@"Watcher: no changes to working copy");
+		}
+		else
+		{
+			NSLog(@"Watcher: changes to working copy");
+			event |= PBGitRepositoryWatcherEventTypeWorkingDirectory;
 		}
 	}
+	lastStatus = newStatus;
+			
 	
 	if(event != 0x0){
 //		NSLog(@"PBGitRepositoryWatcher firing notification for repository %@ with flag %lu", repository, event);
