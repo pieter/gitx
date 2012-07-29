@@ -43,12 +43,14 @@
 		imageFrame.origin.x += 3;
 		imageFrame.size = imageSize;
 
-		if ([controlView isFlipped])
-			imageFrame.origin.y += floor((cellFrame.size.height + imageFrame.size.height) / 2);
-		else
-			imageFrame.origin.y += ceil((cellFrame.size.height - imageFrame.size.height) / 2);
+		imageFrame.origin.y += ceil((cellFrame.size.height - imageFrame.size.height) / 2);
 
-		[image compositeToPoint:imageFrame.origin operation:NSCompositeSourceOver];
+		[image drawInRect:imageFrame
+				 fromRect:NSZeroRect
+				operation:NSCompositeSourceOver
+				 fraction:1.0f
+		   respectFlipped:YES
+					hints:nil];
 	}
 	[super drawWithFrame:cellFrame inView:controlView];
 }

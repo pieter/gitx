@@ -41,12 +41,15 @@
 		NSDivideRect(cellFrame, &imageFrame, &cellFrame, imageSize.width + 3, NSMaxXEdge);
 		imageFrame.size = imageSize;
 
-		if ([outlineView isFlipped])
-			imageFrame.origin.y += floor((cellFrame.size.height + imageFrame.size.height) / 2);
-		else
-			imageFrame.origin.y += ceil((cellFrame.size.height - imageFrame.size.height) / 2);
+		// center the decal verctically
+		imageFrame.origin.y += ceil((cellFrame.size.height - imageFrame.size.height) / 2);
 
-		[checkedOutImage compositeToPoint:imageFrame.origin operation:NSCompositeSourceOver];
+		[checkedOutImage drawInRect:imageFrame
+						   fromRect:NSZeroRect
+						  operation:NSCompositeSourceOver
+						   fraction:1.0f
+					 respectFlipped:YES
+							  hints:nil];
 	}
 
 	[super drawWithFrame:cellFrame inView:outlineView];
