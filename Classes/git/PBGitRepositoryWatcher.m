@@ -123,7 +123,7 @@ void PBGitRepositoryWatcherCallback(ConstFSEventStreamRef streamRef,
 	
 	if ([self _indexChanged])
 	{
-		NSLog(@"Watcher found an index change");
+//		NSLog(@"Watcher found an index change");
 		event |= PBGitRepositoryWatcherEventTypeIndex;
 	}
 	
@@ -145,14 +145,14 @@ void PBGitRepositoryWatcherCallback(ConstFSEventStreamRef streamRef,
 			// ignore changes to lock files
 			if ([eventPath.path hasSuffix:@".lock"])
 			{
-				NSLog(@"Watcher: ignoring change to lock file: %@", eventPath.path);
+//				NSLog(@"Watcher: ignoring change to lock file: %@", eventPath.path);
 				continue;
 			}
 			
 			if ([self _gitDirectoryChanged] || eventPath.flag != kFSEventStreamEventFlagNone) {
 				event |= PBGitRepositoryWatcherEventTypeGitDirectory;
                 [paths addObject:eventPath.path];
-				NSLog(@"Watcher: git dir change in %@", eventPath.path);
+//				NSLog(@"Watcher: git dir change in %@", eventPath.path);
 			}
 		}
 
@@ -161,12 +161,12 @@ void PBGitRepositoryWatcherCallback(ConstFSEventStreamRef streamRef,
 			// ignore changes to lock files
 			if ([eventPath.path hasSuffix:@".lock"])
 			{
-				NSLog(@"Watcher: ignoring change to lock file: %@", eventPath.path);
+//				NSLog(@"Watcher: ignoring change to lock file: %@", eventPath.path);
 				continue;
 			}
 			event |= PBGitRepositoryWatcherEventTypeGitDirectory;
             [paths addObject:eventPath.path];
-			NSLog(@"Watcher: git dir subdir change in %@", eventPath.path);
+//			NSLog(@"Watcher: git dir subdir change in %@", eventPath.path);
 		}
 	}
 	
@@ -188,7 +188,7 @@ void PBGitRepositoryWatcherCallback(ConstFSEventStreamRef streamRef,
 		}
 		else
 		{
-			NSLog(@"Watcher: changes to working copy");
+//			NSLog(@"Watcher: changes to working copy");
 			event |= PBGitRepositoryWatcherEventTypeWorkingDirectory;
 		}
 	}
