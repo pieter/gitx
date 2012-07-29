@@ -86,7 +86,7 @@
 		return request;
 
 	// TODO: Change this to canInitWithRequest
-	if ([[[request URL] scheme] isEqualToString:@"GitX"]) {
+	if ([[[[request URL] scheme] lowercaseString] isEqualToString:@"gitx"]) {
 		NSMutableURLRequest *newRequest = [request mutableCopy];
 		[newRequest setRepository:self.repository];
 		return newRequest;

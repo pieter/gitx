@@ -13,7 +13,7 @@
 
 + (BOOL) canInitWithRequest:(NSURLRequest *)request
 {
-	return [[[request URL] scheme] isEqualToString:@"GitX"];
+	return [[[[request URL] scheme] lowercaseString] isEqualToString:@"gitx"];
 }
 
 + (NSURLRequest *)canonicalRequestForRequest:(NSURLRequest *)request
@@ -61,6 +61,7 @@
 @end
 
 @implementation NSURLRequest (PBGitXProtocol)
+@dynamic repository;
 
 - (PBGitRepository *) repository
 {
