@@ -69,8 +69,20 @@ static NSString* gitPath = nil;
 	if (path && [self acceptBinary:[NSString stringWithUTF8String:path]])
 		return;
 
-	// No explicit path. Try it with "which"
-	NSString *whichPath = [PBEasyPipe outputForCommand:@"/usr/bin/which" withArgs:[NSArray arrayWithObject:@"git"]];
+	// No explicit path.
+	// First, try xcrun git - it should provide some modicum of
+	// stability to what versions we find; and be quite reliable
+	// on the machines of OS X developers - our target audience.
+	NSString* xcrunPath = [PBEasyPipe outputForCommand:@"/usr/bin/xcrun"
+											  withArgs:[NSArray arrayWithObjects:@"-f", @"git", nil]];
+	if ([self acceptBinary:xcrunPath])
+	{
+		return;
+	}
+	
+	// Try it with "which"
+	NSString* whichPath = [PBEasyPipe outputForCommand:@"/usr/bin/which"
+											  withArgs:[NSArray arrayWithObject:@"git"]];
 	if ([self acceptBinary:whichPath])
 		return;
 
