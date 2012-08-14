@@ -95,6 +95,24 @@
 	return request;
 }
 
+- (void)webView:(WebView *)sender
+decidePolicyForNavigationAction:(NSDictionary *)actionInformation
+        request:(NSURLRequest *)request
+		  frame:(WebFrame *)frame
+decisionListener:(id <WebPolicyDecisionListener>)listener
+{
+	NSString* scheme = [[request URL] scheme];
+	if ([scheme compare:@"http"] == NSOrderedSame ||
+		[scheme compare:@"https"] == NSOrderedSame)
+	{
+		[listener ignore];
+		[[NSWorkspace sharedWorkspace] openURL:[request URL]];
+	}
+	else
+	{
+		[listener use];
+	}
+}
 
 + (BOOL)isSelectorExcludedFromWebScript:(SEL)aSelector
 {

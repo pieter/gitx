@@ -325,7 +325,7 @@ var loadCommitDetails = function(data)
 		$("committerDate").parentNode.style.display = "none";
 	}
 
-	$("message").innerHTML = commit.message.replace(/\n/g,"<br>");
+	$("message").innerHTML = commit.message.replace(/\b(https?:\/\/[^\s<]*)/ig, "<a href=\"$1\">$1</a>").replace(/\n/g,"<br>");
 
 	if (commit.diff.length < 200000)
 		showDiff();
