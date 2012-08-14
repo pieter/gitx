@@ -9,7 +9,7 @@ This means that it has a native interface and tries to integrate with the
 operating system as good as possible. Examples of this are drag and drop
 support and QuickLook support.
 
-# What is GitX (R)?
+# What is GitX-dev?
 
 This fork (variant) of GitX focuses on programmer-oriented features for those
 working with the latest tools for developing software for current Apple platforms.
@@ -21,16 +21,16 @@ or unreliable technologies like a dependency on command-line `git` usage
 to drive GitX features; and staying up-to-date with Apple and third-party
 frameworks and libraries that are used.
 
-# Getting GitX (R)
+# Getting GitX-dev
 
 The latest binaries are available on the [GitHub project downloads page](http://github.com/rowanj/gitx/downloads).
 
-GitX (R) uses the [Sparkle](http://sparkle.andymatuschak.org/) framework for in-app updates; so once you have version 0.11 or later, you can check for or update to new builds from the GitX menu at any time, or opt-in for automatic updates.
+GitX-dev uses the [Sparkle](http://sparkle.andymatuschak.org/) framework for in-app updates; so once you have version 0.11 or later, you can check for or update to new builds from the GitX menu at any time, or opt-in for automatic updates.
 
 # Features
 
 The project is well underway, and based on the solid foundations of GitX and
-GitX (L), used day-to-day by our developers.  We consider GitX (R) to be
+GitX (L), used day-to-day by our developers.  We consider GitX-dev to be
 close to feature-complete, with very few workflows dependant on manual
 command-line `git` usage.
 
@@ -45,7 +45,7 @@ command-line `git` usage.
   
 # Development
 
-Developing for GitX (R) has a few requirements above and beyond those
+Developing for GitX-dev has a few requirements above and beyond those
 for mainline GitX.
 
 Most third-party code is referenced with Git submodules, so [read up](http://book.git-scm.com/5_submodules.html) on those if you're not familiar.
@@ -76,5 +76,3 @@ you are not a programmer you can do useful things. A short selection:
 
   * Give feedback
   * File [bug reports](https://github.com/rowanj/gitx/issues?labels=Bug) and [feature requests](https://github.com/rowanj/gitx/issues?labels=Feature).
-
-Currently known issues are i
