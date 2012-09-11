@@ -70,17 +70,8 @@ static NSString* gitPath = nil;
 		return;
 
 	// No explicit path.
-	// First, try xcrun git - it should provide some modicum of
-	// stability to what versions we find; and be quite reliable
-	// on the machines of OS X developers - our target audience.
-	NSString* xcrunPath = [PBEasyPipe outputForCommand:@"/usr/bin/xcrun"
-											  withArgs:[NSArray arrayWithObjects:@"-f", @"git", nil]];
-	if ([self acceptBinary:xcrunPath])
-	{
-		return;
-	}
 	
-	// Try it with "which"
+	// Try to find git with "which"
 	NSString* whichPath = [PBEasyPipe outputForCommand:@"/usr/bin/which"
 											  withArgs:[NSArray arrayWithObject:@"git"]];
 	if ([self acceptBinary:whichPath])
@@ -90,6 +81,14 @@ static NSString* gitPath = nil;
 	for (NSString* location in [PBGitBinary searchLocations]) {
 		if ([self acceptBinary:location])
 			return;
+	}
+	
+	// Lastly, try `xcrun git`
+	NSString* xcrunPath = [PBEasyPipe outputForCommand:@"/usr/bin/xcrun"
+											  withArgs:[NSArray arrayWithObjects:@"-f", @"git", nil]];
+	if ([self acceptBinary:xcrunPath])
+	{
+		return;
 	}
 
 	NSLog(@"Could not find a git binary higher than version " MIN_GIT_VERSION);
