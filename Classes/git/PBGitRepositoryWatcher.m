@@ -132,11 +132,6 @@ void PBGitRepositoryWatcherCallback(ConstFSEventStreamRef streamRef,
 	if (![ourRepo_ns hasSuffix:@"/"])
 		ourRepo_ns = [NSString stringWithFormat:@"%@/", ourRepo_ns];
 	
-	// We only use the event path buffer for testing equality to our own repo
-	// so it's okay to consider failure due to buffer size as inequality.
-	const int eventPathRepoBufferSize = [ourRepo_ns length] + 2;
-	NSMutableData* eventPathRepoBuffer = [NSMutableData dataWithLength:eventPathRepoBufferSize];
-	
     NSMutableArray *paths = [NSMutableArray array];
     
 	for (PBGitRepositoryWatcherEventPath *eventPath in eventPaths) {
