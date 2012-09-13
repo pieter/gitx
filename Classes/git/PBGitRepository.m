@@ -541,14 +541,16 @@
 
 - (NSString *) workingDirectory
 {
-	if ([self.fileURL.path hasSuffix:@"/.git"])
-		return [self.fileURL.path substringToIndex:[self.fileURL.path length] - 5];
+	const char* workdir = git_repository_workdir(self.gtRepo.git_repository);
+	if (workdir)
+	{
+		NSString* result = [[NSString stringWithUTF8String:workdir] stringByStandardizingPath];
+		return result;
+	}
     else
+	{
         return self.fileURL.path;
-//	else if ([[self outputForCommand:@"rev-parse --is-inside-work-tree"] isEqualToString:@"true"])
-//		return [PBGitBinary path];
-	
-	return nil;
+	}
 }
 
 #pragma mark Remotes
