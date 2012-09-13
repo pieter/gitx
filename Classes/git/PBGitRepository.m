@@ -151,6 +151,11 @@
 		return nil;
 
 	self = [self init];
+	if (!self)
+	{
+		NSLog(@"Failed to initWithURL:%@", path);
+		return nil;
+	}
     
     //TODO: IS THIS CORRECT???
 	[self setFileURL: path];
