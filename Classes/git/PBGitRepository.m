@@ -159,7 +159,6 @@
 		return nil;
 	}
     
-    //TODO: IS THIS CORRECT???
 	[self setFileURL: path];
 
 	[self setup];
