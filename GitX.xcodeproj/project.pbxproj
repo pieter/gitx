@@ -185,13 +185,6 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		4A002EF916021CB100430EBB /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 4A4EF09F142CBAD5001B8CDF /* ObjectiveGitFramework.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 4A7347D614A4AFB900F6B435;
-			remoteInfo = git2;
-		};
 		4A467EEF1546D1F300F8902B /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 4A4EF09F142CBAD5001B8CDF /* ObjectiveGitFramework.xcodeproj */;
@@ -206,26 +199,12 @@
 			remoteGlobalIDString = 8DC2EF5B0486A6940098B216;
 			remoteInfo = ObjectiveGit;
 		};
-		4A4EF0B0142CBAD5001B8CDF /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 4A4EF09F142CBAD5001B8CDF /* ObjectiveGitFramework.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = BDD8AEDF1313311100CB5D40;
-			remoteInfo = Tests;
-		};
 		4A4EF0B2142CBAD5001B8CDF /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 4A4EF09F142CBAD5001B8CDF /* ObjectiveGitFramework.xcodeproj */;
 			proxyType = 2;
 			remoteGlobalIDString = 04DB4645133AB57600D9C624;
 			remoteInfo = "ObjectiveGit-iOS";
-		};
-		4A4EF0B4142CBAD5001B8CDF /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 4A4EF09F142CBAD5001B8CDF /* ObjectiveGitFramework.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = BDD9C3D5133BA556003708E7;
-			remoteInfo = "Tests-iOS";
 		};
 		4A68AD6614A0050F006DE321 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -303,6 +282,13 @@
 			proxyType = 1;
 			remoteGlobalIDString = AAE785771419184700A6955E;
 			remoteInfo = MGScopeBar.framework;
+		};
+		4ADAA9C11602ADB8007A0E6F /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 4A4EF09F142CBAD5001B8CDF /* ObjectiveGitFramework.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 88F05A6B16011E5400B7AD1D;
+			remoteInfo = ObjectiveGitTests;
 		};
 		551BF174112F3F3500265053 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -706,10 +692,8 @@
 			isa = PBXGroup;
 			children = (
 				4A4EF0AF142CBAD5001B8CDF /* ObjectiveGit.framework */,
-				4A4EF0B1142CBAD5001B8CDF /* Tests.app */,
 				4A4EF0B3142CBAD5001B8CDF /* libObjectiveGit-iOS.a */,
-				4A4EF0B5142CBAD5001B8CDF /* Tests-iOS.app */,
-				4A002EFA16021CB100430EBB /* libgit2.a */,
+				4ADAA9C21602ADB8007A0E6F /* ObjectiveGitTests.octest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1191,13 +1175,6 @@
 /* End PBXProject section */
 
 /* Begin PBXReferenceProxy section */
-		4A002EFA16021CB100430EBB /* libgit2.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libgit2.a;
-			remoteRef = 4A002EF916021CB100430EBB /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
 		4A4EF0AF142CBAD5001B8CDF /* ObjectiveGit.framework */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
@@ -1205,25 +1182,11 @@
 			remoteRef = 4A4EF0AE142CBAD5001B8CDF /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		4A4EF0B1142CBAD5001B8CDF /* Tests.app */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.application;
-			path = Tests.app;
-			remoteRef = 4A4EF0B0142CBAD5001B8CDF /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
 		4A4EF0B3142CBAD5001B8CDF /* libObjectiveGit-iOS.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
 			path = "libObjectiveGit-iOS.a";
 			remoteRef = 4A4EF0B2142CBAD5001B8CDF /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		4A4EF0B5142CBAD5001B8CDF /* Tests-iOS.app */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.application;
-			path = "Tests-iOS.app";
-			remoteRef = 4A4EF0B4142CBAD5001B8CDF /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		4A68AD6714A0050F006DE321 /* Sparkle.framework */ = {
@@ -1273,6 +1236,13 @@
 			fileType = wrapper.framework;
 			path = MGScopeBar.framework;
 			remoteRef = 4A8F6B4614A9B6110002F4D7 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		4ADAA9C21602ADB8007A0E6F /* ObjectiveGitTests.octest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = ObjectiveGitTests.octest;
+			remoteRef = 4ADAA9C11602ADB8007A0E6F /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 /* End PBXReferenceProxy section */
