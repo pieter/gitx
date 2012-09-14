@@ -22,6 +22,7 @@
 #import "PBHistorySearchController.h"
 #import "PBGitRepositoryWatcher.h"
 
+#import "PBGitSubmodule.h"
 
 #import <ObjectiveGit/GTRepository.h>
 #import <ObjectiveGit/GTIndex.h>
@@ -29,7 +30,7 @@
 
 @implementation PBGitRepository
 
-@synthesize revisionList, branches, currentBranch, refs, hasChanged, configuration;
+@synthesize revisionList, branches, currentBranch, refs, hasChanged, configuration, submodules;
 @synthesize currentBranchFilter;
 
 - (BOOL)readFromData:(NSData *)data ofType:(NSString *)typeName error:(NSError **)outError
@@ -129,6 +130,7 @@
 {
 	self->configuration = self.gtRepo.configuration;
 	self.branches = [NSMutableArray array];
+    self.submodules = [NSMutableArray array];
 	[self reloadRefs];
 	currentBranchFilter = [PBGitDefaults branchFilter];
 	revisionList = [[PBGitHistoryList alloc] initWithRepository:self];
@@ -263,6 +265,27 @@
 		[refs setObject:[NSMutableArray arrayWithObject:ref] forKey:sha];
 }
 
+int addSubmoduleName(git_submodule *module, const char* name, void * context)
+{
+    PBGitRepository *me = (__bridge PBGitRepository *)context;
+    PBGitSubmodule *sub = [[PBGitSubmodule alloc] init];
+    [sub setWorkingDirectory:me.workingDirectory];
+    [sub setSubmodule:module];
+    
+
+    [me.submodules addObject:sub];
+    
+    return 0;
+}
+
+- (void) loadSubmodules
+{
+    self.submodules = [NSMutableArray array];
+    git_submodule_foreach(_gtRepo.git_repository, addSubmoduleName, (__bridge void *)self);
+    
+    NSLog(@"Submodules are %@", self.submodules);
+}
+
 - (void) reloadRefs
 {
 	// clear out ref caches
@@ -303,6 +326,8 @@
 			[self removeBranch:branch];
 
 
+    [self loadSubmodules];
+    
 	[self willChangeValueForKey:@"refs"];
 	[self didChangeValueForKey:@"refs"];
 
