@@ -10,4 +10,7 @@
 
 @interface GitRepoFinder : NSObject
 
++ (NSURL*)baseDirForURL:(NSURL*)fileURL;
++ (NSURL*)gitDirForURL:(NSURL*)fileURL;
+
 @end

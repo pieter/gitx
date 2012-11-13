@@ -172,6 +172,8 @@
 		4A8F6B4C14A9B6C90002F4D7 /* MGScopeBar.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4A8F6B4714A9B6110002F4D7 /* MGScopeBar.framework */; };
 		4A90A73514A9D24300D0DA02 /* GitX.sdef in Resources */ = {isa = PBXBuildFile; fileRef = 4A90A73414A9D24300D0DA02 /* GitX.sdef */; };
 		4AAAFDDA14A010DD008FC9B5 /* Sparkle.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4A68AD6714A0050F006DE321 /* Sparkle.framework */; };
+		4AB057E31652652000DE751D /* GitRepoFinder.m in Sources */ = {isa = PBXBuildFile; fileRef = 4AB057E21652652000DE751D /* GitRepoFinder.m */; };
+		4AB057E41652652000DE751D /* GitRepoFinder.m in Sources */ = {isa = PBXBuildFile; fileRef = 4AB057E21652652000DE751D /* GitRepoFinder.m */; };
 		4AB71FF814B7EDD400F1DFFC /* RJModalRepoSheet.m in Sources */ = {isa = PBXBuildFile; fileRef = 4AB71FF714B7EDD400F1DFFC /* RJModalRepoSheet.m */; };
 		551BF176112F3F4B00265053 /* gitx_askpasswd in Resources */ = {isa = PBXBuildFile; fileRef = 551BF111112F371800265053 /* gitx_askpasswd */; };
 		643952741603E9BC00BB7AFF /* PBGitSubmodule.m in Sources */ = {isa = PBXBuildFile; fileRef = 643952731603E9BC00BB7AFF /* PBGitSubmodule.m */; };
@@ -587,6 +589,8 @@
 		4A90A72C14A9C12F00D0DA02 /* Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Release.xcconfig; sourceTree = SOURCE_ROOT; };
 		4A90A73314A9D1E800D0DA02 /* GitX.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GitX.h; sourceTree = SOURCE_ROOT; };
 		4A90A73414A9D24300D0DA02 /* GitX.sdef */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = GitX.sdef; sourceTree = SOURCE_ROOT; };
+		4AB057E11652652000DE751D /* GitRepoFinder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GitRepoFinder.h; sourceTree = "<group>"; };
+		4AB057E21652652000DE751D /* GitRepoFinder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GitRepoFinder.m; sourceTree = "<group>"; };
 		4AB71FF614B7EDD400F1DFFC /* RJModalRepoSheet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RJModalRepoSheet.h; sourceTree = "<group>"; };
 		4AB71FF714B7EDD400F1DFFC /* RJModalRepoSheet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RJModalRepoSheet.m; sourceTree = "<group>"; };
 		4AEE01C414ABF47C0009CFEA /* dct_weak.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = dct_weak.h; sourceTree = SOURCE_ROOT; };
@@ -965,6 +969,8 @@
 				643952731603E9BC00BB7AFF /* PBGitSubmodule.m */,
 				643952751603EF9B00BB7AFF /* PBGitSVSubmoduleItem.h */,
 				643952761603EF9B00BB7AFF /* PBGitSVSubmoduleItem.m */,
+				4AB057E11652652000DE751D /* GitRepoFinder.h */,
+				4AB057E21652652000DE751D /* GitRepoFinder.m */,
 			);
 			path = git;
 			sourceTree = "<group>";
@@ -1469,6 +1475,7 @@
 				4AB71FF814B7EDD400F1DFFC /* RJModalRepoSheet.m in Sources */,
 				643952741603E9BC00BB7AFF /* PBGitSubmodule.m in Sources */,
 				643952771603EF9B00BB7AFF /* PBGitSVSubmoduleItem.m in Sources */,
+				4AB057E31652652000DE751D /* GitRepoFinder.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1479,6 +1486,7 @@
 				4A5D773A14A9A9F600DF6C68 /* gitx.m in Sources */,
 				4A5D773C14A9AA2F00DF6C68 /* PBGitBinary.m in Sources */,
 				4A5D773D14A9AA3700DF6C68 /* PBEasyPipe.m in Sources */,
+				4AB057E41652652000DE751D /* GitRepoFinder.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
