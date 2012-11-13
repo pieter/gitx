@@ -21,7 +21,7 @@
 #import "GitXScriptingConstants.h"
 #import "PBHistorySearchController.h"
 #import "PBGitRepositoryWatcher.h"
-
+#import "GitRepoFinder.h"
 #import "PBGitSubmodule.h"
 
 #import <ObjectiveGit/GTRepository.h>
@@ -56,30 +56,6 @@
 	return [PBGitRepository isBareRepository:[self fileURL]];
 }
 
-+ (NSURL *)gitDirForURL:(NSURL *)repositoryURL;
-{
-	NSError* repoInitError;
-	GTRepository* objgRepo = [[GTRepository alloc] initWithURL:repositoryURL error:&repoInitError];
-	if (objgRepo != NULL) {
-		NSURL* repoPath = [objgRepo gitDirectoryURL];
-		return repoPath;
-	}
-	return nil;
-}
-
-// For a given path inside a repository, return either the .git dir
-// (for a bare repo) or the directory above the .git dir otherwise
-+ (NSURL*)baseDirForURL:(NSURL*)repositoryURL;
-{
-	NSURL* gitDirURL         = [self gitDirForURL:repositoryURL];
-
-	if (![PBGitRepository isBareRepository:gitDirURL]) {
-		repositoryURL = [NSURL fileURLWithPath:[[repositoryURL path] stringByDeletingLastPathComponent]];
-	}
-
-	return repositoryURL;
-}
-
 // NSFileWrapper is broken and doesn't work when called on a directory containing a large number of directories and files.
 //because of this it is safer to implement readFromURL than readFromFileWrapper.
 //Because NSFileManager does not attempt to recursively open all directories and file when fileExistsAtPath is called
@@ -108,7 +84,7 @@
 	}
 
 
-	NSURL* gitDirURL = [PBGitRepository gitDirForURL:[self fileURL]];
+	NSURL* gitDirURL = [GitRepoFinder gitDirForURL:[self fileURL]];
 	if (!gitDirURL) {
 		if (outError) {
 			NSDictionary* userInfo = [NSDictionary dictionaryWithObject:[NSString stringWithFormat:@"%@ does not appear to be a git repository.", [[self fileURL] path]]
@@ -148,7 +124,7 @@
 	if (![PBGitBinary path])
 		return nil;
 
-	NSURL* gitDirURL = [PBGitRepository gitDirForURL:path];
+	NSURL* gitDirURL = [GitRepoFinder gitDirForURL:path];
 	if (!gitDirURL)
 		return nil;
 
@@ -1056,7 +1032,7 @@ int addSubmoduleName(git_submodule *module, const char* name, void * context)
 		NSString *path = [[eventRecord paramDescriptorForKeyword:typeFileURL] stringValue];
 		if (path) {
 			NSURL *workingDirectory = [NSURL URLWithString:path];
-			if ([[PBGitRepository gitDirForURL:workingDirectory] isEqual:[self fileURL]]) {
+			if ([[GitRepoFinder gitDirForURL:workingDirectory] isEqual:[self fileURL]]) {
 				NSAppleEventDescriptor *argumentsList = [eventRecord paramDescriptorForKeyword:kGitXAEKeyArgumentsList];
 				[self handleGitXScriptingArguments:argumentsList inWorkingDirectory:workingDirectory];
 

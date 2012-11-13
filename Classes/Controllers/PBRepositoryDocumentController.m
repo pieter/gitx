@@ -11,6 +11,7 @@
 #import "PBGitRevList.h"
 #import "PBEasyPipe.h"
 #import "PBGitBinary.h"
+#import "GitRepoFinder.h"
 
 @implementation PBRepositoryDocumentController
 // This method is overridden to configure the open panel to only allow
@@ -26,12 +27,15 @@
 // Convert paths to the .git dir before searching for an already open document
 - (id)documentForURL:(NSURL *)URL
 {
-	return [super documentForURL:[PBGitRepository gitDirForURL:URL]];
+	NSURL* baseURL = [GitRepoFinder baseDirForURL:URL];
+	id result = [super documentForURL:baseURL];
+	return result;
 }
 
-- (void)noteNewRecentDocumentURL:(NSURL*)url
+- (void)noteNewRecentDocumentURL:(NSURL*)URL
 {
-	[super noteNewRecentDocumentURL:[PBGitRepository baseDirForURL:url]];
+	NSURL* baseURL = [GitRepoFinder baseDirForURL:URL];
+	[super noteNewRecentDocumentURL:baseURL];
 }
 
 - (id) documentForLocation:(NSURL*) url

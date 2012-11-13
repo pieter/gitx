@@ -133,9 +133,6 @@ static NSString * PBStringFromBranchFilterType(PBGitXBranchFilterType type) {
 - (NSString*) parseSymbolicReference:(NSString*) ref;
 - (NSString*) parseReference:(NSString*) ref;
 
-+ (NSURL*)gitDirForURL:(NSURL*)repositoryURL;
-+ (NSURL*)baseDirForURL:(NSURL*)repositoryURL;
-
 - (id) initWithURL: (NSURL*) path;
 - (void) setup;
 - (void) forceUpdateRevisions;
