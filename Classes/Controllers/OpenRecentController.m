@@ -154,9 +154,4 @@
 		selectedResult = nil;
 }
 
-- (void) dealloc
-{
-	[self hide];
-}
-
 @end
