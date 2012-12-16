@@ -256,7 +256,7 @@ int addSubmoduleName(git_submodule *module, const char* name, void * context)
 - (void) loadSubmodules
 {
     self.submodules = [NSMutableArray array];
-    git_submodule_foreach(_gtRepo.git_repository, addSubmoduleName, (__bridge void *)self);
+    git_submodule_foreach(self.gtRepo.git_repository, addSubmoduleName, (__bridge void *)self);
 }
 
 - (void) reloadRefs
