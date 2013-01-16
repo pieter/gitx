@@ -72,6 +72,10 @@
 # pragma mark Context Menu methods
 - (BOOL) allSelectedCanBeIgnored:(NSArray *)selectedFiles
 {
+	if ([selectedFiles count] == 0)
+	{
+		return NO;
+	}
 	for (PBChangedFile *selectedItem in selectedFiles) {
 		if (selectedItem.status != NEW) {
 			return NO;
@@ -85,6 +89,11 @@
 	NSMenu *menu = [[NSMenu alloc] init];
 	id controller = [table tag] == 0 ? unstagedFilesController : stagedFilesController;
 	NSArray *selectedFiles = [controller selectedObjects];
+	
+	if ([selectedFiles count] == 0)
+	{
+		return menu;
+	}
 
 	// Unstaged changes
 	if ([table tag] == 0) {
@@ -122,9 +131,19 @@
 		[menu addItem:showInFinderItem];
     }
 
+	BOOL addDiscardMenu = NO;
 	for (PBChangedFile *file in selectedFiles)
-		if (!file.hasUnstagedChanges)
-			return menu;
+	{
+		if (file.hasUnstagedChanges)
+		{
+			addDiscardMenu = YES;
+			break;
+		}
+	}
+	if (!addDiscardMenu)
+	{
+		return menu;
+	}
 
 	NSMenuItem *discardItem = [[NSMenuItem alloc] initWithTitle:@"Discard changes…" action:@selector(discardFilesAction:) keyEquivalent:@""];
 	[discardItem setTarget:self];
@@ -139,6 +158,30 @@
 	[discardForceItem setRepresentedObject:selectedFiles];
 	[discardForceItem setKeyEquivalentModifierMask:NSAlternateKeyMask];
 	[menu addItem:discardForceItem];
+	
+	BOOL trashInsteadOfDiscard = floor(NSAppKitVersionNumber) > NSAppKitVersionNumber10_7;
+	if (trashInsteadOfDiscard)
+	{
+		for (PBChangedFile* file in selectedFiles)
+		{
+			if (file.status != NEW)
+			{
+				trashInsteadOfDiscard = NO;
+				break;
+			}
+		}
+	}
+		
+	if (trashInsteadOfDiscard && [selectedFiles count] > 0)
+	{
+		NSMenuItem* moveToTrashItem = [[NSMenuItem alloc] initWithTitle:@"Move to Trash" action:@selector(moveToTrashAction:) keyEquivalent:@""];
+		[moveToTrashItem setTarget:self];
+		[moveToTrashItem setRepresentedObject:selectedFiles];
+		[menu addItem:moveToTrashItem];
+		
+		[menu removeItem:discardItem];
+		[menu removeItem:discardForceItem];
+	}
 	
 	return menu;
 }
@@ -194,6 +237,25 @@
 	NSString *path = [workingDirectory stringByAppendingPathComponent:[[selectedFiles objectAtIndex:0] path]];
 	NSWorkspace *ws = [NSWorkspace sharedWorkspace];
 	[ws selectFile: path inFileViewerRootedAtPath:nil];
+}
+
+- (void)moveToTrashAction:(id)sender
+{
+	NSArray *selectedFiles = [sender representedObject];
+
+	NSString *workingDirectory = [commitController.repository workingDirectory];
+	NSURL* workDirURL = [NSURL fileURLWithPath:workingDirectory isDirectory:YES];
+	
+	for (PBChangedFile* file in selectedFiles)
+	{
+		NSURL* fileURL = [workDirURL URLByAppendingPathComponent:[file path]];
+		
+		NSError* error = nil;
+		NSURL* resultURL = nil;
+		[[NSFileManager defaultManager] trashItemAtURL:fileURL
+									  resultingItemURL:&resultURL
+												 error:&error];
+	}
 }
 
 - (void) discardChangesForFilesAlertDidEnd:(NSAlert *)alert returnCode:(NSInteger)returnCode contextInfo:(void *)contextInfo
