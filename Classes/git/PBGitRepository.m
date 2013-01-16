@@ -93,6 +93,7 @@
 		}
 		return NO;
 	}
+	self.fileURL = gitDirURL;
 
 	[self setup];
   watcher = [[PBGitRepositoryWatcher alloc] initWithRepository:self];
@@ -173,12 +174,8 @@
 
 - (NSString *) projectName
 {
-	NSString *projectPath = [[self fileURL] path];
-
-	if ([[projectPath lastPathComponent] isEqualToString:@".git"])
-		projectPath = [projectPath stringByDeletingLastPathComponent];
-
-	return [projectPath lastPathComponent];
+	NSString* result = [self.workingDirectory lastPathComponent];
+	return result;
 }
 
 // Get the .gitignore file at the root of the repository
