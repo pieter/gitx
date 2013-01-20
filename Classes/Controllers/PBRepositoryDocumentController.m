@@ -27,15 +27,15 @@
 // Convert paths to the .git dir before searching for an already open document
 - (id)documentForURL:(NSURL *)URL
 {
-	NSURL* baseURL = [GitRepoFinder baseDirForURL:URL];
-	id result = [super documentForURL:baseURL];
+	NSURL* fileURL = [GitRepoFinder fileURLForURL:URL];
+	id result = [super documentForURL:fileURL];
 	return result;
 }
 
 - (void)noteNewRecentDocumentURL:(NSURL*)URL
 {
-	NSURL* baseURL = [GitRepoFinder baseDirForURL:URL];
-	[super noteNewRecentDocumentURL:baseURL];
+	NSURL* fileURL = [GitRepoFinder fileURLForURL:URL];
+	[super noteNewRecentDocumentURL:fileURL];
 }
 
 - (id) documentForLocation:(NSURL*) url

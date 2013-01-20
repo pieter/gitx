@@ -84,7 +84,7 @@
 	}
 
 
-	NSURL* gitDirURL = [GitRepoFinder gitDirForURL:[self fileURL]];
+	NSURL* gitDirURL = [GitRepoFinder gitDirForURL:absoluteURL];
 	if (!gitDirURL) {
 		if (outError) {
 			NSDictionary* userInfo = [NSDictionary dictionaryWithObject:[NSString stringWithFormat:@"%@ does not appear to be a git repository.", [[self fileURL] path]]
@@ -93,7 +93,7 @@
 		}
 		return NO;
 	}
-	self.fileURL = gitDirURL;
+	self.fileURL = [GitRepoFinder fileURLForURL:absoluteURL];
 
 	[self setup];
   watcher = [[PBGitRepositoryWatcher alloc] initWithRepository:self];
