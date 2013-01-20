@@ -246,15 +246,23 @@
 	NSString *workingDirectory = [commitController.repository workingDirectory];
 	NSURL* workDirURL = [NSURL fileURLWithPath:workingDirectory isDirectory:YES];
 	
+	BOOL anyTrashed = NO;
 	for (PBChangedFile* file in selectedFiles)
 	{
 		NSURL* fileURL = [workDirURL URLByAppendingPathComponent:[file path]];
 		
 		NSError* error = nil;
 		NSURL* resultURL = nil;
-		[[NSFileManager defaultManager] trashItemAtURL:fileURL
-									  resultingItemURL:&resultURL
-												 error:&error];
+		if ([[NSFileManager defaultManager] trashItemAtURL:fileURL
+										  resultingItemURL:&resultURL
+													 error:&error])
+		{
+			anyTrashed = YES;
+		}
+	}
+	if (anyTrashed)
+	{
+		[commitController.index refresh];
 	}
 }
 
