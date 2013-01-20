@@ -279,6 +279,11 @@
 		
 		p = [handle readLine];
 	}
+	[c sortUsingComparator:^NSComparisonResult(id obj1, id obj2) {
+		PBGitTree* tree1 = (PBGitTree*)obj1;
+		PBGitTree* tree2 = (PBGitTree*)obj2;
+		return [[tree1 path] localizedStandardCompare:[tree2 path]];
+	}];
 	children = c;
 	return c;
 }
