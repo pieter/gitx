@@ -80,7 +80,7 @@ var showFile = function(txt, fileName) {
     "cxx": "cpp",
     "c++":"cpp",
     "C": "cpp",
-    "h": "cpp",
+//    "h": "cpp",
     "hh": "cpp",
     "hpp": "cpp",
     "h++": "cpp",
