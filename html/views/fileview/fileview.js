@@ -2,7 +2,9 @@ var showFile = function(txt, fileName) {
   $("source").style.display = "";
   var suffix_map = {
     "m": "objc",
+	"mm": "objc",
     "h": "objc",
+	"pch": "objc",
 
     "rb": "ruby",
     "rbx": "ruby",
@@ -23,6 +25,10 @@ var showFile = function(txt, fileName) {
     "opml": "xml",
     "xsl": "xml",
     "xslt": "xml",
+	  
+	  "htm": "xml",
+	  "html": "xml",
+	  "plist": "xml",
     
     "js": "javascript",
     "htc": "javascript",
