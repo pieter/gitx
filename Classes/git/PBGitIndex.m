@@ -502,6 +502,11 @@ NSString *PBGitIndexOperationFailed = @"PBGitIndexOperationFailed";
 	// Now that the index is refreshed, we need to read the information from the index
 	NSNotificationCenter *nc = [NSNotificationCenter defaultCenter]; 
 
+	if ([repository isBareRepository])
+	{
+		return;
+	}
+	
 	// Other files (not tracked, not ignored)
 	refreshStatus++;
 	NSFileHandle *handle = [PBEasyPipe handleForCommand:[PBGitBinary path] 
