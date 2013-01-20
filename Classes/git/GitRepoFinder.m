@@ -10,8 +10,6 @@
 
 @implementation GitRepoFinder
 
-// For a given path inside a repository, return either the .git dir
-// (for a bare repo) or the directory above the .git dir otherwise
 + (NSURL*)baseDirForURL:(NSURL*)fileURL;
 {
 	GTRepository* repo = [[GTRepository alloc] initWithURL:[self gitDirForURL:fileURL]
@@ -46,6 +44,22 @@
 			return result;
 		}
 	}
-	return nil;}
+	return nil;
+}
+
++ (NSURL*) fileURLForURL:(NSURL *)inputURL
+{
+	NSURL* gitDir = [GitRepoFinder gitDirForURL:inputURL];
+	if (!gitDir)
+	{
+		return nil; // not a Git directory at all
+	}
+	NSURL* workDir = [GitRepoFinder baseDirForURL:inputURL];
+	if (workDir)
+	{
+		return workDir; // root of this working copy or deepest submodule
+	}
+	return gitDir; // bare repo
+}
 
 @end
