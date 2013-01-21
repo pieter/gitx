@@ -10,9 +10,9 @@
 
 @implementation GitRepoFinder
 
-+ (NSURL*)baseDirForURL:(NSURL*)fileURL;
++ (NSURL*)workDirForURL:(NSURL*)fileURL;
 {
-	GTRepository* repo = [[GTRepository alloc] initWithURL:[self gitDirForURL:fileURL]
+	GTRepository* repo = [[GTRepository alloc] initWithURL:fileURL
 													 error:nil];
 	NSURL* result = repo.fileURL;
 	return result;
@@ -54,7 +54,7 @@
 	{
 		return nil; // not a Git directory at all
 	}
-	NSURL* workDir = [GitRepoFinder baseDirForURL:inputURL];
+	NSURL* workDir = [GitRepoFinder workDirForURL:inputURL];
 	if (workDir)
 	{
 		return workDir; // root of this working copy or deepest submodule
