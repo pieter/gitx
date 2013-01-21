@@ -1199,11 +1199,12 @@ int addSubmoduleName(git_submodule *module, const char* name, void * context)
 	if (!_gtRepo)
 	{
 		NSError* error = nil;
-		_gtRepo = [GTRepository repositoryWithURL:self.fileURL error:&error];
+		NSURL* repoURL = [GitRepoFinder gitDirForURL:self.fileURL];
+		_gtRepo = [GTRepository repositoryWithURL:repoURL error:&error];
 		if (error)
 		{
 			_gtRepo = nil;
-			NSLog(@"Error opening GTRepository for %@\n%@", self.fileURL, [error userInfo]);
+			NSLog(@"Error opening GTRepository for %@\n%@", repoURL, [error userInfo]);
 		}
 	}
 	return _gtRepo;
