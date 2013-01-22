@@ -7,7 +7,7 @@ use HTML::Template;
 use HTTP::Date;
 
 my %config = (
-	      app_title => "GitX (R)",
+	      app_title => "GitX-dev",
 	      base_url => "http://builds.phere.net/GitX/$ENV{BUILD_TYPE}/"
 	     );
 
@@ -25,7 +25,7 @@ my $template_text = <<EO_TMPL;
       <sparkle:releaseNotesLink><TMPL_VAR BASE_URL><TMPL_VAR BUILD_BASENAME>-<TMPL_VAR BUILD_NUMBER>.html</sparkle:releaseNotesLink>
       <sparkle:minimumSystemVersion>10.6.0</sparkle:minimumSystemVersion>
       <pubDate><TMPL_VAR PUBDATE></pubDate>
-      <enclosure url="<TMPL_VAR BASE_URL><TMPL_VAR BUILD_BASENAME>-<TMPL_VAR BUILD_NUMBER>.zip" sparkle:version="<TMPL_VAR CFBUNDLEVERSION>" length="<TMPL_VAR FILE_SIZE>" sparkle:dsaSignature="<TMPL_VAR FILE_SIG>" type="application/octet-stream" />
+      <enclosure url="<TMPL_VAR BASE_URL><TMPL_VAR BUILD_BASENAME>-<TMPL_VAR BUILD_NUMBER>.dmg" sparkle:version="<TMPL_VAR CFBUNDLEVERSION>" length="<TMPL_VAR FILE_SIZE>" sparkle:dsaSignature="<TMPL_VAR FILE_SIG>" type="application/octet-stream" />
     </item>
 
   </channel>
