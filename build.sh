@@ -17,7 +17,7 @@ agvtool="xcrun agvtool"
 
 configuration=""
 clean=""
-pause=10
+pause=3
 build_number=""
 
 print_usage()
