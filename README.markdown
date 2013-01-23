@@ -68,11 +68,11 @@ GitX is licensed under the GPL version 2. For more information, see the attached
 
 GitX itself is fairly simple. Most of its power is in the 'gitx' binary, which
 you should install through the menu. the 'gitx' binary supports most of git
-rev-list's arguments. For example, you can run `gitx --all' to display all
-branches in the repository, or `gitx -- Documentation' to only show commits
-relating to the 'Documentation' subdirectory. With `gitx -Shaha', gitx will
-only show commits that contain the word 'haha'. Similarly, with 'gitx
-v0.2.1..', you will get a list of all commits since version 0.2.1.
+rev-list's arguments. For example, you can run `gitx --all` to display all
+branches in the repository, or `gitx -- Documentation` to only show commits
+relating to the 'Documentation' subdirectory. With `gitx -Shaha`, gitx will
+only show commits that contain the word 'haha'. Similarly, with `gitx
+v0.2.1..`, you will get a list of all commits since version 0.2.1.
 
 # Helping out
 
