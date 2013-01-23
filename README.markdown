@@ -1,6 +1,3 @@
-GitX
----------------
-
 # What is GitX?
 
 GitX is a graphical client for the `git` version control system, written
@@ -27,7 +24,7 @@ frameworks and libraries that are used.
 
 [![Latest GitX-dev Package](http://rowanj.github.com/gitx/images/gitx.jpg)](http://builds.phere.net/GitX/development/GitX-dev.dmg)
 
-[Download the latest .DMG](http://builds.phere.net/GitX/development/GitX-dev.dmg)
+*[Download the latest .DMG](http://builds.phere.net/GitX/development/GitX-dev.dmg)*
 
 GitX-dev uses the [Sparkle](http://sparkle.andymatuschak.org/) framework for in-app updates; so once you have version 0.11 or later, you can check for or update to new builds from the GitX menu at any time, or opt-in for automatic updates.
 
