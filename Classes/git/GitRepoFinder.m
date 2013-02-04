@@ -12,9 +12,23 @@
 
 + (NSURL*)workDirForURL:(NSURL*)fileURL;
 {
-	GTRepository* repo = [[GTRepository alloc] initWithURL:fileURL
-													 error:nil];
-	NSURL* result = repo.fileURL;
+	if (!fileURL.isFileURL)
+	{
+		return nil;
+	}
+	git_repository* repo = nil;
+	git_repository_open_ext(&repo, fileURL.path.UTF8String, GIT_REPOSITORY_OPEN_CROSS_FS, NULL);
+	if (!repo)
+	{
+		return nil;
+	}
+	const char* workdir = git_repository_workdir(repo);
+	NSURL* result = nil;
+	if (workdir)
+	{
+		result = [NSURL fileURLWithPath:[NSString stringWithUTF8String:workdir]];
+	}
+	git_repository_free(repo); repo = nil;
 	return result;
 }
 
