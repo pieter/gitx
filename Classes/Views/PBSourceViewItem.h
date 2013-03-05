@@ -37,7 +37,7 @@
 - (PBGitRef *) ref;
 
 @property NSString *title;
-@property(readonly) NSMutableArray *children;
+@property(readonly) NSArray *children;
 @property(assign) BOOL isGroupItem, isUncollapsible;
 @property PBGitRevSpecifier *revSpecifier;
 @property (assign)PBSourceViewItem *parent;

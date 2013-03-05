@@ -10,8 +10,11 @@
 #import "PBSourceViewItems.h"
 #import "PBGitRef.h"
 
-@implementation PBSourceViewItem
-@synthesize parent, isGroupItem, children, revSpecifier, isUncollapsible;
+@implementation PBSourceViewItem {
+    NSMutableOrderedSet *_orderedChildren;
+}
+
+@synthesize parent, isGroupItem, revSpecifier, isUncollapsible;
 @dynamic icon;
 
 - (id)init
@@ -19,7 +22,7 @@
 	if (!(self = [super init]))
 		return nil;
 
-	children = [NSMutableArray array];
+	_orderedChildren = [[NSMutableOrderedSet alloc] init];
 	return self;
 }
 
@@ -51,14 +54,20 @@
 	return [PBGitSVOtherRevItem otherItemWithRevSpec:revSpecifier];
 }
 
+- (NSArray *)children
+{
+    return [_orderedChildren sortedArrayUsingComparator:^NSComparisonResult(PBSourceViewItem *obj1, PBSourceViewItem *obj2) {
+        return [obj1.title localizedStandardCompare:obj2.title];
+    }];
+}
+
 - (void)addChild:(PBSourceViewItem *)child
 {
 	if (!child)
 		return;
-
-	[self.children addObject:child];
+    
+	[_orderedChildren addObject:child];
 	child.parent = self;
-	[self.children sortUsingDescriptors:[NSArray arrayWithObject:[[NSSortDescriptor alloc] initWithKey:@"title" ascending:YES selector:@selector(localizedStandardCompare:)]]];
 }
 
 - (void)removeChild:(PBSourceViewItem *)child
@@ -66,8 +75,8 @@
 	if (!child)
 		return;
 
-	[self.children removeObject:child];
-	if (!self.isGroupItem && ([self.children count] == 0))
+	[_orderedChildren removeObject:child];
+	if (!self.isGroupItem && ([_orderedChildren count] == 0))
 		[self.parent removeChild:self];
 }
 
@@ -81,7 +90,7 @@
 
 	NSString *firstTitle = [path objectAtIndex:0];
 	PBSourceViewItem *node = nil;
-	for (PBSourceViewItem *child in [self children])
+	for (PBSourceViewItem *child in _orderedChildren)
 		if ([child.title isEqualToString:firstTitle])
 			node = child;
 
@@ -98,11 +107,11 @@
 
 - (PBSourceViewItem *)findRev:(PBGitRevSpecifier *)rev
 {
-	if (rev == revSpecifier)
+	if ([rev isEqual:revSpecifier])
 		return self;
 
 	PBSourceViewItem *item = nil;
-	for (PBSourceViewItem *child in children)
+	for (PBSourceViewItem *child in _orderedChildren)
 		if ( (item = [child findRev:rev]) != nil )
 			return item;
 
