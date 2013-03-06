@@ -10,9 +10,7 @@
 #import "PBSourceViewItems.h"
 #import "PBGitRef.h"
 
-@implementation PBSourceViewItem {
-    NSMutableOrderedSet *_orderedChildren;
-}
+@implementation PBSourceViewItem
 
 @synthesize parent, isGroupItem, revSpecifier, isUncollapsible;
 @dynamic icon;
@@ -22,7 +20,7 @@
 	if (!(self = [super init]))
 		return nil;
 
-	_orderedChildren = [[NSMutableOrderedSet alloc] init];
+	childrenSet = [[NSMutableOrderedSet alloc] init];
 	return self;
 }
 
@@ -56,9 +54,12 @@
 
 - (NSArray *)children
 {
-    return [_orderedChildren sortedArrayUsingComparator:^NSComparisonResult(PBSourceViewItem *obj1, PBSourceViewItem *obj2) {
-        return [obj1.title localizedStandardCompare:obj2.title];
-    }];
+    if (!children) {
+        children = [childrenSet sortedArrayUsingComparator:^NSComparisonResult(PBSourceViewItem *obj1, PBSourceViewItem *obj2) {
+            return [obj1.title localizedStandardCompare:obj2.title];
+        }];
+    }
+    return children;
 }
 
 - (void)addChild:(PBSourceViewItem *)child
@@ -66,7 +67,8 @@
 	if (!child)
 		return;
     
-	[_orderedChildren addObject:child];
+	[childrenSet addObject:child];
+    children = nil;
 	child.parent = self;
 }
 
@@ -75,8 +77,9 @@
 	if (!child)
 		return;
 
-	[_orderedChildren removeObject:child];
-	if (!self.isGroupItem && ([_orderedChildren count] == 0))
+	[childrenSet removeObject:child];
+    children = nil;
+	if (!self.isGroupItem && ([childrenSet count] == 0))
 		[self.parent removeChild:self];
 }
 
@@ -90,7 +93,7 @@
 
 	NSString *firstTitle = [path objectAtIndex:0];
 	PBSourceViewItem *node = nil;
-	for (PBSourceViewItem *child in _orderedChildren)
+	for (PBSourceViewItem *child in childrenSet)
 		if ([child.title isEqualToString:firstTitle])
 			node = child;
 
@@ -111,7 +114,7 @@
 		return self;
 
 	PBSourceViewItem *item = nil;
-	for (PBSourceViewItem *child in _orderedChildren)
+	for (PBSourceViewItem *child in childrenSet)
 		if ( (item = [child findRev:rev]) != nil )
 			return item;
 

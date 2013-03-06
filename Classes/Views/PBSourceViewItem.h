@@ -12,7 +12,8 @@
 @class PBGitRef;
 
 @interface PBSourceViewItem : NSObject {
-	NSMutableArray *children;
+    NSMutableOrderedSet *childrenSet;
+	NSArray *children;
 
 	NSString *title;
 	PBGitRevSpecifier *revSpecifier;
