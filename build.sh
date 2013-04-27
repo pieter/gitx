@@ -99,6 +99,7 @@ xcrun xcodebuild -scheme "$scheme" -workspace "$workspace" -configuration "$conf
 
 if [[ "$configuration" == "$release_configuration" ]]
 then
+    ./package_build.sh "${build_number}" "${build_dir}/${product}"
     echo "$prog: creating build packages"
     pushd "$build_dir"
     zip -r -9 "${artifact_prefix}-${build_version}.zip" "${product}/"
