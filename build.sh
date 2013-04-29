@@ -99,10 +99,6 @@ xcrun xcodebuild -scheme "$scheme" -workspace "$workspace" -configuration "$conf
 
 if [[ "$configuration" == "$release_configuration" ]]
 then
-    ./package_build.sh "${build_number}" "${build_dir}/${product}"
-    echo "$prog: creating build packages"
-    pushd "$build_dir"
-    zip -r -9 "${artifact_prefix}-${build_version}.zip" "${product}/"
-    zip -r -9 "${artifact_prefix}-${build_version}.dSYM.zip" "${product}.dSYM/"
-    popd
+    ./sign.py --app "${build_dir}/${product}" -fr
+    ./package.py --app "${build_dir}/${product}" -o "${build_dir}/${artifact_prefix}-${build_number}.dmg" -n "${scheme} ${build_version}"
 fi
