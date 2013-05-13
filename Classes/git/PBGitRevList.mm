@@ -178,8 +178,14 @@ using namespace std;
 				int nParents = (parentString.size() + 1) / 41;
 				NSMutableArray *parents = [NSMutableArray arrayWithCapacity:nParents];
 				int parentIndex;
-				for (parentIndex = 0; parentIndex < nParents; ++parentIndex)
-					[parents addObject:[PBGitSHA shaWithCString:parentString.substr(parentIndex * 41, 40).c_str()]];
+				for (parentIndex = 0; parentIndex < nParents; ++parentIndex) {
+					PBGitSHA *parentSHA = [PBGitSHA shaWithCString:parentString.substr(parentIndex * 41, 40).c_str()];
+					if (parentSHA) {
+						[parents addObject:parentSHA];
+					} else {
+						NSLog(@"Nil parent (orphan object) in parents \"%s\"", parentString.c_str());
+					}
+				}
 				
 				[newCommit setParents:parents];
 			}
