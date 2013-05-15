@@ -10,6 +10,12 @@
 #import "PBSourceViewItems.h"
 #import "PBGitRef.h"
 
+@interface PBSourceViewItem ()
+
+@property (nonatomic, strong) NSArray *sortedChildren;
+
+@end
+
 @implementation PBSourceViewItem
 
 @synthesize parent, isGroupItem, revSpecifier, isUncollapsible;
@@ -52,14 +58,15 @@
 	return [PBGitSVOtherRevItem otherItemWithRevSpec:revSpecifier];
 }
 
-- (NSArray *)children
+- (NSArray *)sortedChildren
 {
-    if (!children) {
-        children = [childrenSet sortedArrayUsingComparator:^NSComparisonResult(PBSourceViewItem *obj1, PBSourceViewItem *obj2) {
+    if (!self->_sortedChildren) {
+        NSArray *newArray = [childrenSet sortedArrayUsingComparator:^NSComparisonResult(PBSourceViewItem *obj1, PBSourceViewItem *obj2) {
             return [obj1.title localizedStandardCompare:obj2.title];
         }];
+		self.sortedChildren = newArray;
     }
-    return children;
+    return [NSArray arrayWithArray:self->_sortedChildren];
 }
 
 - (void)addChild:(PBSourceViewItem *)child
@@ -68,7 +75,7 @@
 		return;
     
 	[childrenSet addObject:child];
-    children = nil;
+    self.sortedChildren = nil;
 	child.parent = self;
 }
 
@@ -78,7 +85,7 @@
 		return;
 
 	[childrenSet removeObject:child];
-    children = nil;
+    self.sortedChildren = nil;
 	if (!self.isGroupItem && ([childrenSet count] == 0))
 		[self.parent removeChild:self];
 }
