@@ -105,16 +105,17 @@ using namespace std;
 		std::map<string, NSStringEncoding> encodingMap;
 		NSThread *currentThread = [NSThread currentThread];
 		
-		NSString *formatString = @"--pretty=format:%H\01%e\01%aN\01%cN\01%s\01%P\01%at";
+		NSString *formatString = @"--pretty=format:%H\03%e\03%aN\03%cN\03%s\03%P\03%at";
 		BOOL showSign = [rev hasLeftRight];
 		
 		if (showSign)
-			formatString = [formatString stringByAppendingString:@"\01%m"];
+			formatString = [formatString stringByAppendingString:@"\03%m"];
 		
 		NSMutableArray *arguments = [NSMutableArray arrayWithObjects:@"log",
 									 @"-z",
 									 @"--topo-order",
 									 @"--children",
+									 @"--encoding=UTF-8",
 									 formatString, nil];
 		
 		if (!rev)
@@ -137,12 +138,12 @@ using namespace std;
 				break;
 			
 			string sha;
-			if (!getline(stream, sha, '\1'))
+			if (!getline(stream, sha, '\3'))
 				break;
 			
 			// From now on, 1.2 seconds
 			string encoding_str;
-			getline(stream, encoding_str, '\1');
+			getline(stream, encoding_str, '\3');
 			NSStringEncoding encoding = NSUTF8StringEncoding;
 			if (encoding_str.length())
 			{
@@ -159,16 +160,16 @@ using namespace std;
 			PBGitCommit *newCommit = [PBGitCommit commitWithRepository:repository andSha:[PBGitSHA shaWithOID:oid]];
 			
 			string author;
-			getline(stream, author, '\1');
+			getline(stream, author, '\3');
 			
 			string committer;
-			getline(stream, committer, '\1');
+			getline(stream, committer, '\3');
 			
 			string subject;
-			getline(stream, subject, '\1');
+			getline(stream, subject, '\3');
 			
 			string parentString;
-			getline(stream, parentString, '\1');
+			getline(stream, parentString, '\3');
 			if (parentString.size() != 0)
 			{
 				if (((parentString.size() + 1) % 41) != 0) {
@@ -178,8 +179,14 @@ using namespace std;
 				int nParents = (parentString.size() + 1) / 41;
 				NSMutableArray *parents = [NSMutableArray arrayWithCapacity:nParents];
 				int parentIndex;
-				for (parentIndex = 0; parentIndex < nParents; ++parentIndex)
-					[parents addObject:[PBGitSHA shaWithCString:parentString.substr(parentIndex * 41, 40).c_str()]];
+				for (parentIndex = 0; parentIndex < nParents; ++parentIndex) {
+					PBGitSHA *parentSHA = [PBGitSHA shaWithCString:parentString.substr(parentIndex * 41, 40).c_str()];
+					if (parentSHA) {
+						[parents addObject:parentSHA];
+					} else {
+						NSLog(@"Nil parent (orphan object) in parents \"%s\"", parentString.c_str());
+					}
+				}
 				
 				[newCommit setParents:parents];
 			}
