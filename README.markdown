@@ -1,6 +1,3 @@
-GitX
----------------
-
 # What is GitX?
 
 GitX is a graphical client for the `git` version control system, written
@@ -23,9 +20,17 @@ frameworks and libraries that are used.
 
 # Getting GitX-dev
 
-The latest binaries are available on the [GitHub project downloads page](http://github.com/rowanj/gitx/downloads).
+## Download the latest binary
+
+[![Latest GitX-dev Package](http://rowanj.github.com/gitx/images/gitx.jpg)](http://builds.phere.net/GitX/development/GitX-dev.dmg)
+
+*[Download the latest .DMG](http://builds.phere.net/GitX/development/GitX-dev.dmg)*
 
 GitX-dev uses the [Sparkle](http://sparkle.andymatuschak.org/) framework for in-app updates; so once you have version 0.11 or later, you can check for or update to new builds from the GitX menu at any time, or opt-in for automatic updates.
+
+## Archived binaries
+
+Old binary archives are available on the [GitHub project downloads page](http://github.com/rowanj/gitx/downloads).
 
 # Features
 
@@ -63,11 +68,11 @@ GitX is licensed under the GPL version 2. For more information, see the attached
 
 GitX itself is fairly simple. Most of its power is in the 'gitx' binary, which
 you should install through the menu. the 'gitx' binary supports most of git
-rev-list's arguments. For example, you can run `gitx --all' to display all
-branches in the repository, or `gitx -- Documentation' to only show commits
-relating to the 'Documentation' subdirectory. With `gitx -Shaha', gitx will
-only show commits that contain the word 'haha'. Similarly, with 'gitx
-v0.2.1..', you will get a list of all commits since version 0.2.1.
+rev-list's arguments. For example, you can run `gitx --all` to display all
+branches in the repository, or `gitx -- Documentation` to only show commits
+relating to the 'Documentation' subdirectory. With `gitx -Shaha`, gitx will
+only show commits that contain the word 'haha'. Similarly, with `gitx
+v0.2.1..`, you will get a list of all commits since version 0.2.1.
 
 # Helping out
 

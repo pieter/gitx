@@ -240,19 +240,16 @@ PBHistorySearchMode searchModeForCommandLineArgument(NSString *argument)
 	return 0;
 }
 
-GitXDocument *documentForURL(SBElementArray *documents, NSURL *URL)
+GitXDocument *documentForURL(SBElementArray *documents, NSURL *theURL)
 {
-	NSString *path = [URL path];
-
-	for (GitXDocument *document in documents) {
-		NSString *documentPath = [[document file] path];
-		if ([[documentPath lastPathComponent] isEqualToString:@".git"])
-			documentPath = [documentPath stringByDeletingLastPathComponent];
-
-		if ([documentPath isEqualToString:path])
+	for (GitXDocument *document in documents)
+	{
+		NSURL* docURL = [document file];
+		if ([docURL isEqualTo:theURL])
+		{
 			return document;
+		}
 	}
-
 	return nil;
 }
 
@@ -323,7 +320,7 @@ NSURL *workingDirectoryURL(NSMutableArray *arguments)
     NSString *pwd = [[[NSProcessInfo processInfo] environment] objectForKey:@"PWD"];
 
 	NSURL* pwdURL = [NSURL fileURLWithPath:pwd];
-	NSURL* repoURL = [GitRepoFinder baseDirForURL:pwdURL];
+	NSURL* repoURL = [GitRepoFinder fileURLForURL:pwdURL];
 	return repoURL;
 
 }

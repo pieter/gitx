@@ -30,7 +30,7 @@
 
 @implementation PBGitRepository
 
-@synthesize revisionList, branches, currentBranch, refs, hasChanged, configuration, submodules;
+@synthesize revisionList, branchesSet, currentBranch, refs, hasChanged, configuration, submodules;
 @synthesize currentBranchFilter;
 
 - (BOOL)readFromData:(NSData *)data ofType:(NSString *)typeName error:(NSError **)outError
@@ -84,7 +84,7 @@
 	}
 
 
-	NSURL* gitDirURL = [GitRepoFinder gitDirForURL:[self fileURL]];
+	NSURL* gitDirURL = [GitRepoFinder gitDirForURL:absoluteURL];
 	if (!gitDirURL) {
 		if (outError) {
 			NSDictionary* userInfo = [NSDictionary dictionaryWithObject:[NSString stringWithFormat:@"%@ does not appear to be a git repository.", [[self fileURL] path]]
@@ -93,6 +93,7 @@
 		}
 		return NO;
 	}
+	self.fileURL = [GitRepoFinder fileURLForURL:absoluteURL];
 
 	[self setup];
   watcher = [[PBGitRepositoryWatcher alloc] initWithRepository:self];
@@ -105,7 +106,7 @@
 - (void) setup
 {
 	self->configuration = self.gtRepo.configuration;
-	self.branches = [NSMutableArray array];
+	self.branchesSet = [NSMutableOrderedSet orderedSet];
     self.submodules = [NSMutableArray array];
 	[self reloadRefs];
 	currentBranchFilter = [PBGitDefaults branchFilter];
@@ -146,7 +147,7 @@
 #endif
 
 	[self showWindows];
-
+    
   // Setup the FSEvents watcher to fire notifications when things change
   watcher = [[PBGitRepositoryWatcher alloc] initWithRepository:self];
 	return self;
@@ -173,12 +174,8 @@
 
 - (NSString *) projectName
 {
-	NSString *projectPath = [[self fileURL] path];
-
-	if ([[projectPath lastPathComponent] isEqualToString:@".git"])
-		projectPath = [projectPath stringByDeletingLastPathComponent];
-
-	return [projectPath lastPathComponent];
+	NSString* result = [self.workingDirectory lastPathComponent];
+	return result;
 }
 
 // Get the .gitignore file at the root of the repository
@@ -256,7 +253,12 @@ int addSubmoduleName(git_submodule *module, const char* name, void * context)
 - (void) loadSubmodules
 {
     self.submodules = [NSMutableArray array];
-    git_submodule_foreach(_gtRepo.git_repository, addSubmoduleName, (__bridge void *)self);
+	git_repository* theRepo = self.gtRepo.git_repository;
+	if (!theRepo)
+	{
+		return;
+	}
+    git_submodule_foreach(theRepo, addSubmoduleName, (__bridge void *)self);
 }
 
 - (void) reloadRefs
@@ -270,7 +272,7 @@ int addSubmoduleName(git_submodule *module, const char* name, void * context)
 	NSArray* allRefs = [self.gtRepo referenceNamesWithError:&error];
 	
 	// load all named refs
-	NSMutableArray *oldBranches = [branches mutableCopy];
+	NSMutableOrderedSet *oldBranches = [self.branchesSet mutableCopy];
 	for (NSString* referenceName in allRefs)
 	{
 		GTReference* gtRef =
@@ -500,6 +502,11 @@ int addSubmoduleName(git_submodule *module, const char* name, void * context)
 
 	return nil;
 }
+
+- (NSArray*)branches
+{
+    return [self.branchesSet array];
+}
 		
 // Returns either this object, or an existing, equal object
 - (PBGitRevSpecifier*) addBranch:(PBGitRevSpecifier*)branch
@@ -508,14 +515,14 @@ int addSubmoduleName(git_submodule *module, const char* name, void * context)
 		branch = [self headRef];
 
 	// First check if the branch doesn't exist already
-	for (PBGitRevSpecifier *rev in branches)
-		if ([branch isEqual: rev])
-			return rev;
+    if ([self.branchesSet containsObject:branch]) {
+        return branch;
+    }
 
-	NSIndexSet *newIndex = [NSIndexSet indexSetWithIndex:[branches count]];
+	NSIndexSet *newIndex = [NSIndexSet indexSetWithIndex:[self.branches count]];
 	[self willChange:NSKeyValueChangeInsertion valuesAtIndexes:newIndex forKey:@"branches"];
 
-	[branches addObject:branch];
+    [self.branchesSet addObject:branch];
 
 	[self didChange:NSKeyValueChangeInsertion valuesAtIndexes:newIndex forKey:@"branches"];
 	return branch;
@@ -523,17 +530,15 @@ int addSubmoduleName(git_submodule *module, const char* name, void * context)
 
 - (BOOL) removeBranch:(PBGitRevSpecifier *)branch
 {
-	for (PBGitRevSpecifier *rev in branches) {
-		if ([branch isEqual:rev]) {
-			NSIndexSet *oldIndex = [NSIndexSet indexSetWithIndex:[branches indexOfObject:rev]];
-			[self willChange:NSKeyValueChangeRemoval valuesAtIndexes:oldIndex forKey:@"branches"];
+    if ([self.branchesSet containsObject:branch]) {
+        NSIndexSet *oldIndex = [NSIndexSet indexSetWithIndex:[self.branches indexOfObject:branch]];
+        [self willChange:NSKeyValueChangeRemoval valuesAtIndexes:oldIndex forKey:@"branches"];
 
-			[branches removeObject:rev];
+        [self.branchesSet removeObject:branch];
 
-			[self didChange:NSKeyValueChangeRemoval valuesAtIndexes:oldIndex forKey:@"branches"];
-			return YES;
-		}
-	}
+        [self didChange:NSKeyValueChangeRemoval valuesAtIndexes:oldIndex forKey:@"branches"];
+        return YES;
+    }
 	return NO;
 }
 	
@@ -895,7 +900,7 @@ int addSubmoduleName(git_submodule *module, const char* name, void * context)
 
 	// remove the remote's branches
 	NSString *remoteRef = [kGitXRemoteRefPrefix stringByAppendingString:[ref remoteName]];
-	for (PBGitRevSpecifier *rev in [branches copy]) {
+	for (PBGitRevSpecifier *rev in [self.branchesSet copy]) {
 		PBGitRef *branch = [rev ref];
 		if ([[branch ref] hasPrefix:remoteRef]) {
 			[self removeBranch:rev];
@@ -1197,11 +1202,12 @@ int addSubmoduleName(git_submodule *module, const char* name, void * context)
 	if (!_gtRepo)
 	{
 		NSError* error = nil;
-		_gtRepo = [GTRepository repositoryWithURL:self.fileURL error:&error];
+		NSURL* repoURL = [GitRepoFinder gitDirForURL:self.fileURL];
+		_gtRepo = [GTRepository repositoryWithURL:repoURL error:&error];
 		if (error)
 		{
 			_gtRepo = nil;
-			NSLog(@"Error opening GTRepository for %@\n%@", self.fileURL, [error userInfo]);
+			NSLog(@"Error opening GTRepository for %@\n%@", repoURL, [error userInfo]);
 		}
 	}
 	return _gtRepo;
