@@ -206,15 +206,18 @@ using namespace std;
 			[newCommit setAuthor:[NSString stringWithCString:author.c_str() encoding:encoding]];
 			[newCommit setCommitter:[NSString stringWithCString:committer.c_str() encoding:encoding]];
             
-            // get the git-svn-id from the message
-            NSString *string = [NSString stringWithCString:message.c_str() encoding:encoding];
-            NSArray *matches = [regex matchesInString:string options:0 range:NSMakeRange(0, [string length])];
-            
-            for (NSTextCheckingResult *match in matches)
+            if ([repository hasSVNRemote])
             {
-                NSRange matchRange = [match rangeAtIndex:1];
-                NSString *matchString = [string substringWithRange:matchRange];
-                [newCommit setSVNRevision:matchString];
+                // get the git-svn-id from the message
+                NSString *string = [NSString stringWithCString:message.c_str() encoding:encoding];
+                NSArray *matches = [regex matchesInString:string options:0 range:NSMakeRange(0, [string length])];
+                
+                for (NSTextCheckingResult *match in matches)
+                {
+                    NSRange matchRange = [match rangeAtIndex:1];
+                    NSString *matchString = [string substringWithRange:matchRange];
+                    [newCommit setSVNRevision:matchString];
+                }
             }
             
 			[newCommit setTimestamp:time];
