@@ -11,8 +11,13 @@ var toggleDiff = function(id)
   var content = document.getElementById('content_' + id);
   if (content) {
     var collapsed = (content.style.display == 'none');
-    content.style.display = (collapsed) ? 'block' : 'none';
-
+	  if (collapsed) {
+		  content.style.display = 'box';
+		  jQuery(content).fadeTo('slow', 1).slideDown();
+	  } else {
+		  jQuery(content).fadeTo('fast', 0).slideUp('fast', function () {content.style.display = 'none'});
+	  }
+	
     var title = document.getElementById('title_' + id);
     if (title) {
       if (collapsed) {
