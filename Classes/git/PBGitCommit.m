@@ -77,10 +77,13 @@ NSString * const kGitXCommitType = @"commit";
 	if (self == otherCommit)
 		return YES;
 
+	if (!otherCommit)
+		return NO;
+
 	if (![otherCommit isMemberOfClass:[PBGitCommit class]])
 		return NO;
 
-	return [self.sha isEqual:[(PBGitCommit *)otherCommit sha]];
+	return [self->sha isEqual:((PBGitCommit *)otherCommit)->sha];
 }
 
 - (NSUInteger)hash
