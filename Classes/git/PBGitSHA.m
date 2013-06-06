@@ -99,7 +99,10 @@
 	if (self == otherSHA)
 		return YES;
 
-	git_oid other_oid = [(PBGitSHA *)otherSHA oid];
+	if  (!otherSHA)
+		return NO;
+
+	git_oid other_oid = ((PBGitSHA *)otherSHA)->oid;
 	return git_oid_cmp(&oid, &other_oid) == 0;
 }
 
