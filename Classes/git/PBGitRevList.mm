@@ -209,25 +209,30 @@ using namespace std;
             if ([repository hasSVNRemote])
             {
 				// get the git-svn-id from the subject
+				NSArray *matches = nil;
 				NSString *string = [NSString stringWithCString:subject.c_str() encoding:encoding];
-				NSArray *matches = [regex matchesInString:string options:0 range:NSMakeRange(0, [string length])];
-				for (NSTextCheckingResult *match in matches)
-				{
-					NSRange matchRange = [match rangeAtIndex:1];
-                    NSString *matchString = [string substringWithRange:matchRange];
-                    [newCommit setSVNRevision:matchString];
+				if (string) {
+					matches = [regex matchesInString:string options:0 range:NSMakeRange(0, [string length])];
+					for (NSTextCheckingResult *match in matches)
+					{
+						NSRange matchRange = [match rangeAtIndex:1];
+						NSString *matchString = [string substringWithRange:matchRange];
+						[newCommit setSVNRevision:matchString];
+					}
 				}
 				
                 // get the git-svn-id from the message
                 string = [NSString stringWithCString:message.c_str() encoding:encoding];
-				matches = [regex matchesInString:string options:0 range:NSMakeRange(0, [string length])];
-                
-                for (NSTextCheckingResult *match in matches)
-                {
-                    NSRange matchRange = [match rangeAtIndex:1];
-                    NSString *matchString = [string substringWithRange:matchRange];
-                    [newCommit setSVNRevision:matchString];
-                }
+				if (string) {
+					matches = [regex matchesInString:string options:0 range:NSMakeRange(0, [string length])];
+					
+					for (NSTextCheckingResult *match in matches)
+					{
+						NSRange matchRange = [match rangeAtIndex:1];
+						NSString *matchString = [string substringWithRange:matchRange];
+						[newCommit setSVNRevision:matchString];
+					}
+				}
             }
             
 			[newCommit setTimestamp:time];
