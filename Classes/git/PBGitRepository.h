@@ -107,7 +107,6 @@ static NSString * PBStringFromBranchFilterType(PBGitXBranchFilterType type) {
 + (BOOL)isBareRepository:(NSURL*)repositoryURL;
 
 - (BOOL)hasSVNRemote;
-+ (BOOL)hasSVNRemote:(NSURL*)repositoryURL;
 
 - (void) reloadRefs;
 - (void) lazyReload;
