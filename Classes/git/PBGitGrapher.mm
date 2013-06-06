@@ -10,17 +10,20 @@
 #import "PBGitCommit.h"
 #import "PBGitLane.h"
 #import "PBGitGraphLine.h"
-#import <list>
+
+#import <vector>
 #import <git2/oid.h>
 #include <algorithm>
 
 using namespace std;
+typedef std::vector<PBGitLane *> LaneCollection;
+
 
 @implementation PBGitGrapher
 
 - (id) initWithRepository: (PBGitRepository*) repo
 {
-	pl = new std::list<PBGitLane *>;
+	pl = new LaneCollection;
 
 	PBGitLane::resetColors();
 	return self;
@@ -36,8 +39,8 @@ void add_line(struct PBGitGraphLine *lines, int *nLines, int upper, int from, in
 - (void) decorateCommit: (PBGitCommit *) commit
 {
 	int i = 0, newPos = -1;
-	std::list<PBGitLane *> *currentLanes = new std::list<PBGitLane *>;
-	std::list<PBGitLane *> *previousLanes = (std::list<PBGitLane *> *)pl;
+	LaneCollection *currentLanes = new LaneCollection;
+	LaneCollection *previousLanes = (LaneCollection *)pl;
 	NSArray *parents = [commit parents];
 	int nParents = [parents count];
 
@@ -52,7 +55,7 @@ void add_line(struct PBGitGraphLine *lines, int *nLines, int upper, int from, in
 	// First, iterate over earlier columns and pass through any that don't want this commit
 	if (previous != nil) {
 		// We can't count until numColumns here, as it's only used for the width of the cell.
-		std::list<PBGitLane *>::iterator it = previousLanes->begin();
+		LaneCollection::iterator it = previousLanes->begin();
 		for (; it != previousLanes->end(); ++it) {
 			i++;
 			if (!*it) // This is an empty lane, created when the lane previously had a parentless(root) commit
@@ -108,7 +111,7 @@ void add_line(struct PBGitGraphLine *lines, int *nLines, int upper, int from, in
 		git_oid parentOID = [(PBGitSHA*)[parents objectAtIndex:parentIndex] oid];
 		int i = 0;
 		BOOL was_displayed = NO;
-		std::list<PBGitLane *>::iterator it = currentLanes->begin();
+		LaneCollection::iterator it = currentLanes->begin();
 		for (; it != currentLanes->end(); ++it) {
 			i++;
 			if ((*it)->isCommit(parentOID)) {
@@ -171,8 +174,8 @@ void add_line(struct PBGitGraphLine *lines, int *nLines, int upper, int from, in
 
 - (void) dealloc
 {
-	std::list<PBGitLane *> *lanes = (std::list<PBGitLane *> *)pl;
-	std::list<PBGitLane *>::iterator it = lanes->begin();
+	LaneCollection *lanes = (LaneCollection *)pl;
+	LaneCollection::iterator it = lanes->begin();
 	for (; it != lanes->end(); ++it)
 		delete *it;
 
