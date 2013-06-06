@@ -208,9 +208,19 @@ using namespace std;
             
             if ([repository hasSVNRemote])
             {
+				// get the git-svn-id from the subject
+				NSString *string = [NSString stringWithCString:subject.c_str() encoding:encoding];
+				NSArray *matches = [regex matchesInString:string options:0 range:NSMakeRange(0, [string length])];
+				for (NSTextCheckingResult *match in matches)
+				{
+					NSRange matchRange = [match rangeAtIndex:1];
+                    NSString *matchString = [string substringWithRange:matchRange];
+                    [newCommit setSVNRevision:matchString];
+				}
+				
                 // get the git-svn-id from the message
-                NSString *string = [NSString stringWithCString:message.c_str() encoding:encoding];
-                NSArray *matches = [regex matchesInString:string options:0 range:NSMakeRange(0, [string length])];
+                string = [NSString stringWithCString:message.c_str() encoding:encoding];
+				matches = [regex matchesInString:string options:0 range:NSMakeRange(0, [string length])];
                 
                 for (NSTextCheckingResult *match in matches)
                 {
