@@ -135,7 +135,7 @@ using namespace std;
 		
         // Regular expression for pulling out the SVN revision from the git log
         NSError *error = nil;
-        NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:@"^git-svn-id: .*@(\\d+) .*$" options:0 error:&error];
+        NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:@"^git-svn-id: .*@(\\d+) .*$" options:NSRegularExpressionAnchorsMatchLines error:&error];
         
 		int num = 0;
 		while (true) {
