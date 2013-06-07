@@ -14,7 +14,10 @@
  * @license
  * Dual licensed under the MIT and GPL licenses.
  */
-;(function()
+// Brush for the TypeScript language
+// Based on the JavaScript brush - shBrushJScript.js - with some minor alterations
+
+; (function ()
 {
 	// CommonJS
 	SyntaxHighlighter = SyntaxHighlighter || (typeof require !== 'undefined'? require('shCore').SyntaxHighlighter : null);
@@ -26,7 +29,8 @@
 				'for function if implements import in instanceof ' +
 				'interface let new null package private protected ' +
 				'static return super switch ' +
-				'this throw true try typeof var while with yield';
+				'this throw true try typeof var while with yield' +
+		    ' any bool declare get module number public set string';   // TypeScript-specific, everything above is common with JavaScript
 
 		var r = SyntaxHighlighter.regexLib;
 		
@@ -35,7 +39,6 @@
 			{ regex: r.multiLineSingleQuotedString,					css: 'string' },			// single quoted strings
 			{ regex: r.singleLineCComments,							css: 'comments' },			// one line comments
 			{ regex: r.multiLineCComments,							css: 'comments' },			// multiline comments
-			{ regex: /\s*#.*/gm,									css: 'preprocessor' },		// preprocessor tags like #region and #endregion
 			{ regex: new RegExp(this.getKeywords(keywords), 'gm'),	css: 'keyword' }			// keywords
 			];
 	
@@ -43,9 +46,9 @@
 	};
 
 	Brush.prototype	= new SyntaxHighlighter.Highlighter();
-	Brush.aliases	= ['js', 'jscript', 'javascript', 'json'];
+	Brush.aliases	= ['ts', 'typescript'];
 
-	SyntaxHighlighter.brushes.JScript = Brush;
+	SyntaxHighlighter.brushes.TypeScript = Brush;
 
 	// CommonJS
 	typeof(exports) != 'undefined' ? exports.Brush = Brush : null;
