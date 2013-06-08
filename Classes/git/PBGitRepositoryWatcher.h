@@ -32,7 +32,7 @@ extern NSString *kPBGitRepositoryEventPathsUserInfoKey;
 	NSDictionary* lastStatus;
 }
 
-@property (readonly, dct_weak) PBGitRepository *repository;
+@property (readonly, weak) PBGitRepository *repository;
 
 - (id) initWithRepository:(PBGitRepository *)repository;
 - (void) start;

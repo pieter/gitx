@@ -67,6 +67,6 @@ extern NSString * const kGitXCommitType;
 @property (readonly) NSString* details;
 @property (readonly) PBGitTree* tree;
 @property (readonly) NSArray* treeContents;
-@property (nonatomic, dct_weak) PBGitRepository* repository;
+@property (nonatomic, weak) PBGitRepository* repository;
 @property  id lineInfo;
 @end
