@@ -29,7 +29,7 @@
 	IBOutlet NSToolbarItem *finderItem;
 }
 
-@property (nonatomic, dct_weak)  PBGitRepository *repository;
+@property (nonatomic, weak)  PBGitRepository *repository;
 @property (nonatomic, strong) RJModalRepoSheet* currentModalSheet;
 
 - (id)initWithRepository:(PBGitRepository*)theRepository displayDefault:(BOOL)display;

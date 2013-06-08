@@ -16,7 +16,7 @@
 @class PBRefMenuItem;
 
 @interface PBRefController : NSObject <PBRefContextDelegate> {
-	IBOutlet __unsafe_unretained PBGitHistoryController *historyController;
+	IBOutlet __weak PBGitHistoryController *historyController;
 	IBOutlet NSArrayController *commitController;
 	IBOutlet PBCommitList *commitList;
 

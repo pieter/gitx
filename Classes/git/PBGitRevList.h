@@ -14,7 +14,7 @@
 @interface PBGitRevList : NSObject {
 	NSMutableArray *commits;
 
-	__dct_weak PBGitRepository *repository;
+	__weak PBGitRepository *repository;
 	PBGitRevSpecifier *currentRev;
 	BOOL isGraphing;
 
