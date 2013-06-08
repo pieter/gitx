@@ -204,9 +204,6 @@ using namespace std;
 		__gnu_cxx::stdio_filebuf<char> buf(fd, std::ios::in);
 		std::istream stream(&buf);
 		
-        // Regular expression for pulling out the SVN revision from the git log
-        NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:@"^git-svn-id: .*@(\\d+) .*$" options:NSRegularExpressionAnchorsMatchLines error:&error];
-        
 		int num = 0;
 		while (true) {
 			if ([currentThread isCancelled])
@@ -216,48 +213,12 @@ using namespace std;
 			if (!getline(stream, sha, '\3'))
 				break;
 			
+			
 			git_oid oid;
 			git_oid_fromstr(&oid, sha.c_str());
-			GTObject *object = [gtRepo lookupObjectByOid:&oid error:&error];
-			GTCommit *gtCommit = nil;
-			if ([object isKindOfClass:[GTCommit class]]) {
-				gtCommit = (GTCommit*)object;
-			}
-			assert(gtCommit);
+
+			PBGitCommit *newCommit = [[PBGitCommit alloc] initWithRepository:repo andCommit:oid];
 			
-			PBGitCommit *newCommit = [PBGitCommit commitWithRepository:repo andSha:[PBGitSHA shaWithOID:oid]];
-			
-			NSArray *gtParents = gtCommit.parents;
-			if (gtParents.count)
-			{
-				NSMutableArray *parents = [NSMutableArray arrayWithCapacity:gtParents.count];
-				for (GTCommit *parent in gtParents) {
-					[parents addObject:[PBGitSHA shaWithString:parent.sha]];
-				}
-				[newCommit setParents:parents];
-			}
-			
-			newCommit.subject = gtCommit.messageSummary;
-			newCommit.author = gtCommit.author.name;
-			newCommit.committer = gtCommit.committer.name;
-			
-            if ([repo hasSVNRemote])
-            {
-				// get the git-svn-id from the message
-				NSArray *matches = nil;
-				NSString *string = gtCommit.message;
-				if (string) {
-					matches = [regex matchesInString:string options:0 range:NSMakeRange(0, [string length])];
-					for (NSTextCheckingResult *match in matches)
-					{
-						NSRange matchRange = [match rangeAtIndex:1];
-						NSString *matchString = [string substringWithRange:matchRange];
-						[newCommit setSVNRevision:matchString];
-					}
-				}
-            }
-			
-			newCommit.timestamp = [gtCommit.commitDate timeIntervalSince1970];
 			
 			if (showSign)
 			{
