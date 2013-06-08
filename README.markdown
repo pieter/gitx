@@ -1,7 +1,10 @@
 # What is GitX?
 
 GitX is a graphical client for the `git` version control system, written
-specifically for OS X Snow Leopard (10.6) and higher.
+specifically for OS X Lion (10.7) and higher.
+
+There last build compatible with OS X Snow Leopard (10.6) is [0.14.81](http://builds.phere.net/GitX/development/GitX-dev-81.dmg), from February 4th 2013.
+
 This means that it has a native interface and tries to integrate with the
 operating system as good as possible. Examples of this are drag and drop
 support and QuickLook support.
@@ -26,7 +29,7 @@ frameworks and libraries that are used.
 
 *[Download the latest .DMG](http://builds.phere.net/GitX/development/GitX-dev.dmg)*
 
-GitX-dev uses the [Sparkle](http://sparkle.andymatuschak.org/) framework for in-app updates; so once you have version 0.11 or later, you can check for or update to new builds from the GitX menu at any time, or opt-in for automatic updates.
+GitX-dev uses the [Sparkle](http://sparkle.andymatuschak.org/) framework for in-app updates; so once you have version 0.11 (December 2011) or later, you can check for or update to new builds from the GitX menu at any time, or opt-in for automatic updates.
 
 ## Archived binaries
 
@@ -55,7 +58,7 @@ for mainline GitX.
 
 Most third-party code is referenced with Git submodules, so [read up](http://book.git-scm.com/5_submodules.html) on those if you're not familiar.
 
-  * Very recent Xcode install, 4.3 release strongly recommended.
+  * Very recent Xcode install, 4.5 release strongly recommended.
   * Most development is done on OS X Lion, Snow Leopard may or may not work
   * `CMake` with a working command-line compiling environment for building `libgit2`
   * `node.js` for building `SyntaxHighlighter` (not necessary unless you're updating SyntaxHighlighter itself)
