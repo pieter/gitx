@@ -6,7 +6,7 @@
  * http://alexgorbatchev.com/SyntaxHighlighter/donate.html
  *
  * @version
- * 3.0.83 (Fri, 07 Jun 2013 03:30:16 GMT)
+ * 3.0.83 (Fri, 07 Jun 2013 03:47:38 GMT)
  *
  * @copyright
  * Copyright (C) 2004-2013 Alex Gorbatchev.

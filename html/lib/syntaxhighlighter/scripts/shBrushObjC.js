@@ -6,6 +6,22 @@
  * http://alexgorbatchev.com/SyntaxHighlighter/donate.html
  *
  * @version
+ * 3.0.83 (Fri, 07 Jun 2013 03:47:38 GMT)
+ *
+ * @copyright
+ * Copyright (C) 2004-2013 Alex Gorbatchev.
+ *
+ * @license
+ * Dual licensed under the MIT and GPL licenses.
+ */
+/**
+ * SyntaxHighlighter
+ * http://alexgorbatchev.com/SyntaxHighlighter
+ *
+ * SyntaxHighlighter is donationware. If you are using it, please donate.
+ * http://alexgorbatchev.com/SyntaxHighlighter/donate.html
+ *
+ * @version
  * 3.0.83 (July 02 2010)
  * 
  * @copyright
