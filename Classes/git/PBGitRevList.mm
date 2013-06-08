@@ -14,6 +14,8 @@
 #import "PBEasyPipe.h"
 #import "PBGitBinary.h"
 
+#include <ObjectiveGit/ObjectiveGit.h>
+
 #include <ext/stdio_filebuf.h>
 #include <iostream>
 #include <string>
@@ -24,7 +26,14 @@ using namespace std;
 
 @interface PBGitRevList ()
 
-@property (assign) BOOL isParsing;
+@property (nonatomic, assign) BOOL isGraphing;
+@property (nonatomic, assign) BOOL resetCommits;
+
+@property (nonatomic, weak) PBGitRepository *repository;
+@property (nonatomic, strong) PBGitRevSpecifier *currentRev;
+
+
+@property (nonatomic, strong) NSThread *parseThread;
 
 @end
 
@@ -35,15 +44,15 @@ using namespace std;
 
 @implementation PBGitRevList
 
-@synthesize commits;
-@synthesize isParsing;
-
-
 - (id) initWithRepository:(PBGitRepository *)repo rev:(PBGitRevSpecifier *)rev shouldGraph:(BOOL)graph
 {
-	repository = repo;
-	isGraphing = graph;
-	currentRev = [rev copy];
+	self = [super init];
+	if (!self) {
+		return nil;
+	}
+	self.repository = repo;
+	self.currentRev = [rev copy];
+	self.isGraphing = graph;
 
 	return self;
 }
@@ -51,66 +60,128 @@ using namespace std;
 
 - (void) loadRevisons
 {
-	[parseThread cancel];
+	[self cancel];
 
-	parseThread = [[NSThread alloc] initWithTarget:self selector:@selector(walkRevisionListWithSpecifier:) object:currentRev];
+	self.parseThread = [[NSThread alloc] initWithTarget:self selector:@selector(beginWalkWithSpecifier:) object:self.currentRev];
 	self.isParsing = YES;
-	resetCommits = YES;
-	[parseThread start];
+	self.resetCommits = YES;
+	[self.parseThread start];
 }
 
 
 - (void)cancel
 {
-	[parseThread cancel];
+	[self.parseThread cancel];
+	self.parseThread = nil;
+	self.isParsing = NO;
 }
 
 
 - (void) finishedParsing
 {
+	self.parseThread = nil;
 	self.isParsing = NO;
 }
 
 
 - (void) updateCommits:(NSDictionary *)update
 {
-	if ([update objectForKey:kRevListThreadKey] != parseThread)
+	if ([update objectForKey:kRevListThreadKey] != self.parseThread)
 		return;
 
 	NSArray *revisions = [update objectForKey:kRevListRevisionsKey];
 	if (!revisions || [revisions count] == 0)
 		return;
 
-	if (resetCommits) {
+	if (self.resetCommits) {
 		self.commits = [NSMutableArray array];
-		resetCommits = NO;
+		self.resetCommits = NO;
 	}
 
-	NSRange range = NSMakeRange([commits count], [revisions count]);
+	NSRange range = NSMakeRange([self.commits count], [revisions count]);
 	NSIndexSet *indexes = [NSIndexSet indexSetWithIndexesInRange:range];
 
 	[self willChange:NSKeyValueChangeInsertion valuesAtIndexes:indexes forKey:@"commits"];
-	[commits addObjectsFromArray:revisions];
+	[self.commits addObjectsFromArray:revisions];
 	[self didChange:NSKeyValueChangeInsertion valuesAtIndexes:indexes forKey:@"commits"];
 }
 
+- (void) beginWalkWithSpecifier:(PBGitRevSpecifier*)rev
+{
+	// break the specifier down to components
+	[self walkRevisionListWithPBSpecifier:rev];
+/*	if ([rev isSimpleRef]) {
+		[self walkRevisionListWithSingleSpecifier:rev];
+	} else {
+		for (NSString *parameter in rev.parameters) {
+			PBGitRevSpecifier *simpleRev = [[PBGitRevSpecifier alloc] initWithParameters:@[parameter]];
+			[self walkRevisionListWithSingleSpecifier:simpleRev];
+		}
+	}
+}
 
-- (void) walkRevisionListWithSpecifier:(PBGitRevSpecifier*)rev
+- (void) walkRevisionListWithSingleSpecifier:(PBGitRevSpecifier*)rev
+{
+	[self walkRevisionListWithPBSpecifier:rev];
+
+	GTRepository *repo = self.repository.gtRepo;
+	NSError *error = nil;
+	if (rev.isSimpleRef) {
+		NSString *refspec = rev.simpleRef;
+		GTObject *object = [repo lookupObjectByRefspec:refspec error:&error];
+		if ([object class] == [GTCommit class]) {
+			GTCommit *commit = (GTCommit*)object;
+			NSLog(@"Dug up commit: %@ {%@}", commit, commit.parents);
+		}
+	} else {
+		if ([[rev.parameters objectAtIndex:0] isEqual:@"--branches"]) {
+			NSArray *branches = [repo localBranchesWithError:&error];
+			for (GTBranch *branch in branches) {
+				[self walkBranch:branch];
+			}
+		}
+	}
+}
+
+- (void) walkBranch:(GTBranch *)branch
+{
+	NSLog(@"Walking branch %@", branch.name);
+	NSError *error = nil;
+	GTCommit *commit = [branch targetCommitAndReturnError:&error];
+	if (commit) {
+		[self walkCommit:commit];
+	} */
+}
+
+- (void) walkCommit:(GTCommit *)commit
+{
+	//
+}
+
+- (void) walkRevisionListWithPBSpecifier:(PBGitRevSpecifier*)rev
 {
 	@autoreleasepool {
+		GTRepository *gtRepo = self.repository.gtRepo;
 		NSDate *start = [NSDate date];
 		NSDate *lastUpdate = [NSDate date];
 		NSMutableArray *revisions = [NSMutableArray array];
-		PBGitGrapher *g = [[PBGitGrapher alloc] initWithRepository:repository];
+		PBGitRepository *repo = self.repository;
+
+		NSError *error = nil;
+		
+		PBGitGrapher *g = [[PBGitGrapher alloc] initWithRepository:repo];
+		
+
+		
 		std::map<string, NSStringEncoding> encodingMap;
 		NSThread *currentThread = [NSThread currentThread];
 		
-		NSString *formatString = @"--pretty=format:%H\03%e\03%aN\03%cN\03%s\03%b\03%P\03%at";
+		NSString *formatString = @"--pretty=format:%H\03";
 
 		BOOL showSign = [rev hasLeftRight];
 		
 		if (showSign)
-			formatString = [formatString stringByAppendingString:@"\03%m"];
+			formatString = [formatString stringByAppendingString:@"%m"];
 		
 		NSMutableArray *arguments = [NSMutableArray arrayWithObjects:@"log",
 									 @"-z",
@@ -124,7 +195,7 @@ using namespace std;
 		else
 			[arguments addObjectsFromArray:[rev parameters]];
 		
-		NSString *directory = rev.workingDirectory ? rev.workingDirectory.path : repository.fileURL.path;
+		NSString *directory = rev.workingDirectory ? rev.workingDirectory.path : repo.fileURL.path;
 		NSTask *task = [PBEasyPipe taskForCommand:[PBGitBinary path] withArgs:arguments inDir:directory];
 		[task launch];
 		NSFileHandle *handle = [task.standardOutput fileHandleForReading];
@@ -134,7 +205,6 @@ using namespace std;
 		std::istream stream(&buf);
 		
         // Regular expression for pulling out the SVN revision from the git log
-        NSError *error = nil;
         NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:@"^git-svn-id: .*@(\\d+) .*$" options:NSRegularExpressionAnchorsMatchLines error:&error];
         
 		int num = 0;
@@ -146,86 +216,38 @@ using namespace std;
 			if (!getline(stream, sha, '\3'))
 				break;
 			
-			// From now on, 1.2 seconds
-			string encoding_str;
-			getline(stream, encoding_str, '\3');
-			NSStringEncoding encoding = NSUTF8StringEncoding;
-			if (encoding_str.length())
-			{
-				if (encodingMap.find(encoding_str) != encodingMap.end()) {
-					encoding = encodingMap[encoding_str];
-				} else {
-					encoding = CFStringConvertEncodingToNSStringEncoding(CFStringConvertIANACharSetNameToEncoding((__bridge CFStringRef)[NSString stringWithUTF8String:encoding_str.c_str()]));
-					encodingMap[encoding_str] = encoding;
-				}
-			}
-			
 			git_oid oid;
 			git_oid_fromstr(&oid, sha.c_str());
-			PBGitCommit *newCommit = [PBGitCommit commitWithRepository:repository andSha:[PBGitSHA shaWithOID:oid]];
+			GTObject *object = [gtRepo lookupObjectByOid:&oid error:&error];
+			GTCommit *gtCommit = nil;
+			if ([object isKindOfClass:[GTCommit class]]) {
+				gtCommit = (GTCommit*)object;
+			}
+			assert(gtCommit);
 			
-			string author;
-			getline(stream, author, '\3');
+			PBGitCommit *newCommit = [PBGitCommit commitWithRepository:repo andSha:[PBGitSHA shaWithOID:oid]];
 			
-			string committer;
-			getline(stream, committer, '\3');
-			
-			string subject;
-			getline(stream, subject, '\3');
-            
-            string message;
-            getline(stream, message, '\3');
-			
-			string parentString;
-			getline(stream, parentString, '\3');
-			if (parentString.size() != 0)
+			NSArray *gtParents = gtCommit.parents;
+			if (gtParents.count)
 			{
-				if (((parentString.size() + 1) % 41) != 0) {
-					NSLog(@"invalid parents: %zu", parentString.size());
-					continue;
+				NSMutableArray *parents = [NSMutableArray arrayWithCapacity:gtParents.count];
+				for (GTCommit *parent in gtParents) {
+					[parents addObject:[PBGitSHA shaWithString:parent.sha]];
 				}
-				int nParents = (parentString.size() + 1) / 41;
-				NSMutableArray *parents = [NSMutableArray arrayWithCapacity:nParents];
-				int parentIndex;
-				for (parentIndex = 0; parentIndex < nParents; ++parentIndex) {
-					PBGitSHA *parentSHA = [PBGitSHA shaWithCString:parentString.substr(parentIndex * 41, 40).c_str()];
-					if (parentSHA) {
-						[parents addObject:parentSHA];
-					} else {
-						NSLog(@"Nil parent (orphan object) in parents \"%s\"", parentString.c_str());
-					}
-				}
-				
 				[newCommit setParents:parents];
 			}
 			
-			int time;
-			stream >> time;
+			newCommit.subject = gtCommit.messageSummary;
+			newCommit.author = gtCommit.author.name;
+			newCommit.committer = gtCommit.committer.name;
 			
-			[newCommit setSubject:[NSString stringWithCString:subject.c_str() encoding:encoding]];
-			[newCommit setAuthor:[NSString stringWithCString:author.c_str() encoding:encoding]];
-			[newCommit setCommitter:[NSString stringWithCString:committer.c_str() encoding:encoding]];
-            
-            if ([repository hasSVNRemote])
+            if ([repo hasSVNRemote])
             {
-				// get the git-svn-id from the subject
+				// get the git-svn-id from the message
 				NSArray *matches = nil;
-				NSString *string = [NSString stringWithCString:subject.c_str() encoding:encoding];
+				NSString *string = gtCommit.message;
 				if (string) {
 					matches = [regex matchesInString:string options:0 range:NSMakeRange(0, [string length])];
-					for (NSTextCheckingResult *match in matches)
-					{
-						NSRange matchRange = [match rangeAtIndex:1];
-						NSString *matchString = [string substringWithRange:matchRange];
-						[newCommit setSVNRevision:matchString];
-					}
-				}
-				
-                // get the git-svn-id from the message
-                string = [NSString stringWithCString:message.c_str() encoding:encoding];
-				if (string) {
-					matches = [regex matchesInString:string options:0 range:NSMakeRange(0, [string length])];
-					
 					for (NSTextCheckingResult *match in matches)
 					{
 						NSRange matchRange = [match rangeAtIndex:1];
@@ -234,8 +256,8 @@ using namespace std;
 					}
 				}
             }
-            
-			[newCommit setTimestamp:time];
+			
+			newCommit.timestamp = [gtCommit.commitDate timeIntervalSince1970];
 			
 			if (showSign)
 			{
@@ -253,7 +275,7 @@ using namespace std;
 				cout << "Error" << endl;
 			
 			[revisions addObject: newCommit];
-			if (isGraphing)
+			if (self.isGraphing)
 				[g decorateCommit:newCommit];
 			
 			if (++num % 100 == 0) {
