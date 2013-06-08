@@ -9,6 +9,7 @@
 #import "PBGitHistoryGrapher.h"
 #import "PBGitGrapher.h"
 #import "PBGitSHA.h"
+#import "PBGitCommit.h"
 
 
 @implementation PBGitHistoryGrapher
