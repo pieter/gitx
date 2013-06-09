@@ -138,6 +138,8 @@ using namespace std;
 			[enumerator pushSHA:object.sha error:&error];
 		}
 	} else {
+		NSArray *allRefs = [repo referenceNamesWithError:&error];
+		NSLog(@"allRefs: %@", allRefs);
 		for (NSString *param in rev.parameters) {
 			if ([param isEqualToString:@"--branches"]) {
 				NSArray *branches = [repo localBranchesWithError:&error];
@@ -149,6 +151,17 @@ using namespace std;
 				NSArray *branches = [repo remoteBranchesWithError:&error];
 				for (GTBranch *branch in branches) {
 					[enumerator pushSHA:branch.sha error:&error];
+				}
+			}
+			if ([param isEqualToString:@"--tags"]) {
+				for (NSString *ref in allRefs) {
+					if ([ref hasPrefix:@"refs/tags/"]) {
+						GTObject *tag = [repo lookupObjectByRefspec:ref error:&error];
+						if ([tag isKindOfClass:[GTCommit class]])
+						{
+							[enumerator pushSHA:tag.sha error:&error];
+						}
+					}
 				}
 			}
 		}
