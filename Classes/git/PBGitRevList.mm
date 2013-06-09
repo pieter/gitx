@@ -178,11 +178,6 @@ using namespace std;
 		
 		NSString *formatString = @"--pretty=format:%H\03";
 
-		BOOL showSign = [rev hasLeftRight];
-		
-		if (showSign)
-			formatString = [formatString stringByAppendingString:@"%m"];
-		
 		NSMutableArray *arguments = [NSMutableArray arrayWithObjects:@"log",
 									 @"-z",
 									 @"--topo-order",
@@ -218,17 +213,6 @@ using namespace std;
 			git_oid_fromstr(&oid, sha.c_str());
 
 			PBGitCommit *newCommit = [[PBGitCommit alloc] initWithRepository:repo andCommit:oid];
-			
-			
-			if (showSign)
-			{
-				char c;
-				stream >> c; // Remove separator
-				stream >> c;
-				if (c != '>' && c != '<' && c != '^' && c != '-')
-					NSLog(@"Error loading commits: sign not correct");
-				[newCommit setSign: c];
-			}
 			
 			char c;
 			stream >> c;
