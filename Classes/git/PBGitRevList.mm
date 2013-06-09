@@ -108,13 +108,6 @@ using namespace std;
 
 - (void) beginWalkWithSpecifier:(PBGitRevSpecifier*)rev
 {
-	// break the specifier down to components
-//
-	[self wproto:rev];
-}
-
-- (void) wproto:(PBGitRevSpecifier*)rev
-{
 	PBGitRepository *pbRepo = self.repository;
 	GTRepository *repo = pbRepo.gtRepo;
 	
@@ -139,7 +132,6 @@ using namespace std;
 		}
 	} else {
 		NSArray *allRefs = [repo referenceNamesWithError:&error];
-		NSLog(@"allRefs: %@", allRefs);
 		for (NSString *param in rev.parameters) {
 			if ([param isEqualToString:@"--branches"]) {
 				NSArray *branches = [repo localBranchesWithError:&error];
@@ -175,32 +167,47 @@ using namespace std;
 	NSError *error = nil;
 	GTRepository *repo = enumerator.repository;
 	PBGitGrapher *g = [[PBGitGrapher alloc] initWithRepository:pbRepo];
-	NSDate *lastUpdate = [NSDate date];
+	__block NSDate *lastUpdate = [NSDate date];
 	NSThread *currentThread = [NSThread currentThread];
 	
-	int num = 0;
-	NSMutableArray *revisions = [NSMutableArray array];
+	dispatch_queue_t loadQueue = dispatch_queue_create("net.phere.gitx.loadQueue", 0);
+	dispatch_queue_t decorateQueue = dispatch_queue_create("net.phere.gitx.decorateQueue", 0);
+	dispatch_group_t loadGroup = dispatch_group_create();
+	dispatch_group_t decorateGroup = dispatch_group_create();
+	
+	__block int num = 0;
+	__block NSMutableArray *revisions = [NSMutableArray array];
 	do {
 		commit = [enumerator nextObjectWithSuccess:nil error:&error];
 		if (commit) {
 			GTOID *oid = [[GTOID alloc] initWithSHA:commit.sha];
-			PBGitCommit *newCommit = [[PBGitCommit alloc] initWithRepository:pbRepo andCommit:*oid.git_oid];
 			
-			[revisions addObject:newCommit];
-			if (self.isGraphing) {
-				[g decorateCommit:newCommit];
-			}
-			
-			if (++num % 100 == 0) {
-				if ([[NSDate date] timeIntervalSinceDate:lastUpdate] > 0.1) {
-					NSDictionary *update = [NSDictionary dictionaryWithObjectsAndKeys:currentThread, kRevListThreadKey, revisions, kRevListRevisionsKey, nil];
-					[self performSelectorOnMainThread:@selector(updateCommits:) withObject:update waitUntilDone:NO];
-					revisions = [NSMutableArray array];
-					lastUpdate = [NSDate date];
+			dispatch_group_async(loadGroup, loadQueue, ^{
+				PBGitCommit *newCommit = [[PBGitCommit alloc] initWithRepository:pbRepo andCommit:*oid.git_oid];
+				
+				[revisions addObject:newCommit];
+
+				if (self.isGraphing) {
+					dispatch_group_async(decorateGroup, decorateQueue, ^{
+						[g decorateCommit:newCommit];
+					});
 				}
-			}
+				
+				if (++num % 100 == 0) {
+					dispatch_group_wait(decorateGroup, DISPATCH_TIME_FOREVER);
+					if ([[NSDate date] timeIntervalSinceDate:lastUpdate] > 0.1) {
+						NSDictionary *update = [NSDictionary dictionaryWithObjectsAndKeys:currentThread, kRevListThreadKey, revisions, kRevListRevisionsKey, nil];
+						[self performSelectorOnMainThread:@selector(updateCommits:) withObject:update waitUntilDone:NO];
+						revisions = [NSMutableArray array];
+						lastUpdate = [NSDate date];
+					}
+				}
+			});
 		}
 	} while (commit);
+	
+	dispatch_group_wait(loadGroup, DISPATCH_TIME_FOREVER);
+	dispatch_group_wait(decorateGroup, DISPATCH_TIME_FOREVER);
 	
 	// Make sure the commits are stored before exiting.
 	NSDictionary *update = [NSDictionary dictionaryWithObjectsAndKeys:currentThread, kRevListThreadKey, revisions, kRevListRevisionsKey, nil];
