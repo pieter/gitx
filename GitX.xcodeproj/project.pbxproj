@@ -343,6 +343,7 @@
 		29B97325FDCFA39411CA2CEA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
 		4A0B5BD215FE2DA600ACCB61 /* libssl.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libssl.dylib; path = usr/lib/libssl.dylib; sourceTree = SDKROOT; };
 		4A0B5BD415FE2DC900ACCB61 /* libcrypto.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libcrypto.dylib; path = usr/lib/libcrypto.dylib; sourceTree = SDKROOT; };
+		4A1223321765D1DD0041B567 /* libgit2 */ = {isa = PBXFileReference; lastKnownFileType = folder; name = libgit2; path = "objective-git/libgit2"; sourceTree = "<group>"; };
 		4A40159614067B6300DB9C07 /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
 		4A40159814067B7A00DB9C07 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
 		4A4EF09F142CBAD5001B8CDF /* ObjectiveGitFramework.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ObjectiveGitFramework.xcodeproj; path = "objective-git/ObjectiveGitFramework.xcodeproj"; sourceTree = "<group>"; };
@@ -739,8 +740,8 @@
 			isa = PBXGroup;
 			children = (
 				4A4EF0AF142CBAD5001B8CDF /* ObjectiveGit.framework */,
-				4A4EF0B3142CBAD5001B8CDF /* libObjectiveGit-iOS.a */,
 				4ADAA9C21602ADB8007A0E6F /* ObjectiveGitTests.octest */,
+				4A4EF0B3142CBAD5001B8CDF /* libObjectiveGit-iOS.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1109,6 +1110,7 @@
 		4A5D773E14A9AB3A00DF6C68 /* External Sources */ = {
 			isa = PBXGroup;
 			children = (
+				4A1223321765D1DD0041B567 /* libgit2 */,
 				4A8F6B3B14A9B6100002F4D7 /* MGScopeBar.xcodeproj */,
 				4A4EF09F142CBAD5001B8CDF /* ObjectiveGitFramework.xcodeproj */,
 				4A68AD5814A0050E006DE321 /* Sparkle.xcodeproj */,
