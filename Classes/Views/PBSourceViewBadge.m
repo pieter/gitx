@@ -42,11 +42,13 @@
 	if (![cell isHighlighted])
 		return [NSColor whiteColor];
 
-	if (![[[cell controlView] window] isKeyWindow])
-		if ([[[cell controlView] window] isMainWindow])
+	if (![[[cell controlView] window] isKeyWindow]) {
+		if ([[[cell controlView] window] isMainWindow]) {
 			return [self badgeHighlightColor];
-		else 
+		} else {
 			return [self badgeBackgroundColor];
+        }
+    }
 
 	if ([[[cell controlView] window] firstResponder] == [cell controlView])
 		return [self badgeHighlightColor];
