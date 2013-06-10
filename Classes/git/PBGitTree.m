@@ -210,7 +210,11 @@
 		NSData* data = [handle readDataToEndOfFile];
 		[data writeToFile:newName atomically:YES];
 	} else { // Directory
-		[[NSFileManager defaultManager] createDirectoryAtPath:newName attributes:nil];
+        NSError *error = nil;
+		if (![[NSFileManager defaultManager] createDirectoryAtPath:newName withIntermediateDirectories:YES attributes:nil error:&error]) {
+            NSLog(@"Error creating directory %@: %@", newName, error);
+            return;
+        }
 		for (PBGitTree* child in [self children])
 			[child saveToFolder: newName];
 	}
@@ -301,7 +305,11 @@
 
 - (void) dealloc
 {
-	if (localFileName)
-		[[NSFileManager defaultManager] removeFileAtPath:localFileName handler:nil];
+	if (localFileName) {
+        NSError *error = nil;
+		if (![[NSFileManager defaultManager] removeItemAtPath:localFileName error:&error]) {
+            NSLog(@"Failed to remove item %@: %@", localFileName, error);
+        }
+    }
 }
 @end
