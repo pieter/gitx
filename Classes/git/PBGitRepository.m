@@ -36,7 +36,7 @@
 
 @implementation PBGitRepository
 
-@synthesize revisionList, branchesSet, currentBranch, refs, hasChanged, configuration, submodules;
+@synthesize revisionList, branchesSet, currentBranch, refs, hasChanged, submodules;
 @synthesize currentBranchFilter;
 
 - (BOOL)readFromData:(NSData *)data ofType:(NSString *)typeName error:(NSError **)outError
@@ -130,7 +130,6 @@
 }
 - (void) setup
 {
-	self->configuration = self.gtRepo.configuration;
 	self.branchesSet = [NSMutableOrderedSet orderedSet];
     self.submodules = [NSMutableArray array];
 	[self reloadRefs];
@@ -610,7 +609,7 @@ int addSubmoduleName(git_submodule *module, const char* name, void * context)
 
 	NSString *branchName = [branch branchName];
 	if (branchName) {
-		NSString *remoteName = [self.configuration stringForKey:[NSString stringWithFormat:@"branch.%@.remote", branchName]];
+		NSString *remoteName = [self.gtRepo.configuration stringForKey:[NSString stringWithFormat:@"branch.%@.remote", branchName]];
 		if (remoteName && ([remoteName isKindOfClass:[NSString class]] && ![remoteName isEqualToString:@""])) {
 			PBGitRef *remoteRef = [PBGitRef refFromString:[kGitXRemoteRefPrefix stringByAppendingString:remoteName]];
 			// check that the remote is a valid ref and exists
