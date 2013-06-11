@@ -39,17 +39,9 @@
 @synthesize revisionList, branchesSet, currentBranch, refs, hasChanged, submodules;
 @synthesize currentBranchFilter;
 
-+ (BOOL) isBareRepository: (NSURL*) url
-{
-	NSError* pError;
-	GTRepository* gitRepo = [[GTRepository alloc] initWithURL:url error:&pError];
-
-	return gitRepo && git_repository_is_bare([gitRepo git_repository]);
-}
-
 - (BOOL) isBareRepository
 {
-	return [PBGitRepository isBareRepository:[self fileURL]];
+    return self.gtRepo.isBare;
 }
 
 - (BOOL) readHasSVNRemoteFromConfig

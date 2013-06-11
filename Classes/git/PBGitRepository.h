@@ -103,7 +103,6 @@ static NSString * PBStringFromBranchFilterType(PBGitXBranchFilterType type) {
 - (NSString *) projectName;
 - (NSString *)gitIgnoreFilename;
 - (BOOL)isBareRepository;
-+ (BOOL)isBareRepository:(NSURL*)repositoryURL;
 
 - (BOOL)hasSVNRemote;
 
