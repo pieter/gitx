@@ -62,6 +62,9 @@
 	return self;
 }
 
+- (void)dealloc {
+    [self cleanup];
+}
 
 - (void) forceUpdate
 {
