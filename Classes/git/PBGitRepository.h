@@ -135,7 +135,6 @@ static NSString * PBStringFromBranchFilterType(PBGitXBranchFilterType type) {
 - (NSString*) parseReference:(NSString*) ref;
 
 - (id) initWithURL: (NSURL*) path;
-- (void) setup;
 - (void) forceUpdateRevisions;
 - (NSURL*) getIndexURL;
 
