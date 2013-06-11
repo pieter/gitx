@@ -39,16 +39,6 @@
 @synthesize revisionList, branchesSet, currentBranch, refs, hasChanged, submodules;
 @synthesize currentBranchFilter;
 
-- (BOOL)readFromData:(NSData *)data ofType:(NSString *)typeName error:(NSError **)outError
-{
-	if (outError) {
-		*outError = [NSError errorWithDomain:PBGitRepositoryErrorDomain
-                                      code:0
-                                  userInfo:[NSDictionary dictionaryWithObject:@"Reading files is not supported." forKey:NSLocalizedFailureReasonErrorKey]];
-	}
-	return NO;
-}
-
 + (BOOL) isBareRepository: (NSURL*) url
 {
 	NSError* pError;
