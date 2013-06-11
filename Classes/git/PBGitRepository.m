@@ -172,7 +172,7 @@
 // The fileURL the document keeps is to the working dir
 - (NSString *) displayName
 {
-	if (![[PBGitRef refFromString:[[self headRef] simpleRef]] type])
+    if (self.gtRepo.isHeadDetached)
 		return [NSString stringWithFormat:@"%@ (detached HEAD)", [self projectName]];
 
 	return [NSString stringWithFormat:@"%@ (branch: %@)", [self projectName], [[self headRef] description]];
