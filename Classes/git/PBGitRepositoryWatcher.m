@@ -87,6 +87,9 @@ void PBGitRepositoryWatcherCallback(ConstFSEventStreamRef streamRef,
 }
 
 - (BOOL) _indexChanged {
+	if (self.repository.isBareRepository) {
+		return NO;
+	}
     NSDate *newTouchDate = [self _fileModificationDateAtPath:[repository.gitURL.path stringByAppendingPathComponent:@"index"]];
 	if (![newTouchDate isEqual:indexTouchDate]) {
 		indexTouchDate = newTouchDate;
