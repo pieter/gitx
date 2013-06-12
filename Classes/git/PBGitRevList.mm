@@ -32,6 +32,7 @@ using namespace std;
 @property (nonatomic, weak) PBGitRepository *repository;
 @property (nonatomic, strong) PBGitRevSpecifier *currentRev;
 
+@property (nonatomic, strong) NSMutableDictionary *commitCache;
 
 @property (nonatomic, strong) NSThread *parseThread;
 
@@ -53,6 +54,7 @@ using namespace std;
 	self.repository = repo;
 	self.currentRev = [rev copy];
 	self.isGraphing = graph;
+	self.commitCache = [NSMutableDictionary new];
 	
 	return self;
 }
@@ -184,7 +186,14 @@ using namespace std;
 		GTOID *oid = [[GTOID alloc] initWithSHA:commit.sha];
 		
 		dispatch_group_async(loadGroup, loadQueue, ^{
-			PBGitCommit *newCommit = [[PBGitCommit alloc] initWithRepository:pbRepo andCommit:*oid.git_oid];
+			PBGitCommit *newCommit = nil;
+			PBGitCommit *cachedCommit = [self.commitCache objectForKey:oid.SHA];
+			if (cachedCommit) {
+				newCommit = cachedCommit;
+			} else {
+				newCommit = [[PBGitCommit alloc] initWithRepository:pbRepo andCommit:*oid.git_oid];
+				[self.commitCache setObject:newCommit forKey:oid.SHA];
+			}
 			
 			[revisions addObject:newCommit];
 			
