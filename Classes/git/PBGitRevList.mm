@@ -53,7 +53,7 @@ using namespace std;
 	self.repository = repo;
 	self.currentRev = [rev copy];
 	self.isGraphing = graph;
-
+	
 	return self;
 }
 
@@ -61,7 +61,7 @@ using namespace std;
 - (void) loadRevisons
 {
 	[self cancel];
-
+	
 	self.parseThread = [[NSThread alloc] initWithTarget:self selector:@selector(beginWalkWithSpecifier:) object:self.currentRev];
 	self.isParsing = YES;
 	self.resetCommits = YES;
@@ -88,19 +88,19 @@ using namespace std;
 {
 	if ([update objectForKey:kRevListThreadKey] != self.parseThread)
 		return;
-
+	
 	NSArray *revisions = [update objectForKey:kRevListRevisionsKey];
 	if (!revisions || [revisions count] == 0)
 		return;
-
+	
 	if (self.resetCommits) {
 		self.commits = [NSMutableArray array];
 		self.resetCommits = NO;
 	}
-
+	
 	NSRange range = NSMakeRange([self.commits count], [revisions count]);
 	NSIndexSet *indexes = [NSIndexSet indexSetWithIndexesInRange:range];
-
+	
 	[self willChange:NSKeyValueChangeInsertion valuesAtIndexes:indexes forKey:@"commits"];
 	[self.commits addObjectsFromArray:revisions];
 	[self didChange:NSKeyValueChangeInsertion valuesAtIndexes:indexes forKey:@"commits"];
@@ -113,7 +113,7 @@ using namespace std;
 	
 	NSError *error = nil;
 	GTEnumerator *enu = [[GTEnumerator alloc] initWithRepository:repo error:&error];
-
+	
 	[self setupEnumerator:enu forRevspec:rev];
 	
 	[self addCommitsFromEnumerator:enu inPBRepo:pbRepo];
@@ -125,6 +125,7 @@ using namespace std;
 	NSError *error = nil;
 	GTRepository *repo = enumerator.repository;
 	[enumerator resetWithOptions:GTEnumeratorOptionsTimeSort];
+	//	[enumerator resetWithOptions:GTEnumeratorOptionsTopologicalSort];
 	if (rev.isSimpleRef) {
 		GTObject *object = [repo lookupObjectByRefspec:rev.simpleRef error:&error];
 		if ([object isKindOfClass:[GTCommit class]]) {
@@ -138,14 +139,12 @@ using namespace std;
 				for (GTBranch *branch in branches) {
 					[enumerator pushSHA:branch.sha error:&error];
 				}
-			}
-			if ([param isEqualToString:@"--remotes"]) {
+			} else if ([param isEqualToString:@"--remotes"]) {
 				NSArray *branches = [repo remoteBranchesWithError:&error];
 				for (GTBranch *branch in branches) {
 					[enumerator pushSHA:branch.sha error:&error];
 				}
-			}
-			if ([param isEqualToString:@"--tags"]) {
+			} else if ([param isEqualToString:@"--tags"]) {
 				for (NSString *ref in allRefs) {
 					if ([ref hasPrefix:@"refs/tags/"]) {
 						GTObject *tag = [repo lookupObjectByRefspec:ref error:&error];
@@ -155,6 +154,10 @@ using namespace std;
 						}
 					}
 				}
+			} else if ([param hasPrefix:@"--glob="]) {
+				[enumerator pushGlob:[param substringFromIndex:@"--glob".length] error:&error];
+			} else {
+				[enumerator pushGlob:param error:&error];
 			}
 		}
 	}
@@ -163,9 +166,7 @@ using namespace std;
 - (void) addCommitsFromEnumerator:(GTEnumerator *)enumerator
 						 inPBRepo:(PBGitRepository*)pbRepo;
 {
-	GTCommit *commit = nil;
 	NSError *error = nil;
-	GTRepository *repo = enumerator.repository;
 	PBGitGrapher *g = [[PBGitGrapher alloc] initWithRepository:pbRepo];
 	__block NSDate *lastUpdate = [NSDate date];
 	NSThread *currentThread = [NSThread currentThread];
@@ -175,36 +176,35 @@ using namespace std;
 	dispatch_group_t loadGroup = dispatch_group_create();
 	dispatch_group_t decorateGroup = dispatch_group_create();
 	
+	BOOL enumSuccess = FALSE;
+	GTCommit *commit = nil;
 	__block int num = 0;
 	__block NSMutableArray *revisions = [NSMutableArray array];
-	do {
-		commit = [enumerator nextObjectWithSuccess:nil error:&error];
-		if (commit) {
-			GTOID *oid = [[GTOID alloc] initWithSHA:commit.sha];
+	while ((commit = [enumerator nextObjectWithSuccess:&enumSuccess error:&error]) && enumSuccess) {
+		GTOID *oid = [[GTOID alloc] initWithSHA:commit.sha];
+		
+		dispatch_group_async(loadGroup, loadQueue, ^{
+			PBGitCommit *newCommit = [[PBGitCommit alloc] initWithRepository:pbRepo andCommit:*oid.git_oid];
 			
-			dispatch_group_async(loadGroup, loadQueue, ^{
-				PBGitCommit *newCommit = [[PBGitCommit alloc] initWithRepository:pbRepo andCommit:*oid.git_oid];
-				
-				[revisions addObject:newCommit];
-
-				if (self.isGraphing) {
-					dispatch_group_async(decorateGroup, decorateQueue, ^{
-						[g decorateCommit:newCommit];
-					});
+			[revisions addObject:newCommit];
+			
+			if (self.isGraphing) {
+				dispatch_group_async(decorateGroup, decorateQueue, ^{
+					[g decorateCommit:newCommit];
+				});
+			}
+			
+			if (++num % 100 == 0) {
+				dispatch_group_wait(decorateGroup, DISPATCH_TIME_FOREVER);
+				if ([[NSDate date] timeIntervalSinceDate:lastUpdate] > 0.1) {
+					NSDictionary *update = [NSDictionary dictionaryWithObjectsAndKeys:currentThread, kRevListThreadKey, revisions, kRevListRevisionsKey, nil];
+					[self performSelectorOnMainThread:@selector(updateCommits:) withObject:update waitUntilDone:NO];
+					revisions = [NSMutableArray array];
+					lastUpdate = [NSDate date];
 				}
-				
-				if (++num % 100 == 0) {
-					dispatch_group_wait(decorateGroup, DISPATCH_TIME_FOREVER);
-					if ([[NSDate date] timeIntervalSinceDate:lastUpdate] > 0.1) {
-						NSDictionary *update = [NSDictionary dictionaryWithObjectsAndKeys:currentThread, kRevListThreadKey, revisions, kRevListRevisionsKey, nil];
-						[self performSelectorOnMainThread:@selector(updateCommits:) withObject:update waitUntilDone:NO];
-						revisions = [NSMutableArray array];
-						lastUpdate = [NSDate date];
-					}
-				}
-			});
-		}
-	} while (commit);
+			}
+		});
+	}
 	
 	dispatch_group_wait(loadGroup, DISPATCH_TIME_FOREVER);
 	dispatch_group_wait(decorateGroup, DISPATCH_TIME_FOREVER);
