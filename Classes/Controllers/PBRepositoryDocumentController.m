@@ -56,13 +56,13 @@
 
 - (void)initNewRepositoryAtURL:(NSURL *)url
 {
-	int terminationStatus;
-	NSString *result = [PBEasyPipe outputForCommand:[PBGitBinary path] withArgs:[NSArray arrayWithObjects:@"init", @"-q", nil] inDir:[url path] retValue:&terminationStatus];
-
-	if (terminationStatus == 0)
+	NSError *error = nil;
+	BOOL success = [GTRepository initializeEmptyRepositoryAtURL:url error:&error];
+	if (success && !error) {
 		[self openDocumentWithContentsOfURL:url display:YES error:NULL];
-	else
-		NSRunAlertPanel(@"Failed to create new Git repository", @"Git returned the following error when trying to create the repository: %@", nil, nil, nil, result);
+	} else {
+		NSRunAlertPanel(@"Failed to create new Git repository", @"Git returned the following error when trying to create the repository: %@", nil, nil, nil, [error debugDescription]);
+	}
 }
 
 - (IBAction)newDocument:(id)sender
