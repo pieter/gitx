@@ -318,9 +318,9 @@ NSString * const kGitXProgressErrorInfo          = @"PBGitXProgressErrorInfo";
 	NSString *standardError = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
 
 	if ([standardError isEqualToString:@""])
-		return [NSString stringWithFormat:@"\nerror = %ld", (long)returnCode];
+		return [NSString stringWithFormat:@"\nerror = %ld", returnCode];
 
-	return [NSString stringWithFormat:@"\n\n%@\nerror = %ld", standardError, (long)returnCode];
+	return [NSString stringWithFormat:@"\n\n%@\nerror = %ld", standardError, returnCode];
 }
 
 -(void) dealloc

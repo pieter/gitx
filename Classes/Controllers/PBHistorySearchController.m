@@ -195,7 +195,7 @@
 	if (numberOfMatches == 1)
 		return @"1 match";
 
-	return [NSString stringWithFormat:@"%lu matches", (unsigned long)numberOfMatches];
+	return [NSString stringWithFormat:@"%lu matches", numberOfMatches];
 }
 
 - (void)updateUI

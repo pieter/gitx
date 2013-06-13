@@ -117,7 +117,7 @@
 
 + (NSImage *) numericBadge:(NSInteger)number forCell:(NSTextFieldCell *)cell
 {
-	return [self badge:[NSString stringWithFormat:@"%ld", (long)number] forCell:cell];
+	return [self badge:[NSString stringWithFormat:@"%ld", number] forCell:cell];
 }
 
 @end
