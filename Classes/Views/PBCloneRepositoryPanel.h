@@ -20,7 +20,6 @@
 + (id) panel;
 + (void)beginCloneRepository:(NSString *)repository toURL:(NSURL *)targetURL isBare:(BOOL)bare;
 
-- (void)showMessageSheet:(NSString *)messageText infoText:(NSString *)infoText;
 - (void)showErrorSheet:(NSError *)error;
 
 - (IBAction) closeCloneRepositoryPanel:(id)sender;

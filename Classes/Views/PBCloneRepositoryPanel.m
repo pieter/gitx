@@ -78,19 +78,6 @@
 }
 
 
-- (void)showMessageSheet:(NSString *)messageText infoText:(NSString *)infoText
-{
-	NSAlert *alert = [NSAlert alertWithMessageText:messageText
-									 defaultButton:nil alternateButton:nil otherButton:nil
-						 informativeTextWithFormat:infoText];
-	
-	[alert beginSheetModalForWindow:[self window]
-					  modalDelegate:self 
-					 didEndSelector:@selector(messageSheetDidEnd:returnCode:contextInfo:)
-						contextInfo:NULL];
-}
-
-
 - (void)showErrorSheet:(NSError *)error
 {
 	[[NSAlert alertWithError:error] beginSheetModalForWindow:[self window]
