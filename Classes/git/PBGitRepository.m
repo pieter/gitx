@@ -28,6 +28,8 @@
 #import <ObjectiveGit/GTIndex.h>
 #import <ObjectiveGit/GTConfiguration.h>
 
+NSString *PBGitRepositoryDocumentType = @"Git Repository";
+
 @interface PBGitRepository ()
 
 @property (nonatomic, strong) NSNumber *hasSVNRepoConfig;
@@ -134,29 +136,6 @@
 	[revisionList cleanup];
 
 	[super close];
-}
-
-- (id) initWithURL: (NSURL*) path
-{
-	if (![PBGitBinary path])
-		return nil;
-
-    self = [self initWithContentsOfURL:path ofType:@"" error:NULL];
-	if (!self)
-	{
-		NSLog(@"Failed to initWithURL:%@", path);
-		return nil;
-	}
-
-	// We don't want the window controller to display anything yet..
-	// We'll leave that to the caller of this method.
-#ifndef CLI
-	[self addWindowController:[[PBGitWindowController alloc] initWithRepository:self displayDefault:NO]];
-#endif
-
-	[self showWindows];
-
-	return self;
 }
 
 - (void) forceUpdateRevisions
