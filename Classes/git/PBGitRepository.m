@@ -238,11 +238,11 @@
 		return;
 	}
 	
-	git_oid refOid = *(gtRef.oid);
+	git_oid refOid = *(gtRef.git_oid);
 	git_object* gitTarget = NULL;
 	git_tag* gitTag = NULL;
 	PBGitSHA *sha = [PBGitSHA shaWithOID:refOid];
-	if (git_tag_lookup(&gitTag, self.gtRepo.git_repository, gtRef.oid) == GIT_OK)
+	if (git_tag_lookup(&gitTag, self.gtRepo.git_repository, gtRef.git_oid) == GIT_OK)
 	{
 		if (git_tag_peel(&gitTarget, gitTag) == GIT_OK)
 		{
@@ -397,7 +397,7 @@ int addSubmoduleName(git_submodule *module, const char* name, void * context)
 		NSLog(@"Error looking up ref for %@", ref.ref);
 		return nil;
 	}
-	const git_oid* refOid = gtRef.oid;
+	const git_oid* refOid = gtRef.git_oid;
 	
 	if (refOid)
 	{
