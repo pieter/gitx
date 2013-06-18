@@ -183,16 +183,16 @@ using namespace std;
 	__block int num = 0;
 	__block NSMutableArray *revisions = [NSMutableArray array];
 	while ((commit = [enumerator nextObjectWithSuccess:&enumSuccess error:&error]) && enumSuccess) {
-		GTOID *oid = [[GTOID alloc] initWithSHA:commit.sha];
+		//GTOID *oid = [[GTOID alloc] initWithSHA:commit.sha];
 		
 		dispatch_group_async(loadGroup, loadQueue, ^{
 			PBGitCommit *newCommit = nil;
-			PBGitCommit *cachedCommit = [self.commitCache objectForKey:oid.SHA];
+			PBGitCommit *cachedCommit = [self.commitCache objectForKey:commit.sha];
 			if (cachedCommit) {
 				newCommit = cachedCommit;
 			} else {
-				newCommit = [[PBGitCommit alloc] initWithRepository:pbRepo andCommit:*oid.git_oid];
-				[self.commitCache setObject:newCommit forKey:oid.SHA];
+				newCommit = [[PBGitCommit alloc] initWithRepository:pbRepo andCommit:commit];
+				[self.commitCache setObject:newCommit forKey:commit.sha];
 			}
 			
 			[revisions addObject:newCommit];
@@ -204,8 +204,8 @@ using namespace std;
 			}
 			
 			if (++num % 100 == 0) {
-				dispatch_group_wait(decorateGroup, DISPATCH_TIME_FOREVER);
-				if ([[NSDate date] timeIntervalSinceDate:lastUpdate] > 0.1) {
+				if ([[NSDate date] timeIntervalSinceDate:lastUpdate] > 0.5) {
+					dispatch_group_wait(decorateGroup, DISPATCH_TIME_FOREVER);
 					NSDictionary *update = [NSDictionary dictionaryWithObjectsAndKeys:currentThread, kRevListThreadKey, revisions, kRevListRevisionsKey, nil];
 					[self performSelectorOnMainThread:@selector(updateCommits:) withObject:update waitUntilDone:NO];
 					revisions = [NSMutableArray array];

@@ -18,10 +18,10 @@ NSString * const kGitXCommitType = @"commit";
 
 @property (nonatomic, weak) PBGitRepository *repository;
 @property (nonatomic, strong) GTCommit *gtCommit;
-@property (nonatomic, assign) git_oid oid;
 @property (nonatomic, strong) NSArray *parents;
 
 @property (nonatomic, strong) NSString *patch;
+@property (nonatomic, strong) PBGitSHA *sha;
 
 @end
 
@@ -44,35 +44,18 @@ NSString * const kGitXCommitType = @"commit";
 	return self.tree.children;
 }
 
-/*+ (PBGitCommit *)commitWithRepository:(PBGitRepository*)repo andSha:(PBGitSHA *)newSha
-{
-	return [[self alloc] initWithRepository:repo andSha:newSha];
-}
-*/
-- (id)initWithRepository:(PBGitRepository *)repo andCommit:(git_oid)oid
+- (id)initWithRepository:(PBGitRepository *)repo andCommit:(GTCommit *)gtCommit
 {
 	self = [super init];
 	if (!self) {
 		return nil;
 	}
 	self.repository = repo;
-	self.oid = oid;
+	self.gtCommit = gtCommit;
 	
 	return self;
 }
 
-- (GTCommit *)gtCommit
-{
-	if (!self->_gtCommit) {
-		NSError *error = nil;
-		GTObject *object = [self.repository.gtRepo lookupObjectByOid:&self->_oid error:&error];
-		if ([object isKindOfClass:[GTCommit class]]) {
-			self.gtCommit = (GTCommit *)object;
-		}
-	}
-	assert(self->_gtCommit);
-	return self->_gtCommit;
-}
 
 - (NSArray *)parents
 {
@@ -135,7 +118,14 @@ NSString * const kGitXCommitType = @"commit";
 
 - (PBGitSHA *)sha
 {
-	return [PBGitSHA shaWithOID:self.oid];
+	if (!self->_sha) {
+		const git_oid *oid = git_commit_id(self.gtCommit.git_commit);
+		if (oid) {
+			PBGitSHA *newSha = [PBGitSHA shaWithOID:*oid];
+			self.sha = newSha;
+		}
+	}
+	return self->_sha;
 }
 
 - (NSString *)realSha
@@ -161,16 +151,10 @@ NSString * const kGitXCommitType = @"commit";
 
 - (BOOL)isEqual:(id)otherCommit
 {
-	if (self == otherCommit)
+	if (self == otherCommit) {
 		return YES;
-
-	if (!otherCommit)
-		return NO;
-
-	if (![otherCommit isMemberOfClass:[PBGitCommit class]])
-		return NO;
-
-	return memcmp(&self->_oid, &((PBGitCommit *)otherCommit)->_oid, sizeof(git_oid)) == 0;
+	}
+	return NO;
 }
 
 - (NSUInteger)hash

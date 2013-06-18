@@ -17,6 +17,7 @@
 extern NSString * const kGitXCommitType;
 
 @class PBGraphCellInfo;
+@class GTCommit;
 
 @interface PBGitCommit : NSObject <PBGitRefish>
 
@@ -45,7 +46,7 @@ extern NSString * const kGitXCommitType;
 
 //+ (PBGitCommit *)commitWithRepository:(PBGitRepository*)repo andSha:(PBGitSHA *)newSha;
 
-- (id)initWithRepository:(PBGitRepository *)repo andCommit:(git_oid)oid;
+- (id)initWithRepository:(PBGitRepository *)repo andCommit:(GTCommit *)gtCommit;
 
 - (void) addRef:(PBGitRef *)ref;
 - (void) removeRef:(id)ref;

@@ -60,7 +60,7 @@
 			}
 		}
 		if (++counter % 100 == 0) {
-			if ([[NSDate date] timeIntervalSinceDate:lastUpdate] > 0.1) {
+			if ([[NSDate date] timeIntervalSinceDate:lastUpdate] > 0.5) {
 				[self sendCommits:commits];
 				commits = [NSMutableArray array];
 				lastUpdate = [NSDate date];
