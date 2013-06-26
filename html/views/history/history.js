@@ -106,10 +106,11 @@ var gistie = function() {
 
 	var t = new XMLHttpRequest();
 	t.onreadystatechange = function() {
-		if (t.readyState == 4 && t.status >= 200 && t.status < 300) {
-			if (m = t.responseText.match(/<a href="\/gists\/([a-f0-9]+)\/edit">/))
+		if (t.readyState == 4) {
+			var m, success = t.status >= 200 && t.status < 300;
+			if (success && (m = t.responseText.match(/<a href="\/gists\/([a-f0-9]+)\/edit">/))) {
 				notify("Code uploaded to gistie <a target='_new' href='http://gist.github.com/" + m[1] + "'>#" + m[1] + "</a>", 1);
-			else {
+			} else {
 				notify("Pasting to Gistie failed :(.", -1);
 				Controller.log_(t.responseText);
 			}
