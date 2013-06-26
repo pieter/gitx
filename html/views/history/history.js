@@ -87,13 +87,8 @@ var gistie = function() {
 	var filename = commit.object.subject.replace(/[^a-zA-Z0-9]/g, "-") + ".patch";
 	parameters.files[filename] = {content: commit.object.patch()};
 
+	var accessToken = Controller.getConfig_("github.token"); // obtain a personal access token from https://github.com/settings/applications
 	// TODO: Replace true with private preference
-	token = Controller.getConfig_("github.token");
-	login = Controller.getConfig_("github.user");
-	if (token && login) {
-		parameters.login = login;
-		parameters.token = token;
-	}
 	if (Controller.isFeatureEnabled_("publicGist"))
 		parameters.public = true;
 
@@ -112,6 +107,8 @@ var gistie = function() {
 	}
 
 	t.open('POST', "https://api.github.com/gists");
+	if (accessToken)
+		t.setRequestHeader('Authorization', 'token '+accessToken);
 	t.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
 	t.setRequestHeader('Accept', 'text/javascript, text/html, application/xml, text/xml, */*');
 	t.setRequestHeader('Content-type', 'application/x-www-form-urlencoded;charset=UTF-8');
