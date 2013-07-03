@@ -15,6 +15,12 @@
 #import "PBGitSidebarController.h"
 #import "RJModalRepoSheet.h"
 
+@interface PBGitWindowController ()
+
+@property (nonatomic, strong) RJModalRepoSheet* currentModalSheet;
+
+@end
+
 @implementation PBGitWindowController
 
 @synthesize repository;
