@@ -119,8 +119,10 @@ static OpenRecentController* recentsDialog = nil;
 		[dict addEntriesFromDictionary:[[NSDictionary alloc] initWithObjectsAndKeys:gitversion, @"Version", nil]];
 
 	#ifdef DEBUG_BUILD
-		[dict addEntriesFromDictionary:[[NSDictionary alloc] initWithObjectsAndKeys:@"GitX (DEBUG)", @"ApplicationName", nil]];
+		[dict addEntriesFromDictionary:[[NSDictionary alloc] initWithObjectsAndKeys:@"GitX-dev (DEBUG)", @"ApplicationName", nil]];
 	#endif
+
+	[dict addEntriesFromDictionary:[[NSDictionary alloc] initWithObjectsAndKeys:@"GitX-dev (rowanj fork)", @"ApplicationName", nil]];
 
 	[NSApp orderFrontStandardAboutPanelWithOptions:dict];
 }
@@ -203,7 +205,7 @@ static OpenRecentController* recentsDialog = nil;
 
 - (IBAction)showHelp:(id)sender
 {
-	[[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:@"http://gitx.frim.nl/user_manual.html"]];
+	[[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:@"http://rowanj.github.io/gitx/"]];
 }
 
 - (IBAction)reportAProblem:(id)sender
