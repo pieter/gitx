@@ -167,7 +167,8 @@ contextMenuItemsForElement:(NSDictionary *)element
 
 - getConfig:(NSString *)key
 {
-    GTConfiguration* config = historyController.repository.gtRepo.configuration;
+	NSError *error = nil;
+    GTConfiguration* config = [historyController.repository.gtRepo configurationWithError:&error];
 	return [config stringForKey:key];
 }
 

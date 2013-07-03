@@ -48,7 +48,9 @@ NSString *PBGitRepositoryDocumentType = @"Git Repository";
 
 - (BOOL) readHasSVNRemoteFromConfig
 {
-	NSArray *allKeys = self.gtRepo.configuration.configurationKeys;
+	NSError *error = nil;
+	GTConfiguration *config = [self.gtRepo configurationWithError:&error];
+	NSArray *allKeys = config.configurationKeys;
 	for (NSString *key in allKeys) {
 		if ([key hasPrefix:@"svn-remote."]) {
 			return TRUE;
@@ -570,7 +572,9 @@ int addSubmoduleName(git_submodule *module, const char* name, void * context)
 
 	NSString *branchName = [branch branchName];
 	if (branchName) {
-		NSString *remoteName = [self.gtRepo.configuration stringForKey:[NSString stringWithFormat:@"branch.%@.remote", branchName]];
+		NSError *error = nil;
+		GTConfiguration *config = [self.gtRepo configurationWithError:&error];
+		NSString *remoteName = [config stringForKey:[NSString stringWithFormat:@"branch.%@.remote", branchName]];
 		if (remoteName && ([remoteName isKindOfClass:[NSString class]] && ![remoteName isEqualToString:@""])) {
 			PBGitRef *remoteRef = [PBGitRef refFromString:[kGitXRemoteRefPrefix stringByAppendingString:remoteName]];
 			// check that the remote is a valid ref and exists
@@ -1178,7 +1182,9 @@ int addSubmoduleName(git_submodule *module, const char* name, void * context)
 
 - (NSURL*) getIndexURL
 {
-	NSURL* result = self.gtRepo.index.fileURL;
+	NSError *error = nil;
+	GTIndex *index = [self.gtRepo indexWithError:&error];
+	NSURL* result = index.fileURL;
 	return result;
 }
 
