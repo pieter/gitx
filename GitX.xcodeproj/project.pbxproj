@@ -1779,6 +1779,7 @@
 				INFOPLIST_FILE = Resources/Info.plist;
 				INFOPLIST_OTHER_PREPROCESSOR_FLAGS = "-traditional";
 				INSTALL_PATH = /Applications;
+				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks";
 				OTHER_CFLAGS = "-Werror=incompatible-pointer-types";
 				PRODUCT_NAME = GitX;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -1798,6 +1799,7 @@
 				INFOPLIST_FILE = Resources/Info.plist;
 				INFOPLIST_OTHER_PREPROCESSOR_FLAGS = "-traditional";
 				INSTALL_PATH = /Applications;
+				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks";
 				OTHER_CFLAGS = "-Werror=incompatible-pointer-types";
 				PRODUCT_NAME = GitX;
 				STRIP_INSTALLED_PRODUCT = YES;
