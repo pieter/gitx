@@ -19,7 +19,7 @@
 @class QLPreviewPanel;
 @class PBCommitList;
 @class GLFileView;
-@class PBGitSHA;
+@class GTOID;
 @class PBHistorySearchController;
 
 @interface PBGitHistoryController : PBViewController {
@@ -68,7 +68,7 @@
 - (IBAction) setTreeView:(id)sender;
 - (IBAction) setBranchFilter:(id)sender;
 
-- (void)selectCommit:(PBGitSHA *)commit;
+- (void)selectCommit:(GTOID *)commit;
 - (IBAction) refresh:(id)sender;
 - (IBAction) toggleQLPreviewPanel:(id)sender;
 - (IBAction) openSelectedFile:(id)sender;

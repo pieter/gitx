@@ -204,14 +204,14 @@ NSString *PBGitRepositoryDocumentType = @"Git Repository";
 	git_oid refOid = *(gtRef.git_oid);
 	git_object* gitTarget = NULL;
 	git_tag* gitTag = NULL;
-	PBGitSHA *sha = [PBGitSHA shaWithOID:refOid];
+	GTOID *sha = [GTOID oidWithGitOid: &refOid];
 	if (git_tag_lookup(&gitTag, self.gtRepo.git_repository, gtRef.git_oid) == GIT_OK)
 	{
 		if (git_tag_peel(&gitTarget, gitTag) == GIT_OK)
 		{
 			GTObject* peeledObject = [GTObject objectWithObj:gitTarget inRepository:self.gtRepo];
 //			NSLog(@"peeled sha:%@", peeledObject.sha);
-			sha = [PBGitSHA shaWithString:peeledObject.sha];
+			sha = [GTOID oidWithSHA: peeledObject.sha];
 		}
 	}
 	
@@ -321,7 +321,7 @@ int addSubmoduleName(git_submodule *module, const char* name, void * context)
 	return _headRef;
 }
 
-- (PBGitSHA *)headSHA
+- (GTOID *)headSHA
 {
 	if (! _headSha)
 		[self headRef];
@@ -334,12 +334,12 @@ int addSubmoduleName(git_submodule *module, const char* name, void * context)
 	return [self commitForSHA:[self headSHA]];
 }
 
-- (PBGitSHA *)shaForRef:(PBGitRef *)ref
+- (GTOID *)shaForRef:(PBGitRef *)ref
 {
 	if (!ref)
 		return nil;
 	
-	for (PBGitSHA *sha in refs)
+	for (GTOID *sha in refs)
 	{
 		for (PBGitRef *existingRef in [refs objectForKey:sha])
 		{
@@ -368,7 +368,7 @@ int addSubmoduleName(git_submodule *module, const char* name, void * context)
 		buffer[40] = '\0';
 		git_oid_fmt(buffer, refOid);
 		NSString* shaForRef = [NSString stringWithUTF8String:buffer];
-		PBGitSHA* result = [PBGitSHA shaWithString:shaForRef];
+		GTOID* result = [GTOID oidWithSHA: shaForRef];
 		return result;
 	}
 	return nil;
@@ -382,7 +382,7 @@ int addSubmoduleName(git_submodule *module, const char* name, void * context)
 	return [self commitForSHA:[self shaForRef:ref]];
 }
 
-- (PBGitCommit *)commitForSHA:(PBGitSHA *)sha
+- (PBGitCommit *)commitForSHA:(GTOID *)sha
 {
 	if (!sha)
 		return nil;
@@ -399,7 +399,7 @@ int addSubmoduleName(git_submodule *module, const char* name, void * context)
 	return nil;
 }
 
-- (BOOL)isOnSameBranch:(PBGitSHA *)branchSHA asSHA:(PBGitSHA *)testSHA
+- (BOOL)isOnSameBranch:(GTOID *)branchSHA asSHA:(GTOID *)testSHA
 {
 	if (!branchSHA || !testSHA)
 		return NO;
@@ -412,7 +412,7 @@ int addSubmoduleName(git_submodule *module, const char* name, void * context)
 	NSMutableSet *searchSHAs = [NSMutableSet setWithObject:branchSHA];
 
 	for (PBGitCommit *commit in revList) {
-		PBGitSHA *commitSHA = [commit sha];
+		GTOID *commitSHA = [commit sha];
 		if ([searchSHAs containsObject:commitSHA]) {
 			if ([testSHA isEqual:commitSHA])
 				return YES;
@@ -426,12 +426,12 @@ int addSubmoduleName(git_submodule *module, const char* name, void * context)
 	return NO;
 }
 
-- (BOOL)isSHAOnHeadBranch:(PBGitSHA *)testSHA
+- (BOOL)isSHAOnHeadBranch:(GTOID *)testSHA
 {
 	if (!testSHA)
 		return NO;
 
-	PBGitSHA *headSHA = [self headSHA];
+	GTOID *headSHA = [self headSHA];
 
 	if ([testSHA isEqual:headSHA])
 		return YES;

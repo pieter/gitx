@@ -7,7 +7,6 @@
 //
 
 #import "PBGitCommit.h"
-#import "PBGitSHA.h"
 #import "PBGitDefaults.h"
 
 
@@ -38,12 +37,12 @@ NSString * const kGitXCommitType = @"commit";
 	return self.tree.children;
 }
 
-+ (PBGitCommit *)commitWithRepository:(PBGitRepository*)repo andSha:(PBGitSHA *)newSha
++ (PBGitCommit *)commitWithRepository:(PBGitRepository*)repo andSha:(GTOID *)newSha
 {
 	return [[self alloc] initWithRepository:repo andSha:newSha];
 }
 
-- (id)initWithRepository:(PBGitRepository*) repo andSha:(PBGitSHA *)newSha
+- (id)initWithRepository:(PBGitRepository*) repo andSha:(GTOID *)newSha
 {
 	details = nil;
 	repository = repo;
@@ -53,7 +52,7 @@ NSString * const kGitXCommitType = @"commit";
 
 - (NSString *)realSha
 {
-	return sha.string;
+	return sha.SHA;
 }
 
 - (BOOL) isOnSameBranchAs:(PBGitCommit *)otherCommit

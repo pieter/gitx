@@ -18,6 +18,7 @@
 #include <iostream>
 #include <string>
 #include <map>
+#import <ObjectiveGit/GTOID.h>
 
 using namespace std;
 
@@ -162,7 +163,7 @@ using namespace std;
 			
 			git_oid oid;
 			git_oid_fromstr(&oid, sha.c_str());
-			PBGitCommit *newCommit = [PBGitCommit commitWithRepository:repository andSha:[PBGitSHA shaWithOID:oid]];
+			PBGitCommit *newCommit = [PBGitCommit commitWithRepository:repository andSha:[GTOID oidWithGitOid: &oid]];
 			
 			string author;
 			getline(stream, author, '\3');
@@ -188,7 +189,7 @@ using namespace std;
 				NSMutableArray *parents = [NSMutableArray arrayWithCapacity:nParents];
 				int parentIndex;
 				for (parentIndex = 0; parentIndex < nParents; ++parentIndex) {
-					PBGitSHA *parentSHA = [PBGitSHA shaWithCString:parentString.substr(parentIndex * 41, 40).c_str()];
+					GTOID *parentSHA = [GTOID oidWithSHACString: parentString.substr(parentIndex * 41, 40).c_str()];
 					if (parentSHA) {
 						[parents addObject:parentSHA];
 					} else {

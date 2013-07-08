@@ -105,7 +105,7 @@
 
 - (void) selectCommit:(NSString*)c
 {
-	[historyController selectCommit:[PBGitSHA shaWithString:c]];
+	[historyController selectCommit: [GTOID oidWithSHA: c]];
 }
 
 #pragma mark MGScopeBarDelegate methods

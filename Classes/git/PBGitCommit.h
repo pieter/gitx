@@ -10,14 +10,12 @@
 #import "PBGitRepository.h"
 #import "PBGitTree.h"
 #import "PBGitRefish.h"
-#import "PBGitSHA.h"
-
 
 extern NSString * const kGitXCommitType;
 
 
 @interface PBGitCommit : NSObject <PBGitRefish> {
-	PBGitSHA *sha;
+	GTOID *sha;
 
 	NSString* subject;
 	NSString* author;
@@ -33,8 +31,8 @@ extern NSString * const kGitXCommitType;
 	id lineInfo;
 }
 
-+ (PBGitCommit *)commitWithRepository:(PBGitRepository*)repo andSha:(PBGitSHA *)newSha;
-- (id)initWithRepository:(PBGitRepository *)repo andSha:(PBGitSHA *)newSha;
++ (PBGitCommit *)commitWithRepository:(PBGitRepository*)repo andSha:(GTOID *)newSha;
+- (id)initWithRepository:(PBGitRepository *)repo andSha:(GTOID *)newSha;
 
 - (void) addRef:(PBGitRef *)ref;
 - (void) removeRef:(id)ref;
@@ -49,7 +47,7 @@ extern NSString * const kGitXCommitType;
 - (NSString *) shortName;
 - (NSString *) refishType;
 
-@property (readonly) PBGitSHA *sha;
+@property (readonly) GTOID *sha;
 @property (copy) NSString* subject;
 @property (copy) NSString* author;
 @property (copy) NSString *committer;
