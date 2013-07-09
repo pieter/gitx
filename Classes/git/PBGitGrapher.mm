@@ -51,7 +51,7 @@ void add_line(struct PBGitGraphLine *lines, int *nLines, int upper, int from, in
 
 	PBGitLane *currentLane = NULL;
 	BOOL didFirst = NO;
-	git_oid commit_oid = *[[commit sha] git_oid];
+	const git_oid *commit_oid = [[commit sha] git_oid];
 	
 	// First, iterate over earlier columns and pass through any that don't want this commit
 	if (previous != nil) {
@@ -94,8 +94,8 @@ void add_line(struct PBGitGraphLine *lines, int *nLines, int upper, int from, in
 
 	// If we already did the first parent, don't do so again
 	if (!didFirst && nParents) {
-		git_oid parentOID = *[(GTOID*)[parents objectAtIndex:0] git_oid];
-		PBGitLane *newLane = new PBGitLane(&parentOID);
+		const git_oid *parentOID = [(GTOID*)[parents objectAtIndex:0] git_oid];
+		PBGitLane *newLane = new PBGitLane(parentOID);
 		currentLanes->push_back(newLane);
 		newPos = currentLanes->size();
 		add_line(lines, &currentLine, 0, newPos, newPos, newLane->index());
@@ -109,7 +109,7 @@ void add_line(struct PBGitGraphLine *lines, int *nLines, int upper, int from, in
 
 	int parentIndex = 0;
 	for (parentIndex = 1; parentIndex < nParents; ++parentIndex) {
-		git_oid parentOID = *[(GTOID*)[parents objectAtIndex:parentIndex] git_oid];
+		const git_oid *parentOID = [(GTOID*)[parents objectAtIndex:parentIndex] git_oid];
 		int i = 0;
 		BOOL was_displayed = NO;
 		LaneCollection::iterator it = currentLanes->begin();
@@ -126,7 +126,7 @@ void add_line(struct PBGitGraphLine *lines, int *nLines, int upper, int from, in
 		
 		// Really add this parent
 		addedParent = YES;
-		PBGitLane *newLane = new PBGitLane(&parentOID);
+		PBGitLane *newLane = new PBGitLane(parentOID);
 		currentLanes->push_back(newLane);
 		add_line(lines, &currentLine, 0, currentLanes->size(), newPos, newLane->index());
 	}
@@ -154,7 +154,7 @@ void add_line(struct PBGitGraphLine *lines, int *nLines, int upper, int from, in
 	// Update the current lane to point to the new parent
 	if (currentLane) {
 		if (nParents > 0)
-			currentLane->setSha(*[(GTOID*)[parents objectAtIndex:0] git_oid]);
+			currentLane->setSha( [(GTOID*)[parents objectAtIndex:0] git_oid]);
 		else {
 			// The current lane's commit does not have any parents
 			// AKA, this is a first commit

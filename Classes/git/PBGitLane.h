@@ -16,7 +16,7 @@ class PBGitLane {
 
 public:
 
-	PBGitLane(git_oid *sha)
+	PBGitLane(const git_oid *sha)
 	{
 		d_index = s_colorIndex++;
 		d_sha = *sha;
@@ -33,12 +33,12 @@ public:
 		d_index = s_colorIndex++;
 	}
 	
-	bool isCommit(git_oid sha) const
+	bool isCommit(const git_oid *sha) const
 	{
-		return !git_oid_cmp(&d_sha, &sha);
+		return !git_oid_cmp(&d_sha, sha);
 	}
 	
-	void setSha(git_oid sha);
+	void setSha(const git_oid *sha);
 	
 	git_oid const *sha() const
 	{

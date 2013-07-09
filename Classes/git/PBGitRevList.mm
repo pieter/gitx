@@ -161,9 +161,7 @@ using namespace std;
 				}
 			}
 			
-			git_oid oid;
-			git_oid_fromstr(&oid, sha.c_str());
-			PBGitCommit *newCommit = [PBGitCommit commitWithRepository:repository andSha:[GTOID oidWithGitOid: &oid]];
+			PBGitCommit *newCommit = [PBGitCommit commitWithRepository:repository andSha:[GTOID oidWithSHACString: sha.c_str()]];
 			
 			string author;
 			getline(stream, author, '\3');
