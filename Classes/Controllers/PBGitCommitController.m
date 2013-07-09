@@ -103,8 +103,10 @@
 
 - (IBAction)signOff:(id)sender
 {
-	NSString* userName = [repository.gtRepo.configuration stringForKey:@"user.name"];
-	NSString* userEmail = [repository.gtRepo.configuration stringForKey:@"user.email"];
+	NSError *error = nil;
+	GTConfiguration *config = [repository.gtRepo configurationWithError:&error];
+	NSString* userName = [config stringForKey:@"user.name"];
+	NSString* userEmail = [config stringForKey:@"user.email"];
 	if (!(userName && userEmail))
 		return [[repository windowController] showMessageSheet:@"User's name not set" infoText:@"Signing off a commit requires setting user.name and user.email in your git config"];
 	NSString *SOBline = [NSString stringWithFormat:@"Signed-off-by: %@ <%@>",

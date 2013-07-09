@@ -9,6 +9,7 @@
 #import "PBWebHistoryController.h"
 #import "PBGitDefaults.h"
 #import "PBGitSHA.h"
+#import <ObjectiveGit/GTConfiguration.h>
 
 @implementation PBWebHistoryController
 
@@ -164,9 +165,11 @@ contextMenuItemsForElement:(NSDictionary *)element
 	[[NSWorkspace sharedWorkspace] openURL:[request URL]];
 }
 
-- getConfig:(NSString *)config
+- getConfig:(NSString *)key
 {
-	return [historyController valueForKeyPath:[@"repository.config." stringByAppendingString:config]];
+	NSError *error = nil;
+    GTConfiguration* config = [historyController.repository.gtRepo configurationWithError:&error];
+	return [config stringForKey:key];
 }
 
 
