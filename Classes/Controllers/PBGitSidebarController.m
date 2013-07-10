@@ -219,6 +219,20 @@
 	[historyViewController.searchController setHistorySearch:searchString mode:mode];
 }
 
+- (void) openSubmoduleFromMenuItem:(NSMenuItem *)menuItem
+{
+    [self openSubmoduleAtURL:[menuItem representedObject]];
+}
+
+- (void) openSubmoduleAtURL:(NSURL *)submoduleURL
+{
+	[[NSDocumentController sharedDocumentController] openDocumentWithContentsOfURL:submoduleURL display:YES completionHandler:^(NSDocument *document, BOOL documentWasAlreadyOpen, NSError *error) {
+		if (error) {
+			[self.repository.windowController showErrorSheet:error];
+		}
+	}];
+}
+
 #pragma mark NSOutlineView delegate methods
 
 - (void)outlineViewSelectionDidChange:(NSNotification *)notification
@@ -247,15 +261,7 @@
     if ([[sourceView itemAtRow:rowNumber] isKindOfClass:[PBGitSVSubmoduleItem class]]) {
         PBGitSVSubmoduleItem *subModule = [sourceView itemAtRow:rowNumber];
 
-		NSURL *url = subModule.path;
-		[[NSDocumentController sharedDocumentController] openDocumentWithContentsOfURL:url
-																			   display:YES
-																	 completionHandler:^(NSDocument *document, BOOL documentWasAlreadyOpen, NSError *error) {
-																		 if (error) {
-																			 [self.repository.windowController showErrorSheet:error];
-																		 }
-																	 }];
-        ;
+        [self openSubmoduleAtURL:[subModule path]];
     }
 }
 
@@ -377,7 +383,7 @@
 
 - (void) updateActionMenu
 {
-	[actionButton setEnabled:([[self selectedItem] ref] != nil)];
+	[actionButton setEnabled:([[self selectedItem] ref] != nil || [[self selectedItem] isKindOfClass:[PBGitSVSubmoduleItem class]])];
 }
 
 - (void) addMenuItemsForRef:(PBGitRef *)ref toMenu:(NSMenu *)menu
@@ -387,6 +393,17 @@
 
 	for (NSMenuItem *menuItem in [historyViewController.refController menuItemsForRef:ref])
 		[menu addItem:menuItem];
+}
+
+- (void) addMenuItemsForSubmodule:(PBGitSVSubmoduleItem *)submodule toMenu:(NSMenu *)menu
+{
+    if (!submodule)
+        return;
+
+    NSMenuItem *menuItem = [menu addItemWithTitle:NSLocalizedString(@"Open Submodule", @"Open Submodule menu item") action:@selector(openSubmoduleFromMenuItem:) keyEquivalent:@""];
+
+    [menuItem setTarget:self];
+    [menuItem setRepresentedObject:[submodule path]];
 }
 
 - (NSMenuItem *) actionIconItem
@@ -402,14 +419,18 @@
 - (NSMenu *) menuForRow:(NSInteger)row
 {
 	PBSourceViewItem *viewItem = [sourceView itemAtRow:row];
-
 	PBGitRef *ref = [viewItem ref];
-	if (!ref)
-		return nil;
-
 	NSMenu *menu = [[NSMenu alloc] init];
+
 	[menu setAutoenablesItems:NO];
-	[self addMenuItemsForRef:ref toMenu:menu];
+
+	if (ref) {
+		[self addMenuItemsForRef:ref toMenu:menu];
+	}
+
+	if ([viewItem isKindOfClass:[PBGitSVSubmoduleItem class]]) {
+		[self addMenuItemsForSubmodule:(PBGitSVSubmoduleItem *)viewItem toMenu:menu];
+	}
 
 	return menu;
 }
@@ -422,6 +443,10 @@
 
 	PBGitRef *ref = [[self selectedItem] ref];
 	[self addMenuItemsForRef:ref toMenu:menu];
+
+    if ([[self selectedItem] isKindOfClass:[PBGitSVSubmoduleItem class]]) {
+        [self addMenuItemsForSubmodule:(PBGitSVSubmoduleItem *)[self selectedItem] toMenu:menu];
+    }
 }
 
 
