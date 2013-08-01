@@ -12,6 +12,7 @@
 @class PBGitRevSpecifier;
 @protocol PBGitRefish;
 @class PBGitRef;
+@class PBGitStash;
 @class GTRepository;
 @class GTConfiguration;
 
@@ -61,6 +62,7 @@ static NSString * PBStringFromBranchFilterType(PBGitXBranchFilterType type) {
 @property (readonly, getter = getIndexURL) NSURL* indexURL;
 
 @property (nonatomic, strong) PBGitHistoryList *revisionList;
+@property (nonatomic, readonly, strong) NSArray* stashes;
 @property (nonatomic, readonly, strong) NSArray* branches;
 @property (nonatomic, strong) NSMutableOrderedSet* branchesSet;
 @property (nonatomic, strong) PBGitRevSpecifier* currentBranch;
@@ -120,6 +122,7 @@ static NSString * PBStringFromBranchFilterType(PBGitXBranchFilterType type) {
 - (PBGitCommit *)commitForOID:(GTOID *)sha;
 - (BOOL)isOIDOnSameBranch:(GTOID *)baseOID asOID:(GTOID *)testOID;
 - (BOOL)isOIDOnHeadBranch:(GTOID *)testOID;
+- (PBGitStash *)stashForRef:(PBGitRef *)ref;
 - (BOOL)isRefOnHeadBranch:(PBGitRef *)testRef;
 - (BOOL)checkRefFormat:(NSString *)refName;
 - (BOOL)refExists:(PBGitRef *)ref;

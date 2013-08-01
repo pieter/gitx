@@ -23,7 +23,7 @@
 #import "PBGitRepositoryWatcher.h"
 #import "GitRepoFinder.h"
 #import "PBGitHistoryList.h"
-
+#import "PBGitStash.h"
 
 NSString *PBGitRepositoryDocumentType = @"Git Repository";
 
@@ -615,6 +615,33 @@ NSString *PBGitRepositoryDocumentType = @"Git Repository";
 {
     return [self.workingDirectoryURL path];
 }
+
+#pragma mark Stashes
+
+- (NSArray *) stashes
+{
+	NSMutableArray *stashes = [NSMutableArray array];
+	[self.gtRepo enumerateStashesUsingBlock:^(NSUInteger index, NSString *message, GTOID *oid, BOOL *stop) {
+		PBGitStash *stash = [[PBGitStash alloc] initWithRepository:self stashOID:oid index:index message:message];
+		[stashes addObject:stash];
+	}];
+    return [NSArray arrayWithArray:stashes];
+}
+
+- (PBGitStash *)stashForRef:(PBGitRef *)ref {
+    __block PBGitStash * found = nil;
+
+	[self.gtRepo enumerateStashesUsingBlock:^(NSUInteger index, NSString *message, GTOID *oid, BOOL *stop) {
+		PBGitStash *stash = [[PBGitStash alloc] initWithRepository:self stashOID:oid index:index message:message];
+        if ([stash.ref isEqualToRef:ref]) {
+            found = stash;
+            stop = YES;
+        }
+	}];
+    return found;
+}
+
+
 
 #pragma mark Remotes
 
