@@ -16,6 +16,8 @@
 #import "PBAddRemoteSheet.h"
 #import "PBGitDefaults.h"
 #import "PBHistorySearchController.h"
+#import "PBGitStash.h"
+#import "PBGitSVStashItem.h"
 
 @interface PBGitSidebarController ()
 
@@ -283,8 +285,12 @@
 	branches = [PBSourceViewItem groupItemWithTitle:@"Branches"];
 	remotes = [PBSourceViewItem groupItemWithTitle:@"Remotes"];
 	tags = [PBSourceViewItem groupItemWithTitle:@"Tags"];
+    stashes = [PBSourceViewItem groupItemWithTitle:@"Stashes"];
 	submodules = [PBSourceViewItem groupItemWithTitle:@"Submodules"];
 	others = [PBSourceViewItem groupItemWithTitle:@"Other"];
+
+	for (PBGitStash *stash in repository.stashes)
+		[stashes addChild: [PBGitSVStashItem itemWithStash:stash]];
 
 	for (PBGitRevSpecifier *rev in repository.branches) {
 		[self addRevSpec:rev];
@@ -298,6 +304,7 @@
 	[items addObject:branches];
 	[items addObject:remotes];
 	[items addObject:tags];
+	[items addObject:stashes];
 	[items addObject:submodules];
 	[items addObject:others];
 
@@ -305,6 +312,7 @@
 	[sourceView expandItem:project];
 	[sourceView expandItem:branches expandChildren:YES];
 	[sourceView expandItem:remotes];
+    [sourceView expandItem:stashes];
     [sourceView expandItem:submodules];
 
 	[sourceView reloadItem:nil reloadChildren:YES];

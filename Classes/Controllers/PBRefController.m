@@ -14,6 +14,7 @@
 #import "PBGitDefaults.h"
 #import "PBDiffWindowController.h"
 #import "PBGitRevSpecifier.h"
+#import "PBGitStash.h"
 
 #define kDialogAcceptDroppedRef @"Accept Dropped Ref"
 #define kDialogConfirmPush @"Confirm Push"
@@ -232,6 +233,29 @@
 		commit = [historyController.repository commitForRef:[sender refish]];
 
 	[PBDiffWindowController showDiffWindowWithFiles:nil fromCommit:commit diffCommit:nil];
+}
+
+#pragma mark Stash
+
+-(void) stashPop:(id)sender
+{
+    NSLog(@"stashPop: %@", [sender refish]);
+}
+
+-(void) stashApply:(id)sender
+{
+    NSLog(@"stashApply: %@", [sender refish]);
+}
+
+-(void) stashDrop:(id)sender
+{
+    NSLog(@"stashDrop: %@", [sender refish]);
+}
+
+-(void) stashViewDiff:(id)sender
+{
+    PBGitStash * stash = [historyController.repository stashForRef:[sender refish]];
+    [PBDiffWindowController showDiffWindowWithFiles:nil fromCommit:stash.ancestorCommit diffCommit:stash.commit];
 }
 
 #pragma mark Tags
