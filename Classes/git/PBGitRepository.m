@@ -643,7 +643,29 @@ NSString *PBGitRepositoryDocumentType = @"Git Repository";
     return found;
 }
 
+-(BOOL)stashRunCommand:(NSString *)command withStash:(PBGitStash *)stash
+{
+    int retValue;
+    [self outputInWorkdirForArguments:@[@"stash", command, stash.ref.refishName] retValue:&retValue];
+    [self willChangeValueForKey:@"stashes"];
+	[self didChangeValueForKey:@"stashes"];
+    return retValue ? NO : YES;
+}
 
+-(BOOL)stashPop:(PBGitStash *)stash
+{
+    return [self stashRunCommand:@"pop" withStash:stash];
+}
+
+-(BOOL)stashApply:(PBGitStash *)stash
+{
+    return [self stashRunCommand:@"apply" withStash:stash];
+}
+
+-(BOOL)stashDrop:(PBGitStash *)stash
+{
+    return [self stashRunCommand:@"drop" withStash:stash];
+}
 
 #pragma mark Remotes
 

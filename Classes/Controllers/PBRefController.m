@@ -239,17 +239,29 @@
 
 -(void) stashPop:(id)sender
 {
-    NSLog(@"stashPop: %@", [sender refish]);
+    PBGitStash * stash = [historyController.repository stashForRef:[sender refish]];
+    BOOL ok = [historyController.repository stashPop:stash];
+    if (ok) {
+        [historyController.repository.windowController showCommitView:sender];
+    }
 }
 
 -(void) stashApply:(id)sender
 {
-    NSLog(@"stashApply: %@", [sender refish]);
+    PBGitStash * stash = [historyController.repository stashForRef:[sender refish]];
+    BOOL ok = [historyController.repository stashApply:stash];
+    if (ok) {
+        [historyController.repository.windowController showCommitView:sender];
+    }
 }
 
 -(void) stashDrop:(id)sender
 {
-    NSLog(@"stashDrop: %@", [sender refish]);
+    PBGitStash * stash = [historyController.repository stashForRef:[sender refish]];
+    BOOL ok = [historyController.repository stashDrop:stash];
+    if (ok) {
+        [historyController.repository.windowController showHistoryView:sender];
+    }
 }
 
 -(void) stashViewDiff:(id)sender

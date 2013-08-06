@@ -85,6 +85,9 @@ static NSString * PBStringFromBranchFilterType(PBGitXBranchFilterType type) {
 - (BOOL) createTag:(NSString *)tagName message:(NSString *)message atRefish:(id <PBGitRefish>)commitSHA;
 - (BOOL) deleteRemote:(PBGitRef *)ref;
 - (BOOL) deleteRef:(PBGitRef *)ref;
+- (BOOL) stashPop:(PBGitStash *)stash;
+- (BOOL) stashApply:(PBGitStash *)stash;
+- (BOOL) stashDrop:(PBGitStash *)stash;
 
 - (NSURL *) gitURL ;
 
