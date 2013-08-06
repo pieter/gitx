@@ -844,28 +844,16 @@ int addSubmoduleName(git_submodule *module, const char* name, void * context)
 	if (!tagName)
 		return NO;
 
-	NSMutableArray *arguments = [NSMutableArray arrayWithObject:@"tag"];
+	NSError *error = nil;
 
-	// if there is a message then make this an annotated tag
-	if (message && ![message isEqualToString:@""] && ([message length] > 3)) {
-		[arguments addObject:@"-a"];
-		[arguments addObject:[@"-m" stringByAppendingString:message]];
+	GTObject *object = [self.gtRepo lookupObjectByRefspec:[target refishName] error:&error];
+	GTTag *newTag = nil;
+	if (object && !error) {
+		newTag = [GTTag tagInRepository:self.gtRepo name:tagName target:object tagger:self.gtRepo.userSignatureForNow message:message error:&error];
 	}
 
-	[arguments addObject:tagName];
-
-	// if no refish then git will add it to HEAD
-	if (target)
-		[arguments addObject:[target refishName]];
-
-	int retValue = 1;
-	NSString *output = [self outputInWorkdirForArguments:arguments retValue:&retValue];
-	if (retValue) {
-		NSString *targetName = @"HEAD";
-		if (target)
-			targetName = [NSString stringWithFormat:@"%@ '%@'", [target refishType], [target shortName]];
-		NSString *message = [NSString stringWithFormat:@"There was an error creating the tag '%@' at %@.", tagName, targetName];
-		[self.windowController showErrorSheetTitle:@"Create Tag failed!" message:message arguments:arguments output:output];
+	if (!newTag || error) {
+		[self.windowController showErrorSheet:error];
 		return NO;
 	}
 
