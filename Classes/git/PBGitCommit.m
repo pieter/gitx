@@ -63,7 +63,7 @@ NSString * const kGitXCommitType = @"commit";
 		NSArray *gtParents = self.gtCommit.parents;
 		NSMutableArray *parents = [NSMutableArray arrayWithCapacity:gtParents.count];
 		for (GTCommit *parent in gtParents) {
-			[parents addObject:[PBGitSHA shaWithString:parent.sha]];
+			[parents addObject:[PBGitSHA shaWithString:parent.SHA]];
 		}
 		self.parents = parents;
 	}
@@ -130,7 +130,7 @@ NSString * const kGitXCommitType = @"commit";
 
 - (NSString *)realSha
 {
-	return self.gtCommit.sha;
+	return self.gtCommit.SHA;
 }
 
 - (BOOL) isOnSameBranchAs:(PBGitCommit *)otherCommit
@@ -242,7 +242,7 @@ NSString * const kGitXCommitType = @"commit";
 
 - (NSString *) shortName
 {
-	return self.gtCommit.shortSha;
+	return self.gtCommit.shortSHA;
 }
 
 - (NSString *) refishType

@@ -153,7 +153,7 @@ NSString *PBGitRepositoryDocumentType = @"Git Repository";
 // The fileURL the document keeps is to the working dir
 - (NSString *) displayName
 {
-    if (self.gtRepo.isHeadDetached)
+    if (self.gtRepo.isHEADDetached)
 		return [NSString stringWithFormat:@"%@ (detached HEAD)", [self projectName]];
 
 	return [NSString stringWithFormat:@"%@ (branch: %@)", [self projectName], [[self headRef] description]];
@@ -189,21 +189,25 @@ NSString *PBGitRepositoryDocumentType = @"Git Repository";
 
 - (void) addRef:(GTReference*)gtRef
 {
+	while (gtRef && gtRef.referenceType == GTReferenceTypeSymbolic) {
+//		GTReference *oldRef = gtRef;
+		gtRef = gtRef.resolvedReference;
+//		NSLog(@"Resolved reference %@ to %@", oldRef, gtRef);
+	}
 	if (gtRef == nil)
 	{
 		NSLog(@"Sneaky attempt to add nil GTReference");
 		return;
 	}
-	if (!([gtRef.type compare:@"commit"] == NSOrderedSame||
-		 [gtRef.type compare:@"tag"] == NSOrderedSame))
-	{
-//		NSLog(@"Can't addRef for %@ ref of unsupported type \"%@\"", gtRef.name, gtRef.type);
+	if (gtRef.referenceType != GTReferenceTypeOid) {
+		NSLog(@"Can't addRef for %@ ref of unsupported type \"%u\"", gtRef.name, gtRef.referenceType);
 		return;
 	}
-	
-	git_oid refOid = *(gtRef.git_oid);
+
+	git_oid refOid = *gtRef.OID.git_oid;
 	git_object* gitTarget = NULL;
 	git_tag* gitTag = NULL;
+
 	PBGitSHA *sha = [PBGitSHA shaWithOID:refOid];
 	if (git_tag_lookup(&gitTag, self.gtRepo.git_repository, gtRef.git_oid) == GIT_OK)
 	{
@@ -211,7 +215,7 @@ NSString *PBGitRepositoryDocumentType = @"Git Repository";
 		{
 			GTObject* peeledObject = [GTObject objectWithObj:gitTarget inRepository:self.gtRepo];
 //			NSLog(@"peeled sha:%@", peeledObject.sha);
-			sha = [PBGitSHA shaWithString:peeledObject.sha];
+			sha = [PBGitSHA shaWithString:peeledObject.SHA];
 		}
 	}
 	
@@ -849,7 +853,7 @@ int addSubmoduleName(git_submodule *module, const char* name, void * context)
 	GTObject *object = [self.gtRepo lookupObjectByRefspec:[target refishName] error:&error];
 	GTTag *newTag = nil;
 	if (object && !error) {
-		newTag = [GTTag tagInRepository:self.gtRepo name:tagName target:object tagger:self.gtRepo.userSignatureForNow message:message error:&error];
+		newTag = [self.gtRepo createTagNamed:tagName target:object tagger:self.gtRepo.userSignatureForNow message:message error:&error];
 	}
 
 	if (!newTag || error) {
