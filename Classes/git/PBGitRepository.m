@@ -376,7 +376,9 @@ NSString *PBGitRepositoryDocumentType = @"Git Repository";
     [self loadSubmodules];
     
 	[self willChangeValueForKey:@"refs"];
+	[self willChangeValueForKey:@"stashes"];
 	[self didChangeValueForKey:@"refs"];
+	[self didChangeValueForKey:@"stashes"];
 
 	[[[self windowController] window] setTitle:[self displayName]];
 }

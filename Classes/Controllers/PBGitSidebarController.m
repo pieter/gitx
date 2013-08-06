@@ -55,6 +55,7 @@
 
 	[repository addObserver:self forKeyPath:@"currentBranch" options:0 context:@"currentBranchChange"];
 	[repository addObserver:self forKeyPath:@"branches" options:(NSKeyValueObservingOptionOld | NSKeyValueObservingOptionNew) context:@"branchesModified"];
+   	[repository addObserver:self forKeyPath:@"stashes" options:0 context:@"stashesModified"];
 
     [sourceView setTarget:self];
     [sourceView setDoubleAction:@selector(doubleClicked:)];
@@ -84,6 +85,7 @@
 
 	[repository removeObserver:self forKeyPath:@"currentBranch"];
 	[repository removeObserver:self forKeyPath:@"branches"];
+	[repository removeObserver:self forKeyPath:@"stashes"];
 
 	[super closeView];
 }
@@ -113,6 +115,20 @@
 		}
 		return;
 	}
+    
+	if ([@"stashesModified" isEqualToString:(__bridge NSString*)context]) {
+        
+        for (PBGitSVStashItem *stashItem in stashes.sortedChildren)
+            [stashes removeChild:stashItem];
+        
+        for (PBGitStash *stash in repository.stashes)
+            [stashes addChild: [PBGitSVStashItem itemWithStash:stash]];
+
+        [sourceView expandItem:stashes];
+        [sourceView reloadItem:stashes reloadChildren:YES];
+        
+        return;
+    }
 
 	[super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
 }
