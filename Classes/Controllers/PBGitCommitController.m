@@ -19,6 +19,8 @@
 #import <ObjectiveGit/GTConfiguration.h>
 
 #define kCommitSplitViewPositionDefault @"Commit SplitView Position"
+#define kControlsTabIndexCommit 0
+#define kControlsTabIndexStash  1
 
 @interface PBGitCommitController ()
 - (void)refreshFinished:(NSNotification *)notification;
@@ -36,6 +38,7 @@
 @implementation PBGitCommitController
 
 @synthesize index;
+@synthesize stashKeepIndex;
 
 - (id)initWithRepository:(PBGitRepository *)theRepository superController:(PBGitWindowController *)controller
 {
@@ -126,6 +129,8 @@
 
 - (void) refresh:(id) sender
 {
+	[controlsTabView selectTabViewItemAtIndex:kControlsTabIndexCommit];
+
 	self.isBusy = YES;
 	self.status = @"Refreshing index…";
 	[index refresh];
@@ -137,6 +142,11 @@
 - (void) updateView
 {
 	[self refresh:nil];
+}
+
+- (IBAction) stashChanges:(id)sender
+{
+    NSLog(@"stash changes: %@", stashKeepIndex ? @"keep index" : @"");
 }
 
 - (IBAction) commit:(id) sender
@@ -315,5 +325,19 @@
 	[commitSplitView setPosition:position ofDividerAtIndex:0];
 	[commitSplitView setHidden:NO];
 }
+
+#pragma mark Handle "alt" key-down/up events
+// to toggle commit/stash controls
+
+- (void)flagsChanged:(NSEvent *)theEvent
+{
+    BOOL altDown = !!([theEvent modifierFlags] & NSAlternateKeyMask);
+    int currIndex = [controlsTabView indexOfTabViewItem:controlsTabView.selectedTabViewItem];
+    int desiredIndex = altDown ? kControlsTabIndexStash : kControlsTabIndexCommit;
+    if (currIndex != desiredIndex) {
+        [controlsTabView selectTabViewItemAtIndex:desiredIndex];
+    }
+}
+
 
 @end

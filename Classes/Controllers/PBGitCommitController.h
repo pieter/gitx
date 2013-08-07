@@ -22,8 +22,13 @@
 	PBGitIndex *index;
 
 	IBOutlet PBCommitMessageView *commitMessageView;
+
+	BOOL stashKeepIndex;
+
 	IBOutlet NSArrayController *unstagedFilesController;
 	IBOutlet NSArrayController *cachedFilesController;
+
+	IBOutlet NSTabView *controlsTabView;
 	IBOutlet NSButton *commitButton;
 
 	IBOutlet PBGitIndexController *indexController;
@@ -32,9 +37,11 @@
 }
 
 @property(readonly) PBGitIndex *index;
+@property(assign) BOOL stashKeepIndex;
 
 - (IBAction) refresh:(id) sender;
 - (IBAction) commit:(id) sender;
 - (IBAction) forceCommit:(id) sender;
-- (IBAction)signOff:(id)sender;
+- (IBAction) signOff:(id)sender;
+- (IBAction) stashChanges:(id) sender;
 @end
