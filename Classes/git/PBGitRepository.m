@@ -667,6 +667,21 @@ NSString *PBGitRepositoryDocumentType = @"Git Repository";
     return [self stashRunCommand:@"drop" withStash:stash];
 }
 
+-(BOOL)stashSave
+{
+    return [self stashSaveWithKeepIndex:NO];
+}
+
+-(BOOL)stashSaveWithKeepIndex:(BOOL)keepIndex
+{
+    NSArray * args = @[@"stash", @"save", keepIndex?@"--keep-index":@"--no-keep-index"];
+    int retValue;
+    NSString * output = [self outputInWorkdirForArguments:args retValue:&retValue];
+    [self willChangeValueForKey:@"stashes"];
+	[self didChangeValueForKey:@"stashes"];
+    return retValue ? NO : YES;
+}
+
 #pragma mark Remotes
 
 - (NSArray *) remotes

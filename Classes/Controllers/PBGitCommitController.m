@@ -147,6 +147,7 @@
 - (IBAction) stashChanges:(id)sender
 {
     NSLog(@"stash changes: %@", stashKeepIndex ? @"keep index" : @"");
+    [self.repository stashSaveWithKeepIndex:stashKeepIndex];
 }
 
 - (IBAction) commit:(id) sender

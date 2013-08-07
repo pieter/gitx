@@ -88,6 +88,8 @@ static NSString * PBStringFromBranchFilterType(PBGitXBranchFilterType type) {
 - (BOOL) stashPop:(PBGitStash *)stash;
 - (BOOL) stashApply:(PBGitStash *)stash;
 - (BOOL) stashDrop:(PBGitStash *)stash;
+- (BOOL) stashSave;
+- (BOOL) stashSaveWithKeepIndex:(BOOL)keepIndex;
 
 - (NSURL *) gitURL ;
 
