@@ -14,6 +14,7 @@
                 <outlet property="commitSplitView" destination="186" id="314"/>
                 <outlet property="controlsTabView" destination="4Ld-Yb-msh" id="Ogf-eR-aMr"/>
                 <outlet property="indexController" destination="254" id="256"/>
+                <outlet property="trackedFilesController" destination="EmG-y5-6ms" id="mqT-Qm-7zo"/>
                 <outlet property="unstagedFilesController" destination="81" id="156"/>
                 <outlet property="view" destination="1" id="44"/>
                 <outlet property="webController" destination="96" id="253"/>
@@ -32,7 +33,9 @@
                         <webView id="125">
                             <rect key="frame" x="0.0" y="0.0" width="852" height="181"/>
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                            <webPreferences key="preferences" defaultFontSize="12" defaultFixedFontSize="12"/>
+                            <webPreferences key="preferences" defaultFontSize="12" defaultFixedFontSize="12">
+                                <nil key="identifier"/>
+                            </webPreferences>
                             <connections>
                                 <outlet property="frameLoadDelegate" destination="96" id="137"/>
                             </connections>
@@ -119,7 +122,7 @@
                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                     <subviews>
                                                         <textView importsGraphics="NO" richText="NO" continuousSpellChecking="YES" allowsUndo="YES" verticallyResizable="YES" linkDetection="YES" spellingCorrection="YES" grammarChecking="YES" smartInsertDelete="YES" id="133" customClass="PBCommitMessageView">
-                                                            <rect key="frame" x="0.0" y="0.0" width="437" height="188"/>
+                                                            <rect key="frame" x="0.0" y="0.0" width="438" height="188"/>
                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                             <size key="minSize" width="436.5" height="188"/>
@@ -330,6 +333,11 @@ DQ
             </declaredKeys>
             <connections>
                 <binding destination="-2" name="contentArray" keyPath="index.indexChanges" id="282"/>
+            </connections>
+        </arrayController>
+        <arrayController id="EmG-y5-6ms" userLabel="Tracked Files">
+            <connections>
+                <binding destination="-2" name="contentArray" keyPath="index.indexChanges" id="WBE-vc-PuQ"/>
             </connections>
         </arrayController>
         <customObject id="96" userLabel="Diff Controller" customClass="PBWebChangesController">

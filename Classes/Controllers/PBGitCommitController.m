@@ -70,6 +70,7 @@
 	
 	[unstagedFilesController setFilterPredicate:[NSPredicate predicateWithFormat:@"hasUnstagedChanges == 1"]];
 	[cachedFilesController setFilterPredicate:[NSPredicate predicateWithFormat:@"hasStagedChanges == 1"]];
+    [trackedFilesController setFilterPredicate:[NSPredicate predicateWithFormat:@"status > 0"]];
 	
 	[unstagedFilesController setSortDescriptors:[NSArray arrayWithObjects:
 		[[NSSortDescriptor alloc] initWithKey:@"status" ascending:false],
@@ -240,12 +241,12 @@
 {
 	[cachedFilesController rearrangeObjects];
 	[unstagedFilesController rearrangeObjects];
-    if ([[cachedFilesController arrangedObjects] count]) {
-        [commitButton setEnabled:YES];
-    } else {
-        [commitButton setEnabled:NO];
-    }
-
+    
+    NSUInteger tracked = [[trackedFilesController arrangedObjects] count];
+    NSUInteger staged = [[cachedFilesController arrangedObjects] count];
+    
+    [commitButton setEnabled:(staged > 0)];
+    [stashButton setEnabled:(staged > 0 || tracked > 0)];
 }
 
 - (void)indexOperationFailed:(NSNotification *)notification
