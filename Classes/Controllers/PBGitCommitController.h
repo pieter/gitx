@@ -46,4 +46,8 @@
 - (IBAction) forceCommit:(id) sender;
 - (IBAction) signOff:(id)sender;
 - (IBAction) stashChanges:(id) sender;
+
+- (NSView *) nextKeyViewFor:(NSView *)view;
+- (NSView *) previousKeyViewFor:(NSView *)view;
+
 @end

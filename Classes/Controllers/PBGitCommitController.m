@@ -14,6 +14,7 @@
 #import "PBNiceSplitView.h"
 #import "PBGitRepositoryWatcher.h"
 #import "PBCommitMessageView.h"
+#import "PBGitIndexController.h"
 
 #import <ObjectiveGit/GTRepository.h>
 #import <ObjectiveGit/GTConfiguration.h>
@@ -22,7 +23,7 @@
 #define kControlsTabIndexCommit 0
 #define kControlsTabIndexStash  1
 
-@interface PBGitCommitController ()
+@interface PBGitCommitController () <NSTextViewDelegate>
 - (void)refreshFinished:(NSNotification *)notification;
 - (void)commitWithVerification:(BOOL) doVerify;
 - (void)commitStatusUpdated:(NSNotification *)notification;
@@ -65,6 +66,7 @@
 	[super awakeFromNib];
 
 	commitMessageView.repository = self.repository;
+	commitMessageView.delegate = self;
 
 	[commitMessageView setTypingAttributes:[NSDictionary dictionaryWithObject:[NSFont fontWithName:@"Monaco" size:12.0] forKey:NSFontAttributeName]];
 	
@@ -341,5 +343,57 @@
     }
 }
 
+#pragma mark NSTextView delegate methods
+
+- (void)focusTable:(NSTableView *)table
+{
+    if ([table numberOfRows] > 0) {
+        if ([table numberOfSelectedRows] == 0) {
+            [table selectRowIndexes:[NSIndexSet indexSetWithIndex:0] byExtendingSelection:NO];
+        }
+        [[table window] makeFirstResponder:table];
+    }
+}
+
+- (BOOL)textView:(NSTextView *)textView doCommandBySelector:(SEL)commandSelector;
+{
+    if (commandSelector == @selector(insertTab:)) {
+        [self focusTable:indexController.stagedTable];
+        return YES;
+    } else if (commandSelector == @selector(insertBacktab:)) {
+        [self focusTable:indexController.unstagedTable];
+        return YES;
+	}
+    return NO;
+}
+
+# pragma mark Key View Chain
+
+-(NSView *)nextKeyViewFor:(NSView *)view
+{
+    NSView * next = nil;
+    if (view == indexController.unstagedTable) {
+        next = commitMessageView;
+    }
+    else if (view == commitMessageView) {
+        next = indexController.stagedTable;
+    }
+    else if (view == indexController.stagedTable) {
+        next = commitButton;
+    }
+    return next;
+}
+
+-(NSView *)previousKeyViewFor:(NSView *)view
+{
+    NSView * next = nil;
+    if (view == indexController.stagedTable) {
+        next = commitMessageView;
+    }
+    else if (view == commitMessageView) {
+        next = indexController.unstagedTable;
+    }
+    return next;
+}
 
 @end

@@ -70,4 +70,19 @@
     }
 }
 
+-(BOOL)acceptsFirstResponder
+{
+    return [self numberOfRows] > 0;
+}
+
+-(NSView *)nextKeyView
+{
+    return [(PBGitIndexController*)[self delegate] nextKeyViewFor:self];
+}
+
+-(NSView *)previousKeyView
+{
+    return [(PBGitIndexController*)[self delegate] previousKeyViewFor:self];
+}
+
 @end

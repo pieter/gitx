@@ -18,10 +18,16 @@
 	IBOutlet NSTableView *stagedTable;	
 }
 
+@property (readonly) NSTableView *unstagedTable;
+@property (readonly) NSTableView *stagedTable;
+
 - (IBAction) rowClicked:(NSCell *) sender;
 - (IBAction) tableClicked:(NSTableView *)tableView;
 
 - (NSMenu *) menuForTable:(NSTableView *)table;
+- (NSView *) nextKeyViewFor:(NSView *)view;
+- (NSView *) previousKeyViewFor:(NSView *)view;
+
 
 - (void) stageSelectedFiles;
 - (void) unstageSelectedFiles;
