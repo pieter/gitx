@@ -28,8 +28,7 @@
     _commit = [[PBGitCommit alloc] initWithRepository:repo andCommit:gtCommit];
     _indexCommit = [[PBGitCommit alloc] initWithRepository:repo andCommit:gtIndexCommit];
     _ancestorCommit = [[PBGitCommit alloc] initWithRepository:repo andCommit:gtAncestorCommit];
-    
-    NSLog(@" stash: %zd, %@, %@, %@",_index,[_commit shortName], [_ancestorCommit  shortName], [_indexCommit shortName]);
+
     return self;
 }
 
