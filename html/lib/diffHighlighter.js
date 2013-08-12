@@ -102,7 +102,7 @@ var highlightDiff = function(diff, element, callbacks) {
 			finalContent +=		'<div id="content_' + title + '" class="diffContent">' +
 								'<div class="lineno">' + line1 + "</div>" +
 								'<div class="lineno">' + line2 + "</div>" +
-								'<div class="lines">' + diffContent + "</div>" +
+								'<div class="lines">' + postProcessDiffContents(diffContent) + "</div>" +
 							'</div>';
 		}
 		else {
@@ -255,3 +255,239 @@ var highlightDiff = function(diff, element, callbacks) {
 	if (false)
 		Controller.log_("Total time:" + (new Date().getTime() - start));
 }
+
+var postProcessDiffContents = function(diffContent) {
+	var $ = jQuery;
+	var diffEl = $(diffContent);
+	var dumbEl = $('<div/>');
+	var newContent = "";
+	var oldEls = [];
+	var newEls = [];
+	var flushBuffer = function () {
+		if (oldEls.length || newEls.length) {
+			var buffer = "";
+			if (!oldEls.length || !newEls.length) {
+				// diff block only contains additions OR deletions, so there is no need
+				// to do any inline-diff. just keep the elements as they are
+				buffer = $.map(oldEls.length ? oldEls : newEls, function (e) {
+					return dumbEl.html(e).html();
+				}).join("");
+			}
+			else {
+				// 
+				var oldText = $.map(oldEls, function (e) { return e.html().substring(1); }).join("\n");
+				var newText = $.map(newEls, function (e) { return e.html().substring(1); }).join("\n");
+				var diffBuffer = inlinediff.diffString3(oldText,newText);
+					diffLines = (diffBuffer[1] + diffBuffer[2]).split(/\n/g);
+				buffer = $.map(oldEls, function (e, i) {
+					var di = i;
+					e.html("-"+diffLines[di]);
+					return dumbEl.html(e).html();
+				}).join("") + $.map(newEls, function (e, i) {
+					var di = i + oldEls.length;
+					e.html("+"+diffLines[di]);
+					return dumbEl.html(e).html();
+				}).join("");
+			}
+			//console.log("flushBuffer BUFFER: \n", buffer);
+			newContent+= buffer;
+			oldEls = [];
+			newEls = [];
+		}
+	};
+	diffEl.each(function (i, e) {
+		e = $(e);
+		var isAdd = e.is(".addline");
+		var isDel = e.is(".delline");
+		var text = e.text();
+		var html = dumbEl.html(e).html();
+		if (isAdd) {
+			newEls.push(e);
+		}
+		else if (isDel) {
+			oldEls.push(e);
+		}
+		else {
+			flushBuffer();
+			newContent+= html;
+		}
+	});
+	flushBuffer();
+	return newContent; 
+}
+
+
+/*
+ * Javascript Diff Algorithm
+ *  By John Resig (http://ejohn.org/)
+ *  Modified by Chu Alan "sprite"
+ *  Adapted for GitX by Mathias Leppich http://github.com/muhqu
+ *
+ * Released under the MIT license.
+ *
+ * More Info:
+ *  http://ejohn.org/projects/javascript-diff-algorithm/
+ */
+
+var inlinediff = (function () {
+  return {
+    diffString: diffString,
+    diffString3: diffString3
+  };
+
+  function escape(s) {
+      var n = s;
+      n = n.replace(/&/g, "&amp;");
+      n = n.replace(/</g, "&lt;");
+      n = n.replace(/>/g, "&gt;");
+      n = n.replace(/"/g, "&quot;");
+      return n;
+  }
+
+  function diffString( o, n ) {
+    o = o.replace(/\s+$/, '');
+    n = n.replace(/\s+$/, '');
+
+    var out = diff(o == "" ? [] : o.split(/\s+/), n == "" ? [] : n.split(/\s+/) );
+    var str = "";
+
+    var oSpace = o.match(/\s+/g);
+    if (oSpace == null) {
+      oSpace = ["\n"];
+    } else {
+      oSpace.push("\n");
+    }
+    var nSpace = n.match(/\s+/g);
+    if (nSpace == null) {
+      nSpace = ["\n"];
+    } else {
+      nSpace.push("\n");
+    }
+
+    if (out.n.length == 0) {
+        for (var i = 0; i < out.o.length; i++) {
+          str += '<del>' + escape(out.o[i]) + oSpace[i] + "</del>";
+        }
+    } else {
+      if (out.n[0].text == null) {
+        for (n = 0; n < out.o.length && out.o[n].text == null; n++) {
+          str += '<del>' + escape(out.o[n]) + oSpace[n] + "</del>";
+        }
+      }
+
+      for ( var i = 0; i < out.n.length; i++ ) {
+        if (out.n[i].text == null) {
+          str += '<ins>' + escape(out.n[i]) + nSpace[i] + "</ins>";
+        } else {
+          var pre = "";
+
+          for (n = out.n[i].row + 1; n < out.o.length && out.o[n].text == null; n++ ) {
+            pre += '<del>' + escape(out.o[n]) + oSpace[n] + "</del>";
+          }
+          str += out.n[i].text + nSpace[i] + pre;
+        }
+      }
+    }
+    
+    return str;
+  }
+
+  function diffString3( o, n ) {
+    o = o.replace(/\s+$/, '');
+    n = n.replace(/\s+$/, '');
+
+    var out = diff(o == "" ? [] : o.split(/\s+/), n == "" ? [] : n.split(/\s+/) );
+    var str1 = "", str2 = "", str3 = "";
+
+    var oSpace = o.match(/\s+/g);
+    if (oSpace == null) {
+      oSpace = ["\n"];
+    } else {
+      oSpace.push("\n");
+    }
+    var nSpace = n.match(/\s+/g);
+    if (nSpace == null) {
+      nSpace = ["\n"];
+    } else {
+      nSpace.push("\n");
+    }
+
+    if (out.n.length == 0) {
+        for (var i = 0; i < out.o.length; i++) {
+          str1 += '<del>' + escape(out.o[i]) + oSpace[i] + "</del>";
+          str2 += '<del>' + escape(out.o[i]) + oSpace[i] + "</del>";
+          str3 += '<del/>';
+        }
+    } else {
+      if (out.n[0].text == null) {
+        for (n = 0; n < out.o.length && out.o[n].text == null; n++) {
+          str1 += '<del>' + escape(out.o[n]) + oSpace[n] + "</del>";
+          str2 += '<del>' + escape(out.o[n]) + oSpace[n] + "</del>";
+          str3 += '<del/>';
+        }
+      }
+
+      for ( var i = 0; i < out.n.length; i++ ) {
+        if (out.n[i].text == null) {
+          str1 += '<ins>' + escape(out.n[i]) + nSpace[i] + "</ins>";
+          str2 += '<ins/>';
+          str3 += '<ins>' + escape(out.n[i]) + nSpace[i] + "</ins>";
+        } else {
+          var pre1 = "", pre2 = "";
+          for (n = out.n[i].row + 1; n < out.o.length && out.o[n].text == null; n++ ) {
+            pre1 += '<del>' + escape(out.o[n]) + oSpace[n] + "</del>";
+            pre2 += '<del/>';
+          }
+          str1 += out.n[i].text + nSpace[i] + pre1;
+          str2 += out.n[i].text + nSpace[i] + pre1;
+          str3 += out.n[i].text + nSpace[i] + pre2;
+        }
+      }
+    }
+    
+    return [str1,str2,str3];
+  }
+
+  function diff( o, n ) {
+    var ns = new Object();
+    var os = new Object();
+    
+    for ( var i = 0; i < n.length; i++ ) {
+      if ( ns[ n[i] ] == null )
+        ns[ n[i] ] = { rows: new Array(), o: null };
+      ns[ n[i] ].rows.push( i );
+    }
+    
+    for ( var i = 0; i < o.length; i++ ) {
+      if ( os[ o[i] ] == null )
+        os[ o[i] ] = { rows: new Array(), n: null };
+      os[ o[i] ].rows.push( i );
+    }
+    
+    for ( var i in ns ) {
+      if ( ns[i].rows.length == 1 && typeof(os[i]) != "undefined" && os[i].rows.length == 1 ) {
+        n[ ns[i].rows[0] ] = { text: n[ ns[i].rows[0] ], row: os[i].rows[0] };
+        o[ os[i].rows[0] ] = { text: o[ os[i].rows[0] ], row: ns[i].rows[0] };
+      }
+    }
+    
+    for ( var i = 0; i < n.length - 1; i++ ) {
+      if ( n[i].text != null && n[i+1].text == null && n[i].row + 1 < o.length && o[ n[i].row + 1 ].text == null && 
+           n[i+1] == o[ n[i].row + 1 ] ) {
+        n[i+1] = { text: n[i+1], row: n[i].row + 1 };
+        o[n[i].row+1] = { text: o[n[i].row+1], row: i + 1 };
+      }
+    }
+    
+    for ( var i = n.length - 1; i > 0; i-- ) {
+      if ( n[i].text != null && n[i-1].text == null && n[i].row > 0 && o[ n[i].row - 1 ].text == null && 
+           n[i-1] == o[ n[i].row - 1 ] ) {
+        n[i-1] = { text: n[i-1], row: n[i].row - 1 };
+        o[n[i].row-1] = { text: o[n[i].row-1], row: i - 1 };
+      }
+    }
+    
+    return { o: o, n: n };
+  }
+})();
+
