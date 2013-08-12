@@ -214,10 +214,6 @@ var highlightDiff = function(diff, element, callbacks) {
 
 		sindex = "index=" + lindex.toString() + " ";
 		if (firstChar == "+") {
-			// Highlight trailing whitespace
-			if (m = l.match(/\s+$/))
-				l = l.replace(/\s+$/, "<span class='whitespace'>" + m + "</span>");
-
 			line1 += "\n";
 			line2 += ++hunk_start_line_2 + "\n";
 			diffContent += "<div " + sindex + "class='addline'>" + l + "</div>";
@@ -256,6 +252,13 @@ var highlightDiff = function(diff, element, callbacks) {
 		Controller.log_("Total time:" + (new Date().getTime() - start));
 }
 
+var highlightTrailingWhitespace = function (l) {
+	// Highlight trailing whitespace
+	if (m = l.match(/\s+$/))
+		l = l.replace(/\s+$/, "<span class='whitespace'>" + m + "</span>");
+	return l;
+}
+
 var postProcessDiffContents = function(diffContent) {
 	var $ = jQuery;
 	var diffEl = $(diffContent);
@@ -267,25 +270,29 @@ var postProcessDiffContents = function(diffContent) {
 		if (oldEls.length || newEls.length) {
 			var buffer = "";
 			if (!oldEls.length || !newEls.length) {
-				// diff block only contains additions OR deletions, so there is no need
+				// hunk only contains additions OR deletions, so there is no need
 				// to do any inline-diff. just keep the elements as they are
 				buffer = $.map(oldEls.length ? oldEls : newEls, function (e) {
+					if (newEls.length) {
+						e.html(highlightTrailingWhitespace(e.html()));
+					}
 					return dumbEl.html(e).html();
 				}).join("");
 			}
 			else {
-				// 
+				// hunk contains additions AND deletions. so we create an inline diff
+				// of all the old and new lines together and merge the result back to buffer
 				var oldText = $.map(oldEls, function (e) { return e.html().substring(1); }).join("\n");
 				var newText = $.map(newEls, function (e) { return e.html().substring(1); }).join("\n");
-				var diffBuffer = inlinediff.diffString3(oldText,newText);
-					diffLines = (diffBuffer[1] + diffBuffer[2]).split(/\n/g);
+				var diffResult = inlinediff.diffString3(oldText,newText);
+					diffLines = (diffResult[1] + diffResult[2]).split(/\n/g);
 				buffer = $.map(oldEls, function (e, i) {
 					var di = i;
 					e.html("-"+diffLines[di]);
 					return dumbEl.html(e).html();
 				}).join("") + $.map(newEls, function (e, i) {
 					var di = i + oldEls.length;
-					e.html("+"+diffLines[di]);
+					e.html("+"+highlightTrailingWhitespace(diffLines[di]));
 					return dumbEl.html(e).html();
 				}).join("");
 			}
