@@ -254,8 +254,7 @@ var highlightDiff = function(diff, element, callbacks) {
 
 var highlightTrailingWhitespace = function (l) {
 	// Highlight trailing whitespace
-	if (m = l.match(/\s+$/))
-		l = l.replace(/\s+$/, "<span class='whitespace'>" + m + "</span>");
+	l = l.replace(/(\s+)(<\/ins>)?$/, '<span class="whitespace">$1</span>$2');
 	return l;
 }
 
@@ -282,10 +281,11 @@ var postProcessDiffContents = function(diffContent) {
 			else {
 				// hunk contains additions AND deletions. so we create an inline diff
 				// of all the old and new lines together and merge the result back to buffer
-				var oldText = $.map(oldEls, function (e) { return e.html().substring(1); }).join("\n");
-				var newText = $.map(newEls, function (e) { return e.html().substring(1); }).join("\n");
+				var oldText = $.map(oldEls, function (e) { return e.text().substring(1); }).join("\n");
+				var newText = $.map(newEls, function (e) { return e.text().substring(1); }).join("\n");
 				var diffResult = inlinediff.diffString3(oldText,newText);
-					diffLines = (diffResult[1] + diffResult[2]).split(/\n/g);
+					diffLines = (diffResult[1] + "\n" + diffResult[2]).split(/\n/g);
+				
 				buffer = $.map(oldEls, function (e, i) {
 					var di = i;
 					e.html("-"+diffLines[di]);
@@ -296,7 +296,6 @@ var postProcessDiffContents = function(diffContent) {
 					return dumbEl.html(e).html();
 				}).join("");
 			}
-			//console.log("flushBuffer BUFFER: \n", buffer);
 			newContent+= buffer;
 			oldEls = [];
 			newEls = [];
@@ -339,7 +338,8 @@ var postProcessDiffContents = function(diffContent) {
 var inlinediff = (function () {
   return {
     diffString: diffString,
-    diffString3: diffString3
+    diffString3: diffString3,
+    escape: escape
   };
 
   function escape(s) {
@@ -391,7 +391,7 @@ var inlinediff = (function () {
           for (n = out.n[i].row + 1; n < out.o.length && out.o[n].text == null; n++ ) {
             pre += '<del>' + escape(out.o[n]) + oSpace[n] + "</del>";
           }
-          str += out.n[i].text + nSpace[i] + pre;
+          str += escape(out.n[i].text) + nSpace[i] + pre;
         }
       }
     }
@@ -399,60 +399,60 @@ var inlinediff = (function () {
     return str;
   }
 
+  function whitespaceAwareTokenize(n) {
+  	var nt = n == "" ? [] : n.split(/\s+/);
+    var nw = n == "" ? [] : (n.match(/\s+/g) || []);
+    var nz = []; for (var i=0; i < nt.length; i++) { nz.push(nt[i]); if (i < nw.length) nz.push(nw[i]); };
+  	return nz;
+  }
+
+  function tag(t,c) {
+    return c==="" ? '' : '<'+t+'>'+escape(c)+'</'+t+'>';
+  }
+  function mergeTags(c, t) {
+    return c.replace(/<\/(\w+)><\1>/g,'');
+  }
   function diffString3( o, n ) {
-    o = o.replace(/\s+$/, '');
-    n = n.replace(/\s+$/, '');
-
-    var out = diff(o == "" ? [] : o.split(/\s+/), n == "" ? [] : n.split(/\s+/) );
-    var str1 = "", str2 = "", str3 = "";
-
-    var oSpace = o.match(/\s+/g);
-    if (oSpace == null) {
-      oSpace = ["\n"];
-    } else {
-      oSpace.push("\n");
-    }
-    var nSpace = n.match(/\s+/g);
-    if (nSpace == null) {
-      nSpace = ["\n"];
-    } else {
-      nSpace.push("\n");
-    }
-
+    var out = diff(whitespaceAwareTokenize(o), whitespaceAwareTokenize(n));
+    var ac = [], ao = [], an = [];
     if (out.n.length == 0) {
         for (var i = 0; i < out.o.length; i++) {
-          str1 += '<del>' + escape(out.o[i]) + oSpace[i] + "</del>";
-          str2 += '<del>' + escape(out.o[i]) + oSpace[i] + "</del>";
-          str3 += '<del/>';
+          ac.push(tag('del',out.o[i]));
+          ao.push(tag('del',out.o[i]));
         }
     } else {
       if (out.n[0].text == null) {
         for (n = 0; n < out.o.length && out.o[n].text == null; n++) {
-          str1 += '<del>' + escape(out.o[n]) + oSpace[n] + "</del>";
-          str2 += '<del>' + escape(out.o[n]) + oSpace[n] + "</del>";
-          str3 += '<del/>';
+          ac.push(tag('del',out.o[n]));
+        }
+      }
+
+      for ( var i = 0; i < out.o.length; i++ ) {
+        if (out.o[i].text == null) {
+          ao.push(tag('del',out.o[i]));
+        } else {
+          ao.push(escape(out.o[i].text));
         }
       }
 
       for ( var i = 0; i < out.n.length; i++ ) {
         if (out.n[i].text == null) {
-          str1 += '<ins>' + escape(out.n[i]) + nSpace[i] + "</ins>";
-          str2 += '<ins/>';
-          str3 += '<ins>' + escape(out.n[i]) + nSpace[i] + "</ins>";
+          ac.push(tag('ins',out.n[i]));
+          an.push(tag('ins',out.n[i]));
         } else {
-          var pre1 = "", pre2 = "";
+          ac.push(escape(out.n[i].text));
+          an.push(escape(out.n[i].text));
           for (n = out.n[i].row + 1; n < out.o.length && out.o[n].text == null; n++ ) {
-            pre1 += '<del>' + escape(out.o[n]) + oSpace[n] + "</del>";
-            pre2 += '<del/>';
+            ac.push(tag('del',out.o[n]));
           }
-          str1 += out.n[i].text + nSpace[i] + pre1;
-          str2 += out.n[i].text + nSpace[i] + pre1;
-          str3 += out.n[i].text + nSpace[i] + pre2;
         }
       }
     }
-    
-    return [str1,str2,str3];
+    return [
+      mergeTags(ac.join("")), // anotated combined additions and deletions
+      mergeTags(ao.join("")), // old with highlighted deletions
+      mergeTags(an.join(""))  // new with highlighted additions
+    ];
   }
 
   function diff( o, n ) {
