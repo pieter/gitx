@@ -52,13 +52,15 @@
 }
 .diff .file .diffcontent .lines del,
 .diff .file .diffcontent .lines ins {
-	text-decoration: none;
+	text-decoration: none; border-radius: 0.3em;
 }
 .diff .file .diffcontent .lines .delline del {
-	background-color: #e8ced1;
+	background-color: #febfbf;
+	color: #A00;
 }
 .diff .file .diffcontent .lines .addline ins {
-	background-color: #c2ecbf;
+	background-color: #b2ffaf;
+	color: #070;
 }
 
 #CurrentHunk {
