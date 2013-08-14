@@ -407,10 +407,22 @@ var inlinediff = (function () {
   }
 
   function whitespaceAwareTokenize(n) {
-  	var nt = n == "" ? [] : n.split(/[ \t]+|\n/);
-    var nw = n == "" ? [] : (n.match(/[ \t]+|\n/g) || []);
-    var nz = []; for (var i=0; i < nt.length; i++) { nz.push(nt[i]); if (i < nw.length) nz.push(nw[i]); };
-  	return nz;
+    var nz = [], nn = n === "" ? [] : (n.match(/\n|[^\n]+/g) || []);
+    for (var i = 0; i < nn.length; i++) {
+        if (nn[i] == "\n") {
+            nz.push(nn[i]);
+        }
+        else {
+            var ns = (nn[i].match(/\s+|[^\s]+/g) || []);
+            for (var k = 0; k < ns.length; k++) {
+                var nw = (ns[k].match(/\s+|\W|\w+/g) || []);
+                for (var j = 0; j < nw.length; j++) {
+                    nz.push(nw[j]);
+                }
+            }
+        }
+    }
+    return nz;
   }
 
   function tag(t,c) {
