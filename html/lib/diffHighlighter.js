@@ -40,7 +40,7 @@ var highlightDiff = function(diff, element, callbacks) {
 		callbacks = {};
 	var start = new Date().getTime();
 	element.className = "diff"
-	var content = diff.escapeHTML().replace(/\t/g, "    ");;
+	var content = diff.escapeHTML();
 
 	var file_index = 0;
 
@@ -102,7 +102,7 @@ var highlightDiff = function(diff, element, callbacks) {
 			finalContent +=		'<div id="content_' + title + '" class="diffContent">' +
 								'<div class="lineno">' + line1 + "</div>" +
 								'<div class="lineno">' + line2 + "</div>" +
-								'<div class="lines">' + postProcessDiffContents(diffContent) + "</div>" +
+								'<div class="lines">' + postProcessDiffContents(diffContent).replace(/\t/g, "    ") + "</div>" +
 							'</div>';
 		}
 		else {
