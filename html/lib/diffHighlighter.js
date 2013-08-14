@@ -258,6 +258,12 @@ var highlightTrailingWhitespace = function (l) {
 	return l;
 }
 
+var mergeInsDel = function (html) {
+	return html
+		.replace(/^<\/(ins|del)>|<(ins|del)>$/g,'')
+		.replace(/<\/(ins|del)><\1>/g,'');
+}
+
 var postProcessDiffContents = function(diffContent) {
 	var $ = jQuery;
 	var diffEl = $(diffContent);
@@ -288,11 +294,12 @@ var postProcessDiffContents = function(diffContent) {
 				
 				buffer = $.map(oldEls, function (e, i) {
 					var di = i;
-					e.html("-"+diffLines[di]);
+					e.html("-"+mergeInsDel(diffLines[di]));
 					return dumbEl.html(e).html();
 				}).join("") + $.map(newEls, function (e, i) {
 					var di = i + oldEls.length;
-					e.html("+"+highlightTrailingWhitespace(diffLines[di]));
+					var line = mergeInsDel(highlightTrailingWhitespace(diffLines[di]));
+					e.html("+"+line);
 					return dumbEl.html(e).html();
 				}).join("");
 			}
@@ -400,8 +407,8 @@ var inlinediff = (function () {
   }
 
   function whitespaceAwareTokenize(n) {
-  	var nt = n == "" ? [] : n.split(/\s+/);
-    var nw = n == "" ? [] : (n.match(/\s+/g) || []);
+  	var nt = n == "" ? [] : n.split(/[ \t]+|\n/);
+    var nw = n == "" ? [] : (n.match(/[ \t]+|\n/g) || []);
     var nz = []; for (var i=0; i < nt.length; i++) { nz.push(nt[i]); if (i < nw.length) nz.push(nw[i]); };
   	return nz;
   }
@@ -409,9 +416,7 @@ var inlinediff = (function () {
   function tag(t,c) {
     return c==="" ? '' : '<'+t+'>'+escape(c)+'</'+t+'>';
   }
-  function mergeTags(c, t) {
-    return c.replace(/<\/(\w+)><\1>/g,'');
-  }
+  
   function diffString3( o, n ) {
     var out = diff(whitespaceAwareTokenize(o), whitespaceAwareTokenize(n));
     var ac = [], ao = [], an = [];
@@ -449,9 +454,9 @@ var inlinediff = (function () {
       }
     }
     return [
-      mergeTags(ac.join("")), // anotated combined additions and deletions
-      mergeTags(ao.join("")), // old with highlighted deletions
-      mergeTags(an.join(""))  // new with highlighted additions
+      ac.join(""), // anotated combined additions and deletions
+      ao.join(""), // old with highlighted deletions
+      an.join("")  // new with highlighted additions
     ];
   }
 
