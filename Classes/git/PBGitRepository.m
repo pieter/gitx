@@ -189,43 +189,30 @@ NSString *PBGitRepositoryDocumentType = @"Git Repository";
 
 - (void) addRef:(GTReference*)gtRef
 {
-	while (gtRef && gtRef.referenceType == GTReferenceTypeSymbolic) {
-//		GTReference *oldRef = gtRef;
-		gtRef = gtRef.resolvedReference;
-//		NSLog(@"Resolved reference %@ to %@", oldRef, gtRef);
-	}
-	if (gtRef == nil)
-	{
-		NSLog(@"Sneaky attempt to add nil GTReference");
-		return;
-	}
-	if (gtRef.referenceType != GTReferenceTypeOid) {
-		NSLog(@"Can't addRef for %@ ref of unsupported type \"%u\"", gtRef.name, gtRef.referenceType);
+	GTObject *refTarget = gtRef.resolvedTarget;
+	if (![refTarget isKindOfClass:[GTObject class]]) {
+		NSLog(@"Tried to add invalid ref %@ -> %@", gtRef, refTarget);
 		return;
 	}
 
-	git_oid refOid = *gtRef.OID.git_oid;
-	git_object* gitTarget = NULL;
-	git_tag* gitTag = NULL;
-
-	PBGitSHA *sha = [PBGitSHA shaWithOID:refOid];
-	if (git_tag_lookup(&gitTag, self.gtRepo.git_repository, gtRef.git_oid) == GIT_OK)
-	{
-		if (git_tag_peel(&gitTarget, gitTag) == GIT_OK)
-		{
-			GTObject* peeledObject = [GTObject objectWithObj:gitTarget inRepository:self.gtRepo];
-//			NSLog(@"peeled sha:%@", peeledObject.sha);
-			sha = [PBGitSHA shaWithString:peeledObject.SHA];
-		}
+	PBGitSHA *sha = [PBGitSHA shaWithOID:refTarget.OID.git_oid];
+	if (!sha) {
+		NSLog(@"Couldn't determine sha for ref %@ -> %@", gtRef, refTarget);
+		return;
 	}
-	
+
 	PBGitRef* ref = [[PBGitRef alloc] initWithString:gtRef.name];
 //	NSLog(@"addRef %@ %@ at %@", ref.type, gtRef.name, [sha string]);
-	NSMutableArray* curRefs;
-	if ( (curRefs = [refs objectForKey:sha]) != nil )
+	NSMutableArray* curRefs = refs[sha];
+	if ( curRefs != nil ) {
+		if ([curRefs containsObject:ref]) {
+			NSLog(@"Duplicate ref shouldn't be added: %@", ref);
+			return;
+		}
 		[curRefs addObject:ref];
-	else
-		[refs setObject:[NSMutableArray arrayWithObject:ref] forKey:sha];
+	} else {
+		refs[sha] = [NSMutableArray arrayWithObject:ref];
+	}
 }
 
 int addSubmoduleName(git_submodule *module, const char* name, void * context)
@@ -343,9 +330,10 @@ int addSubmoduleName(git_submodule *module, const char* name, void * context)
 	if (!ref)
 		return nil;
 	
-	for (PBGitSHA *sha in refs)
+	for (PBGitSHA *sha in refs.allKeys)
 	{
-		for (PBGitRef *existingRef in [refs objectForKey:sha])
+		NSMutableSet *refsForSha = [refs objectForKey:sha];
+		for (PBGitRef *existingRef in refsForSha)
 		{
 			if ([existingRef isEqualToRef:ref])
 			{
@@ -459,11 +447,12 @@ int addSubmoduleName(git_submodule *module, const char* name, void * context)
 
 - (BOOL) refExists:(PBGitRef *)ref
 {
-	int retValue = 1;
-    NSString *output = [self outputInWorkdirForArguments:[NSArray arrayWithObjects:@"for-each-ref", [ref ref], nil] retValue:&retValue];
-    if (retValue || [output isEqualToString:@""])
-        return NO;
-    return YES;
+	NSError *gtError = nil;
+	GTReference *gtRef = [GTReference referenceByLookingUpReferencedNamed:ref.ref inRepository:self.gtRepo error:&gtError];
+	if (gtRef) {
+		return YES;
+	}
+	return NO;
 }
 
 // useful for getting the full ref for a user entered name
@@ -579,8 +568,9 @@ int addSubmoduleName(git_submodule *module, const char* name, void * context)
 		if (remoteName && ([remoteName isKindOfClass:[NSString class]] && ![remoteName isEqualToString:@""])) {
 			PBGitRef *remoteRef = [PBGitRef refFromString:[kGitXRemoteRefPrefix stringByAppendingString:remoteName]];
 			// check that the remote is a valid ref and exists
-			if ([self checkRefFormat:[remoteRef ref]] && [self refExists:remoteRef])
+			if ([self checkRefFormat:[remoteRef ref]] && [self refExists:remoteRef]) {
 				return remoteRef;
+			}
 		}
 	}
 
