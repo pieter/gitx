@@ -109,6 +109,10 @@ NSString * const kGitXRemoteRefPrefix = @"refs/remotes/";
 
 - (PBGitRef*) initWithString: (NSString*) s
 {
+	self = [super init];
+	if (!self) {
+		return nil;
+	}
 	ref = s;
 	return self;
 }
