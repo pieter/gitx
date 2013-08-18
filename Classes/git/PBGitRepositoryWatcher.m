@@ -34,7 +34,6 @@ void PBGitRepositoryWatcherCallback(ConstFSEventStreamRef streamRef,
 	NSMutableArray *changePaths = [[NSMutableArray alloc] init];
 	NSArray *eventPaths = (__bridge NSArray*)_eventPaths;
 	for (int i = 0; i < numEvents; ++i) {
-//		NSLog(@"FSEvent Watcher: %@ Change %llu in %s, flags %lu", watcher, eventIds[i], paths[i], eventFlags[i]);
 		NSString *path = [eventPaths objectAtIndex:i];
 		if ([path hasSuffix:@".lock"]) {
 			continue;
@@ -62,8 +61,17 @@ void PBGitRepositoryWatcherCallback(ConstFSEventStreamRef streamRef,
 	repository = theRepository;
 	FSEventStreamContext context = {0, (__bridge void *)(self), NULL, NULL, NULL};
 
-	NSString *path = [repository.fileURL path];
-	NSArray *paths = [NSArray arrayWithObject: path];
+	NSString *indexPath = repository.gtRepo.gitDirectoryURL.path;
+	if (!indexPath) {
+		return nil;
+	}
+	NSString *workDir = repository.gtRepo.isBare ? nil : repository.gtRepo.fileURL.path;
+	NSArray *paths = nil;
+	if (workDir) {
+		paths = @[indexPath, workDir];
+	} else {
+		paths = @[indexPath];
+	}
 
 	self.statusCache = [NSMutableDictionary new];
 
