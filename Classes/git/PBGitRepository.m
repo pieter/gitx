@@ -453,11 +453,8 @@ int addSubmoduleName(git_submodule *module, const char* name, void * context)
 
 - (BOOL) checkRefFormat:(NSString *)refName
 {
-	int retValue = 1;
-	[self outputInWorkdirForArguments:[NSArray arrayWithObjects:@"check-ref-format", refName, nil] retValue:&retValue];
-	if (retValue)
-		return NO;
-	return YES;
+	BOOL result = [GTReference isValidReferenceName:refName];
+	return result;
 }
 
 - (BOOL) refExists:(PBGitRef *)ref
