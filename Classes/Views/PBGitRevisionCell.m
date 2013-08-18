@@ -11,6 +11,8 @@
 #import "RoundedRectangle.h"
 #import "GitXTextFieldCell.h"
 
+#import "NSColor+RGB.h"
+
 const int COLUMN_WIDTH = 10;
 
 @implementation PBGitRevisionCell
@@ -26,15 +28,18 @@ const int COLUMN_WIDTH = 10;
 + (NSArray *)laneColors
 {
 	static NSArray *laneColors = nil;
-	if (!laneColors)
-		laneColors = [NSArray arrayWithObjects:
-					  [NSColor colorWithCalibratedRed: 0X4e/256.0 green:0X9A/256.0 blue: 0X06/256.0 alpha: 1.0],
-					  [NSColor colorWithCalibratedRed: 0X20/256.0 green:0X4A/256.0 blue: 0X87/256.0 alpha: 1.0],
-					  [NSColor colorWithCalibratedRed: 0XC4/256.0 green:0XA0/256.0 blue: 0 alpha: 1.0],
-					  [NSColor colorWithCalibratedRed: 0X5C/256.0 green:0X35/256.0 blue: 0X66/256.0 alpha: 1.0],
-					  [NSColor colorWithCalibratedRed: 0XA4/256.0 green:0X00/256.0 blue: 0X00/256.0 alpha: 1.0],
-					  [NSColor colorWithCalibratedRed: 0XCE/256.0 green:0X5C/256.0 blue: 0 alpha: 1.0],
-					  nil];
+	if (!laneColors) {
+		laneColors = @[
+	 [NSColor colorWithR:181 G:137 B:0], // Solarized yellow
+	 [NSColor colorWithR:203 G:75 B:22], // Solarized orange
+	 [NSColor colorWithR:220 G:50 B:47], // Solarized red
+	 [NSColor colorWithR:211 G:54 B:130], // Solarized magenta
+	 [NSColor colorWithR:108 G:113 B:196], // Solarized violet
+	 [NSColor colorWithR:38 G:139 B:210], // Solarized blue
+	 [NSColor colorWithR:42 G:161 B:152], // Solarized cyan
+	 [NSColor colorWithR:133 G:153 B:0], // Solarized green
+	 ];
+	}
 
 	return laneColors;
 }
