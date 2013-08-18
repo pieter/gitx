@@ -84,11 +84,7 @@ NSString * const kGitXCommitType = @"commit";
 - (NSString *)committer
 {
 	GTSignature *sig = self.gtCommit.committer;
-	if (![sig isEqual:self.gtCommit.author]) {
-		return sig.name
-		;
-	}
-	return nil;
+	return sig.name;
 }
 
 - (NSString *)SVNRevision
