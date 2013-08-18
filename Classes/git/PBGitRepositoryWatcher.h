@@ -29,7 +29,6 @@ extern NSString *kPBGitRepositoryEventPathsUserInfoKey;
 	NSDate *indexTouchDate;
 	__strong PBGitRepositoryWatcher* ownRef;
     BOOL _running;
-	NSDictionary* lastStatus;
 }
 
 @property (readonly, weak) PBGitRepository *repository;

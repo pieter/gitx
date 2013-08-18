@@ -18,6 +18,9 @@ NSString *kPBGitRepositoryEventTypeUserInfoKey = @"kPBGitRepositoryEventTypeUser
 NSString *kPBGitRepositoryEventPathsUserInfoKey = @"kPBGitRepositoryEventPathsUserInfoKey";
 
 @interface PBGitRepositoryWatcher ()
+
+@property (nonatomic, strong) NSMutableDictionary *statusCache;
+
 - (void) _handleEventCallback:(NSArray *)eventPaths;
 @end
 
@@ -59,8 +62,10 @@ void PBGitRepositoryWatcherCallback(ConstFSEventStreamRef streamRef,
 	repository = theRepository;
 	FSEventStreamContext context = {0, (__bridge void *)(self), NULL, NULL, NULL};
 
-	NSString *path = [repository.gitURL path];
+	NSString *path = [repository.fileURL path];
 	NSArray *paths = [NSArray arrayWithObject: path];
+
+	self.statusCache = [NSMutableDictionary new];
 
 	// Create and activate event stream
 	eventStream = FSEventStreamCreate(kCFAllocatorDefault, PBGitRepositoryWatcherCallback, &context, 
@@ -165,32 +170,33 @@ void PBGitRepositoryWatcherCallback(ConstFSEventStreamRef streamRef,
             [paths addObject:eventPath.path];
 //			NSLog(@"Watcher: git dir subdir change in %@", eventPath.path);
 		}
+
+		else {
+			unsigned int fileStatus = 0;
+			NSString *repoPrefix = self.repository.fileURL.path;
+			// TODO: fix exception
+			NSString *eventRepoRelativePath = [eventPath.path substringFromIndex:(repoPrefix.length + 1)];
+			int gitError = git_status_file(&fileStatus, self.repository.gtRepo.git_repository, eventRepoRelativePath.UTF8String);
+			if (gitError == GIT_OK) {
+				if (fileStatus & GIT_STATUS_IGNORED) {
+//					NSLog(@"ignoring change to ignored file: %@", eventPath.path);
+				} else {
+					NSNumber *oldStatus = self.statusCache[eventPath.path];
+					NSNumber *newStatus = @(fileStatus);
+					if (![oldStatus isEqualTo:newStatus]) {
+//						NSLog(@"file changed status: %@", eventPath.path);
+						[paths addObject:eventPath.path];
+						event |= PBGitRepositoryWatcherEventTypeWorkingDirectory;
+					} else if (fileStatus & GIT_STATUS_WT_MODIFIED) {
+//						NSLog(@"modified file touched: %@", eventPath.path);
+						event |= PBGitRepositoryWatcherEventTypeWorkingDirectory;
+						[paths addObject:eventPath.path];
+					}
+					self.statusCache[eventPath.path] = newStatus;
+				}
+			}
+		}
 	}
-	
-	// working dir
-	NSMutableDictionary* newStatus = [NSMutableDictionary dictionary];
-	[self.repository.gtRepo enumerateFileStatusUsingBlock:^(NSURL *fileURL, GTRepositoryFileStatus status, BOOL *stop) {
-		if (status != GIT_STATUS_IGNORED)
-		{
-			NSNumber* nsStatus = [NSNumber numberWithInt:status];
-			NSString* nsKey = [fileURL path];
-			[newStatus setValue:nsStatus forKey:nsKey];
-		}
-	}];
-	if (lastStatus)
-	{
-		if ([lastStatus isEqualToDictionary:newStatus])
-		{
-//			NSLog(@"Watcher: no changes to working copy");
-		}
-		else
-		{
-//			NSLog(@"Watcher: changes to working copy");
-			event |= PBGitRepositoryWatcherEventTypeWorkingDirectory;
-		}
-	}
-	lastStatus = newStatus;
-			
 	
 	if(event != 0x0){
 //		NSLog(@"PBGitRepositoryWatcher firing notification for repository %@ with flag %lu", repository, event);
