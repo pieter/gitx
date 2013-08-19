@@ -1858,6 +1858,7 @@
 			buildSettings = {
 				INSTALL_PATH = /usr/local/bin;
 				PRODUCT_NAME = gitx_askpasswd;
+				SKIP_INSTALL = YES;
 			};
 			name = Debug;
 		};
@@ -1868,6 +1869,7 @@
 				INFOPLIST_PREPROCESS = YES;
 				INSTALL_PATH = /usr/local/bin;
 				PRODUCT_NAME = gitx_askpasswd;
+				SKIP_INSTALL = YES;
 			};
 			name = Release;
 		};
@@ -1876,6 +1878,7 @@
 			buildSettings = {
 				INSTALL_PATH = /usr/local/bin;
 				PRODUCT_NAME = gitx_askpasswd;
+				SKIP_INSTALL = YES;
 			};
 			name = Install;
 		};
@@ -1886,6 +1889,7 @@
 				GCC_PREFIX_HEADER = GitX_Prefix.pch;
 				INSTALL_PATH = /usr/local/bin;
 				PRODUCT_NAME = gitx;
+				SKIP_INSTALL = YES;
 			};
 			name = Debug;
 		};
@@ -1896,6 +1900,7 @@
 				GCC_PREFIX_HEADER = GitX_Prefix.pch;
 				INSTALL_PATH = /usr/local/bin;
 				PRODUCT_NAME = gitx;
+				SKIP_INSTALL = YES;
 				STRIP_INSTALLED_PRODUCT = YES;
 			};
 			name = Release;
