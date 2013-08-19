@@ -239,24 +239,35 @@ void PBGitRepositoryWatcherCallback(ConstFSEventStreamRef streamRef,
 			continue;
 		}
 		NSString *eventRepoRelativePath = [eventPath.path substringFromIndex:(workDir.length + 1)];
-		int gitError = git_status_file(&fileStatus, self.repository.gtRepo.git_repository, eventRepoRelativePath.UTF8String);
-		if (gitError == GIT_OK) {
-			if (fileStatus & GIT_STATUS_IGNORED) {
-				//					NSLog(@"ignoring change to ignored file: %@", eventPath.path);
-			} else {
-				NSNumber *oldStatus = self.statusCache[eventPath.path];
-				NSNumber *newStatus = @(fileStatus);
-				if (![oldStatus isEqualTo:newStatus]) {
-					//						NSLog(@"file changed status: %@", eventPath.path);
-					[paths addObject:eventPath.path];
-					event |= PBGitRepositoryWatcherEventTypeWorkingDirectory;
-				} else if (fileStatus & GIT_STATUS_WT_MODIFIED) {
-					//						NSLog(@"modified file touched: %@", eventPath.path);
-					event |= PBGitRepositoryWatcherEventTypeWorkingDirectory;
-					[paths addObject:eventPath.path];
-				}
-				self.statusCache[eventPath.path] = newStatus;
+		int ignoreResult = 0;
+		int ignoreError = git_status_should_ignore(&ignoreResult, self.repository.gtRepo.git_repository, eventRepoRelativePath.UTF8String);
+		if (ignoreError == GIT_OK && ignoreResult) {
+			// file is covered by ignore rules
+			NSNumber *oldStatus = self.statusCache[eventPath.path];
+			if (!oldStatus || [oldStatus isEqualToNumber:@(GIT_STATUS_IGNORED)]) {
+				// no cached status or previously ignored - skip this file
+				continue;
 			}
+		}
+		int statusError = git_status_file(&fileStatus, self.repository.gtRepo.git_repository, eventRepoRelativePath.UTF8String);
+		if (statusError == GIT_OK) {
+			// grab the cached status value and update the cache
+			NSNumber *oldStatus = self.statusCache[eventPath.path];
+			NSNumber *newStatus = @(fileStatus);
+			self.statusCache[eventPath.path] = newStatus;
+
+			BOOL addToChanges = NO;
+			if (![oldStatus isEqualTo:newStatus]) {
+				addToChanges = YES; // status has changed
+			}
+			if (fileStatus & GIT_STATUS_WT_MODIFIED) {
+				addToChanges = YES; // file has changed, and we were already tracking modified
+			}
+			if (addToChanges) {
+				[paths addObject:eventPath.path];
+				event |= PBGitRepositoryWatcherEventTypeWorkingDirectory;
+			}
+
 		}
 	}
 
