@@ -557,19 +557,22 @@ int addSubmoduleName(git_submodule *module, const char* name, void * context)
 
 - (PBGitRef *) remoteRefForBranch:(PBGitRef *)branch error:(NSError **)error
 {
-	if ([branch isRemote])
+	if ([branch isRemote]) {
 		return [branch remoteRef];
+	}
 
-	NSString *branchName = [branch branchName];
-	if (branchName) {
-		NSError *error = nil;
-		GTConfiguration *config = [self.gtRepo configurationWithError:&error];
-		NSString *remoteName = [config stringForKey:[NSString stringWithFormat:@"branch.%@.remote", branchName]];
-		if (remoteName && ([remoteName isKindOfClass:[NSString class]] && ![remoteName isEqualToString:@""])) {
-			PBGitRef *remoteRef = [PBGitRef refFromString:[kGitXRemoteRefPrefix stringByAppendingString:remoteName]];
-			// check that the remote is a valid ref and exists
-			if ([self checkRefFormat:[remoteRef ref]] && [self refExists:remoteRef]) {
-				return remoteRef;
+	NSString *branchRef = branch.ref;
+	if (branchRef) {
+		NSError *branchError = nil;
+		GTBranch *gtBranch = [GTBranch branchWithName:branchRef repository:self.gtRepo error:&branchError];
+		if (gtBranch) {
+			NSError *trackingError = nil;
+			BOOL trackingSuccess = NO;
+			GTBranch *trackingBranch = [gtBranch trackingBranchWithError:&trackingError success:&trackingSuccess];
+			if (trackingBranch && trackingSuccess) {
+				NSString *trackingBranchRefName = trackingBranch.reference.name;
+				PBGitRef *trackingBranchRef = [PBGitRef refFromString:trackingBranchRefName];
+				return trackingBranchRef;
 			}
 		}
 	}
