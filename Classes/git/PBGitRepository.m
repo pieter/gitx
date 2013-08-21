@@ -646,9 +646,15 @@ NSString *PBGitRepositoryDocumentType = @"Git Repository";
 -(BOOL)stashRunCommand:(NSString *)command withStash:(PBGitStash *)stash
 {
     int retValue;
-    [self outputInWorkdirForArguments:@[@"stash", command, stash.ref.refishName] retValue:&retValue];
+    NSArray *arguments = @[@"stash", command, stash.ref.refishName];
+	NSString *output = [self outputInWorkdirForArguments:arguments retValue:&retValue];
     [self willChangeValueForKey:@"stashes"];
 	[self didChangeValueForKey:@"stashes"];
+	if (retValue) {
+		NSString *title = [NSString stringWithFormat:@"Stash %@ failed!", command];
+		NSString *message = [NSString stringWithFormat:@"There was an error!"];
+		[self.windowController showErrorSheetTitle:title message:message arguments:arguments output:output];
+    }
     return retValue ? NO : YES;
 }
 
@@ -674,11 +680,16 @@ NSString *PBGitRepositoryDocumentType = @"Git Repository";
 
 -(BOOL)stashSaveWithKeepIndex:(BOOL)keepIndex
 {
-    NSArray * args = @[@"stash", @"save", keepIndex?@"--keep-index":@"--no-keep-index"];
     int retValue;
-    NSString * output = [self outputInWorkdirForArguments:args retValue:&retValue];
+    NSArray * arguments = @[@"stash", @"save", keepIndex?@"--keep-index":@"--no-keep-index"];
+    NSString * output = [self outputInWorkdirForArguments:arguments retValue:&retValue];
     [self willChangeValueForKey:@"stashes"];
 	[self didChangeValueForKey:@"stashes"];
+    if (retValue) {
+		NSString *title = [NSString stringWithFormat:@"Stash save failed!"];
+		NSString *message = [NSString stringWithFormat:@"There was an error!"];
+		[self.windowController showErrorSheetTitle:title message:message arguments:arguments output:output];
+    }
     return retValue ? NO : YES;
 }
 
