@@ -278,9 +278,11 @@ var postProcessDiffContents = function(diffContent) {
 				// hunk only contains additions OR deletions, so there is no need
 				// to do any inline-diff. just keep the elements as they are
 				buffer = $.map(oldEls.length ? oldEls : newEls, function (e) {
-					if (newEls.length) {
-						e.html(highlightTrailingWhitespace(e.html()));
-					}
+					var prefix = e.text().substring(0,1),
+						text = e.text().substring(1),
+						tag = prefix=='+' ? 'ins' : 'del',
+						html = prefix+'<'+tag+'>'+(prefix == "+" ? highlightTrailingWhitespace(text) : text)+'</'+tag+'>';
+					e.html(html);
 					return dumbEl.html(e).html();
 				}).join("");
 			}
