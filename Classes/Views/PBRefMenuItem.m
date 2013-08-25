@@ -134,7 +134,7 @@
 	[items addObject:[PBRefMenuItem separatorItem]];
 	{
 		NSString *deleteTitle = [NSString stringWithFormat:@"Delete %@…", targetRefName];
-		BOOL deleteEnabled = !(isDetachedHead || [ref isRemote]);
+		BOOL deleteEnabled = !(isDetachedHead || [ref isRemote] || isHead);
 		PBRefMenuItem *deleteItem = [PBRefMenuItem itemWithTitle:deleteTitle action:@selector(showDeleteRefSheet:) enabled:deleteEnabled];
 		[items addObject:deleteItem];
 	}
