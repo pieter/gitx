@@ -5,7 +5,7 @@ var contextLines = 0;
 
 var showNewFile = function(file)
 {
-	setTitle("New file: " + file.path);
+	setTitle("New file: " + file.path.escapeHTML());
 
 	var contents = Index.diffForFile_staged_contextLines_(file, false, contextLines);
 	if (!contents) {
@@ -59,7 +59,7 @@ var showFileChanges = function(file, cached) {
 	if (file.status == 0) // New file?
 		return showNewFile(file);
 
-	setTitle((cached ? "Staged": "Unstaged") + " changes for " + file.path);
+	setTitle((cached ? "Staged": "Unstaged") + " changes for " + file.path.escapeHTML());
 	displayContext();
 	var changes = Index.diffForFile_staged_contextLines_(file, cached, contextLines);
 	
