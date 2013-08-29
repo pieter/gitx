@@ -289,8 +289,9 @@ var postProcessDiffContents = function(diffContent) {
 			else {
 				// hunk contains additions AND deletions. so we create an inline diff
 				// of all the old and new lines together and merge the result back to buffer
-				var oldText = $.map(oldEls, function (e) { return e.text().substring(1); }).join("\n");
-				var newText = $.map(newEls, function (e) { return e.text().substring(1); }).join("\n");
+				var mapFn = function (e) { return e.text().substring(1).replace(/\r?\n|\r/g,''); };
+				var oldText = $.map(oldEls, mapFn).join("\n");
+				var newText = $.map(newEls, mapFn).join("\n");
 				var diffResult = inlinediff.diffString3(oldText,newText);
 					diffLines = (diffResult[1] + "\n" + diffResult[2]).split(/\n/g);
 				
