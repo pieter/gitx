@@ -238,7 +238,7 @@ const BOOL ENABLE_SHADOW = YES;
 	NSMutableArray *array = [NSMutableArray array];
 	
 	static const int ref_padding = 10;
-	static const int ref_spacing = 2;
+	static const int ref_spacing = 4;
 	
 	NSRect lastRect = rect;
 	lastRect.origin.x = round(lastRect.origin.x) + 0.5;
