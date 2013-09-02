@@ -82,7 +82,7 @@ const int COLUMN_WIDTH = 10;
 	
 	NSBezierPath * path = [NSBezierPath bezierPath];
 	[path setLineWidth:2];
-	
+	[path setLineCapStyle:NSRoundLineCapStyle];
 	[path moveToPoint: source];
 	[path lineToPoint: center];
 	[path stroke];
