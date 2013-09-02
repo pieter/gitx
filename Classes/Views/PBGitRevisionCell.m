@@ -251,10 +251,24 @@ const BOOL ENABLE_SHADOW = YES;
 	NSMutableDictionary* attributes = [self attributesForRefLabelSelected:[self isHighlighted]];
 	NSBezierPath *border = [NSBezierPath bezierPathWithRoundedRect:rect cornerRadius: 2.0];
 	[[self colorForRef:ref] set];
-	[border fill];
 	
+
+	if (ENABLE_SHADOW) {
+		[NSGraphicsContext saveGraphicsState];
+
+		NSShadow *shadow = [NSShadow new];
+		[shadow setShadowColor:[NSColor blackColor]];//[[self class] shadowColor]];
+		[shadow setShadowOffset:NSMakeSize(0.5f, -0.5f)];
+		[shadow setShadowBlurRadius:2.0f];
+		[shadow set];
+	}
+	[border fill];
+	if (ENABLE_SHADOW) {
+		[NSGraphicsContext restoreGraphicsState];
+	}
+//	[[NSColor blackColor] set];
+//	[border stroke];
 	[[ref shortName] drawInRect:rect withAttributes:attributes];
-	[border stroke];	
 }
 
 - (void) drawRefsInRect: (NSRect *)refRect
