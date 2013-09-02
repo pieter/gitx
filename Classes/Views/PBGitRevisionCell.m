@@ -269,7 +269,7 @@ const BOOL ENABLE_SHADOW = YES;
 	PBGitRef *ref = [refs objectAtIndex:index];
 	
 	NSMutableDictionary* attributes = [self attributesForRefLabelSelected:[self isHighlighted]];
-	NSBezierPath *border = [NSBezierPath bezierPathWithRoundedRect:rect cornerRadius: 2.0];
+	NSBezierPath *border = [NSBezierPath bezierPathWithRoundedRect:rect cornerRadius: 3.0];
 	[[self colorForRef:ref] set];
 	
 
