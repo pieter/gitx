@@ -14,9 +14,9 @@
 #import "NSColor+RGB.h"
 
 const int COLUMN_WIDTH = 10;
+const BOOL ENABLE_SHADOW = YES;
 
 @implementation PBGitRevisionCell
-
 
 - (id) initWithCoder: (id) coder
 {
@@ -58,6 +58,16 @@ const int COLUMN_WIDTH = 10;
 	return laneColors;
 }
 
++ (NSColor *)shadowColor
+{
+	static NSColor *shadowColor = nil;
+	if (!shadowColor) {
+		uint8_t l = 0x26;
+		shadowColor = [NSColor colorWithR:l G:l B:l];
+	}
+	return shadowColor;
+}
+
 - (void) drawLineFromColumn: (int) from toColumn: (int) to inRect: (NSRect) r offset: (int) offset color: (int) c
 {
 	NSPoint origin = r.origin;
@@ -66,14 +76,12 @@ const int COLUMN_WIDTH = 10;
 	NSPoint center = NSMakePoint( origin.x + COLUMN_WIDTH * to, origin.y + r.size.height * 0.5 + 0.5);
 
 	NSShadow *shadow = nil;
-	if (true)
+	if (ENABLE_SHADOW)
 	{
 		[NSGraphicsContext saveGraphicsState];
-		uint8_t l = 0x26;
-		NSColor *shadowColor = [NSColor colorWithR:l G:l B:l];
 
 		shadow = [NSShadow new];
-		[shadow setShadowColor:shadowColor];
+		[shadow setShadowColor:[[self class] shadowColor]];
 		[shadow setShadowOffset:NSMakeSize(0.5f, -0.5f)];
 		[shadow set];
 	}
@@ -105,6 +113,7 @@ const int COLUMN_WIDTH = 10;
 - (void) drawCircleInRect: (NSRect) r
 {
 
+	
 	int c = cellInfo.position;
 	NSPoint origin = r.origin;
 	NSPoint columnOrigin = { origin.x + COLUMN_WIDTH * c, origin.y};
@@ -112,12 +121,22 @@ const int COLUMN_WIDTH = 10;
 	NSRect oval = { columnOrigin.x - 5, columnOrigin.y + r.size.height * 0.5 - 5, 10, 10};
 
 	
-	NSBezierPath * path = [NSBezierPath bezierPathWithOvalInRect:oval];
 
-	[[NSColor blackColor] set];
-	[path fill];
+	{
+		[NSGraphicsContext saveGraphicsState];
+		NSBezierPath * path = [NSBezierPath bezierPathWithOvalInRect:oval];
+		NSShadow *shadow = [NSShadow new];
+		[shadow setShadowColor:[[self class] shadowColor]];
+		[shadow setShadowOffset:NSMakeSize(0.5f, -0.5f)];
+		[shadow setShadowBlurRadius:2.0f];
+		[shadow set];
+
+		[[NSColor blackColor] set];
+		[path fill];
+		[NSGraphicsContext restoreGraphicsState];
+	}
 	
-	NSRect smallOval = { columnOrigin.x - 3, columnOrigin.y + r.size.height * 0.5 - 3, 6, 6};
+	NSRect smallOval = { columnOrigin.x - 4, columnOrigin.y + r.size.height * 0.5 - 4, 8, 8};
 
 	if ( [self isCurrentCommit ] ) {
 		[[NSColor colorWithCalibratedRed: 0Xfc/256.0 green:0Xa6/256.0 blue: 0X4f/256.0 alpha: 1.0] set];
@@ -125,8 +144,9 @@ const int COLUMN_WIDTH = 10;
 		[[NSColor whiteColor] set];
 	}
 
-	path = [NSBezierPath bezierPathWithOvalInRect:smallOval];
-	[path fill];	
+	NSBezierPath *smallPath = [NSBezierPath bezierPathWithOvalInRect:smallOval];
+	[smallPath fill];
+
 }
 
 - (void) drawTriangleInRect: (NSRect) r sign: (char) sign
