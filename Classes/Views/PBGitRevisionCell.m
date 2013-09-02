@@ -62,7 +62,7 @@ const BOOL ENABLE_SHADOW = YES;
 {
 	static NSColor *shadowColor = nil;
 	if (!shadowColor) {
-		uint8_t l = 0x26;
+		uint8_t l = 0x80;
 		shadowColor = [NSColor colorWithR:l G:l B:l];
 	}
 	return shadowColor;
