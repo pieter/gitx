@@ -65,6 +65,18 @@ const int COLUMN_WIDTH = 10;
 	NSPoint source = NSMakePoint(origin.x + COLUMN_WIDTH * from, origin.y + offset);
 	NSPoint center = NSMakePoint( origin.x + COLUMN_WIDTH * to, origin.y + r.size.height * 0.5 + 0.5);
 
+	NSShadow *shadow = nil;
+	if (true)
+	{
+		[NSGraphicsContext saveGraphicsState];
+		uint8_t l = 0x26;
+		NSColor *shadowColor = [NSColor colorWithR:l G:l B:l];
+
+		shadow = [NSShadow new];
+		[shadow setShadowColor:shadowColor];
+		[shadow setShadowOffset:NSMakeSize(1.0f, -1.f)];
+		[shadow set];
+	}
 	NSArray* colors = [PBGitRevisionCell laneColors];
 	[(NSColor*)[colors objectAtIndex: (c % [colors count])] set];
 	
@@ -74,7 +86,10 @@ const int COLUMN_WIDTH = 10;
 	[path moveToPoint: source];
 	[path lineToPoint: center];
 	[path stroke];
-	
+
+	if (shadow) {
+		[NSGraphicsContext restoreGraphicsState];
+	}
 }
 
 - (BOOL) isCurrentCommit
