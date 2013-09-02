@@ -75,12 +75,11 @@ const BOOL ENABLE_SHADOW = YES;
 	NSPoint source = NSMakePoint(origin.x + COLUMN_WIDTH * from, origin.y + offset);
 	NSPoint center = NSMakePoint( origin.x + COLUMN_WIDTH * to, origin.y + r.size.height * 0.5 + 0.5);
 
-	NSShadow *shadow = nil;
 	if (ENABLE_SHADOW)
 	{
 		[NSGraphicsContext saveGraphicsState];
 
-		shadow = [NSShadow new];
+		NSShadow *shadow = [NSShadow new];
 		[shadow setShadowColor:[[self class] shadowColor]];
 		[shadow setShadowOffset:NSMakeSize(0.5f, -0.5f)];
 		[shadow set];
@@ -95,7 +94,7 @@ const BOOL ENABLE_SHADOW = YES;
 	[path lineToPoint: center];
 	[path stroke];
 
-	if (shadow) {
+	if (ENABLE_SHADOW) {
 		[NSGraphicsContext restoreGraphicsState];
 	}
 }
@@ -120,11 +119,9 @@ const BOOL ENABLE_SHADOW = YES;
 
 	NSRect oval = { columnOrigin.x - 5, columnOrigin.y + r.size.height * 0.5 - 5, 10, 10};
 
-	
-
-	{
+	NSBezierPath * path = [NSBezierPath bezierPathWithOvalInRect:oval];
+	if (ENABLE_SHADOW) {
 		[NSGraphicsContext saveGraphicsState];
-		NSBezierPath * path = [NSBezierPath bezierPathWithOvalInRect:oval];
 		NSShadow *shadow = [NSShadow new];
 		[shadow setShadowColor:[[self class] shadowColor]];
 		[shadow setShadowOffset:NSMakeSize(0.5f, -0.5f)];
@@ -132,7 +129,9 @@ const BOOL ENABLE_SHADOW = YES;
 		[shadow set];
 
 		[[NSColor blackColor] set];
-		[path fill];
+	}
+	[path fill];
+	if (ENABLE_SHADOW) {
 		[NSGraphicsContext restoreGraphicsState];
 	}
 	
