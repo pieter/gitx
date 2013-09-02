@@ -74,7 +74,7 @@ const int COLUMN_WIDTH = 10;
 
 		shadow = [NSShadow new];
 		[shadow setShadowColor:shadowColor];
-		[shadow setShadowOffset:NSMakeSize(1.0f, -1.f)];
+		[shadow setShadowOffset:NSMakeSize(0.5f, -0.5f)];
 		[shadow set];
 	}
 	NSArray* colors = [PBGitRevisionCell laneColors];
