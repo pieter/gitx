@@ -189,8 +189,28 @@ const BOOL ENABLE_SHADOW = YES;
 	[attributes setObject:style forKey:NSParagraphStyleAttributeName];
 	[attributes setObject:[NSFont fontWithName:@"Helvetica" size:9] forKey:NSFontAttributeName];
 
-	//if (selected)
-	//	[attributes setObject:[NSColor alternateSelectedControlTextColor] forKey:NSForegroundColorAttributeName];
+	NSShadow *shadow = nil;
+
+	if (false /*selected*/) { // white text is a bit too hard to read (even with shadow) on refs
+		[attributes setObject:[NSColor alternateSelectedControlTextColor] forKey:NSForegroundColorAttributeName];
+		if (ENABLE_SHADOW) {
+			shadow = [NSShadow new];
+			[shadow setShadowColor:[[self class] shadowColor]];
+			[shadow setShadowBlurRadius:1.0f];
+			[shadow setShadowOffset:NSMakeSize(0.5f, -0.5f)];
+		}
+	} else {
+		if (ENABLE_SHADOW) {
+			shadow = [NSShadow new];
+			[shadow setShadowColor:[NSColor whiteColor]];
+			[shadow setShadowBlurRadius:4.0f];
+			[shadow setShadowOffset:NSMakeSize(-0.5f, 0.5f)];
+		}
+	}
+
+	if (shadow) {
+		attributes[NSShadowAttributeName] = shadow;
+	}
 
 	return attributes;
 }
