@@ -969,6 +969,8 @@
 				4A5D768914A9A9CC00DF6C68 /* GitXRelativeDateFormatter.m */,
 				4A5D768A14A9A9CC00DF6C68 /* GitXScriptingConstants.h */,
 				4A5D768B14A9A9CC00DF6C68 /* main.m */,
+				4A2125A217C0C78A00B5B582 /* NSColor+RGB.h */,
+				4A2125A317C0C78A00B5B582 /* NSColor+RGB.m */,
 				4A5D768C14A9A9CC00DF6C68 /* PBChangedFile.h */,
 				4A5D768D14A9A9CC00DF6C68 /* PBChangedFile.m */,
 				4A5D768E14A9A9CC00DF6C68 /* PBCLIProxy.h */,
@@ -988,8 +990,6 @@
 				4A5D76A314A9A9CC00DF6C68 /* Terminal.h */,
 				4A5D76A414A9A9CC00DF6C68 /* Util */,
 				4A5D76B314A9A9CC00DF6C68 /* Views */,
-				4A2125A217C0C78A00B5B582 /* NSColor+RGB.h */,
-				4A2125A317C0C78A00B5B582 /* NSColor+RGB.m */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
@@ -1858,6 +1858,7 @@
 			buildSettings = {
 				INSTALL_PATH = /usr/local/bin;
 				PRODUCT_NAME = gitx_askpasswd;
+				SKIP_INSTALL = YES;
 			};
 			name = Debug;
 		};
@@ -1868,6 +1869,7 @@
 				INFOPLIST_PREPROCESS = YES;
 				INSTALL_PATH = /usr/local/bin;
 				PRODUCT_NAME = gitx_askpasswd;
+				SKIP_INSTALL = YES;
 			};
 			name = Release;
 		};
@@ -1876,6 +1878,7 @@
 			buildSettings = {
 				INSTALL_PATH = /usr/local/bin;
 				PRODUCT_NAME = gitx_askpasswd;
+				SKIP_INSTALL = YES;
 			};
 			name = Install;
 		};
@@ -1886,6 +1889,7 @@
 				GCC_PREFIX_HEADER = GitX_Prefix.pch;
 				INSTALL_PATH = /usr/local/bin;
 				PRODUCT_NAME = gitx;
+				SKIP_INSTALL = YES;
 			};
 			name = Debug;
 		};
@@ -1896,6 +1900,7 @@
 				GCC_PREFIX_HEADER = GitX_Prefix.pch;
 				INSTALL_PATH = /usr/local/bin;
 				PRODUCT_NAME = gitx;
+				SKIP_INSTALL = YES;
 				STRIP_INSTALLED_PRODUCT = YES;
 			};
 			name = Release;

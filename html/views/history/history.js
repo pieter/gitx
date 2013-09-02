@@ -197,8 +197,8 @@ var loadCommit = function(commitObject, currentRef) {
 	for (var i = 0; i < commit.parents.length; i++) {
 		var newRow = $("commit_header").insertRow(-1);
 		newRow.innerHTML = "<td class='property_name'>Parent:</td><td>" +
-			"<a href='' onclick='selectCommit(this.innerHTML); return false;'>" +
-			commit.parents[i].string + "</a></td>";
+			"<a class=\"SHA\" href='' onclick='selectCommit(this.innerHTML); return false;'>" +
+			commit.parents[i].string() + "</a></td>";
 	}
 
 	commit.notificationID = setTimeout(function() { 

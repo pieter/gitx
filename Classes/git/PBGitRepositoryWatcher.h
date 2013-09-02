@@ -23,10 +23,19 @@ extern NSString *PBGitRepositoryEventNotification;
 extern NSString *kPBGitRepositoryEventTypeUserInfoKey;
 extern NSString *kPBGitRepositoryEventPathsUserInfoKey;
 
+typedef void(^PBGitRepositoryWatcherCallbackBlock)(NSArray *changedFiles);
+
 @interface PBGitRepositoryWatcher : NSObject {
-    FSEventStreamRef eventStream;
+    FSEventStreamRef gitDirEventStream;
+	FSEventStreamRef workDirEventStream;
+	PBGitRepositoryWatcherCallbackBlock gitDirChangedBlock;
+	PBGitRepositoryWatcherCallbackBlock workDirChangedBlock;
 	NSDate *gitDirTouchDate;
 	NSDate *indexTouchDate;
+
+	NSString *gitDir;
+	NSString *workDir;
+
 	__strong PBGitRepositoryWatcher* ownRef;
     BOOL _running;
 }
