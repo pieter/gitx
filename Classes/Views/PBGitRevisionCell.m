@@ -39,6 +39,20 @@ const int COLUMN_WIDTH = 10;
 	 [NSColor colorWithR:42 G:161 B:152], // Solarized cyan
 	 [NSColor colorWithR:133 G:153 B:0], // Solarized green
 	 ];
+
+		NSMutableArray *oddColors = [NSMutableArray new];
+		NSMutableArray *evenColors = [NSMutableArray new];
+
+		for (NSUInteger i = 0; i < laneColors.count; ++i) {
+			if (i % 2) {
+				[oddColors addObject:laneColors[i]];
+			} else {
+				[evenColors addObject:laneColors[i]];
+			}
+		}
+
+		laneColors = [evenColors arrayByAddingObjectsFromArray:oddColors];
+
 	}
 
 	return laneColors;
