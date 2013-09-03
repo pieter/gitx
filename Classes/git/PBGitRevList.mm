@@ -150,9 +150,17 @@ using namespace std;
 				for (NSString *ref in allRefs) {
 					if ([ref hasPrefix:@"refs/tags/"]) {
 						GTObject *tag = [repo lookupObjectByRefspec:ref error:&error];
-						if ([tag isKindOfClass:[GTCommit class]])
+						GTCommit *commit = nil;
+						if ([tag isKindOfClass:[GTCommit class]]) {
+							commit = (GTCommit *)tag;
+						} else if ([tag isKindOfClass:[GTTag class]]) {
+							NSError *tagError = nil;
+							commit = [(GTTag *)tag objectByPeelingTagError:&tagError];
+						}
+
+						if ([commit isKindOfClass:[GTCommit class]])
 						{
-							[enumerator pushSHA:tag.SHA error:&error];
+							[enumerator pushSHA:commit.SHA error:&error];
 						}
 					}
 				}
