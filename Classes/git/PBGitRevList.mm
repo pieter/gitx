@@ -157,7 +157,7 @@ using namespace std;
 					}
 				}
 			} else if ([param hasPrefix:@"--glob="]) {
-				[enumerator pushGlob:[param substringFromIndex:@"--glob".length] error:&error];
+				[enumerator pushGlob:[param substringFromIndex:@"--glob=".length] error:&error];
 			} else {
 				[enumerator pushGlob:param error:&error];
 			}
