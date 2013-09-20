@@ -31,6 +31,7 @@ NSString * const kGitXCommitType = @"commit";
 - (NSDate *) date
 {
 	return self.gtCommit.commitDate;
+	// previous behaviour was equiv. to:  return self.gtCommit.author.time;
 }
 
 - (NSString *) dateString
