@@ -23,10 +23,9 @@
 #import "PBGitRepositoryWatcher.h"
 #import "GitRepoFinder.h"
 #import "PBGitSubmodule.h"
+#import "PBGitHistoryList.h"
+#import "PBGitSHA.h"
 
-#import <ObjectiveGit/GTRepository.h>
-#import <ObjectiveGit/GTIndex.h>
-#import <ObjectiveGit/GTConfiguration.h>
 
 NSString *PBGitRepositoryDocumentType = @"Git Repository";
 
