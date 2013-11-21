@@ -13,7 +13,7 @@
 #import "PBGitGraphLine.h"
 
 #import <vector>
-#import <git2/oid.h>
+
 #include <algorithm>
 
 using namespace std;

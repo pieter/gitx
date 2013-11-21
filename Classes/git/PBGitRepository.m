@@ -840,7 +840,7 @@ int addSubmoduleName(git_submodule *module, const char* name, void * context)
 
 	NSError *error = nil;
 
-	GTObject *object = [self.gtRepo lookupObjectByRefspec:[target refishName] error:&error];
+	GTObject *object = [self.gtRepo lookupObjectByRevParse:[target refishName] error:&error];
 	GTTag *newTag = nil;
 	if (object && !error) {
 		newTag = [self.gtRepo createTagNamed:tagName target:object tagger:self.gtRepo.userSignatureForNow message:message error:&error];

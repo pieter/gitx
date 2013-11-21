@@ -2,9 +2,8 @@
 
 #ifdef __OBJC__
     #import <Cocoa/Cocoa.h>
-	#ifndef __cplusplus
-		#import <ObjectiveGit/ObjectiveGit.h>
-	#endif
+	#import <ObjectiveGit/ObjectiveGit.h>
+
 #endif
 
 #define DEPRECATED __attribute__ ((deprecated))

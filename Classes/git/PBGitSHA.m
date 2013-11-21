@@ -8,7 +8,6 @@
 
 #import "PBGitSHA.h"
 
-#import <git2/errors.h>
 
 @interface PBGitSHA ()
 

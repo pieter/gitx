@@ -251,7 +251,7 @@
 	NSError *error = nil;
 	NSString *tagName = [(PBGitRef *)[sender refish] tagName];
 	NSString *tagRef = [@"refs/tags/" stringByAppendingString:tagName];
-	GTObject *object = [historyController.repository.gtRepo lookupObjectByRefspec:tagRef error:&error];
+	GTObject *object = [historyController.repository.gtRepo lookupObjectByRevParse:tagRef error:&error];
 	if (!object) {
 		NSLog(@"Couldn't look up ref %@:%@", tagRef, [error debugDescription]);
 		return;
