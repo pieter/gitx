@@ -62,7 +62,16 @@ const BOOL ENABLE_SHADOW = YES;
 {
 	static NSColor *shadowColor = nil;
 	if (!shadowColor) {
-		uint8_t l = 0x80;
+		uint8_t l = 64;
+		shadowColor = [NSColor colorWithR:l G:l B:l];
+	}
+	return shadowColor;
+}
++ (NSColor *)lineShadowColor
+{
+	static NSColor *shadowColor = nil;
+	if (!shadowColor) {
+		uint8_t l = 140;
 		shadowColor = [NSColor colorWithR:l G:l B:l];
 	}
 	return shadowColor;
@@ -80,7 +89,7 @@ const BOOL ENABLE_SHADOW = YES;
 		[NSGraphicsContext saveGraphicsState];
 
 		NSShadow *shadow = [NSShadow new];
-		[shadow setShadowColor:[[self class] shadowColor]];
+		[shadow setShadowColor:[[self class] lineShadowColor]];
 		[shadow setShadowOffset:NSMakeSize(0.5f, -0.5f)];
 		[shadow set];
 	}
@@ -191,20 +200,12 @@ const BOOL ENABLE_SHADOW = YES;
 
 	NSShadow *shadow = nil;
 
-	if (false /*selected*/) { // white text is a bit too hard to read (even with shadow) on refs
+	if (selected && false) { // white text is a bit too hard to read (even with shadow) on refs
 		[attributes setObject:[NSColor alternateSelectedControlTextColor] forKey:NSForegroundColorAttributeName];
 		if (ENABLE_SHADOW) {
 			shadow = [NSShadow new];
-			[shadow setShadowColor:[[self class] shadowColor]];
-			[shadow setShadowBlurRadius:1.0f];
-			[shadow setShadowOffset:NSMakeSize(0.5f, -0.5f)];
-		}
-	} else {
-		if (ENABLE_SHADOW) {
-			shadow = [NSShadow new];
-			[shadow setShadowColor:[NSColor whiteColor]];
-			[shadow setShadowBlurRadius:4.0f];
-			[shadow setShadowOffset:NSMakeSize(-0.5f, 0.5f)];
+			[shadow setShadowColor:[NSColor blackColor]];
+			[shadow setShadowBlurRadius:2.0f];
 		}
 	}
 
@@ -219,16 +220,18 @@ const BOOL ENABLE_SHADOW = YES;
 {
 	BOOL isHEAD = [ref.ref isEqualToString:[[[controller repository] headRef] simpleRef]];
 
-	if (isHEAD)
+	if (isHEAD) {
 		return [NSColor colorWithCalibratedRed: 0Xfc/256.0 green:0Xa6/256.0 blue: 0X4f/256.0 alpha: 1.0];
+	}
 
 	NSString* type = [ref type];
-	if ([type isEqualToString:@"head"])
-		return [NSColor colorWithCalibratedRed: 0Xaa/256.0 green:0Xf2/256.0 blue: 0X54/256.0 alpha: 1.0];
-	else if ([type isEqualToString:@"remote"])
-		return [NSColor colorWithCalibratedRed: 0xb2/256.0 green:0Xdf/256.0 blue: 0Xff/256.0 alpha: 1.0];
-	else if ([type isEqualToString:@"tag"])
+	if ([type isEqualToString:@"head"]) {
+		return [NSColor colorWithCalibratedRed: 0X7a/256.0 green:0Xd2/256.0 blue: 0X54/256.0 alpha: 1.0];
+	} else if ([type isEqualToString:@"remote"]) {
+		return [NSColor colorWithCalibratedRed: 0x82/256.0 green:0Xaf/256.0 blue: 0Xef/256.0 alpha: 1.0];
+	} else if ([type isEqualToString:@"tag"]) {
 		return [NSColor colorWithCalibratedRed: 0Xfc/256.0 green:0Xed/256.0 blue: 0X4f/256.0 alpha: 1.0];
+	}
 	
 	return [NSColor yellowColor];
 }
