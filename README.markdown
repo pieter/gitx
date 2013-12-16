@@ -60,6 +60,7 @@ Most third-party code is referenced with Git submodules, so [read up](http://boo
 
   * Very recent Xcode install, 4.5 release strongly recommended.
   * Most development is done on OS X Lion, Snow Leopard may or may not work
+  * `Homebrew` and `xctool` for running Objective-Git’s `bootstrap` script
   * `CMake` with a working command-line compiling environment for building `libgit2`
   * `node.js` for building `SyntaxHighlighter` (not necessary unless you're updating SyntaxHighlighter itself)
 
@@ -67,7 +68,8 @@ To get GitX-dev to compile locally you need to:
 
   1. Clone the repository locally: `git clone https://github.com/rowanj/gitx.git`
   2. After cloning it `cd gitx` and then recursively initialize all submodules: `git submodule update --init --recursive`
-  3. Then compile objective-git `cd objective-git && ./script/update_libgit2`
+  3. Then prepare objective-git by running its bootstrap script: `cd objective-git && ./script/bootstrap`
+  4. Then compile objective-git `cd objective-git && ./script/update_libgit2`
 
 After that you should be able to open the Xcode project and build successfully.
 
