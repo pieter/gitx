@@ -7,18 +7,18 @@ prog="`basename $0`"
 scheme="GitX"
 product="GitX.app"
 label="dev"
-base_version="0.14"
+base_version="0.15"
 
 artifact_prefix="${scheme}-${label}"
 workspace="${scheme}.xcodeproj/project.xcworkspace"
 debug_configuration="Debug"
 release_configuration="Release"
 agvtool="xcrun agvtool"
+release_branch="master"
 
 configuration=""
 clean=""
 pause=3
-build_number=""
 
 print_usage()
 {
@@ -26,7 +26,6 @@ print_usage()
     echo "Where   -c clean before building"
     echo "        -d build for Debug configuration"
     echo "        -r build for Release configuration"
-    echo "        -b {number}  overrides project build number"
 }
 
 while getopts drchb: flag
@@ -46,9 +45,6 @@ while getopts drchb: flag
 		print_usage
 		exit
 		;;
-	    b)
-		build_number="$OPTARG"
-		;;
             ?)
 		print_usage
                 exit
@@ -65,10 +61,17 @@ fi
 
 if [[ "$configuration" == "$release_configuration" ]]
 then
-    if ! [[ "$build_number" =~ ^[0-9]+$ ]]
-    then
-	echo "$prog: error: $release_configuration configuration must specify -b {number} (got \"${build_number}\")"
-	print_usage
+    if [ -z "$(git status --porcelain)" ]; then
+	echo "Working copy is clean"
+    else
+	echo "$prog: error: working copy is not clean"
+	exit 1
+    fi
+
+    if [ "$release_branch" == `git rev-parse --abbrev-ref HEAD` ]; then
+	echo "Building \"$release_branch\" for \"$configuration\""
+    else
+	echo "$prog: error: must be on branch \"$release_branch\" to build \"$configuration\""
 	exit 1
     fi
 fi
@@ -80,6 +83,7 @@ else
     echo "$prog: setting build number to $build_number"
     $agvtool mvers -terse1
     $agvtool vers -terse
+    build_number=`git rev-list HEAD --count`
     marketing_version="${base_version}.${build_number} ${label}"
     build_version="${base_version}.${build_number}"
     $agvtool new-marketing-version "$marketing_version"
