@@ -34,9 +34,9 @@ def package(app, bundle, name):
     shutil.move(app, movedApp)
 
     if args.verbose:
-        print 'appBase: ' + appBase
-        print 'appName: ' + appName
-        print 'tmp_dir: ' + tmp_dir
+        print('appBase: ' + appBase)
+        print('appName: ' + appName)
+        print('tmp_dir: ' + tmp_dir)
 
     hdiutil = ['hdiutil',
                'create', bundle,

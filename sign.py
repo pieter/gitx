@@ -30,15 +30,15 @@ parser.add_argument('--verbose','-v',
 args = parser.parse_args()
 
 if args.verbose:
-    print 'Signing configuration:'
-    print 'APP = ' + args.app
-    print 'ID = ' + args.key
-    print 'FRAMEWORKS = %r' % (args.frameworks)
-    print 'RESOURCES = %r' % (args.resources)
-    print 'VERBOSE = %r' % (args.verbose)
+    print('Signing configuration:')
+    print('APP = ' + args.app)
+    print('ID = ' + args.key)
+    print('FRAMEWORKS = %r' % (args.frameworks))
+    print('RESOURCES = %r' % (args.resources))
+    print('VERBOSE = %r' % (args.verbose))
 
 def sign(target):
-    print 'Signing ' + os.path.basename(target)
+    print('Signing ' + os.path.basename(target))
     codesign = ['codesign', '--force', '--verify']
     if args.verbose:
         for i in range(args.verbose):
