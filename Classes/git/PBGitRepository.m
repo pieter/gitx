@@ -1173,7 +1173,7 @@ int addSubmoduleName(git_submodule *module, const char* name, void * context)
 
 - (void) dealloc
 {
-	NSLog(@"Dealloc of repository");
+//	NSLog(@"Dealloc of repository");
 	[watcher stop];
 }
 @end
