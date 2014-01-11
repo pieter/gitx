@@ -76,19 +76,14 @@ then
     fi
 fi
 
-if [ -z "$build_number" ]
-then
-    echo "$prog: not setting build number"
-else
-    echo "$prog: setting build number to $build_number"
-    $agvtool mvers -terse1
-    $agvtool vers -terse
-    build_number=`git rev-list HEAD --count`
-    marketing_version="${base_version}.${build_number} ${label}"
-    build_version="${base_version}.${build_number}"
-    $agvtool new-marketing-version "$marketing_version"
-    $agvtool new-version -all "$build_version"
-fi
+build_number=`git rev-list HEAD --count`
+echo "$prog: setting build number to $build_number"
+$agvtool mvers -terse1
+$agvtool vers -terse
+marketing_version="${base_version}.${build_number} ${label}"
+build_version="${base_version}.${build_number}"
+$agvtool new-marketing-version "$marketing_version"
+$agvtool new-version -all "$build_version"
 
 if [ -z "$clean" ]
 then
