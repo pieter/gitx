@@ -73,9 +73,9 @@ def assert_clean():
         raise BuildError("Working copy must be clean")
 
 def assert_branch(branch="master"):
-    ref = subprocess.check_output(["git", "rev-parse", "HEAD"])
+    ref = subprocess.check_output(["git", "rev-parse", "--abbrev-ref", "HEAD"]).strip()
     if ref != branch:
-        raise BuildError("HEAD must be %s" % (branch,))
+        raise BuildError("HEAD must be %s, but is %s" % (branch, ref))
 
 def build_config(config):
     build_dir = os.path.join(build_base_dir, config)
