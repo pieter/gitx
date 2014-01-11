@@ -11,6 +11,7 @@ app="GitX"
 product="%s.app" % (app,)
 label="dev"
 base_version="0.15"
+signing_key="Developer ID Application: Rowan James"
 
 artifact_prefix= "%s-%s" % (app, label)
 workspace="%s.xcodeproj/project.xcworkspace" % (app,)
@@ -41,6 +42,7 @@ def release():
         
         build_config(release_configuration)
 
+        build_dir = os.path.join(build_base_dir, release_configuration)
         built_product = os.path.join(build_dir, product)
         sign_app(built_product)
 
@@ -53,7 +55,6 @@ def release():
 
 def debug():
     try:
-        build_dir = os.path.join
         build_config(debug_configuration)
         
     except BuildError as e:
@@ -68,12 +69,12 @@ def build(configuration):
         release()
 
 def assert_clean():
-    status = subprocess.check_output(["git", "status", "--porcelain"])
+    status = check_string_output(["git", "status", "--porcelain"])
     if len(status):
         raise BuildError("Working copy must be clean")
 
 def assert_branch(branch="master"):
-    ref = subprocess.check_output(["git", "rev-parse", "--abbrev-ref", "HEAD"]).strip()
+    ref = check_string_output(["git", "rev-parse", "--abbrev-ref", "HEAD"])
     if ref != branch:
         raise BuildError("HEAD must be %s, but is %s" % (branch, ref))
 
@@ -86,12 +87,12 @@ def clean_config(config):
     xcodebuild(app, workspace, config, ["clean"], build_dir)
 
 def commit_count():
-    count = subprocess.check_output(["git", "rev-list", "HEAD", "--count"])
+    count = check_string_output(["git", "rev-list", "HEAD", "--count"])
     return count
 
 def set_versions(base_version, build_number, label):
-    print(subprocess.check_output(["agvtool", "mvers", "-terse1"]))
-    print(subprocess.check_output(["agvtool", "vers", "-terse"]))
+    print("mvers: " + check_string_output(["agvtool", "mvers", "-terse1"]))
+    print("vers:  " + check_string_output(["agvtool", "vers", "-terse"]))
     marketing_version = "%s.%s %s" % (base_version, build_number, label)
     build_version = "%s.%s" % (base_version, build_number)
     subprocess.check_call(["agvtool", "new-marketing-version", marketing_version])
@@ -102,13 +103,16 @@ def xcodebuild(scheme, workspace, configuration, commands, build_dir):
     cmd = cmd + commands
     cmd.append('CONFIGURATION_BUILD_DIR=%s' % (build_dir))
     try:
-        output = subprocess.check_output(cmd)
+        output = check_string_output(cmd)
         return output
     except subprocess.CalledProcessError as e:
         raise BuildError(str(e))
 
+def check_string_output(command):
+    return subprocess.check_output(command).decode().strip()
+
 def sign_app(app_path):
-    sign.sign_everything_in_app(app_path, verbose=2)
+    sign.sign_everything_in_app(app_path, key=signing_key)
 
 def package_app(app_path, image_path, image_name):
     package.package(app_path, image_path, image_name)

@@ -24,7 +24,7 @@ def sign_frameworks_in_app(app_path, key, verbose=0):
     for framework in glob.glob(frameworkDir + '/*.framework'):
         sign(framework, key, verbose=verbose)
 
-def sign_resources_in_app(app_path, verbose=0):
+def sign_resources_in_app(app_path, key, verbose=0):
     executableFlags = stat.S_IEXEC | stat.S_IXGRP | stat.S_IXOTH
     resourcesDir = os.path.join(app_path, 'Contents/Resources')
     for filename in os.listdir(resourcesDir):
@@ -33,7 +33,7 @@ def sign_resources_in_app(app_path, verbose=0):
             st = os.stat(filename)
             mode = st.st_mode
             if mode & executableFlags:
-                sign(filename)
+                sign(filename, key, verbose)
 
 def sign_everything_in_app(app_path, key, verbose=0):
     sign_frameworks_in_app(app_path, key, verbose=verbose)
