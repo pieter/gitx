@@ -9,48 +9,57 @@
 
 #import "PBIconAndTextCell.h"
 
+@interface PBIconAndTextCell ()
+
+@property(strong) NSImageCell *imageCell;
+
+@end
 
 @implementation PBIconAndTextCell
-@synthesize image;
+@dynamic image;
+@synthesize imageCell;
 
+- (id)initWithCoder:(NSCoder *)decoder
+{
+	if ((self = [super initWithCoder:decoder])) {
+		imageCell = [[NSImageCell alloc] init];
+	}
+	return self;
+}
+
+- (NSImage *)image
+{
+	return imageCell.image;
+}
+
+- (void)setImage:(NSImage *)image
+{
+	imageCell.image = image;
+}
 
 - (id)copyWithZone:(NSZone *)zone
 {
 	PBIconAndTextCell *cell = [super copyWithZone:zone];
-	cell.image              = image;
+	cell.imageCell          = [imageCell copyWithZone:zone];
 	return cell;
 }
 
 - (void)selectWithFrame:(NSRect)aRect inView:(NSView *)controlView editor:(NSText *)textObj delegate:(id)anObject start:(NSInteger)selStart length:(NSInteger)selLength
 {
 	NSRect textFrame, imageFrame;
-	NSDivideRect (aRect, &imageFrame, &textFrame, 3 + [image size].width, NSMinXEdge);
+	NSDivideRect (aRect, &imageFrame, &textFrame, 3 + [imageCell.image size].width, NSMinXEdge);
 	[super selectWithFrame: textFrame inView: controlView editor:textObj delegate:anObject start:selStart length:selLength];
 }
 
 - (void)drawWithFrame:(NSRect)cellFrame inView:(NSView *)controlView
 {
-	if (image) {
-		NSSize  imageSize;
-		NSRect  imageFrame;
-
-		imageSize = [image size];
-		NSDivideRect(cellFrame, &imageFrame, &cellFrame, 3 + imageSize.width, NSMinXEdge);
-		if ([self drawsBackground]) {
-			[[self backgroundColor] set];
-			NSRectFill(imageFrame);
-		}
+	if (imageCell.image) {
+		NSRect imageFrame = cellFrame;
+		imageFrame.size.width = imageCell.image.size.width;
 		imageFrame.origin.x += 3;
-		imageFrame.size = imageSize;
-
-		imageFrame.origin.y += ceil((cellFrame.size.height - imageFrame.size.height) / 2);
-
-		[image drawInRect:imageFrame
-				 fromRect:NSZeroRect
-				operation:NSCompositeSourceOver
-				 fraction:1.0f
-		   respectFlipped:YES
-					hints:nil];
+		[imageCell drawWithFrame:imageFrame inView:controlView];
+		cellFrame.origin.x += imageFrame.size.width + 3;
+		cellFrame.size.width -= imageFrame.size.width + 3;
 	}
 	[super drawWithFrame:cellFrame inView:controlView];
 }
@@ -58,7 +67,7 @@
 - (NSSize)cellSize
 {
 	NSSize cellSize = [super cellSize];
-	cellSize.width += (image ? [image size].width : 0) + 3;
+	cellSize.width += (imageCell.image ? [imageCell.image size].width : 0) + 3;
 	return cellSize;
 }
 
@@ -72,7 +81,7 @@
 	NSPoint point = [controlView convertPoint:[event locationInWindow] fromView:nil];
 
 	NSRect textFrame, imageFrame;
-	NSDivideRect (cellFrame, &imageFrame, &textFrame, 3 + [image size].width, NSMinXEdge);
+	NSDivideRect (cellFrame, &imageFrame, &textFrame, 3 + [imageCell.image size].width, NSMinXEdge);
 	if (NSMouseInRect(point, imageFrame, [controlView isFlipped]))
 		return NSCellHitContentArea | NSCellHitTrackableArea;
 
@@ -90,7 +99,7 @@
 	[self setControlView:controlView];
 
 	NSRect textFrame, imageFrame;
-	NSDivideRect (cellFrame, &imageFrame, &textFrame, 3 + [image size].width, NSMinXEdge);
+	NSDivideRect (cellFrame, &imageFrame, &textFrame, 3 + [imageCell.image size].width, NSMinXEdge);
 	while ([theEvent type] != NSLeftMouseUp) {
 		// This is VERY simple event tracking. We simply check to see if the mouse is in the "i" button or not and dispatch entered/exited mouse events
 		NSPoint point = [controlView convertPoint:[theEvent locationInWindow] fromView:nil];
