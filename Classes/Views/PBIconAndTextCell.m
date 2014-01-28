@@ -9,6 +9,9 @@
 
 #import "PBIconAndTextCell.h"
 
+static const CGFloat kIconSpacing = 4;
+static const CGFloat kIconPadding = 3;
+
 @interface PBIconAndTextCell ()
 
 @property(strong) NSImageCell *imageCell;
@@ -47,7 +50,7 @@
 - (void)selectWithFrame:(NSRect)aRect inView:(NSView *)controlView editor:(NSText *)textObj delegate:(id)anObject start:(NSInteger)selStart length:(NSInteger)selLength
 {
 	NSRect textFrame, imageFrame;
-	NSDivideRect (aRect, &imageFrame, &textFrame, 3 + [imageCell.image size].width, NSMinXEdge);
+	NSDivideRect (aRect, &imageFrame, &textFrame, kIconSpacing + [imageCell.image size].width, NSMinXEdge);
 	[super selectWithFrame: textFrame inView: controlView editor:textObj delegate:anObject start:selStart length:selLength];
 }
 
@@ -56,10 +59,10 @@
 	if (imageCell.image) {
 		NSRect imageFrame = cellFrame;
 		imageFrame.size.width = imageCell.image.size.width;
-		imageFrame.origin.x += 3;
+		imageFrame.origin.x += kIconPadding;
 		[imageCell drawWithFrame:imageFrame inView:controlView];
-		cellFrame.origin.x += imageFrame.size.width + 3;
-		cellFrame.size.width -= imageFrame.size.width + 3;
+		cellFrame.origin.x += imageFrame.size.width + kIconSpacing;
+		cellFrame.size.width -= imageFrame.size.width + kIconSpacing;
 	}
 	[super drawWithFrame:cellFrame inView:controlView];
 }
@@ -67,7 +70,7 @@
 - (NSSize)cellSize
 {
 	NSSize cellSize = [super cellSize];
-	cellSize.width += (imageCell.image ? [imageCell.image size].width : 0) + 3;
+	cellSize.width += (imageCell.image ? [imageCell.image size].width : 0) + kIconSpacing;
 	return cellSize;
 }
 
@@ -81,7 +84,7 @@
 	NSPoint point = [controlView convertPoint:[event locationInWindow] fromView:nil];
 
 	NSRect textFrame, imageFrame;
-	NSDivideRect (cellFrame, &imageFrame, &textFrame, 3 + [imageCell.image size].width, NSMinXEdge);
+	NSDivideRect (cellFrame, &imageFrame, &textFrame, kIconSpacing + [imageCell.image size].width, NSMinXEdge);
 	if (NSMouseInRect(point, imageFrame, [controlView isFlipped]))
 		return NSCellHitContentArea | NSCellHitTrackableArea;
 
@@ -99,7 +102,7 @@
 	[self setControlView:controlView];
 
 	NSRect textFrame, imageFrame;
-	NSDivideRect (cellFrame, &imageFrame, &textFrame, 3 + [imageCell.image size].width, NSMinXEdge);
+	NSDivideRect (cellFrame, &imageFrame, &textFrame, kIconSpacing + [imageCell.image size].width, NSMinXEdge);
 	while ([theEvent type] != NSLeftMouseUp) {
 		// This is VERY simple event tracking. We simply check to see if the mouse is in the "i" button or not and dispatch entered/exited mouse events
 		NSPoint point = [controlView convertPoint:[theEvent locationInWindow] fromView:nil];
