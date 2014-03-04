@@ -8,7 +8,6 @@
 
 #import "PBGitSHA.h"
 
-
 @interface PBGitSHA ()
 
 @property (nonatomic, assign) git_oid oid;
