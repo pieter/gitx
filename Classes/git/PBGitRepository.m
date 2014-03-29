@@ -130,6 +130,15 @@
     return self.gtRepo.gitDirectoryURL;
 }
 
+- (NSURL *)workingDirectoryURL {
+    return self.gtRepo.fileURL;
+}
+
+- (NSString *)workingDirectory
+{
+    return self.workingDirectoryURL.path;
+}
+
 - (void)forceUpdateRevisions
 {
 	[revisionList forceUpdate];
@@ -460,15 +469,6 @@
 - (void) readCurrentBranch
 {
 		self.currentBranch = [self addBranch: [self headRef]];
-}
-
-- (NSURL *)workingDirectoryURL {
-    return self.gtRepo.fileURL;
-}
-
-- (NSString *)workingDirectory
-{
-    return [self.workingDirectoryURL path];
 }
 
 #pragma mark Stashes
