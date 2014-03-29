@@ -21,7 +21,7 @@
 #import "GitXScriptingConstants.h"
 #import "PBHistorySearchController.h"
 #import "PBGitRepositoryWatcher.h"
-#import "GitRepoFinder.h"
+#import "PBRepositoryFinder.h"
 #import "PBGitHistoryList.h"
 #import "PBGitStash.h"
 
@@ -56,8 +56,8 @@
 	if (!self) return nil;
 
 	NSError *gtError = nil;
-	NSURL *repoURL = [GitRepoFinder gitDirForURL:repositoryURL];
-    _gtRepo = [GTRepository repositoryWithURL:repoURL error:&gtError];
+	NSURL *repoURL = [PBRepositoryFinder gitDirForURL:repositoryURL];
+	_gtRepo = [GTRepository repositoryWithURL:repoURL error:&gtError];
 	if (!_gtRepo) {
 		if (error) {
 			NSDictionary* userInfo = [NSDictionary dictionaryWithObjectsAndKeys:
@@ -84,7 +84,6 @@
 	// NSLog(@"Dealloc of repository");
 	[watcher stop];
 }
-
 
 #pragma mark -
 #pragma mark Properties/General methods
