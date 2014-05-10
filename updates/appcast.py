@@ -53,4 +53,4 @@ if args.output:
     outputFile = open(args.output, 'w')
     outputFile.write(result)
 else:
-    print result
+    print(result)
