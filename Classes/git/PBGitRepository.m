@@ -91,7 +91,8 @@ NSString *PBGitRepositoryDocumentType = @"Git Repository";
 	}
 
     NSError *error = nil;
-    _gtRepo = [GTRepository repositoryWithURL:absoluteURL error:&error];
+	NSURL *repoURL = [GitRepoFinder gitDirForURL:absoluteURL];
+    _gtRepo = [GTRepository repositoryWithURL:repoURL error:&error];
 	if (!_gtRepo) {
 		if (outError) {
 			NSDictionary* userInfo = [NSDictionary dictionaryWithObjectsAndKeys:
@@ -602,8 +603,9 @@ NSString *PBGitRepositoryDocumentType = @"Git Repository";
 	NSString *branchRef = branch.ref;
 	if (branchRef) {
 		NSError *branchError = nil;
-		GTBranch *gtBranch = [GTBranch branchWithName:branchRef repository:self.gtRepo error:&branchError];
-		if (gtBranch) {
+		BOOL lookupSuccess = NO;
+		GTBranch *gtBranch = [self.gtRepo lookUpBranchWithName:branchRef type:GTBranchTypeLocal success:&lookupSuccess error:&branchError];
+		if (gtBranch && lookupSuccess) {
 			NSError *trackingError = nil;
 			BOOL trackingSuccess = NO;
 			GTBranch *trackingBranch = [gtBranch trackingBranchWithError:&trackingError success:&trackingSuccess];
