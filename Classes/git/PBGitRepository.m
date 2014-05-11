@@ -22,7 +22,6 @@
 #import "PBHistorySearchController.h"
 #import "PBGitRepositoryWatcher.h"
 #import "GitRepoFinder.h"
-#import "PBGitSubmodule.h"
 #import "PBGitHistoryList.h"
 #import "PBGitSHA.h"
 
@@ -37,7 +36,7 @@ NSString *PBGitRepositoryDocumentType = @"Git Repository";
 
 @implementation PBGitRepository
 
-@synthesize revisionList, branchesSet, currentBranch, refs, hasChanged, submodules;
+@synthesize revisionList, branchesSet, currentBranch, refs, hasChanged;
 @synthesize currentBranchFilter;
 
 #pragma mark -
@@ -273,8 +272,8 @@ NSString *PBGitRepositoryDocumentType = @"Git Repository";
 {
     self.submodules = [NSMutableArray array];
 
-    [self.gtRepo enumerateSubmodulesRecursively:NO usingBlock:^(GTSubmodule *submodule, BOOL *stop) {
-        [self.submodules addObject:submodule];
+    [self.gtRepo enumerateSubmodulesRecursively:NO usingBlock:^(GTSubmodule *gtSubmodule, NSError *error, BOOL *stop) {
+		[self.submodules addObject:gtSubmodule];
     }];
 }
 

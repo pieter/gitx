@@ -15,7 +15,6 @@
 #import "NSOutlineViewExt.h"
 #import "PBAddRemoteSheet.h"
 #import "PBGitDefaults.h"
-#import "PBGitSubmodule.h"
 #import "PBHistorySearchController.h"
 
 @interface PBGitSidebarController ()
@@ -227,12 +226,15 @@
     NSInteger rowNumber = [sourceView selectedRow];
     if ([[sourceView itemAtRow:rowNumber] isKindOfClass:[PBGitSVSubmoduleItem class]]) {
         PBGitSVSubmoduleItem *subModule = [sourceView itemAtRow:rowNumber];
-        
-        NSURL *url = [NSURL fileURLWithPath:subModule.submodule.path];
-        [[NSDocumentController sharedDocumentController] openDocumentWithContentsOfURL:url
-                                                                               display:YES
-                                                                                 error:nil];
 
+		NSURL *url = subModule.path;
+		[[NSDocumentController sharedDocumentController] openDocumentWithContentsOfURL:url
+																			   display:YES
+																	 completionHandler:^(NSDocument *document, BOOL documentWasAlreadyOpen, NSError *error) {
+																		 if (error) {
+																			 [self.repository.windowController showErrorSheet:error];
+																		 }
+																	 }];
         ;
     }
 }
@@ -286,11 +288,13 @@
 	submodules = [PBSourceViewItem groupItemWithTitle:@"Submodules"];
 	others = [PBSourceViewItem groupItemWithTitle:@"Other"];
 
-	for (PBGitRevSpecifier *rev in repository.branches)
+	for (PBGitRevSpecifier *rev in repository.branches) {
 		[self addRevSpec:rev];
+	}
     
-    for (PBGitSubmodule *sub in repository.submodules)
+    for (GTSubmodule *sub in repository.submodules) {
         [submodules addChild: [PBGitSVSubmoduleItem itemWithSubmodule:sub]];
+	}
     
 	[items addObject:project];
 	[items addObject:branches];
