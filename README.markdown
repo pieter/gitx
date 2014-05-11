@@ -1,13 +1,13 @@
 # What is GitX?
 
 GitX is a graphical client for the `git` version control system, written
-specifically for OS X Lion (10.7) and higher.
-
-There last build compatible with OS X Snow Leopard (10.6) is [0.14.81](http://builds.phere.net/GitX/development/GitX-dev-81.dmg), from February 4th 2013.
+specifically for OS X Mavericks.
 
 This means that it has a native interface and tries to integrate with the
 operating system as good as possible. Examples of this are drag and drop
 support and QuickLook support.
+
+Legacy builds are available for older OS X platforms, see below.
 
 # What is GitX-dev?
 
@@ -27,13 +27,26 @@ frameworks and libraries that are used.
 
 [![Latest GitX-dev Package](http://rowanj.github.com/gitx/images/gitx.jpg)](http://builds.phere.net/GitX/development/GitX-dev.dmg)
 
-*[Download the latest .DMG](http://builds.phere.net/GitX/development/GitX-dev.dmg)*
+* *Download the [latest build](http://builds.phere.net/GitX/development/GitX-dev.dmg)*
+* Browse the [project releases page](https://github.com/rowanj/gitx/releases) for milestones and preview builds.
+* Jump straight to the [latest milestone build](https://github.com/rowanj/gitx/releases/latest)
 
 GitX-dev uses the [Sparkle](http://sparkle.andymatuschak.org/) framework for in-app updates; so once you have version 0.11 (December 2011) or later, you can check for or update to new builds from the GitX menu at any time, or opt-in for automatic updates.
 
 ## Archived binaries
 
-Old binary archives are available on the [GitHub project downloads page](http://github.com/rowanj/gitx/downloads).
+Milestone releases are uploaded to the [GitHub project releases page](https://github.com/rowanj/gitx/releases).
+
+Older binary archives (predating the GitHub releases system) are available on the [GitHub project downloads page](https://github.com/rowanj/gitx/downloads).
+
+There last build compatible with OS X Snow Leopard (10.6) is [0.14.81](http://builds.phere.net/GitX/development/GitX-dev-81.dmg), from February 4th 2013.
+
+Lion (10.7) and Mountain Lion (10.8) support for new builds will be ending
+soon.  I don't have the capability (or configuraiton) to test against these
+operating system release anymore, and at this point I'm not looking for a
+maintainer.  The maintainence strategy will be as with Snow Leopard, a legacy
+build will be earmarked for any new installs on these platforms.
+
 
 # Features
 
@@ -58,11 +71,11 @@ for mainline GitX.
 
 Most third-party code is referenced with Git submodules, so [read up](http://book.git-scm.com/5_submodules.html) on those if you're not familiar.
 
-  * Very recent Xcode install, 4.5 release strongly recommended.
-  * Most development is done on OS X Lion, Snow Leopard may or may not work
-  * `Homebrew` and `xctool` for running Objective-Git’s `bootstrap` script
-  * `CMake` with a working command-line compiling environment for building `libgit2`
-  * `node.js` for building `SyntaxHighlighter` (not necessary unless you're updating SyntaxHighlighter itself)
+  * Very recent Xcode install, 5.1 release strongly recommended.
+  * Most development is done on OS X Mavericks, earlier host platforms may or may not work at all.
+  * `Homebrew` and `xctool` for running Objective-Git’s `bootstrap` script.
+  * `CMake` with a working command-line compiling environment for building `libgit2`.
+  * `node.js` for building `SyntaxHighlighter` (not necessary unless you're updating SyntaxHighlighter itself.)
 
 To get GitX-dev to compile locally you need to:
 
