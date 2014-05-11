@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-from email.Utils import formatdate
+from email.utils import formatdate
 from string import Template
 from argparse import ArgumentParser
 from hashlib import sha1
