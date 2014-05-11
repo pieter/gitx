@@ -879,7 +879,7 @@ NSString *PBGitRepositoryDocumentType = @"Git Repository";
 
 	NSError *error = nil;
 
-	GTObject *object = [self.gtRepo lookupObjectByRevParse:[target refishName] error:&error];
+	GTObject *object = [self.gtRepo lookUpObjectByRevParse:[target refishName] error:&error];
 	GTTag *newTag = nil;
 	if (object && !error) {
 		newTag = [self.gtRepo createTagNamed:tagName target:object tagger:self.gtRepo.userSignatureForNow message:message error:&error];

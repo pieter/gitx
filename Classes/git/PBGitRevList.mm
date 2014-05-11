@@ -129,7 +129,7 @@ using namespace std;
 	[enumerator resetWithOptions:GTEnumeratorOptionsTimeSort];
 	//	[enumerator resetWithOptions:GTEnumeratorOptionsTopologicalSort];
 	if (rev.isSimpleRef) {
-		GTObject *object = [repo lookupObjectByRevParse:rev.simpleRef error:&error];
+		GTObject *object = [repo lookUpObjectByRevParse:rev.simpleRef error:&error];
 		if ([object isKindOfClass:[GTCommit class]]) {
 			[enumerator pushSHA:object.SHA error:&error];
 		}
@@ -149,7 +149,7 @@ using namespace std;
 			} else if ([param isEqualToString:@"--tags"]) {
 				for (NSString *ref in allRefs) {
 					if ([ref hasPrefix:@"refs/tags/"]) {
-						GTObject *tag = [repo lookupObjectByRevParse:ref error:&error];
+						GTObject *tag = [repo lookUpObjectByRevParse:ref error:&error];
 						GTCommit *commit = nil;
 						if ([tag isKindOfClass:[GTCommit class]]) {
 							commit = (GTCommit *)tag;
