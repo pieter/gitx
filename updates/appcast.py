@@ -24,7 +24,7 @@ parser.add_argument('--output','-o',
 
 args = parser.parse_args()
 
-bundle = open(args.bundle_file, 'r').read()
+bundle = open(args.bundle_file, 'rb').read()
 
 templateSource = open(args.template_file, 'r').read()
 
