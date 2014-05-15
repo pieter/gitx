@@ -7,31 +7,39 @@ import os
 import package
 import sign
 
-app="GitX"
-product="%s.app" % (app,)
-label="dev"
-base_version="0.15"
-signing_key="Developer ID Application: Rowan James"
+app = "GitX"
+product = "%s.app" % (app,)
+label = "dev"
+base_version = "0.15"
+signing_key = "Developer ID Application: Rowan James"
 
-artifact_prefix= "%s-%s" % (app, label)
-workspace="%s.xcodeproj/project.xcworkspace" % (app,)
-debug_configuration="Debug"
-release_configuration="Release"
-agvtool="xcrun agvtool"
-release_branch="master"
+artifact_prefix = "%s-%s" % (app, label)
+workspace = "%s.xcodeproj/project.xcworkspace" % (app,)
+debug_configuration = "Debug"
+release_configuration = "Release"
+agvtool = "xcrun agvtool"
+release_branch = "master"
 
-configuration=""
-clean=""
-pause=3
+updates_template_file = os.path.join('updates', 'GitX-dev.xml.tmpl')
+release_notes_file = os.path.join('updates', 'GitX-dev.html')
+updates_signing_key_file = os.path.expanduser(os.path.join('~', 'Documents', 'gitx-updates.key'))
+updates_appcast_file = 'GitX-dev.xml'
+
+configuration = ""
+clean = ""
+pause = 3
 
 build_base_dir = os.path.join(os.getcwd(), "build")
-                         
+
+
 class BuildError(RuntimeError):
     pass
+
 
 def clean():
     clean_config(debug_configuration)
     clean_config(release_configuration)
+
 
 def release():
     try:
@@ -39,7 +47,7 @@ def release():
         assert_branch(release_branch)
         build_number = commit_count()
         set_versions(base_version, build_number, "dev")
-        
+
         build_config(release_configuration)
 
         build_dir = os.path.join(build_base_dir, release_configuration)
@@ -49,46 +57,80 @@ def release():
         image_path = os.path.join(build_dir, "%s-%s.dmg" % (artifact_prefix, build_number))
         image_name = "%s %s" % (app, build_number)
         package_app(built_product, image_path, image_name)
-        
+
+        prepare_release(build_number, image_path)
+
     except BuildError as e:
         print("error: %s" % (str(e),))
+
 
 def debug():
     try:
         build_config(debug_configuration)
-        
+
     except BuildError as e:
         print("error: %s" % (str(e),))
 
 
-@argh.arg("configuration", choices=['debug','release'])
+def prepare_release(build_number, image_source_path):
+    release_dir = "release"
+    try:
+        os.makedirs(release_dir)
+    except FileExistsError:
+        pass
+
+    import appcast
+    appcast_text = appcast.generate_appcast(image_source_path, updates_template_file, build_number, updates_signing_key_file)
+    with open(os.path.join(release_dir, updates_appcast_file), 'w') as appcast_file:
+        appcast_file.write(appcast_text)
+
+    import shutil
+    copied_image = os.path.join(release_dir, os.path.basename(image_source_path))
+    unversioned_image = os.path.join(release_dir, artifact_prefix + ".dmg")
+    shutil.copyfile(image_source_path, copied_image)
+    shutil.copyfile(image_source_path, unversioned_image)
+
+    publish_release_notes_file = os.path.join(release_dir, os.path.basename(release_notes_file))
+    shutil.copyfile(release_notes_file, publish_release_notes_file)
+    publish_release_notes_filebase, publish_release_notes_ext = os.path.splitext(publish_release_notes_file)
+    publish_release_notes_version_file = "%s-%s%s" % (publish_release_notes_filebase, build_number, publish_release_notes_ext)
+    shutil.copyfile(release_notes_file, publish_release_notes_version_file)
+
+
+@argh.arg("configuration", choices=['debug', 'release'])
 def build(configuration):
     if configuration == "debug":
         debug()
     if configuration == "release":
         release()
 
+
 def assert_clean():
     status = check_string_output(["git", "status", "--porcelain"])
     if len(status):
         raise BuildError("Working copy must be clean")
+
 
 def assert_branch(branch="master"):
     ref = check_string_output(["git", "rev-parse", "--abbrev-ref", "HEAD"])
     if ref != branch:
         raise BuildError("HEAD must be %s, but is %s" % (branch, ref))
 
+
 def build_config(config):
     build_dir = os.path.join(build_base_dir, config)
     xcodebuild(app, workspace, config, ["build"], build_dir)
+
 
 def clean_config(config):
     build_dir = os.path.join(build_base_dir, config)
     xcodebuild(app, workspace, config, ["clean"], build_dir)
 
+
 def commit_count():
     count = check_string_output(["git", "rev-list", "HEAD", "--count"])
     return count
+
 
 def set_versions(base_version, build_number, label):
     print("mvers: " + check_string_output(["agvtool", "mvers", "-terse1"]))
@@ -97,6 +139,7 @@ def set_versions(base_version, build_number, label):
     build_version = "%s.%s" % (base_version, build_number)
     subprocess.check_call(["agvtool", "new-marketing-version", marketing_version])
     subprocess.check_call(["agvtool", "new-version", "-all", build_version])
+
 
 def xcodebuild(scheme, workspace, configuration, commands, build_dir):
     cmd = ["xcrun", "xcodebuild", "-scheme", scheme, "-workspace", workspace, "-configuration", configuration]
@@ -108,15 +151,19 @@ def xcodebuild(scheme, workspace, configuration, commands, build_dir):
     except subprocess.CalledProcessError as e:
         raise BuildError(str(e))
 
+
 def check_string_output(command):
     return subprocess.check_output(command).decode().strip()
 
+
 def sign_app(app_path):
     sign.sign_everything_in_app(app_path, key=signing_key)
+
 
 def package_app(app_path, image_path, image_name):
     package.package(app_path, image_path, image_name)
 
 if __name__ == "__main__":
-        argh.dispatch_commands([clean, build])
-
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    os.chdir(script_dir)
+    argh.dispatch_commands([clean, build])
