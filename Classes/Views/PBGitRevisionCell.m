@@ -18,6 +18,7 @@
 
 const int COLUMN_WIDTH = 10;
 const BOOL ENABLE_SHADOW = YES;
+const BOOL SHUFFLE_COLORS = NO;
 
 @implementation PBGitRevisionCell
 
@@ -30,32 +31,25 @@ const BOOL ENABLE_SHADOW = YES;
 
 + (NSArray *)laneColors
 {
+	static const size_t colorCount = 8;
 	static NSArray *laneColors = nil;
 	if (!laneColors) {
-		laneColors = @[
-	 [NSColor colorWithR:181 G:137 B:0], // Solarized yellow
-	 [NSColor colorWithR:203 G:75 B:22], // Solarized orange
-	 [NSColor colorWithR:220 G:50 B:47], // Solarized red
-	 [NSColor colorWithR:211 G:54 B:130], // Solarized magenta
-	 [NSColor colorWithR:108 G:113 B:196], // Solarized violet
-	 [NSColor colorWithR:38 G:139 B:210], // Solarized blue
-	 [NSColor colorWithR:42 G:161 B:152], // Solarized cyan
-	 [NSColor colorWithR:133 G:153 B:0], // Solarized green
-	 ];
-
-		NSMutableArray *oddColors = [NSMutableArray new];
-		NSMutableArray *evenColors = [NSMutableArray new];
-
-		for (NSUInteger i = 0; i < laneColors.count; ++i) {
-			if (i % 2) {
-				[oddColors addObject:laneColors[i]];
-			} else {
-				[evenColors addObject:laneColors[i]];
-			}
+		float segment = 1.0f / colorCount;
+		NSMutableArray *colors = [NSMutableArray new];
+		for (size_t i = 0; i < colorCount; ++i) {
+			NSColor *newColor = [NSColor colorWithCalibratedHue:(segment * i) saturation:0.9f brightness:0.9f alpha:1.0f];
+			[colors addObject:newColor];
 		}
-
-		laneColors = [evenColors arrayByAddingObjectsFromArray:oddColors];
-
+		if (SHUFFLE_COLORS) {
+			NSMutableArray *shuffledColors = [NSMutableArray new];
+			while (colors.count) {
+				uint32_t index = arc4random_uniform(colors.count);
+				[shuffledColors addObject:colors[index]];
+				[colors removeObjectAtIndex:index];
+			}
+			colors = shuffledColors;
+		}
+		laneColors = [NSArray arrayWithArray:colors];
 	}
 
 	return laneColors;
@@ -132,7 +126,7 @@ const BOOL ENABLE_SHADOW = YES;
 	NSRect oval = { columnOrigin.x - 5, columnOrigin.y + r.size.height * 0.5 - 5, 10, 10};
 
 	NSBezierPath * path = [NSBezierPath bezierPathWithOvalInRect:oval];
-	if (ENABLE_SHADOW) {
+	if (ENABLE_SHADOW && false) {
 		[NSGraphicsContext saveGraphicsState];
 		NSShadow *shadow = [NSShadow new];
 		[shadow setShadowColor:[[self class] shadowColor]];
@@ -143,7 +137,7 @@ const BOOL ENABLE_SHADOW = YES;
 		[[NSColor blackColor] set];
 	}
 	[path fill];
-	if (ENABLE_SHADOW) {
+	if (ENABLE_SHADOW && false) {
 		[NSGraphicsContext restoreGraphicsState];
 	}
 	
