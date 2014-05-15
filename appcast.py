@@ -28,7 +28,7 @@ def generate_appcast(bundle_file, template_file, build_number, signing_key_file=
                                     stdout=subprocess.PIPE)
         signProc.stdin.write(hash)
         binsig = signProc.communicate()[0]
-        attrs['file_sig'] = base64.b64encode(binsig)
+        attrs['file_sig'] = base64.b64encode(binsig).decode()
 
     result = Template(templateSource).substitute(attrs)
     return result
