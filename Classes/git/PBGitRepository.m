@@ -604,7 +604,7 @@ NSString *PBGitRepositoryDocumentType = @"Git Repository";
 	if (branchRef) {
 		NSError *branchError = nil;
 		BOOL lookupSuccess = NO;
-		GTBranch *gtBranch = [self.gtRepo lookUpBranchWithName:branchRef type:GTBranchTypeLocal success:&lookupSuccess error:&branchError];
+		GTBranch *gtBranch = [self.gtRepo lookUpBranchWithName:branch.branchName type:GTBranchTypeLocal success:&lookupSuccess error:&branchError];
 		if (gtBranch && lookupSuccess) {
 			NSError *trackingError = nil;
 			BOOL trackingSuccess = NO;
