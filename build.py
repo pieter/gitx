@@ -79,6 +79,9 @@ def prepare_release(build_number, image_source_path):
     except FileExistsError:
         pass
 
+    tag = 'builds/%s/%s' % (base_version, build_number)
+    subprocess.check_call(['git', 'tag', tag])
+
     import appcast
     appcast_text = appcast.generate_appcast(image_source_path, updates_template_file, build_number, updates_signing_key_file)
     with open(os.path.join(release_dir, updates_appcast_file), 'w') as appcast_file:
