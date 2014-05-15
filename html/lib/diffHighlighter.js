@@ -414,6 +414,7 @@ var inlinediff = (function () {
   }
 
   function tag(t,c) {
+    if (t === "") return escape(c);
     return c==="" ? '' : '<'+t+'>'+escape(c)+'</'+t+'>';
   }
   
@@ -432,23 +433,27 @@ var inlinediff = (function () {
         }
       }
 
+      var added = 0;
       for ( var i = 0; i < out.o.length; i++ ) {
         if (out.o[i].text == null) {
-          ao.push(tag('del',out.o[i]));
+          ao.push(tag('del',out.o[i])); added++;
         } else {
-          ao.push(escape(out.o[i].text));
+          var moved = (i - out.o[i].row - added);
+          ao.push(tag((moved>0) ? 'del' : '',out.o[i].text));
         }
       }
 
+      var removed = 0;
       for ( var i = 0; i < out.n.length; i++ ) {
         if (out.n[i].text == null) {
           ac.push(tag('ins',out.n[i]));
           an.push(tag('ins',out.n[i]));
         } else {
+          var moved = (i - out.n[i].row + removed);
+          an.push(tag((moved<0)?'ins':'', out.n[i].text));
           ac.push(escape(out.n[i].text));
-          an.push(escape(out.n[i].text));
           for (n = out.n[i].row + 1; n < out.o.length && out.o[n].text == null; n++ ) {
-            ac.push(tag('del',out.o[n]));
+            ac.push(tag('del',out.o[n])); removed++;
           }
         }
       }
