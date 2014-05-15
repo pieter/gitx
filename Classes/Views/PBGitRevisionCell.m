@@ -223,11 +223,11 @@ const BOOL SHUFFLE_COLORS = NO;
 
 	NSString* type = [ref type];
 	if ([type isEqualToString:@"head"]) {
-		return [NSColor colorWithCalibratedRed: 0X7a/256.0 green:0Xd2/256.0 blue: 0X54/256.0 alpha: 1.0];
+		return [NSColor colorWithCalibratedRed: 0X9a/256.0 green:0Xe2/256.0 blue: 0X84/256.0 alpha: 1.0];
 	} else if ([type isEqualToString:@"remote"]) {
-		return [NSColor colorWithCalibratedRed: 0x82/256.0 green:0Xaf/256.0 blue: 0Xef/256.0 alpha: 1.0];
+		return [NSColor colorWithCalibratedRed: 0xa2/256.0 green:0Xcf/256.0 blue: 0Xef/256.0 alpha: 1.0];
 	} else if ([type isEqualToString:@"tag"]) {
-		return [NSColor colorWithCalibratedRed: 0Xfc/256.0 green:0Xed/256.0 blue: 0X4f/256.0 alpha: 1.0];
+		return [NSColor colorWithCalibratedRed: 0Xfc/256.0 green:0Xed/256.0 blue: 0X6f/256.0 alpha: 1.0];
 	}
 	
 	return [NSColor yellowColor];
