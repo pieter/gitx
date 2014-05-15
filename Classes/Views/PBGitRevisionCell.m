@@ -277,7 +277,7 @@ const BOOL SHUFFLE_COLORS = NO;
 		[NSGraphicsContext saveGraphicsState];
 
 		NSShadow *shadow = [NSShadow new];
-		[shadow setShadowColor:[NSColor blackColor]];//[[self class] shadowColor]];
+		[shadow setShadowColor:[NSColor grayColor]];//[[self class] shadowColor]];
 		[shadow setShadowOffset:NSMakeSize(0.5f, -0.5f)];
 		[shadow setShadowBlurRadius:2.0f];
 		[shadow set];
