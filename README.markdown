@@ -27,25 +27,25 @@ frameworks and libraries that are used.
 
 [![Latest GitX-dev Package](http://rowanj.github.com/gitx/images/gitx.jpg)](http://builds.phere.net/GitX/development/GitX-dev.dmg)
 
-* *Download the [latest build](http://builds.phere.net/GitX/development/GitX-dev.dmg)*
+* *Download the [latest build](http://builds.phere.net/GitX/development/GitX-dev.dmg)* for OS X 10.7 Lion and newer.  OS X 10.6 Snow Leopard users please see *Older releases* below.
 * Browse the [project releases page](https://github.com/rowanj/gitx/releases) for milestones and preview builds.
 * Jump straight to the [latest milestone build](https://github.com/rowanj/gitx/releases/latest)
 
 GitX-dev uses the [Sparkle](http://sparkle.andymatuschak.org/) framework for in-app updates; so once you have version 0.11 (December 2011) or later, you can check for or update to new builds from the GitX menu at any time, or opt-in for automatic updates.
 
-## Archived binaries
+## Older releases
 
 Milestone releases are uploaded to the [GitHub project releases page](https://github.com/rowanj/gitx/releases).
 
 Older binary archives (predating the GitHub releases system) are available on the [GitHub project downloads page](https://github.com/rowanj/gitx/downloads).
 
-There last build compatible with OS X Snow Leopard (10.6) is [0.14.81](http://builds.phere.net/GitX/development/GitX-dev-81.dmg), from February 4th 2013.
+There last build compatible with OS X Snow Leopard (10.6) is [0.14.81](http://builds.phere.net/GitX/development/GitX-dev-81.dmg), from February 4th 2013.  Among the OS X features that Snow Leopard does not support is Objective-C ARC, which is now the only non-deprecated memory management system on OS X.
 
-Lion (10.7) and Mountain Lion (10.8) support for new builds will be ending
-soon.  I don't have the capability (or configuraiton) to test against these
-operating system release anymore, and at this point I'm not looking for a
-maintainer.  The maintainence strategy will be as with Snow Leopard, a legacy
-build will be earmarked for any new installs on these platforms.
+Lion (10.7) and Mountain Lion (10.8) support for new builds will be ending soon,
+probably mid to late 2014.  I don't have the capability (or configuration) to
+test against these operating system releases anymore, and at this point I'm not
+looking for a maintainer.  The maintainence strategy will be as with Snow Leopard,
+a legacy build will be earmarked for any new installs on these platforms.
 
 
 # Features
