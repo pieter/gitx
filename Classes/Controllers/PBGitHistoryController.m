@@ -104,16 +104,12 @@
 				  bottomColor:[NSColor colorWithCalibratedHue:0.579 saturation:0.119 brightness:0.765 alpha:1.000]];
 	[self updateBranchFilterMatrix];
 
-  // listen for updates
-  [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_repositoryUpdatedNotification:) name:PBGitRepositoryEventNotification object:repository];
+	// listen for updates
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_repositoryUpdatedNotification:) name:PBGitRepositoryEventNotification object:repository];
 
-	__weak PBGitHistoryController *weakSelf = self;
-	commitList.findPanelActionBlock = ^(id sender){
-		PBGitHistoryController *controller = weakSelf;
-		if (!controller) {
-			return;
-		}
-		[controller.view.window makeFirstResponder:controller->searchField];
+	__unsafe_unretained PBGitHistoryController *weakSelf = self;
+	commitList.findPanelActionBlock = ^(id sender) {
+		[weakSelf.view.window makeFirstResponder:weakSelf->searchField];
 	};
 
 	[super awakeFromNib];
