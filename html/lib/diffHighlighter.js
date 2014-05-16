@@ -465,24 +465,28 @@ var inlinediff = (function () {
     ];
   }
 
+  function hasProp(obj, x) {
+    return Object.prototype.hasOwnProperty.call(obj, x);
+  }
+
   function diff( o, n ) {
     var ns = new Object();
     var os = new Object();
     
     for ( var i = 0; i < n.length; i++ ) {
-      if ( ns[ n[i] ] == null )
+      if ( ! hasProp(ns, n[i]) )
         ns[ n[i] ] = { rows: new Array(), o: null };
       ns[ n[i] ].rows.push( i );
     }
     
     for ( var i = 0; i < o.length; i++ ) {
-      if ( os[ o[i] ] == null )
+      if ( ! hasProp(os, o[i]) )
         os[ o[i] ] = { rows: new Array(), n: null };
       os[ o[i] ].rows.push( i );
     }
     
     for ( var i in ns ) {
-      if ( ns[i].rows.length == 1 && typeof(os[i]) != "undefined" && os[i].rows.length == 1 ) {
+      if ( ns[i].rows.length == 1 && hasProp(os, i) && os[i].rows.length == 1 ) {
         n[ ns[i].rows[0] ] = { text: n[ ns[i].rows[0] ], row: os[i].rows[0] };
         o[ os[i].rows[0] ] = { text: o[ os[i].rows[0] ], row: ns[i].rows[0] };
       }
