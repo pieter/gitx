@@ -126,8 +126,10 @@ using namespace std;
 {
 	NSError *error = nil;
 	GTRepository *repo = enumerator.repository;
-	[enumerator resetWithOptions:GTEnumeratorOptionsTimeSort];
-	//	[enumerator resetWithOptions:GTEnumeratorOptionsTopologicalSort];
+	// [enumerator resetWithOptions:GTEnumeratorOptionsTimeSort];
+	[enumerator resetWithOptions:GTEnumeratorOptionsTopologicalSort];
+	NSMutableArray *enumBranches = [NSMutableArray new];
+	NSMutableArray *enumTagCommits = [NSMutableArray new];
 	if (rev.isSimpleRef) {
 		GTObject *object = [repo lookUpObjectByRevParse:rev.simpleRef error:&error];
 		if ([object isKindOfClass:[GTCommit class]]) {
@@ -139,12 +141,12 @@ using namespace std;
 			if ([param isEqualToString:@"--branches"]) {
 				NSArray *branches = [repo localBranchesWithError:&error];
 				for (GTBranch *branch in branches) {
-					[enumerator pushSHA:branch.SHA error:&error];
+					[enumBranches addObject:branch];
 				}
 			} else if ([param isEqualToString:@"--remotes"]) {
 				NSArray *branches = [repo remoteBranchesWithError:&error];
 				for (GTBranch *branch in branches) {
-					[enumerator pushSHA:branch.SHA error:&error];
+					[enumBranches addObject:branch];
 				}
 			} else if ([param isEqualToString:@"--tags"]) {
 				for (NSString *ref in allRefs) {
@@ -160,7 +162,7 @@ using namespace std;
 
 						if ([commit isKindOfClass:[GTCommit class]])
 						{
-							[enumerator pushSHA:commit.SHA error:&error];
+							[enumTagCommits addObject:commit];
 						}
 					}
 				}
@@ -171,6 +173,28 @@ using namespace std;
 			}
 		}
 	}
+
+	NSMutableArray *branchAndTagCommits = [NSMutableArray arrayWithArray:enumTagCommits];
+	for (GTBranch *branch in enumBranches) {
+		NSError *objectLookupError = nil;
+		GTObject *gtObject = [repo lookUpObjectBySHA:branch.SHA error:&objectLookupError];
+		if ([gtObject isKindOfClass:[GTCommit class]]) {
+			[branchAndTagCommits addObject:gtObject];
+		}
+	}
+	NSArray *sortedBranchesAndTags = [branchAndTagCommits sortedArrayWithOptions:NSSortStable usingComparator:^NSComparisonResult(id obj1, id obj2) {
+		GTCommit *branchCommit1 = obj1;
+		GTCommit *branchCommit2 = obj2;
+
+		return [branchCommit2.commitDate compare:branchCommit1.commitDate];
+	}];
+
+	for (GTCommit *commit in sortedBranchesAndTags) {
+		NSError *pushError = nil;
+		[enumerator pushSHA:commit.SHA error:&pushError];
+	}
+
+
 }
 
 - (void) addCommitsFromEnumerator:(GTEnumerator *)enumerator
