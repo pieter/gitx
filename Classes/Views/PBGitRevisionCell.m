@@ -68,7 +68,7 @@ const BOOL SHUFFLE_COLORS = NO;
 {
 	static NSColor *shadowColor = nil;
 	if (!shadowColor) {
-		uint8_t l = 140;
+		uint8_t l = 200;
 		shadowColor = [NSColor colorWithR:l G:l B:l];
 	}
 	return shadowColor;
