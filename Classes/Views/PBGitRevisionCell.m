@@ -241,8 +241,8 @@ const BOOL SHUFFLE_COLORS = NO;
 	static const int ref_spacing = 4;
 	
 	NSRect lastRect = rect;
-	lastRect.origin.x = round(lastRect.origin.x) + 0.5;
-	lastRect.origin.y = round(lastRect.origin.y) + 0.5;
+	lastRect.origin.x = round(lastRect.origin.x);
+	lastRect.origin.y = round(lastRect.origin.y);
 	
 	for (PBGitRef *ref in self.objectValue.refs) {
 		NSMutableDictionary* attributes = [self attributesForRefLabelSelected:NO];
