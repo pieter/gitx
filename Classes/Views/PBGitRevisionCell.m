@@ -117,8 +117,6 @@ const BOOL SHUFFLE_COLORS = NO;
 
 - (void) drawCircleInRect: (NSRect) r
 {
-
-	
 	int c = cellInfo.position;
 	NSPoint origin = r.origin;
 	NSPoint columnOrigin = { origin.x + COLUMN_WIDTH * c, origin.y};
@@ -133,9 +131,8 @@ const BOOL SHUFFLE_COLORS = NO;
 		[shadow setShadowOffset:NSMakeSize(0.5f, -0.5f)];
 		[shadow setShadowBlurRadius:2.0f];
 		[shadow set];
-
-		[[NSColor blackColor] set];
 	}
+	[[NSColor blackColor] set];
 	[path fill];
 	if (ENABLE_SHADOW && false) {
 		[NSGraphicsContext restoreGraphicsState];
