@@ -39,7 +39,6 @@ using namespace std;
 @end
 
 
-#define kRevListThreadKey @"thread"
 #define kRevListRevisionsKey @"revisions"
 
 
@@ -88,9 +87,6 @@ using namespace std;
 
 - (void) updateCommits:(NSDictionary *)update
 {
-	if ([update objectForKey:kRevListThreadKey] != self.parseThread)
-		return;
-	
 	NSArray *revisions = [update objectForKey:kRevListRevisionsKey];
 	if (!revisions || [revisions count] == 0)
 		return;
@@ -236,9 +232,9 @@ using namespace std;
 			}
 			
 			if (++num % 100 == 0) {
-				if ([[NSDate date] timeIntervalSinceDate:lastUpdate] > 0.5) {
+				if ([[NSDate date] timeIntervalSinceDate:lastUpdate] > 0.5 && ![[NSThread currentThread] isCancelled]) {
 					dispatch_group_wait(decorateGroup, DISPATCH_TIME_FOREVER);
-					NSDictionary *update = [NSDictionary dictionaryWithObjectsAndKeys:currentThread, kRevListThreadKey, revisions, kRevListRevisionsKey, nil];
+					NSDictionary *update = [NSDictionary dictionaryWithObjectsAndKeys:revisions, kRevListRevisionsKey, nil];
 					[self performSelectorOnMainThread:@selector(updateCommits:) withObject:update waitUntilDone:NO];
 					revisions = [NSMutableArray array];
 					lastUpdate = [NSDate date];
@@ -256,10 +252,12 @@ using namespace std;
     dispatch_release(decorateQueue);
 	
 	// Make sure the commits are stored before exiting.
-	NSDictionary *update = [NSDictionary dictionaryWithObjectsAndKeys:currentThread, kRevListThreadKey, revisions, kRevListRevisionsKey, nil];
-	[self performSelectorOnMainThread:@selector(updateCommits:) withObject:update waitUntilDone:YES];
-	
-	[self performSelectorOnMainThread:@selector(finishedParsing) withObject:nil waitUntilDone:NO];
+	if (![[NSThread currentThread] isCancelled]) {
+		NSDictionary *update = [NSDictionary dictionaryWithObjectsAndKeys:revisions, kRevListRevisionsKey, nil];
+		[self performSelectorOnMainThread:@selector(updateCommits:) withObject:update waitUntilDone:YES];
+		
+		[self performSelectorOnMainThread:@selector(finishedParsing) withObject:nil waitUntilDone:NO];
+	}
 }
 
 @end
