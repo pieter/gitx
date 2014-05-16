@@ -306,6 +306,10 @@ NSString *PBGitRepositoryDocumentType = @"Git Repository";
 			}
 			continue;
 		}
+		if (gtRef.remote && gtRef.referenceType == GTReferenceTypeSymbolic) {
+			// Hide remote symbolic references like origin/HEAD
+			continue;
+		}
 		PBGitRef* gitRef = [PBGitRef refFromString:referenceName];
 		PBGitRevSpecifier* revSpec = [[PBGitRevSpecifier alloc] initWithRef:gitRef];
 		[self addBranch:revSpec];
