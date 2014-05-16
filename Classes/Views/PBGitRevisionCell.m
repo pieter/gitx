@@ -68,7 +68,7 @@ const BOOL SHUFFLE_COLORS = NO;
 {
 	static NSColor *shadowColor = nil;
 	if (!shadowColor) {
-		uint8_t l = 140;
+		uint8_t l = 200;
 		shadowColor = [NSColor colorWithR:l G:l B:l];
 	}
 	return shadowColor;
@@ -193,7 +193,7 @@ const BOOL SHUFFLE_COLORS = NO;
 	
 	[style setAlignment:NSCenterTextAlignment];
 	[attributes setObject:style forKey:NSParagraphStyleAttributeName];
-	[attributes setObject:[NSFont fontWithName:@"Helvetica" size:10] forKey:NSFontAttributeName];
+	[attributes setObject:[NSFont fontWithName:@"LucidaGrande" size:10] forKey:NSFontAttributeName];
 
 	NSShadow *shadow = nil;
 
