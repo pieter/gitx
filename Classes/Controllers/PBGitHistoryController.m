@@ -6,7 +6,6 @@
 //  Copyright 2008 __MyCompanyName__. All rights reserved.
 //
 
-#import "PBGitSHA.h"
 #import "PBGitCommit.h"
 #import "PBGitTree.h"
 #import "PBGitRef.h"

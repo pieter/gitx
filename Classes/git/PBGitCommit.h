@@ -12,7 +12,6 @@
 @class PBGitRepository;
 @class PBGitTree;
 @class PBGitRef;
-@class PBGitSHA;
 @class PBGraphCellInfo;
 
 extern NSString * const kGitXCommitType;
@@ -42,8 +41,6 @@ extern NSString * const kGitXCommitType;
 @property (nonatomic, readonly) PBGitTree* tree;
 @property (readonly) NSArray* treeContents;
 
-
-//+ (PBGitCommit *)commitWithRepository:(PBGitRepository*)repo andSha:(PBGitSHA *)newSha;
 
 - (id)initWithRepository:(PBGitRepository *)repo andCommit:(GTCommit *)gtCommit;
 

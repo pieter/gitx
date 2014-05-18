@@ -10,7 +10,6 @@
 
 #import "GLFileView.h"
 #import "PBGitTree.h"
-#import "PBGitSHA.h"
 #import "PBGitCommit.h"
 #import "PBGitHistoryController.h"
 

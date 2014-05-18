@@ -16,7 +16,6 @@
 #import "PBEasyPipe.h"
 #import "PBGitBinary.h"
 #import "PBGitCommit.h"
-#import "PBGitSHA.h"
 
 @interface PBHistorySearchController ()
 

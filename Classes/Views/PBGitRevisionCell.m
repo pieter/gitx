@@ -8,7 +8,6 @@
 
 #import "PBGitRevisionCell.h"
 #import "PBGitRef.h"
-#import "PBGitSHA.h"
 #import "PBGitCommit.h"
 #import "PBGitRevSpecifier.h"
 #import "RoundedRectangle.h"
