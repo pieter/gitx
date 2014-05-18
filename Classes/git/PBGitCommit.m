@@ -6,10 +6,11 @@
 //  Copyright 2008 __MyCompanyName__. All rights reserved.
 //
 
+#import "PBGitRepository.h"
 #import "PBGitCommit.h"
+#import "PBGitTree.h"
+#import "PBGitRef.h"
 #import "PBGitDefaults.h"
-
-#import <ObjectiveGit/ObjectiveGit.h>
 
 NSString * const kGitXCommitType = @"commit";
 
@@ -30,6 +31,7 @@ NSString * const kGitXCommitType = @"commit";
 - (NSDate *) date
 {
 	return self.gtCommit.commitDate;
+	// previous behaviour was equiv. to:  return self.gtCommit.author.time;
 }
 
 - (NSString *) dateString

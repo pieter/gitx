@@ -6,6 +6,9 @@
 //  Copyright 2008 __MyCompanyName__. All rights reserved.
 //
 
+#include <vector>
+#include <algorithm>
+
 #import "PBGraphCellInfo.h"
 #import "PBGitGrapher.h"
 #import "PBGitCommit.h"
