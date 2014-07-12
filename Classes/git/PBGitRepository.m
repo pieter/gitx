@@ -394,18 +394,7 @@ NSString *PBGitRepositoryDocumentType = @"Git Repository";
 		NSLog(@"Error looking up ref for %@", ref.ref);
 		return nil;
 	}
-	const git_oid* refOid = gtRef.git_oid;
-	
-	if (refOid)
-	{
-		char buffer[41];
-		buffer[40] = '\0';
-		git_oid_fmt(buffer, refOid);
-		NSString* shaForRef = [NSString stringWithUTF8String:buffer];
-		GTOID* result = [GTOID oidWithSHA: shaForRef];
-		return result;
-	}
-	return nil;
+	return gtRef.OID;
 }
 
 - (PBGitCommit *)commitForRef:(PBGitRef *)ref
