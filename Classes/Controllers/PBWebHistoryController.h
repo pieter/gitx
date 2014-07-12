@@ -21,7 +21,7 @@
 	IBOutlet PBGitHistoryController* historyController;
 	IBOutlet id<PBRefContextDelegate> contextMenuDelegate;
 
-	GTOID* currentSha;
+	GTOID *currentOID;
 	NSString* diff;
 }
 

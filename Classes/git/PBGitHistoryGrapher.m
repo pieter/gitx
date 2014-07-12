@@ -19,7 +19,7 @@
 
 	delegate = theDelegate;
 	currentQueue = queue;
-	searchSHAs = [NSMutableSet setWithSet:commits];
+	searchOIDs = [NSMutableSet setWithSet:commits];
 	grapher = [[PBGitGrapher alloc] initWithRepository:nil];
 	viewAllBranches = viewAll;
 
@@ -48,13 +48,13 @@
 	for (PBGitCommit *commit in revList) {
 		if ([currentThread isCancelled])
 			return;
-		GTOID *commitSHA = [commit sha];
-		if (viewAllBranches || [searchSHAs containsObject:commitSHA]) {
+		GTOID *commitOID = commit.OID;
+		if (viewAllBranches || [searchOIDs containsObject:commitOID]) {
 			[grapher decorateCommit:commit];
 			[commits addObject:commit];
 			if (!viewAllBranches) {
-				[searchSHAs removeObject:commitSHA];
-				[searchSHAs addObjectsFromArray:[commit parents]];
+				[searchOIDs removeObject:commitOID];
+				[searchOIDs addObjectsFromArray:[commit parents]];
 			}
 		}
 		if (++counter % 100 == 0) {

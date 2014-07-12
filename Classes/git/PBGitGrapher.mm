@@ -67,7 +67,7 @@ void add_line(struct PBGitGraphLine *lines, int *nLines, int upper, int from, in
 
 	PBGitLane *currentLane = NULL;
 	BOOL didFirst = NO;
-	const git_oid *commit_oid = [[commit sha] git_oid];
+	const git_oid *commit_oid = commit.OID.git_oid;
 	
 	// First, iterate over earlier columns and pass through any that don't want this commit
 	if (self.previous != nil) {

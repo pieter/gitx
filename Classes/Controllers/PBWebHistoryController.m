@@ -34,7 +34,7 @@
 
 - (void) didLoad
 {
-	currentSha = nil;
+	currentOID = nil;
 	[self changeContentTo: historyController.webCommit];
 }
 
@@ -52,7 +52,7 @@
 		return;
 
 	// The sha is the same, but refs may have changed.. reload it lazy
-	if ([currentSha isEqual:[content sha]])
+	if ([currentOID isEqual:content.OID])
 	{
 		[[self script] callWebScriptMethod:@"reload" withArguments: nil];
 		return;
@@ -65,13 +65,13 @@
 		[self performSelector:_cmd withObject:content afterDelay:0.05];
 		return;
 	}
-	currentSha = [content sha];
+	currentOID = content.OID;
 
 	// Now we load the extended details. We used to do this in a separate thread,
 	// but this caused some funny behaviour because NSTask's and NSThread's don't really
 	// like each other. Instead, just do it async.
 
-	NSMutableArray *taskArguments = [NSMutableArray arrayWithObjects:@"show", @"--pretty=raw", @"-M", @"--no-color", [currentSha SHA], nil];
+	NSMutableArray *taskArguments = [NSMutableArray arrayWithObjects:@"show", @"--pretty=raw", @"-M", @"--no-color", currentOID.SHA, nil];
 	if (![PBGitDefaults showWhitespaceDifferences])
 		[taskArguments insertObject:@"-w" atIndex:1];
 

@@ -21,7 +21,7 @@ extern NSString * const kGitXCommitType;
 
 @property (nonatomic, weak, readonly) PBGitRepository* repository;
 
-@property (nonatomic, strong, readonly) GTOID *sha;
+@property (nonatomic, strong, readonly) GTOID *OID;
 
 @property (nonatomic, strong, readonly) NSDate *date;
 @property (nonatomic, strong, readonly) NSString *subject;
@@ -29,7 +29,7 @@ extern NSString * const kGitXCommitType;
 @property (nonatomic, strong, readonly) NSString *committer;
 @property (nonatomic, strong, readonly) NSString *details;
 @property (nonatomic, strong, readonly) NSString *patch;
-@property (nonatomic, strong, readonly) NSString *realSHA;
+@property (nonatomic, strong, readonly) NSString *SHA;
 @property (nonatomic, strong, readonly) NSString *SVNRevision;
 
 @property (nonatomic, strong, readonly) NSArray *parents;
@@ -48,7 +48,7 @@ extern NSString * const kGitXCommitType;
 - (void) removeRef:(id)ref;
 - (BOOL) hasRef:(PBGitRef *)ref;
 
-- (NSString *)realSha;
+- (NSString *)SHA;
 - (BOOL) isOnSameBranchAs:(PBGitCommit *)other;
 - (BOOL) isOnHeadBranch;
 

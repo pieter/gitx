@@ -20,7 +20,7 @@
 	id delegate;
 	NSOperationQueue *currentQueue;
 
-	NSMutableSet *searchSHAs;
+	NSMutableSet *searchOIDs;
 	PBGitGrapher *grapher;
 	BOOL viewAllBranches;
 }

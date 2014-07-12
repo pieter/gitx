@@ -106,12 +106,12 @@ const BOOL SHUFFLE_COLORS = NO;
 
 - (BOOL) isCurrentCommit
 {
-	GTOID *thisSha = [self.objectValue sha];
+	GTOID *thisOID = self.objectValue.OID;
 
 	PBGitRepository* repository = [self.objectValue repository];
-	GTOID *currentSha = [repository headSHA];
+	GTOID *currentOID = [repository headOID];
 
-	return [currentSha isEqual:thisSha];
+	return [currentOID isEqual:thisOID];
 }
 
 - (void) drawCircleInRect: (NSRect) r

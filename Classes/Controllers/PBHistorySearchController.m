@@ -152,7 +152,7 @@
 {
 	if ([[commitController arrangedObjects] count] > index) {
 		PBGitCommit *commit = [[commitController arrangedObjects] objectAtIndex:index];
-		[historyController selectCommit:[commit sha]];
+		[historyController selectCommit:commit.OID];
 	}
 }
 
@@ -454,7 +454,7 @@
 	NSArray *arrangedObjects = [commitController arrangedObjects];
 	NSIndexSet *indexes = [arrangedObjects indexesOfObjectsPassingTest:^BOOL(id obj, NSUInteger idx, BOOL *stop) {
 		PBGitCommit *commit = obj;
-		return [matches containsObject:commit.sha];
+		return [matches containsObject:commit.OID];
 	}];
 
 	results = indexes;

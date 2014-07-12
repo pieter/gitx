@@ -21,7 +21,7 @@ NSString * const kGitXCommitType = @"commit";
 @property (nonatomic, strong) NSArray *parents;
 
 @property (nonatomic, strong) NSString *patch;
-@property (nonatomic, strong) GTOID *sha;
+@property (nonatomic, strong) GTOID *oid;
 
 @end
 
@@ -113,20 +113,17 @@ NSString * const kGitXCommitType = @"commit";
 	return result;
 }
 
-- (GTOID *)sha
+- (GTOID *)OID
 {
-	GTOID *result = _sha;
-	if (result) {
-		return result;
+	if (!_oid) {
+		_oid = self.gtCommit.OID;
 	}
-    result = self.gtCommit.OID;
-	_sha = result;
-	return result;
+	return _oid;
 }
 
-- (NSString *)realSha
+- (NSString *)SHA
 {
-	return self.gtCommit.SHA;
+	return self.OID.SHA;
 }
 
 - (BOOL) isOnSameBranchAs:(PBGitCommit *)otherCommit
@@ -137,7 +134,7 @@ NSString * const kGitXCommitType = @"commit";
 	if ([self isEqual:otherCommit])
 		return YES;
 
-	return [self.repository isOnSameBranch:otherCommit.sha asSHA:self.sha];
+	return [self.repository isOIDOnSameBranch:otherCommit.OID asOID:self.OID];
 }
 
 - (BOOL) isOnHeadBranch
@@ -155,7 +152,7 @@ NSString * const kGitXCommitType = @"commit";
 
 - (NSUInteger)hash
 {
-	return [self.sha hash];
+	return self.OID.hash;
 }
 
 // FIXME: Remove this method once it's unused.
@@ -169,7 +166,7 @@ NSString * const kGitXCommitType = @"commit";
 	if (self->_patch != nil)
 		return _patch;
 
-	NSString *p = [self.repository outputForArguments:[NSArray arrayWithObjects:@"format-patch",  @"-1", @"--stdout", [self realSha], nil]];
+	NSString *p = [self.repository outputForArguments:[NSArray arrayWithObjects:@"format-patch",  @"-1", @"--stdout", self.SHA, nil]];
 	// Add a GitX identifier to the patch ;)
 	self.patch = [[p substringToIndex:[p length] -1] stringByAppendingString:@"+GitX"];
 	return self->_patch;
@@ -210,12 +207,12 @@ NSString * const kGitXCommitType = @"commit";
 
 - (NSMutableArray *)refs
 {
-	return self.repository.refs[self.sha];
+	return self.repository.refs[self.OID];
 }
 
 - (void) setRefs:(NSMutableArray *)refs
 {
-	self.repository.refs[self.sha] = [NSMutableArray arrayWithArray:refs];
+	self.repository.refs[self.OID] = [NSMutableArray arrayWithArray:refs];
 }
 
 
@@ -233,7 +230,7 @@ NSString * const kGitXCommitType = @"commit";
 
 - (NSString *) refishName
 {
-	return [self realSha];
+	return self.SHA;
 }
 
 - (NSString *) shortName

@@ -189,7 +189,7 @@
 
 	NSPasteboard *pasteboard = [NSPasteboard generalPasteboard];
 	[pasteboard declareTypes:[NSArray arrayWithObject:NSStringPboardType] owner:nil];
-	[pasteboard setString:[commit realSha] forType:NSStringPboardType];
+	[pasteboard setString:commit.SHA forType:NSStringPboardType];
 }
 
 
@@ -389,7 +389,7 @@
 		return;
 
 	int retValue = 1;
-	[historyController.repository outputForArguments:[NSArray arrayWithObjects:@"update-ref", @"-mUpdate from GitX", [ref ref], [dropCommit realSha], NULL] retValue:&retValue];
+	[historyController.repository outputForArguments:[NSArray arrayWithObjects:@"update-ref", @"-mUpdate from GitX", ref.ref, dropCommit.SHA, NULL] retValue:&retValue];
 	if (retValue)
 		return;
 

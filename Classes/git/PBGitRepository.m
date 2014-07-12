@@ -281,7 +281,7 @@ NSString *PBGitRepositoryDocumentType = @"Git Repository";
 {
 	// clear out ref caches
 	_headRef = nil;
-	_headSha = nil;
+	_headOID = nil;
 	self->refs = [NSMutableDictionary dictionary];
 	
 	NSError* error = nil;
@@ -349,25 +349,25 @@ NSString *PBGitRepositoryDocumentType = @"Git Repository";
 	else
 		_headRef = [[PBGitRevSpecifier alloc] initWithRef:[PBGitRef refFromString:@"HEAD"]];
 
-	_headSha = [self shaForRef:[_headRef ref]];
+	_headOID = [self OIDForRef:[_headRef ref]];
 
 	return _headRef;
 }
 
-- (GTOID *)headSHA
+- (GTOID *)headOID
 {
-	if (! _headSha)
+	if (! _headOID)
 		[self headRef];
 
-	return _headSha;
+	return _headOID;
 }
 
 - (PBGitCommit *)headCommit
 {
-	return [self commitForSHA:[self headSHA]];
+	return [self commitForOID:self.headOID];
 }
 
-- (GTOID *)shaForRef:(PBGitRef *)ref
+- (GTOID *)OIDForRef:(PBGitRef *)ref
 {
 	if (!ref)
 		return nil;
@@ -413,10 +413,10 @@ NSString *PBGitRepositoryDocumentType = @"Git Repository";
 	if (!ref)
 		return nil;
 
-	return [self commitForSHA:[self shaForRef:ref]];
+	return [self commitForOID:[self OIDForRef:ref]];
 }
 
-- (PBGitCommit *)commitForSHA:(GTOID *)sha
+- (PBGitCommit *)commitForOID:(GTOID *)sha
 {
 	if (!sha)
 		return nil;
@@ -427,50 +427,50 @@ NSString *PBGitRepositoryDocumentType = @"Git Repository";
         revList = revisionList.projectCommits;
     }
 	for (PBGitCommit *commit in revList)
-		if ([[commit sha] isEqual:sha])
+		if ([commit.OID isEqual:sha])
 			return commit;
 
 	return nil;
 }
 
-- (BOOL)isOnSameBranch:(GTOID *)branchSHA asSHA:(GTOID *)testSHA
+- (BOOL)isOIDOnSameBranch:(GTOID *)branchOID asOID:(GTOID *)testOID
 {
-	if (!branchSHA || !testSHA)
+	if (!branchOID || !testOID)
 		return NO;
 
-	if ([testSHA isEqual:branchSHA])
+	if ([testOID isEqual:branchOID])
 		return YES;
 
 	NSArray *revList = revisionList.projectCommits;
 
-	NSMutableSet *searchSHAs = [NSMutableSet setWithObject:branchSHA];
+	NSMutableSet *searchOIDs = [NSMutableSet setWithObject:branchOID];
 
 	for (PBGitCommit *commit in revList) {
-		GTOID *commitSHA = [commit sha];
-		if ([searchSHAs containsObject:commitSHA]) {
-			if ([testSHA isEqual:commitSHA])
+		GTOID *commitOID = commit.OID;
+		if ([searchOIDs containsObject:commitOID]) {
+			if ([testOID isEqual:commitOID])
 				return YES;
-			[searchSHAs removeObject:commitSHA];
-			[searchSHAs addObjectsFromArray:commit.parents];
+			[searchOIDs removeObject:commitOID];
+			[searchOIDs addObjectsFromArray:commit.parents];
 		}
-		else if ([testSHA isEqual:commitSHA])
+		else if ([testOID isEqual:commitOID])
 			return NO;
 	}
 
 	return NO;
 }
 
-- (BOOL)isSHAOnHeadBranch:(GTOID *)testSHA
+- (BOOL)isOIDOnHeadBranch:(GTOID *)testOID
 {
-	if (!testSHA)
+	if (!testOID)
 		return NO;
 
-	GTOID *headSHA = [self headSHA];
+	GTOID *headOID = self.headOID;
 
-	if ([testSHA isEqual:headSHA])
+	if ([testOID isEqual:headOID])
 		return YES;
 
-	return [self isOnSameBranch:headSHA asSHA:testSHA];
+	return [self isOIDOnSameBranch:headOID asOID:testOID];
 }
 
 - (BOOL)isRefOnHeadBranch:(PBGitRef *)testRef
@@ -478,7 +478,7 @@ NSString *PBGitRepositoryDocumentType = @"Git Repository";
 	if (!testRef)
 		return NO;
 
-	return [self isSHAOnHeadBranch:[self shaForRef:testRef]];
+	return [self isOIDOnHeadBranch:[self OIDForRef:testRef]];
 }
 
 - (BOOL) checkRefFormat:(NSString *)refName

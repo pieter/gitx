@@ -296,9 +296,9 @@
 		[self updateStatus];
 
 		if ([repository.currentBranch isSimpleRef])
-			[self selectCommit:[repository shaForRef:[repository.currentBranch ref]]];
+			[self selectCommit:[repository OIDForRef:repository.currentBranch.ref]];
 		else
-			[self selectCommit:[[self firstCommit] sha]];
+			[self selectCommit:self.firstCommit.OID];
 		return;
 	}
 
@@ -382,7 +382,7 @@
 	PBGitCommit *commit = [[commitController selectedObjects] objectAtIndex:0];
 	if (!commit)
 		return;
-	NSString *info = [NSString stringWithFormat:@"%@ (%@)", [[commit realSha] substringToIndex:10], [commit subject]];
+	NSString *info = [NSString stringWithFormat:@"%@ (%@)", [commit.SHA substringToIndex:10], commit.subject];
 
 	NSPasteboard *a =[NSPasteboard generalPasteboard];
 	[a declareTypes:[NSArray arrayWithObject:NSStringPboardType] owner:self];
@@ -395,7 +395,7 @@
 	PBGitCommit *commit = [[commitController selectedObjects] objectAtIndex:0];
 	if (!commit)
 		return;
-	NSString *info = [[commit realSha] substringWithRange:NSMakeRange(0, 7)];
+	NSString *info = [commit.SHA substringWithRange:NSMakeRange(0, 7)];
 
 	NSPasteboard *a =[NSPasteboard generalPasteboard];
 	[a declareTypes:[NSArray arrayWithObject:NSStringPboardType] owner:self];
@@ -487,9 +487,9 @@
     commitList.useAdjustScroll = NO;
 }
 
-- (NSArray *) selectedObjectsForSHA:(GTOID *)commitSHA
+- (NSArray *) selectedObjectsForOID:(GTOID *)commitOID
 {
-	NSPredicate *selection = [NSPredicate predicateWithFormat:@"sha == %@", commitSHA];
+	NSPredicate *selection = [NSPredicate predicateWithFormat:@"OID == %@", commitOID];
 	NSArray *selectedCommits = [[commitController content] filteredArrayUsingPredicate:selection];
 
 	if (([selectedCommits count] == 0) && [self firstCommit])
@@ -498,14 +498,14 @@
 	return selectedCommits;
 }
 
-- (void)selectCommit:(GTOID *)commitSHA
+- (void)selectCommit:(GTOID *)commitOID
 {
-	if (!forceSelectionUpdate && [[[[commitController selectedObjects] lastObject] sha] isEqual:commitSHA])
+	if (!forceSelectionUpdate && [[[commitController.selectedObjects lastObject] OID] isEqual:commitOID])
 		return;
 
 	NSInteger oldIndex = [[commitController selectionIndexes] firstIndex];
 
-	NSArray *selectedCommits = [self selectedObjectsForSHA:commitSHA];
+	NSArray *selectedCommits = [self selectedObjectsForOID:commitOID];
 	[commitController setSelectedObjects:selectedCommits];
 
 	[self scrollSelectionToTopOfViewFrom:oldIndex];
@@ -627,7 +627,7 @@
 	PBGitRef *headRef = [[repository headRef] ref];
 	NSString *headRefName = [headRef shortName];
 	NSString *diffTitle = [NSString stringWithFormat:@"Diff %@ with %@", multiple ? @"files" : @"file", headRefName];
-	BOOL isHead = [[selectedCommit sha] isEqual:[repository headSHA]];
+	BOOL isHead = [selectedCommit.OID isEqual:repository.headOID];
 	NSMenuItem *diffItem = [[NSMenuItem alloc] initWithTitle:diffTitle
 													  action:isHead ? nil : @selector(diffFilesAction:)
 											   keyEquivalent:@""];
