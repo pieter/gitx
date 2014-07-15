@@ -171,6 +171,53 @@ NSString *PBGitRepositoryDocumentType = @"Git Repository";
 }
 
 #pragma mark -
+#pragma mark NSResponder methods
+
+- (NSArray *)selectedURLsFromSender:(id)sender {
+	NSArray *selectedFiles = [sender representedObject];
+	if ([selectedFiles count] == 0)
+		return nil;
+
+	NSURL *workingDirectoryURL = self.workingDirectoryURL;
+	NSMutableArray *URLs = [NSMutableArray array];
+    for (id file in selectedFiles) {
+        NSString *path = file;
+        // Those can be PBChangedFiles sent by PBGitIndexController. Get their path.
+        if ([file respondsToSelector:@selector(path)]) {
+            path = [file path];
+        }
+
+        if (![path isKindOfClass:[NSString class]])
+            continue;
+        [URLs addObject:[workingDirectoryURL URLByAppendingPathComponent:path]];
+    }
+
+    return URLs;
+}
+
+- (IBAction)showInFinderAction:(id)sender {
+    NSArray *URLs = [self selectedURLsFromSender:sender];
+    if ([URLs count] == 0)
+        return;
+
+    [[NSWorkspace sharedWorkspace] activateFileViewerSelectingURLs:URLs];
+}
+
+- (IBAction)openFilesAction:(id)sender {
+    NSArray *URLs = [self selectedURLsFromSender:sender];
+
+    if ([URLs count] == 0)
+        return;
+
+    [[NSWorkspace sharedWorkspace] openURLs:URLs
+                    withAppBundleIdentifier:nil
+                                    options:0
+             additionalEventParamDescriptor:nil
+                          launchIdentifiers:NULL];
+}
+
+
+#pragma mark -
 #pragma mark Properties/General methods
 
 - (NSURL *)getIndexURL

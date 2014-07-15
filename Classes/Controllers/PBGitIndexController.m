@@ -17,6 +17,8 @@
 - (void)discardChangesForFiles:(NSArray *)files force:(BOOL)force;
 @end
 
+// FIXME: This isn't a view/window/whatever controller, though it acts like one...
+// See for example -menuForTable and its setTarget: calls.
 @implementation PBGitIndexController
 
 - (void)awakeFromNib
@@ -99,20 +101,17 @@
 	if ([table tag] == 0) {
 		NSMenuItem *stageItem = [[NSMenuItem alloc] initWithTitle:@"Stage Changes" action:@selector(stageFilesAction:) keyEquivalent:@"s"];
 		[stageItem setTarget:self];
-		[stageItem setRepresentedObject:selectedFiles];
 		[menu addItem:stageItem];
 	}
 	else if ([table tag] == 1) {
 		NSMenuItem *unstageItem = [[NSMenuItem alloc] initWithTitle:@"Unstage Changes" action:@selector(unstageFilesAction:) keyEquivalent:@"u"];
 		[unstageItem setTarget:self];
-		[unstageItem setRepresentedObject:selectedFiles];
 		[menu addItem:unstageItem];
 	}
 
 	NSString *title = [selectedFiles count] == 1 ? @"Open file" : @"Open files";
 	NSMenuItem *openItem = [[NSMenuItem alloc] initWithTitle:title action:@selector(openFilesAction:) keyEquivalent:@""];
-	[openItem setTarget:self];
-	[openItem setRepresentedObject:selectedFiles];
+	[openItem setTarget:commitController.repository];
 	[menu addItem:openItem];
 
 	// Attempt to ignore
@@ -120,14 +119,12 @@
 		NSString *ignoreText = [selectedFiles count] == 1 ? @"Ignore File": @"Ignore Files";
 		NSMenuItem *ignoreItem = [[NSMenuItem alloc] initWithTitle:ignoreText action:@selector(ignoreFilesAction:) keyEquivalent:@""];
 		[ignoreItem setTarget:self];
-		[ignoreItem setRepresentedObject:selectedFiles];
 		[menu addItem:ignoreItem];
 	}
 
 	if ([selectedFiles count] == 1) {
 		NSMenuItem *showInFinderItem = [[NSMenuItem alloc] initWithTitle:@"Show in Finder" action:@selector(showInFinderAction:) keyEquivalent:@""];
-		[showInFinderItem setTarget:self];
-		[showInFinderItem setRepresentedObject:selectedFiles];
+		[showInFinderItem setTarget:commitController.repository];
 		[menu addItem:showInFinderItem];
     }
 
@@ -140,50 +137,61 @@
 			break;
 		}
 	}
-	if (!addDiscardMenu)
-	{
-		return menu;
-	}
 
-	NSMenuItem *discardItem = [[NSMenuItem alloc] initWithTitle:@"Discard changes…" action:@selector(discardFilesAction:) keyEquivalent:@""];
-	[discardItem setTarget:self];
-	[discardItem setAlternate:NO];
-	[discardItem setRepresentedObject:selectedFiles];
+	if (addDiscardMenu)
+    {
+        NSMenuItem *discardItem = [[NSMenuItem alloc] initWithTitle:@"Discard changes…" action:@selector(discardFilesAction:) keyEquivalent:@""];
+        [discardItem setAlternate:NO];
+        [discardItem setTarget:self];
 
-	[menu addItem:discardItem];
+        [menu addItem:discardItem];
 
-	NSMenuItem *discardForceItem = [[NSMenuItem alloc] initWithTitle:@"Discard changes" action:@selector(forceDiscardFilesAction:) keyEquivalent:@""];
-	[discardForceItem setTarget:self];
-	[discardForceItem setAlternate:YES];
-	[discardForceItem setRepresentedObject:selectedFiles];
-	[discardForceItem setKeyEquivalentModifierMask:NSAlternateKeyMask];
-	[menu addItem:discardForceItem];
+        NSMenuItem *discardForceItem = [[NSMenuItem alloc] initWithTitle:@"Discard changes" action:@selector(forceDiscardFilesAction:) keyEquivalent:@""];
+        [discardForceItem setAlternate:YES];
+        [discardForceItem setKeyEquivalentModifierMask:NSAlternateKeyMask];
+        [discardForceItem setTarget:self];
+        [menu addItem:discardForceItem];
 	
-	BOOL trashInsteadOfDiscard = floor(NSAppKitVersionNumber) > NSAppKitVersionNumber10_7;
-	if (trashInsteadOfDiscard)
-	{
-		for (PBChangedFile* file in selectedFiles)
-		{
-			if (file.status != NEW)
-			{
-				trashInsteadOfDiscard = NO;
-				break;
-			}
-		}
-	}
-		
-	if (trashInsteadOfDiscard && [selectedFiles count] > 0)
-	{
-		NSMenuItem* moveToTrashItem = [[NSMenuItem alloc] initWithTitle:@"Move to Trash" action:@selector(moveToTrashAction:) keyEquivalent:@""];
-		[moveToTrashItem setTarget:self];
-		[moveToTrashItem setRepresentedObject:selectedFiles];
-		[menu addItem:moveToTrashItem];
-		
-		[menu removeItem:discardItem];
-		[menu removeItem:discardForceItem];
-	}
-	
+        BOOL trashInsteadOfDiscard = floor(NSAppKitVersionNumber) > NSAppKitVersionNumber10_7;
+        if (trashInsteadOfDiscard)
+        {
+            for (PBChangedFile* file in selectedFiles)
+            {
+                if (file.status != NEW)
+                {
+                    trashInsteadOfDiscard = NO;
+                    break;
+                }
+            }
+        }
+
+        if (trashInsteadOfDiscard && [selectedFiles count] > 0)
+        {
+            NSMenuItem* moveToTrashItem = [[NSMenuItem alloc] initWithTitle:@"Move to Trash" action:@selector(moveToTrashAction:) keyEquivalent:@""];
+            [moveToTrashItem setTarget:self];
+            [menu addItem:moveToTrashItem];
+
+            [menu removeItem:discardItem];
+            [menu removeItem:discardForceItem];
+        }
+    }
+
+    for (NSMenuItem *item in [menu itemArray]) {
+        [item setRepresentedObject:selectedFiles];
+    }
+
 	return menu;
+}
+
+- (BOOL)validateMenuItem:(NSMenuItem *)menuItem
+{
+    if ([self respondsToSelector:[menuItem action]])
+        return YES;
+
+    if ([commitController respondsToSelector:[menuItem action]])
+        return YES;
+
+    return [[commitController nextResponder] validateMenuItem:menuItem];
 }
 
 - (void) stageSelectedFiles
@@ -205,14 +213,6 @@
 - (void) unstageFilesAction:(id) sender
 {
 	[commitController.index unstageFiles:[sender representedObject]];
-}
-
-- (void) openFilesAction:(id) sender
-{
-	NSArray *files = [sender representedObject];
-	NSURL *workingDirectoryURL = commitController.repository.workingDirectoryURL;
-	for (PBChangedFile *file in files)
-		[[NSWorkspace sharedWorkspace] openURL:[workingDirectoryURL URLByAppendingPathComponent:[file path]]];
 }
 
 - (void) ignoreFilesAction:(id) sender
@@ -237,17 +237,6 @@
 	NSArray *selectedFiles = [sender representedObject];
 	if ([selectedFiles count] > 0)
 		[self discardChangesForFiles:selectedFiles force:TRUE];
-}
-
-- (void) showInFinderAction:(id) sender
-{
-	NSArray *selectedFiles = [sender representedObject];
-	if ([selectedFiles count] == 0)
-		return;
-	NSURL *workingDirectoryURL = commitController.repository.workingDirectoryURL;
-	NSURL *filePath = [workingDirectoryURL URLByAppendingPathComponent:[[selectedFiles objectAtIndex:0] path]];
-
-	[[NSWorkspace sharedWorkspace] activateFileViewerSelectingURLs:@[filePath]];
 }
 
 - (void)moveToTrashAction:(id)sender

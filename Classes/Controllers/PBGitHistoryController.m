@@ -322,7 +322,11 @@
     } else if ([menuItem action] == @selector(setTreeView:)) {
 		[menuItem setState:(self.selectedCommitDetailsIndex == kHistoryTreeViewIndex) ? NSOnState : NSOffState];
     }
-    return YES;
+
+    if ([self respondsToSelector:[menuItem action]])
+        return YES;
+
+    return [[self nextResponder] validateMenuItem:menuItem];
 }
 
 - (IBAction) setDetailedView:(id)sender
@@ -564,28 +568,6 @@
 	[searchController setHistorySearch:searchString mode:kGitXPathSearchMode];
 }
 
-- (void)showInFinderAction:(id)sender
-{
-	NSURL *workingDirectoryURL = self.repository.workingDirectoryURL;
-	NSMutableArray *URLs = [NSMutableArray array];
-
-	for (NSString *filePath in [sender representedObject]) {
-		[URLs addObject:[workingDirectoryURL URLByAppendingPathComponent:filePath]];
-    }
-    [[NSWorkspace sharedWorkspace] activateFileViewerSelectingURLs:URLs];
-}
-
-- (void)openFilesAction:(id)sender
-{
-	NSURL *workingDirectoryURL = self.repository.workingDirectoryURL;
-	NSMutableArray *URLs = [NSMutableArray array];
-
-	for (NSString *filePath in [sender representedObject]) {
-        [URLs addObject:[workingDirectoryURL URLByAppendingPathComponent:filePath]];
-    }
-    [[NSWorkspace sharedWorkspace] openURLs:URLs withAppBundleIdentifier:nil options:0 additionalEventParamDescriptor:nil launchIdentifiers:NULL];
-}
-
 - (void) checkoutFiles:(id)sender
 {
 	NSMutableArray *files = [NSMutableArray array];
@@ -641,7 +623,6 @@
 
 	NSArray *menuItems = [NSArray arrayWithObjects:historyItem, diffItem, checkoutItem, finderItem, openFilesItem, nil];
 	for (NSMenuItem *item in menuItems) {
-		[item setTarget:self];
 		[item setRepresentedObject:filePaths];
 	}
 

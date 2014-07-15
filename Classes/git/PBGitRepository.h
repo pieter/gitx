@@ -143,4 +143,7 @@ static NSString * PBStringFromBranchFilterType(PBGitXBranchFilterType type) {
 // for the scripting bridge
 - (void)findInModeScriptCommand:(NSScriptCommand *)command;
 
+- (IBAction)showInFinderAction:(id)sender;
+- (IBAction)openFilesAction:(id)sender;
+
 @end
