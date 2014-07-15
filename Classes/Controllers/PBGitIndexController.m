@@ -210,9 +210,9 @@
 - (void) openFilesAction:(id) sender
 {
 	NSArray *files = [sender representedObject];
-	NSString *workingDirectory = [commitController.repository workingDirectory];
+	NSURL *workingDirectoryURL = commitController.repository.workingDirectoryURL;
 	for (PBChangedFile *file in files)
-		[[NSWorkspace sharedWorkspace] openFile:[workingDirectory stringByAppendingPathComponent:[file path]]];
+		[[NSWorkspace sharedWorkspace] openURL:[workingDirectoryURL URLByAppendingPathComponent:[file path]]];
 }
 
 - (void) ignoreFilesAction:(id) sender
@@ -244,23 +244,22 @@
 	NSArray *selectedFiles = [sender representedObject];
 	if ([selectedFiles count] == 0)
 		return;
-	NSString *workingDirectory = [[commitController.repository workingDirectory] stringByAppendingString:@"/"];
-	NSString *path = [workingDirectory stringByAppendingPathComponent:[[selectedFiles objectAtIndex:0] path]];
-	NSWorkspace *ws = [NSWorkspace sharedWorkspace];
-	[ws selectFile: path inFileViewerRootedAtPath:nil];
+	NSURL *workingDirectoryURL = commitController.repository.workingDirectoryURL;
+	NSURL *filePath = [workingDirectoryURL URLByAppendingPathComponent:[[selectedFiles objectAtIndex:0] path]];
+
+	[[NSWorkspace sharedWorkspace] activateFileViewerSelectingURLs:@[filePath]];
 }
 
 - (void)moveToTrashAction:(id)sender
 {
 	NSArray *selectedFiles = [sender representedObject];
 
-	NSString *workingDirectory = [commitController.repository workingDirectory];
-	NSURL* workDirURL = [NSURL fileURLWithPath:workingDirectory isDirectory:YES];
+	NSURL *workingDirectoryURL = commitController.repository.workingDirectoryURL;
 	
 	BOOL anyTrashed = NO;
-	for (PBChangedFile* file in selectedFiles)
+	for (PBChangedFile *file in selectedFiles)
 	{
-		NSURL* fileURL = [workDirURL URLByAppendingPathComponent:[file path]];
+		NSURL* fileURL = [workingDirectoryURL URLByAppendingPathComponent:[file path]];
 		
 		NSError* error = nil;
 		NSURL* resultURL = nil;
@@ -343,14 +342,14 @@ writeRowsWithIndexes:(NSIndexSet *)rowIndexes
 
 	// External, to drag them to for example XCode or Textmate
 	NSArrayController *controller = [tv tag] == 0 ? unstagedFilesController : stagedFilesController;
-	NSArray *files = [[controller arrangedObjects] objectsAtIndexes:rowIndexes];
-	NSString *workingDirectory = [commitController.repository workingDirectory];
+	NSArray *files = [controller.arrangedObjects objectsAtIndexes:rowIndexes];
+	NSURL *workingDirectoryURL = commitController.repository.workingDirectoryURL;
 
-	NSMutableArray *filenames = [NSMutableArray arrayWithCapacity:[rowIndexes count]];
+	NSMutableArray *URLs = [NSMutableArray arrayWithCapacity:rowIndexes.count];
 	for (PBChangedFile *file in files)
-		[filenames addObject:[workingDirectory stringByAppendingPathComponent:[file path]]];
+		[URLs addObject:[workingDirectoryURL URLByAppendingPathComponent:file.path]];
 
-	[pboard setPropertyList:filenames forType:NSFilenamesPboardType];
+	[pboard setPropertyList:URLs forType:NSURLPboardType];
     return YES;
 }
 

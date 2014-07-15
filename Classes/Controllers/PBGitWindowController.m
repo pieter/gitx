@@ -41,12 +41,7 @@
     [super synchronizeWindowTitleWithDocumentName];
 
     // Point window proxy icon at project directory, not internal .git dir
-    NSString *workingDirectory = [self.repository workingDirectory];
-	if (workingDirectory)
-	{
-		[[self window] setRepresentedURL:[NSURL fileURLWithPath:workingDirectory
-													isDirectory:YES]];
-	}
+    [[self window] setRepresentedURL:self.repository.workingDirectoryURL];
 }
 
 - (void)windowWillClose:(NSNotification *)notification
@@ -176,13 +171,13 @@
 
 - (IBAction) revealInFinder:(id)sender
 {
-	[[NSWorkspace sharedWorkspace] openFile:[repository workingDirectory]];
+	[[NSWorkspace sharedWorkspace] openURL:self.repository.workingDirectoryURL];
 }
 
 - (IBAction) openInTerminal:(id)sender
 {
 	TerminalApplication *term = [SBApplication applicationWithBundleIdentifier: @"com.apple.Terminal"];
-	NSString *workingDirectory = [[repository workingDirectory] stringByAppendingString:@"/"];
+	NSString *workingDirectory = [self.repository.workingDirectoryURL.path stringByAppendingString:@"/"];
 	NSString *cmd = [NSString stringWithFormat: @"cd \"%@\"; clear; echo '# Opened by GitX:'; git status", workingDirectory];
 	[term doScript: cmd in: nil];
 	[NSThread sleepForTimeInterval: 0.1];

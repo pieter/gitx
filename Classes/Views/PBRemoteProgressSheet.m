@@ -97,7 +97,7 @@ NSString * const kGitXProgressErrorInfo          = @"PBGitXProgressErrorInfo";
 	[PBRemoteProgressSheet beginRemoteProgressSheetForArguments:args
 														  title:theTitle
 													description:theDescription
-														  inDir:[repo workingDirectory]
+														  inDir:repo.workingDirectoryURL.path
 											   windowController:repo.windowController];
 }
 
@@ -110,7 +110,7 @@ NSString * const kGitXProgressErrorInfo          = @"PBGitXProgressErrorInfo";
 	[PBRemoteProgressSheet beginRemoteProgressSheetForArguments:args
 														  title:theTitle
 													description:theDescription
-														  inDir:[repo workingDirectory]
+														  inDir:repo.workingDirectoryURL.path
 											   windowController:repo.windowController
 											  hideSuccessScreen:hideSucc];
 }
@@ -161,8 +161,6 @@ NSString * const kGitXProgressErrorInfo          = @"PBGitXProgressErrorInfo";
 
 	[gitTask launch];
 }
-
-
 
 #pragma mark Notifications
 

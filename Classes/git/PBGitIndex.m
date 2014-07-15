@@ -56,6 +56,8 @@ NSString *PBGitIndexOperationFailed = @"PBGitIndexOperationFailed";
 
 @implementation PBGitIndex
 
+@synthesize repository=repository; /* WIP: Switch to automatic synthesize */
+
 - (id)initWithRepository:(PBGitRepository *)theRepository
 {
 	if (!(self = [super init]))
@@ -64,11 +66,8 @@ NSString *PBGitIndexOperationFailed = @"PBGitIndexOperationFailed";
 	NSAssert(theRepository, @"PBGitIndex requires a repository");
 
 	repository = theRepository;
-	NSString* workingPath = theRepository.workingDirectory;
-	if (workingPath)
-	{
-		workingDirectory = [NSURL fileURLWithPath:workingPath];
-	}
+    workingDirectory = repository.workingDirectoryURL;
+
 	files = [NSMutableArray array];
 
 	return self;
@@ -455,10 +454,10 @@ NSString *PBGitIndexOperationFailed = @"PBGitIndexOperationFailed";
 	if (file.status == NEW) {
 		NSStringEncoding encoding;
 		NSError *error = nil;
-		NSString *path = [[repository workingDirectory] stringByAppendingPathComponent:file.path];
-		NSString *contents = [NSString stringWithContentsOfFile:path
-												   usedEncoding:&encoding
-														  error:&error];
+		NSURL *fileURL = [self.repository.workingDirectoryURL URLByAppendingPathComponent:file.path];
+		NSString *contents = [NSString stringWithContentsOfURL:fileURL
+                                                  usedEncoding:&encoding
+                                                         error:&error];
 		if (error)
 			return nil;
 

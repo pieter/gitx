@@ -555,18 +555,13 @@ NSString *PBGitRepositoryDocumentType = @"Git Repository";
 		self.currentBranch = [self addBranch: [self headRef]];
 }
 
-- (NSString *) workingDirectory
+- (NSURL *)workingDirectoryURL {
+    return self.gtRepo.fileURL;
+}
+
+- (NSString *)workingDirectory
 {
-	const char* workdir = git_repository_workdir(self.gtRepo.git_repository);
-	if (workdir)
-	{
-		NSString* result = [[NSString stringWithUTF8String:workdir] stringByStandardizingPath];
-		return result;
-	}
-    else
-	{
-        return self.fileURL.path;
-	}
+    return [self.workingDirectoryURL path];
 }
 
 #pragma mark Remotes

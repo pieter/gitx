@@ -56,6 +56,7 @@ extern NSString *PBGitIndexOperationFailed;
 // Whether we want the changes for amending,
 // or for
 @property BOOL amend;
+@property (weak, readonly) PBGitRepository *repository;
 
 - (id)initWithRepository:(PBGitRepository *)repository;
 

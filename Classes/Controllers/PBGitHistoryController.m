@@ -566,27 +566,24 @@
 
 - (void)showInFinderAction:(id)sender
 {
-	NSString *workingDirectory = [[repository workingDirectory] stringByAppendingString:@"/"];
-	NSString *path;
-	NSWorkspace *ws = [NSWorkspace sharedWorkspace];
+	NSURL *workingDirectoryURL = self.repository.workingDirectoryURL;
+	NSMutableArray *URLs = [NSMutableArray array];
 
 	for (NSString *filePath in [sender representedObject]) {
-		path = [workingDirectory stringByAppendingPathComponent:filePath];
-		[ws selectFile: path inFileViewerRootedAtPath:path];
-	}
-
+		[URLs addObject:[workingDirectoryURL URLByAppendingPathComponent:filePath]];
+    }
+    [[NSWorkspace sharedWorkspace] activateFileViewerSelectingURLs:URLs];
 }
 
 - (void)openFilesAction:(id)sender
 {
-	NSString *workingDirectory = [[repository workingDirectory] stringByAppendingString:@"/"];
-	NSString *path;
-	NSWorkspace *ws = [NSWorkspace sharedWorkspace];
+	NSURL *workingDirectoryURL = self.repository.workingDirectoryURL;
+	NSMutableArray *URLs = [NSMutableArray array];
 
 	for (NSString *filePath in [sender representedObject]) {
-		path = [workingDirectory stringByAppendingPathComponent:filePath];
-		[ws openFile:path];
-	}
+        [URLs addObject:[workingDirectoryURL URLByAppendingPathComponent:filePath]];
+    }
+    [[NSWorkspace sharedWorkspace] openURLs:URLs withAppBundleIdentifier:nil options:0 additionalEventParamDescriptor:nil launchIdentifiers:NULL];
 }
 
 - (void) checkoutFiles:(id)sender
