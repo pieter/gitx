@@ -42,7 +42,17 @@ NSString *PBGitIndexOperationFailed = @"PBGitIndexOperationFailed";
 
 @end
 
-@interface PBGitIndex ()
+@interface PBGitIndex () {
+
+@private
+	__weak PBGitRepository *repository;
+	NSURL *workingDirectory;
+	NSMutableArray *files;
+
+	NSUInteger refreshStatus;
+	NSDictionary *amendEnvironment;
+	BOOL amend;
+}
 
 // Returns the tree to compare the index to, based
 // on whether amend is set or not.

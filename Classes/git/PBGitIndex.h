@@ -41,17 +41,7 @@ extern NSString *PBGitIndexOperationFailed;
 // As a single git repository can have multiple trees,
 // the tree has to be given explicitly, even though
 // multiple trees is not yet supported in GitX
-@interface PBGitIndex : NSObject {
-	
-@private
-	__weak PBGitRepository *repository;
-	NSURL *workingDirectory;
-	NSMutableArray *files;
-
-	NSUInteger refreshStatus;
-	NSDictionary *amendEnvironment;
-	BOOL amend;
-}
+@interface PBGitIndex : NSObject
 
 // Whether we want the changes for amending,
 // or for
