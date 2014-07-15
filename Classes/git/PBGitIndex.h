@@ -44,8 +44,8 @@ extern NSString *PBGitIndexOperationFailed;
 @interface PBGitIndex : NSObject
 
 // Whether we want the changes for amending,
-// or for
-@property BOOL amend;
+// or for making a new commit.
+@property (assign, readonly, getter=isAmend) BOOL amend;
 @property (weak, readonly) PBGitRepository *repository;
 
 - (id)initWithRepository:(PBGitRepository *)repository;
