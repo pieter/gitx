@@ -258,20 +258,20 @@ var showDiff = function() {
 		var renamed = false;
 		if (name1 == name2) {
 			finalFile = name1;
-			img.src = "../../images/modified.png";
+			img.src = "../../images/modified.svg";
 			img.title = "Modified file";
 			p.title = "Modified file";
 			if (mode_change)
 				p.appendChild(document.createTextNode(" mode " + old_mode + " -> " + new_mode));
 		}
 		else if (name1 == "/dev/null") {
-			img.src = "../../images/added.png";
+			img.src = "../../images/added.svg";
 			img.title = "Added file";
 			p.title = "Added file";
 			finalFile = name2;
 		}
 		else if (name2 == "/dev/null") {
-			img.src = "../../images/removed.png";
+			img.src = "../../images/removed.svg";
 			img.title = "Removed file";
 			p.title = "Removed file";
 			finalFile = name1;
@@ -280,7 +280,7 @@ var showDiff = function() {
 			renamed = true;
 		}
 		if (renamed) {
-			img.src = "../../images/renamed.png";
+			img.src = "../../images/renamed.svg";
 			img.title = "Renamed file";
 			p.title = "Renamed file";
 			finalFile = name2;

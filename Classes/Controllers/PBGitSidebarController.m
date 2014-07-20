@@ -255,9 +255,7 @@
 - (void)outlineView:(NSOutlineView *)outlineView willDisplayCell:(PBSourceViewCell *)cell forTableColumn:(NSTableColumn *)tableColumn item:(PBSourceViewItem *)item
 {
 	cell.isCheckedOut = [item.revSpecifier isEqual:[repository headRef]];
-
-    NSImage* iconImage = ([cell isHighlighted]) ? [item highlightedIcon] : [item icon];
-	[cell setImage:iconImage];
+	[cell setImage:[item icon]];
 }
 
 - (BOOL)outlineView:(NSOutlineView *)outlineView shouldSelectItem:(id)item
