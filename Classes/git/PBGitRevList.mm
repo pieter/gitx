@@ -117,6 +117,36 @@ using namespace std;
 	[self addCommitsFromEnumerator:enu inPBRepo:pbRepo];
 }
 
+- (void) addGitObject:(GTObject *)obj toCommitSet:(NSMutableSet *)set
+{
+	GTCommit *commit = nil;
+	if ([obj isKindOfClass:[GTCommit class]]) {
+		commit = (GTCommit *)obj;
+	} else {
+		NSError *peelError = nil;
+		commit = [obj objectByPeelingToType:GTObjectTypeCommit error:&peelError];
+	}
+
+	NSAssert(commit, @"Can't add nil commit to set");
+
+	for (GTCommit *item in set) {
+		if ([item.OID isEqual:commit.OID]) {
+			return;
+		}
+	}
+
+	[set addObject:commit];
+}
+
+- (void) addGitBranches:(NSArray *)branches fromRepo:(GTRepository *)repo toCommitSet:(NSMutableSet *)set
+{
+	for (GTBranch *branch in branches) {
+		NSError *objectLookupError = nil;
+		GTObject *gtObject = [repo lookUpObjectBySHA:branch.SHA error:&objectLookupError];
+		[self addGitObject:gtObject toCommitSet:set];
+	}
+}
+
 - (void) setupEnumerator:(GTEnumerator*)enumerator
 			  forRevspec:(PBGitRevSpecifier*)rev
 {
@@ -124,26 +154,19 @@ using namespace std;
 	GTRepository *repo = enumerator.repository;
 	// [enumerator resetWithOptions:GTEnumeratorOptionsTimeSort];
 	[enumerator resetWithOptions:GTEnumeratorOptionsTopologicalSort];
-	NSMutableArray *enumBranches = [NSMutableArray new];
-	NSMutableArray *enumTagCommits = [NSMutableArray new];
+	NSMutableSet *enumCommits = [NSMutableSet new];
 	if (rev.isSimpleRef) {
 		GTObject *object = [repo lookUpObjectByRevParse:rev.simpleRef error:&error];
-		if ([object isKindOfClass:[GTCommit class]]) {
-			[enumerator pushSHA:object.SHA error:&error];
-		}
+		[self addGitObject:object toCommitSet:enumCommits];
 	} else {
 		NSArray *allRefs = [repo referenceNamesWithError:&error];
 		for (NSString *param in rev.parameters) {
 			if ([param isEqualToString:@"--branches"]) {
 				NSArray *branches = [repo localBranchesWithError:&error];
-				for (GTBranch *branch in branches) {
-					[enumBranches addObject:branch];
-				}
+				[self addGitBranches:branches fromRepo:repo toCommitSet:enumCommits];
 			} else if ([param isEqualToString:@"--remotes"]) {
 				NSArray *branches = [repo remoteBranchesWithError:&error];
-				for (GTBranch *branch in branches) {
-					[enumBranches addObject:branch];
-				}
+				[self addGitBranches:branches fromRepo:repo toCommitSet:enumCommits];
 			} else if ([param isEqualToString:@"--tags"]) {
 				for (NSString *ref in allRefs) {
 					if ([ref hasPrefix:@"refs/tags/"]) {
@@ -158,7 +181,7 @@ using namespace std;
 
 						if ([commit isKindOfClass:[GTCommit class]])
 						{
-							[enumTagCommits addObject:commit];
+							[self addGitObject:commit toCommitSet:enumCommits];
 						}
 					}
 				}
@@ -170,15 +193,7 @@ using namespace std;
 		}
 	}
 
-	NSMutableArray *branchAndTagCommits = [NSMutableArray arrayWithArray:enumTagCommits];
-	for (GTBranch *branch in enumBranches) {
-		NSError *objectLookupError = nil;
-		GTObject *gtObject = [repo lookUpObjectBySHA:branch.SHA error:&objectLookupError];
-		if ([gtObject isKindOfClass:[GTCommit class]]) {
-			[branchAndTagCommits addObject:gtObject];
-		}
-	}
-	NSArray *sortedBranchesAndTags = [branchAndTagCommits sortedArrayWithOptions:NSSortStable usingComparator:^NSComparisonResult(id obj1, id obj2) {
+	NSArray *sortedBranchesAndTags = [[enumCommits allObjects] sortedArrayWithOptions:NSSortStable usingComparator:^NSComparisonResult(id obj1, id obj2) {
 		GTCommit *branchCommit1 = obj1;
 		GTCommit *branchCommit2 = obj2;
 
@@ -196,11 +211,9 @@ using namespace std;
 - (void) addCommitsFromEnumerator:(GTEnumerator *)enumerator
 						 inPBRepo:(PBGitRepository*)pbRepo;
 {
-	NSError *error = nil;
 	PBGitGrapher *g = [[PBGitGrapher alloc] initWithRepository:pbRepo];
 	__block NSDate *lastUpdate = [NSDate date];
-	NSThread *currentThread = [NSThread currentThread];
-	
+
 	dispatch_queue_t loadQueue = dispatch_queue_create("net.phere.gitx.loadQueue", 0);
 	dispatch_queue_t decorateQueue = dispatch_queue_create("net.phere.gitx.decorateQueue", 0);
 	dispatch_group_t loadGroup = dispatch_group_create();
@@ -210,7 +223,8 @@ using namespace std;
 	GTCommit *commit = nil;
 	__block int num = 0;
 	__block NSMutableArray *revisions = [NSMutableArray array];
-	while ((commit = [enumerator nextObjectWithSuccess:&enumSuccess error:&error]) && enumSuccess) {
+	NSError *enumError = nil;
+	while ((commit = [enumerator nextObjectWithSuccess:&enumSuccess error:&enumError]) && enumSuccess) {
 		//GTOID *oid = [[GTOID alloc] initWithSHA:commit.sha];
 		
 		dispatch_group_async(loadGroup, loadQueue, ^{
@@ -242,6 +256,8 @@ using namespace std;
 			}
 		});
 	}
+
+	NSAssert(!enumError, @"Error enumerating commits");
 	
 	dispatch_group_wait(loadGroup, DISPATCH_TIME_FOREVER);
 	dispatch_group_wait(decorateGroup, DISPATCH_TIME_FOREVER);
