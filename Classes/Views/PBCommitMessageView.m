@@ -7,7 +7,9 @@
 //
 
 #import "PBCommitMessageView.h"
+
 #import "PBGitDefaults.h"
+#import "PBGitRepository.h"
 
 @implementation PBCommitMessageView
 
@@ -68,6 +70,25 @@
         line.size.height = textViewHeight;
         NSRectFill(line);
     }
+}
+
+- (BOOL)performDragOperation:(id <NSDraggingInfo>)sender
+{
+    NSPasteboard *pboard = [sender draggingPasteboard];
+
+    if ( [[pboard types] containsObject:NSURLPboardType] ) {
+        NSString *droppedPath = [[NSURL URLFromPasteboard:pboard] path];
+		NSString *baseDir = [self.repository.workingDirectory stringByAppendingString:@"/"];
+		if (baseDir && [droppedPath hasPrefix:baseDir]) {
+			NSString *relativePath = [droppedPath substringFromIndex:(baseDir.length)];
+			if (relativePath.length) {
+				[pboard clearContents];
+				[pboard setString:relativePath forType:NSPasteboardTypeString];
+			}
+
+		}
+    }
+	return [super performDragOperation:sender];
 }
 
 @end
