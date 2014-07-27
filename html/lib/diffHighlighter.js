@@ -55,6 +55,7 @@ var highlightDiff = function(diff, element, callbacks) {
 	var mode_change = false;
 	var old_mode = "";
 	var new_mode = "";
+    var linkToTop = "<div class=\"top-link\"><a href=\"#\">Top</a></div>";
 
 	var hunk_start_line_1 = -1;
 	var hunk_start_line_2 = -1;
@@ -115,7 +116,7 @@ var highlightDiff = function(diff, element, callbacks) {
 		}
 
 		if (diffContent != "" || binary)
-			finalContent += '</div>';
+			finalContent += '</div>' + linkToTop;
 
 		line1 = "";
 		line2 = "";
