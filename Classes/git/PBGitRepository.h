@@ -43,13 +43,13 @@ static NSString * PBStringFromBranchFilterType(PBGitXBranchFilterType type) {
 
 @class PBGitWindowController;
 @class PBGitCommit;
-@class PBGitSHA;
+@class GTOID;
 @class PBGitRepositoryWatcher;
 
 @interface PBGitRepository : NSDocument {
 	__strong PBGitRepositoryWatcher *watcher;
 	__strong PBGitRevSpecifier *_headRef; // Caching
-	__strong PBGitSHA* _headSha;
+	__strong GTOID* _headSha;
 	__strong GTRepository* _gtRepo;
 }
 
@@ -112,13 +112,13 @@ static NSString * PBStringFromBranchFilterType(PBGitXBranchFilterType type) {
 - (void) reloadRefs;
 - (void) lazyReload;
 - (PBGitRevSpecifier*)headRef;
-- (PBGitSHA *)headSHA;
+- (GTOID *)headSHA;
 - (PBGitCommit *)headCommit;
-- (PBGitSHA *)shaForRef:(PBGitRef *)ref;
+- (GTOID *)shaForRef:(PBGitRef *)ref;
 - (PBGitCommit *)commitForRef:(PBGitRef *)ref;
-- (PBGitCommit *)commitForSHA:(PBGitSHA *)sha;
-- (BOOL)isOnSameBranch:(PBGitSHA *)baseSHA asSHA:(PBGitSHA *)testSHA;
-- (BOOL)isSHAOnHeadBranch:(PBGitSHA *)testSHA;
+- (PBGitCommit *)commitForSHA:(GTOID *)sha;
+- (BOOL)isOnSameBranch:(GTOID *)baseSHA asSHA:(GTOID *)testSHA;
+- (BOOL)isSHAOnHeadBranch:(GTOID *)testSHA;
 - (BOOL)isRefOnHeadBranch:(PBGitRef *)testRef;
 - (BOOL)checkRefFormat:(NSString *)refName;
 - (BOOL)refExists:(PBGitRef *)ref;

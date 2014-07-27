@@ -59,7 +59,7 @@
         NSRectFill(line);
 
         // and one for the body of the commit message
-        lineWidth = lineWidth = characterWidth * [PBGitDefaults commitMessageViewVerticalBodyLineLength];
+        lineWidth = characterWidth * [PBGitDefaults commitMessageViewVerticalBodyLineLength];
         [[NSColor darkGrayColor] set];
         padding = [[self textContainer] lineFragmentPadding];
         line.origin.x = padding + lineWidth;

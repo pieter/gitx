@@ -15,8 +15,8 @@ signing_key = "Developer ID Application: Rowan James"
 
 artifact_prefix = "%s-%s" % (app, label)
 workspace = "%s.xcodeproj/project.xcworkspace" % (app,)
-debug_configuration = "Debug"
-release_configuration = "Release"
+debug_scheme = "Debug"
+release_scheme = "Release"
 agvtool = "xcrun agvtool"
 release_branch = "master"
 
@@ -25,7 +25,6 @@ release_notes_file = os.path.join('updates', 'GitX-dev.html')
 updates_signing_key_file = os.path.expanduser(os.path.join('~', 'Documents', 'gitx-updates.key'))
 updates_appcast_file = 'GitX-dev.xml'
 
-configuration = ""
 clean = ""
 pause = 3
 
@@ -37,8 +36,8 @@ class BuildError(RuntimeError):
 
 
 def clean():
-    clean_config(debug_configuration)
-    clean_config(release_configuration)
+    clean_scheme(debug_scheme)
+    clean_scheme(release_scheme)
 
 
 def release():
@@ -48,9 +47,9 @@ def release():
         build_number = commit_count()
         set_versions(base_version, build_number, "dev")
 
-        build_config(release_configuration)
+        build_scheme(release_scheme)
 
-        build_dir = os.path.join(build_base_dir, release_configuration)
+        build_dir = os.path.join(build_base_dir, release_scheme)
         built_product = os.path.join(build_dir, product)
         sign_app(built_product)
 
@@ -66,7 +65,7 @@ def release():
 
 def debug():
     try:
-        build_config(debug_configuration)
+        build_scheme(debug_scheme)
 
     except BuildError as e:
         print("error: %s" % (str(e),))
@@ -100,11 +99,11 @@ def prepare_release(build_number, image_source_path):
     shutil.copyfile(release_notes_file, publish_release_notes_version_file)
 
 
-@argh.arg("configuration", choices=['debug', 'release'])
-def build(configuration):
-    if configuration == "debug":
+@argh.arg("scheme", choices=['debug', 'release'])
+def build(scheme):
+    if scheme == "debug":
         debug()
-    if configuration == "release":
+    if scheme == "release":
         release()
 
 
@@ -120,14 +119,14 @@ def assert_branch(branch="master"):
         raise BuildError("HEAD must be %s, but is %s" % (branch, ref))
 
 
-def build_config(config):
-    build_dir = os.path.join(build_base_dir, config)
-    xcodebuild(app, workspace, config, ["build"], build_dir)
+def build_scheme(scheme):
+    build_dir = os.path.join(build_base_dir, scheme)
+    xcodebuild(scheme, workspace, ["build"], build_dir)
 
 
-def clean_config(config):
-    build_dir = os.path.join(build_base_dir, config)
-    xcodebuild(app, workspace, config, ["clean"], build_dir)
+def clean_scheme(scheme):
+    build_dir = os.path.join(build_base_dir, scheme)
+    xcodebuild(scheme, workspace, ["clean"], build_dir)
 
 
 def commit_count():
@@ -144,8 +143,8 @@ def set_versions(base_version, build_number, label):
     subprocess.check_call(["agvtool", "new-version", "-all", build_version])
 
 
-def xcodebuild(scheme, workspace, configuration, commands, build_dir):
-    cmd = ["xcrun", "xcodebuild", "-scheme", scheme, "-workspace", workspace, "-configuration", configuration]
+def xcodebuild(scheme, workspace, commands, build_dir):
+    cmd = ["xcrun", "xcodebuild", "-scheme", scheme, "-workspace", workspace]
     cmd = cmd + commands
     cmd.append('CONFIGURATION_BUILD_DIR=%s' % (build_dir))
     try:
