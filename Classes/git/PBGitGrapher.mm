@@ -23,13 +23,12 @@
 using namespace std;
 typedef std::vector<PBGitLane *> LaneCollection;
 
-@interface PBGitGrapher () {
-	int _laneIndex;
-}
+@interface PBGitGrapher ()
 
 @property (nonatomic, strong) PBGraphCellInfo *previous;
 @property (nonatomic, assign) LaneCollection *pl;
 @property (nonatomic, assign) int curLane;
+@property (nonatomic, assign) int laneIndex;
 
 @end
 
@@ -43,7 +42,6 @@ typedef std::vector<PBGitLane *> LaneCollection;
 	}
 	
 	self.pl = new LaneCollection;
-	_laneIndex = 0;
 	
 	return self;
 }
@@ -113,7 +111,7 @@ void add_line(struct PBGitGraphLine *lines, int *nLines, int upper, int from, in
 	// If we already did the first parent, don't do so again
 	if (!didFirst && nParents) {
 		const git_oid *parentOID = [(GTOID*)[parents objectAtIndex:0] git_oid];
-		PBGitLane *newLane = new PBGitLane(parentOID);
+		PBGitLane *newLane = new PBGitLane(_laneIndex++, parentOID);
 		currentLanes->push_back(newLane);
 		newPos = currentLanes->size();
 		add_line(lines, &currentLine, 0, newPos, newPos, newLane->index());
@@ -144,7 +142,7 @@ void add_line(struct PBGitGraphLine *lines, int *nLines, int upper, int from, in
 		
 		// Really add this parent
 		addedParent = YES;
-		PBGitLane *newLane = new PBGitLane(parentOID);
+		PBGitLane *newLane = new PBGitLane(_laneIndex++, parentOID);
 		currentLanes->push_back(newLane);
 		add_line(lines, &currentLine, 0, currentLanes->size(), newPos, newLane->index());
 	}

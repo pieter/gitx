@@ -19,9 +19,10 @@ public:
 		d_sha = *sha;
 	}
 
-	PBGitLane(int index, NSString *sha) : d_index(index)
+	PBGitLane(int index, const git_oid *sha)
+	: d_index(index)
 	{
-		git_oid_fromstr(&d_sha, [sha UTF8String]);
+		git_oid_cpy(&d_sha, sha);
 	}
 	
 	bool isCommit(const git_oid *sha) const
