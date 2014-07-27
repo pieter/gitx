@@ -6,7 +6,6 @@
 //  Copyright 2008 __MyCompanyName__. All rights reserved.
 //
 
-#import "PBGitSHA.h"
 #import "PBGitCommit.h"
 #import "PBGitTree.h"
 #import "PBGitRef.h"
@@ -488,7 +487,7 @@
     commitList.useAdjustScroll = NO;
 }
 
-- (NSArray *) selectedObjectsForSHA:(PBGitSHA *)commitSHA
+- (NSArray *) selectedObjectsForSHA:(GTOID *)commitSHA
 {
 	NSPredicate *selection = [NSPredicate predicateWithFormat:@"sha == %@", commitSHA];
 	NSArray *selectedCommits = [[commitController content] filteredArrayUsingPredicate:selection];
@@ -499,7 +498,7 @@
 	return selectedCommits;
 }
 
-- (void)selectCommit:(PBGitSHA *)commitSHA
+- (void)selectCommit:(GTOID *)commitSHA
 {
 	if (!forceSelectionUpdate && [[[[commitController selectedObjects] lastObject] sha] isEqual:commitSHA])
 		return;

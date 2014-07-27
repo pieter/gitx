@@ -16,7 +16,6 @@
 #import "PBEasyPipe.h"
 #import "PBGitBinary.h"
 #import "PBGitCommit.h"
-#import "PBGitSHA.h"
 
 @interface PBHistorySearchController ()
 
@@ -448,7 +447,7 @@
 	for (NSString *resultSHA in resultsArray) {
 		NSUInteger index = 0;
 		for (PBGitCommit *commit in [commitController arrangedObjects]) {
-			if ([resultSHA isEqualToString:commit.sha.string]) {
+			if ([resultSHA isEqualToString:commit.sha.SHA]) {
 				[indexes addIndex:index];
 				break;
 			}

@@ -14,7 +14,7 @@ class PBGitLane {
 
 public:
 
-	PBGitLane(int index, git_oid *sha) : d_index(index)
+	PBGitLane(const git_oid *sha)
 	{
 		d_sha = *sha;
 	}
@@ -24,12 +24,12 @@ public:
 		git_oid_fromstr(&d_sha, [sha UTF8String]);
 	}
 	
-	bool isCommit(git_oid sha) const
+	bool isCommit(const git_oid *sha) const
 	{
-		return !git_oid_cmp(&d_sha, &sha);
+		return !git_oid_cmp(&d_sha, sha);
 	}
 	
-	void setSha(git_oid sha);
+	void setSha(const git_oid *sha);
 	
 	git_oid const *sha() const
 	{
