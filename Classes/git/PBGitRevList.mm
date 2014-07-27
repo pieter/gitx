@@ -189,7 +189,13 @@ using namespace std;
 			} else if ([param hasPrefix:@"--glob="]) {
 				[enumerator pushGlob:[param substringFromIndex:@"--glob=".length] error:&error];
 			} else {
-				[enumerator pushGlob:param error:&error];
+				NSError *lookupError = nil;
+				GTObject *obj = [repo lookUpObjectByRevParse:param error:&lookupError];
+				if (obj && !lookupError) {
+					[self addGitObject:obj toCommitSet:enumCommits];
+				} else {
+					[enumerator pushGlob:param error:&error];
+				}
 			}
 		}
 	}
