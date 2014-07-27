@@ -465,30 +465,27 @@ var inlinediff = (function () {
     ];
   }
 
-  function hasProp(obj, x) {
-    return Object.prototype.hasOwnProperty.call(obj, x);
-  }
-
   function diff( o, n ) {
-    var ns = new Object();
-    var os = new Object();
+    var ns = {}, os = {}, k = null, i = 0;
     
     for ( var i = 0; i < n.length; i++ ) {
-      if ( ! hasProp(ns, n[i]) )
-        ns[ n[i] ] = { rows: new Array(), o: null };
-      ns[ n[i] ].rows.push( i );
+      k = '"' + n[i]; // prefix keys with a quote to not collide with Object's internal keys, e.g. '__proto__' or 'constructor'
+      if ( ns[k] === undefined )
+        ns[k] = { rows: [], o: null };
+      ns[k].rows.push( i );
     }
     
     for ( var i = 0; i < o.length; i++ ) {
-      if ( ! hasProp(os, o[i]) )
-        os[ o[i] ] = { rows: new Array(), n: null };
-      os[ o[i] ].rows.push( i );
+      k = '"' + o[i]
+      if ( os[k] === undefined )
+        os[k] = { rows: [], n: null };
+      os[k].rows.push( i );
     }
     
-    for ( var i in ns ) {
-      if ( ns[i].rows.length == 1 && hasProp(os, i) && os[i].rows.length == 1 ) {
-        n[ ns[i].rows[0] ] = { text: n[ ns[i].rows[0] ], row: os[i].rows[0] };
-        o[ os[i].rows[0] ] = { text: o[ os[i].rows[0] ], row: ns[i].rows[0] };
+    for ( var k in ns ) {
+      if ( ns[k].rows.length == 1 && os[k] !== undefined && os[k].rows.length == 1 ) {
+        n[ ns[k].rows[0] ] = { text: n[ ns[k].rows[0] ], row: os[k].rows[0] };
+        o[ os[k].rows[0] ] = { text: o[ os[k].rows[0] ], row: ns[k].rows[0] };
       }
     }
     
