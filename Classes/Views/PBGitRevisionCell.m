@@ -8,7 +8,6 @@
 
 #import "PBGitRevisionCell.h"
 #import "PBGitRef.h"
-#import "PBGitSHA.h"
 #import "PBGitCommit.h"
 #import "PBGitRevSpecifier.h"
 #import "RoundedRectangle.h"
@@ -107,10 +106,10 @@ const BOOL SHUFFLE_COLORS = NO;
 
 - (BOOL) isCurrentCommit
 {
-	PBGitSHA *thisSha = [self.objectValue sha];
+	GTOID *thisSha = [self.objectValue sha];
 
 	PBGitRepository* repository = [self.objectValue repository];
-	PBGitSHA *currentSha = [repository headSHA];
+	GTOID *currentSha = [repository headSHA];
 
 	return [currentSha isEqual:thisSha];
 }

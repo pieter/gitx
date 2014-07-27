@@ -9,7 +9,6 @@
 #import "PBGitRepository.h"
 #import "PBGitCommit.h"
 #import "PBGitTree.h"
-#import "PBGitSHA.h"
 #import "PBGitRef.h"
 #import "PBGitDefaults.h"
 
@@ -22,7 +21,7 @@ NSString * const kGitXCommitType = @"commit";
 @property (nonatomic, strong) NSArray *parents;
 
 @property (nonatomic, strong) NSString *patch;
-@property (nonatomic, strong) PBGitSHA *sha;
+@property (nonatomic, strong) GTOID *sha;
 
 @end
 
@@ -65,7 +64,7 @@ NSString * const kGitXCommitType = @"commit";
 		NSArray *gtParents = self.gtCommit.parents;
 		NSMutableArray *parents = [NSMutableArray arrayWithCapacity:gtParents.count];
 		for (GTCommit *parent in gtParents) {
-			[parents addObject:[PBGitSHA shaWithString:parent.SHA]];
+			[parents addObject:parent.OID];
 		}
 		self.parents = parents;
 	}
@@ -114,16 +113,9 @@ NSString * const kGitXCommitType = @"commit";
 	return result;
 }
 
-- (PBGitSHA *)sha
+- (GTOID *)sha
 {
-	if (!self->_sha) {
-		const git_oid *oid = self.gtCommit.OID.git_oid;
-		if (oid) {
-			PBGitSHA *newSha = [PBGitSHA shaWithOID:oid];
-			self.sha = newSha;
-		}
-	}
-	return self->_sha;
+    return self.gtCommit.OID;
 }
 
 - (NSString *)realSha

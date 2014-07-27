@@ -13,7 +13,7 @@ int PBGitLane::index() const
 	return d_index;
 }
 
-void PBGitLane::setSha(git_oid sha)
+void PBGitLane::setSha(const git_oid *sha)
 {
-	d_sha = sha;
+	d_sha = *sha;
 }

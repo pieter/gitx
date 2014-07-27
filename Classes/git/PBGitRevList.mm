@@ -20,6 +20,7 @@
 #import <iostream>
 #import <string>
 #import <map>
+#import <ObjectiveGit/GTOID.h>
 
 using namespace std;
 
