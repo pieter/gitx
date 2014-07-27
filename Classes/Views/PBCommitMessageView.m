@@ -76,16 +76,23 @@
 {
     NSPasteboard *pboard = [sender draggingPasteboard];
 
-    if ( [[pboard types] containsObject:NSURLPboardType] ) {
-        NSString *droppedPath = [[NSURL URLFromPasteboard:pboard] path];
+    if ( [[pboard types] containsObject:NSFilenamesPboardType] ) {
+		NSArray *filenames = [pboard propertyListForType:NSFilenamesPboardType];
 		NSString *baseDir = [self.repository.workingDirectory stringByAppendingString:@"/"];
-		if (baseDir && [droppedPath hasPrefix:baseDir]) {
-			NSString *relativePath = [droppedPath substringFromIndex:(baseDir.length)];
-			if (relativePath.length) {
-				[pboard clearContents];
-				[pboard setString:relativePath forType:NSPasteboardTypeString];
+		if (baseDir) {
+			NSMutableArray *relativeNames = [NSMutableArray new];
+			for (NSString *filename in filenames) {
+				if ([filename hasPrefix:baseDir]) {
+					NSString *relativeName = [filename substringFromIndex:(baseDir.length)];
+					if (relativeName.length) {
+						[relativeNames addObject:relativeName];
+						continue;
+					}
+				}
+				[relativeNames addObject:filename];
 			}
-
+			[pboard clearContents];
+			[pboard writeObjects:relativeNames];
 		}
     }
 	return [super performDragOperation:sender];
