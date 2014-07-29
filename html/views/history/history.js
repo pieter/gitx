@@ -240,7 +240,7 @@ var formatRenameDiff = function(d) {
     if (o === "" && n === "" && s === "") {
         return p;
     }
-    return [p, "{ ", o, " -> ", n, " }", s].join("");
+    return [p, "{ ", o, " → ", n, " }", s].join("");
 };
 
 var showDiff = function() {
@@ -262,7 +262,7 @@ var showDiff = function() {
 			img.title = "Modified file";
 			p.title = "Modified file";
 			if (mode_change)
-				p.appendChild(document.createTextNode(" mode " + old_mode + " -> " + new_mode));
+				p.appendChild(document.createTextNode(" mode " + old_mode + " → " + new_mode));
 		}
 		else if (name1 == "/dev/null") {
 			img.src = "../../images/added.svg";
