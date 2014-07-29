@@ -110,7 +110,7 @@
 	else
 		title = self.description;
 	
-	return [NSString stringWithFormat:@"\"%@\"", title];
+	return [NSString stringWithFormat:@"“%@”", title];
 }
 
 - (BOOL) hasPathLimiter;
