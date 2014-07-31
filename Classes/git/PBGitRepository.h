@@ -94,6 +94,7 @@ static NSString * PBStringFromBranchFilterType(PBGitXBranchFilterType type) {
 - (BOOL) stashSave;
 - (BOOL) stashSaveWithKeepIndex:(BOOL)keepIndex;
 
+- (BOOL)updateReference:(PBGitRef *)ref toPointAtCommit:(PBGitCommit *)newCommit;
 - (NSString *)performDiff:(PBGitCommit *)startCommit against:(PBGitCommit *)diffCommit forFiles:(NSArray *)filePaths;
 
 - (NSURL *) gitURL ;

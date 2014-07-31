@@ -950,6 +950,14 @@
 	return YES;
 }
 
+- (BOOL)updateReference:(PBGitRef *)ref toPointAtCommit:(PBGitCommit *)newCommit {
+	int retValue = 1;
+
+	[self outputForArguments:@[@"update-ref", @"-mUpdate from GitX", ref.ref, newCommit.SHA] retValue:&retValue];
+
+	return retValue;
+}
+
 #pragma mark low level
 
 - (int) returnValueForCommand:(NSString *)cmd

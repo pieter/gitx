@@ -424,10 +424,7 @@
 	if (!ref || ! oldCommit || !dropCommit)
 		return;
 
-	int retValue = 1;
-	[historyController.repository outputForArguments:[NSArray arrayWithObjects:@"update-ref", @"-mUpdate from GitX", ref.ref, dropCommit.SHA, NULL] retValue:&retValue];
-	if (retValue)
-		return;
+	if (![historyController.repository updateReference:ref toPointAtCommit:dropCommit])
 
 	[dropCommit addRef:ref];
 	[oldCommit removeRef:ref];
