@@ -895,6 +895,36 @@
 	return YES;
 }
 
+- (NSString *)performDiff:(PBGitCommit *)startCommit against:(PBGitCommit *)diffCommit forFiles:(NSArray *)filePaths {
+	NSParameterAssert(startCommit);
+	NSAssert(startCommit.repository == self, @"Different repo");
+
+	if (diffCommit) {
+		NSAssert(diffCommit.repository == self, @"Different repo");
+	} else {
+		diffCommit = [self headCommit];
+	}
+
+	NSString *commitSelector = [NSString stringWithFormat:@"%@..%@", startCommit.SHA, diffCommit.SHA];
+	NSMutableArray *arguments = [NSMutableArray arrayWithObjects:@"diff", @"--no-ext-diff", commitSelector, nil];
+
+	if (![PBGitDefaults showWhitespaceDifferences])
+		[arguments insertObject:@"-w" atIndex:1];
+
+	if (filePaths) {
+		[arguments addObject:@"--"];
+		[arguments addObjectsFromArray:filePaths];
+	}
+
+	int retValue;
+	NSString *diff = [startCommit.repository outputInWorkdirForArguments:arguments retValue:&retValue];
+	if (retValue) {
+		NSLog(@"diff failed with retValue: %d   for command: '%@'    output: '%@'", retValue, [arguments componentsJoinedByString:@" "], diff);
+		return @"";
+	}
+	return diff;
+}
+
 - (BOOL) deleteRef:(PBGitRef *)ref
 {
 	if (!ref)

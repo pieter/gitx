@@ -94,6 +94,8 @@ static NSString * PBStringFromBranchFilterType(PBGitXBranchFilterType type) {
 - (BOOL) stashSave;
 - (BOOL) stashSaveWithKeepIndex:(BOOL)keepIndex;
 
+- (NSString *)performDiff:(PBGitCommit *)startCommit against:(PBGitCommit *)diffCommit forFiles:(NSArray *)filePaths;
+
 - (NSURL *) gitURL ;
 
 - (NSFileHandle*) handleForCommand:(NSString*) cmd GITX_DEPRECATED;

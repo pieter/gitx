@@ -214,7 +214,9 @@
 - (void) diffWithHEAD:(PBRefMenuItem *)sender
 {
 	PBGitCommit *commit = [self commitsForMenuItem:sender].firstObject;
-	[PBDiffWindowController showDiffWindowWithFiles:nil fromCommit:commit diffCommit:nil];
+	NSString *diff = [historyController.repository performDiff:commit against:nil forFiles:nil];
+
+	[PBDiffWindowController showDiff:diff];
 }
 
 #pragma mark Stash
