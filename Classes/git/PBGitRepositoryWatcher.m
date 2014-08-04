@@ -250,23 +250,11 @@ void PBGitRepositoryWatcherCallback(ConstFSEventStreamRef streamRef,
 		}
 		int statusError = git_status_file(&fileStatus, self.repository.gtRepo.git_repository, eventRepoRelativePath.UTF8String);
 		if (statusError == GIT_OK) {
-			// grab the cached status value and update the cache
-			NSNumber *oldStatus = self.statusCache[eventPath.path];
 			NSNumber *newStatus = @(fileStatus);
 			self.statusCache[eventPath.path] = newStatus;
 
-			BOOL addToChanges = NO;
-			if (![oldStatus isEqualTo:newStatus]) {
-				addToChanges = YES; // status has changed
-			}
-			if (fileStatus & GIT_STATUS_WT_MODIFIED) {
-				addToChanges = YES; // file has changed, and we were already tracking modified
-			}
-			if (addToChanges) {
-				[paths addObject:eventPath.path];
-				event |= PBGitRepositoryWatcherEventTypeWorkingDirectory;
-			}
-
+			[paths addObject:eventPath.path];
+			event |= PBGitRepositoryWatcherEventTypeWorkingDirectory;
 		}
 	}
 
