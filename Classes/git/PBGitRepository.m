@@ -638,6 +638,7 @@ NSString *PBGitRepositoryDocumentType = @"Git Repository";
         if ([stash.ref isEqualToRef:ref]) {
             found = stash;
             stop = YES;
+			(void)stop;
         }
 	}];
     return found;
