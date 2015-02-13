@@ -171,11 +171,12 @@
 	// delete ref
 	[items addObject:[PBRefMenuItem separatorItem]];
 	{
+		BOOL isStash = [[ref ref] hasPrefix:@"refs/stash"];
 		NSString *deleteTitle = [NSString stringWithFormat:@"Delete %@…", targetRefName];
 		if ([ref isRemote]) {
 			deleteTitle = [NSString stringWithFormat:@"Remove %@…", targetRefName];
 		}
-		BOOL deleteEnabled = !(isDetachedHead || isHead);
+		BOOL deleteEnabled = !(isDetachedHead || isHead || isStash);
 		PBRefMenuItem *deleteItem = [PBRefMenuItem itemWithTitle:deleteTitle action:@selector(showDeleteRefSheet:) enabled:deleteEnabled];
 		[items addObject:deleteItem];
 	}
