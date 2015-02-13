@@ -333,6 +333,11 @@ NSString *PBGitRepositoryDocumentType = @"Git Repository";
 	
 	NSError* error = nil;
 	NSArray* allRefs = [self.gtRepo referenceNamesWithError:&error];
+
+	if ([self.gtRepo isHEADDetached]) {
+		// Add HEAD when we're detached
+		allRefs = [allRefs arrayByAddingObject:@"HEAD"];
+	}
 	
 	// load all named refs
 	NSMutableOrderedSet *oldBranches = [self.branchesSet mutableCopy];
