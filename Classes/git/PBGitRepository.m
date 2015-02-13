@@ -620,7 +620,7 @@ NSString *PBGitRepositoryDocumentType = @"Git Repository";
 
 #pragma mark Stashes
 
-- (NSArray *) stashes
+- (NSArray *)stashes
 {
 	NSMutableArray *stashes = [NSMutableArray array];
 	[self.gtRepo enumerateStashesUsingBlock:^(NSUInteger index, NSString *message, GTOID *oid, BOOL *stop) {
@@ -643,7 +643,7 @@ NSString *PBGitRepositoryDocumentType = @"Git Repository";
     return found;
 }
 
--(BOOL)stashRunCommand:(NSString *)command withStash:(PBGitStash *)stash
+- (BOOL)stashRunCommand:(NSString *)command withStash:(PBGitStash *)stash
 {
     int retValue;
     NSArray *arguments = @[@"stash", command, stash.ref.refishName];
@@ -658,27 +658,27 @@ NSString *PBGitRepositoryDocumentType = @"Git Repository";
     return retValue ? NO : YES;
 }
 
--(BOOL)stashPop:(PBGitStash *)stash
+- (BOOL)stashPop:(PBGitStash *)stash
 {
     return [self stashRunCommand:@"pop" withStash:stash];
 }
 
--(BOOL)stashApply:(PBGitStash *)stash
+- (BOOL)stashApply:(PBGitStash *)stash
 {
     return [self stashRunCommand:@"apply" withStash:stash];
 }
 
--(BOOL)stashDrop:(PBGitStash *)stash
+- (BOOL)stashDrop:(PBGitStash *)stash
 {
     return [self stashRunCommand:@"drop" withStash:stash];
 }
 
--(BOOL)stashSave
+- (BOOL)stashSave
 {
     return [self stashSaveWithKeepIndex:NO];
 }
 
--(BOOL)stashSaveWithKeepIndex:(BOOL)keepIndex
+- (BOOL)stashSaveWithKeepIndex:(BOOL)keepIndex
 {
     int retValue;
     NSArray * arguments = @[@"stash", @"save", keepIndex?@"--keep-index":@"--no-keep-index"];

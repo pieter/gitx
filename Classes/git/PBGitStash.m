@@ -35,12 +35,12 @@
     return self;
 }
 
--(NSString *)description
+- (NSString *)description
 {
     return [NSString stringWithFormat:@"stash@{%zd}: %@", _index, _message];
 }
 
--(PBGitRef *)ref
+- (PBGitRef *)ref
 {
     NSString * refStr = [NSString stringWithFormat:@"refs/stash@{%zd}", _index];
     return [[PBGitRef alloc] initWithString:refStr];
