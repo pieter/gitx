@@ -38,6 +38,7 @@
 	[self.view setUIDelegate:self];
 	[self.view setFrameLoadDelegate:self];
 	[self.view setResourceLoadDelegate:self];
+	[self.view.preferences setDefaultFontSize:[NSFont systemFontSize]];
 	[self.view.mainFrame loadRequest:request];
 }
 
