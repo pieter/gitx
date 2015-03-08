@@ -10,7 +10,6 @@
 #import <WebKit/WebKit.h>
 
 @interface PBWebController : NSObject {
-	__weak IBOutlet WebView* view;
 	NSString *startFile;
 	BOOL finishedLoading;
 
@@ -21,6 +20,7 @@
 	__weak IBOutlet id repository;
 }
 
+@property (weak) IBOutlet WebView *view;
 @property  NSString *startFile;
 @property (weak) id repository;
 
