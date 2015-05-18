@@ -277,8 +277,8 @@ var findsubhunk = function(start) {
 var deselect = function() {
 	var selection = document.getElementById("selected");
 	if (selection) {
-		while (selection.childNodes[1])
-			selection.parentNode.insertBefore(selection.childNodes[1], selection);
+		while (selection.childNodes[2])
+			selection.parentNode.insertBefore(selection.childNodes[2], selection);
 		selection.parentNode.removeChild(selection);
 	}
 }
@@ -457,19 +457,34 @@ var showSelection = function(file, from, to, trust)
 				   (elementList.length > 1?"s":"")));
 	button.setAttribute("class","hunkbutton");
 	button.setAttribute("id","stagelines");
+	var copy_button = document.createElement('a');
+	copy_button.setAttribute("href","#");
+	copy_button.appendChild(document.createTextNode("Copy"));
+	copy_button.setAttribute("class","hunkbutton");
+	copy_button.setAttribute("id","copylines");
 
 	if (sel.good) {
 		button.setAttribute('onclick','stageLines('+
 				    (originalCached?'true':'false')+
 				    '); return false;');
+		copy_button.setAttribute('onclick','copy(); return false;');
 	} else {
 		button.setAttribute("class","disabled");
+		copy_button.setAttribute("class","disabled");
 	}
 	selection.appendChild(button);
+	selection.appendChild(copy_button);
 
 	file.insertBefore(selection, from);
 	for (i = 0; i < elementList.length; i++)
 		selection.appendChild(elementList[i]);
+}
+
+var copy = function()
+{
+	var selection = document.getElementById("selected");
+	if(!selection) return false;
+	Controller.copy_(selection.innerText);
 }
 
 

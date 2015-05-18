@@ -131,4 +131,20 @@
 	[script callWebScriptMethod:@"setState" withArguments: [NSArray arrayWithObject:state]];
 }
 
+-(void)copy: (NSString *)text{
+	NSArray *lines = [text componentsSeparatedByString:@"\n"];
+	NSMutableArray *processedLines = [NSMutableArray arrayWithCapacity:lines.count -1];
+	for (int i = 1; i < lines.count; i++) {
+		NSString *line = [lines objectAtIndex:i];
+		if (line.length>0) {
+			[processedLines addObject:[line substringFromIndex:1]];
+		} else {
+			[processedLines addObject:line];
+		}
+	}
+	NSString *result = [processedLines componentsJoinedByString:@"\n"];
+	[[NSPasteboard generalPasteboard] declareTypes:[NSArray arrayWithObject:NSStringPboardType] owner:nil];
+	[[NSPasteboard generalPasteboard] setString:result forType:NSStringPboardType];
+}
+
 @end
