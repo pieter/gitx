@@ -277,8 +277,8 @@ var findsubhunk = function(start) {
 var deselect = function() {
 	var selection = document.getElementById("selected");
 	if (selection) {
-		while (selection.childNodes[2])
-			selection.parentNode.insertBefore(selection.childNodes[2], selection);
+		while (selection.childNodes[1])
+			selection.parentNode.insertBefore(selection.childNodes[1], selection);
 		selection.parentNode.removeChild(selection);
 	}
 }
@@ -462,6 +462,9 @@ var showSelection = function(file, from, to, trust)
 	copy_button.appendChild(document.createTextNode("Copy"));
 	copy_button.setAttribute("class","hunkbutton");
 	copy_button.setAttribute("id","copylines");
+	var buttons_div = document.createElement('div');
+	buttons_div.appendChild(button);
+	buttons_div.appendChild(copy_button);
 
 	if (sel.good) {
 		button.setAttribute('onclick','stageLines('+
@@ -472,8 +475,7 @@ var showSelection = function(file, from, to, trust)
 		button.setAttribute("class","disabled");
 		copy_button.setAttribute("class","disabled");
 	}
-	selection.appendChild(button);
-	selection.appendChild(copy_button);
+	selection.appendChild(buttons_div);
 
 	file.insertBefore(selection, from);
 	for (i = 0; i < elementList.length; i++)
