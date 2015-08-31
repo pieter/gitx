@@ -239,6 +239,10 @@ var highlightDiff = function(diff, element, callbacks) {
 			line1 += ++hunk_start_line_1 + "\n";
 			line2 += ++hunk_start_line_2 + "\n";
 			diffContent += "<div " + sindex + "class='noopline'>" + l + "</div>";
+		} else if (firstChar == "\\") {
+			line1 += ++hunk_start_line_1 + "\n";
+			line2 += ++hunk_start_line_2 + "\n";
+			diffContent += "<div " + sindex + "class='markerline'>" + l + "</div>";
 		}
 		lindex++;
 	}
