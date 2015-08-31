@@ -319,19 +319,27 @@ var stageLines = function(reverse) {
 	for (var i = 0; i < lines.length; i++) {
 		var l = lines[i];
 		var firstChar = l.charAt(0);
-		if (i < preselect || i >= preselect+sel_len) {    // Before/after select
+		var isSelectedLine = (i >= preselect && i < preselect+sel_len);
+		var isMarkerLine = (firstChar == '\\');
+		if (isMarkerLine && isSelectedLine)
+			sel_len++; // We cheat so our isSelectedLine test isn't confused by missing lines
+
+		if (!isSelectedLine) {    // Before/after select
 			if(firstChar == (reverse?'+':"-"))   // It's context now, make it so!
 				l = ' '+l.substr(1);
 			if(firstChar != (reverse?'-':"+")) { // Skip unincluded changes
 				patch += l+"\n";
-				count[0]++; count[1]++;
+				if (!isMarkerLine) {
+					// Missing-newlines don't count
+					count[0]++; count[1]++;
+				}
 			}
 		} else {                                      // In the selection
 			if (firstChar == '-') {
 				count[0]++;
 			} else if (firstChar == '+') {
 				count[1]++;
-			} else {
+			} else if (!isMarkerLine) {
 				count[0]++; count[1]++;
 			}
 			patch += l+"\n";
