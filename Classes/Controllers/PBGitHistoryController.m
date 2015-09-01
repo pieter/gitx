@@ -673,37 +673,6 @@
 	return [splitView frame].size.height - [splitView dividerThickness] - historySplitView.bottomViewMin;
 }
 
-// while the user resizes the window keep the upper (history) view constant and just resize the lower view
-// unless the lower view gets too small
-- (void)splitView:(NSSplitView *)splitView resizeSubviewsWithOldSize:(NSSize)oldSize
-{
-	NSRect newFrame = [splitView frame];
-
-	float dividerThickness = [splitView dividerThickness];
-
-	NSView *upperView = [[splitView subviews] objectAtIndex:0];
-	NSView *lowerView = [[splitView subviews] objectAtIndex:1];
-	NSRect upperFrame = [upperView frame];
-	NSRect lowerFrame = [lowerView frame];
-
-	upperFrame.size.width = newFrame.size.width;
-
-	if ((newFrame.size.height - upperFrame.size.height - dividerThickness) < historySplitView.bottomViewMin) {
-		upperFrame.size.height = newFrame.size.height - dividerThickness;
-		if (![splitView isSubviewCollapsed:lowerView]) {
-			upperFrame.size.height -= historySplitView.bottomViewMin;
-		}
-	}
-
-	lowerFrame.origin.y = upperFrame.size.height + dividerThickness;
-
-	lowerFrame.size.height = newFrame.size.height - lowerFrame.origin.y;
-	lowerFrame.size.width = newFrame.size.width;
-
-	[upperView setFrame:upperFrame];
-	[lowerView setFrame:lowerFrame];
-}
-
 // NSSplitView does not save and restore the position of the SplitView correctly so do it manually
 - (void)saveSplitViewPosition
 {
