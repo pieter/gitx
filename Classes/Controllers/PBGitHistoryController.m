@@ -682,16 +682,21 @@
 	float dividerThickness = [splitView dividerThickness];
 
 	NSView *upperView = [[splitView subviews] objectAtIndex:0];
+	NSView *lowerView = [[splitView subviews] objectAtIndex:1];
 	NSRect upperFrame = [upperView frame];
+	NSRect lowerFrame = [lowerView frame];
+
 	upperFrame.size.width = newFrame.size.width;
 
 	if ((newFrame.size.height - upperFrame.size.height - dividerThickness) < historySplitView.bottomViewMin) {
-		upperFrame.size.height = newFrame.size.height - historySplitView.bottomViewMin - dividerThickness;
+		upperFrame.size.height = newFrame.size.height - dividerThickness;
+		if (![splitView isSubviewCollapsed:lowerView]) {
+			upperFrame.size.height -= historySplitView.bottomViewMin;
+		}
 	}
 
-	NSView *lowerView = [[splitView subviews] objectAtIndex:1];
-	NSRect lowerFrame = [lowerView frame];
 	lowerFrame.origin.y = upperFrame.size.height + dividerThickness;
+
 	lowerFrame.size.height = newFrame.size.height - lowerFrame.origin.y;
 	lowerFrame.size.width = newFrame.size.width;
 
