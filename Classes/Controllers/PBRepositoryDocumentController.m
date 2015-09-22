@@ -41,7 +41,7 @@
         return nil;
     }
 
-    BOOL success = [GTRepository initializeEmptyRepositoryAtFileURL:[op URL] error:outError];
+	BOOL success = [GTRepository initializeEmptyRepositoryAtFileURL:[op URL] options:nil error:outError];
     if (!success)
         return nil; // Repo creation failed
 

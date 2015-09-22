@@ -143,7 +143,7 @@ using namespace std;
 {
 	for (GTBranch *branch in branches) {
 		NSError *objectLookupError = nil;
-		GTObject *gtObject = [repo lookUpObjectBySHA:branch.SHA error:&objectLookupError];
+		GTObject *gtObject = [repo lookUpObjectByOID:branch.OID error:&objectLookupError];
 		[self addGitObject:gtObject toCommitSet:set];
 	}
 }
