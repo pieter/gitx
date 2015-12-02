@@ -383,27 +383,34 @@
 
 - (void) copyCommitInfo
 {
-	PBGitCommit *commit = [[commitController selectedObjects] objectAtIndex:0];
-	if (!commit)
-		return;
-	NSString *info = [NSString stringWithFormat:@"%@ (%@)", [commit.SHA substringToIndex:10], commit.subject];
-
-	NSPasteboard *a =[NSPasteboard generalPasteboard];
-	[a declareTypes:[NSArray arrayWithObject:NSStringPboardType] owner:self];
-	[a setString:info forType: NSStringPboardType];
-	
+	NSArray * strings = [self selectedCommitsWithTransformation:^(PBGitCommit * commit) {
+		return [NSString stringWithFormat:@"%@ (%@)", [commit.SHA substringToIndex:10], commit.subject];
+	}];
+	[self.class putStringToPasteboard:[strings componentsJoinedByString:@"\n"]];
 }
 
 - (void) copyCommitSHA
 {
-	PBGitCommit *commit = [[commitController selectedObjects] objectAtIndex:0];
-	if (!commit)
-		return;
-	
-	NSPasteboard *a = [NSPasteboard generalPasteboard];
-	[a declareTypes:[NSArray arrayWithObject:NSStringPboardType] owner:self];
-	
-	[a setString:commit.shortName forType: NSStringPboardType];
+	NSArray * strings = [self selectedCommitsWithTransformation:^(PBGitCommit * commit) { return commit.shortName; }];
+	[self.class putStringToPasteboard:[strings componentsJoinedByString:@" "]];
+}
+
+- (NSArray *) selectedCommitsWithTransformation:(NSString *(^)(PBGitCommit * _Nonnull commit))transformer
+{
+	NSArray *commits = commitController.selectedObjects;
+	NSMutableArray *shortNames = [NSMutableArray arrayWithCapacity:commits.count];
+	[commits enumerateObjectsUsingBlock:^(PBGitCommit * _Nonnull commit, NSUInteger idx, BOOL * _Nonnull stop) {
+		[shortNames addObject:transformer(commit)];
+	}];
+	return shortNames;
+}
+
++ (void) putStringToPasteboard:(NSString *)string {
+	if (string.length > 0) {
+		NSPasteboard *pasteboard = [NSPasteboard generalPasteboard];
+		[pasteboard declareTypes:@[NSStringPboardType] owner:self];
+		[pasteboard setString:string forType:NSStringPboardType];
+	}
 }
 
 - (IBAction) toggleQLPreviewPanel:(id)sender
