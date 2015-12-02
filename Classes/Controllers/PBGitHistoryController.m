@@ -399,12 +399,11 @@
 	PBGitCommit *commit = [[commitController selectedObjects] objectAtIndex:0];
 	if (!commit)
 		return;
-	NSString *info = [commit.SHA substringWithRange:NSMakeRange(0, 7)];
-
-	NSPasteboard *a =[NSPasteboard generalPasteboard];
+	
+	NSPasteboard *a = [NSPasteboard generalPasteboard];
 	[a declareTypes:[NSArray arrayWithObject:NSStringPboardType] owner:self];
-	[a setString:info forType: NSStringPboardType];
-
+	
+	[a setString:commit.shortName forType: NSStringPboardType];
 }
 
 - (IBAction) toggleQLPreviewPanel:(id)sender
