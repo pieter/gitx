@@ -22,6 +22,9 @@
 
 static OpenRecentController* recentsDialog = nil;
 
+@interface ApplicationController () <SUUpdaterDelegate>
+@end
+
 @implementation ApplicationController
 
 - (ApplicationController*)init
