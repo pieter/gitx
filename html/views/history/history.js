@@ -162,7 +162,7 @@ var confirm_gist = function(confirmation_message) {
 	var deleteMessage = Controller.getConfig_("github.token") ? " " : "You might not be able to delete it after posting.<br>";
 	var publicMessage = Controller.isFeatureEnabled_("publicGist") ? "<b>public</b>" : "private";
 	// Insert the verification links into div#notification_message
-	var notification_text = 'This will create a ' + publicMessage + ' paste of your commit to <a href="http://gist.github.com/">http://gist.github.com/</a><br>' +
+	var notification_text = 'This will create a ' + publicMessage + ' paste of your commit to <a href="https://gist.github.com/">https://gist.github.com/</a><br>' +
 	deleteMessage +
 	'Are you sure you want to continue?<br/><br/>' +
 	'<a href="#" onClick="hideNotification();return false;" style="color: red;">No. Cancel.</a> | ' +
