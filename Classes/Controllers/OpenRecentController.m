@@ -76,9 +76,9 @@
 {
 	[self changeSelection:self];
 	if(selectedResult != nil) {
-		[[NSDocumentController sharedDocumentController] openDocumentWithContentsOfURL:selectedResult
-                                                                               display:YES
-                                                                                 error:nil];
+		[[NSDocumentController sharedDocumentController] openDocumentWithContentsOfURL:selectedResult display:YES completionHandler:^(NSDocument * _Nullable document, BOOL documentWasAlreadyOpen, NSError * _Nullable error) {
+
+		}];
 	}
 	[self hide];
 }
@@ -87,9 +87,9 @@
     BOOL result = NO;
     if (commandSelector == @selector(insertNewline:)) {
 		if(selectedResult != nil) {
-			[[NSDocumentController sharedDocumentController] openDocumentWithContentsOfURL:selectedResult
-                                                                                   display:YES
-                                                                                     error:nil];
+			[[NSDocumentController sharedDocumentController] openDocumentWithContentsOfURL:selectedResult display:YES completionHandler:^(NSDocument * _Nullable document, BOOL documentWasAlreadyOpen, NSError * _Nullable error) {
+
+			}];
 		}
 		[self hide];
 //		[searchWindow makeKeyAndOrderFront: nil];

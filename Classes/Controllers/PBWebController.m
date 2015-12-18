@@ -13,7 +13,7 @@
 
 #include <SystemConfiguration/SCNetworkReachability.h>
 
-@interface PBWebController()
+@interface PBWebController () <WebUIDelegate, WebFrameLoadDelegate, WebResourceLoadDelegate>
 - (void)preferencesChangedWithNotification:(NSNotification *)theNotification;
 @end
 
