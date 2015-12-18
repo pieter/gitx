@@ -204,7 +204,7 @@ using namespace std;
 		GTCommit *branchCommit1 = obj1;
 		GTCommit *branchCommit2 = obj2;
 
-		return [branchCommit2.commitDate compare:branchCommit1.commitDate];
+		return [branchCommit1.commitDate compare:branchCommit2.commitDate];
 	}];
 
 	for (GTCommit *commit in sortedBranchesAndTags) {
