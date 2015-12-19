@@ -189,7 +189,8 @@ const BOOL SHUFFLE_COLORS = NO;
 	
 	[style setAlignment:NSCenterTextAlignment];
 	[attributes setObject:style forKey:NSParagraphStyleAttributeName];
-	[attributes setObject:[NSFont fontWithName:@"LucidaGrande" size:10] forKey:NSFontAttributeName];
+	
+	[attributes setObject:[NSFont systemFontOfSize:10] forKey:NSFontAttributeName];
 
 	NSShadow *shadow = nil;
 

@@ -65,7 +65,7 @@
 		[centerStyle setAlignment:NSCenterTextAlignment];
 
 		badgeTextAttributes =  [NSMutableDictionary dictionary];
-		[badgeTextAttributes setObject:[NSFont fontWithName:@"Helvetica-Bold" size:[NSFont systemFontSize] - 2] forKey:NSFontAttributeName];
+		[badgeTextAttributes setObject:[NSFont boldSystemFontOfSize:[NSFont systemFontSize] - 2] forKey:NSFontAttributeName];
 		[badgeTextAttributes setObject:centerStyle forKey:NSParagraphStyleAttributeName];
 	}
 
