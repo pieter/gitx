@@ -273,18 +273,13 @@ var loadCommit = function(commitObject, currentRef) {
 	$("message").innerHTML = "";
 	$("date").innerHTML = "";
 	$("files").style.display = "none";
+	jQuery("#commit").show();
+	jQuery("#no-commit-message").hide();
 	var filelist = $("filelist");
 	while (filelist.hasChildNodes())
 		filelist.removeChild(filelist.lastChild);
 	showRefs();
-
-	for (var i = 0; i < $("commit_header").rows.length; ++i) {
-		var row = $("commit_header").rows[i];
-		if (row.innerHTML.match(/Parent:/)) {
-			row.parentNode.removeChild(row);
-			--i;
-		}
-	}
+	removeParentsFromCommitHeader();
 
 	// Scroll to top
 	scroll(0, 0);
@@ -306,6 +301,24 @@ var loadCommit = function(commitObject, currentRef) {
 	}, 500);
 
 }
+
+var removeParentsFromCommitHeader = function() {
+	for (var i = 0; i < $("commit_header").rows.length; ++i) {
+		var row = $("commit_header").rows[i];
+		if (row.innerHTML.match(/Parent:/)) {
+			row.parentNode.removeChild(row);
+			--i;
+		}
+	}
+};
+
+var showMultipleSelectionMessage = function(messageParts) {
+	jQuery("#commit").hide();
+	jParagraphs = jQuery.map(messageParts, function(message) {
+		return jQuery( '<p/>', { text:message } )
+	});
+	jQuery("#no-commit-message").empty().append(jParagraphs).show();
+};
 
 var commonPrefix = function(a, b) {
     if (a === b) return a;

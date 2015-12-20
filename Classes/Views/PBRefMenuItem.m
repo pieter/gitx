@@ -11,7 +11,7 @@
 #import "PBGitRevSpecifier.h"
 
 @implementation PBRefMenuItem
-@synthesize refish;
+@synthesize refishs;
 
 + (PBRefMenuItem *) itemWithTitle:(NSString *)title action:(SEL)selector enabled:(BOOL)isEnabled
 {
@@ -31,7 +31,7 @@
 }
 
 
-+ (NSArray *) defaultMenuItemsForStashRef:(PBGitRef *)ref inRepository:(PBGitRepository *)repo target:(id)target
++ (NSArray<NSMenuItem *> *) defaultMenuItemsForStashRef:(PBGitRef *)ref inRepository:(PBGitRepository *)repo target:(id)target
 {
     NSMutableArray *items = [NSMutableArray array];
 	NSString *targetRefName = [ref shortName];
@@ -56,27 +56,25 @@
     [items addObject:[PBRefMenuItem itemWithTitle:stashDropTitle action:@selector(stashDrop:) enabled:YES]];
     
 	for (PBRefMenuItem *item in items) {
-		[item setTarget:target];
-		[item setRefish:ref];
+		item.target = target;
+		item.refishs = @[ref];
 	}
     
 	return items;
 }
 
 
-+ (NSArray *) defaultMenuItemsForRef:(PBGitRef *)ref inRepository:(PBGitRepository *)repo target:(id)target
++ (NSArray<NSMenuItem *> *) defaultMenuItemsForRef:(PBGitRef *)ref inRepository:(PBGitRepository *)repo target:(id)target
 {
 	if (!ref || !repo || !target) {
 		return nil;
 	}
-    
+	
     if ([ref isStash]) {
         return [self defaultMenuItemsForStashRef:ref inRepository:repo target:target];
     }
 
-	NSMutableArray *items = [NSMutableArray array];
-
-	NSString *targetRefName = [ref shortName];
+	NSString *refName = [ref shortName];
 
 	PBGitRef *headRef = [[repo headRef] ref];
 	NSString *headRefName = [headRef shortName];
@@ -91,14 +89,15 @@
 	BOOL hasRemote = (remoteName ? YES : NO);
 	BOOL isRemote = ([ref isRemote] && ![ref isRemoteBranch]);
 
+	NSMutableArray *items = [NSMutableArray array];
 	if (!isRemote) {
 		// checkout ref
-		NSString *checkoutTitle = [@"Checkout " stringByAppendingString:targetRefName];
+		NSString *checkoutTitle = [@"Checkout " stringByAppendingString:refName];
 		[items addObject:[PBRefMenuItem itemWithTitle:checkoutTitle action:@selector(checkout:) enabled:!isHead]];
 		[items addObject:[PBRefMenuItem separatorItem]];
 
 		// create branch
-		NSString *createBranchTitle = [ref isRemoteBranch] ? [NSString stringWithFormat:@"Create branch that tracks %@…", targetRefName] : @"Create branch…";
+		NSString *createBranchTitle = [ref isRemoteBranch] ? [NSString stringWithFormat:@"Create branch that tracks %@…", refName] : @"Create branch…";
 		[items addObject:[PBRefMenuItem itemWithTitle:createBranchTitle action:@selector(createBranch:) enabled:YES]];
 
 		// create tag
@@ -114,11 +113,11 @@
 		[items addObject:[PBRefMenuItem separatorItem]];
 
 		// merge ref
-		NSString *mergeTitle = isOnHeadBranch ? @"Merge" : [NSString stringWithFormat:@"Merge %@ into %@", targetRefName, headRefName];
+		NSString *mergeTitle = isOnHeadBranch ? @"Merge" : [NSString stringWithFormat:@"Merge %@ into %@", refName, headRefName];
 		[items addObject:[PBRefMenuItem itemWithTitle:mergeTitle action:@selector(merge:) enabled:!isOnHeadBranch]];
 
 		// rebase
-		NSString *rebaseTitle = isOnHeadBranch ? @"Rebase" : [NSString stringWithFormat:@"Rebase %@ on %@", headRefName, targetRefName];
+		NSString *rebaseTitle = isOnHeadBranch ? @"Rebase" : [NSString stringWithFormat:@"Rebase %@ on %@", headRefName, refName];
 		[items addObject:[PBRefMenuItem itemWithTitle:rebaseTitle action:@selector(rebaseHeadBranch:) enabled:!isOnHeadBranch]];
 
 		[items addObject:[PBRefMenuItem separatorItem]];
@@ -146,21 +145,21 @@
 		BOOL hasDefaultRemote = NO;
 		if (![ref isTag] && hasRemote) {
 			hasDefaultRemote = YES;
-			NSString *pushTitle = [NSString stringWithFormat:@"Push %@ to %@", targetRefName, remoteName];
+			NSString *pushTitle = [NSString stringWithFormat:@"Push %@ to %@", refName, remoteName];
 			[items addObject:[PBRefMenuItem itemWithTitle:pushTitle action:@selector(pushDefaultRemoteForRef:) enabled:YES]];
 		}
 
 		// push to remotes submenu
 		NSArray *remoteNames = [repo remotes];
 		if ([remoteNames count] && !(hasDefaultRemote && ([remoteNames count] == 1))) {
-			NSString *pushToTitle = [NSString stringWithFormat:@"Push %@ to", targetRefName];
+			NSString *pushToTitle = [NSString stringWithFormat:@"Push %@ to", refName];
 			PBRefMenuItem *pushToItem = [PBRefMenuItem itemWithTitle:pushToTitle action:nil enabled:YES];
 			NSMenu *remotesMenu = [[NSMenu alloc] initWithTitle:@"remotesMenu"];
 			for (NSString *remote in remoteNames) {
 				PBRefMenuItem *remoteItem = [PBRefMenuItem itemWithTitle:remote action:@selector(pushToRemote:) enabled:YES];
-				[remoteItem setTarget:target];
-				[remoteItem setRefish:ref];
-				[remoteItem setRepresentedObject:remote];
+				remoteItem.target = target;
+				remoteItem.refishs = @[ref];
+				remoteItem.representedObject = remote;
 				[remotesMenu addItem:remoteItem];
 			}
 			[pushToItem setSubmenu:remotesMenu];
@@ -172,9 +171,9 @@
 	[items addObject:[PBRefMenuItem separatorItem]];
 	{
 		BOOL isStash = [[ref ref] hasPrefix:@"refs/stash"];
-		NSString *deleteTitle = [NSString stringWithFormat:@"Delete %@…", targetRefName];
+		NSString *deleteTitle = [NSString stringWithFormat:@"Delete %@…", refName];
 		if ([ref isRemote]) {
-			deleteTitle = [NSString stringWithFormat:@"Remove %@…", targetRefName];
+			deleteTitle = [NSString stringWithFormat:@"Remove %@…", refName];
 		}
 		BOOL deleteEnabled = !(isDetachedHead || isHead || isStash);
 		PBRefMenuItem *deleteItem = [PBRefMenuItem itemWithTitle:deleteTitle action:@selector(showDeleteRefSheet:) enabled:deleteEnabled];
@@ -182,51 +181,59 @@
 	}
 
 	for (PBRefMenuItem *item in items) {
-		[item setTarget:target];
-		[item setRefish:ref];
+		item.target = target;
+		item.refishs = @[ref];
 	}
 
 	return items;
 }
 
 
-+ (NSArray *) defaultMenuItemsForCommit:(PBGitCommit *)commit target:(id)target
++ (NSArray<NSMenuItem *> *) defaultMenuItemsForCommits:(NSArray<PBGitCommit *> *)commits target:(id)target
 {
 	NSMutableArray *items = [NSMutableArray array];
+	
+	BOOL isSingleCommitSelection = commits.count == 1;
+	PBGitCommit *firstCommit = commits.firstObject;
+	
+	NSString *headBranchName = [[[firstCommit.repository headRef] ref] shortName];
+	BOOL isOnHeadBranch = [firstCommit isOnHeadBranch];
+	BOOL isHead = [firstCommit.OID isEqual:firstCommit.repository.headOID];
 
-	NSString *headBranchName = [[[commit.repository headRef] ref] shortName];
-	BOOL isOnHeadBranch = [commit isOnHeadBranch];
-	BOOL isHead = [commit.OID isEqual:commit.repository.headOID];
+	if (isSingleCommitSelection) {
+		[items addObject:[PBRefMenuItem itemWithTitle:@"Checkout Commit" action:@selector(checkout:) enabled:YES]];
+		[items addObject:[PBRefMenuItem separatorItem]];
 
-	[items addObject:[PBRefMenuItem itemWithTitle:@"Checkout Commit" action:@selector(checkout:) enabled:YES]];
-	[items addObject:[PBRefMenuItem separatorItem]];
-
-    [items addObject:[PBRefMenuItem itemWithTitle:@"Create Branch…" action:@selector(createBranch:) enabled:YES]];
-	[items addObject:[PBRefMenuItem itemWithTitle:@"Create Tag…" action:@selector(createTag:) enabled:YES]];
-	[items addObject:[PBRefMenuItem separatorItem]];
-
+		[items addObject:[PBRefMenuItem itemWithTitle:@"Create Branch…" action:@selector(createBranch:) enabled:YES]];
+		[items addObject:[PBRefMenuItem itemWithTitle:@"Create Tag…" action:@selector(createTag:) enabled:YES]];
+		[items addObject:[PBRefMenuItem separatorItem]];
+	}
+	
 	[items addObject:[PBRefMenuItem itemWithTitle:@"Copy SHA" action:@selector(copySHA:) enabled:YES]];
 	[items addObject:[PBRefMenuItem itemWithTitle:@"Copy short SHA" action:@selector(copyShortSHA:) enabled:YES]];
 	[items addObject:[PBRefMenuItem itemWithTitle:@"Copy Patch" action:@selector(copyPatch:) enabled:YES]];
-	NSString *diffTitle = [NSString stringWithFormat:@"Diff with %@", headBranchName];
-	[items addObject:[PBRefMenuItem itemWithTitle:diffTitle action:@selector(diffWithHEAD:) enabled:!isHead]];
-	[items addObject:[PBRefMenuItem separatorItem]];
 
-	// merge commit
-	NSString *mergeTitle = isOnHeadBranch ? @"Merge commit" : [NSString stringWithFormat:@"Merge commit into %@", headBranchName];
-	[items addObject:[PBRefMenuItem itemWithTitle:mergeTitle action:@selector(merge:) enabled:!isOnHeadBranch]];
+	if (isSingleCommitSelection) {
+		NSString *diffTitle = [NSString stringWithFormat:@"Diff with %@", headBranchName];
+		[items addObject:[PBRefMenuItem itemWithTitle:diffTitle action:@selector(diffWithHEAD:) enabled:!isHead]];
+		[items addObject:[PBRefMenuItem separatorItem]];
 
-	// cherry pick
-	NSString *cherryPickTitle = isOnHeadBranch ? @"Cherry pick commit" : [NSString stringWithFormat:@"Cherry pick commit to %@", headBranchName];
-	[items addObject:[PBRefMenuItem itemWithTitle:cherryPickTitle action:@selector(cherryPick:) enabled:!isOnHeadBranch]];
+		// merge commit
+		NSString *mergeTitle = isOnHeadBranch ? @"Merge commit" : [NSString stringWithFormat:@"Merge commit into %@", headBranchName];
+		[items addObject:[PBRefMenuItem itemWithTitle:mergeTitle action:@selector(merge:) enabled:!isOnHeadBranch]];
 
-	// rebase
-	NSString *rebaseTitle = isOnHeadBranch ? @"Rebase commit" : [NSString stringWithFormat:@"Rebase %@ on commit", headBranchName];
-	[items addObject:[PBRefMenuItem itemWithTitle:rebaseTitle action:@selector(rebaseHeadBranch:) enabled:!isOnHeadBranch]];
+		// cherry pick
+		NSString *cherryPickTitle = isOnHeadBranch ? @"Cherry pick commit" : [NSString stringWithFormat:@"Cherry pick commit to %@", headBranchName];
+		[items addObject:[PBRefMenuItem itemWithTitle:cherryPickTitle action:@selector(cherryPick:) enabled:!isOnHeadBranch]];
 
+		// rebase
+		NSString *rebaseTitle = isOnHeadBranch ? @"Rebase commit" : [NSString stringWithFormat:@"Rebase %@ on commit", headBranchName];
+		[items addObject:[PBRefMenuItem itemWithTitle:rebaseTitle action:@selector(rebaseHeadBranch:) enabled:!isOnHeadBranch]];
+	}
+	
 	for (PBRefMenuItem *item in items) {
-		[item setTarget:target];
-		[item setRefish:commit];
+		item.target = target;
+		item.refishs = commits;
 	}
 
 	return items;

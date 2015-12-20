@@ -394,22 +394,29 @@ const BOOL SHUFFLE_COLORS = NO;
 	if (!contextMenuDelegate)
 		return [self menu];
 
-	int i = [self indexAtX:[view convertPoint:[event locationInWindow] fromView:nil].x - rect.origin.x];
-
-	id ref = nil;
-	if (i >= 0)
-		ref = [[[self objectValue] refs] objectAtIndex:i];
-
-	NSArray *items = nil;
-	if (ref)
-		items = [contextMenuDelegate menuItemsForRef:ref];
-	else
-		items = [contextMenuDelegate menuItemsForCommit:[self objectValue]];
-
+	PBGitRef *clickedRef = [self findClickedRefFor:event rect:rect ofView:view];
+	
+	NSArray<NSMenuItem *> *items = nil;
+	if (clickedRef)
+		items = [contextMenuDelegate menuItemsForRef:clickedRef];
+	else {
+		NSArray<PBGitCommit *> *relevantCommits = [controller.selectedCommits containsObject:self.objectValue]
+			? controller.selectedCommits
+			: @[self.objectValue];
+		items = [contextMenuDelegate menuItemsForCommits:relevantCommits];
+	}
+	
 	NSMenu *menu = [[NSMenu alloc] init];
 	[menu setAutoenablesItems:NO];
 	for (NSMenuItem *item in items)
 		[menu addItem:item];
 	return menu;
 }
+
+- (PBGitRef *) findClickedRefFor:(NSEvent *)event rect:(NSRect)rect ofView:(NSView *)view
+{
+	int i = [self indexAtX:[view convertPoint:[event locationInWindow] fromView:nil].x - rect.origin.x];
+	return (i >= 0) ? [self.objectValue.refs objectAtIndex:i] : nil;
+}
+
 @end

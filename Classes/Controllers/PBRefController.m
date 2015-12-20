@@ -15,6 +15,7 @@
 #import "PBDiffWindowController.h"
 #import "PBGitRevSpecifier.h"
 #import "PBGitStash.h"
+#import "GitXCommitCopier.h"
 
 #define kDialogAcceptDroppedRef @"Accept Dropped Ref"
 #define kDialogConfirmPush @"Confirm Push"
@@ -34,7 +35,7 @@
 
 - (void) fetchRemote:(PBRefMenuItem *)sender
 {
-	id <PBGitRefish> refish = [sender refish];
+	id <PBGitRefish> refish = sender.refishs.firstObject;
 	if ([refish refishType] == kGitXCommitType)
 		return;
 
@@ -46,7 +47,7 @@
 
 - (void) pullRemote:(PBRefMenuItem *)sender
 {
-	id <PBGitRefish> refish = [sender refish];
+	id <PBGitRefish> refish = sender.refishs.firstObject;
 	[historyController.repository beginPullFromRemote:nil forRef:refish];
 }
 
@@ -110,21 +111,20 @@
 
 - (void) pushUpdatesToRemote:(PBRefMenuItem *)sender
 {
-	PBGitRef *remoteRef = [(PBGitRef *)[sender refish] remoteRef];
+	PBGitRef *remoteRef = [(PBGitRef *)[sender refishs] remoteRef];
 
 	[self showConfirmPushRefSheet:nil remote:remoteRef];
 }
 
 - (void) pushDefaultRemoteForRef:(PBRefMenuItem *)sender
 {
-	PBGitRef *ref = (PBGitRef *)[sender refish];
-
+	PBGitRef *ref = sender.refishs.firstObject;
 	[self showConfirmPushRefSheet:ref remote:nil];
 }
 
 - (void) pushToRemote:(PBRefMenuItem *)sender
 {
-	PBGitRef *ref = (PBGitRef *)[sender refish];
+	PBGitRef *ref = sender.refishs.firstObject;;
 	NSString *remoteName = [sender representedObject];
 	PBGitRef *remoteRef = [PBGitRef refFromString:[kGitXRemoteRefPrefix stringByAppendingString:remoteName]];
 
@@ -136,7 +136,7 @@
 
 - (void) merge:(PBRefMenuItem *)sender
 {
-	id <PBGitRefish> refish = [sender refish];
+	id <PBGitRefish> refish = sender.refishs.firstObject;
 	[historyController.repository mergeWithRefish:refish];
 }
 
@@ -145,7 +145,7 @@
 
 - (void) checkout:(PBRefMenuItem *)sender
 {
-	id <PBGitRefish> refish = [sender refish];
+	id <PBGitRefish> refish = sender.refishs.firstObject;
 	[historyController.repository checkoutRefish:refish];
 }
 
@@ -154,7 +154,7 @@
 
 - (void) cherryPick:(PBRefMenuItem *)sender
 {
-	id <PBGitRefish> refish = [sender refish];
+	id <PBGitRefish> refish = sender.refishs.firstObject;
 	[historyController.repository cherryPickRefish:refish];
 }
 
@@ -163,8 +163,7 @@
 
 - (void) rebaseHeadBranch:(PBRefMenuItem *)sender
 {
-	id <PBGitRefish> refish = [sender refish];
-
+	id <PBGitRefish> refish = sender.refishs.firstObject;
 	[historyController.repository rebaseBranch:nil onRefish:refish];
 }
 
@@ -173,7 +172,7 @@
 
 - (void) createBranch:(PBRefMenuItem *)sender
 {
-	id <PBGitRefish> refish = [sender refish];
+	id <PBGitRefish> refish = sender.refishs.firstObject;
 	[PBCreateBranchSheet beginCreateBranchSheetAtRefish:refish inRepository:historyController.repository];
 }
 
@@ -182,43 +181,32 @@
 
 - (void) copySHA:(PBRefMenuItem *)sender
 {
-	PBGitCommit *commit = nil;
-	if ([[sender refish] refishType] == kGitXCommitType)
-		commit = (PBGitCommit *)[sender refish];
-	else
-		commit = [historyController.repository commitForRef:[sender refish]];
-
-	NSPasteboard *pasteboard = [NSPasteboard generalPasteboard];
-	[pasteboard declareTypes:[NSArray arrayWithObject:NSStringPboardType] owner:nil];
-	[pasteboard setString:commit.SHA forType:NSStringPboardType];
+	[GitXCommitCopier putStringToPasteboard:[GitXCommitCopier toFullSHA:[self commitsForMenuItem:sender]]];
 }
-
 
 - (void) copyShortSHA:(PBRefMenuItem *)sender
 {
-	PBGitCommit *commit = nil;
-	if ([[sender refish] refishType] == kGitXCommitType)
-		commit = (PBGitCommit *)[sender refish];
-	else
-		commit = [historyController.repository commitForRef:[sender refish]];
-    
-	NSPasteboard *pasteboard = [NSPasteboard generalPasteboard];
-	[pasteboard declareTypes:[NSArray arrayWithObject:NSStringPboardType] owner:nil];
-	[pasteboard setString:[commit shortName] forType:NSStringPboardType];
+	[GitXCommitCopier putStringToPasteboard:[GitXCommitCopier toShortName:[self commitsForMenuItem:sender]]];
 }
-
 
 - (void) copyPatch:(PBRefMenuItem *)sender
 {
-	PBGitCommit *commit = nil;
-	if ([[sender refish] refishType] == kGitXCommitType)
-		commit = (PBGitCommit *)[sender refish];
-	else
-		commit = [historyController.repository commitForRef:[sender refish]];
+	[GitXCommitCopier putStringToPasteboard:[GitXCommitCopier toPatch:[self commitsForMenuItem:sender]]];
+}
 
-	NSPasteboard *pasteboard = [NSPasteboard generalPasteboard];
-	[pasteboard declareTypes:[NSArray arrayWithObject:NSStringPboardType] owner:nil];
-	[pasteboard setString:[commit patch] forType:NSStringPboardType];
+- (NSArray<PBGitCommit *> *) commitsForMenuItem:(PBRefMenuItem *)menuItem {
+	NSArray<id<PBGitRefish>> * refishs = menuItem.refishs;
+	NSMutableArray *commits = [NSMutableArray arrayWithCapacity:refishs.count];
+	for (id<PBGitRefish> refish in refishs) {
+		[commits addObject:[self refishToCommit:refish]];
+	}
+	return commits;
+}
+
+- (PBGitCommit *) refishToCommit:(id<PBGitRefish>)refish {
+	return [refish refishType] == kGitXCommitType
+		? (PBGitCommit *)refish
+		: [historyController.repository commitForRef:refish];
 }
 
 
@@ -226,47 +214,42 @@
 
 - (void) diffWithHEAD:(PBRefMenuItem *)sender
 {
-	PBGitCommit *commit = nil;
-	if ([[sender refish] refishType] == kGitXCommitType)
-		commit = (PBGitCommit *)[sender refish];
-	else
-		commit = [historyController.repository commitForRef:[sender refish]];
-
+	PBGitCommit *commit = [self commitsForMenuItem:sender].firstObject;
 	[PBDiffWindowController showDiffWindowWithFiles:nil fromCommit:commit diffCommit:nil];
 }
 
 #pragma mark Stash
 
--(void) stashPop:(id)sender
+-(void) stashPop:(PBRefMenuItem *)sender
 {
-    PBGitStash * stash = [historyController.repository stashForRef:[sender refish]];
+    PBGitStash * stash = [historyController.repository stashForRef:[sender refishs].firstObject];
     BOOL ok = [historyController.repository stashPop:stash];
     if (ok) {
         [historyController.repository.windowController showCommitView:sender];
     }
 }
 
--(void) stashApply:(id)sender
+-(void) stashApply:(PBRefMenuItem *)sender
 {
-    PBGitStash * stash = [historyController.repository stashForRef:[sender refish]];
+    PBGitStash * stash = [historyController.repository stashForRef:[sender refishs].firstObject];
     BOOL ok = [historyController.repository stashApply:stash];
     if (ok) {
         [historyController.repository.windowController showCommitView:sender];
     }
 }
 
--(void) stashDrop:(id)sender
+-(void) stashDrop:(PBRefMenuItem *)sender
 {
-    PBGitStash * stash = [historyController.repository stashForRef:[sender refish]];
+    PBGitStash * stash = [historyController.repository stashForRef:[sender refishs].firstObject];
     BOOL ok = [historyController.repository stashDrop:stash];
     if (ok) {
         [historyController.repository.windowController showHistoryView:sender];
     }
 }
 
--(void) stashViewDiff:(id)sender
+-(void) stashViewDiff:(PBRefMenuItem *)sender
 {
-    PBGitStash * stash = [historyController.repository stashForRef:[sender refish]];
+    PBGitStash * stash = [historyController.repository stashForRef:sender.refishs.firstObject];
     [PBDiffWindowController showDiffWindowWithFiles:nil fromCommit:stash.ancestorCommit diffCommit:stash.commit];
 }
 
@@ -274,18 +257,21 @@
 
 - (void) createTag:(PBRefMenuItem *)sender
 {
-	id <PBGitRefish> refish = [sender refish];
+	id <PBGitRefish> refish = [sender refishs].firstObject;
 	[PBCreateTagSheet beginCreateTagSheetAtRefish:refish inRepository:historyController.repository];
 }
 
 - (void) showTagInfoSheet:(PBRefMenuItem *)sender
 {
-	if ([[sender refish] refishType] != kGitXTagType)
+	id<PBGitRefish> refish = sender.refishs.firstObject;
+	if ([refish refishType] != kGitXTagType)
 		return;
 
-	NSError *error = nil;
-	NSString *tagName = [(PBGitRef *)[sender refish] tagName];
+	PBGitRef *ref = (PBGitRef *)refish;
+
+	NSString *tagName = [ref tagName];
 	NSString *tagRef = [@"refs/tags/" stringByAppendingString:tagName];
+	NSError *error = nil;
 	GTObject *object = [historyController.repository.gtRepo lookUpObjectByRevParse:tagRef error:&error];
 	if (!object) {
 		NSLog(@"Couldn't look up ref %@:%@", tagRef, [error debugDescription]);
@@ -305,10 +291,11 @@
 
 - (void)showDeleteRefSheet:(PBRefMenuItem *)sender
 {
-	if ([[sender refish] refishType] == kGitXCommitType)
+	id<PBGitRefish> refish = sender.refishs.firstObject;
+	if ([refish refishType] == kGitXCommitType)
 		return;
 
-	PBGitRef *ref = (PBGitRef *)[sender refish];
+	PBGitRef *ref = (PBGitRef *)refish;
 
 	if ([PBGitDefaults isDialogWarningSuppressedForDialog:kDialogDeleteRef]) {
 		[historyController.repository deleteRef:ref];
@@ -347,24 +334,25 @@
 
 #pragma mark Contextual menus
 
-- (NSArray *) menuItemsForRef:(PBGitRef *)ref
+- (NSArray<NSMenuItem *> *) menuItemsForRef:(PBGitRef *)ref
 {
 	return [PBRefMenuItem defaultMenuItemsForRef:ref inRepository:historyController.repository target:self];
 }
 
-- (NSArray *) menuItemsForCommit:(PBGitCommit *)commit
+- (NSArray<NSMenuItem *> *) menuItemsForCommits:(NSArray<PBGitCommit *> *)commits
 {
-	return [PBRefMenuItem defaultMenuItemsForCommit:commit target:self];
+	return [PBRefMenuItem defaultMenuItemsForCommits:commits target:self];
 }
 
-- (NSArray *)menuItemsForRow:(NSInteger)rowIndex
+- (NSArray<NSMenuItem *> *)menuItemsForRow:(NSInteger)rowIndex
 {
-	NSArray *commits = [commitController arrangedObjects];
+	NSArray<PBGitCommit *> *commits = [commitController arrangedObjects];
 	if ([commits count] <= rowIndex)
 		return nil;
 
-	return [self menuItemsForCommit:[commits objectAtIndex:rowIndex]];
+	return [self menuItemsForCommits:@[[commits objectAtIndex:rowIndex]]];
 }
+
 
 
 # pragma mark Tableview delegate methods

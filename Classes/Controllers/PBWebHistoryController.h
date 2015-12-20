@@ -25,8 +25,8 @@
 	NSString* diff;
 }
 
-- (void) changeContentTo: (PBGitCommit *) content;
 - (void) sendKey: (NSString*) key;
 
 @property (readonly) NSString* diff;
+
 @end

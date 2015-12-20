@@ -142,6 +142,7 @@
 		4AC42F7D16BFBADA007CCA3A /* AppKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4A40159814067B7A00DB9C07 /* AppKit.framework */; };
 		551BF176112F3F4B00265053 /* gitx_askpasswd in Resources */ = {isa = PBXBuildFile; fileRef = 551BF111112F371800265053 /* gitx_askpasswd */; };
 		643952771603EF9B00BB7AFF /* PBGitSVSubmoduleItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 643952761603EF9B00BB7AFF /* PBGitSVSubmoduleItem.m */; };
+		6C25810B1C2720E60080A89A /* GitXCommitCopier.m in Sources */ = {isa = PBXBuildFile; fileRef = 6C25810A1C2720E60080A89A /* GitXCommitCopier.m */; };
 		8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
 		911112370E5A097800BF76B4 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 911112360E5A097800BF76B4 /* Security.framework */; };
 		913D5E500E55645900CECEA2 /* gitx in Resources */ = {isa = PBXBuildFile; fileRef = 913D5E490E55644600CECEA2 /* gitx */; };
@@ -540,6 +541,8 @@
 		551BF111112F371800265053 /* gitx_askpasswd */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = gitx_askpasswd; sourceTree = BUILT_PRODUCTS_DIR; };
 		643952751603EF9B00BB7AFF /* PBGitSVSubmoduleItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PBGitSVSubmoduleItem.h; sourceTree = "<group>"; };
 		643952761603EF9B00BB7AFF /* PBGitSVSubmoduleItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PBGitSVSubmoduleItem.m; sourceTree = "<group>"; };
+		6C2581091C2720E60080A89A /* GitXCommitCopier.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GitXCommitCopier.h; sourceTree = "<group>"; };
+		6C25810A1C2720E60080A89A /* GitXCommitCopier.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GitXCommitCopier.m; sourceTree = "<group>"; };
 		77C82804067257F0000B614F /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = /System/Library/Frameworks/CoreData.framework; sourceTree = "<absolute>"; };
 		8D1107320486CEB800E47090 /* GitX.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GitX.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		911112360E5A097800BF76B4 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = /System/Library/Frameworks/Security.framework; sourceTree = "<absolute>"; };
@@ -911,8 +914,6 @@
 				4A5D768214A9A9CC00DF6C68 /* PBGitXErrors.m */,
 				4A5D768314A9A9CC00DF6C68 /* PBGitXProtocol.h */,
 				4A5D768414A9A9CC00DF6C68 /* PBGitXProtocol.m */,
-				643952721603E9BC00BB7AFF /* PBGitSubmodule.h */,
-				643952731603E9BC00BB7AFF /* PBGitSubmodule.m */,
 				A2F8D0DD17AAB32500580B84 /* PBGitStash.h */,
 				A2F8D0DE17AAB32500580B84 /* PBGitStash.m */,
 				643952751603EF9B00BB7AFF /* PBGitSVSubmoduleItem.h */,
@@ -944,6 +945,8 @@
 				4A5D76B214A9A9CC00DF6C68 /* PBEasyPipe.m */,
 				4AB71FF614B7EDD400F1DFFC /* RJModalRepoSheet.h */,
 				4AB71FF714B7EDD400F1DFFC /* RJModalRepoSheet.m */,
+				6C2581091C2720E60080A89A /* GitXCommitCopier.h */,
+				6C25810A1C2720E60080A89A /* GitXCommitCopier.m */,
 			);
 			path = Util;
 			sourceTree = "<group>";
@@ -1172,7 +1175,7 @@
 		4A68AD6B14A0050F006DE321 /* Sparkle Unit Tests.octest */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.cfbundle;
-			path = "Sparkle Unit Tests.octest";
+			path = "Sparkle Unit Tests.xctest";
 			remoteRef = 4A68AD6A14A0050F006DE321 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
@@ -1186,7 +1189,7 @@
 		4A68AD6F14A0050F006DE321 /* finish_installation.app */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.application;
-			path = finish_installation.app;
+			path = Autoupdate.app;
 			remoteRef = 4A68AD6E14A0050F006DE321 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
@@ -1340,6 +1343,7 @@
 				4A5D76F214A9A9CC00DF6C68 /* PBWebDiffController.m in Sources */,
 				4A5D76F314A9A9CC00DF6C68 /* PBWebHistoryController.m in Sources */,
 				4A5D76F414A9A9CC00DF6C68 /* PBGitBinary.m in Sources */,
+				6C25810B1C2720E60080A89A /* GitXCommitCopier.m in Sources */,
 				4A5D76F514A9A9CC00DF6C68 /* PBGitCommit.m in Sources */,
 				4A5D76F714A9A9CC00DF6C68 /* PBGitDefaults.m in Sources */,
 				4A5D76F814A9A9CC00DF6C68 /* PBGitGrapher.mm in Sources */,

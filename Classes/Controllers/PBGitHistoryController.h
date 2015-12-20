@@ -36,9 +36,6 @@
 	__weak IBOutlet PBCommitList *commitList;
 	__weak IBOutlet PBCollapsibleSplitView *historySplitView;
 	__weak IBOutlet PBGitGradientBarView *upperToolbarView;
-	__weak IBOutlet NSButton *mergeButton;
-	__weak IBOutlet NSButton *cherryPickButton;
-	__weak IBOutlet NSButton *rebaseButton;
 	__weak IBOutlet PBGitGradientBarView *scopeBarView;
 	__weak IBOutlet NSButton *allBranchesFilterItem;
 	__weak IBOutlet NSButton *localRemoteBranchesFilterItem;
@@ -46,22 +43,27 @@
 	__weak IBOutlet id webView;
 
 	NSArray *currentFileBrowserSelectionPath;
-    QLPreviewPanel* previewPanel;
+    QLPreviewPanel *previewPanel;
 	int selectedCommitDetailsIndex;
 	BOOL forceSelectionUpdate;
 	PBGitTree *gitTree;
-	PBGitCommit *webCommit;
-	PBGitCommit *selectedCommit;
+	NSArray<PBGitCommit *> *webCommits;
+	NSArray<PBGitCommit *> *selectedCommits;
 }
 
-@property (readonly) NSTreeController* treeController;
-@property (assign) int selectedCommitDetailsIndex;
-@property  PBGitCommit *webCommit;
-@property  PBGitTree* gitTree;
 @property (readonly) NSArrayController *commitController;
+@property (readonly) NSTreeController *treeController;
 @property (readonly) PBRefController *refController;
 @property (readonly) PBHistorySearchController *searchController;
+
+@property (assign) int selectedCommitDetailsIndex;
+@property PBGitTree* gitTree;
+@property NSArray<PBGitCommit *> *webCommits;
+@property NSArray<PBGitCommit *> *selectedCommits;
+
 @property (readonly) PBCommitList *commitList;
+@property (readonly) BOOL singleCommitSelected;
+@property (readonly) BOOL singleNonHeadCommitSelected;
 
 - (IBAction) setDetailedView:(id)sender;
 - (IBAction) setTreeView:(id)sender;
@@ -94,6 +96,9 @@
 
 - (void) copyCommitInfo;
 - (void) copyCommitSHA;
+- (void) copyCommitShortName;
+- (void) copyCommitPatch;
+
 
 - (BOOL) hasNonlinearPath;
 

@@ -8,36 +8,7 @@
 
 @class GitXApplication, GitXDocument, GitXWindow;
 
-
-
-/*
- * Standard Suite
- */
-
-// The application's top-level scripting object.
-@interface GitXApplication : SBApplication
-
-- (SBElementArray *) documents;
-- (SBElementArray *) windows;
-
-@property (copy, readonly) NSString *name;  // The name of the application.
-@property (readonly) BOOL frontmost;  // Is this the active application?
-@property (copy, readonly) NSString *version;  // The version number of the application.
-
-- (void) open:(NSArray *)x;  // Open a document.
-- (void) quit;  // Quit the application.
-- (BOOL) exists:(id)x;  // Verify that an object exists.
-- (void) showDiff:(NSString *)x;  // Show the supplied diff output in a GitX window.
-- (void) initRepository:(NSURL *)x NS_RETURNS_NOT_RETAINED;  // Create a git repository at the given filesystem URL.
-- (void) cloneRepository:(NSString *)x to:(NSURL *)to isBare:(BOOL)isBare;  // Clone a repository.
-
-@end
-
-// A document.
-@interface GitXDocument : SBObject
-
-@property (copy, readonly) NSString *name;  // Its name.
-@property (copy, readonly) NSURL *file;  // Its location on disk, if it has one.
+@protocol GitXGenericMethods
 
 - (void) close;  // Close a document.
 - (void) delete;  // Delete an object.
@@ -47,8 +18,42 @@
 
 @end
 
+
+
+/*
+ * Standard Suite
+ */
+
+// The application's top-level scripting object.
+@interface GitXApplication : SBApplication
+
+- (SBElementArray<GitXDocument *> *) documents;
+- (SBElementArray<GitXWindow *> *) windows;
+
+@property (copy, readonly) NSString *name;  // The name of the application.
+@property (readonly) BOOL frontmost;  // Is this the active application?
+@property (copy, readonly) NSString *version;  // The version number of the application.
+
+- (void) open:(NSArray<NSURL *> *)x;  // Open a document.
+- (void) quit;  // Quit the application.
+- (BOOL) exists:(id)x;  // Verify that an object exists.
+- (void) showDiff:(NSString *)x;  // Show the supplied diff output in a GitX window.
+- (void) initRepository:(NSURL *)x NS_RETURNS_NOT_RETAINED;  // Create a git repository at the given filesystem URL.
+- (void) cloneRepository:(NSString *)x to:(NSURL *)to isBare:(BOOL)isBare;  // Clone a repository.
+
+@end
+
+// A document.
+@interface GitXDocument : SBObject <GitXGenericMethods>
+
+@property (copy, readonly) NSString *name;  // Its name.
+@property (copy, readonly) NSURL *file;  // Its location on disk, if it has one.
+
+
+@end
+
 // A window.
-@interface GitXWindow : SBObject
+@interface GitXWindow : SBObject <GitXGenericMethods>
 
 @property (copy, readonly) NSString *name;  // The title of the window.
 - (NSInteger) id;  // The unique identifier of the window.
@@ -63,11 +68,6 @@
 @property BOOL zoomed;  // Is the window zoomed right now?
 @property (copy, readonly) GitXDocument *document;  // The document whose contents are displayed in the window.
 
-- (void) close;  // Close a document.
-- (void) delete;  // Delete an object.
-- (void) duplicateTo:(SBObject *)to withProperties:(NSDictionary *)withProperties;  // Copy an object.
-- (void) moveTo:(SBObject *)to;  // Move an object to a new location.
-- (void) searchString:(NSString *)string inMode:(NSInteger)inMode;  // Highlight commits that match the given search string.
 
 @end
 

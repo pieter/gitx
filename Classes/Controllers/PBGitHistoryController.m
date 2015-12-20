@@ -31,6 +31,7 @@
 #define QLPreviewPanel NSClassFromString(@"QLPreviewPanel")
 #import "PBQLTextView.h"
 #import "GLFileView.h"
+#import "GitXCommitCopier.h"
 
 
 #define kHistorySelectedDetailIndexKey @"PBHistorySelectedDetailIndex"
@@ -50,10 +51,11 @@
 
 
 @implementation PBGitHistoryController
-@synthesize webCommit, gitTree, commitController, refController;
+@synthesize webCommits, gitTree, commitController, refController;
 @synthesize searchController;
 @synthesize commitList;
 @synthesize treeController;
+@synthesize selectedCommits;
 
 - (void)awakeFromNib
 {
@@ -122,34 +124,44 @@
     }
 }
 
-- (void)updateKeys
+- (void) updateKeys
 {
-	PBGitCommit *lastObject = [[commitController selectedObjects] lastObject];
-	if (lastObject) {
-		if (![selectedCommit isEqual:lastObject]) {
-			selectedCommit = lastObject;
-
-			BOOL isOnHeadBranch = [selectedCommit isOnHeadBranch];
-			[mergeButton setEnabled:!isOnHeadBranch];
-			[cherryPickButton setEnabled:!isOnHeadBranch];
-			[rebaseButton setEnabled:!isOnHeadBranch];
-		}
+	NSArray<PBGitCommit *> *newSelectedCommits = commitController.selectedObjects;
+	if  (![self.selectedCommits isEqualToArray:newSelectedCommits]) {
+		self.selectedCommits = newSelectedCommits;
 	}
-	else {
-		[mergeButton setEnabled:NO];
-		[cherryPickButton setEnabled:NO];
-		[rebaseButton setEnabled:NO];
-	}
-
+	
+	PBGitCommit *firstSelectedCommit = self.selectedCommits.firstObject;
+	
 	if (self.selectedCommitDetailsIndex == kHistoryTreeViewIndex) {
-		self.gitTree = selectedCommit.tree;
+		self.gitTree = firstSelectedCommit.tree;
 		[self restoreFileBrowserSelection];
 	}
 	else {
 		// kHistoryDetailViewIndex
-		if (![self.webCommit isEqual:selectedCommit])
-		self.webCommit = selectedCommit;
+		if (![self.webCommits isEqualToArray:self.selectedCommits]) {
+			self.webCommits = self.selectedCommits;
+		}
 	}
+}
+
+- (BOOL) singleCommitSelected
+{
+	return self.selectedCommits.count == 1;
+}
+
++ (NSSet *) keyPathsForValuesAffectingSingleCommitSelected {
+	return [NSSet setWithObjects:@"selectedCommits", nil];
+}
+
+- (BOOL) singleNonHeadCommitSelected
+{
+	return self.singleCommitSelected
+		&& ![self.selectedCommits.firstObject isOnHeadBranch];
+}
+
++ (NSSet *) keyPathsForValuesAffectingSingleNonHeadCommitSelected {
+	return [self keyPathsForValuesAffectingSingleCommitSelected];
 }
 
 - (void) updateBranchFilterMatrix
@@ -190,7 +202,7 @@
 
 - (BOOL)isCommitSelected
 {
-	return [selectedCommit isEqual:[[commitController selectedObjects] lastObject]];
+	return [self.selectedCommits isEqualToArray:[commitController selectedObjects]];
 }
 
 - (void) setSelectedCommitDetailsIndex:(int)detailsIndex
@@ -317,15 +329,22 @@
 
 - (BOOL)validateMenuItem:(NSMenuItem *)menuItem
 {
-    if ([menuItem action] == @selector(setDetailedView:)) {
+	SEL action = menuItem.action;
+
+    if (action == @selector(setDetailedView:)) {
 		[menuItem setState:(self.selectedCommitDetailsIndex == kHistoryDetailViewIndex) ? NSOnState : NSOffState];
-    } else if ([menuItem action] == @selector(setTreeView:)) {
+    } else if (action == @selector(setTreeView:)) {
 		[menuItem setState:(self.selectedCommitDetailsIndex == kHistoryTreeViewIndex) ? NSOnState : NSOffState];
-    }
-
-    if ([self respondsToSelector:[menuItem action]])
+	} 
+	
+	if ([self respondsToSelector:action]) {
+		if (action == @selector(createBranch:) || action == @selector(createTag:)) {
+			return self.singleCommitSelected;
+		}
+		
         return YES;
-
+	}
+	
     return [[self nextResponder] validateMenuItem:menuItem];
 }
 
@@ -383,35 +402,25 @@
 
 - (void) copyCommitInfo
 {
-	NSArray * strings = [self selectedCommitsWithTransformation:^(PBGitCommit * commit) {
-		return [NSString stringWithFormat:@"%@ (%@)", [commit.SHA substringToIndex:10], commit.subject];
-	}];
-	[self.class putStringToPasteboard:[strings componentsJoinedByString:@"\n"]];
+	[GitXCommitCopier putStringToPasteboard:[GitXCommitCopier toSHAAndHeadingString:commitController.selectedObjects]];
 }
 
 - (void) copyCommitSHA
 {
-	NSArray * strings = [self selectedCommitsWithTransformation:^(PBGitCommit * commit) { return commit.shortName; }];
-	[self.class putStringToPasteboard:[strings componentsJoinedByString:@" "]];
+	[GitXCommitCopier putStringToPasteboard:[GitXCommitCopier toFullSHA:commitController.selectedObjects]];
 }
 
-- (NSArray *) selectedCommitsWithTransformation:(NSString *(^)(PBGitCommit * _Nonnull commit))transformer
+- (void) copyCommitShortName
 {
-	NSArray *commits = commitController.selectedObjects;
-	NSMutableArray *shortNames = [NSMutableArray arrayWithCapacity:commits.count];
-	[commits enumerateObjectsUsingBlock:^(PBGitCommit * _Nonnull commit, NSUInteger idx, BOOL * _Nonnull stop) {
-		[shortNames addObject:transformer(commit)];
-	}];
-	return shortNames;
+	[GitXCommitCopier putStringToPasteboard:[GitXCommitCopier toShortName:commitController.selectedObjects]];
 }
 
-+ (void) putStringToPasteboard:(NSString *)string {
-	if (string.length > 0) {
-		NSPasteboard *pasteboard = [NSPasteboard generalPasteboard];
-		[pasteboard declareTypes:@[NSStringPboardType] owner:self];
-		[pasteboard setString:string forType:NSStringPboardType];
-	}
+- (void) copyCommitPatch
+{
+	[GitXCommitCopier putStringToPasteboard:[GitXCommitCopier toPatch:commitController.selectedObjects]];
 }
+
+
 
 - (IBAction) toggleQLPreviewPanel:(id)sender
 {
@@ -500,24 +509,25 @@
 - (NSArray *) selectedObjectsForOID:(GTOID *)commitOID
 {
 	NSPredicate *selection = [NSPredicate predicateWithFormat:@"OID == %@", commitOID];
-	NSArray *selectedCommits = [[commitController content] filteredArrayUsingPredicate:selection];
+	NSArray *selectionCommits = [[commitController content] filteredArrayUsingPredicate:selection];
 
-	if (([selectedCommits count] == 0) && [self firstCommit])
-		selectedCommits = [NSArray arrayWithObject:[self firstCommit]];
-
-	return selectedCommits;
+	if ((selectionCommits.count == 0) && [self firstCommit] != nil) {
+		selectionCommits = @[[self firstCommit]];
+	}
+	
+	return selectionCommits;
 }
 
 - (void)selectCommit:(GTOID *)commitOID
 {
-	if (!forceSelectionUpdate && [[[commitController.selectedObjects lastObject] OID] isEqual:commitOID])
+	if (!forceSelectionUpdate && [[[commitController.selectedObjects lastObject] OID] isEqual:commitOID]) {
 		return;
+	}
+
+	NSArray *selectedObjects = [self selectedObjectsForOID:commitOID];
+	[commitController setSelectedObjects:selectedObjects];
 
 	NSInteger oldIndex = [[commitController selectionIndexes] firstIndex];
-
-	NSArray *selectedCommits = [self selectedObjectsForOID:commitOID];
-	[commitController setSelectedObjects:selectedCommits];
-
 	[self scrollSelectionToTopOfViewFrom:oldIndex];
 
 	forceSelectionUpdate = NO;
@@ -579,13 +589,12 @@
 	NSMutableArray *files = [NSMutableArray array];
 	for (NSString *filePath in [sender representedObject])
 		[files addObject:[filePath stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]]];
-
-	[repository checkoutFiles:files fromRefish:selectedCommit];
+	[repository checkoutFiles:files fromRefish:self.selectedCommits.firstObject];
 }
 
 - (void) diffFilesAction:(id)sender
 {
-	[PBDiffWindowController showDiffWindowWithFiles:[sender representedObject] fromCommit:selectedCommit diffCommit:nil];
+	[PBDiffWindowController showDiffWindowWithFiles:[sender representedObject] fromCommit:self.selectedCommits.firstObject diffCommit:nil];
 }
 
 - (NSMenu *)contextMenuForTreeView
@@ -612,7 +621,7 @@
 	PBGitRef *headRef = [[repository headRef] ref];
 	NSString *headRefName = [headRef shortName];
 	NSString *diffTitle = [NSString stringWithFormat:@"Diff %@ with %@", multiple ? @"files" : @"file", headRefName];
-	BOOL isHead = [selectedCommit.OID isEqual:repository.headOID];
+	BOOL isHead = [self.selectedCommits.firstObject.OID isEqual:repository.headOID];
 	NSMenuItem *diffItem = [[NSMenuItem alloc] initWithTitle:diffTitle
 													  action:isHead ? nil : @selector(diffFilesAction:)
 											   keyEquivalent:@""];
@@ -715,8 +724,9 @@
 - (IBAction) createBranch:(id)sender
 {
 	PBGitRef *currentRef = [repository.currentBranch ref];
-
-	if (!selectedCommit || [selectedCommit hasRef:currentRef])
+	
+	PBGitCommit *selectedCommit = self.selectedCommits.firstObject;
+	if (!selectedCommits.firstObject || [selectedCommit hasRef:currentRef])
 		[PBCreateBranchSheet beginCreateBranchSheetAtRefish:currentRef inRepository:self.repository];
 	else
 		[PBCreateBranchSheet beginCreateBranchSheetAtRefish:selectedCommit inRepository:self.repository];
@@ -724,6 +734,7 @@
 
 - (IBAction) createTag:(id)sender
 {
+	PBGitCommit *selectedCommit = self.selectedCommits.firstObject;
 	if (!selectedCommit)
 		[PBCreateTagSheet beginCreateTagSheetAtRefish:[repository.currentBranch ref] inRepository:repository];
 	else
@@ -737,18 +748,21 @@
 
 - (IBAction) merge:(id)sender
 {
+	PBGitCommit *selectedCommit = self.selectedCommits.firstObject;
 	if (selectedCommit)
 		[repository mergeWithRefish:selectedCommit];
 }
 
 - (IBAction) cherryPick:(id)sender
 {
+	PBGitCommit *selectedCommit = self.selectedCommits.firstObject;
 	if (selectedCommit)
 		[repository cherryPickRefish:selectedCommit];
 }
 
 - (IBAction) rebase:(id)sender
 {
+	PBGitCommit *selectedCommit = self.selectedCommits.firstObject;
 	if (selectedCommit)
 		[repository rebaseBranch:nil onRefish:selectedCommit];
 }

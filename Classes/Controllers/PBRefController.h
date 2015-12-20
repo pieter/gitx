@@ -1,5 +1,5 @@
 //
-//  PBLabelController.h
+//  PBRefController.h
 //  GitX
 //
 //  Created by Pieter de Bie on 21-10-08.
@@ -39,10 +39,5 @@
 - (void) diffWithHEAD:(PBRefMenuItem *)sender;
 - (void) createTag:(PBRefMenuItem *)sender;
 - (void) showTagInfoSheet:(PBRefMenuItem *)sender;
-
-- (NSArray *) menuItemsForRef:(PBGitRef *)ref;
-- (NSArray *) menuItemsForCommit:(PBGitCommit *)commit;
-- (NSArray *)menuItemsForRow:(NSInteger)rowIndex;
-
 
 @end
