@@ -214,23 +214,25 @@ var gistie = function() {
 }
 
 var setGravatar = function(email, image) {
+	image.src=(createGravatarUrl(email, image));
+};
+
+var createGravatarUrl = function(email, image) {
 	if(Controller && !Controller.isFeatureEnabled_("gravatar")) {
-		image.src = "";
-		return;
+		return "";
 	}
-
-	if (!email) {
-		image.src = "http://www.gravatar.com/avatar/?d=wavatar&s=60";
-		return;
-	}
-
-	image.src = "http://www.gravatar.com/avatar/" +
-		hex_md5(email.toLowerCase().replace(/ /g, "")) + "?d=wavatar&s=60";
-}
+	
+	var gravatarBaseUrl = "https://www.gravatar.com/avatar/";
+	var gravatarParameter = "?d=wavatar&s=60";
+	
+	var gravatarID = (email && hex_md5(email.toLowerCase().replace(/ /g, ""))) ||  "";
+	
+	return gravatarBaseUrl + gravatarID + gravatarParameter;
+};
 
 var selectCommit = function(a) {
 	Controller.selectCommit_(a);
-}
+};
 
 // Relead only refs
 var reload = function() {
