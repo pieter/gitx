@@ -374,7 +374,7 @@
 	}
 
 	NSMutableIndexSet *indexes = [NSMutableIndexSet indexSet];
-	NSPredicate *searchPredicate = [NSPredicate predicateWithFormat:@"subject CONTAINS[cd] %@ OR author CONTAINS[cd] %@ OR realSha BEGINSWITH[c] %@", searchString, searchString, searchString];
+	NSPredicate *searchPredicate = [NSPredicate predicateWithFormat:@"subject CONTAINS[cd] %@ OR author CONTAINS[cd] %@ OR SHA BEGINSWITH[c] %@", searchString, searchString, searchString];
 
 	NSUInteger index = 0;
 	for (PBGitCommit *commit in [commitController arrangedObjects]) {
