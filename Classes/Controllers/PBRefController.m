@@ -111,8 +111,7 @@
 
 - (void) pushUpdatesToRemote:(PBRefMenuItem *)sender
 {
-	PBGitRef *remoteRef = [(PBGitRef *)[sender refishs] remoteRef];
-
+	PBGitRef *remoteRef = [(PBGitRef *)sender.refishs.firstObject remoteRef];
 	[self showConfirmPushRefSheet:nil remote:remoteRef];
 }
 
