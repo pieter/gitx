@@ -86,15 +86,21 @@
 	}
 
 	NSFileHandle* handle = [[task standardOutput] fileHandleForReading];
+	NSFileHandle *inHandle = nil;
 
 	if (input) {
 		[task setStandardInput:[NSPipe pipe]];
-		NSFileHandle *inHandle = [[task standardInput] fileHandleForWriting];
-		[inHandle writeData:[input dataUsingEncoding:NSUTF8StringEncoding]];
-		[inHandle closeFile];
+		inHandle = [[task standardInput] fileHandleForWriting];
 	}
 	
 	[task launch];
+
+	if (input && inHandle) {
+		dispatch_async(dispatch_get_global_queue(0, 0), ^{
+			[inHandle writeData:[input dataUsingEncoding:NSUTF8StringEncoding]];
+			[inHandle closeFile];
+		});
+	}
 	
 	NSData* data = [handle readDataToEndOfFile];
 	NSString *string = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
