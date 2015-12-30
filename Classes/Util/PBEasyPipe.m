@@ -96,6 +96,9 @@
 	[task launch];
 
 	if (input && inHandle) {
+		// A large write could wait for stdout buffer to be flushed by the task,
+		// which may not happen until the task is run. The task may similarly wait
+		// for its stdout to be read before reading its stdin, causing a deadlock.
 		dispatch_async(dispatch_get_global_queue(0, 0), ^{
 			[inHandle writeData:[input dataUsingEncoding:NSUTF8StringEncoding]];
 			[inHandle closeFile];
