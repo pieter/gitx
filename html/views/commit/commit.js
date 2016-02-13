@@ -1,11 +1,11 @@
 /* Commit: Interface for selecting, staging, discarding, and unstaging
    hunks, individual lines, or ranges of lines.  */
 
-var contextLines = 5;
+var contextLines = 0;
 
 var showNewFile = function(file)
 {
-	setTitle("New file: " + file.path);
+	setTitle("New file: " + file.path.escapeHTML());
 
 	var contents = Index.diffForFile_staged_contextLines_(file, false, contextLines);
 	if (!contents) {
@@ -39,6 +39,7 @@ var setTitle = function(status) {
 var displayContext = function() {
 	$("contextSize").style.display = "";
 	$("contextTitle").style.display = "";
+	contextLines = $("contextSize").value;
 }
 
 var showFileChanges = function(file, cached) {
@@ -51,13 +52,14 @@ var showFileChanges = function(file, cached) {
 	hideState();
 
 	$("contextSize").oninput = function(element) {
-		contextSize = $("contextSize").value;
+		contextLines = $("contextSize").value;
+		Controller.refresh();
 	}
 
 	if (file.status == 0) // New file?
 		return showNewFile(file);
 
-	setTitle((cached ? "Staged": "Unstaged") + " changes for" + file.path);
+	setTitle((cached ? "Staged": "Unstaged") + " changes for " + file.path.escapeHTML());
 	displayContext();
 	var changes = Index.diffForFile_staged_contextLines_(file, cached, contextLines);
 	
@@ -68,6 +70,15 @@ var showFileChanges = function(file, cached) {
 	}
 
 	displayDiff(changes, cached);
+}
+
+var findParentElementByTag = function (el, tagName)
+{
+	tagName = tagName.toUpperCase();
+	while (el && el.tagName != tagName && el.parentNode) {
+		el = el.parentNode;
+	}
+	return el;
 }
 
 /* Set the event handlers for mouse clicks/drags */
@@ -94,10 +105,11 @@ var setSelectHandlers = function()
 	for (i = 0; i < list.length; ++i) {
 		var file = list[i];
 		file.ondblclick = function (event) {
-			var file = event.target.parentNode;
+			var target = findParentElementByTag(event.target, "div");
+			var file = target.parentNode;
 			if (file.id = "selected")
 				file = file.parentNode;
-			var start = event.target;
+			var start = target;
 			var elem_class = start.getAttribute("class");
 			if(!elem_class || !(elem_class == "addline" | elem_class == "delline")) 
 				return false;
@@ -115,7 +127,8 @@ var setSelectHandlers = function()
 			if (elem_class == "hunkheader" || elem_class == "hunkbutton")
 				return false;
 
-			var file = event.target.parentNode;
+			var target = findParentElementByTag(event.target, "div");
+			var file = target.parentNode;
 			if (file.id && file.id == "selected")
 				file = file.parentNode;
 
@@ -127,7 +140,7 @@ var setSelectHandlers = function()
 			};
 
 			if (event.shiftKey && currentSelection) { // Extend selection
-				var index = parseInt(event.target.getAttribute("index"));
+				var index = parseInt(target.getAttribute("index"));
 				var min = parseInt(currentSelection.bounds[0].getAttribute("index"));
 				var max = parseInt(currentSelection.bounds[1].getAttribute("index"));
 				var ender = 1;
@@ -137,21 +150,21 @@ var setSelectHandlers = function()
 				}
 
 				if (index < min)
-					showSelection(file,currentSelection.bounds[ender],
-						      event.target);
+					showSelection(file,currentSelection.bounds[ender],target);
 				else if (index > max)
-					showSelection(file,currentSelection.bounds[1-ender],
-						      event.target);
-				else showSelection(file,currentSelection.bounds[0],event.target);
+					showSelection(file,currentSelection.bounds[1-ender],target);
+				else
+					showSelection(file,currentSelection.bounds[0],target);
 				return false;
 			}
 
-
+			var srcElement = findParentElementByTag(event.srcElement, "div");
 			file.onmouseover = function(event2) {
-				showSelection(file, event.srcElement, event2.target);
+				var target2 = findParentElementByTag(event2.target, "div");
+				showSelection(file, srcElement, target2);
 				return false;
 			};
-			showSelection(file, event.srcElement, event.srcElement);
+			showSelection(file, srcElement, srcElement);
 			return false;
 		}
 	}
@@ -337,8 +350,9 @@ var computeSelection = function(list, from,to)
 {
 	var startIndex = parseInt(from.getAttribute("index"));
 	var endIndex = parseInt(to.getAttribute("index"));
-	if (startIndex == -1 || endIndex == -1)
+	if (startIndex == -1 || endIndex == -1) {
 		return false;
+	}
 
 	var up = (startIndex < endIndex);
 	var nextelem = up?"nextSibling":"previousSibling";

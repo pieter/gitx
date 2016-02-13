@@ -2,10 +2,14 @@
 <head>
 	<title>Details for commit</title>
 	<link rel="stylesheet" href="../../css/GitX.css" type="text/css" media="screen" title="no title" charset="utf-8">
+	<script src="../../lib/jquery-2.0.2.min.js" type="text/javascript" charset="utf-8"></script>
 	<script src="../../lib/GitX.js" type="text/javascript" charset="utf-8"></script>
 	<script src="../../lib/md5.js" type="text/javascript" charset="utf-8"></script>
 	<script src="../../lib/diffHighlighter.js" type="text/javascript" charset="utf-8"></script>
 	<script src="../../lib/keyboardNavigation.js" type="text/javascript" charset="utf-8"></script>
+
+	<link rel="stylesheet" href="diffWindow.css" type="text/css" media="screen" title="no title" charset="utf-8">
+	<script src="diffWindow.js" type="text/javascript" charset="utf-8"></script>
 
 	<script type="text/javascript" charset="utf-8">
 		var showDiff = function(diff) {
@@ -15,5 +19,8 @@
 </head>
 
 <body>
+	<div id="message" style="display:none">
+		There are no differences
+	</div>
 	<div id='diff'></div>
 </body>
