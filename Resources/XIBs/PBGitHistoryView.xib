@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="9531" systemVersion="15D9c" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="9060" systemVersion="15D21" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
     <dependencies>
-        <deployment version="1070" identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="9531"/>
-        <plugIn identifier="com.apple.WebKitIBPlugin" version="9531"/>
+        <deployment identifier="macosx"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="9060"/>
+        <plugIn identifier="com.apple.WebKitIBPlugin" version="9060"/>
     </dependencies>
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="PBGitHistoryController">
@@ -105,6 +105,7 @@
                                         <button toolTip="View commits from all branches" verticalHuggingPriority="750" id="355">
                                             <rect key="frame" x="11" y="2" width="30" height="17"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                            <animations/>
                                             <buttonCell key="cell" type="recessed" title="All" bezelStyle="recessed" alignment="center" controlSize="small" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="356">
                                                 <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES" changeBackground="YES" changeGray="YES"/>
                                                 <font key="font" metaFont="smallSystemBold"/>
@@ -114,8 +115,9 @@
                                             </connections>
                                         </button>
                                         <button toolTip="View commits from the selected branch only" verticalHuggingPriority="750" tag="2" id="359">
-                                            <rect key="frame" x="114" y="2" width="103" height="17"/>
+                                            <rect key="frame" x="114" y="2" width="107" height="17"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                            <animations/>
                                             <buttonCell key="cell" type="recessed" title="Selected Branch" bezelStyle="recessed" alignment="left" controlSize="small" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="360">
                                                 <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES" changeBackground="YES" changeGray="YES"/>
                                                 <font key="font" metaFont="smallSystemBold"/>
@@ -127,6 +129,7 @@
                                         <button toolTip="View commits from only local or remote branches" verticalHuggingPriority="750" tag="1" id="387">
                                             <rect key="frame" x="49" y="2" width="57" height="17"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                            <animations/>
                                             <buttonCell key="cell" type="recessed" title="Remote" bezelStyle="recessed" alignment="center" controlSize="small" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="388">
                                                 <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES" changeBackground="YES" changeGray="YES"/>
                                                 <font key="font" metaFont="smallSystemBold"/>
@@ -138,6 +141,7 @@
                                         <textField verticalHuggingPriority="750" id="430">
                                             <rect key="frame" x="630" y="5" width="80" height="14"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
+                                            <animations/>
                                             <textFieldCell key="cell" controlSize="small" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="# of matches" id="431">
                                                 <font key="font" metaFont="smallSystem"/>
                                                 <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
@@ -147,6 +151,7 @@
                                         <segmentedControl verticalHuggingPriority="750" id="427">
                                             <rect key="frame" x="714" y="3" width="43" height="18"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
+                                            <animations/>
                                             <segmentedCell key="cell" controlSize="small" borderStyle="border" alignment="left" style="roundRect" trackingMode="momentary" id="428">
                                                 <font key="font" metaFont="miniSystem"/>
                                                 <segments>
@@ -161,6 +166,7 @@
                                         <searchField wantsLayer="YES" verticalHuggingPriority="750" id="297">
                                             <rect key="frame" x="765" y="2" width="180" height="19"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
+                                            <animations/>
                                             <searchFieldCell key="cell" controlSize="small" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" borderStyle="bezel" bezelStyle="round" recentsAutosaveName="Recent History Searches" id="298">
                                                 <font key="font" metaFont="smallSystem"/>
                                                 <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
@@ -176,8 +182,10 @@
                                         <progressIndicator hidden="YES" horizontalHuggingPriority="750" verticalHuggingPriority="750" maxValue="100" bezeled="NO" indeterminate="YES" controlSize="small" style="spinning" id="447">
                                             <rect key="frame" x="740" y="3" width="16" height="16"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
+                                            <animations/>
                                         </progressIndicator>
                                     </subviews>
+                                    <animations/>
                                 </customView>
                                 <scrollView focusRingType="none" borderType="none" autohidesScrollers="YES" horizontalLineScroll="19" horizontalPageScroll="10" verticalLineScroll="19" verticalPageScroll="10" usesPredominantAxisScrolling="NO" id="3" userLabel="Commits Scroll View">
                                     <rect key="frame" x="1" y="0.0" width="955" height="147"/>
@@ -187,8 +195,9 @@
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                         <subviews>
                                             <tableView focusRingType="none" verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="firstColumnOnly" alternatingRowBackgroundColors="YES" autosaveName="CommitView" headerView="30" id="27" userLabel="Commit List" customClass="PBCommitList">
-                                                <rect key="frame" x="0.0" y="0.0" width="1056" height="109"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="1056.5" height="19"/>
                                                 <autoresizingMask key="autoresizingMask"/>
+                                                <animations/>
                                                 <size key="intercellSpacing" width="3" height="2"/>
                                                 <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                                 <color key="gridColor" name="gridColor" catalog="System" colorSpace="catalog"/>
@@ -366,19 +375,24 @@
                                                 </connections>
                                             </tableView>
                                         </subviews>
+                                        <animations/>
                                         <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                     </clipView>
+                                    <animations/>
                                     <scroller key="horizontalScroller" verticalHuggingPriority="750" horizontal="YES" id="29">
                                         <rect key="frame" x="0.0" y="132" width="955" height="15"/>
                                         <autoresizingMask key="autoresizingMask"/>
+                                        <animations/>
                                     </scroller>
                                     <scroller key="verticalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="NO" id="28">
                                         <rect key="frame" x="837" y="17" width="15" height="179"/>
                                         <autoresizingMask key="autoresizingMask"/>
+                                        <animations/>
                                     </scroller>
                                     <tableHeaderView key="headerView" id="30" customClass="PBUnsortableTableHeader">
                                         <rect key="frame" x="0.0" y="0.0" width="1056" height="23"/>
                                         <autoresizingMask key="autoresizingMask"/>
+                                        <animations/>
                                         <connections>
                                             <outlet property="controller" destination="39" id="217"/>
                                         </connections>
@@ -387,11 +401,13 @@
                                 <box verticalHuggingPriority="750" title="Box" boxType="separator" titlePosition="noTitle" id="327">
                                     <rect key="frame" x="0.0" y="144" width="955" height="5"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                                    <animations/>
                                     <color key="borderColor" white="0.0" alpha="0.41999999999999998" colorSpace="calibratedWhite"/>
                                     <color key="fillColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                     <font key="titleFont" metaFont="system"/>
                                 </box>
                             </subviews>
+                            <animations/>
                         </customView>
                         <customView id="310" userLabel="Details Split View">
                             <rect key="frame" x="0.0" y="172" width="955" height="233"/>
@@ -400,6 +416,7 @@
                                 <tabView type="noTabsNoBorder" id="4" userLabel="Detail / Tree Tab View">
                                     <rect key="frame" x="0.0" y="0.0" width="955" height="233"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                    <animations/>
                                     <font key="font" metaFont="system"/>
                                     <tabViewItems>
                                         <tabViewItem label="Details" identifier="1" id="6" userLabel="Details Tab">
@@ -410,6 +427,7 @@
                                                     <webView focusRingType="none" id="21">
                                                         <rect key="frame" x="1" y="0.0" width="954" height="234"/>
                                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                                        <animations/>
                                                         <webPreferences key="preferences" defaultFontSize="12" defaultFixedFontSize="12" plugInsEnabled="NO" javaEnabled="NO" javaScriptCanOpenWindowsAutomatically="NO">
                                                             <nil key="identifier"/>
                                                         </webPreferences>
@@ -420,6 +438,7 @@
                                                         </connections>
                                                     </webView>
                                                 </subviews>
+                                                <animations/>
                                             </view>
                                         </tabViewItem>
                                         <tabViewItem label="Tree" identifier="Item 2" id="7" userLabel="Tree Tab">
@@ -441,11 +460,12 @@
                                                                         <outlineView focusRingType="none" verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" alternatingRowBackgroundColors="YES" autosaveColumns="NO" indentationPerLevel="16" autoresizesOutlineColumn="YES" outlineTableColumn="18" id="15" customClass="PBQLOutlineView">
                                                                             <rect key="frame" x="0.0" y="0.0" width="216" height="19"/>
                                                                             <autoresizingMask key="autoresizingMask" heightSizable="YES"/>
+                                                                            <animations/>
                                                                             <size key="intercellSpacing" width="3" height="2"/>
                                                                             <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                                                             <color key="gridColor" name="gridColor" catalog="System" colorSpace="catalog"/>
                                                                             <tableColumns>
-                                                                                <tableColumn editable="NO" width="213" minWidth="16" maxWidth="1000" id="18">
+                                                                                <tableColumn editable="NO" width="212" minWidth="16" maxWidth="1000" id="18">
                                                                                     <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left">
                                                                                         <font key="font" metaFont="smallSystem"/>
                                                                                         <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
@@ -471,15 +491,19 @@
                                                                             </connections>
                                                                         </outlineView>
                                                                     </subviews>
+                                                                    <animations/>
                                                                     <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                                                 </clipView>
+                                                                <animations/>
                                                                 <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" doubleValue="0.0045045050792396069" horizontal="YES" id="16">
                                                                     <rect key="frame" x="-100" y="-100" width="502" height="15"/>
                                                                     <autoresizingMask key="autoresizingMask"/>
+                                                                    <animations/>
                                                                 </scroller>
                                                                 <scroller key="verticalScroller" verticalHuggingPriority="750" horizontal="NO" id="17">
                                                                     <rect key="frame" x="217" y="1" width="15" height="233"/>
                                                                     <autoresizingMask key="autoresizingMask"/>
+                                                                    <animations/>
                                                                 </scroller>
                                                             </scrollView>
                                                             <customView id="449" userLabel="Viewer">
@@ -489,6 +513,7 @@
                                                                     <webView id="450" userLabel="FileViewer">
                                                                         <rect key="frame" x="0.0" y="0.0" width="723" height="210"/>
                                                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                                                        <animations/>
                                                                         <webPreferences key="preferences" defaultFontSize="12" defaultFixedFontSize="12" plugInsEnabled="NO" javaEnabled="NO" javaScriptCanOpenWindowsAutomatically="NO">
                                                                             <nil key="identifier"/>
                                                                         </webPreferences>
@@ -504,6 +529,7 @@
                                                                                     <button toolTip="Quick Look" verticalHuggingPriority="750" id="49">
                                                                                         <rect key="frame" x="41" y="1.5" width="29" height="19"/>
                                                                                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
+                                                                                        <animations/>
                                                                                         <buttonCell key="cell" type="recessed" title="QuickLook" bezelStyle="recessed" image="NSQuickLookTemplate" imagePosition="only" alignment="center" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="50">
                                                                                             <behavior key="behavior" lightByContents="YES"/>
                                                                                             <font key="font" metaFont="systemBold" size="12"/>
@@ -517,15 +543,19 @@ IA
                                                                                         </connections>
                                                                                     </button>
                                                                                 </subviews>
+                                                                                <animations/>
                                                                             </customView>
                                                                         </subviews>
+                                                                        <animations/>
                                                                         <connections>
                                                                             <outlet property="delegate" destination="452" id="485"/>
                                                                         </connections>
                                                                     </customView>
                                                                 </subviews>
+                                                                <animations/>
                                                             </customView>
                                                         </subviews>
+                                                        <animations/>
                                                         <holdingPriorities>
                                                             <real value="250"/>
                                                             <real value="250"/>
@@ -535,6 +565,7 @@ IA
                                                         </connections>
                                                     </splitView>
                                                 </subviews>
+                                                <animations/>
                                             </view>
                                         </tabViewItem>
                                     </tabViewItems>
@@ -543,8 +574,10 @@ IA
                                     </connections>
                                 </tabView>
                             </subviews>
+                            <animations/>
                         </customView>
                     </subviews>
+                    <animations/>
                     <holdingPriorities>
                         <real value="250"/>
                         <real value="250"/>
@@ -560,6 +593,7 @@ IA
                         <box verticalHuggingPriority="750" title="Box" boxType="separator" titlePosition="noTitle" id="317">
                             <rect key="frame" x="0.0" y="-2" width="955" height="5"/>
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                            <animations/>
                             <color key="borderColor" white="0.0" alpha="0.41999999999999998" colorSpace="calibratedWhite"/>
                             <color key="fillColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                             <font key="titleFont" metaFont="system"/>
@@ -567,6 +601,7 @@ IA
                         <button toolTip="Create Branch" verticalHuggingPriority="750" id="330">
                             <rect key="frame" x="10" y="3" width="37" height="25"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                            <animations/>
                             <buttonCell key="cell" type="roundTextured" title="Create Branch" bezelStyle="texturedRounded" image="AddBranchTemplate" imagePosition="only" alignment="center" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="331">
                                 <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                 <font key="font" metaFont="system"/>
@@ -579,6 +614,7 @@ IA
                         <button toolTip="Create Tag" verticalHuggingPriority="750" id="332">
                             <rect key="frame" x="55" y="3" width="37" height="25"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                            <animations/>
                             <buttonCell key="cell" type="roundTextured" title="Create Tag" bezelStyle="texturedRounded" image="AddLabelTemplate" imagePosition="only" alignment="center" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="333">
                                 <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                 <font key="font" metaFont="system"/>
@@ -591,6 +627,7 @@ IA
                         <button toolTip="Merge" verticalHuggingPriority="750" id="337">
                             <rect key="frame" x="116" y="3" width="37" height="25"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                            <animations/>
                             <buttonCell key="cell" type="roundTextured" title="Merge" bezelStyle="texturedRounded" image="MergeTemplate" imagePosition="only" alignment="center" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="338">
                                 <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                 <font key="font" metaFont="system"/>
@@ -603,6 +640,7 @@ IA
                         <button toolTip="Cherry Pick" verticalHuggingPriority="750" id="340">
                             <rect key="frame" x="161" y="3" width="37" height="25"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                            <animations/>
                             <buttonCell key="cell" type="roundTextured" title="Cherry Pick" bezelStyle="texturedRounded" image="CherryPickTemplate" imagePosition="only" alignment="center" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="341">
                                 <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                 <font key="font" metaFont="system"/>
@@ -615,6 +653,7 @@ IA
                         <button toolTip="Rebase" verticalHuggingPriority="750" id="343">
                             <rect key="frame" x="206" y="3" width="37" height="25"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                            <animations/>
                             <buttonCell key="cell" type="roundTextured" title="Rebase" bezelStyle="texturedRounded" image="RebaseTemplate" imagePosition="only" alignment="center" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="344">
                                 <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                 <font key="font" metaFont="system"/>
@@ -625,9 +664,10 @@ IA
                             </connections>
                         </button>
                         <segmentedControl verticalHuggingPriority="750" id="48">
-                            <rect key="frame" x="266" y="3" width="71" height="25"/>
+                            <rect key="frame" x="268" y="3" width="67" height="25"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                            <segmentedCell key="cell" state="on" borderStyle="border" alignment="left" style="texturedRounded" trackingMode="selectOne" id="51">
+                            <animations/>
+                            <segmentedCell key="cell" state="on" borderStyle="border" alignment="left" style="texturedSquare" trackingMode="selectOne" id="51">
                                 <font key="font" metaFont="system"/>
                                 <segments>
                                     <segment toolTip="Detailed View" image="DetailViewTemplate" imageScaling="none" width="32" selected="YES"/>
@@ -639,8 +679,10 @@ IA
                             </connections>
                         </segmentedControl>
                     </subviews>
+                    <animations/>
                 </customView>
             </subviews>
+            <animations/>
             <point key="canvasLocation" x="511.5" y="20"/>
         </customView>
         <customObject id="231" customClass="PBRefController">
