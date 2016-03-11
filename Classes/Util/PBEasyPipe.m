@@ -13,7 +13,9 @@ NSString *const PBEasyPipeUnderlyingExceptionKey = @"PBEasyPipeUnderlyingExcepti
 
 @implementation PBEasyPipe
 
-+ (void)performCommand:(NSString *)command arguments:(NSArray *)arguments inDirectory:(NSString *)directory terminationHandler:(void (^)(NSTask *, NSError *error))terminationHandler {
++ (nullable NSTask *)performCommand:(NSString *)command arguments:(NSArray *)arguments inDirectory:(NSString *)directory terminationHandler:(void (^)(NSTask *, NSError *error))terminationHandler {
+	NSParameterAssert(command != nil);
+
 	NSTask *task = [self taskForCommand:command arguments:arguments inDirectory:directory];
 	task.terminationHandler = ^(NSTask *task) {
 		dispatch_async(dispatch_get_main_queue(), ^{
@@ -33,11 +35,13 @@ NSString *const PBEasyPipeUnderlyingExceptionKey = @"PBEasyPipeUnderlyingExcepti
 											 code:PBEasyPipeTaskLaunchError
 										 userInfo:info];
 		terminationHandler(task, error);
+		return nil;
 	}
+	return task;
 }
 
-+ (void)performCommand:(NSString *)command arguments:(NSArray *)arguments inDirectory:(NSString *)directory completionHandler:(void (^)(NSTask *, NSData *readData, NSError *error))completionHandler {
-	[self performCommand:command arguments:arguments inDirectory:directory terminationHandler:^(NSTask *task, NSError *error) {
++ (nullable NSTask *)performCommand:(NSString *)command arguments:(NSArray *)arguments inDirectory:(NSString *)directory completionHandler:(void (^)(NSTask *, NSData *readData, NSError *error))completionHandler {
+	return [self performCommand:command arguments:arguments inDirectory:directory terminationHandler:^(NSTask *task, NSError *error) {
 		if (error) {
 			completionHandler(task, nil, error);
 			return;
@@ -187,6 +191,10 @@ NSString *const PBEasyPipeUnderlyingExceptionKey = @"PBEasyPipeUnderlyingExcepti
 }
 
 /* Deprecated */
+
++ (NSTask *)taskForCommand:(NSString *)cmd withArgs:(NSArray *)args inDir:(NSString *)dir {
+	return [self taskForCommand:cmd arguments:args inDirectory:dir];
+}
 
 + (NSFileHandle *)handleForCommand:(NSString *)cmd withArgs:(NSArray *)arguments
 {
