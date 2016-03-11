@@ -5,7 +5,7 @@
     #import <ObjectiveGit/ObjectiveGit.h>
 #endif
 
-#ifdef GITX_NO_DEPRECATE
+#if (GITX_NO_DEPRECATE || DEBUG)
 #define GITX_DEPRECATED
 #else
 #define GITX_DEPRECATED __attribute__ ((deprecated))
