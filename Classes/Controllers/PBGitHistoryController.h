@@ -79,8 +79,6 @@
 - (NSMenu *)contextMenuForTreeView;
 - (NSArray *)menuItemsForPaths:(NSArray *)paths;
 - (void)showCommitsFromTree:(id)sender;
-- (void)showInFinderAction:(id)sender;
-- (void)openFilesAction:(id)sender;
 
 // Repository Methods
 - (IBAction) createBranch:(id)sender;
