@@ -815,8 +815,8 @@
     }
 
     // convert icon rect to screen coordinates
-    iconRect = [fileBrowser convertRectToBase:iconRect];
-    iconRect.origin = [[fileBrowser window] convertBaseToScreen:iconRect.origin];
+	iconRect = [fileBrowser.window.contentView convertRect:iconRect fromView:fileBrowser];
+	iconRect = [fileBrowser.window convertRectToScreen:iconRect];
 
     return iconRect;
 }
