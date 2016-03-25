@@ -363,8 +363,15 @@ NSString *PBGitIndexOperationFailed = @"PBGitIndexOperationFailed";
 			loopCount++;
 			
 			PBChangedFile *file = [unstageFiles objectAtIndex:i];
-			
-			[input appendString:[file indexInfo]];
+
+			NSString *indexInfo = nil;
+			if (file.status == NEW) {
+				// Index info lies because the file is NEW
+				indexInfo = [NSString stringWithFormat:@"0 0000000000000000000000000000000000000000\t\"%@\"", file.path];
+			} else {
+				indexInfo = [file indexInfo];
+			}
+			[input appendString:indexInfo];
 		}
 		
 		int ret = 1;
