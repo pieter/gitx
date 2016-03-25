@@ -7,11 +7,10 @@
 //
 
 #import "PBRepositoryDocumentController.h"
-#import "PBGitRepository.h"
+#import "PBGitRepositoryDocument.h"
 #import "PBGitRevList.h"
 #import "PBEasyPipe.h"
 #import "PBGitBinary.h"
-#import "GitRepoFinder.h"
 
 #import <ObjectiveGit/GTRepository.h>
 
@@ -45,7 +44,7 @@
     if (!success)
         return nil; // Repo creation failed
 
-    return [[PBGitRepository alloc] initWithContentsOfURL:[op URL] ofType:PBGitRepositoryDocumentType error:outError];
+    return [[PBGitRepositoryDocument alloc] initWithContentsOfURL:[op URL] ofType:PBGitRepositoryDocumentType error:outError];
 }
 
 - (BOOL)validateMenuItem:(NSMenuItem *)item

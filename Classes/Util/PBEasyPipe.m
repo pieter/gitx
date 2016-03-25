@@ -113,7 +113,13 @@ NSString *const PBEasyPipeUnderlyingExceptionKey = @"PBEasyPipeUnderlyingExcepti
 		inHandle = [[task standardInput] fileHandleForWriting];
 	}
 	
-	[task launch];
+	@try {
+		[task launch];
+	}
+	@catch (NSException *exception) {
+		if (ret) *ret = -1;
+		return nil;
+	}
 
 	if (input && inHandle) {
 		// A large write could wait for stdout buffer to be flushed by the task,

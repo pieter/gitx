@@ -594,6 +594,7 @@
 
 - (void) diffFilesAction:(id)sender
 {
+	/* TODO: Move that to the document */
 	[PBDiffWindowController showDiffWindowWithFiles:[sender representedObject] fromCommit:self.selectedCommits.firstObject diffCommit:nil];
 }
 

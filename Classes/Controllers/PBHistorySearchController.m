@@ -423,7 +423,7 @@
 			return;
 	}
 
-	backgroundSearchTask = [PBEasyPipe taskForCommand:[PBGitBinary path] withArgs:searchArguments inDir:[[historyController.repository fileURL] path]];
+	backgroundSearchTask = [PBEasyPipe taskForCommand:[PBGitBinary path] withArgs:searchArguments inDir:[[historyController.repository workingDirectoryURL] path]];
 	[backgroundSearchTask launch];
 
 	NSFileHandle *handle = [[backgroundSearchTask standardOutput] fileHandleForReading];

@@ -21,11 +21,9 @@
 #import "GitXScriptingConstants.h"
 #import "PBHistorySearchController.h"
 #import "PBGitRepositoryWatcher.h"
-#import "GitRepoFinder.h"
+#import "PBRepositoryFinder.h"
 #import "PBGitHistoryList.h"
 #import "PBGitStash.h"
-
-NSString *PBGitRepositoryDocumentType = @"Git Repository";
 
 @interface PBGitRepository ()
 
@@ -52,53 +50,21 @@ NSString *PBGitRepositoryDocumentType = @"Git Repository";
     return self;
 }
 
-- (void) dealloc
+- (id)initWithURL:(NSURL *)repositoryURL error:(NSError **)error
 {
-	// NSLog(@"Dealloc of repository");
-	[watcher stop];
-}
+	self = [self init];
+	if (!self) return nil;
 
-
-#pragma mark -
-#pragma mark NSDocument API
-
-// NSFileWrapper is broken and doesn't work when called on a directory containing a large number of directories and files.
-//because of this it is safer to implement readFromURL than readFromFileWrapper.
-//Because NSFileManager does not attempt to recursively open all directories and file when fileExistsAtPath is called
-//this works much better.
-- (BOOL)readFromURL:(NSURL *)absoluteURL ofType:(NSString *)typeName error:(NSError **)outError
-{
-	if (![PBGitBinary path])
-	{
-		if (outError) {
-			NSDictionary* userInfo = [NSDictionary dictionaryWithObject:[PBGitBinary notFoundError]
-																 forKey:NSLocalizedRecoverySuggestionErrorKey];
-			*outError = [NSError errorWithDomain:PBGitRepositoryErrorDomain code:0 userInfo:userInfo];
-		}
-		return NO;
-	}
-
-	BOOL isDirectory = FALSE;
-	[[NSFileManager defaultManager] fileExistsAtPath:[absoluteURL path] isDirectory:&isDirectory];
-	if (!isDirectory) {
-		if (outError) {
-			NSDictionary* userInfo = [NSDictionary dictionaryWithObject:@"Reading files is not supported."
-																 forKey:NSLocalizedRecoverySuggestionErrorKey];
-			*outError = [NSError errorWithDomain:PBGitRepositoryErrorDomain code:0 userInfo:userInfo];
-		}
-		return NO;
-	}
-
-    NSError *error = nil;
-	NSURL *repoURL = [GitRepoFinder gitDirForURL:absoluteURL];
-    _gtRepo = [GTRepository repositoryWithURL:repoURL error:&error];
+	NSError *gtError = nil;
+	NSURL *repoURL = [PBRepositoryFinder gitDirForURL:repositoryURL];
+	_gtRepo = [GTRepository repositoryWithURL:repoURL error:&gtError];
 	if (!_gtRepo) {
-		if (outError) {
+		if (error) {
 			NSDictionary* userInfo = [NSDictionary dictionaryWithObjectsAndKeys:
-                                      [NSString stringWithFormat:@"%@ does not appear to be a git repository.", [[self fileURL] path]], NSLocalizedRecoverySuggestionErrorKey,
-                                      error, NSUnderlyingErrorKey,
+                                      [NSString stringWithFormat:@"%@ does not appear to be a git repository.", [repositoryURL path]], NSLocalizedRecoverySuggestionErrorKey,
+                                      gtError, NSUnderlyingErrorKey,
                                       nil];
-			*outError = [NSError errorWithDomain:PBGitRepositoryErrorDomain code:0 userInfo:userInfo];
+			*error = [NSError errorWithDomain:PBGitRepositoryErrorDomain code:0 userInfo:userInfo];
 		}
 		return NO;
 	}
@@ -110,112 +76,14 @@ NSString *PBGitRepositoryDocumentType = @"Git Repository";
     // Setup the FSEvents watcher to fire notifications when things change
     watcher = [[PBGitRepositoryWatcher alloc] initWithRepository:self];
 
-	return YES;
+	return self;
 }
 
-- (void)close
+- (void) dealloc
 {
-	[revisionList cleanup];
-
-	[super close];
+	// NSLog(@"Dealloc of repository");
+	[watcher stop];
 }
-
-- (BOOL)isDocumentEdited
-{
-	return NO;
-}
-
-- (NSString *)displayName
-{
-    // Build our display name depending on the current HEAD and whether it's detached or not
-    if (self.gtRepo.isHEADDetached)
-		return [NSString localizedStringWithFormat:@"%@ (detached HEAD)", self.projectName];
-
-	return [NSString localizedStringWithFormat:@"%@ (branch: %@)", self.projectName, [[self headRef] description]];
-}
-
-- (void)makeWindowControllers
-{
-    // Create our custom window controller
-#ifndef CLI
-	[self addWindowController: [[PBGitWindowController alloc] initWithRepository:self displayDefault:YES]];
-#endif
-}
-
-// see if the current appleEvent has the command line arguments from the gitx cli
-// this could be from an openApplication or an openDocument apple event
-// when opening a repository this is called before the sidebar controller gets it's awakeFromNib: message
-// if the repository is already open then this is also a good place to catch the event as the window is about to be brought forward
-- (void)showWindows
-{
-	NSAppleEventDescriptor *currentAppleEvent = [[NSAppleEventManager sharedAppleEventManager] currentAppleEvent];
-
-	if (currentAppleEvent) {
-		NSAppleEventDescriptor *eventRecord = [currentAppleEvent paramDescriptorForKeyword:keyAEPropData];
-
-		// on app launch there may be many repositories opening, so double check that this is the right repo
-		NSString *path = [[eventRecord paramDescriptorForKeyword:typeFileURL] stringValue];
-		if (path) {
-			NSURL *workingDirectory = [NSURL URLWithString:path];
-			if ([[GitRepoFinder gitDirForURL:workingDirectory] isEqual:[self fileURL]]) {
-				NSAppleEventDescriptor *argumentsList = [eventRecord paramDescriptorForKeyword:kGitXAEKeyArgumentsList];
-				[self handleGitXScriptingArguments:argumentsList inWorkingDirectory:workingDirectory];
-
-				// showWindows may be called more than once during app launch so remove the CLI data after we handle the event
-				[currentAppleEvent removeDescriptorWithKeyword:keyAEPropData];
-			}
-		}
-	}
-
-	[super showWindows];
-}
-
-#pragma mark -
-#pragma mark NSResponder methods
-
-- (NSArray *)selectedURLsFromSender:(id)sender {
-	NSArray *selectedFiles = [sender representedObject];
-	if ([selectedFiles count] == 0)
-		return nil;
-
-	NSURL *workingDirectoryURL = self.workingDirectoryURL;
-	NSMutableArray *URLs = [NSMutableArray array];
-    for (id file in selectedFiles) {
-        NSString *path = file;
-        // Those can be PBChangedFiles sent by PBGitIndexController. Get their path.
-        if ([file respondsToSelector:@selector(path)]) {
-            path = [file path];
-        }
-
-        if (![path isKindOfClass:[NSString class]])
-            continue;
-        [URLs addObject:[workingDirectoryURL URLByAppendingPathComponent:path]];
-    }
-
-    return URLs;
-}
-
-- (IBAction)showInFinderAction:(id)sender {
-    NSArray *URLs = [self selectedURLsFromSender:sender];
-    if ([URLs count] == 0)
-        return;
-
-    [[NSWorkspace sharedWorkspace] activateFileViewerSelectingURLs:URLs];
-}
-
-- (IBAction)openFilesAction:(id)sender {
-    NSArray *URLs = [self selectedURLsFromSender:sender];
-
-    if ([URLs count] == 0)
-        return;
-
-    [[NSWorkspace sharedWorkspace] openURLs:URLs
-                    withAppBundleIdentifier:nil
-                                    options:0
-             additionalEventParamDescriptor:nil
-                          launchIdentifiers:NULL];
-}
-
 
 #pragma mark -
 #pragma mark Properties/General methods
@@ -262,6 +130,15 @@ NSString *PBGitRepositoryDocumentType = @"Git Repository";
     return self.gtRepo.gitDirectoryURL;
 }
 
+- (NSURL *)workingDirectoryURL {
+    return self.gtRepo.fileURL;
+}
+
+- (NSString *)workingDirectory
+{
+    return self.workingDirectoryURL.path;
+}
+
 - (void)forceUpdateRevisions
 {
 	[revisionList forceUpdate];
@@ -277,14 +154,6 @@ NSString *PBGitRepositoryDocumentType = @"Git Repository";
 - (NSString *)gitIgnoreFilename
 {
 	return [[self workingDirectory] stringByAppendingPathComponent:@".gitignore"];
-}
-
-- (PBGitWindowController *)windowController
-{
-	if ([[self windowControllers] count] == 0)
-		return NULL;
-	
-	return [[self windowControllers] objectAtIndex:0];
 }
 
 - (void)addRef:(GTReference *)gtRef
@@ -376,8 +245,6 @@ NSString *PBGitRepositoryDocumentType = @"Git Repository";
 	[self willChangeValueForKey:@"stashes"];
 	[self didChangeValueForKey:@"refs"];
 	[self didChangeValueForKey:@"stashes"];
-
-	[[[self windowController] window] setTitle:[self displayName]];
 }
 
 - (void) lazyReload
@@ -602,15 +469,6 @@ NSString *PBGitRepositoryDocumentType = @"Git Repository";
 - (void) readCurrentBranch
 {
 		self.currentBranch = [self addBranch: [self headRef]];
-}
-
-- (NSURL *)workingDirectoryURL {
-    return self.gtRepo.fileURL;
-}
-
-- (NSString *)workingDirectory
-{
-    return [self.workingDirectoryURL path];
 }
 
 #pragma mark Stashes
@@ -1036,6 +894,36 @@ NSString *PBGitRepositoryDocumentType = @"Git Repository";
 	return YES;
 }
 
+- (NSString *)performDiff:(PBGitCommit *)startCommit against:(PBGitCommit *)diffCommit forFiles:(NSArray *)filePaths {
+	NSParameterAssert(startCommit);
+	NSAssert(startCommit.repository == self, @"Different repo");
+
+	if (diffCommit) {
+		NSAssert(diffCommit.repository == self, @"Different repo");
+	} else {
+		diffCommit = [self headCommit];
+	}
+
+	NSString *commitSelector = [NSString stringWithFormat:@"%@..%@", startCommit.SHA, diffCommit.SHA];
+	NSMutableArray *arguments = [NSMutableArray arrayWithObjects:@"diff", @"--no-ext-diff", commitSelector, nil];
+
+	if (![PBGitDefaults showWhitespaceDifferences])
+		[arguments insertObject:@"-w" atIndex:1];
+
+	if (filePaths) {
+		[arguments addObject:@"--"];
+		[arguments addObjectsFromArray:filePaths];
+	}
+
+	int retValue;
+	NSString *diff = [startCommit.repository outputInWorkdirForArguments:arguments retValue:&retValue];
+	if (retValue) {
+		NSLog(@"diff failed with retValue: %d   for command: '%@'    output: '%@'", retValue, [arguments componentsJoinedByString:@" "], diff);
+		return @"";
+	}
+	return diff;
+}
+
 - (BOOL) deleteRef:(PBGitRef *)ref
 {
 	if (!ref)
@@ -1061,103 +949,13 @@ NSString *PBGitRepositoryDocumentType = @"Git Repository";
 	return YES;
 }
 
+- (BOOL)updateReference:(PBGitRef *)ref toPointAtCommit:(PBGitCommit *)newCommit {
+	int retValue = 1;
 
-#pragma mark GitX Scripting
+	[self outputForArguments:@[@"update-ref", @"-mUpdate from GitX", ref.ref, newCommit.SHA] retValue:&retValue];
 
-- (void)handleRevListArguments:(NSArray *)arguments inWorkingDirectory:(NSURL *)workingDirectory
-{
-	if (![arguments count])
-		return;
-
-	PBGitRevSpecifier *revListSpecifier = nil;
-
-	// the argument may be a branch or tag name but will probably not be the full reference
-	if ([arguments count] == 1) {
-		PBGitRef *refArgument = [self refForName:[arguments lastObject]];
-		if (refArgument) {
-			revListSpecifier = [[PBGitRevSpecifier alloc] initWithRef:refArgument];
-			revListSpecifier.workingDirectory = workingDirectory;
-		}
-	}
-
-	if (!revListSpecifier) {
-		revListSpecifier = [[PBGitRevSpecifier alloc] initWithParameters:arguments];
-		revListSpecifier.workingDirectory = workingDirectory;
-	}
-
-	self.currentBranch = [self addBranch:revListSpecifier];
-	[PBGitDefaults setShowStageView:NO];
-	[self.windowController showHistoryView:self];
+	return retValue;
 }
-
-- (void)handleBranchFilterEventForFilter:(PBGitXBranchFilterType)filter additionalArguments:(NSMutableArray *)arguments inWorkingDirectory:(NSURL *)workingDirectory
-{
-	self.currentBranchFilter = filter;
-	[PBGitDefaults setShowStageView:NO];
-	[self.windowController showHistoryView:self];
-
-	// treat any additional arguments as a rev-list specifier
-	if ([arguments count] > 1) {
-		[arguments removeObjectAtIndex:0];
-		[self handleRevListArguments:arguments inWorkingDirectory:workingDirectory];
-	}
-}
-
-- (void)handleGitXScriptingArguments:(NSAppleEventDescriptor *)argumentsList inWorkingDirectory:(NSURL *)workingDirectory
-{
-	NSMutableArray *arguments = [NSMutableArray array];
-	uint argumentsIndex = 1; // AppleEvent list descriptor's are one based
-	while(1) {
-		NSAppleEventDescriptor *arg = [argumentsList descriptorAtIndex:argumentsIndex++];
-		if (arg)
-			[arguments addObject:[arg stringValue]];
-		else
-			break;
-	}
-
-	if (![arguments count])
-		return;
-
-	NSString *firstArgument = [arguments objectAtIndex:0];
-
-	if ([firstArgument isEqualToString:@"-c"] || [firstArgument isEqualToString:@"--commit"]) {
-		[PBGitDefaults setShowStageView:YES];
-		[self.windowController showCommitView:self];
-		return;
-	}
-
-	if ([firstArgument isEqualToString:@"--all"]) {
-		[self handleBranchFilterEventForFilter:kGitXAllBranchesFilter additionalArguments:arguments inWorkingDirectory:workingDirectory];
-		return;
-	}
-
-	if ([firstArgument isEqualToString:@"--local"]) {
-		[self handleBranchFilterEventForFilter:kGitXLocalRemoteBranchesFilter additionalArguments:arguments inWorkingDirectory:workingDirectory];
-		return;
-	}
-
-	if ([firstArgument isEqualToString:@"--branch"]) {
-		[self handleBranchFilterEventForFilter:kGitXSelectedBranchFilter additionalArguments:arguments inWorkingDirectory:workingDirectory];
-		return;
-	}
-
-	// if the argument is not a known command then treat it as a rev-list specifier
-	[self handleRevListArguments:arguments inWorkingDirectory:workingDirectory];
-}
-
-// for the scripting bridge
-- (void)findInModeScriptCommand:(NSScriptCommand *)command
-{
-	NSDictionary *arguments = [command arguments];
-	NSString *searchString = [arguments objectForKey:kGitXFindSearchStringKey];
-	if (searchString) {
-		NSInteger mode = [[arguments objectForKey:kGitXFindInModeKey] integerValue];
-		[PBGitDefaults setShowStageView:NO];
-		[self.windowController showHistoryView:self];
-		[self.windowController setHistorySearch:searchString mode:mode];
-	}
-}
-
 
 #pragma mark low level
 
@@ -1204,29 +1002,29 @@ NSString *PBGitRepositoryDocumentType = @"Git Repository";
 
 - (NSString*) outputForArguments:(NSArray*) arguments
 {
-	return [PBEasyPipe outputForCommand:[PBGitBinary path] withArgs:arguments inDir: self.fileURL.path];
+	return [PBEasyPipe outputForCommand:[PBGitBinary path] withArgs:arguments inDir: self.workingDirectory];
 }
 
 - (NSString*) outputInWorkdirForArguments:(NSArray*) arguments
 {
-	return [PBEasyPipe outputForCommand:[PBGitBinary path] withArgs:arguments inDir: [self workingDirectory]];
+	return [PBEasyPipe outputForCommand:[PBGitBinary path] withArgs:arguments inDir:self.workingDirectory];
 }
 
 - (NSString*) outputInWorkdirForArguments:(NSArray *)arguments retValue:(int *)ret
 {
-	return [PBEasyPipe outputForCommand:[PBGitBinary path] withArgs:arguments inDir:[self workingDirectory] retValue: ret];
+	return [PBEasyPipe outputForCommand:[PBGitBinary path] withArgs:arguments inDir:self.workingDirectory retValue: ret];
 }
 
 - (NSString*) outputForArguments:(NSArray *)arguments retValue:(int *)ret
 {
-	return [PBEasyPipe outputForCommand:[PBGitBinary path] withArgs:arguments inDir: self.fileURL.path retValue: ret];
+	return [PBEasyPipe outputForCommand:[PBGitBinary path] withArgs:arguments inDir: self.workingDirectory retValue: ret];
 }
 
 - (NSString*) outputForArguments:(NSArray *)arguments inputString:(NSString *)input retValue:(int *)ret
 {
 	return [PBEasyPipe outputForCommand:[PBGitBinary path]
 							   withArgs:arguments
-								  inDir:[self workingDirectory]
+								  inDir:self.workingDirectory
 							inputString:input
 							   retValue: ret];
 }
@@ -1235,7 +1033,7 @@ NSString *PBGitRepositoryDocumentType = @"Git Repository";
 {
 	return [PBEasyPipe outputForCommand:[PBGitBinary path]
 							   withArgs:arguments
-								  inDir:[self workingDirectory]
+								  inDir:self.workingDirectory
 				 byExtendingEnvironment:dict
 							inputString:input
 							   retValue: ret];

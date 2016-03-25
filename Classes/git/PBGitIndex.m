@@ -98,22 +98,22 @@ NSString *PBGitIndexOperationFailed = @"PBGitIndexOperationFailed";
 	// If we amend, we want to keep the author information for the previous commit
 	// We do this by reading in the previous commit, and storing the information
 	// in a dictionary. This dictionary will then later be read by [self commit:]
-	NSString *message = [self.repository outputForCommand:@"cat-file commit HEAD"];
-	NSArray *match = [message substringsMatchingRegularExpression:@"\nauthor ([^\n]*) <([^\n>]*)> ([0-9]+[^\n]*)\n" count:3 options:0 ranges:nil error:nil];
-	if (match)
-		self.amendEnvironment = [NSDictionary dictionaryWithObjectsAndKeys:[match objectAtIndex:1], @"GIT_AUTHOR_NAME",
-                                 [match objectAtIndex:2], @"GIT_AUTHOR_EMAIL",
-                                 [match objectAtIndex:3], @"GIT_AUTHOR_DATE",
-                                 nil];
+	GTReference *headRef = [self.repository.gtRepo headReferenceWithError:NULL];
+	GTCommit *commit = [headRef resolvedTarget];
+	if (commit)
+		self.amendEnvironment = @{
+								  @"GIT_AUTHOR_NAME":  commit.author.name,
+								  @"GIT_AUTHOR_EMAIL": commit.author.email,
+								  @"GIT_AUTHOR_DATE":  commit.commitDate,
+								  };
 
-	// Find the commit message
-	NSRange r = [message rangeOfString:@"\n\n"];
-	if (r.location != NSNotFound) {
-		NSString *commitMessage = [message substringFromIndex:r.location + 2];
-		[[NSNotificationCenter defaultCenter] postNotificationName:PBGitIndexAmendMessageAvailable
-															object: self
-														  userInfo:[NSDictionary dictionaryWithObject:commitMessage forKey:@"message"]];
+	NSDictionary *notifDict = nil;
+	if (commit.message) {
+		notifDict = @{@"message": commit.message};
 	}
+	[[NSNotificationCenter defaultCenter] postNotificationName:PBGitIndexAmendMessageAvailable
+														object:self
+													  userInfo:notifDict];
 	
 }
 

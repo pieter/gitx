@@ -47,7 +47,7 @@ static NSString * PBStringFromBranchFilterType(PBGitXBranchFilterType type) {
 @class GTOID;
 @class PBGitRepositoryWatcher;
 
-@interface PBGitRepository : NSDocument {
+@interface PBGitRepository : NSObject {
 	__strong PBGitRepositoryWatcher *watcher;
 	__strong PBGitRevSpecifier *_headRef; // Caching
 	__strong GTOID* _headOID;
@@ -71,6 +71,9 @@ static NSString * PBStringFromBranchFilterType(PBGitXBranchFilterType type) {
 
 @property (nonatomic, strong) NSMutableArray* submodules;
 
+// Designated initializer
+- (id)initWithURL:(NSURL *)repositoryURL error:(NSError **)error;
+
 - (void) cloneRepositoryToPath:(NSString *)path bare:(BOOL)isBare;
 - (void) beginAddRemote:(NSString *)remoteName forURL:(NSString *)remoteURL;
 - (void) beginFetchFromRemoteForRef:(PBGitRef *)ref;
@@ -90,6 +93,9 @@ static NSString * PBStringFromBranchFilterType(PBGitXBranchFilterType type) {
 - (BOOL) stashDrop:(PBGitStash *)stash;
 - (BOOL) stashSave;
 - (BOOL) stashSaveWithKeepIndex:(BOOL)keepIndex;
+
+- (BOOL)updateReference:(PBGitRef *)ref toPointAtCommit:(PBGitCommit *)newCommit;
+- (NSString *)performDiff:(PBGitCommit *)startCommit against:(PBGitCommit *)diffCommit forFiles:(NSArray *)filePaths;
 
 - (NSURL *) gitURL ;
 
@@ -147,11 +153,5 @@ static NSString * PBStringFromBranchFilterType(PBGitXBranchFilterType type) {
 
 - (void) forceUpdateRevisions;
 - (NSURL*) getIndexURL;
-
-// for the scripting bridge
-- (void)findInModeScriptCommand:(NSScriptCommand *)command;
-
-- (IBAction)showInFinderAction:(id)sender;
-- (IBAction)openFilesAction:(id)sender;
 
 @end

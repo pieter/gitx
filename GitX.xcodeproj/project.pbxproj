@@ -6,6 +6,20 @@
 	objectVersion = 46;
 	objects = {
 
+/* Begin PBXAggregateTarget section */
+		4D3F252B18C37D2E000922D9 /* Generate Scripting Header */ = {
+			isa = PBXAggregateTarget;
+			buildConfigurationList = 4D3F252C18C37D2E000922D9 /* Build configuration list for PBXAggregateTarget "Generate Scripting Header" */;
+			buildPhases = (
+				4D3F252F18C37D5A000922D9 /* Generate Scripting Header */,
+			);
+			dependencies = (
+			);
+			name = "Generate Scripting Header";
+			productName = "Generate Scripting Header";
+		};
+/* End PBXAggregateTarget section */
+
 /* Begin PBXBuildFile section */
 		0A6858C711F7EA8A00AC2BE4 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A6858C611F7EA8A00AC2BE4 /* CoreServices.framework */; };
 		2682AABB1929140E00271A4D /* GTOID+JavaScript.m in Sources */ = {isa = PBXBuildFile; fileRef = 2682AABA1929140E00271A4D /* GTOID+JavaScript.m */; };
@@ -125,8 +139,6 @@
 		4A5D773914A9A9CC00DF6C68 /* PBSourceViewItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A5D76DF14A9A9CC00DF6C68 /* PBSourceViewItem.m */; };
 		4A5D773A14A9A9F600DF6C68 /* gitx.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A5D768614A9A9CC00DF6C68 /* gitx.m */; };
 		4A5D773B14A9A9F900DF6C68 /* gitx_askpasswd_main.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A5D768714A9A9CC00DF6C68 /* gitx_askpasswd_main.m */; };
-		4A5D773C14A9AA2F00DF6C68 /* PBGitBinary.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A5D764F14A9A9CC00DF6C68 /* PBGitBinary.m */; };
-		4A5D773D14A9AA3700DF6C68 /* PBEasyPipe.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A5D76B214A9A9CC00DF6C68 /* PBEasyPipe.m */; };
 		4A5D777314A9AEB000DF6C68 /* PBSourceViewAction.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A5D776D14A9AEB000DF6C68 /* PBSourceViewAction.m */; };
 		4A5D777414A9AEB000DF6C68 /* PBSourceViewBadge.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A5D776F14A9AEB000DF6C68 /* PBSourceViewBadge.m */; };
 		4A5D777514A9AEB000DF6C68 /* PBSourceViewRemote.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A5D777214A9AEB000DF6C68 /* PBSourceViewRemote.m */; };
@@ -136,10 +148,11 @@
 		4A8F6B4C14A9B6C90002F4D7 /* MGScopeBar.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4A8F6B4714A9B6110002F4D7 /* MGScopeBar.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		4A90A73514A9D24300D0DA02 /* GitX.sdef in Resources */ = {isa = PBXBuildFile; fileRef = 4A90A73414A9D24300D0DA02 /* GitX.sdef */; };
 		4AAAFDDA14A010DD008FC9B5 /* Sparkle.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4A68AD6714A0050F006DE321 /* Sparkle.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
-		4AB057E31652652000DE751D /* GitRepoFinder.m in Sources */ = {isa = PBXBuildFile; fileRef = 4AB057E21652652000DE751D /* GitRepoFinder.m */; };
-		4AB057E41652652000DE751D /* GitRepoFinder.m in Sources */ = {isa = PBXBuildFile; fileRef = 4AB057E21652652000DE751D /* GitRepoFinder.m */; };
+		4AB057E31652652000DE751D /* PBRepositoryFinder.m in Sources */ = {isa = PBXBuildFile; fileRef = 4AB057E21652652000DE751D /* PBRepositoryFinder.m */; };
+		4AB057E41652652000DE751D /* PBRepositoryFinder.m in Sources */ = {isa = PBXBuildFile; fileRef = 4AB057E21652652000DE751D /* PBRepositoryFinder.m */; };
 		4AB71FF814B7EDD400F1DFFC /* RJModalRepoSheet.m in Sources */ = {isa = PBXBuildFile; fileRef = 4AB71FF714B7EDD400F1DFFC /* RJModalRepoSheet.m */; };
 		4AC42F7D16BFBADA007CCA3A /* AppKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4A40159814067B7A00DB9C07 /* AppKit.framework */; };
+		4D3FB3E7198AEAAF000B4A58 /* PBGitRepositoryDocument.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D3FB3E6198AEAAF000B4A58 /* PBGitRepositoryDocument.m */; };
 		551BF176112F3F4B00265053 /* gitx_askpasswd in Resources */ = {isa = PBXBuildFile; fileRef = 551BF111112F371800265053 /* gitx_askpasswd */; };
 		643952771603EF9B00BB7AFF /* PBGitSVSubmoduleItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 643952761603EF9B00BB7AFF /* PBGitSVSubmoduleItem.m */; };
 		6C25810B1C2720E60080A89A /* GitXCommitCopier.m in Sources */ = {isa = PBXBuildFile; fileRef = 6C25810A1C2720E60080A89A /* GitXCommitCopier.m */; };
@@ -288,6 +301,20 @@
 			proxyType = 2;
 			remoteGlobalIDString = F879D8361B4B7F7C002D5C07;
 			remoteInfo = "ObjectiveGit-iOSTests";
+		};
+		4D3F253018C37D9A000922D9 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 4D3F252B18C37D2E000922D9;
+			remoteInfo = "Generate Scripting Header";
+		};
+		4D3F253218C37D9F000922D9 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 4D3F252B18C37D2E000922D9;
+			remoteInfo = "Generate Scripting Header";
 		};
 		551BF174112F3F3500265053 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -541,10 +568,13 @@
 		4A90A72C14A9C12F00D0DA02 /* Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Release.xcconfig; sourceTree = SOURCE_ROOT; };
 		4A90A73314A9D1E800D0DA02 /* GitX.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GitX.h; sourceTree = SOURCE_ROOT; };
 		4A90A73414A9D24300D0DA02 /* GitX.sdef */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = GitX.sdef; sourceTree = SOURCE_ROOT; };
-		4AB057E11652652000DE751D /* GitRepoFinder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GitRepoFinder.h; sourceTree = "<group>"; };
-		4AB057E21652652000DE751D /* GitRepoFinder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GitRepoFinder.m; sourceTree = "<group>"; };
+		4AB057E11652652000DE751D /* PBRepositoryFinder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PBRepositoryFinder.h; sourceTree = "<group>"; };
+		4AB057E21652652000DE751D /* PBRepositoryFinder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PBRepositoryFinder.m; sourceTree = "<group>"; usesTabs = 0; };
 		4AB71FF614B7EDD400F1DFFC /* RJModalRepoSheet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RJModalRepoSheet.h; sourceTree = "<group>"; };
 		4AB71FF714B7EDD400F1DFFC /* RJModalRepoSheet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RJModalRepoSheet.m; sourceTree = "<group>"; };
+		4D3FB3E5198AEAAF000B4A58 /* PBGitRepositoryDocument.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PBGitRepositoryDocument.h; sourceTree = "<group>"; };
+		4D3FB3E6198AEAAF000B4A58 /* PBGitRepositoryDocument.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PBGitRepositoryDocument.m; sourceTree = "<group>"; };
+		4DC1853818E6F93200E8DB8F /* Info-gitx.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Info-gitx.plist"; sourceTree = "<group>"; };
 		551BF111112F371800265053 /* gitx_askpasswd */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = gitx_askpasswd; sourceTree = BUILT_PRODUCTS_DIR; };
 		643952751603EF9B00BB7AFF /* PBGitSVSubmoduleItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PBGitSVSubmoduleItem.h; sourceTree = "<group>"; };
 		643952761603EF9B00BB7AFF /* PBGitSVSubmoduleItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PBGitSVSubmoduleItem.m; sourceTree = "<group>"; };
@@ -709,6 +739,7 @@
 				4A5D75B514A9A90500DF6C68 /* source.css */,
 				4A5D75B714A9A90500DF6C68 /* UpdateKey.pem */,
 				4A5D75B914A9A90500DF6C68 /* XIBs */,
+				4DC1853818E6F93200E8DB8F /* Info-gitx.plist */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -862,6 +893,8 @@
 				4A5D764914A9A9CC00DF6C68 /* PBWebDiffController.m */,
 				4A5D764A14A9A9CC00DF6C68 /* PBWebHistoryController.h */,
 				4A5D764B14A9A9CC00DF6C68 /* PBWebHistoryController.m */,
+				4D3FB3E5198AEAAF000B4A58 /* PBGitRepositoryDocument.h */,
+				4D3FB3E6198AEAAF000B4A58 /* PBGitRepositoryDocument.m */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -926,8 +959,8 @@
 				A2F8D0DE17AAB32500580B84 /* PBGitStash.m */,
 				643952751603EF9B00BB7AFF /* PBGitSVSubmoduleItem.h */,
 				643952761603EF9B00BB7AFF /* PBGitSVSubmoduleItem.m */,
-				4AB057E11652652000DE751D /* GitRepoFinder.h */,
-				4AB057E21652652000DE751D /* GitRepoFinder.m */,
+				4AB057E11652652000DE751D /* PBRepositoryFinder.h */,
+				4AB057E21652652000DE751D /* PBRepositoryFinder.m */,
 				2682AAB91929140E00271A4D /* GTOID+JavaScript.h */,
 				2682AABA1929140E00271A4D /* GTOID+JavaScript.m */,
 			);
@@ -1074,11 +1107,11 @@
 				8D11072E0486CEB800E47090 /* Frameworks */,
 				F580E6BD0E73329C009E2D3F /* CopyFiles */,
 				F5CF04A20EAE696C00D75C81 /* Copy HTML files */,
-				D81E15ED121CE83D00269E61 /* Scripting Bridge Header Script  */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				4D3F253118C37D9A000922D9 /* PBXTargetDependency */,
 				4A8F6B4A14A9B6B80002F4D7 /* PBXTargetDependency */,
 				4A68AD7114A00534006DE321 /* PBXTargetDependency */,
 				4A68AD7314A00534006DE321 /* PBXTargetDependency */,
@@ -1101,6 +1134,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				4D3F253318C37D9F000922D9 /* PBXTargetDependency */,
 				4A467EF01546D1F300F8902B /* PBXTargetDependency */,
 			);
 			name = "cli tool";
@@ -1147,6 +1181,7 @@
 				8D1107260486CEB800E47090 /* GitX */,
 				913D5E480E55644600CECEA2 /* cli tool */,
 				551BF110112F371800265053 /* gitx_askpasswd */,
+				4D3F252B18C37D2E000922D9 /* Generate Scripting Header */,
 			);
 		};
 /* End PBXProject section */
@@ -1290,7 +1325,7 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		D81E15ED121CE83D00269E61 /* Scripting Bridge Header Script  */ = {
+		4D3F252F18C37D5A000922D9 /* Generate Scripting Header */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -1298,14 +1333,13 @@
 			inputPaths = (
 				"$(SRCROOT)/GitX.sdef",
 			);
-			name = "Scripting Bridge Header Script ";
+			name = "Generate Scripting Header";
 			outputPaths = (
 				"$(SRCROOT)/GitX.h",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# Build the scripting bridge header GitX.h if the GitX.sdef file changes\necho \"Trying to build scripting definitions from $CONFIGURATION_BUILD_DIR/GitX.app\"\nif [ -e \"$CONFIGURATION_BUILD_DIR/GitX.app\" ]; then\n\techo -n \"generating...\"\n\tsdef \"$CONFIGURATION_BUILD_DIR/GitX.app\" | sdp -fh --basename GitX\n\techo \" done.\"\nelse\n\techo \"warning: Scripting definitions weren't generated.\"\nfi";
-			showEnvVarsInLog = 0;
+			shellScript = "# Build the scripting bridge header GitX.h if the GitX.sdef file changes\nsdp -fh --basename GitX $SRCROOT/GitX.sdef\n";
 		};
 		F5CF04A20EAE696C00D75C81 /* Copy HTML files */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -1388,6 +1422,7 @@
 				2682AABB1929140E00271A4D /* GTOID+JavaScript.m in Sources */,
 				4A5D771314A9A9CC00DF6C68 /* PBChangedFile.m in Sources */,
 				4A5D771414A9A9CC00DF6C68 /* PBCLIProxy.m in Sources */,
+				4D3FB3E7198AEAAF000B4A58 /* PBGitRepositoryDocument.m in Sources */,
 				4A5D771514A9A9CC00DF6C68 /* PBCommitList.m in Sources */,
 				4A5D771614A9A9CC00DF6C68 /* PBGraphCellInfo.m in Sources */,
 				4A5D771714A9A9CC00DF6C68 /* PBNSURLPathUserDefaultsTransfomer.m in Sources */,
@@ -1426,7 +1461,7 @@
 				4A5D777514A9AEB000DF6C68 /* PBSourceViewRemote.m in Sources */,
 				4AB71FF814B7EDD400F1DFFC /* RJModalRepoSheet.m in Sources */,
 				643952771603EF9B00BB7AFF /* PBGitSVSubmoduleItem.m in Sources */,
-				4AB057E31652652000DE751D /* GitRepoFinder.m in Sources */,
+				4AB057E31652652000DE751D /* PBRepositoryFinder.m in Sources */,
 				4A2125A417C0C78A00B5B582 /* NSColor+RGB.m in Sources */,
 				A2F8D0DF17AAB32500580B84 /* PBGitStash.m in Sources */,
 				A2F8D0EB17AAB95E00580B84 /* PBGitSVStashItem.m in Sources */,
@@ -1438,9 +1473,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				4A5D773A14A9A9F600DF6C68 /* gitx.m in Sources */,
-				4A5D773C14A9AA2F00DF6C68 /* PBGitBinary.m in Sources */,
-				4A5D773D14A9AA3700DF6C68 /* PBEasyPipe.m in Sources */,
-				4AB057E41652652000DE751D /* GitRepoFinder.m in Sources */,
+				4AB057E41652652000DE751D /* PBRepositoryFinder.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1471,6 +1504,16 @@
 			isa = PBXTargetDependency;
 			name = MGScopeBar.framework;
 			targetProxy = 4A8F6B4914A9B6B80002F4D7 /* PBXContainerItemProxy */;
+		};
+		4D3F253118C37D9A000922D9 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 4D3F252B18C37D2E000922D9 /* Generate Scripting Header */;
+			targetProxy = 4D3F253018C37D9A000922D9 /* PBXContainerItemProxy */;
+		};
+		4D3F253318C37D9F000922D9 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 4D3F252B18C37D2E000922D9 /* Generate Scripting Header */;
+			targetProxy = 4D3F253218C37D9F000922D9 /* PBXContainerItemProxy */;
 		};
 		551BF175112F3F3500265053 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -1643,6 +1686,20 @@
 			};
 			name = Release;
 		};
+		4D3F252D18C37D2E000922D9 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		4D3F252E18C37D2E000922D9 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
 		551BF113112F371800265053 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -1675,8 +1732,10 @@
 		913D5E4B0E55644600CECEA2 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CREATE_INFOPLIST_SECTION_IN_BINARY = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = GitX_Prefix.pch;
+				INFOPLIST_FILE = "Resources/Info-gitx.plist";
 				INSTALL_PATH = /usr/local/bin;
 				PRODUCT_NAME = gitx;
 				SKIP_INSTALL = YES;
@@ -1686,8 +1745,10 @@
 		913D5E4C0E55644600CECEA2 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CREATE_INFOPLIST_SECTION_IN_BINARY = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = GitX_Prefix.pch;
+				INFOPLIST_FILE = "Resources/Info-gitx.plist";
 				INSTALL_PATH = /usr/local/bin;
 				PRODUCT_NAME = gitx;
 				SKIP_INSTALL = YES;
@@ -1712,6 +1773,15 @@
 			buildConfigurations = (
 				26FC0A890875C7B200E6366F /* Debug */,
 				26FC0A8A0875C7B200E6366F /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		4D3F252C18C37D2E000922D9 /* Build configuration list for PBXAggregateTarget "Generate Scripting Header" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4D3F252D18C37D2E000922D9 /* Debug */,
+				4D3F252E18C37D2E000922D9 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
