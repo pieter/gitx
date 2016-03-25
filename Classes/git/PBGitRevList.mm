@@ -153,8 +153,9 @@ using namespace std;
 {
 	NSError *error = nil;
 	GTRepository *repo = enumerator.repository;
-	// [enumerator resetWithOptions:GTEnumeratorOptionsTimeSort];
-	[enumerator resetWithOptions:GTEnumeratorOptionsTopologicalSort];
+	[enumerator resetWithOptions:GTEnumeratorOptionsTimeSort];
+//	[enumerator resetWithOptions:GTEnumeratorOptionsTopologicalSort];
+//	[enumerator resetWithOptions:GTEnumeratorOptionsTopologicalSort|GTEnumeratorOptionsTimeSort];
 	NSMutableSet *enumCommits = [NSMutableSet new];
 	if (rev.isSimpleRef) {
 		GTObject *object = [repo lookUpObjectByRevParse:rev.simpleRef error:&error];
@@ -200,12 +201,13 @@ using namespace std;
 		}
 	}
 
-	NSArray *sortedBranchesAndTags = [[enumCommits allObjects] sortedArrayWithOptions:NSSortStable usingComparator:^NSComparisonResult(id obj1, id obj2) {
-		GTCommit *branchCommit1 = obj1;
-		GTCommit *branchCommit2 = obj2;
-
-		return [branchCommit2.commitDate compare:branchCommit1.commitDate];
-	}];
+//	NSArray *sortedBranchesAndTags = [[enumCommits allObjects] sortedArrayWithOptions:NSSortStable usingComparator:^NSComparisonResult(id obj1, id obj2) {
+//		GTCommit *branchCommit1 = obj1;
+//		GTCommit *branchCommit2 = obj2;
+//
+//		return [branchCommit2.commitDate compare:branchCommit1.commitDate];
+//	}];
+	NSArray *sortedBranchesAndTags = [enumCommits allObjects];
 
 	for (GTCommit *commit in sortedBranchesAndTags) {
 		NSError *pushError = nil;
