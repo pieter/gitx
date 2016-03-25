@@ -1054,30 +1054,61 @@
 							   retValue: ret];
 }
 
-- (BOOL)executeHook:(NSString *)name output:(NSString **)output
-{
+- (BOOL)executeHook:(NSString *)name output:(NSString **)output {
 	return [self executeHook:name withArgs:[NSArray array] output:output];
 }
 
-- (BOOL)executeHook:(NSString *)name withArgs:(NSArray *)arguments output:(NSString **)output
-{
-	NSString *hookPath = [[[[self gitURL] path] stringByAppendingPathComponent:@"hooks"] stringByAppendingPathComponent:name];
-	if (![[NSFileManager defaultManager] isExecutableFileAtPath:hookPath])
-		return TRUE;
+- (BOOL)executeHook:(NSString *)name withArgs:(NSArray *)arguments output:(NSString **)outputPtr {
+	return [self executeHook:name arguments:arguments output:outputPtr error:NULL];
+}
 
-	NSDictionary *info = [NSDictionary dictionaryWithObjectsAndKeys:
-		[self gitURL].path, @"GIT_DIR",
-		[[self gitURL].path stringByAppendingPathComponent:@"index"], @"GIT_INDEX_FILE",
-		nil
-	];
+- (BOOL)executeHook:(NSString *)name error:(NSError **)error {
+	return [self executeHook:name arguments:@[] error:error];
+}
+
+- (BOOL)executeHook:(NSString *)name arguments:(NSArray *)arguments error:(NSError **)error {
+	return [self executeHook:name arguments:arguments output:NULL error:error];
+}
+
+- (BOOL)executeHook:(NSString *)name arguments:(NSArray *)arguments output:(NSString **)outputPtr error:(NSError **)error {
+	NSParameterAssert(name != nil);
+
+	NSString *hookPath = [[[[self gitURL] path] stringByAppendingPathComponent:@"hooks"] stringByAppendingPathComponent:name];
+	if (![[NSFileManager defaultManager] isExecutableFileAtPath:hookPath]) {
+		// XXX: Maybe return error ?
+		// We *
+		return @"";
+	}
+
+	NSDictionary *info = @{
+						   @"GIT_DIR": self.gitURL.path,
+						   @"GIT_INDEX_FILE": [self.gitURL.path stringByAppendingPathComponent:@"index"],
+						   };
 
 	int ret = 1;
-	NSString *_output =	[PBEasyPipe outputForCommand:hookPath withArgs:arguments inDir:[self workingDirectory] byExtendingEnvironment:info inputString:nil retValue:&ret];
+	NSString *output = [PBEasyPipe outputForCommand:hookPath withArgs:arguments inDir:[self workingDirectory] byExtendingEnvironment:info inputString:nil retValue:&ret];
+	if (ret != 0) {
+		NSString *failureReason = [NSString localizedStringWithFormat:@"Hook %@ failed", name];
+		NSString *desc = nil;
+		if (output.length == 0) {
+			desc = [NSString localizedStringWithFormat:@"The %@ hook failed to run.", name];
+		} else {
+			desc = [NSString localizedStringWithFormat:@"The %@ hook failed to run and returned the following:\n%@", name, output];
+		}
 
-	if (output)
-		*output = _output;
+		if (error) *error = [NSError errorWithDomain:PBGitRepositoryErrorDomain
+												code:0
+											userInfo:@{
+													   NSLocalizedFailureReasonErrorKey: failureReason,
+													   NSLocalizedDescriptionKey: desc,
+													   }
+							 ];
+		return NO;
+	}
 
-	return ret == 0;
+	if (outputPtr) *outputPtr = output;
+
+	return (ret == 0);
 }
 
 - (NSString *)parseReference:(NSString *)reference
