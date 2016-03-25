@@ -44,6 +44,7 @@ static NSString * PBStringFromBranchFilterType(PBGitXBranchFilterType type) {
 
 @class PBGitWindowController;
 @class PBGitCommit;
+@class PBGitIndex;
 @class GTOID;
 @class PBGitRepositoryWatcher;
 
@@ -64,6 +65,7 @@ static NSString * PBStringFromBranchFilterType(PBGitXBranchFilterType type) {
 @property (readonly, strong) GTRepository* gtRepo;
 
 @property (nonatomic, strong) NSMutableArray* submodules;
+@property (readonly, strong) PBGitIndex *index;
 
 // Designated initializer
 - (id)initWithURL:(NSURL *)repositoryURL error:(NSError **)error;

@@ -8,6 +8,7 @@
 
 #import "PBGitRepository.h"
 #import "PBGitCommit.h"
+#import "PBGitIndex.h"
 #import "PBGitWindowController.h"
 #import "PBGitBinary.h"
 
@@ -30,6 +31,7 @@
 	__strong PBGitRevSpecifier *_headRef; // Caching
 	__strong GTOID* _headOID;
 	__strong GTRepository* _gtRepo;
+	PBGitIndex *_index;
 }
 
 @property (nonatomic, strong) NSNumber *hasSVNRepoConfig;
@@ -550,6 +552,14 @@
 		[self.windowController showErrorSheetTitle:title message:message arguments:arguments output:output];
     }
     return retValue ? NO : YES;
+}
+
+- (PBGitIndex *)index
+{
+	if (!_index) {
+		_index = [[PBGitIndex alloc] initWithRepository:self];
+	}
+	return _index;
 }
 
 #pragma mark Remotes
