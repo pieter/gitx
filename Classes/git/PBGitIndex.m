@@ -52,6 +52,7 @@ NSString *PBGitIndexOperationFailed = @"PBGitIndexOperationFailed";
 
 @property (retain) NSDictionary *amendEnvironment;
 @property (retain) NSMutableArray *files;
+@property (assign) BOOL amend;
 
 @end
 
