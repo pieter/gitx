@@ -31,7 +31,7 @@ typedef NS_ENUM(NSUInteger, PBEasyPipeError) {
  * @param directory The directory to use as the executable working directory.
  * @param terminationHandler A block that will be called when the executable exits.
  */
-+ (void)performCommand:(NSString *)command arguments:(nullable NSArray *)arguments inDirectory:(nullable NSString *)directory terminationHandler:(void (^)(NSTask *task, NSError * __nullable error))terminationHandler;
++ (nullable NSTask *)performCommand:(NSString *)command arguments:(nullable NSArray *)arguments inDirectory:(nullable NSString *)directory terminationHandler:(void (^)(NSTask *task, NSError * __nullable error))terminationHandler;
 
 /**
  * Execute a command in the shell, and process its output.
@@ -44,7 +44,7 @@ typedef NS_ENUM(NSUInteger, PBEasyPipeError) {
  * @param completionHandler A block that will be called when the executable exits.
  *							If readData is nil, it means an error occurred.
  */
-+ (void)performCommand:(NSString *)command arguments:(nullable NSArray *)arguments inDirectory:(nullable NSString *)directory completionHandler:(void (^)(NSTask *task, NSData * __nullable readData, NSError * __nullable error))completionHandler;
++ (nullable NSTask *)performCommand:(NSString *)command arguments:(nullable NSArray *)arguments inDirectory:(nullable NSString *)directory completionHandler:(void (^)(NSTask *task, NSData * __nullable readData, NSError * __nullable error))completionHandler;
 
 /**
  * Setup a task for subsequent execution.
@@ -58,20 +58,20 @@ typedef NS_ENUM(NSUInteger, PBEasyPipeError) {
 /* The following methods are kept for backward-compatibility.
  * Newly-written code should use the block-based methods above.
  */
-+ (NSTask *)taskForCommand:(NSString *)cmd withArgs:(NSArray *)args inDir:(NSString *)dir GITX_DEPRECATED;
-+ (NSString *)outputForCommand:(NSString *)cmd withArgs:(NSArray *)args GITX_DEPRECATED;
-+ (NSString *)outputForCommand:(NSString *)cmd withArgs:(NSArray *)args inDir:(NSString *)dir GITX_DEPRECATED;
-+ (NSString *)outputForCommand:(NSString *)cmd withArgs:(NSArray *)args inDir:(NSString *)dir retValue:(int *)ret GITX_DEPRECATED;
-+ (NSString *)outputForCommand:(NSString *)cmd withArgs:(NSArray *)args inDir:(NSString *)dir inputString:(NSString *)input retValue:(int *)ret GITX_DEPRECATED;
-+ (NSString *)outputForCommand:(NSString *)cmd withArgs:(NSArray *)args inDir:(NSString *)dir byExtendingEnvironment:(NSDictionary *)dict inputString:(NSString *)input retValue:(int *)ret GITX_DEPRECATED;
++ (NSTask *)taskForCommand:(NSString *)cmd withArgs:(nullable NSArray *)args inDir:(nullable NSString *)dir GITX_DEPRECATED;
++ (NSString *)outputForCommand:(NSString *)cmd withArgs:(nullable NSArray *)args GITX_DEPRECATED;
++ (NSString *)outputForCommand:(NSString *)cmd withArgs:(nullable NSArray *)args inDir:(nullable NSString *)dir GITX_DEPRECATED;
++ (NSString *)outputForCommand:(NSString *)cmd withArgs:(nullable NSArray *)args inDir:(nullable NSString *)dir retValue:(nullable int *)ret GITX_DEPRECATED;
++ (NSString *)outputForCommand:(NSString *)cmd withArgs:(nullable NSArray *)args inDir:(nullable NSString *)dir inputString:(nullable NSString *)input retValue:(nullable int *)ret GITX_DEPRECATED;
++ (NSString *)outputForCommand:(NSString *)cmd withArgs:(nullable NSArray *)args inDir:(nullable NSString *)dir byExtendingEnvironment:(nullable NSDictionary *)dict inputString:(nullable NSString *)input retValue:(nullable int *)ret GITX_DEPRECATED;
 
 /*
  * The following methods are deprecated because they're inherently racy:
  * They are launched at the end of the method, but you might not be able to
  * register for the NSFileHandle notification before they are done running.
  */
-+ (NSFileHandle *)handleForCommand:(NSString *)cmd withArgs:(NSArray *)args GITX_DEPRECATED;
-+ (NSFileHandle *)handleForCommand:(NSString *)cmd withArgs:(NSArray *)args inDir:(NSString *)dir GITX_DEPRECATED;
++ (NSFileHandle *)handleForCommand:(NSString *)cmd withArgs:(nullable NSArray *)args GITX_DEPRECATED;
++ (NSFileHandle *)handleForCommand:(NSString *)cmd withArgs:(nullable NSArray *)args inDir:(nullable NSString *)dir GITX_DEPRECATED;
 
 @end
 
