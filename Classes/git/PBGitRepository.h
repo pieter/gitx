@@ -47,13 +47,7 @@ static NSString * PBStringFromBranchFilterType(PBGitXBranchFilterType type) {
 @class GTOID;
 @class PBGitRepositoryWatcher;
 
-@interface PBGitRepository : NSObject {
-	__strong PBGitRepositoryWatcher *watcher;
-	__strong PBGitRevSpecifier *_headRef; // Caching
-	__strong GTOID* _headOID;
-	__strong GTRepository* _gtRepo;
-}
-
+@interface PBGitRepository : NSDocument
 
 @property (assign) BOOL hasChanged;
 @property (assign) NSInteger currentBranchFilter;

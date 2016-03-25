@@ -25,7 +25,12 @@
 #import "PBGitHistoryList.h"
 #import "PBGitStash.h"
 
-@interface PBGitRepository ()
+@interface PBGitRepository () {
+	__strong PBGitRepositoryWatcher *watcher;
+	__strong PBGitRevSpecifier *_headRef; // Caching
+	__strong GTOID* _headOID;
+	__strong GTRepository* _gtRepo;
+}
 
 @property (nonatomic, strong) NSNumber *hasSVNRepoConfig;
 
