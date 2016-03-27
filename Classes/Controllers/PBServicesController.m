@@ -7,37 +7,42 @@
 //
 
 #import "PBServicesController.h"
+#import "PBGitRepositoryDocument.h"
 #import "PBGitRepository.h"
 
 @implementation PBServicesController
 
-- (NSString *)completeSHA1For:(NSString *)sha
+- (NSString *)completeSHA1For:(NSString *)sha error:(NSString **)error
 {
 	NSArray *documents = [[NSApplication sharedApplication] orderedDocuments];
-	for (PBGitRepository *repo in documents)
+	for (PBGitRepositoryDocument *doc in documents)
 	{
 		int ret = 1;
-		NSString *s = [repo outputForArguments:[NSArray arrayWithObjects:@"log", @"-1", @"--pretty=format:%h (%s)", sha, nil] retValue:&ret];
+		NSString *s = [doc.repository outputForArguments:[NSArray arrayWithObjects:@"log", @"-1", @"--pretty=format:%h (%s)", sha, nil] retValue:&ret];
 		if (!ret)
 			return s;
 	}
-	return @"Could not find SHA";
+
+	if (error) *error = @"Unable to resolve SHA in opened repositories";
+	return nil;
 }
 
--(NSString *)runNameRevFor:(NSString *)s
+- (NSString *)runNameRevFor:(NSString *)s error:(NSString **)error
 {
 	NSArray *repositories = [[NSApplication sharedApplication] orderedDocuments];
 	if ([repositories count] == 0)
 		return s;
-	PBGitRepository *repo = [repositories objectAtIndex:0];
+	PBGitRepositoryDocument *doc = [repositories objectAtIndex:0];
 	int ret = 1;
-	NSString *returnString = [repo outputForArguments:[NSArray arrayWithObjects:@"name-rev", @"--stdin", nil] inputString:s retValue:&ret];
-	if (ret)
-		return s;
-	return returnString;
+	NSString *returnString = [doc.repository outputForArguments:[NSArray arrayWithObjects:@"name-rev", @"--stdin", nil] inputString:s retValue:&ret];
+	if (!ret)
+		return returnString;
+
+	if (error) *error = @"Unable to resolve SHA in opened repositories";
+	return nil;
 }
 
--(void)completeSha:(NSPasteboard *)pboard userData:(NSString *)userData error:(NSString **)error
+- (void)completeSha:(NSPasteboard *)pboard userData:(NSString *)userData error:(NSString **)error
 {
 	NSArray *types = [pboard types];
 	if (![types containsObject:NSStringPboardType])
@@ -48,9 +53,11 @@
 
 	NSString *s = [pboard stringForType:NSStringPboardType];
 	if ([s rangeOfString:@" "].location == NSNotFound)
-		s = [self completeSHA1For:s];
+		s = [self completeSHA1For:s error:error];
 	else
-		s = [self runNameRevFor:s];
+		s = [self runNameRevFor:s error:error];
+
+	if (!s) return;
 
 	[pboard declareTypes:[NSArray arrayWithObject:NSStringPboardType] owner:nil];
 	[pboard setString:s forType:NSStringPboardType];
