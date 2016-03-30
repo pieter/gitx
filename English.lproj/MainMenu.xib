@@ -5,13 +5,13 @@
         <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="9060"/>
     </dependencies>
     <objects>
-        <customObject id="-2" userLabel="File's Owner" customClass="NSApplication">
+        <customObject id="-2" userLabel="File's Owner" customClass="ApplicationController"/>
+        <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
+        <customObject id="-3" userLabel="Application">
             <connections>
-                <outlet property="delegate" destination="205" id="206"/>
+                <outlet property="delegate" destination="205" id="2IS-vA-KKo"/>
             </connections>
         </customObject>
-        <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
-        <customObject id="-3" userLabel="Application" customClass="NSObject"/>
         <menu title="MainMenu" systemMenu="main" id="29" userLabel="MainMenu">
             <items>
                 <menuItem title="GitX" id="56">
@@ -20,7 +20,7 @@
                             <menuItem title="About GitX" id="58">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
-                                    <action selector="showAboutPanel:" target="205" id="142"/>
+                                    <action selector="showAboutPanel:" target="-1" id="ivG-FU-hGW"/>
                                 </connections>
                             </menuItem>
                             <menuItem isSeparatorItem="YES" id="196">
@@ -28,12 +28,12 @@
                             </menuItem>
                             <menuItem title="Enable Terminal Usage…" id="909">
                                 <connections>
-                                    <action selector="installCliTool:" target="205" id="910"/>
+                                    <action selector="installCliTool:" target="-1" id="A89-7Z-hf3"/>
                                 </connections>
                             </menuItem>
                             <menuItem title="Preferences…" keyEquivalent="," id="129">
                                 <connections>
-                                    <action selector="openPreferencesWindow:" target="205" id="933"/>
+                                    <action selector="openPreferencesWindow:" target="-1" id="wRi-Ra-7Ua"/>
                                 </connections>
                             </menuItem>
                             <menuItem title="Check for Updates…" id="919">
@@ -53,18 +53,18 @@
                             </menuItem>
                             <menuItem title="Hide GitX" keyEquivalent="h" id="134">
                                 <connections>
-                                    <action selector="hide:" target="-2" id="152"/>
+                                    <action selector="hide:" target="-1" id="f2f-Ce-Bqz"/>
                                 </connections>
                             </menuItem>
                             <menuItem title="Hide Others" keyEquivalent="h" id="145">
                                 <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
                                 <connections>
-                                    <action selector="hideOtherApplications:" target="-2" id="146"/>
+                                    <action selector="hideOtherApplications:" target="-1" id="xwC-ZO-vrM"/>
                                 </connections>
                             </menuItem>
                             <menuItem title="Show All" id="150">
                                 <connections>
-                                    <action selector="unhideAllApplications:" target="-2" id="153"/>
+                                    <action selector="unhideAllApplications:" target="-1" id="N7a-he-BiT"/>
                                 </connections>
                             </menuItem>
                             <menuItem isSeparatorItem="YES" id="149">
@@ -72,7 +72,7 @@
                             </menuItem>
                             <menuItem title="Quit GitX" keyEquivalent="q" id="136">
                                 <connections>
-                                    <action selector="terminate:" target="-2" id="139"/>
+                                    <action selector="terminate:" target="-1" id="cQq-Bb-5Zs"/>
                                 </connections>
                             </menuItem>
                         </items>
@@ -440,7 +440,7 @@
                 </menuItem>
             </items>
         </menu>
-        <customObject id="205" userLabel="ApplicationController" customClass="ApplicationController">
+        <customObject id="205" userLabel="Application Delegate" customClass="ApplicationController">
             <connections>
                 <outlet property="firstResponder" destination="-2" id="868"/>
             </connections>
