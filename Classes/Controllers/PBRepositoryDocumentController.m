@@ -17,12 +17,14 @@
 @implementation PBRepositoryDocumentController
 // This method is overridden to configure the open panel to only allow
 // selection of directories
-- (NSInteger)runModalOpenPanel:(NSOpenPanel *)openPanel forTypes:(NSArray *)extensions
-{
+- (void)beginOpenPanel:(NSOpenPanel *)openPanel forTypes:(NSArray<NSString *> *)inTypes completionHandler:(void (^)(NSInteger))completionHandler {
 	[openPanel setCanChooseFiles:YES];
 	[openPanel setCanChooseDirectories:YES];
 	[openPanel setAllowedFileTypes:[NSArray arrayWithObject:@"git"]];
-	return [openPanel runModal];
+
+	NSModalResponse response = [openPanel runModal];
+
+	completionHandler(response);
 }
 
 - (id)makeUntitledDocumentOfType:(NSString *)typeName error:(NSError *__autoreleasing *)outError {
