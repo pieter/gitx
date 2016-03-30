@@ -51,6 +51,8 @@ NSString *PBGitRepositoryDocumentType = @"Git Repository";
 	}
 
 	_repository = [[PBGitRepository alloc] initWithURL:absoluteURL error:outError];
+	if (!_repository)
+		return NO;
 
 	return YES;
 }
