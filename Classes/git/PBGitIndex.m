@@ -135,8 +135,6 @@ NS_ENUM(NSUInteger, PBGitIndexOperation) {
 					 arguments:@[@"update-index", @"-q", @"--unmerged", @"--ignore-missing", @"--refresh"]
 				   inDirectory:self.repository.workingDirectoryURL.path
 			 terminationHandler:^(NSTask *task, NSError *error) {
-				 NSLog(@"task %@ (%p)", [task arguments][0], task);
-
 				 if (task.terminationStatus != 0)
 				 {
 					 [[NSNotificationCenter defaultCenter] postNotificationName:PBGitIndexIndexRefreshFailed
@@ -190,7 +188,6 @@ NS_ENUM(NSUInteger, PBGitIndexOperation) {
 					 arguments:@[@"ls-files", @"--others", @"--exclude-standard", @"-z"]
 				   inDirectory:self.repository.workingDirectoryURL.path
 			 completionHandler:^(NSTask *task, NSData *readData, NSError *error) {
-				 NSLog(@"task %@ (%p), %@", [task arguments][0], task, [[NSString alloc] initWithData:readData encoding:NSUTF8StringEncoding]);
 				 NSArray *lines = [self linesFromData:readData];
 				 NSMutableDictionary *dictionary = [[NSMutableDictionary alloc] initWithCapacity:[lines count]];
 				 // Other files are untracked, so we don't have any real index information. Instead, we can just fake it.
@@ -214,7 +211,6 @@ NS_ENUM(NSUInteger, PBGitIndexOperation) {
 					 arguments:@[@"diff-index", @"--cached", @"-z", [self parentTree]]
 				   inDirectory:self.repository.workingDirectoryURL.path
 			 completionHandler:^(NSTask *task, NSData *readData, NSError *error) {
-				 NSLog(@"task %@ (%p), %@", [task arguments][0], task, [[NSString alloc] initWithData:readData encoding:NSUTF8StringEncoding]);
 				 NSArray *lines = [self linesFromData:readData];
 				 NSMutableDictionary *dic = [self dictionaryForLines:lines];
 				 [self addFilesFromDictionary:dic staged:YES tracked:YES];
@@ -229,7 +225,6 @@ NS_ENUM(NSUInteger, PBGitIndexOperation) {
 					 arguments:@[@"diff-files", @"-z"]
 				   inDirectory:self.repository.workingDirectoryURL.path
 			 completionHandler:^(NSTask *task, NSData *readData, NSError *error) {
-				 NSLog(@"task %@ (%p), %@", [task arguments][0], task, [[NSString alloc] initWithData:readData encoding:NSUTF8StringEncoding]);
 				 NSArray *lines = [self linesFromData:readData];
 				 NSMutableDictionary *dic = [self dictionaryForLines:lines];
 				 [self addFilesFromDictionary:dic staged:NO tracked:YES];
