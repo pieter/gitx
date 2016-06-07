@@ -453,6 +453,9 @@ NS_ENUM(NSUInteger, PBGitIndexOperation) {
 		if (loopTo > filesCount)
 			loopTo = filesCount;
 	}
+	
+	[self postIndexChange];
+	
 	return YES;
 }
 
