@@ -8,17 +8,52 @@
 
 #import "PBEasyPipe.h"
 
+NSString *const PBEasyPipeErrorDomain = @"PBEasyPipeErrorDomain";
+NSString *const PBEasyPipeUnderlyingExceptionKey = @"PBEasyPipeUnderlyingExceptionKey";
 
 @implementation PBEasyPipe
 
-+ (NSFileHandle*) handleForCommand: (NSString*) cmd withArgs: (NSArray*) args
-{
-	return [self handleForCommand:cmd withArgs:args inDir:nil];
++ (nullable NSTask *)performCommand:(NSString *)command arguments:(NSArray *)arguments inDirectory:(NSString *)directory terminationHandler:(void (^)(NSTask *, NSError *error))terminationHandler {
+	NSParameterAssert(command != nil);
+
+	NSTask *task = [self taskForCommand:command arguments:arguments inDirectory:directory];
+	task.terminationHandler = ^(NSTask *task) {
+		dispatch_async(dispatch_get_main_queue(), ^{
+			terminationHandler(task, nil);
+		});
+	};
+	@try {
+		[task launch];
+	}
+	@catch (NSException *exception) {
+		NSDictionary *info = @{
+									 NSLocalizedFailureReasonErrorKey: @"",
+									 NSLocalizedDescriptionKey: @"",
+									 PBEasyPipeUnderlyingExceptionKey: exception,
+									 };
+		NSError *error = [NSError errorWithDomain:PBEasyPipeErrorDomain
+											 code:PBEasyPipeTaskLaunchError
+										 userInfo:info];
+		terminationHandler(task, error);
+		return nil;
+	}
+	return task;
 }
 
-+ (NSTask *) taskForCommand:(NSString *)cmd withArgs:(NSArray *)args inDir:(NSString *)dir
++ (nullable NSTask *)performCommand:(NSString *)command arguments:(NSArray *)arguments inDirectory:(NSString *)directory completionHandler:(void (^)(NSTask *, NSData *readData, NSError *error))completionHandler {
+	return [self performCommand:command arguments:arguments inDirectory:directory terminationHandler:^(NSTask *task, NSError *error) {
+		if (error) {
+			completionHandler(task, nil, error);
+			return;
+		}
+		NSData *data = [[task.standardOutput fileHandleForReading] readDataToEndOfFile];
+		completionHandler(task, data, nil);
+	}];
+}
+
++ (NSTask *)taskForCommand:(NSString *)cmd arguments:(NSArray *)args inDirectory:(NSString *)directory
 {
-	NSTask* task = [[NSTask alloc] init];
+	NSTask *task = [[NSTask alloc] init];
 	[task setLaunchPath:cmd];
 	[task setArguments:args];
 
@@ -27,31 +62,20 @@
     [env removeObjectsForKeys:@[@"MallocStackLogging", @"MallocStackLoggingNoCompact", @"NSZombieEnabled"]];
     [task setEnvironment:env];
 
-	if (dir)
-		[task setCurrentDirectoryPath:dir];
+	if (directory)
+		[task setCurrentDirectoryPath:directory];
 
 	if ([[NSUserDefaults standardUserDefaults] boolForKey:@"Show Debug Messages"])
-		NSLog(@"Starting command `%@ %@` in dir %@", cmd, [args componentsJoinedByString:@" "], dir);
+		NSLog(@"Starting command `%@ %@` in dir %@", cmd, [args componentsJoinedByString:@" "], directory);
 #ifdef CLI
-	NSLog(@"Starting command `%@ %@` in dir %@", cmd, [args componentsJoinedByString:@" "], dir);
+	NSLog(@"Starting command `%@ %@` in dir %@", cmd, [args componentsJoinedByString:@" "], directory);
 #endif
 
-	NSPipe* pipe = [NSPipe pipe];
+	NSPipe *pipe = [NSPipe pipe];
 	[task setStandardOutput:pipe];
 	[task setStandardError:pipe];
 	return task;
 }
-
-+ (NSFileHandle*) handleForCommand: (NSString*) cmd withArgs: (NSArray*) args inDir: (NSString*) dir
-{
-	NSTask *task = [self taskForCommand:cmd withArgs:args inDir:dir];
-	NSFileHandle* handle = [[task standardOutput] fileHandleForReading];
-	
-	[task launch];
-	return handle;
-}
-
-
 
 + (NSString*) outputForCommand:(NSString *) cmd
 					  withArgs:(NSArray *)  args
@@ -77,7 +101,7 @@
 				   inputString:(NSString *)    input
 					  retValue:(int *)         ret
 {
-	NSTask *task = [self taskForCommand:cmd withArgs:args inDir:dir];
+	NSTask *task = [self taskForCommand:cmd arguments:args inDirectory:dir];
 
 	if (dict) {
 		NSMutableDictionary *env = [[[NSProcessInfo processInfo] environment] mutableCopy];
@@ -93,7 +117,13 @@
 		inHandle = [[task standardInput] fileHandleForWriting];
 	}
 	
-	[task launch];
+	@try {
+		[task launch];
+	}
+	@catch (NSException *exception) {
+		if (ret) *ret = -1;
+		return nil;
+	}
 
 	if (input && inHandle) {
 		// A large write could wait for stdout buffer to be flushed by the task,
@@ -125,7 +155,7 @@
 
 + (NSString*) outputForCommand: (NSString*) cmd withArgs: (NSArray*) args  inDir: (NSString*) dir
 {
-	NSTask *task = [self taskForCommand:cmd withArgs:args inDir:dir];
+	NSTask *task = [self taskForCommand:cmd arguments:args inDirectory:dir];
 	NSFileHandle* handle = [[task standardOutput] fileHandleForReading];
 	
 	[task launch];
@@ -155,10 +185,29 @@
 	return string;
 }
 
-
-+ (NSString*) outputForCommand: (NSString*) cmd withArgs: (NSArray*) args
++ (NSString *)outputForCommand:(NSString *)cmd withArgs:(NSArray *)args
 {
 	return [self outputForCommand:cmd withArgs:args inDir:nil];
+}
+
+/* Deprecated */
+
++ (NSTask *)taskForCommand:(NSString *)cmd withArgs:(NSArray *)args inDir:(NSString *)dir {
+	return [self taskForCommand:cmd arguments:args inDirectory:dir];
+}
+
++ (NSFileHandle *)handleForCommand:(NSString *)cmd withArgs:(NSArray *)arguments
+{
+	return [self handleForCommand:cmd withArgs:arguments inDir:nil];
+}
+
++ (NSFileHandle *)handleForCommand:(NSString *)cmd withArgs:(NSArray *)args inDir:(NSString *)dir
+{
+	NSTask *task = [self taskForCommand:cmd arguments:args inDirectory:dir];
+	NSFileHandle* handle = [[task standardOutput] fileHandleForReading];
+
+	[task launch];
+	return handle;
 }
 
 @end

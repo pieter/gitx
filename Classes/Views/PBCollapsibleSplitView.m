@@ -11,6 +11,13 @@
 @implementation PBCollapsibleSplitView
 @synthesize topViewMin, bottomViewMin;
 
++ (BOOL)requiresConstraintBasedLayout { return YES; }
+
+- (void)awakeFromNib {
+	// Assumes the first subview is the one to preserve
+	[self setHoldingPriority:NSLayoutPriorityFittingSizeCompression forSubviewAtIndex:1];
+}
+
 - (void)setTopMin:(CGFloat)topMin andBottomMin:(CGFloat)bottomMin {
 	topViewMin = topMin;
 	bottomViewMin = bottomMin;

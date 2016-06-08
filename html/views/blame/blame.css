@@ -8,9 +8,12 @@ body,th, td {
 	padding: 0 !important;
 	border: 0 !important;
 	outline: 0 !important;
-	font-size: 12px !important;
+	font-size: 100% !important;
 	vertical-align: baseline !important;
 	background: transparent !important;
+}
+
+p.summary {
 }
 
 p{
@@ -22,6 +25,7 @@ p{
 }
 
 pre{
+  font-size: 1em;
   font-family: Menlo, Consolas, 'Bitstream Vera Sans Mono', 'Courier New', Courier, monospace;
 }
 
@@ -40,7 +44,7 @@ p.author {
 }
 
 table.blocks {
-	font-size: 11px;
+	font: 11px "Menlo" !important !important;
 }
 
 table tr.block{

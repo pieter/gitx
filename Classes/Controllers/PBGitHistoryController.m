@@ -594,6 +594,7 @@
 
 - (void) diffFilesAction:(id)sender
 {
+	/* TODO: Move that to the document */
 	[PBDiffWindowController showDiffWindowWithFiles:[sender representedObject] fromCommit:self.selectedCommits.firstObject diffCommit:nil];
 }
 
@@ -671,32 +672,6 @@
 - (CGFloat)splitView:(NSSplitView *)splitView constrainMaxCoordinate:(CGFloat)proposedMax ofSubviewAt:(NSInteger)dividerIndex
 {
 	return [splitView frame].size.height - [splitView dividerThickness] - historySplitView.bottomViewMin;
-}
-
-// while the user resizes the window keep the upper (history) view constant and just resize the lower view
-// unless the lower view gets too small
-- (void)splitView:(NSSplitView *)splitView resizeSubviewsWithOldSize:(NSSize)oldSize
-{
-	NSRect newFrame = [splitView frame];
-
-	float dividerThickness = [splitView dividerThickness];
-
-	NSView *upperView = [[splitView subviews] objectAtIndex:0];
-	NSRect upperFrame = [upperView frame];
-	upperFrame.size.width = newFrame.size.width;
-
-	if ((newFrame.size.height - upperFrame.size.height - dividerThickness) < historySplitView.bottomViewMin) {
-		upperFrame.size.height = newFrame.size.height - historySplitView.bottomViewMin - dividerThickness;
-	}
-
-	NSView *lowerView = [[splitView subviews] objectAtIndex:1];
-	NSRect lowerFrame = [lowerView frame];
-	lowerFrame.origin.y = upperFrame.size.height + dividerThickness;
-	lowerFrame.size.height = newFrame.size.height - lowerFrame.origin.y;
-	lowerFrame.size.width = newFrame.size.width;
-
-	[upperView setFrame:upperFrame];
-	[lowerView setFrame:lowerFrame];
 }
 
 // NSSplitView does not save and restore the position of the SplitView correctly so do it manually
@@ -841,8 +816,8 @@
     }
 
     // convert icon rect to screen coordinates
-    iconRect = [fileBrowser convertRectToBase:iconRect];
-    iconRect.origin = [[fileBrowser window] convertBaseToScreen:iconRect.origin];
+	iconRect = [fileBrowser.window.contentView convertRect:iconRect fromView:fileBrowser];
+	iconRect = [fileBrowser.window convertRectToScreen:iconRect];
 
     return iconRect;
 }

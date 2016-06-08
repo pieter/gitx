@@ -11,8 +11,8 @@
 #import "PBDiffWindowController.h"
 #import "PBGitRepository.h"
 #import "PBCloneRepositoryPanel.h"
-
-#import <ObjectiveGit/GTRepository.h>
+#import "PBGitBinary.h"
+#import "PBEasyPipe.h"
 
 
 @implementation NSApplication (GitXScripting)
@@ -27,6 +27,31 @@
 	}
 }
 
+- (void)performDiffScriptCommand:(NSScriptCommand *)command
+{
+    NSURL *repositoryURL = command.directParameter;
+    NSArray *diffOptions = command.arguments[@"diffOptions"];
+
+	diffOptions = [[NSArray arrayWithObjects:@"diff", @"--no-ext-diff", nil] arrayByAddingObjectsFromArray:diffOptions];
+
+	int retValue = 1;
+	NSString *diffOutput = [PBEasyPipe outputForCommand:[PBGitBinary path] withArgs:diffOptions inDir:[repositoryURL path] retValue:&retValue];
+	if (retValue) {
+		// if there is an error diffOutput should have the error output from git
+		if (diffOutput)
+			NSLog(@"%s\n", [diffOutput UTF8String]);
+		else
+			NSLog(@"Invalid diff command [%d]\n", retValue);
+        return;
+	}
+
+    if (diffOutput) {
+        PBDiffWindowController *diffController = [[PBDiffWindowController alloc] initWithDiff:diffOutput];
+        [diffController showWindow:self];
+        [[NSApplication sharedApplication] activateIgnoringOtherApps:YES];
+    }
+}
+
 - (void)initRepositoryScriptCommand:(NSScriptCommand *)command
 {
     NSError *error = nil;
@@ -34,7 +59,7 @@
 	if (!repositoryURL)
         return;
 
-    BOOL success = [GTRepository initializeEmptyRepositoryAtFileURL:repositoryURL error:&error];
+	BOOL success = [GTRepository initializeEmptyRepositoryAtFileURL:repositoryURL options:nil error:&error];
     if (!success) {
         NSLog(@"Failed to create repository at %@: %@", repositoryURL, error);
         return;

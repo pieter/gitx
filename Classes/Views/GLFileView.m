@@ -93,7 +93,7 @@
 		else if([startFile isEqualToString:GROUP_ID_LOG])
 			fileTxt = [file log:logFormat];
 
-		id script = [view windowScriptObject];
+		id script = self.view.windowScriptObject;
 		NSString *filePath = [file fullPath];
         [script callWebScriptMethod:@"showFile" withArguments:[NSArray arrayWithObjects:fileTxt, filePath, nil]];
 	}
@@ -158,7 +158,7 @@
 	NSString *path = [NSString stringWithFormat:@"html/views/%@", identifier];
 	NSString *html = [[NSBundle mainBundle] pathForResource:@"index" ofType:@"html" inDirectory:path];
 	NSURLRequest * request = [NSURLRequest requestWithURL:[NSURL fileURLWithPath:html]];
-	[[view mainFrame] loadRequest:request];
+	[self.view.mainFrame loadRequest:request];
 }
 
 - (NSView *)accessoryViewForScopeBar:(MGScopeBar *)scopeBar

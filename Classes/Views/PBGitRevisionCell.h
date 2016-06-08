@@ -24,5 +24,5 @@
 - (NSRect) rectAtIndex:(int)index;
 - (void) drawLabelAtIndex:(int)index inRect:(NSRect)rect;
 
-@property PBGitCommit* objectValue;
+@property (copy) PBGitCommit* objectValue;
 @end

@@ -423,7 +423,7 @@
 			return;
 	}
 
-	backgroundSearchTask = [PBEasyPipe taskForCommand:[PBGitBinary path] withArgs:searchArguments inDir:[[historyController.repository fileURL] path]];
+	backgroundSearchTask = [PBEasyPipe taskForCommand:[PBGitBinary path] withArgs:searchArguments inDir:[[historyController.repository workingDirectoryURL] path]];
 	[backgroundSearchTask launch];
 
 	NSFileHandle *handle = [[backgroundSearchTask standardOutput] fileHandleForReading];
@@ -468,6 +468,7 @@
 #pragma mark Rewind Panel
 
 #define kRewindPanelSize 125.0f
+#define kRewindPanelImageViewTag 1234
 
 - (void)closeRewindPanel
 {
@@ -476,17 +477,19 @@
 	rewindPanel = nil;
 }
 
-- (NSPanel *)rewindPanelReverse:(BOOL)isReversed
+- (NSPanel *)rewindPanel
 {
+	// Update the panel frame in case the window was resized
 	NSRect windowFrame = [[[historyController view] window] frame];
-	NSRect historyFrame = [[historyController view] convertRectToBase:[[historyController view] frame]];
+	NSRect historyFrame = [historyController.view.window.contentView convertRect:historyController.view.frame
+																		fromView:historyController.view];
 	NSRect panelRect = NSMakeRect(0.0f, 0.0f, kRewindPanelSize, kRewindPanelSize);
 	panelRect.origin.x = windowFrame.origin.x + historyFrame.origin.x + ((historyFrame.size.width - kRewindPanelSize) / 2.0f);
 	panelRect.origin.y = windowFrame.origin.y + historyFrame.origin.y + ((historyFrame.size.height - kRewindPanelSize) / 2.0f);
 
 	NSPanel *panel = [[NSPanel alloc] initWithContentRect:panelRect
 												styleMask:NSBorderlessWindowMask
-												  backing:NSBackingStoreBuffered 
+												  backing:NSBackingStoreBuffered
 													defer:YES];
 	[panel setIgnoresMouseEvents:YES];
 	[panel setOneShot:YES];
@@ -504,12 +507,11 @@
 	[box setCornerRadius:12.0f];
 	[[panel contentView] addSubview:box];
 
-	NSImage *rewindImage = [[NSImage imageNamed:@"rewindImage"] copy];
-	[rewindImage setFlipped:isReversed];
+	NSImage *rewindImage = [NSImage imageNamed:@"rewindImage"];
 	NSSize imageSize = [rewindImage size];
 	NSRect imageViewFrame = NSMakeRect(21.0f, 5.0f, imageSize.width, imageSize.height);
 	NSImageView *rewindImageView = [[NSImageView alloc] initWithFrame:imageViewFrame];
-	[rewindImageView setImage:rewindImage];
+	[rewindImageView setTag:kRewindPanelImageViewTag];
 	[[box contentView] addSubview:rewindImageView];
 
 	return panel;
@@ -535,15 +537,32 @@
 
 - (void)showSearchRewindPanelReverse:(BOOL)isReversed
 {
-	if (rewindPanel)
-		[self closeRewindPanel];
+	if (rewindPanel != nil) {
+		// Panel still open, cancel the upcoming close
+		[[self class] cancelPreviousPerformRequestsWithTarget:self selector:@selector(closeRewindPanel) object:nil];
+	} else {
+		// The panel is already closed, create a new one
+		rewindPanel = [self rewindPanel];
 
-	rewindPanel = [self rewindPanelReverse:isReversed];
+		[[[historyController view] window] addChildWindow:rewindPanel ordered:NSWindowAbove];
+	}
 
-	[[[historyController view] window] addChildWindow:rewindPanel ordered:NSWindowAbove];
+	// Setup our wrap-results image depending on the direction we wrapped
+	NSImage *rewindImage = [NSImage imageNamed:@"rewindImage"];
+	NSImage *reversedRewindImage = [NSImage imageWithSize:rewindImage.size
+												  flipped:isReversed
+										   drawingHandler:^BOOL(NSRect destRect) {
+		[rewindImage drawInRect:destRect fromRect:NSZeroRect operation:NSCompositeCopy fraction:1.0];
+		return YES;
+	}];
+	NSImageView *rewindImageView = [rewindPanel.contentView viewWithTag:kRewindPanelImageViewTag];
+	[rewindImageView setImage:reversedRewindImage];
+
+	// Perform the fade-out animation
+	[rewindPanel setAlphaValue:1.0f];
 
 	CAKeyframeAnimation *alphaAnimation = [self rewindPanelFadeOutAnimation];
-    [rewindPanel setAnimations:[NSDictionary dictionaryWithObject:alphaAnimation forKey:@"alphaValue"]];
+	[rewindPanel setAnimations:[NSDictionary dictionaryWithObject:alphaAnimation forKey:@"alphaValue"]];
 	[[rewindPanel animator] setAlphaValue:0.0f];
 
 	[self performSelector:@selector(closeRewindPanel) withObject:nil afterDelay:0.7f];

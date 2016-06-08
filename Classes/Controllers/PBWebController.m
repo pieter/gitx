@@ -13,7 +13,7 @@
 
 #include <SystemConfiguration/SCNetworkReachability.h>
 
-@interface PBWebController()
+@interface PBWebController () <WebUIDelegate, WebFrameLoadDelegate, WebResourceLoadDelegate>
 - (void)preferencesChangedWithNotification:(NSNotification *)theNotification;
 @end
 
@@ -35,22 +35,23 @@
 		 object:nil];
 
 	finishedLoading = NO;
-	[view setUIDelegate:self];
-	[view setFrameLoadDelegate:self];
-	[view setResourceLoadDelegate:self];
-	[[view mainFrame] loadRequest:request];
+	[self.view setUIDelegate:self];
+	[self.view setFrameLoadDelegate:self];
+	[self.view setResourceLoadDelegate:self];
+	[self.view.preferences setDefaultFontSize:[NSFont systemFontSize]];
+	[self.view.mainFrame loadRequest:request];
 }
 
 - (WebScriptObject *) script
 {
-	return [view windowScriptObject];
+	return self.view.windowScriptObject;
 }
 
 - (void)closeView
 {
-	if (view) {
+	if (self.view) {
 		[[self script] setValue:nil forKey:@"Controller"];
-		[view close];
+		[self.view close];
 	}
 
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
@@ -60,8 +61,8 @@
 
 - (void)webView:(WebView *)sender didClearWindowObject:(WebScriptObject *)windowObject forFrame:(WebFrame *)frame
 {
-	id script = [view windowScriptObject];
-	[script setValue: self forKey:@"Controller"];
+	id script = self.view.windowScriptObject;
+	[script setValue:self forKey:@"Controller"];
 }
 
 - (void) webView:(id) v didFinishLoadForFrame:(id) frame

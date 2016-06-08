@@ -44,16 +44,11 @@ static NSString * PBStringFromBranchFilterType(PBGitXBranchFilterType type) {
 
 @class PBGitWindowController;
 @class PBGitCommit;
+@class PBGitIndex;
 @class GTOID;
 @class PBGitRepositoryWatcher;
 
-@interface PBGitRepository : NSDocument {
-	__strong PBGitRepositoryWatcher *watcher;
-	__strong PBGitRevSpecifier *_headRef; // Caching
-	__strong GTOID* _headOID;
-	__strong GTRepository* _gtRepo;
-}
-
+@interface PBGitRepository : NSDocument
 
 @property (assign) BOOL hasChanged;
 @property (assign) NSInteger currentBranchFilter;
@@ -70,6 +65,10 @@ static NSString * PBStringFromBranchFilterType(PBGitXBranchFilterType type) {
 @property (readonly, strong) GTRepository* gtRepo;
 
 @property (nonatomic, strong) NSMutableArray* submodules;
+@property (readonly, strong) PBGitIndex *index;
+
+// Designated initializer
+- (id)initWithURL:(NSURL *)repositoryURL error:(NSError **)error;
 
 - (void) cloneRepositoryToPath:(NSString *)path bare:(BOOL)isBare;
 - (void) beginAddRemote:(NSString *)remoteName forURL:(NSString *)remoteURL;
@@ -91,6 +90,9 @@ static NSString * PBStringFromBranchFilterType(PBGitXBranchFilterType type) {
 - (BOOL) stashSave;
 - (BOOL) stashSaveWithKeepIndex:(BOOL)keepIndex;
 
+- (BOOL)updateReference:(PBGitRef *)ref toPointAtCommit:(PBGitCommit *)newCommit;
+- (NSString *)performDiff:(PBGitCommit *)startCommit against:(PBGitCommit *)diffCommit forFiles:(NSArray *)filePaths;
+
 - (NSURL *) gitURL ;
 
 - (NSFileHandle*) handleForCommand:(NSString*) cmd GITX_DEPRECATED;
@@ -109,9 +111,14 @@ static NSString * PBStringFromBranchFilterType(PBGitXBranchFilterType type) {
 - (BOOL)executeHook:(NSString *)name output:(NSString **)output GITX_DEPRECATED;
 - (BOOL)executeHook:(NSString *)name withArgs:(NSArray*) arguments output:(NSString **)output GITX_DEPRECATED;
 
+- (BOOL)executeHook:(NSString *)name error:(NSError **)error;
+- (BOOL)executeHook:(NSString *)name arguments:(NSArray *)arguments error:(NSError **)error;
+- (BOOL)executeHook:(NSString *)name arguments:(NSArray *)arguments output:(NSString **)outputPtr error:(NSError **)error;
+
 - (NSString *)workingDirectory GITX_DEPRECATED;
 - (NSURL *)workingDirectoryURL;
 - (NSString *)projectName;
+
 - (NSString *)gitIgnoreFilename;
 - (BOOL)isBareRepository;
 
@@ -147,11 +154,5 @@ static NSString * PBStringFromBranchFilterType(PBGitXBranchFilterType type) {
 
 - (void) forceUpdateRevisions;
 - (NSURL*) getIndexURL;
-
-// for the scripting bridge
-- (void)findInModeScriptCommand:(NSScriptCommand *)command;
-
-- (IBAction)showInFinderAction:(id)sender;
-- (IBAction)openFilesAction:(id)sender;
 
 @end

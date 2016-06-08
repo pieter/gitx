@@ -119,7 +119,7 @@
 	if (!summary)
 		return;
 
-	[[view windowScriptObject] callWebScriptMethod:@"loadCommitSummary" withArguments:[NSArray arrayWithObject:summary]];
+	[self.view.windowScriptObject callWebScriptMethod:@"loadCommitSummary" withArguments:[NSArray arrayWithObject:summary]];
 
     // Now load the full diff
 	NSMutableArray *taskArguments = [NSMutableArray arrayWithObjects:@"show", @"--pretty=raw", @"-M", @"--no-color", currentOID.SHA, nil];
@@ -150,7 +150,7 @@
 	if (!fullDiff)
 		return;
 
-	[[view windowScriptObject] callWebScriptMethod:@"loadCommitFullDiff" withArguments:[NSArray arrayWithObject:fullDiff]];
+	[self.view.windowScriptObject callWebScriptMethod:@"loadCommitFullDiff" withArguments:[NSArray arrayWithObject:fullDiff]];
 }
 
 - (void)selectCommit:(NSString *)sha
@@ -160,13 +160,13 @@
 
 - (void) sendKey: (NSString*) key
 {
-	id script = [view windowScriptObject];
+	id script = self.view.windowScriptObject;
 	[script callWebScriptMethod:@"handleKeyFromCocoa" withArguments: [NSArray arrayWithObject:key]];
 }
 
 - (void) copySource
 {
-	NSString *source = [(DOMHTMLElement *)[[[view mainFrame] DOMDocument] documentElement] outerHTML];
+	NSString *source = [(DOMHTMLElement *)self.view.mainFrame.DOMDocument.documentElement outerHTML];
 	NSPasteboard *a =[NSPasteboard generalPasteboard];
 	[a declareTypes:[NSArray arrayWithObject:NSStringPboardType] owner:self];
 	[a setString:source forType: NSStringPboardType];

@@ -214,7 +214,9 @@
 - (void) diffWithHEAD:(PBRefMenuItem *)sender
 {
 	PBGitCommit *commit = [self commitsForMenuItem:sender].firstObject;
-	[PBDiffWindowController showDiffWindowWithFiles:nil fromCommit:commit diffCommit:nil];
+	NSString *diff = [historyController.repository performDiff:commit against:nil forFiles:nil];
+
+	[PBDiffWindowController showDiff:diff];
 }
 
 #pragma mark Stash
@@ -422,10 +424,7 @@
 	if (!ref || ! oldCommit || !dropCommit)
 		return;
 
-	int retValue = 1;
-	[historyController.repository outputForArguments:[NSArray arrayWithObjects:@"update-ref", @"-mUpdate from GitX", ref.ref, dropCommit.SHA, NULL] retValue:&retValue];
-	if (retValue)
-		return;
+	if (![historyController.repository updateReference:ref toPointAtCommit:dropCommit])
 
 	[dropCommit addRef:ref];
 	[oldCommit removeRef:ref];

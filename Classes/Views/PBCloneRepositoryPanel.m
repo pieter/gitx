@@ -163,19 +163,20 @@
 - (void) messageSheetDidEnd:(NSOpenPanel *)sheet returnCode:(NSInteger)code contextInfo:(void *)info
 {
 	NSURL *documentURL = [NSURL fileURLWithPath:path];
-	
-	NSError *error = nil;
-	id document = [[NSDocumentController sharedDocumentController] openDocumentWithContentsOfURL:documentURL display:YES error:&error];
-	if (!document && error)
+
+	[[NSDocumentController sharedDocumentController] openDocumentWithContentsOfURL:documentURL display:YES completionHandler:^(NSDocument * _Nullable document, BOOL documentWasAlreadyOpen, NSError * _Nullable error) {
+		if (!document && error) {
 			[self showErrorSheet:error];
-	else {
+			return;
+		}
+
 		[self close];
-		
+
 		NSString *containingPath = [path stringByDeletingLastPathComponent];
 		[PBGitDefaults setRecentCloneDestination:containingPath];
 		[self.destinationPath setStringValue:containingPath];
 		[self.repositoryURL setStringValue:@""];
-	}
+	}];
 }
 
 
