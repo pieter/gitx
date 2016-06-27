@@ -575,6 +575,8 @@
 		4D3FB3E5198AEAAF000B4A58 /* PBGitRepositoryDocument.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PBGitRepositoryDocument.h; sourceTree = "<group>"; };
 		4D3FB3E6198AEAAF000B4A58 /* PBGitRepositoryDocument.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PBGitRepositoryDocument.m; sourceTree = "<group>"; };
 		4DC1853818E6F93200E8DB8F /* Info-gitx.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Info-gitx.plist"; sourceTree = "<group>"; };
+		4DE23D041CF31237004C3A6F /* src */ = {isa = PBXFileReference; lastKnownFileType = folder; name = src; path = "objective-git/External/libgit2/src"; sourceTree = "<group>"; };
+		4DE23D051CF31252004C3A6F /* include */ = {isa = PBXFileReference; lastKnownFileType = folder; name = include; path = "objective-git/External/libgit2/include"; sourceTree = "<group>"; };
 		551BF111112F371800265053 /* gitx_askpasswd */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = gitx_askpasswd; sourceTree = BUILT_PRODUCTS_DIR; };
 		643952751603EF9B00BB7AFF /* PBGitSVSubmoduleItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PBGitSVSubmoduleItem.h; sourceTree = "<group>"; };
 		643952761603EF9B00BB7AFF /* PBGitSVSubmoduleItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PBGitSVSubmoduleItem.m; sourceTree = "<group>"; };
@@ -1051,6 +1053,7 @@
 		4A5D773E14A9AB3A00DF6C68 /* External Sources */ = {
 			isa = PBXGroup;
 			children = (
+				4DE23D061CF31258004C3A6F /* libgit2 */,
 				4A8F6B3B14A9B6100002F4D7 /* MGScopeBar.xcodeproj */,
 				4A4EF09F142CBAD5001B8CDF /* ObjectiveGitFramework.xcodeproj */,
 				4A68AD5814A0050E006DE321 /* Sparkle.xcodeproj */,
@@ -1077,6 +1080,15 @@
 				4A8F6B4714A9B6110002F4D7 /* MGScopeBar.framework */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		4DE23D061CF31258004C3A6F /* libgit2 */ = {
+			isa = PBXGroup;
+			children = (
+				4DE23D051CF31252004C3A6F /* include */,
+				4DE23D041CF31237004C3A6F /* src */,
+			);
+			name = libgit2;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
