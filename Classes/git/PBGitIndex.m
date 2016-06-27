@@ -389,7 +389,6 @@ NS_ENUM(NSUInteger, PBGitIndexOperation) {
 	if (loopTo > filesCount)
 		loopTo = filesCount;
 	int loopCount = 0;
-	int i = 0;
 
 	// Staging
 	while (loopCount < filesCount) {
@@ -399,7 +398,7 @@ NS_ENUM(NSUInteger, PBGitIndexOperation) {
 		// "git add -- <files>
 		NSMutableString *input = [NSMutableString string];
 
-		for (i = loopFrom; i < loopTo; i++) {
+		for (int i = loopFrom; i < loopTo; i++) {
 			loopCount++;
 
 			PBChangedFile *file = [files objectAtIndex:i];
@@ -418,7 +417,6 @@ NS_ENUM(NSUInteger, PBGitIndexOperation) {
 			}
 		}
 
-
 		int ret = 1;
 		if (stage) {
 			[self.repository outputForArguments:[NSArray arrayWithObjects:@"update-index", @"--add", @"--remove", @"-z", @"--stdin", nil]
@@ -435,16 +433,10 @@ NS_ENUM(NSUInteger, PBGitIndexOperation) {
 			return NO;
 		}
 
-		for (i = loopFrom; i < loopTo; i++) {
+		for (int i = loopFrom; i < loopTo; i++) {
 			PBChangedFile *file = [files objectAtIndex:i];
-
-			if (stage) {
-				file.hasUnstagedChanges = NO;
-				file.hasStagedChanges = YES;
-			} else {
-				file.hasUnstagedChanges = YES;
-				file.hasStagedChanges = NO;
-			}
+			file.hasStagedChanges = stage;
+			file.hasUnstagedChanges = !stage;
 		}
 
 		// Prepare next iteration
@@ -453,6 +445,9 @@ NS_ENUM(NSUInteger, PBGitIndexOperation) {
 		if (loopTo > filesCount)
 			loopTo = filesCount;
 	}
+	
+	[self postIndexChange];
+	
 	return YES;
 }
 

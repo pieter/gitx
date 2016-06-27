@@ -55,7 +55,7 @@
 + (NSArray<NSString *> *) transformCommits:(NSArray<PBGitCommit *> *)commits with:(NSString *(^)(PBGitCommit *  commit))transformer {
 	
 	NSMutableArray *strings = [NSMutableArray arrayWithCapacity:commits.count];
-	[commits enumerateObjectsUsingBlock:^(PBGitCommit * _Nonnull commit, NSUInteger idx, BOOL * _Nonnull stop) {
+	[commits enumerateObjectsWithOptions:NSEnumerationReverse usingBlock:^(PBGitCommit * _Nonnull commit, NSUInteger idx, BOOL * _Nonnull stop) {
 		[strings addObject:transformer(commit)];
 	}];
 	
