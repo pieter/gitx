@@ -132,6 +132,10 @@
 	[commitController addObserver:self forKeyPath:@"arrangedObjects" options:0 context:kGitXSearchArrangedObjectsContext];
 }
 
+- (void)dealloc {
+	[commitController removeObserver:self forKeyPath:@"arrangedObjects" context:kGitXSearchArrangedObjectsContext];
+}
+
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
 {
 	if ([(__bridge NSString *)context isEqualToString:kGitXSearchArrangedObjectsContext]) {
