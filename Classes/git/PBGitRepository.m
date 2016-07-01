@@ -40,8 +40,7 @@
 
 @implementation PBGitRepository
 
-@synthesize revisionList, branchesSet, currentBranch, refs, hasChanged;
-@synthesize currentBranchFilter;
+@synthesize revisionList, branchesSet, currentBranch, currentBranchFilter, hasChanged, refs;
 
 #pragma mark -
 #pragma mark Memory management
@@ -477,6 +476,22 @@
 {
 		self.currentBranch = [self addBranch: [self headRef]];
 }
+
+- (void) setCurrentBranch:(PBGitRevSpecifier *)newCurrentBranch {
+	currentBranch = newCurrentBranch;
+	[revisionList updateHistory];
+}
+
+- (void) setCurrentBranchFilter:(NSInteger)newCurrentBranchFilter {
+	currentBranchFilter = newCurrentBranchFilter;
+	[revisionList updateHistory];
+}
+
+- (void) setHasChanged:(BOOL)newHasChanged {
+	hasChanged = newHasChanged;
+	[revisionList forceUpdate];
+}
+
 
 #pragma mark Stashes
 

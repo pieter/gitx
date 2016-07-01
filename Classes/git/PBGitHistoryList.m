@@ -51,9 +51,6 @@
 	commits = [NSMutableArray array];
 	repository = repo;
 	lastBranchFilter = -1;
-	[repository addObserver:self forKeyPath:@"currentBranch" options:0 context:@"currentBranch"];
-	[repository addObserver:self forKeyPath:@"currentBranchFilter" options:0 context:@"currentBranch"];
-	[repository addObserver:self forKeyPath:@"hasChanged" options:0 context:@"repositoryHasChanged"];
 
 	shouldReloadProjectHistory = YES;
 	projectRevList = [[PBGitRevList alloc] initWithRepository:repository rev:[PBGitRevSpecifier allBranchesRevSpec] shouldGraph:NO];
@@ -96,9 +93,6 @@
 	}
 	[graphQueue cancelAllOperations];
 
-	[repository removeObserver:self forKeyPath:@"currentBranch"];
-	[repository removeObserver:self forKeyPath:@"currentBranchFilter"];
-	[repository removeObserver:self forKeyPath:@"hasChanged"];
 }
 
 
@@ -350,19 +344,8 @@
 
 #pragma mark -
 #pragma mark Key Value Observing
-
 - (void) observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
 {
-	if ([@"currentBranch" isEqualToString:(__bridge NSString*)context]) {
-		[self updateHistory];
-		return;
-	}
-
-	if ([@"repositoryHasChanged" isEqualToString:(__bridge NSString*)context]) {
-		[self forceUpdate];
-		return;
-	}
-
 	if ([@"commitsUpdated" isEqualToString:(__bridge NSString*)context]) {
 		NSInteger changeKind = [(NSNumber *)[change objectForKey:NSKeyValueChangeKindKey] intValue];
 		if (changeKind == NSKeyValueChangeInsertion) {

@@ -50,8 +50,8 @@ static NSString * PBStringFromBranchFilterType(PBGitXBranchFilterType type) {
 
 @interface PBGitRepository : NSDocument
 
-@property (assign) BOOL hasChanged;
-@property (assign) NSInteger currentBranchFilter;
+@property (nonatomic, assign) BOOL hasChanged;
+@property (nonatomic, assign) NSInteger currentBranchFilter;
 
 @property (readonly, strong) PBGitWindowController *windowController;
 @property (readonly, getter = getIndexURL) NSURL* indexURL;
