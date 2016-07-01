@@ -117,6 +117,7 @@ void handleDiffWithArguments(NSURL *repositoryURL, NSArray *arguments)
 void handleOpenRepository(NSURL *repositoryURL, NSArray *arguments)
 {
     GitXApplication *gitXApp = [SBApplication applicationWithBundleIdentifier:kGitXBundleIdentifier];
+	[gitXApp activate];
     [gitXApp open:repositoryURL withOptions:arguments];
     return;
 }
