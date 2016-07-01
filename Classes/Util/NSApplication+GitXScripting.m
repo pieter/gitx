@@ -23,7 +23,6 @@
 	if (diffText) {
 		PBDiffWindowController *diffController = [[PBDiffWindowController alloc] initWithDiff:diffText];
 		[diffController showWindow:nil];
-		[[NSApplication sharedApplication] activateIgnoringOtherApps:YES];
 	}
 }
 
@@ -48,7 +47,6 @@
     if (diffOutput) {
         PBDiffWindowController *diffController = [[PBDiffWindowController alloc] initWithDiff:diffOutput];
         [diffController showWindow:self];
-        [[NSApplication sharedApplication] activateIgnoringOtherApps:YES];
     }
 }
 
