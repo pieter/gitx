@@ -71,18 +71,22 @@ static OpenRecentController* recentsDialog = nil;
 	}
 }
 
-- (BOOL)application:(NSApplication *)sender openFile:(NSString *)filename {
-    NSURL *repository = [NSURL fileURLWithPath:filename];
-    NSError *error = nil;
-    NSDocument *doc = [[PBRepositoryDocumentController sharedDocumentController] openDocumentWithContentsOfURL:repository
-                                                                                                       display:YES
-                                                                                                         error:&error];
-    if (!doc) {
-        NSLog(@"Error opening repository \"%@\": %@", repository.path, error);
-        return NO;
-    }
-
-    return YES;
+- (void)application:(NSApplication *)sender openFiles:(NSArray <NSString *> *)filenames {
+	PBRepositoryDocumentController * controller = [PBRepositoryDocumentController sharedDocumentController];
+	
+	for (NSString * filename in filenames) {
+		NSURL * repository = [NSURL fileURLWithPath:filename];
+		[controller openDocumentWithContentsOfURL:repository display:YES
+								completionHandler:^void (NSDocument *document, BOOL documentWasAlreadyOpen, NSError *error) {
+									if (!document) {
+										NSLog(@"Error opening repository \"%@\": %@", repository.path, error);
+										[sender replyToOpenOrPrint:NSApplicationDelegateReplyFailure];
+									}
+									else {
+										[sender replyToOpenOrPrint:NSApplicationDelegateReplySuccess];
+									}
+								}];
+	}
 }
 
 - (BOOL)applicationShouldOpenUntitledFile:(NSApplication *)sender
