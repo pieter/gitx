@@ -10,6 +10,7 @@
 
 @class PBGitRepository;
 @class PBGitRevSpecifier;
+@class PBGitWindowController;
 
 extern NSString *PBGitRepositoryDocumentType;
 
@@ -29,5 +30,7 @@ extern NSString *PBGitRepositoryDocumentType;
 - (IBAction)showHistoryView:(id)sender;
 
 - (void)selectRevisionSpecifier:(PBGitRevSpecifier *)specifier;
+
+- (PBGitWindowController *)windowController;
 
 @end
