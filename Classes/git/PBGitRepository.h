@@ -70,6 +70,8 @@ static NSString * PBStringFromBranchFilterType(PBGitXBranchFilterType type) {
 // Designated initializer
 - (id)initWithURL:(NSURL *)repositoryURL error:(NSError **)error;
 
+- (void)setDocument:(NSDocument *)document; // Backward-compatibility while PBGitRepository gets "modelized";
+
 - (void) cloneRepositoryToPath:(NSString *)path bare:(BOOL)isBare;
 - (void) beginAddRemote:(NSString *)remoteName forURL:(NSString *)remoteURL;
 - (void) beginFetchFromRemoteForRef:(PBGitRef *)ref;

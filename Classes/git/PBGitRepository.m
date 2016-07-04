@@ -10,6 +10,7 @@
 #import "PBGitCommit.h"
 #import "PBGitIndex.h"
 #import "PBGitWindowController.h"
+#import "PBGitRepositoryDocument.h"
 #import "PBGitBinary.h"
 
 #import "NSFileHandleExt.h"
@@ -32,6 +33,8 @@
 	__strong GTOID* _headOID;
 	__strong GTRepository* _gtRepo;
 	PBGitIndex *_index;
+
+	PBGitRepositoryDocument *_document;
 }
 
 @property (nonatomic, strong) NSNumber *hasSVNRepoConfig;
@@ -89,6 +92,19 @@
 {
 	// NSLog(@"Dealloc of repository");
 	[watcher stop];
+}
+
+#pragma mark -
+#pragma mark Backward-compatibility
+// PBGitRepository is responsible for both repository actions and document management
+// This is here for the time being while the controller code gets updated to use PBGitRepositoryDocument.
+
+- (void)setDocument:(NSDocument *)document {
+	_document = (PBGitRepositoryDocument *)document;
+}
+
+- (PBGitWindowController *)windowController {
+	return _document.windowController;
 }
 
 #pragma mark -
