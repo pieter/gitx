@@ -22,10 +22,6 @@ extern NSString *PBGitRepositoryDocumentType;
 // Scripting Bridge
 - (void)findInModeScriptCommand:(NSScriptCommand *)command;
 
-// Responder
-- (IBAction)showInFinderAction:(id)sender;
-- (IBAction)openFilesAction:(id)sender;
-
 - (IBAction)showCommitView:(id)sender;
 - (IBAction)showHistoryView:(id)sender;
 
