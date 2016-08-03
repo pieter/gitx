@@ -10,6 +10,7 @@
 #import "PBChangedFile.h"
 #import "PBGitRepository.h"
 #import "PBGitIndex.h"
+#import "PBOpenFiles.h"
 
 #define FileChangesTableViewType @"GitFileChangedType"
 
@@ -113,7 +114,7 @@
 
 	NSString *title = [selectedFiles count] == 1 ? @"Open file" : @"Open files";
 	NSMenuItem *openItem = [[NSMenuItem alloc] initWithTitle:title action:@selector(openFilesAction:) keyEquivalent:@""];
-	[openItem setTarget:commitController.repository];
+	[openItem setTarget:self];
 	[menu addItem:openItem];
 
 	// Attempt to ignore
@@ -126,7 +127,7 @@
 
 	if ([selectedFiles count] == 1) {
 		NSMenuItem *showInFinderItem = [[NSMenuItem alloc] initWithTitle:@"Show in Finder" action:@selector(showInFinderAction:) keyEquivalent:@""];
-		[showInFinderItem setTarget:commitController.repository];
+		[showInFinderItem setTarget:self];
 		[menu addItem:showInFinderItem];
     }
 
@@ -217,6 +218,11 @@
 	[commitController.index unstageFiles:[sender representedObject]];
 }
 
+- (void) openFilesAction:(id) sender
+{
+	[PBOpenFiles openFilesAction:sender with:commitController.repository.workingDirectoryURL];
+}
+
 - (void) ignoreFilesAction:(id) sender
 {
 	NSArray *selectedFiles = [sender representedObject];
@@ -225,6 +231,11 @@
 
 	[self ignoreFiles:selectedFiles];
 	[commitController.index refresh];
+}
+
+- (void) showInFinderAction:(id) sender
+{
+	[PBOpenFiles showInFinderAction:sender with:commitController.repository.workingDirectoryURL];
 }
 
 - (void)discardFilesAction:(id) sender
