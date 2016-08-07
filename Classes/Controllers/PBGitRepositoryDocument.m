@@ -14,6 +14,7 @@
 #import "GitXScriptingConstants.h"
 #import "PBRepositoryFinder.h"
 #import "PBGitDefaults.h"
+#import "PBOpenShallowRepositoryErrorRecoveryAttempter.h"
 
 NSString *PBGitRepositoryDocumentType = @"Git Repository";
 
@@ -57,7 +58,11 @@ NSString *PBGitRepositoryDocumentType = @"Git Repository";
 	if (_repository.isShallowRepository) {
 		if (outError) {
 			NSDictionary* userInfo = @{
-				NSLocalizedRecoverySuggestionErrorKey: @"Shallowly cloned repositories are not supported. Please run “git fetch --unshallow” on the repository before opening it with GitX."
+				NSLocalizedRecoverySuggestionErrorKey: NSLocalizedString(
+					@"The repository is shallowly cloned, which is not supported by GitX. Please run “git fetch --unshallow” on the repository before opening it with GitX.",
+					@"Recovery suggestion when opening a shallow repository"),
+				NSLocalizedRecoveryOptionsErrorKey: [PBOpenShallowRepositoryErrorRecoveryAttempter errorDialogButtonNames],
+				NSRecoveryAttempterErrorKey: [[PBOpenShallowRepositoryErrorRecoveryAttempter alloc] initWithURL:_repository.workingDirectoryURL]
 			};
 			*outError = [NSError errorWithDomain:PBGitRepositoryErrorDomain code:0 userInfo:userInfo];
 		}

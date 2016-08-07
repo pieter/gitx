@@ -9,7 +9,7 @@
 #import "PBGitWindowController.h"
 #import "PBGitHistoryController.h"
 #import "PBGitCommitController.h"
-#import "Terminal.h"
+#import "PBTerminalUtil.h"
 #import "PBCommitHookFailedSheet.h"
 #import "PBGitXMessageSheet.h"
 #import "PBGitSidebarController.h"
@@ -170,12 +170,7 @@
 
 - (IBAction) openInTerminal:(id)sender
 {
-	TerminalApplication *term = [SBApplication applicationWithBundleIdentifier: @"com.apple.Terminal"];
-	NSString *workingDirectory = [self.repository.workingDirectoryURL.path stringByAppendingString:@"/"];
-	NSString *cmd = [NSString stringWithFormat: @"cd \"%@\"; clear; echo '# Opened by GitX:'; git status", workingDirectory];
-	[term doScript: cmd in: nil];
-	[NSThread sleepForTimeInterval: 0.1];
-	[term activate];
+	[PBTerminalUtil runCommand:@"git status" inDirectory:self.repository.workingDirectoryURL];
 }
 
 - (IBAction) refresh:(id)sender
