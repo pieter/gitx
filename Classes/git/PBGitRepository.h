@@ -63,6 +63,7 @@ static NSString * PBStringFromBranchFilterType(PBGitXBranchFilterType type) {
 @property (nonatomic, strong) PBGitRevSpecifier* currentBranch;
 @property (nonatomic, strong) NSMutableDictionary* refs;
 @property (readonly, strong) GTRepository* gtRepo;
+@property (nonatomic, readonly) BOOL isShallowRepository;
 
 @property (nonatomic, strong) NSMutableArray* submodules;
 @property (readonly, strong) PBGitIndex *index;

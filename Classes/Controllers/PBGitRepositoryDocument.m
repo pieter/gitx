@@ -51,8 +51,18 @@ NSString *PBGitRepositoryDocumentType = @"Git Repository";
 	}
 
 	_repository = [[PBGitRepository alloc] initWithURL:absoluteURL error:outError];
-	if (!_repository)
+	if (!_repository) {
 		return NO;
+	}
+	if (_repository.isShallowRepository) {
+		if (outError) {
+			NSDictionary* userInfo = @{
+				NSLocalizedRecoverySuggestionErrorKey: @"Shallowly cloned repositories are not supported. Please run “git fetch --unshallow” on the repository before opening it with GitX."
+			};
+			*outError = [NSError errorWithDomain:PBGitRepositoryErrorDomain code:0 userInfo:userInfo];
+		}
+		return NO;
+	}
 
 	[_repository setDocument:self];
 

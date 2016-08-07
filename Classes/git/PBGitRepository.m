@@ -127,6 +127,13 @@
     return self.gtRepo.isBare;
 }
 
+- (BOOL)isShallowRepository
+{
+	// Using low-level function because GTRepository does not currently
+    // expose this information itself.
+	return (BOOL)git_repository_is_shallow(self.gtRepo.git_repository);
+}
+
 - (BOOL)readHasSVNRemoteFromConfig
 {
 	NSError *error = nil;
