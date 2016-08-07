@@ -80,6 +80,7 @@ static OpenRecentController* recentsDialog = nil;
 								completionHandler:^void (NSDocument *document, BOOL documentWasAlreadyOpen, NSError *error) {
 									if (!document) {
 										NSLog(@"Error opening repository \"%@\": %@", repository.path, error);
+										[controller presentError:error];
 										[sender replyToOpenOrPrint:NSApplicationDelegateReplyFailure];
 									}
 									else {
