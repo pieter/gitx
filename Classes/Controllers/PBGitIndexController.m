@@ -331,9 +331,7 @@
 	[self tableClicked: tableView];
 }
 
-- (BOOL)tableView:(NSTableView *)tv
-writeRowsWithIndexes:(NSIndexSet *)rowIndexes
-	 toPasteboard:(NSPasteboard*)pboard
+- (BOOL) tableView:(NSTableView *)tv writeRowsWithIndexes:(NSIndexSet *)rowIndexes toPasteboard:(NSPasteboard*)pboard
 {
     // Copy the row numbers to the pasteboard.
     [pboard declareTypes:[NSArray arrayWithObjects:FileChangesTableViewType, NSFilenamesPboardType, nil] owner:self];
@@ -347,11 +345,12 @@ writeRowsWithIndexes:(NSIndexSet *)rowIndexes
 	NSArray *files = [controller.arrangedObjects objectsAtIndexes:rowIndexes];
 	NSURL *workingDirectoryURL = commitController.repository.workingDirectoryURL;
 
-	NSMutableArray *URLs = [NSMutableArray arrayWithCapacity:rowIndexes.count];
-	for (PBChangedFile *file in files)
+	NSMutableArray<NSURL *> *URLs = [NSMutableArray arrayWithCapacity:rowIndexes.count];
+	for (PBChangedFile *file in files) {
 		[URLs addObject:[workingDirectoryURL URLByAppendingPathComponent:file.path]];
-
-	[pboard setPropertyList:URLs forType:NSURLPboardType];
+	}
+	[pboard writeObjects:URLs];
+	
     return YES;
 }
 

@@ -12,6 +12,7 @@
 @implementation PBFileChangesTableView
 
 #pragma mark NSTableView overrides
+
 - (NSMenu *)menuForEvent:(NSEvent *)theEvent
 {
 	if ([self delegate]) {
@@ -24,12 +25,13 @@
 	return nil;
 }
 
-- (NSDragOperation) draggingSourceOperationMaskForLocal:(BOOL) local
+- (NSDragOperation)draggingSession:(NSDraggingSession *)session sourceOperationMaskForDraggingContext:(NSDraggingContext)context
 {
 	return NSDragOperationEvery;
 }
 
 #pragma mark NSView overrides
+
 - (void)keyDown:(NSEvent *)theEvent
 {
     PBGitIndexController* controller = (PBGitIndexController*)[self delegate];
