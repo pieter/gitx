@@ -80,8 +80,8 @@
 	[cachedFilesController setSortDescriptors:[NSArray arrayWithObject:
 		[[NSSortDescriptor alloc] initWithKey:@"path" ascending:true]]];
 
-  // listen for updates
-  [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_repositoryUpdatedNotification:) name:PBGitRepositoryEventNotification object:repository];
+    // listen for updates
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_repositoryUpdatedNotification:) name:PBGitRepositoryEventNotification object:repository];
 
 	[cachedFilesController setAutomaticallyRearrangesObjects:NO];
 	[unstagedFilesController setAutomaticallyRearrangesObjects:NO];
@@ -241,6 +241,9 @@
 
 - (void)indexChanged:(NSNotification *)notification
 {
+	NSArrayController * controller = notification.userInfo[@"controller"];
+	NSUInteger selectedIndexBefore = controller.selectionIndex;
+	
 	[cachedFilesController rearrangeObjects];
 	[unstagedFilesController rearrangeObjects];
     
@@ -249,6 +252,12 @@
     
     [commitButton setEnabled:(staged > 0)];
     [stashButton setEnabled:(staged > 0 || tracked > 0)];
+	
+	if (controller != nil) {
+		// If we have a controller, update its selection to the item
+		// beneath the one just (un)staged or the last one in the list.
+		[controller setSelectionIndex:MIN(selectedIndexBefore, [[controller arrangedObjects] count] - 1)];
+	}
 }
 
 - (void)indexOperationFailed:(NSNotification *)notification

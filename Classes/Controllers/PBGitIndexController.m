@@ -199,23 +199,22 @@
 
 - (void) stageSelectedFiles
 {
-	[commitController.index stageFiles:[unstagedFilesController selectedObjects]];
+	[commitController.index stageFiles:[unstagedFilesController selectedObjects] for:unstagedFilesController];
 }
 
 - (void) unstageSelectedFiles
 {
-	[commitController.index unstageFiles:[stagedFilesController selectedObjects]];
+	[commitController.index unstageFiles:[stagedFilesController selectedObjects] for:stagedFilesController];
 }
-
 
 - (void) stageFilesAction:(id) sender
 {
-	[commitController.index stageFiles:[sender representedObject]];
+	[commitController.index stageFiles:[sender representedObject] for:unstagedFilesController];
 }
 
 - (void) unstageFilesAction:(id) sender
 {
-	[commitController.index unstageFiles:[sender representedObject]];
+	[commitController.index unstageFiles:[sender representedObject] for:stagedFilesController];
 }
 
 - (void) openFilesAction:(id) sender
@@ -283,7 +282,7 @@
     [[alert window] orderOut:nil];
 
 	if (returnCode == NSAlertDefaultReturn) {
-        [commitController.index discardChangesForFiles:(__bridge NSArray*)contextInfo];
+		[commitController.index discardChangesForFiles:(__bridge NSArray*)contextInfo for:unstagedFilesController];
 	}
 }
 
@@ -300,7 +299,7 @@
                          didEndSelector:@selector(discardChangesForFilesAlertDidEnd:returnCode:contextInfo:)
                             contextInfo:(__bridge_retained void*)files];
 	} else {
-        [commitController.index discardChangesForFiles:files];
+		[commitController.index discardChangesForFiles:files for:unstagedFilesController];
     }
 }
 
@@ -317,10 +316,12 @@
 
 	NSIndexSet *selectionIndexes = [tableView selectedRowIndexes];
 	NSArray *files = [[controller arrangedObjects] objectsAtIndexes:selectionIndexes];
-	if ([tableView tag] == 0)
-		[commitController.index stageFiles:files];
-	else
-		[commitController.index unstageFiles:files];
+	if ([tableView tag] == 0) {
+		[commitController.index stageFiles:files for:controller];
+	}
+	else {
+		[commitController.index unstageFiles:files for:controller];
+	}
 }
 
 - (void) rowClicked:(NSCell *)sender
@@ -378,10 +379,12 @@
 	NSArrayController *controller = [aTableView tag] == 0 ? stagedFilesController : unstagedFilesController;
 	NSArray *files = [[controller arrangedObjects] objectsAtIndexes:rowIndexes];
 
-	if ([aTableView tag] == 0)
-		[commitController.index unstageFiles:files];
-	else
-		[commitController.index stageFiles:files];
+	if ([aTableView tag] == 0) {
+		[commitController.index unstageFiles:files for:controller];
+	}
+	else {
+		[commitController.index stageFiles:files for:controller];
+	}
 
 	return YES;
 }

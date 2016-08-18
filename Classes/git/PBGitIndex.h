@@ -61,9 +61,9 @@ extern NSString *PBGitIndexOperationFailed;
 - (void)commitWithMessage:(NSString *)commitMessage andVerify:(BOOL) doVerify;
 
 // Inter-file changes:
-- (BOOL)stageFiles:(NSArray *)stageFiles;
-- (BOOL)unstageFiles:(NSArray *)unstageFiles;
-- (void)discardChangesForFiles:(NSArray *)discardFiles;
+- (BOOL)stageFiles:(NSArray *)stageFiles for:(NSArrayController *)controller;
+- (BOOL)unstageFiles:(NSArray *)unstageFiles for:(NSArrayController *)controller;
+- (void)discardChangesForFiles:(NSArray *)discardFiles for:(NSArrayController *)controller;
 
 // Intra-file changes
 - (BOOL)applyPatch:(NSString *)hunk stage:(BOOL)stage reverse:(BOOL)reverse;

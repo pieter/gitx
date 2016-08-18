@@ -17,7 +17,7 @@ NSString *PBGitIndexIndexRefreshStatus = @"PBGitIndexIndexRefreshStatus";
 NSString *PBGitIndexIndexRefreshFailed = @"PBGitIndexIndexRefreshFailed";
 NSString *PBGitIndexFinishedIndexRefresh = @"PBGitIndexFinishedIndexRefresh";
 
-NSString *PBGitIndexIndexUpdated = @"GBGitIndexIndexUpdated";
+NSString *PBGitIndexIndexUpdated = @"PBGitIndexIndexUpdated";
 
 NSString *PBGitIndexCommitStatus = @"PBGitIndexCommitStatus";
 NSString *PBGitIndexCommitFailed = @"PBGitIndexCommitFailed";
@@ -52,7 +52,7 @@ NS_ENUM(NSUInteger, PBGitIndexOperation) {
 - (void)postCommitUpdate:(NSString *)update;
 - (void)postCommitFailure:(NSString *)reason;
 - (void)postCommitHookFailure:(NSString *)reason;
-- (void)postIndexChange;
+- (void)postIndexChange:(NSArrayController *)controller;
 - (void)postOperationFailed:(NSString *)description;
 
 @property (retain) NSDictionary *amendEnvironment;
@@ -146,7 +146,7 @@ NS_ENUM(NSUInteger, PBGitIndexOperation) {
 																	   userInfo:@{@"description": @"update-index success"}];
 				 }
 
-				 [self postIndexChange];
+				 [self postIndexChange:nil];
 				 dispatch_group_leave(_indexRefreshGroup);
 			 }];
 
@@ -174,7 +174,7 @@ NS_ENUM(NSUInteger, PBGitIndexOperation) {
 
 		[[NSNotificationCenter defaultCenter] postNotificationName:PBGitIndexFinishedIndexRefresh
 															object:self];
-		[self postIndexChange];
+		[self postIndexChange:nil];
 	});
 
 	if ([self.repository isBareRepository])
@@ -201,7 +201,7 @@ NS_ENUM(NSUInteger, PBGitIndexOperation) {
 
 				 [self addFilesFromDictionary:dictionary staged:NO tracked:NO];
 
-				 [self postIndexChange];
+				 [self postIndexChange:nil];
 				 dispatch_group_leave(_indexRefreshGroup);
 			 }];
 
@@ -215,7 +215,7 @@ NS_ENUM(NSUInteger, PBGitIndexOperation) {
 				 NSMutableDictionary *dic = [self dictionaryForLines:lines];
 				 [self addFilesFromDictionary:dic staged:YES tracked:YES];
 
-				 [self postIndexChange];
+				 [self postIndexChange:nil];
 				 dispatch_group_leave(_indexRefreshGroup);
 			 }];
 
@@ -229,7 +229,7 @@ NS_ENUM(NSUInteger, PBGitIndexOperation) {
 				 NSMutableDictionary *dic = [self dictionaryForLines:lines];
 				 [self addFilesFromDictionary:dic staged:NO tracked:YES];
 
-				 [self postIndexChange];
+				 [self postIndexChange:nil];
 				 dispatch_group_leave(_indexRefreshGroup);
 			 }];
 }
@@ -371,7 +371,7 @@ NS_ENUM(NSUInteger, PBGitIndexOperation) {
 													  userInfo:[NSDictionary dictionaryWithObject:description forKey:@"description"]];	
 }
 
-- (BOOL)performStageOrUnstage:(BOOL)stage withFiles:(NSArray *)files
+- (BOOL)performStageOrUnstage:(BOOL)stage withFiles:(NSArray *)files for:(NSArrayController *)controller
 {
 	// Do staging files by chunks of 1000 files each, to prevent program freeze (because NSPipe has limited capacity)
 
@@ -441,22 +441,22 @@ NS_ENUM(NSUInteger, PBGitIndexOperation) {
 			loopTo = filesCount;
 	}
 	
-	[self postIndexChange];
+	[self postIndexChange:controller];
 	
 	return YES;
 }
 
-- (BOOL)stageFiles:(NSArray *)stageFiles
+- (BOOL)stageFiles:(NSArray *)stageFiles for:(NSArrayController *)controller
 {
-	return [self performStageOrUnstage:YES withFiles:stageFiles];
+	return [self performStageOrUnstage:YES withFiles:stageFiles for:controller];
 }
 
-- (BOOL)unstageFiles:(NSArray *)unstageFiles
+- (BOOL)unstageFiles:(NSArray *)unstageFiles for:(NSArrayController *)controller;
 {
-	return [self performStageOrUnstage:NO withFiles:unstageFiles];
+	return [self performStageOrUnstage:NO withFiles:unstageFiles for:controller];
 }
 
-- (void)discardChangesForFiles:(NSArray *)discardFiles
+- (void)discardChangesForFiles:(NSArray *)discardFiles for:(NSArrayController *)controller
 {
 	NSArray *paths = [discardFiles valueForKey:@"path"];
 	NSString *input = [paths componentsJoinedByString:@"\0"];
@@ -475,7 +475,7 @@ NS_ENUM(NSUInteger, PBGitIndexOperation) {
 		if (file.status != NEW)
 			file.hasUnstagedChanges = NO;
 
-	[self postIndexChange];
+	[self postIndexChange:controller];
 }
 
 - (BOOL)applyPatch:(NSString *)hunk stage:(BOOL)stage reverse:(BOOL)reverse;
@@ -531,11 +531,14 @@ NS_ENUM(NSUInteger, PBGitIndexOperation) {
 	return [self.repository outputInWorkdirForArguments:[NSArray arrayWithObjects:@"diff-files", parameter, @"--", file.path, nil]];
 }
 
-- (void)postIndexChange
+- (void)postIndexChange:(NSArrayController *)controller
 {
 	dispatch_async(dispatch_get_main_queue(), ^{
+		NSDictionary *userInfo = controller != nil ? @{@"controller": controller} : @{};
+		
 		[[NSNotificationCenter defaultCenter] postNotificationName:PBGitIndexIndexUpdated
-															object:self];
+															object:self
+														  userInfo:userInfo];
 	});
 }
 
