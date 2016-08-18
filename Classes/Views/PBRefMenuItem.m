@@ -97,7 +97,7 @@
 		[items addObject:[PBRefMenuItem separatorItem]];
 
 		// create branch
-		NSString *createBranchTitle = [ref isRemoteBranch] ? [NSString stringWithFormat:@"Create branch that tracks %@…", refName] : @"Create branch…";
+		NSString *createBranchTitle = [ref isRemoteBranch] ? [NSString stringWithFormat:@"Create branch that tracks %@…", refName] : @"Create Branch…";
 		[items addObject:[PBRefMenuItem itemWithTitle:createBranchTitle action:@selector(createBranch:) enabled:YES]];
 
 		// create tag
