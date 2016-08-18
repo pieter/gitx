@@ -14,6 +14,7 @@
 #import "PBGitXMessageSheet.h"
 #import "PBGitSidebarController.h"
 #import "RJModalRepoSheet.h"
+#import "PBAddRemoteSheet.h"
 
 @interface PBGitWindowController ()
 
@@ -238,7 +239,12 @@
 	}
 }
 
-#pragma mark SplitView Delegates
+#pragma mark IBActions
+
+- (IBAction) showAddRemoteSheet:(id)sender
+{
+	[[[PBAddRemoteSheet alloc] initWithRepository:self.repository] show];
+}
 
 - (IBAction) stashSave:(id) sender
 {

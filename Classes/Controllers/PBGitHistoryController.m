@@ -727,11 +727,6 @@
 		[PBCreateTagSheet beginCreateTagSheetAtRefish:selectedCommit inRepository:repository];
 }
 
-- (IBAction) showAddRemoteSheet:(id)sender
-{
-	[[[PBAddRemoteSheet alloc] initWithRepository:self.repository] show];
-}
-
 - (IBAction) merge:(id)sender
 {
 	PBGitCommit *selectedCommit = self.selectedCommits.firstObject;

@@ -45,6 +45,7 @@
 - (IBAction) revealInFinder:(id)sender;
 - (IBAction) openInTerminal:(id)sender;
 - (IBAction) refresh:(id)sender;
+- (IBAction) showAddRemoteSheet:(id)sender;
 - (IBAction) stashSave:(id) sender;
 - (IBAction) stashSaveWithKeepIndex:(id) sender;
 - (IBAction) stashPop:(id) sender;
