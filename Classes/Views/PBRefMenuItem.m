@@ -97,7 +97,7 @@
 		[items addObject:[PBRefMenuItem separatorItem]];
 
 		// create branch
-		NSString *createBranchTitle = [ref isRemoteBranch] ? [NSString stringWithFormat:@"Create branch that tracks %@…", refName] : @"Create Branch…";
+		NSString *createBranchTitle = [ref isRemoteBranch] ? [NSString stringWithFormat:@"Create Branch tracking %@…", refName] : @"Create Branch…";
 		[items addObject:[PBRefMenuItem itemWithTitle:createBranchTitle action:@selector(createBranch:) enabled:YES]];
 
 		// create tag
@@ -105,7 +105,7 @@
 
 		// view tag info
 		if ([ref isTag])
-			[items addObject:[PBRefMenuItem itemWithTitle:@"View tag info…" action:@selector(showTagInfoSheet:) enabled:YES]];
+			[items addObject:[PBRefMenuItem itemWithTitle:@"View Tag Info…" action:@selector(showTagInfoSheet:) enabled:YES]];
 
 		// Diff
 		NSString *diffTitle = [NSString stringWithFormat:@"Diff with %@", headRefName];
@@ -128,13 +128,13 @@
 	[items addObject:[PBRefMenuItem itemWithTitle:fetchTitle action:@selector(fetchRemote:) enabled:hasRemote]];
 
 	// pull
-	NSString *pullTitle = hasRemote ? [NSString stringWithFormat:@"Pull %@ and update %@", remoteName, headRefName] : @"Pull";
+	NSString *pullTitle = hasRemote ? [NSString stringWithFormat:@"Pull %@ and Update %@", remoteName, headRefName] : @"Pull";
 	[items addObject:[PBRefMenuItem itemWithTitle:pullTitle action:@selector(pullRemote:) enabled:hasRemote]];
 
 	// push
 	if (isRemote || [ref isRemoteBranch]) {
 		// push updates to remote
-		NSString *pushTitle = [NSString stringWithFormat:@"Push updates to %@", remoteName];
+		NSString *pushTitle = [NSString stringWithFormat:@"Push Updates to %@", remoteName];
 		[items addObject:[PBRefMenuItem itemWithTitle:pushTitle action:@selector(pushUpdatesToRemote:) enabled:YES]];
 	}
 	else if (isDetachedHead) {
@@ -219,15 +219,15 @@
 		[items addObject:[PBRefMenuItem separatorItem]];
 
 		// merge commit
-		NSString *mergeTitle = isOnHeadBranch ? @"Merge commit" : [NSString stringWithFormat:@"Merge commit into %@", headBranchName];
+		NSString *mergeTitle = isOnHeadBranch ? @"Merge Commit" : [NSString stringWithFormat:@"Merge Commit into %@", headBranchName];
 		[items addObject:[PBRefMenuItem itemWithTitle:mergeTitle action:@selector(merge:) enabled:!isOnHeadBranch]];
 
 		// cherry pick
-		NSString *cherryPickTitle = isOnHeadBranch ? @"Cherry pick commit" : [NSString stringWithFormat:@"Cherry pick commit to %@", headBranchName];
+		NSString *cherryPickTitle = isOnHeadBranch ? @"Cherry Pick Commit" : [NSString stringWithFormat:@"Cherry Pick Commit to %@", headBranchName];
 		[items addObject:[PBRefMenuItem itemWithTitle:cherryPickTitle action:@selector(cherryPick:) enabled:!isOnHeadBranch]];
 
 		// rebase
-		NSString *rebaseTitle = isOnHeadBranch ? @"Rebase commit" : [NSString stringWithFormat:@"Rebase %@ on commit", headBranchName];
+		NSString *rebaseTitle = isOnHeadBranch ? @"Rebase Commit" : [NSString stringWithFormat:@"Rebase %@ on Commit", headBranchName];
 		[items addObject:[PBRefMenuItem itemWithTitle:rebaseTitle action:@selector(rebaseHeadBranch:) enabled:!isOnHeadBranch]];
 	}
 	
