@@ -389,6 +389,19 @@
                                 </connections>
                             </menuItem>
                             <menuItem isSeparatorItem="YES" id="943"/>
+                            <menuItem title="Fetch" id="hAa-UP-Llb">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="fetchRemote:" target="-1" id="zxl-J9-UiW"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Fetch All" id="OAK-L4-wE7">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="fetchAllRemotes:" target="-1" id="gQf-4H-0cg"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem isSeparatorItem="YES" id="bMk-cx-k5H"/>
                             <menuItem title="Stash Save" keyEquivalent="y" id="Zqy-z5-0Jz">
                                 <connections>
                                     <action selector="stashSave:" target="-1" id="VkG-km-8Nw"/>

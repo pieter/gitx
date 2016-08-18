@@ -31,6 +31,7 @@
 
 @implementation PBGitSidebarController
 @synthesize items;
+@synthesize sourceView;
 @synthesize sourceListControlsView;
 @synthesize historyViewController;
 @synthesize commitViewController;
@@ -479,6 +480,5 @@ enum  {
 			[historyViewController.refController showConfirmPushRefSheet:ref remote:remoteRef];
 	}
 }
-
 
 @end

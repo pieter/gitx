@@ -690,20 +690,27 @@
 {
 	NSMutableArray *arguments = [NSMutableArray arrayWithObject:@"fetch"];
 
-	if (![ref isRemote]) {
-		NSError *error = nil;
-		ref = [self remoteRefForBranch:ref error:&error];
-		if (!ref) {
-			if (error)
-				[self.windowController showErrorSheet:error];
-			return;
+	NSString * remoteName;
+	if (ref != nil) {
+		if (![ref isRemote]) {
+			NSError *error = nil;
+			ref = [self remoteRefForBranch:ref error:&error];
+			if (!ref) {
+				if (error)
+					[self.windowController showErrorSheet:error];
+				return;
+			}
 		}
+		remoteName = [ref remoteName];
+		[arguments addObject:remoteName];
 	}
-	NSString *remoteName = [ref remoteName];
-	[arguments addObject:remoteName];
-
-	NSString *description = [NSString stringWithFormat:@"Fetching all tracking branches from %@", remoteName];
-	NSString *title = @"Fetching from remote";
+	else {
+		remoteName = @"all remotes";
+		[arguments addObject:@"--all"];
+	}
+	
+	NSString *description = [NSString stringWithFormat:@"Fetching all tracking branches for %@", remoteName];
+	NSString *title = @"Fetching…";
 	[PBRemoteProgressSheet beginRemoteProgressSheetForArguments:arguments title:title description:description inRepository:self];
 }
 

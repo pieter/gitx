@@ -15,6 +15,9 @@
 #import "PBGitSidebarController.h"
 #import "RJModalRepoSheet.h"
 #import "PBAddRemoteSheet.h"
+#import "PBSourceViewItem.h"
+#import "PBGitRevSpecifier.h"
+#import "PBGitRef.h"
 
 @interface PBGitWindowController ()
 
@@ -64,7 +67,17 @@
 	} else if ([menuItem action] == @selector(showHistoryView:)) {
 		[menuItem setState:(contentController != sidebarController.commitViewController) ? YES : NO];
 		return ![repository isBareRepository];
+	} else if (menuItem.action == @selector(fetchRemote:)) {
+		NSOutlineView *sourceView = sidebarController.sourceView;
+		PBSourceViewItem *item = [sourceView itemAtRow:sourceView.selectedRow];
+		if (item.ref.isRemote) {
+			menuItem.title = [NSString stringWithFormat:NSLocalizedString(@"Fetch “%@”", @"Fetch ”Remote Name“"), item.ref.remoteName];
+			return YES;
+		}
+		menuItem.title = NSLocalizedString(@"Fetch", @"Fetch (without Remote Name for inactive menu item)");
+		return NO;
 	}
+	
 	return YES;
 }
 
@@ -246,6 +259,17 @@
 	[[[PBAddRemoteSheet alloc] initWithRepository:self.repository] show];
 }
 
+
+- (IBAction) fetchRemote:(id)sender {
+	NSOutlineView *sourceView = sidebarController.sourceView;
+	PBSourceViewItem *item = [sourceView itemAtRow:sourceView.selectedRow];
+	[repository beginFetchFromRemoteForRef:item.ref];
+}
+
+- (IBAction) fetchAllRemotes:(id)sender {
+	[repository beginFetchFromRemoteForRef:nil];
+}
+
 - (IBAction) stashSave:(id) sender
 {
     [repository stashSaveWithKeepIndex:NO];
@@ -267,6 +291,7 @@
 - (void)flagsChanged:(NSEvent *)theEvent {
 	[sidebarController.commitViewController flagsChanged:theEvent];
 }
+
 
 
 #pragma mark -
