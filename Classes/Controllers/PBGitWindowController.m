@@ -68,18 +68,32 @@
 		[menuItem setState:(contentController != sidebarController.commitViewController) ? YES : NO];
 		return ![repository isBareRepository];
 	} else if (menuItem.action == @selector(fetchRemote:)) {
-		NSOutlineView *sourceView = sidebarController.sourceView;
-		PBSourceViewItem *item = [sourceView itemAtRow:sourceView.selectedRow];
-		if (item.ref.isRemote) {
-			menuItem.title = [NSString stringWithFormat:NSLocalizedString(@"Fetch “%@”", @"Fetch ”Remote Name“"), item.ref.remoteName];
-			return YES;
-		}
-		menuItem.title = NSLocalizedString(@"Fetch", @"Fetch (without Remote Name for inactive menu item)");
-		return NO;
+		return [self validateMenuItem:menuItem remoteTitle:@"Fetch “%@”" plainTitle:@"Fetch"];
+	} else if (menuItem.action == @selector(pullRemote:)) {
+		return [self validateMenuItem:menuItem remoteTitle:@"Pull From “%@”" plainTitle:@"Pull"];
 	}
 	
 	return YES;
 }
+
+- (BOOL) validateMenuItem:(NSMenuItem *)menuItem remoteTitle:(NSString *)localisationKeyWithRemote plainTitle:(NSString *)localizationKeyWithoutRemote
+{
+	PBSourceViewItem *item = [self selectedItem];
+	PBGitRef *ref = item.ref;
+
+	if (!ref && (item.parent == sidebarController.remotes)) {
+		ref = [PBGitRef refFromString:[kGitXRemoteRefPrefix stringByAppendingString:item.title]];
+	}
+	
+	if (ref.isRemote) {
+		menuItem.title = [NSString stringWithFormat:NSLocalizedString(localisationKeyWithRemote, @""), ref.remoteName];
+		return YES;
+	}
+
+	menuItem.title = NSLocalizedString(localizationKeyWithoutRemote, @"");
+	return NO;
+}
+
 
 - (void) awakeFromNib
 {
@@ -261,13 +275,28 @@
 
 
 - (IBAction) fetchRemote:(id)sender {
-	NSOutlineView *sourceView = sidebarController.sourceView;
-	PBSourceViewItem *item = [sourceView itemAtRow:sourceView.selectedRow];
-	[repository beginFetchFromRemoteForRef:item.ref];
+	PBGitRef *ref = [self selectedItem].ref;
+	[repository beginFetchFromRemoteForRef:ref];
 }
 
 - (IBAction) fetchAllRemotes:(id)sender {
 	[repository beginFetchFromRemoteForRef:nil];
+}
+
+- (IBAction) pullRemote:(id)sender {
+	PBGitRef *ref = [self selectedItem].revSpecifier.ref;
+	PBGitRef *remoteRef = [repository remoteRefForBranch:ref error:NULL];
+	[repository beginPullFromRemote:remoteRef forRef:ref];
+}
+
+- (IBAction) pullDefaultRemote:(id)sender {
+	PBGitRef *ref = [self selectedItem].revSpecifier.ref;
+	[repository beginPullFromRemote:nil forRef:ref];
+}
+
+- (PBSourceViewItem *) selectedItem {
+	NSOutlineView *sourceView = sidebarController.sourceView;
+	return [sourceView itemAtRow:sourceView.selectedRow];
 }
 
 - (IBAction) stashSave:(id) sender

@@ -401,6 +401,19 @@
                                     <action selector="fetchAllRemotes:" target="-1" id="gQf-4H-0cg"/>
                                 </connections>
                             </menuItem>
+                            <menuItem isSeparatorItem="YES" id="CDX-1D-7tK"/>
+                            <menuItem title="Pull" id="ka6-UF-ky7">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="pullRemote:" target="-1" id="Uq3-eV-MxO"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Pull From Default Remote" id="hpV-fp-aO8">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="pullDefaultRemote:" target="-1" id="X3P-VB-IDo"/>
+                                </connections>
+                            </menuItem>
                             <menuItem isSeparatorItem="YES" id="bMk-cx-k5H"/>
                             <menuItem title="Stash Save" keyEquivalent="y" id="Zqy-z5-0Jz">
                                 <connections>

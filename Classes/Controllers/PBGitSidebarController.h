@@ -42,6 +42,7 @@
 - (void)setHistorySearch:(NSString *)searchString mode:(NSInteger)mode;
 
 @property(readonly) NSMutableArray *items;
+@property(readonly) PBSourceViewItem *remotes;
 @property(readonly) NSOutlineView *sourceView;
 @property(readonly) NSView *sourceListControlsView;
 @property(readonly) PBGitHistoryController *historyViewController;

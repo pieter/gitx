@@ -31,6 +31,7 @@
 
 @implementation PBGitSidebarController
 @synthesize items;
+@synthesize remotes;
 @synthesize sourceView;
 @synthesize sourceListControlsView;
 @synthesize historyViewController;

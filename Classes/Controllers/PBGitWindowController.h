@@ -51,6 +51,9 @@
 - (IBAction) fetchRemote:(id)sender;
 - (IBAction) fetchAllRemotes:(id)sender;
 
+- (IBAction) pullRemote:(id)sender;
+- (IBAction) pullDefaultRemote:(id)sender;
+
 - (IBAction) stashSave:(id) sender;
 - (IBAction) stashSaveWithKeepIndex:(id) sender;
 - (IBAction) stashPop:(id) sender;
