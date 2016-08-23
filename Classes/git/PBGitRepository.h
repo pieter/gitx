@@ -76,7 +76,7 @@ static NSString * PBStringFromBranchFilterType(PBGitXBranchFilterType type) {
 - (void) cloneRepositoryToPath:(NSString *)path bare:(BOOL)isBare;
 - (void) beginAddRemote:(NSString *)remoteName forURL:(NSString *)remoteURL;
 - (void) beginFetchFromRemoteForRef:(PBGitRef *)ref;
-- (void) beginPullFromRemote:(PBGitRef *)remoteRef forRef:(PBGitRef *)ref;
+- (void) beginPullFromRemote:(PBGitRef *)remoteRef forRef:(PBGitRef *)ref rebase:(BOOL)rebase;
 - (void) beginPushRef:(PBGitRef *)ref toRemote:(PBGitRef *)remoteRef;
 - (BOOL) checkoutRefish:(id <PBGitRefish>)ref;
 - (BOOL) checkoutFiles:(NSArray *)files fromRefish:(id <PBGitRefish>)ref;

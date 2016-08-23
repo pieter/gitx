@@ -48,7 +48,7 @@
 - (void) pullRemote:(PBRefMenuItem *)sender
 {
 	id <PBGitRefish> refish = sender.refishs.firstObject;
-	[historyController.repository beginPullFromRemote:nil forRef:refish];
+	[historyController.repository beginPullFromRemote:nil forRef:refish rebase:NO];
 }
 
 

@@ -71,6 +71,8 @@
 		return [self validateMenuItem:menuItem remoteTitle:@"Fetch “%@”" plainTitle:@"Fetch"];
 	} else if (menuItem.action == @selector(pullRemote:)) {
 		return [self validateMenuItem:menuItem remoteTitle:@"Pull From “%@”" plainTitle:@"Pull"];
+	} else if (menuItem.action == @selector(pullRebaseRemote:)) {
+		return [self validateMenuItem:menuItem remoteTitle:@"Pull From “%@” and Rebase" plainTitle:@"Pull and Rebase"];
 	}
 	
 	return YES;
@@ -284,14 +286,30 @@
 }
 
 - (IBAction) pullRemote:(id)sender {
+	[self pull:sender rebase:NO];
+}
+
+- (IBAction) pullRebaseRemote:(id)sender {
+	[self pull:sender rebase:YES];
+}
+
+- (void) pull:(id)sender rebase:(BOOL)rebase {
 	PBGitRef *ref = [self selectedItem].revSpecifier.ref;
 	PBGitRef *remoteRef = [repository remoteRefForBranch:ref error:NULL];
-	[repository beginPullFromRemote:remoteRef forRef:ref];
+	[repository beginPullFromRemote:remoteRef forRef:ref rebase:rebase];
 }
 
 - (IBAction) pullDefaultRemote:(id)sender {
+	[self pullDefault:sender rebase:NO];
+}
+
+- (IBAction) pullRebaseDefaultRemote:(id)sender {
+	[self pullDefault:sender rebase:YES];
+}
+
+- (void) pullDefault:(id)sender rebase:(BOOL)rebase {
 	PBGitRef *ref = [self selectedItem].revSpecifier.ref;
-	[repository beginPullFromRemote:nil forRef:ref];
+	[repository beginPullFromRemote:nil forRef:ref rebase:NO];
 }
 
 - (PBSourceViewItem *) selectedItem {

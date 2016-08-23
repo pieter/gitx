@@ -714,9 +714,13 @@
 	[PBRemoteProgressSheet beginRemoteProgressSheetForArguments:arguments title:title description:description inRepository:self];
 }
 
-- (void) beginPullFromRemote:(PBGitRef *)remoteRef forRef:(PBGitRef *)ref
+- (void) beginPullFromRemote:(PBGitRef *)remoteRef forRef:(PBGitRef *)ref rebase:(BOOL)rebase
 {
 	NSMutableArray *arguments = [NSMutableArray arrayWithObject:@"pull"];
+	
+	if (rebase) {
+		[arguments addObject:@"--rebase"];
+	}
 
 	// a nil remoteRef means lookup the ref's default remote
 	if (!remoteRef || ![remoteRef isRemote]) {

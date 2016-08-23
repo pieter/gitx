@@ -402,16 +402,26 @@
                                 </connections>
                             </menuItem>
                             <menuItem isSeparatorItem="YES" id="CDX-1D-7tK"/>
-                            <menuItem title="Pull" id="ka6-UF-ky7">
-                                <modifierMask key="keyEquivalentModifierMask"/>
+                            <menuItem title="Pull" keyEquivalent="l" id="ka6-UF-ky7">
                                 <connections>
                                     <action selector="pullRemote:" target="-1" id="Uq3-eV-MxO"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Pull From Default Remote" id="hpV-fp-aO8">
-                                <modifierMask key="keyEquivalentModifierMask"/>
+                            <menuItem title="Pull and Rebase" alternate="YES" keyEquivalent="l" id="voe-dZ-hNd">
+                                <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
+                                <connections>
+                                    <action selector="pullRebaseRemote:" target="-1" id="QtG-bu-sTO"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Pull From Default Remote" keyEquivalent="L" id="hpV-fp-aO8">
                                 <connections>
                                     <action selector="pullDefaultRemote:" target="-1" id="X3P-VB-IDo"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Pull From Default Remote and Rebase" alternate="YES" keyEquivalent="L" id="3yY-A6-tCH">
+                                <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
+                                <connections>
+                                    <action selector="pullRebaseDefaultRemote:" target="-1" id="4BD-Fh-yDB"/>
                                 </connections>
                             </menuItem>
                             <menuItem isSeparatorItem="YES" id="bMk-cx-k5H"/>
