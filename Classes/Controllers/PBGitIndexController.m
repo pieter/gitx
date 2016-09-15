@@ -92,42 +92,54 @@
 - (NSMenu *) menuForTable:(NSTableView *)table
 {
 	NSMenu *menu = [[NSMenu alloc] init];
-	id controller = [table tag] == 0 ? unstagedFilesController : stagedFilesController;
-	NSArray *selectedFiles = [controller selectedObjects];
+	NSArrayController *controller = table.tag == 0 ? unstagedFilesController : stagedFilesController;
+	NSArray *selectedFiles = controller.selectedObjects;
 	
-	if ([selectedFiles count] == 0)
+	NSUInteger numberOfSelectedFiles = selectedFiles.count;
+
+	if (numberOfSelectedFiles == 0)
 	{
 		return menu;
 	}
-
-	// Unstaged changes
-	if ([table tag] == 0) {
-		NSMenuItem *stageItem = [[NSMenuItem alloc] initWithTitle:@"Stage Changes" action:@selector(stageFilesAction:) keyEquivalent:@"s"];
-		[stageItem setTarget:self];
+	
+	// Stage/Unstage changes
+	if (table.tag == 0) {
+		NSString *stageTitle = numberOfSelectedFiles == 1
+			? [NSString stringWithFormat:NSLocalizedString( @"Stage “%@”", @"Stage single file contextual menu item" ), [self getNameOfFirstSelectedFile:selectedFiles]]
+			: [NSString stringWithFormat:NSLocalizedString( @"Stage %s Files", @"Stage multiple files contextual menu item"), numberOfSelectedFiles ];
+		NSMenuItem *stageItem = [[NSMenuItem alloc] initWithTitle:stageTitle action:@selector(stageFilesAction:) keyEquivalent:@"s"];
+		stageItem.target = self;
 		[menu addItem:stageItem];
 	}
-	else if ([table tag] == 1) {
-		NSMenuItem *unstageItem = [[NSMenuItem alloc] initWithTitle:@"Unstage Changes" action:@selector(unstageFilesAction:) keyEquivalent:@"u"];
-		[unstageItem setTarget:self];
+	else if (table.tag == 1) {
+		NSString *stageTitle = numberOfSelectedFiles == 1
+			? [NSString stringWithFormat:NSLocalizedString( @"Unstage “%@”", @"Unstage single file contextual menu item" ), [self getNameOfFirstSelectedFile:selectedFiles]]
+			: [NSString stringWithFormat:NSLocalizedString( @"Unstage %s Files", @"Unstage multiple files contextual menu item"), numberOfSelectedFiles ];
+		NSMenuItem *unstageItem = [[NSMenuItem alloc] initWithTitle:stageTitle action:@selector(unstageFilesAction:) keyEquivalent:@"u"];
+		unstageItem.target = self;
 		[menu addItem:unstageItem];
 	}
 
-	NSString *title = [selectedFiles count] == 1 ? @"Open file" : @"Open files";
-	NSMenuItem *openItem = [[NSMenuItem alloc] initWithTitle:title action:@selector(openFilesAction:) keyEquivalent:@""];
-	[openItem setTarget:self];
+	NSString *openTitle = numberOfSelectedFiles == 1
+		? [NSString stringWithFormat:NSLocalizedString( @"Open ”%@“", @"Open single file contextual menu item" ), [self getNameOfFirstSelectedFile:selectedFiles]]
+		: [NSString stringWithFormat:NSLocalizedString( @"Open %s Files", @"Open multiple files contextual menu item"), numberOfSelectedFiles ];
+	NSMenuItem *openItem = [[NSMenuItem alloc] initWithTitle:openTitle action:@selector(openFilesAction:) keyEquivalent:@""];
+	openItem.target = self;
 	[menu addItem:openItem];
 
 	// Attempt to ignore
 	if ([self allSelectedCanBeIgnored:selectedFiles]) {
-		NSString *ignoreText = [selectedFiles count] == 1 ? @"Ignore File": @"Ignore Files";
+		NSString *ignoreText = numberOfSelectedFiles == 1
+			? [NSString stringWithFormat:NSLocalizedString( @"Ignore ”%@“", @"Ignore single file contextual menu item" ), [self getNameOfFirstSelectedFile:selectedFiles]]
+			: [NSString stringWithFormat:NSLocalizedString( @"Ignore %s Files", @"Ignore multiple files contextual menu item"), numberOfSelectedFiles ];
 		NSMenuItem *ignoreItem = [[NSMenuItem alloc] initWithTitle:ignoreText action:@selector(ignoreFilesAction:) keyEquivalent:@""];
-		[ignoreItem setTarget:self];
+		ignoreItem.target = self;
 		[menu addItem:ignoreItem];
 	}
 
-	if ([selectedFiles count] == 1) {
+	if (numberOfSelectedFiles == 1) {
 		NSMenuItem *showInFinderItem = [[NSMenuItem alloc] initWithTitle:@"Show in Finder" action:@selector(showInFinderAction:) keyEquivalent:@""];
-		[showInFinderItem setTarget:self];
+		showInFinderItem.target = self;
 		[menu addItem:showInFinderItem];
     }
 
@@ -186,6 +198,10 @@
 	return menu;
 }
 
+- (NSString *) getNameOfFirstSelectedFile:(NSArray<PBChangedFile *> *) selectedFiles {
+	return selectedFiles.firstObject.path.lastPathComponent;
+}
+
 - (BOOL)validateMenuItem:(NSMenuItem *)menuItem
 {
     if ([self respondsToSelector:[menuItem action]])
@@ -197,24 +213,34 @@
     return [[commitController nextResponder] validateMenuItem:menuItem];
 }
 
+
+- (IBAction) stageFilesAction:(id) sender {
+	[self stageSelectedFiles];
+}
+
+- (IBAction) unstageFilesAction:(id) sender {
+	[self unstageSelectedFiles];
+}
+
 - (void) stageSelectedFiles
 {
-	[commitController.index stageFiles:[unstagedFilesController selectedObjects] for:unstagedFilesController];
+	[commitController.index stageFiles:unstagedFilesController.selectedObjects];
+	[self.class establishFutureSelection:unstagedFilesController];
 }
 
 - (void) unstageSelectedFiles
 {
-	[commitController.index unstageFiles:[stagedFilesController selectedObjects] for:stagedFilesController];
+	[commitController.index unstageFiles:[stagedFilesController selectedObjects]];
+	[self.class establishFutureSelection:stagedFilesController];
 }
 
-- (void) stageFilesAction:(id) sender
++ (void) establishFutureSelection:(NSArrayController *) controller
 {
-	[commitController.index stageFiles:[sender representedObject] for:unstagedFilesController];
-}
-
-- (void) unstageFilesAction:(id) sender
-{
-	[commitController.index unstageFiles:[sender representedObject] for:stagedFilesController];
+	NSUInteger currentSelectionIndex = controller.selectionIndex;
+	dispatch_async(dispatch_get_main_queue(), ^{
+		NSUInteger newSelectionIndex = MIN(currentSelectionIndex, [controller.arrangedObjects count] - 1);
+		controller.selectionIndex = newSelectionIndex;
+	});
 }
 
 - (void) openFilesAction:(id) sender
@@ -282,7 +308,7 @@
     [[alert window] orderOut:nil];
 
 	if (returnCode == NSAlertDefaultReturn) {
-		[commitController.index discardChangesForFiles:(__bridge NSArray*)contextInfo for:unstagedFilesController];
+		[commitController.index discardChangesForFiles:(__bridge NSArray*)contextInfo];
 	}
 }
 
@@ -299,7 +325,7 @@
                          didEndSelector:@selector(discardChangesForFilesAlertDidEnd:returnCode:contextInfo:)
                             contextInfo:(__bridge_retained void*)files];
 	} else {
-		[commitController.index discardChangesForFiles:files for:unstagedFilesController];
+		[commitController.index discardChangesForFiles:files];
     }
 }
 
@@ -317,10 +343,10 @@
 	NSIndexSet *selectionIndexes = [tableView selectedRowIndexes];
 	NSArray *files = [[controller arrangedObjects] objectsAtIndexes:selectionIndexes];
 	if ([tableView tag] == 0) {
-		[commitController.index stageFiles:files for:controller];
+		[commitController.index stageFiles:files];
 	}
 	else {
-		[commitController.index unstageFiles:files for:controller];
+		[commitController.index unstageFiles:files];
 	}
 }
 
@@ -380,10 +406,10 @@
 	NSArray *files = [[controller arrangedObjects] objectsAtIndexes:rowIndexes];
 
 	if ([aTableView tag] == 0) {
-		[commitController.index unstageFiles:files for:controller];
+		[commitController.index unstageFiles:files];
 	}
 	else {
-		[commitController.index stageFiles:files for:controller];
+		[commitController.index stageFiles:files];
 	}
 
 	return YES;

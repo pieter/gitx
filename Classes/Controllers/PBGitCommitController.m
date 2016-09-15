@@ -241,9 +241,6 @@
 
 - (void)indexChanged:(NSNotification *)notification
 {
-	NSArrayController * controller = notification.userInfo[@"controller"];
-	NSUInteger selectedIndexBefore = controller.selectionIndex;
-	
 	[cachedFilesController rearrangeObjects];
 	[unstagedFilesController rearrangeObjects];
     
@@ -252,12 +249,6 @@
     
     [commitButton setEnabled:(staged > 0)];
     [stashButton setEnabled:(staged > 0 || tracked > 0)];
-	
-	if (controller != nil) {
-		// If we have a controller, update its selection to the item
-		// beneath the one just (un)staged or the last one in the list.
-		[controller setSelectionIndex:MIN(selectedIndexBefore, [[controller arrangedObjects] count] - 1)];
-	}
 }
 
 - (void)indexOperationFailed:(NSNotification *)notification
