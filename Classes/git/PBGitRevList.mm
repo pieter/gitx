@@ -16,7 +16,6 @@
 
 #import <ObjectiveGit/ObjectiveGit.h>
 
-#import <ext/stdio_filebuf.h>
 #import <iostream>
 #import <string>
 #import <map>
