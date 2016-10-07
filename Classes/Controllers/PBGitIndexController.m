@@ -106,7 +106,7 @@
 	if (table.tag == 0) {
 		NSString *stageTitle = numberOfSelectedFiles == 1
 			? [NSString stringWithFormat:NSLocalizedString( @"Stage “%@”", @"Stage single file contextual menu item" ), [self getNameOfFirstSelectedFile:selectedFiles]]
-			: [NSString stringWithFormat:NSLocalizedString( @"Stage %s Files", @"Stage multiple files contextual menu item"), numberOfSelectedFiles ];
+			: [NSString stringWithFormat:NSLocalizedString( @"Stage %i Files", @"Stage multiple files contextual menu item"), numberOfSelectedFiles ];
 		NSMenuItem *stageItem = [[NSMenuItem alloc] initWithTitle:stageTitle action:@selector(stageFilesAction:) keyEquivalent:@"s"];
 		stageItem.target = self;
 		[menu addItem:stageItem];
@@ -114,7 +114,7 @@
 	else if (table.tag == 1) {
 		NSString *stageTitle = numberOfSelectedFiles == 1
 			? [NSString stringWithFormat:NSLocalizedString( @"Unstage “%@”", @"Unstage single file contextual menu item" ), [self getNameOfFirstSelectedFile:selectedFiles]]
-			: [NSString stringWithFormat:NSLocalizedString( @"Unstage %s Files", @"Unstage multiple files contextual menu item"), numberOfSelectedFiles ];
+			: [NSString stringWithFormat:NSLocalizedString( @"Unstage %i Files", @"Unstage multiple files contextual menu item"), numberOfSelectedFiles ];
 		NSMenuItem *unstageItem = [[NSMenuItem alloc] initWithTitle:stageTitle action:@selector(unstageFilesAction:) keyEquivalent:@"u"];
 		unstageItem.target = self;
 		[menu addItem:unstageItem];
@@ -122,7 +122,7 @@
 
 	NSString *openTitle = numberOfSelectedFiles == 1
 		? [NSString stringWithFormat:NSLocalizedString( @"Open ”%@“", @"Open single file contextual menu item" ), [self getNameOfFirstSelectedFile:selectedFiles]]
-		: [NSString stringWithFormat:NSLocalizedString( @"Open %s Files", @"Open multiple files contextual menu item"), numberOfSelectedFiles ];
+		: [NSString stringWithFormat:NSLocalizedString( @"Open %i Files", @"Open multiple files contextual menu item"), numberOfSelectedFiles ];
 	NSMenuItem *openItem = [[NSMenuItem alloc] initWithTitle:openTitle action:@selector(openFilesAction:) keyEquivalent:@""];
 	openItem.target = self;
 	[menu addItem:openItem];
@@ -131,7 +131,7 @@
 	if ([self allSelectedCanBeIgnored:selectedFiles]) {
 		NSString *ignoreText = numberOfSelectedFiles == 1
 			? [NSString stringWithFormat:NSLocalizedString( @"Ignore ”%@“", @"Ignore single file contextual menu item" ), [self getNameOfFirstSelectedFile:selectedFiles]]
-			: [NSString stringWithFormat:NSLocalizedString( @"Ignore %s Files", @"Ignore multiple files contextual menu item"), numberOfSelectedFiles ];
+			: [NSString stringWithFormat:NSLocalizedString( @"Ignore %i Files", @"Ignore multiple files contextual menu item"), numberOfSelectedFiles ];
 		NSMenuItem *ignoreItem = [[NSMenuItem alloc] initWithTitle:ignoreText action:@selector(ignoreFilesAction:) keyEquivalent:@""];
 		ignoreItem.target = self;
 		[menu addItem:ignoreItem];
