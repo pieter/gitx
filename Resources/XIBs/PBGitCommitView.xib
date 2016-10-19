@@ -1,9 +1,9 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="9060" systemVersion="15D21" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="11201" systemVersion="16B2548a" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="9060"/>
-        <plugIn identifier="com.apple.WebKitIBPlugin" version="9060"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="11201"/>
+        <plugIn identifier="com.apple.WebKitIBPlugin" version="11201"/>
         <capability name="box content view" minToolsVersion="7.0"/>
     </dependencies>
     <objects>
@@ -34,7 +34,6 @@
                         <webView id="125">
                             <rect key="frame" x="0.0" y="0.0" width="852" height="181"/>
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                            <animations/>
                             <webPreferences key="preferences" defaultFontSize="12" defaultFixedFontSize="12">
                                 <nil key="identifier"/>
                             </webPreferences>
@@ -46,7 +45,7 @@
                             <rect key="frame" x="0.0" y="190" width="852" height="242"/>
                             <autoresizingMask key="autoresizingMask"/>
                             <subviews>
-                                <box autoresizesSubviews="NO" title="Unstaged Changes" borderType="none" id="206">
+                                <box autoresizesSubviews="NO" borderType="none" title="Unstaged Changes" id="206">
                                     <rect key="frame" x="-3" y="0.0" width="194" height="246"/>
                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                     <view key="contentView" id="o6a-kT-Geh">
@@ -63,7 +62,6 @@
                                                         <tableView focusRingType="none" verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" columnSelection="YES" autosaveColumns="NO" rowHeight="15" id="48" customClass="PBFileChangesTableView">
                                                             <rect key="frame" x="0.0" y="0.0" width="193" height="225"/>
                                                             <autoresizingMask key="autoresizingMask"/>
-                                                            <animations/>
                                                             <size key="intercellSpacing" width="3" height="2"/>
                                                             <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                                             <color key="gridColor" name="gridColor" catalog="System" colorSpace="catalog"/>
@@ -94,84 +92,66 @@
                                                             </connections>
                                                         </tableView>
                                                     </subviews>
-                                                    <animations/>
-                                                    <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                                 </clipView>
-                                                <animations/>
                                                 <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="YES" id="47">
                                                     <rect key="frame" x="1" y="179" width="173" height="15"/>
                                                     <autoresizingMask key="autoresizingMask"/>
-                                                    <animations/>
                                                 </scroller>
                                                 <scroller key="verticalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="NO" id="46">
                                                     <rect key="frame" x="178" y="1" width="16" height="0.0"/>
                                                     <autoresizingMask key="autoresizingMask"/>
-                                                    <animations/>
                                                 </scroller>
                                             </scrollView>
                                         </subviews>
-                                        <animations/>
                                     </view>
-                                    <animations/>
-                                    <color key="borderColor" white="0.0" alpha="0.41999999999999998" colorSpace="calibratedWhite"/>
-                                    <color key="fillColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 </box>
-                                <box autoresizesSubviews="NO" title="Commit Message" borderType="none" id="207">
-                                    <rect key="frame" x="194" y="0.0" width="438.5" height="246"/>
+                                <box autoresizesSubviews="NO" borderType="none" title="Commit Message" id="207">
+                                    <rect key="frame" x="194" y="0.0" width="438" height="246"/>
                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                     <view key="contentView" id="KUO-uW-2Ed">
-                                        <rect key="frame" x="0.0" y="0.0" width="438.5" height="231"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="438" height="231"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                         <subviews>
                                             <scrollView autohidesScrollers="YES" horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" id="130">
-                                                <rect key="frame" x="0.0" y="36" width="438.5" height="190"/>
+                                                <rect key="frame" x="0.0" y="36" width="438" height="190"/>
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <clipView key="contentView" id="0Ty-JR-WNQ">
-                                                    <rect key="frame" x="1" y="1" width="436.5" height="188"/>
+                                                    <rect key="frame" x="1" y="1" width="436" height="188"/>
                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                     <subviews>
-                                                        <textView importsGraphics="NO" richText="NO" continuousSpellChecking="YES" allowsUndo="YES" verticallyResizable="YES" linkDetection="YES" spellingCorrection="YES" grammarChecking="YES" smartInsertDelete="YES" id="133" customClass="PBCommitMessageView">
-                                                            <rect key="frame" x="0.0" y="0.0" width="436.5" height="188"/>
+                                                        <textView importsGraphics="NO" richText="NO" allowsUndo="YES" linkDetection="YES" smartInsertDelete="YES" id="133" customClass="PBCommitMessageView">
+                                                            <rect key="frame" x="0.0" y="0.0" width="446" height="188"/>
                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                                            <animations/>
                                                             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                                            <size key="minSize" width="436.5" height="188"/>
+                                                            <size key="minSize" width="436" height="188"/>
                                                             <size key="maxSize" width="1161" height="10000000"/>
                                                             <color key="insertionPointColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
-                                                            <size key="minSize" width="436.5" height="188"/>
-                                                            <size key="maxSize" width="1161" height="10000000"/>
                                                         </textView>
                                                     </subviews>
-                                                    <animations/>
                                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                 </clipView>
-                                                <animations/>
                                                 <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" doubleValue="1" horizontal="YES" id="132">
                                                     <rect key="frame" x="-100" y="-100" width="87" height="18"/>
                                                     <autoresizingMask key="autoresizingMask"/>
-                                                    <animations/>
                                                 </scroller>
                                                 <scroller key="verticalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="NO" id="131">
-                                                    <rect key="frame" x="421.5" y="1" width="16" height="0.0"/>
+                                                    <rect key="frame" x="422" y="1" width="16" height="0.0"/>
                                                     <autoresizingMask key="autoresizingMask"/>
-                                                    <animations/>
                                                 </scroller>
                                             </scrollView>
                                             <tabView drawsBackground="NO" controlSize="mini" type="noTabsNoBorder" initialItem="cUS-tK-1Kt" id="4Ld-Yb-msh">
-                                                <rect key="frame" x="0.0" y="3" width="438.5" height="30"/>
+                                                <rect key="frame" x="0.0" y="3" width="438" height="30"/>
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
-                                                <animations/>
                                                 <font key="font" metaFont="miniSystem"/>
                                                 <tabViewItems>
                                                     <tabViewItem label="Commit" identifier="1" id="cUS-tK-1Kt">
                                                         <view key="view" id="TLa-tK-777">
-                                                            <rect key="frame" x="0.0" y="0.0" width="438.5" height="30"/>
+                                                            <rect key="frame" x="0.0" y="0.0" width="438" height="30"/>
                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                             <subviews>
                                                                 <button id="e4Y-vA-x9M">
                                                                     <rect key="frame" x="-2" y="6" width="82" height="18"/>
                                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                                    <animations/>
                                                                     <buttonCell key="cell" type="check" title="Amend" bezelStyle="regularSquare" imagePosition="left" alignment="left" state="on" inset="2" id="pYj-lv-tp6">
                                                                         <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                                                         <font key="font" metaFont="system"/>
@@ -183,9 +163,8 @@
                                                                     </connections>
                                                                 </button>
                                                                 <button verticalHuggingPriority="750" id="010-p4-kzI">
-                                                                    <rect key="frame" x="252.5" y="-3" width="96" height="32"/>
+                                                                    <rect key="frame" x="252" y="-3" width="96" height="32"/>
                                                                     <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
-                                                                    <animations/>
                                                                     <buttonCell key="cell" type="push" title="Sign-Off" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="cp4-9E-oFJ">
                                                                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                                                         <font key="font" metaFont="system"/>
@@ -195,9 +174,8 @@
                                                                     </connections>
                                                                 </button>
                                                                 <button verticalHuggingPriority="750" id="coC-RC-dhM">
-                                                                    <rect key="frame" x="348.5" y="-3" width="96" height="32"/>
+                                                                    <rect key="frame" x="348" y="-3" width="96" height="32"/>
                                                                     <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
-                                                                    <animations/>
                                                                     <buttonCell key="cell" type="push" title="Commit" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="wNE-Rq-NpC">
                                                                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                                                         <font key="font" metaFont="system"/>
@@ -211,7 +189,6 @@ DQ
                                                                     </connections>
                                                                 </button>
                                                             </subviews>
-                                                            <animations/>
                                                         </view>
                                                     </tabViewItem>
                                                     <tabViewItem label="Stash" identifier="2" id="vFn-0a-FZj">
@@ -222,7 +199,6 @@ DQ
                                                                 <button verticalHuggingPriority="750" id="FEO-RD-AjR">
                                                                     <rect key="frame" x="311.5" y="-3" width="133" height="32"/>
                                                                     <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
-                                                                    <animations/>
                                                                     <buttonCell key="cell" type="push" title="Stash Changes" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="yBt-2d-x1H">
                                                                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                                                         <font key="font" metaFont="system"/>
@@ -234,7 +210,6 @@ DQ
                                                                 <button id="KlK-1A-LQX">
                                                                     <rect key="frame" x="-2" y="6" width="93" height="18"/>
                                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                                                    <animations/>
                                                                     <buttonCell key="cell" type="check" title="Keep Index" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="9aM-KH-a1l">
                                                                         <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                                                         <font key="font" metaFont="system"/>
@@ -244,36 +219,30 @@ DQ
                                                                     </connections>
                                                                 </button>
                                                             </subviews>
-                                                            <animations/>
                                                         </view>
                                                     </tabViewItem>
                                                 </tabViewItems>
                                             </tabView>
                                         </subviews>
-                                        <animations/>
                                     </view>
-                                    <animations/>
-                                    <color key="borderColor" white="0.0" alpha="0.41999999999999998" colorSpace="calibratedWhite"/>
-                                    <color key="fillColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 </box>
-                                <box autoresizesSubviews="NO" title="Staged Changes" borderType="none" id="208">
-                                    <rect key="frame" x="635.5" y="0.0" width="219.5" height="246"/>
+                                <box autoresizesSubviews="NO" borderType="none" title="Staged Changes" id="208">
+                                    <rect key="frame" x="635" y="0.0" width="220" height="246"/>
                                     <autoresizingMask key="autoresizingMask" flexibleMinX="YES" heightSizable="YES"/>
                                     <view key="contentView" id="WaF-YV-oYS">
-                                        <rect key="frame" x="0.0" y="0.0" width="219.5" height="231"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="220" height="231"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                         <subviews>
                                             <scrollView focusRingType="none" autohidesScrollers="YES" horizontalLineScroll="17" horizontalPageScroll="10" verticalLineScroll="17" verticalPageScroll="10" usesPredominantAxisScrolling="NO" id="54">
-                                                <rect key="frame" x="0.0" y="-1" width="220.5" height="227"/>
+                                                <rect key="frame" x="0.0" y="-1" width="221" height="227"/>
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <clipView key="contentView" id="ZtA-6a-PrR">
-                                                    <rect key="frame" x="1" y="1" width="218.5" height="225"/>
+                                                    <rect key="frame" x="1" y="1" width="219" height="225"/>
                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                     <subviews>
                                                         <tableView focusRingType="none" verticalHuggingPriority="750" tag="1" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" columnSelection="YES" autosaveColumns="NO" rowHeight="15" id="57" customClass="PBFileChangesTableView">
-                                                            <rect key="frame" x="0.0" y="0.0" width="218.5" height="225"/>
+                                                            <rect key="frame" x="0.0" y="0.0" width="219" height="225"/>
                                                             <autoresizingMask key="autoresizingMask"/>
-                                                            <animations/>
                                                             <size key="intercellSpacing" width="3" height="2"/>
                                                             <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                                             <color key="gridColor" name="gridColor" catalog="System" colorSpace="catalog"/>
@@ -304,30 +273,20 @@ DQ
                                                             </connections>
                                                         </tableView>
                                                     </subviews>
-                                                    <animations/>
-                                                    <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                                 </clipView>
-                                                <animations/>
                                                 <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="YES" id="56">
                                                     <rect key="frame" x="1" y="247" width="256" height="15"/>
                                                     <autoresizingMask key="autoresizingMask"/>
-                                                    <animations/>
                                                 </scroller>
                                                 <scroller key="verticalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="NO" id="55">
-                                                    <rect key="frame" x="203.5" y="1" width="16" height="0.0"/>
+                                                    <rect key="frame" x="204" y="1" width="16" height="0.0"/>
                                                     <autoresizingMask key="autoresizingMask"/>
-                                                    <animations/>
                                                 </scroller>
                                             </scrollView>
                                         </subviews>
-                                        <animations/>
                                     </view>
-                                    <animations/>
-                                    <color key="borderColor" white="0.0" alpha="0.41999999999999998" colorSpace="calibratedWhite"/>
-                                    <color key="fillColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 </box>
                             </subviews>
-                            <animations/>
                             <holdingPriorities>
                                 <real value="250"/>
                                 <real value="250"/>
@@ -335,7 +294,6 @@ DQ
                             </holdingPriorities>
                         </splitView>
                     </subviews>
-                    <animations/>
                     <holdingPriorities>
                         <real value="250"/>
                         <real value="250"/>
@@ -345,7 +303,6 @@ DQ
                     </connections>
                 </splitView>
             </subviews>
-            <animations/>
         </customView>
         <userDefaultsController representsSharedInstance="YES" id="77"/>
         <arrayController selectsInsertedObjects="NO" avoidsEmptySelection="NO" clearsFilterPredicateOnInsertion="NO" automaticallyRearrangesObjects="YES" id="81" userLabel="Unstaged Files">
