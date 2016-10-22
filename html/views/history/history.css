@@ -158,12 +158,8 @@ a {
 	padding: 10px;
 }
 #files {
-	margin: 10px;
-	padding: 10px 0;
-	background-color: #f9f9f9;
-	-webkit-border-radius: 10px;
-	border: 1px solid #CCC;
-	-webkit-box-shadow: 1px 1px 2px #DDD;
+	margin: 10px 0;
+	padding: 0;
 }
 #files ul {
 	margin: 0;
@@ -176,13 +172,10 @@ a {
 	height: 18px;
 }
 #files li.odd {
-	background-color: #f9f9f9;
-}
-#files li.even {
-	background-color: #f0f0f0;
+    background-color: #f2f2f2;
 }
 #files li:hover {
-	background-color: #d4e4ff;
+    text-decoration: underline;
 	cursor: pointer;
 }
 #files img.changetype-icon {
@@ -199,6 +192,7 @@ a {
 
 .top-link {
     text-align: right;
+    margin-top: -5px;
     margin-right: 20px;
     padding-bottom: 5px;
     font-size: 90%;
@@ -230,26 +224,24 @@ a {
 }
 
 #files .diffstat-numbers {
-	background-color: rgba(0,0,0,.75);
-	color: #e3e3e3;
 	font-size: 12px;
 	font-weight: bold;
-	text-shadow: #000 0 1px 1px;
 	white-space: nowrap;
 	padding: 1px 5px;
 	position: absolute;
-	height: 14px;
-	border: 1px solid black;
-	-webkit-box-shadow: 0 1px 1px white;
+    height: 16px;
 }
 
 #files .diffstat-numbers.summary {
+    border-left: 1px solid #333;
 	-webkit-border-top-right-radius: 12px;
 	-webkit-border-bottom-right-radius: 12px;
-	right: 0px;
+	right: 1px;
 	width: 35px;
 }
 #files .diffstat-numbers.details {
+    background-color: black;
+    color: #e3e3e3;
 	-webkit-border-top-left-radius: 12px;
 	-webkit-border-bottom-left-radius: 12px;
 	right: 46px;
