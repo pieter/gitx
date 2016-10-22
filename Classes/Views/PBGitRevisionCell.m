@@ -16,7 +16,7 @@
 #import "NSColor+RGB.h"
 
 const int COLUMN_WIDTH = 10;
-const BOOL ENABLE_SHADOW = YES;
+const BOOL ENABLE_SHADOW = NO;
 const BOOL SHUFFLE_COLORS = NO;
 
 @implementation PBGitRevisionCell
