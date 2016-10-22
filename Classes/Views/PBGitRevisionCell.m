@@ -136,8 +136,9 @@ const BOOL SHUFFLE_COLORS = NO;
 	if (ENABLE_SHADOW && false) {
 		[NSGraphicsContext restoreGraphicsState];
 	}
-	
-	NSRect smallOval = { columnOrigin.x - 4, columnOrigin.y + r.size.height * 0.5 - 4, 8, 8};
+
+	CGFloat outlineWidth = 1.4f;
+	NSRect smallOval = CGRectInset(oval, outlineWidth, outlineWidth);
 
 	if ( [self isCurrentCommit ] ) {
 		[[NSColor colorWithCalibratedRed: 0Xfc/256.0 green:0Xa6/256.0 blue: 0X4f/256.0 alpha: 1.0] set];
