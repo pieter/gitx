@@ -267,7 +267,7 @@ const BOOL SHUFFLE_COLORS = NO;
 	PBGitRef *ref = [refs objectAtIndex:index];
 	
 	NSMutableDictionary* attributes = [self attributesForRefLabelSelected:[self isHighlighted]];
-	NSBezierPath *border = [NSBezierPath bezierPathWithRoundedRect:rect cornerRadius: 3.0];
+	NSBezierPath *border = [NSBezierPath bezierPathWithRoundedRect:rect cornerRadius:2];
 	[[self colorForRef:ref] set];
 	
 
