@@ -36,7 +36,7 @@ const BOOL SHUFFLE_COLORS = NO;
 		float segment = 1.0f / colorCount;
 		NSMutableArray *colors = [NSMutableArray new];
 		for (size_t i = 0; i < colorCount; ++i) {
-			NSColor *newColor = [NSColor colorWithCalibratedHue:(segment * i) saturation:0.9f brightness:0.9f alpha:1.0f];
+			NSColor *newColor = [NSColor colorWithCalibratedHue:(segment * i) saturation:0.7f brightness:0.8f alpha:1.0f];
 			[colors addObject:newColor];
 		}
 		if (SHUFFLE_COLORS) {
