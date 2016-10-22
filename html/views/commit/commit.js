@@ -453,8 +453,7 @@ var showSelection = function(file, from, to, trust)
 	var button = document.createElement('a');
 	button.setAttribute("href","#");
 	button.appendChild(document.createTextNode(
-				   (originalCached?"Uns":"S")+"tage line"+
-				   (elementList.length > 1?"s":"")));
+				   (originalCached?"Uns":"S")+"tage"));
 	button.setAttribute("class","hunkbutton");
 	button.setAttribute("id","stagelines");
 	var copy_button = document.createElement('a');
