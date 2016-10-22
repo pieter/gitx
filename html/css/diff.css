@@ -51,6 +51,10 @@
     display:none;
 }
 
+.diff .file .diffcontent .lines .nonewline:after {
+	content: "  \20e0\23ce";
+	font-family: -apple-system, "Helvetica Neue", sans-serif;
+}
 .diff .file .diffcontent .lines .whitespace {
 	background-color: rgba(255,0,0,0.5);
 }
