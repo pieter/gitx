@@ -235,7 +235,7 @@ const BOOL SHUFFLE_COLORS = NO;
 {
 	NSMutableArray *array = [NSMutableArray array];
 	
-	static const int ref_padding = 10;
+	static const int ref_padding = 4;
 	static const int ref_spacing = 4;
 	
 	NSRect lastRect = rect;
@@ -247,7 +247,7 @@ const BOOL SHUFFLE_COLORS = NO;
 		NSSize textSize = [[ref shortName] sizeWithAttributes:attributes];
 		
 		NSRect newRect = lastRect;
-		newRect.size.width = textSize.width + ref_padding;
+		newRect.size.width = textSize.width + ref_padding * 2;
 		newRect.size.height = textSize.height;
 		newRect.origin.y = rect.origin.y + (rect.size.height - newRect.size.height) / 2;
 		
