@@ -19,23 +19,6 @@ var Commit = function(obj) {
 	this.message = obj.message();
 	this.notificationID = null;
 
-	this.parseSummary = function(summary) {
-		this.filesInfo = summary.filesInfo;
-	}
-
-	// This can be called later with the output of
-	// 'git show' to get the full diff
-	this.parseFullDiff = function(fullDiff) {
-		this.fullDiffRaw = fullDiff;
-
-		var diffStart = this.fullDiffRaw.indexOf("\ndiff ");
-		if (diffStart > 0) {
-			this.diff = this.fullDiffRaw.substring(diffStart);
-		} else {
-			this.diff = "";
-		}
-	}
-
 	this.reloadRefs = function() {
 		this.refs = this.object.refs();
 	}
@@ -310,10 +293,12 @@ var enableFeatures = function()
 	enableFeature("gravatar", $("committer_gravatar").parentNode)
 }
 
-var loadCommitSummary = function(summaryJSON)
+var loadCommitDiff = function(jsonData)
 {
-	commit.parseSummary(JSON.parse(summaryJSON));
-	
+	var diffData = JSON.parse(jsonData)
+	commit.filesInfo = diffData.filesInfo;
+	commit.diff = diffData.fullDiff;
+
 	if (commit.notificationID)
 		clearTimeout(commit.notificationID)
 		else
@@ -411,11 +396,6 @@ var loadCommitSummary = function(summaryJSON)
 		}
 		$("files").style.display = "";
 	}
-}
-
-var loadCommitFullDiff = function(data)
-{
-	commit.parseFullDiff(data);
 
 	if (commit.diff.length < 200000)
 		showDiff();

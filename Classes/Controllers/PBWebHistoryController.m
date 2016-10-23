@@ -165,6 +165,7 @@ static NSDictionary *loadCommitSummary(GTRepository *repo, GTCommit *commit, BOO
 	}
 	if (isCanceled()) return nil;
 	NSMutableArray *fileDeltas = [NSMutableArray array];
+	NSMutableString *fullDiff = [NSMutableString string];
 	[d enumerateDeltasUsingBlock:^(GTDiffDelta *_Nonnull delta, BOOL *_Nonnull stop) {
 		if (isCanceled()) {
 			*stop = YES;
@@ -181,6 +182,20 @@ static NSDictionary *loadCommitSummary(GTRepository *repo, GTCommit *commit, BOO
 		if (patch) {
 			numLinesAdded = patch.addedLinesCount;
 			numLinesRemoved = patch.deletedLinesCount;
+			NSData *patchData = patch.patchData;
+			if (patchData) {
+				NSString *patchString =
+				    [[NSString alloc] initWithData:patchData
+				                          encoding:NSUTF8StringEncoding];
+				if (!patchString) {
+					patchString =
+					    [[NSString alloc] initWithData:patchData
+					                          encoding:NSISOLatin1StringEncoding];
+				}
+				if (patchString) {
+					[fullDiff appendString:patchString];
+				}
+			}
 		} else {
 			NSLog(@"generatePatch error: %@", err);
 		}
@@ -198,6 +213,7 @@ static NSDictionary *loadCommitSummary(GTRepository *repo, GTCommit *commit, BOO
 	if (isCanceled()) return nil;
 	return @{
 		@"filesInfo" : fileDeltas,
+		@"fullDiff" : fullDiff,
 	};
 }
 
@@ -208,38 +224,7 @@ static NSDictionary *loadCommitSummary(GTRepository *repo, GTCommit *commit, BOO
 		return;
 	}
 
-	[self.view.windowScriptObject callWebScriptMethod:@"loadCommitSummary" withArguments:@[summaryJSON]];
-
-    // Now load the full diff
-	NSMutableArray *taskArguments = [NSMutableArray arrayWithObjects:@"show", @"--pretty=raw", @"-M", @"--no-color", currentOID.SHA, nil];
-
-	if (![PBGitDefaults showWhitespaceDifferences])
-		[taskArguments insertObject:@"-w" atIndex:1];
-
-	NSFileHandle *handle = [repository handleForArguments:taskArguments];
-	NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
-	// Remove notification, in case we have another one running
-	[nc removeObserver:self name:NSFileHandleReadToEndOfFileCompletionNotification object:nil];
-	[nc addObserver:self selector:@selector(commitFullDiffLoaded:) name:NSFileHandleReadToEndOfFileCompletionNotification object:handle];
-	[handle readToEndOfFileInBackgroundAndNotify];
-}
-
-- (void)commitFullDiffLoaded:(NSNotification *)notification
-{
-	[[NSNotificationCenter defaultCenter] removeObserver:self name:NSFileHandleReadToEndOfFileCompletionNotification object:nil];
-
-	NSData *data = [[notification userInfo] valueForKey:NSFileHandleNotificationDataItem];
-	if (!data)
-		return;
-
-	NSString *fullDiff = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-	if (!fullDiff)
-		fullDiff = [[NSString alloc] initWithData:data encoding:NSISOLatin1StringEncoding];
-
-	if (!fullDiff)
-		return;
-
-	[self.view.windowScriptObject callWebScriptMethod:@"loadCommitFullDiff" withArguments:[NSArray arrayWithObject:fullDiff]];
+	[self.view.windowScriptObject callWebScriptMethod:@"loadCommitDiff" withArguments:@[summaryJSON]];
 }
 
 - (void)selectCommit:(NSString *)sha
