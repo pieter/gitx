@@ -535,8 +535,7 @@
 		PBGitStash *stash = [[PBGitStash alloc] initWithRepository:self stashOID:oid index:index message:message];
         if ([stash.ref isEqualToRef:ref]) {
             found = stash;
-            stop = YES;
-			(void)stop;
+            *stop = YES;
         }
 	}];
     return found;
@@ -1125,8 +1124,7 @@
 	NSString *hookPath = [[[[self gitURL] path] stringByAppendingPathComponent:@"hooks"] stringByAppendingPathComponent:name];
 	if (![[NSFileManager defaultManager] isExecutableFileAtPath:hookPath]) {
 		// XXX: Maybe return error ?
-		// We *
-		return @"";
+		return YES;
 	}
 
 	NSDictionary *info = @{
