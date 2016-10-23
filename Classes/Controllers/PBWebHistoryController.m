@@ -11,6 +11,11 @@
 #import <ObjectiveGit/GTConfiguration.h>
 #import "PBGitRef.h"
 #import "PBGitRevSpecifier.h"
+#import <stdatomic.h>
+
+@interface PBWebHistoryController ()
+@property (nonatomic) atomic_ulong commitSummaryGeneration;
+@end
 
 @implementation PBWebHistoryController
 
@@ -83,6 +88,8 @@ static NSString *deltaTypeName(GTDiffDeltaType t) {
 	}
 }
 
+static NSDictionary *loadCommitSummary(GTRepository *repo, GTCommit *commit, BOOL (^isCanceled)());
+
 - (void) changeContentToCommit:(PBGitCommit *)commit
 {
 	// The sha is the same, but refs may have changed. reload it lazy
@@ -101,29 +108,76 @@ static NSString *deltaTypeName(GTDiffDeltaType t) {
 	}
 	currentOID = commit.OID;
 
+	unsigned long gen = atomic_fetch_add(&_commitSummaryGeneration, 1) + 1;
+
+	// Open a new repo instance for the background queue
+	NSError *err = nil;
+	GTRepository *repo =
+	    [GTRepository repositoryWithURL:[repository gtRepo].gitDirectoryURL error:&err];
+	if (!repo) {
+		NSLog(@"Failed to open repository: %@", err);
+		return;
+	}
+	GTCommit *queueCommit = [repo lookUpObjectByOID:commit.OID error:&err];
+	if (!queueCommit) {
+		NSLog(@"Failed to find commit: %@", err);
+		return;
+	}
+
+	dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+		NSDictionary *summary = loadCommitSummary(repo, queueCommit, ^BOOL {
+			return gen != atomic_load(&_commitSummaryGeneration);
+		});
+		if (!summary) return;
+		NSError *err = nil;
+		NSString *summaryJSON =
+		    [[NSString alloc] initWithData:[NSJSONSerialization dataWithJSONObject:summary
+		                                                                   options:0
+		                                                                     error:&err]
+		                          encoding:NSUTF8StringEncoding];
+		if (!summaryJSON) {
+			NSLog(@"Commit summary JSON error: %@", err);
+			return;
+		}
+		dispatch_async(dispatch_get_main_queue(), ^{
+			[self commitSummaryLoaded:summaryJSON forOID:commit.OID];
+		});
+	});
+}
+
+static NSDictionary *loadCommitSummary(GTRepository *repo, GTCommit *commit, BOOL (^isCanceled)()) {
+	if (isCanceled()) return nil;
 	GTDiffFindOptionsFlags flags = GTDiffFindOptionsFlagsFindRenames;
 	if (![PBGitDefaults showWhitespaceDifferences]) {
 		flags |= GTDiffFindOptionsFlagsIgnoreWhitespace;
 	}
 	NSError *err = nil;
-	GTDiff *d = // TODO async?
-	    [GTDiff diffOldTree:commit.gtCommit.parents.firstObject.tree
-	            withNewTree:commit.gtCommit.tree
-	           inRepository:[repository gtRepo]
-	                options:@{
-	                    GTDiffFindOptionsFlagsKey : @(flags)
-	                }
-	                  error:&err];
+	GTDiff *d = [GTDiff diffOldTree:commit.parents.firstObject.tree
+	                    withNewTree:commit.tree
+	                   inRepository:repo
+	                        options:@{
+	                            GTDiffFindOptionsFlagsKey : @(flags)
+	                        }
+	                          error:&err];
 	if (!d) {
 		NSLog(@"Commit summary diff error: %@", err);
-		return;
+		return nil;
 	}
+	if (isCanceled()) return nil;
 	NSMutableArray *fileDeltas = [NSMutableArray array];
 	[d enumerateDeltasUsingBlock:^(GTDiffDelta *_Nonnull delta, BOOL *_Nonnull stop) {
+		if (isCanceled()) {
+			*stop = YES;
+			return;
+		}
 		NSUInteger numLinesAdded = 0;
 		NSUInteger numLinesRemoved = 0;
 		NSError *err = nil;
 		GTDiffPatch *patch = [delta generatePatch:&err];
+		if (isCanceled()) {
+			*stop = YES;
+			return;
+		}
 		if (patch) {
 			numLinesAdded = patch.addedLinesCount;
 			numLinesRemoved = patch.deletedLinesCount;
@@ -141,20 +195,20 @@ static NSString *deltaTypeName(GTDiffDeltaType t) {
 			    [NSNumber numberWithBool:(delta.flags & GTDiffFileFlagBinary) != 0],
 		}];
 	}];
-	NSDictionary *summaryDict = @{
+	if (isCanceled()) return nil;
+	return @{
 		@"filesInfo" : fileDeltas,
 	};
-	NSString *summary =
-	    [[NSString alloc] initWithData:[NSJSONSerialization dataWithJSONObject:summaryDict
-	                                                                   options:0
-	                                                                     error:&err]
-	                          encoding:NSUTF8StringEncoding];
-	if (!summary) {
-		NSLog(@"Commit summary JSON error: %@", err);
+}
+
+- (void)commitSummaryLoaded:(NSString *)summaryJSON forOID:(GTOID *)summaryOID
+{
+	if (![currentOID isEqual:summaryOID]) {
+		// a different summary finished loading late
 		return;
 	}
 
-	[self.view.windowScriptObject callWebScriptMethod:@"loadCommitSummary" withArguments:@[summary]];
+	[self.view.windowScriptObject callWebScriptMethod:@"loadCommitSummary" withArguments:@[summaryJSON]];
 
     // Now load the full diff
 	NSMutableArray *taskArguments = [NSMutableArray arrayWithObjects:@"show", @"--pretty=raw", @"-M", @"--no-color", currentOID.SHA, nil];
