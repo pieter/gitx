@@ -13,9 +13,9 @@ var toggleDiff = function(id)
     var collapsed = (content.style.display == 'none');
 	  if (collapsed) {
 		  content.style.display = 'box';
-		  jQuery(content).fadeTo('slow', 1).slideDown();
+		  jQuery(content).slideDown(100);
 	  } else {
-		  jQuery(content).fadeTo('fast', 0).slideUp('fast', function () {content.style.display = 'none'});
+          jQuery(content).slideUp(100, function () {content.style.display = 'none'});
 	  }
 	
     var title = document.getElementById('title_' + id);
