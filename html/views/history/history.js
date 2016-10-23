@@ -8,120 +8,19 @@ var Commit = function(obj) {
 
 	this.refs = obj.refs();
 	this.author_name = obj.author();
+	this.author_email = obj.authorEmail();
+	this.author_date = obj.authorDate();
 	this.committer_name = obj.committer();
+	this.committer_email = obj.committerEmail();
+	this.committer_date = obj.committerDate();
 	this.sha = obj.SHA();
 	this.parents = obj.parents();
 	this.subject = obj.subject();
+	this.message = obj.message();
 	this.notificationID = null;
 
-	// TODO:
-	// this.author_date instant
-
-	this.parseSummary = function(summaryString) {
-		this.summaryRaw = summaryString;
-		
-		// Get the header info and the full commit message
-		var messageStart = this.summaryRaw.indexOf("\n\n") + 2;
-		this.header = this.summaryRaw.substring(0, messageStart);
-		var afterHeader = this.summaryRaw.substring(messageStart);
-		var numstatStart = afterHeader.indexOf("\n\n") + 2;
-		if (numstatStart > 1) {
-			this.message = afterHeader.substring(0, numstatStart - 2).replace(/^    /gm, "").escapeHTML();;
-			var afterMessage = afterHeader.substring(numstatStart);
-			var filechangeStart = afterMessage.indexOf("\n ") + 1;
-			if (filechangeStart > 1) {
-				this.numstatRaw = afterMessage.substring(0, filechangeStart);
-				this.filechangeRaw = afterMessage.substring(filechangeStart);
-			}
-			else {
-				this.numstatRaw = afterMessage;
-				this.filechangeRaw = "";
-			}
-		}
-		else {
-			this.message = afterHeader;
-			this.numstatRaw = "";
-			this.filechangeRaw = "";
-		}
-		
-		
-        if (typeof this.header !== 'undefined') {
-            var matches = this.header.match(/\nauthor (.*) <(.*@.*|.*)> ([0-9].*)/);
-            if (matches !== null && matches[2] !== null) {
-                if (!(matches[2].match(/@[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}/)))
-                    this.author_email = matches[2];
-				
-				if (typeof matches[3] !== 'undefined')
-                	this.author_date = new Date(parseInt(matches[3]) * 1000);
-				
-                matches = this.header.match(/\ncommitter (.*) <(.*@.*|.*)> ([0-9].*)/);
-				if (typeof matches[2] !== 'undefined')
-					this.committer_email = matches[2];
-				if (typeof matches[3] !== 'undefined')
-					this.committer_date = new Date(parseInt(matches[3]) * 1000);
-            } 
-        }
-		
-		// Parse the --numstat part to get the list of files and lines changed.
-		this.filesInfo = [];
-		var lines = this.numstatRaw.split('\n');
-		for (var lineno=0; lineno < lines.length; lineno++) {
-			var columns = lines[lineno].split('\t');
-			if (columns.length >= 2) {
-				if (columns[0] == "-" && columns[1] == "-") {
-					this.filesInfo.push({"filename": columns[2],
-										"changeType": "modified",
-										"binary": true});
-				}
-				else {
-					this.filesInfo.push({"numLinesAdded": parseInt(columns[0]),
-										"numLinesRemoved": parseInt(columns[1]),
-										"filename": columns[2],
-										"changeType": "modified",
-										"binary": false});
-				}
-			}
-		}
-		
-		// Parse the filechange part (from --summary) to get info about files
-		// that were added/deleted/etc.
-		// Sample text:
-		//  create mode 100644 GitXTextFieldCell.h
-		//  delete mode 100644 someDir/filename with spaces.txt
-		//  rename fielname with spaces.txt => filename_without_spaces.txt (98%)
-		var lines = this.filechangeRaw.split('\n');
-		for (var lineno=0; lineno < lines.length; lineno++) {
-			var line = lines[lineno];
-			var filename="", changeType="";
-			if (line.indexOf("delete") == 1) {
-				filename = line.match(/ delete mode \d+ (.*)$/)[0];
-				changeType = "removed";
-			}
-			else if (line.indexOf("create") == 1) {
-				filename = line.match(/ create mode \d+ (.*)/)[0];
-				changeType = "added";
-			}
-			else if (line.indexOf("rename") == 1) {
-				// get the new name of the file (the part after the " => ")
-				filename = line.match(/ rename (.*) \(.+\)$/)[0];
-				changeType = "renamed";
-			}
-			
-			if (filename != "") {
-				// Update the appropriate filesInfo with the actual changeType.
-				for (var i=0; i < commit.filesInfo.length; i+=1) {
-					if (commit.filesInfo[i].filename == filename) {
-						commit.filesInfo[i].changeType = changeType;
-						if (changeType == "renamed") {
-							var names = filename.split(" => ");
-							commit.filesInfo[i].oldFilename = names[0];
-							commit.filesInfo[i].newFilename = names[1];
-						}
-						break;
-					}
-				}
-			}
-		}
+	this.parseSummary = function(summary) {
+		this.filesInfo = summary.filesInfo;
 	}
 
 	// This can be called later with the output of
@@ -270,9 +169,31 @@ var loadCommit = function(commitObject, currentRef) {
 	$("authorID").innerHTML = commit.author_name;
 	$("subjectID").innerHTML = commit.subject.escapeHTML();
 	$("diff").innerHTML = "";
-	$("message").innerHTML = "";
 	$("date").innerHTML = "";
 	$("files").style.display = "none";
+
+	var formatEmail = function(name, email) {
+		return email ? name + " &lt;<a href='mailto:" + email + "'>" + email + "</a>&gt;" : name;
+	}
+
+	$("authorID").innerHTML = formatEmail(commit.author_name, commit.author_email);
+	$("date").innerHTML = commit.author_date;
+	setGravatar(commit.author_email, $("author_gravatar"));
+
+	if (commit.committer_name != commit.author_name) {
+		$("committerID").parentNode.style.display = "";
+		$("committerID").innerHTML = formatEmail(commit.committer_name, commit.committer_email);
+
+		$("committerDate").parentNode.style.display = "";
+		$("committerDate").innerHTML = commit.committer_date;
+		setGravatar(commit.committer_email, $("committer_gravatar"));
+	} else {
+		$("committerID").parentNode.style.display = "none";
+		$("committerDate").parentNode.style.display = "none";
+	}
+
+	$("message").innerHTML = commit.message.replace(/\b(https?:\/\/[^\s<]*)/ig, "<a href=\"$1\">$1</a>").replace(/\n/g,"<br>");
+
 	jQuery("#commit").show();
 	jQuery("#no-commit-message").hide();
 	var filelist = $("filelist");
@@ -389,36 +310,14 @@ var enableFeatures = function()
 	enableFeature("gravatar", $("committer_gravatar").parentNode)
 }
 
-var loadCommitSummary = function(data)
+var loadCommitSummary = function(summaryJSON)
 {
-	commit.parseSummary(data);
+	commit.parseSummary(JSON.parse(summaryJSON));
 	
 	if (commit.notificationID)
 		clearTimeout(commit.notificationID)
 		else
 			$("notification").style.display = "none";
-	
-	var formatEmail = function(name, email) {
-		return email ? name + " &lt;<a href='mailto:" + email + "'>" + email + "</a>&gt;" : name;
-	}
-	
-	$("authorID").innerHTML = formatEmail(commit.author_name, commit.author_email);
-	$("date").innerHTML = commit.author_date;
-	setGravatar(commit.author_email, $("author_gravatar"));
-	
-	if (commit.committer_name != commit.author_name) {
-		$("committerID").parentNode.style.display = "";
-		$("committerID").innerHTML = formatEmail(commit.committer_name, commit.committer_email);
-		
-		$("committerDate").parentNode.style.display = "";
-		$("committerDate").innerHTML = commit.committer_date;
-		setGravatar(commit.committer_email, $("committer_gravatar"));
-	} else {
-		$("committerID").parentNode.style.display = "none";
-		$("committerDate").parentNode.style.display = "none";
-	}
-
-	$("message").innerHTML = commit.message.replace(/\b(https?:\/\/[^\s<]*)/ig, "<a href=\"$1\">$1</a>").replace(/\n/g,"<br>");
 
 	if (commit.filesInfo.length > 0) {
 		// Create the file list

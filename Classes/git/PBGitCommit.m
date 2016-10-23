@@ -28,6 +28,18 @@ NSString * const kGitXCommitType = @"commit";
 
 @implementation PBGitCommit
 
++ (NSDateFormatter *)longDateFormatter {
+	static NSDateFormatter *formatter = nil;
+	static dispatch_once_t token;
+	dispatch_once(&token, ^{
+		NSDateFormatter *f = [[NSDateFormatter alloc] init];
+		f.dateStyle = NSDateFormatterLongStyle;
+		f.timeStyle = NSDateFormatterLongStyle;
+		formatter = f;
+	});
+	return formatter;
+}
+
 - (NSDate *) date
 {
 	return self.gtCommit.commitDate;
@@ -76,16 +88,41 @@ NSString * const kGitXCommitType = @"commit";
 	return self.gtCommit.messageSummary;
 }
 
+- (NSString *)message
+{
+	return self.gtCommit.message;
+}
+
 - (NSString *)author
 {
 	NSString *result = self.gtCommit.author.name;
 	return result;
 }
 
+- (NSString *)authorEmail
+{
+	return self.gtCommit.author.email;
+}
+
+- (NSString *)authorDate
+{
+	return [[[self class] longDateFormatter] stringFromDate:self.gtCommit.author.time];
+}
+
 - (NSString *)committer
 {
 	GTSignature *sig = self.gtCommit.committer;
 	return sig.name;
+}
+
+- (NSString *)committerEmail
+{
+	return self.gtCommit.committer.email;
+}
+
+- (NSString *)committerDate
+{
+	return [[[self class] longDateFormatter] stringFromDate:self.gtCommit.committer.time];
 }
 
 - (NSString *)SVNRevision

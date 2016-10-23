@@ -21,12 +21,18 @@ extern NSString * const kGitXCommitType;
 
 @property (nonatomic, weak, readonly) PBGitRepository* repository;
 
+@property (nonatomic, strong, readonly) GTCommit *gtCommit;
 @property (nonatomic, strong, readonly) GTOID *OID;
 
 @property (nonatomic, strong, readonly) NSDate *date;
 @property (nonatomic, strong, readonly) NSString *subject;
+@property (nonatomic, strong, readonly) NSString *message;
 @property (nonatomic, strong, readonly) NSString *author;
+@property (nonatomic, strong, readonly) NSString *authorEmail;
+@property (nonatomic, strong, readonly) NSString *authorDate;
 @property (nonatomic, strong, readonly) NSString *committer;
+@property (nonatomic, strong, readonly) NSString *committerEmail;
+@property (nonatomic, strong, readonly) NSString *committerDate;
 @property (nonatomic, strong, readonly) NSString *details;
 @property (nonatomic, strong, readonly) NSString *patch;
 @property (nonatomic, strong, readonly) NSString *SHA;

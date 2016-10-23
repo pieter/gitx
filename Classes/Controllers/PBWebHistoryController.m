@@ -69,6 +69,20 @@
 	[[self script] callWebScriptMethod:@"showMultipleSelectionMessage" withArguments:arguments];
 }
 
+static NSString *deltaTypeName(GTDiffDeltaType t) {
+	switch (t) {
+		case GTDiffFileDeltaUnmodified: return @"unmodified";
+		case GTDiffFileDeltaAdded: return @"added";
+		case GTDiffFileDeltaDeleted: return @"removed";
+		case GTDiffFileDeltaModified: return @"modified";
+		case GTDiffFileDeltaRenamed: return @"renamed";
+		case GTDiffFileDeltaCopied: return @"copied";
+		case GTDiffFileDeltaIgnored: return @"ignored";
+		case GTDiffFileDeltaUntracked: return @"untracked";
+		case GTDiffFileDeltaTypeChange: return @"type changed";
+	}
+}
+
 - (void) changeContentToCommit:(PBGitCommit *)commit
 {
 	// The sha is the same, but refs may have changed. reload it lazy
@@ -78,7 +92,7 @@
 		return;
 	}
 
-	NSArray *arguments = [NSArray arrayWithObjects:commit, [[[historyController repository] headRef] simpleRef], nil];
+	NSArray *arguments = @[commit, [[[historyController repository] headRef] simpleRef]];
 	id scriptResult = [[self script] callWebScriptMethod:@"loadCommit" withArguments: arguments];
 	if (!scriptResult) {
 		// the web view is not really ready for scripting???
@@ -87,39 +101,60 @@
 	}
 	currentOID = commit.OID;
 
-	// Now we load the extended details. We used to do this in a separate thread,
-	// but this caused some funny behaviour because NSTask's and NSThread's don't really
-	// like each other. Instead, just do it async.
-
-	NSMutableArray *taskArguments = [NSMutableArray arrayWithObjects:@"show", @"--numstat", @"-M", @"--summary", @"--pretty=raw", currentOID.SHA, nil];
+	GTDiffFindOptionsFlags flags = GTDiffFindOptionsFlagsFindRenames;
 	if (![PBGitDefaults showWhitespaceDifferences]) {
-		[taskArguments insertObject:@"-w" atIndex:1];
+		flags |= GTDiffFindOptionsFlagsIgnoreWhitespace;
 	}
-	
-	NSFileHandle *handle = [repository handleForArguments:taskArguments];
-	NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
-	// Remove notification, in case we have another one running
-	[nc removeObserver:self name:NSFileHandleReadToEndOfFileCompletionNotification object:nil];
-	[nc addObserver:self selector:@selector(commitSummaryLoaded:) name:NSFileHandleReadToEndOfFileCompletionNotification object:handle];
-	[handle readToEndOfFileInBackgroundAndNotify];
-}
-
-- (void)commitSummaryLoaded:(NSNotification *)notification
-{
-	[[NSNotificationCenter defaultCenter] removeObserver:self name:NSFileHandleReadToEndOfFileCompletionNotification object:nil];
-
-	NSData *data = [[notification userInfo] valueForKey:NSFileHandleNotificationDataItem];
-	if (!data)
+	NSError *err = nil;
+	GTDiff *d = // TODO async?
+	    [GTDiff diffOldTree:commit.gtCommit.parents.firstObject.tree
+	            withNewTree:commit.gtCommit.tree
+	           inRepository:[repository gtRepo]
+	                options:@{
+	                    GTDiffFindOptionsFlagsKey : @(flags)
+	                }
+	                  error:&err];
+	if (!d) {
+		NSLog(@"Commit summary diff error: %@", err);
 		return;
-
-	NSString *summary = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-	if (!summary)
-		summary = [[NSString alloc] initWithData:data encoding:NSISOLatin1StringEncoding];
-
-	if (!summary)
+	}
+	NSMutableArray *fileDeltas = [NSMutableArray array];
+	[d enumerateDeltasUsingBlock:^(GTDiffDelta *_Nonnull delta, BOOL *_Nonnull stop) {
+		NSUInteger numLinesAdded = 0;
+		NSUInteger numLinesRemoved = 0;
+		NSError *err = nil;
+		GTDiffPatch *patch = [delta generatePatch:&err];
+		if (patch) {
+			numLinesAdded = patch.addedLinesCount;
+			numLinesRemoved = patch.deletedLinesCount;
+		} else {
+			NSLog(@"generatePatch error: %@", err);
+		}
+		[fileDeltas addObject:@{
+			@"filename" : delta.newFile.path,
+			@"oldFilename" : delta.oldFile.path,
+			@"newFilename" : delta.newFile.path,
+			@"changeType" : deltaTypeName(delta.type),
+			@"numLinesAdded" : @(numLinesAdded),
+			@"numLinesRemoved" : @(numLinesRemoved),
+			@"binary" :
+			    [NSNumber numberWithBool:(delta.flags & GTDiffFileFlagBinary) != 0],
+		}];
+	}];
+	NSDictionary *summaryDict = @{
+		@"filesInfo" : fileDeltas,
+	};
+	NSString *summary =
+	    [[NSString alloc] initWithData:[NSJSONSerialization dataWithJSONObject:summaryDict
+	                                                                   options:0
+	                                                                     error:&err]
+	                          encoding:NSUTF8StringEncoding];
+	if (!summary) {
+		NSLog(@"Commit summary JSON error: %@", err);
 		return;
+	}
 
-	[self.view.windowScriptObject callWebScriptMethod:@"loadCommitSummary" withArguments:[NSArray arrayWithObject:summary]];
+	[self.view.windowScriptObject callWebScriptMethod:@"loadCommitSummary" withArguments:@[summary]];
 
     // Now load the full diff
 	NSMutableArray *taskArguments = [NSMutableArray arrayWithObjects:@"show", @"--pretty=raw", @"-M", @"--no-color", currentOID.SHA, nil];
