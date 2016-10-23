@@ -13,12 +13,18 @@ table {
 	font-size: 12px;
 }
 
-.expanded:before {
-  content: "\25be\0020";
+.fileHeader a:before {
+    margin-left: 0.3em;
+    width: 1em;
+    display: inline-block;
 }
 
-.collapsed:before {
-  content: "\25b8\0020";
+.expanded a:before {
+    content: "\25be\0020";
+}
+
+.collapsed a:before {
+    content: "\25b8\0020";
 }
 
 .SHA {
