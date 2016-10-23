@@ -26,7 +26,7 @@ var Commit = function(obj) {
 		var afterHeader = this.summaryRaw.substring(messageStart);
 		var numstatStart = afterHeader.indexOf("\n\n") + 2;
 		if (numstatStart > 1) {
-			this.message = afterHeader.substring(0, numstatStart).replace(/^    /gm, "").escapeHTML();;
+			this.message = afterHeader.substring(0, numstatStart - 2).replace(/^    /gm, "").escapeHTML();;
 			var afterMessage = afterHeader.substring(numstatStart);
 			var filechangeStart = afterMessage.indexOf("\n ") + 1;
 			if (filechangeStart > 1) {
