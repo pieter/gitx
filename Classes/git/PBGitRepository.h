@@ -152,8 +152,8 @@ static NSString * PBStringFromBranchFilterType(PBGitXBranchFilterType type) {
 - (PBGitRevSpecifier*) addBranch: (PBGitRevSpecifier*) rev;
 - (BOOL)removeBranch:(PBGitRevSpecifier *)rev;
 
-- (NSString*) parseSymbolicReference:(NSString*) ref;
-- (NSString*) parseReference:(NSString*) ref;
+- (GTReference*) parseSymbolicReference:(NSString*) ref;
+- (BOOL) revisionExists:(NSString*) spec;
 
 - (void) forceUpdateRevisions;
 - (NSURL*) getIndexURL;
