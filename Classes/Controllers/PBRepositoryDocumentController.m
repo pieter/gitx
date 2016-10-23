@@ -42,8 +42,8 @@
         return nil;
     }
 
-	BOOL success = [GTRepository initializeEmptyRepositoryAtFileURL:[op URL] options:nil error:outError];
-    if (!success)
+	GTRepository *repo = [GTRepository initializeEmptyRepositoryAtFileURL:[op URL] options:nil error:outError];
+    if (!repo)
         return nil; // Repo creation failed
 
     return [[PBGitRepositoryDocument alloc] initWithContentsOfURL:[op URL] ofType:PBGitRepositoryDocumentType error:outError];
