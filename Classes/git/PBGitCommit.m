@@ -48,8 +48,9 @@ NSString * const kGitXCommitType = @"commit";
 
 - (NSString *) dateString
 {
-	NSDateFormatter* formatter = [[NSDateFormatter alloc] initWithDateFormat:@"%Y-%m-%d %H:%M:%S" allowNaturalLanguage:NO];
-	return [formatter stringFromDate: self.date];
+	NSDateFormatter * formatter = [[NSDateFormatter alloc] init];
+	[formatter setLocalizedDateFormatFromTemplate:@"%Y-%m-%d %H:%M:%S"];
+	return [formatter stringFromDate:self.date];
 }
 
 - (NSArray*) treeContents
