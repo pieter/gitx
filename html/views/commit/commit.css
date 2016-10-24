@@ -62,20 +62,19 @@ table.diff {
 }
 
 .diff .hunkbutton {
-	min-width: 40px;
-	padding: 0 2px 0 2px;
+	min-width: 5em;
+	padding: 3px 0;
+    top: 4px;
 	margin-bottom: 4px;
-	margin-right: 1px;
+	margin-right: 3px;
 	float: right;
 	position: relative;
 	z-index: 1;
 
-	border: 1px solid #3465a4;
 	background-color: #cce5ff;
 	color: #204a87;
 
 	font-family: -apple-system, 'Helvetica Neue', 'Lucida Grande';
-	font-size: 80%;
 	text-decoration: none;
 	text-align: center;
 
@@ -96,12 +95,6 @@ table.diff {
 }
 
 #selected #stagelines {
-    padding-left: 2px;
-    width: auto;
-    padding-right: 2px;
-    margin-right: 2px;
-    margin-top: 1px;
-    clear: right;
     background-color: #FFF;
 }
 

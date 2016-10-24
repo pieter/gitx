@@ -16,7 +16,7 @@
 #import "NSColor+RGB.h"
 
 const int COLUMN_WIDTH = 10;
-const BOOL ENABLE_SHADOW = YES;
+const BOOL ENABLE_SHADOW = NO;
 const BOOL SHUFFLE_COLORS = NO;
 
 @implementation PBGitRevisionCell
@@ -36,7 +36,7 @@ const BOOL SHUFFLE_COLORS = NO;
 		float segment = 1.0f / colorCount;
 		NSMutableArray *colors = [NSMutableArray new];
 		for (size_t i = 0; i < colorCount; ++i) {
-			NSColor *newColor = [NSColor colorWithCalibratedHue:(segment * i) saturation:0.9f brightness:0.9f alpha:1.0f];
+			NSColor *newColor = [NSColor colorWithCalibratedHue:(segment * i) saturation:0.7f brightness:0.8f alpha:1.0f];
 			[colors addObject:newColor];
 		}
 		if (SHUFFLE_COLORS) {
@@ -136,8 +136,9 @@ const BOOL SHUFFLE_COLORS = NO;
 	if (ENABLE_SHADOW && false) {
 		[NSGraphicsContext restoreGraphicsState];
 	}
-	
-	NSRect smallOval = { columnOrigin.x - 4, columnOrigin.y + r.size.height * 0.5 - 4, 8, 8};
+
+	CGFloat outlineWidth = 1.4f;
+	NSRect smallOval = CGRectInset(oval, outlineWidth, outlineWidth);
 
 	if ( [self isCurrentCommit ] ) {
 		[[NSColor colorWithCalibratedRed: 0Xfc/256.0 green:0Xa6/256.0 blue: 0X4f/256.0 alpha: 1.0] set];
@@ -234,7 +235,7 @@ const BOOL SHUFFLE_COLORS = NO;
 {
 	NSMutableArray *array = [NSMutableArray array];
 	
-	static const int ref_padding = 10;
+	static const int ref_padding = 4;
 	static const int ref_spacing = 4;
 	
 	NSRect lastRect = rect;
@@ -246,7 +247,7 @@ const BOOL SHUFFLE_COLORS = NO;
 		NSSize textSize = [[ref shortName] sizeWithAttributes:attributes];
 		
 		NSRect newRect = lastRect;
-		newRect.size.width = textSize.width + ref_padding;
+		newRect.size.width = textSize.width + ref_padding * 2;
 		newRect.size.height = textSize.height;
 		newRect.origin.y = rect.origin.y + (rect.size.height - newRect.size.height) / 2;
 		
@@ -266,7 +267,7 @@ const BOOL SHUFFLE_COLORS = NO;
 	PBGitRef *ref = [refs objectAtIndex:index];
 	
 	NSMutableDictionary* attributes = [self attributesForRefLabelSelected:[self isHighlighted]];
-	NSBezierPath *border = [NSBezierPath bezierPathWithRoundedRect:rect cornerRadius: 3.0];
+	NSBezierPath *border = [NSBezierPath bezierPathWithRoundedRect:rect cornerRadius:2];
 	[[self colorForRef:ref] set];
 	
 
