@@ -347,6 +347,8 @@ var loadCommitDiff = function(jsonData)
 			if (fileInfo.binary) {
 				// remove the diffstat-info element
 				diffstatElem.parentNode.removeChild(diffstatElem);
+				binaryElem.innerText =
+				    fileInfo.oldFileSize + " \u2192 " + fileInfo.newFileSize + " bytes";
 			}
 			else {
 				// remove the binary element
