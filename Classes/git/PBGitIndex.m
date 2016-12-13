@@ -238,7 +238,7 @@ NS_ENUM(NSUInteger, PBGitIndexOperation) {
 {
 	NSString *parent = self.amend ? @"HEAD^" : @"HEAD";
 	
-	if (![self.repository parseReference:parent])
+	if (![self.repository revisionExists:parent])
 		// We don't have a head ref. Return the empty tree.
 		return @"4b825dc642cb6eb9a060e54bf8d69288fbee4904";
 
@@ -269,7 +269,7 @@ NS_ENUM(NSUInteger, PBGitIndexOperation) {
 	
 	NSMutableArray *arguments = [NSMutableArray arrayWithObjects:@"commit-tree", tree, nil];
 	NSString *parent = self.amend ? @"HEAD^" : @"HEAD";
-	if ([self.repository parseReference:parent]) {
+	if ([self.repository revisionExists:parent]) {
 		[arguments addObject:@"-p"];
 		[arguments addObject:parent];
 	}

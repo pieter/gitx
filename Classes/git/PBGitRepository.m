@@ -290,13 +290,13 @@
 	if (_headRef)
 		return _headRef;
 
-	NSString* branch = [self parseSymbolicReference: @"HEAD"];
-	if (branch && [branch hasPrefix:@"refs/heads/"])
-		_headRef = [[PBGitRevSpecifier alloc] initWithRef:[PBGitRef refFromString:branch]];
+	GTReference *branchRef = [self parseSymbolicReference: @"HEAD"];
+	if (branchRef && [branchRef.name hasPrefix:@"refs/heads/"])
+		_headRef = [[PBGitRevSpecifier alloc] initWithRef:[PBGitRef refFromString:branchRef.name]];
 	else
 		_headRef = [[PBGitRevSpecifier alloc] initWithRef:[PBGitRef refFromString:@"HEAD"]];
 
-	_headOID = [self OIDForRef:[_headRef ref]];
+	_headOID = branchRef.OID;
 
 	return _headRef;
 }
@@ -1158,23 +1158,21 @@
 	return (ret == 0);
 }
 
-- (NSString *)parseReference:(NSString *)reference
+- (BOOL)revisionExists:(NSString *)spec
 {
-	int ret = 1;
-	NSString *ref = [self outputForArguments:[NSArray arrayWithObjects: @"rev-parse", @"--verify", reference, nil] retValue: &ret];
-	if (ret)
-		return nil;
-
-	return ref;
+	return [self.gtRepo lookUpObjectByRevParse:spec error:nil] != nil;
 }
 
-- (NSString*) parseSymbolicReference:(NSString*) reference
+- (GTReference *)parseSymbolicReference:(NSString*) reference
 {
-	NSString* ref = [self outputForArguments:[NSArray arrayWithObjects: @"symbolic-ref", @"-q", reference, nil]];
-	if ([ref hasPrefix:@"refs/"])
-		return ref;
-
-	return nil;
+	GTReference *gtRef = [self.gtRepo lookUpReferenceWithName:reference error:nil];
+	if (!gtRef) return nil;
+	id target = gtRef.unresolvedTarget;
+	if ([target isKindOfClass:[GTReference class]]) {
+		NSString *ref = ((GTReference *)target).name;
+		if ([ref hasPrefix:@"refs/"]) return target;
+	}
+    return nil;
 }
 
 @end
