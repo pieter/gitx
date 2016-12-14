@@ -84,13 +84,13 @@
 	PBGitRef *ref = [PBGitRef refFromString:[kGitXBranchRefPrefix stringByAppendingString:name]];
 
 	if (![self.repository checkRefFormat:[ref ref]]) {
-		[self.errorMessageField setStringValue:@"Invalid name"];
+		[self.errorMessageField setStringValue:NSLocalizedString(@"Invalid name", @"Error message for create branch command when the entered name cannot be used as a branch name")];
 		[self.errorMessageField setHidden:NO];
 		return;
 	}
 
 	if ([self.repository refExists:ref]) {
-		[self.errorMessageField setStringValue:@"Branch already exists"];
+		[self.errorMessageField setStringValue:NSLocalizedString(@"Branch already exists", @"Error message for create branch command")];
 		[self.errorMessageField setHidden:NO];
 		return;
 	}

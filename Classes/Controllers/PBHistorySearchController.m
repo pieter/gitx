@@ -36,10 +36,10 @@
 #define kGitXSearchDirectionNext 1
 #define kGitXSearchDirectionPrevious -1
 
-#define kGitXBasicSearchLabel @"Subject, Author, SHA"
-#define kGitXPickaxeSearchLabel @"Commit (pickaxe)"
-#define kGitXRegexSearchLabel @"Commit (pickaxe regex)"
-#define kGitXPathSearchLabel @"File path"
+#define kGitXBasicSearchLabel NSLocalizedString(@"Subject, Author, SHA", @"Option in Search menu to search for subject, author or SHA")
+#define kGitXPickaxeSearchLabel NSLocalizedString(@"Commit (pickaxe)", @"Option in Search menu to use the pickaxe search")
+#define kGitXRegexSearchLabel NSLocalizedString(@"Commit (pickaxe regex)", @"Option in Search menu to use the pickaxe search with regular expressions")
+#define kGitXPathSearchLabel NSLocalizedString(@"File path", @"Option in Search menu to search for file paths in the commit")
 
 #define kGitXSearchArrangedObjectsContext @"GitXSearchArrangedObjectsContext"
 
@@ -194,12 +194,14 @@
 	NSUInteger numberOfMatches = [results count];
 
 	if (numberOfMatches == 0)
-		return @"Not found";
+		return NSLocalizedString(@"Not found", @"Search count (left of search field): no results");
 
 	if (numberOfMatches == 1)
-		return @"1 match";
+		return NSLocalizedString(@"1 match", @"Search count (left of search field): exactly one result");
 
-	return [NSString stringWithFormat:@"%lu matches", numberOfMatches];
+	return [NSString stringWithFormat:
+			NSLocalizedString(@"%lu matches", @"Search count (left of search field): number of results"),
+			numberOfMatches];
 }
 
 - (void)updateUI
@@ -234,7 +236,7 @@
 
 - (void)setupSearchMenuTemplate
 {
-	NSMenu *searchMenu = [[NSMenu alloc] initWithTitle:@"Search Menu"];
+	NSMenu *searchMenu = [[NSMenu alloc] initWithTitle:NSLocalizedString(@"Search Menu", @"Title of the Search menu.")];
     NSMenuItem *item;
 
 	item = [[NSMenuItem alloc] initWithTitle:kGitXBasicSearchLabel action:@selector(selectSearchMode:) keyEquivalent:@""];
@@ -260,11 +262,11 @@
     item = [NSMenuItem separatorItem];
     [searchMenu addItem:item];
 
-	item = [[NSMenuItem alloc] initWithTitle:@"Recent Searches" action:NULL keyEquivalent:@""];
+	item = [[NSMenuItem alloc] initWithTitle:NSLocalizedString(@"Recent Searches", @"Searches menu: title of inactive headline item for Recent Searches section") action:NULL keyEquivalent:@""];
     [item setTag:NSSearchFieldRecentsTitleMenuItemTag];
     [searchMenu addItem:item];
 
-    item = [[NSMenuItem alloc] initWithTitle:@"Recents" action:NULL keyEquivalent:@""];
+    item = [[NSMenuItem alloc] initWithTitle:@"" action:NULL keyEquivalent:@""];
     [item setTag:NSSearchFieldRecentsMenuItemTag];
     [searchMenu addItem:item];
 
@@ -272,11 +274,11 @@
     [item setTag:NSSearchFieldRecentsTitleMenuItemTag];
     [searchMenu addItem:item];
 
-	item = [[NSMenuItem alloc] initWithTitle:@"Clear Recent Searches" action:NULL keyEquivalent:@""];
+	item = [[NSMenuItem alloc] initWithTitle:NSLocalizedString(@"Clear Recent Searches", @"Searches menu: title of clear recent searches item") action:NULL keyEquivalent:@""];
     [item setTag:NSSearchFieldClearRecentsMenuItemTag];
     [searchMenu addItem:item];
 
-	item = [[NSMenuItem alloc] initWithTitle:@"No Recent Searches" action:NULL keyEquivalent:@""];
+	item = [[NSMenuItem alloc] initWithTitle:NSLocalizedString(@"No Recent Searches", @"Searches menu: title of dummy item displayed in recent searches section when there are no recent searches") action:NULL keyEquivalent:@""];
     [item setTag:NSSearchFieldNoRecentsMenuItemTag];
     [searchMenu addItem:item];
 

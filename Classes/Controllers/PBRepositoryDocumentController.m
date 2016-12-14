@@ -33,8 +33,8 @@
 	[op setCanChooseFiles:NO];
 	[op setCanChooseDirectories:YES];
 	[op setAllowsMultipleSelection:NO];
-	[op setMessage:@"Initialize a repository here:"];
-	[op setTitle:@"New Repository"];
+	[op setMessage:NSLocalizedString(@"Initialize a repository here:", @"Message at the top of the repository initialisation file selection dialogue box")];
+	[op setTitle:NSLocalizedString(@"New Repository", @"Title of the repository initialisation file selection dialogue box")];
 	if ([op runModal] != NSFileHandlingPanelOKButton) {
 		if (outError) {
 			*outError = [NSError errorWithDomain:NSCocoaErrorDomain code:NSUserCancelledError userInfo:nil];

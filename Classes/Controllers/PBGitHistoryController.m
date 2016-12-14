@@ -189,7 +189,9 @@
 	[selectedBranchFilterItem setTitle:[repository.currentBranch title]];
 	[selectedBranchFilterItem sizeToFit];
 
-	[localRemoteBranchesFilterItem setTitle:[[repository.currentBranch ref] isRemote] ? @"Remote" : @"Local"];
+	[localRemoteBranchesFilterItem setTitle:[[repository.currentBranch ref] isRemote]
+		? NSLocalizedString(@"Remote", @"Filter button for all remote commits in history view")
+		: NSLocalizedString(@"Local", @"Filter button for all local commits in history view")];
 }
 
 - (PBGitCommit *) firstCommit
@@ -564,7 +566,7 @@
 #pragma mark Table Column Methods
 - (NSMenu *)tableColumnMenu
 {
-	NSMenu *menu = [[NSMenu alloc] initWithTitle:@"Table columns menu"];
+	NSMenu *menu = [[NSMenu alloc] initWithTitle:@""];
 	for (NSTableColumn *column in [commitList tableColumns]) {
 		NSMenuItem *item = [[NSMenuItem alloc] init];
 		[item setTitle:[[column headerCell] stringValue]];
@@ -626,25 +628,40 @@
 		[filePaths addObject:[filePath stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]]];
 
 	BOOL multiple = [filePaths count] != 1;
-	NSMenuItem *historyItem = [[NSMenuItem alloc] initWithTitle:multiple? @"Show history of files" : @"Show history of file"
+	NSString *historyItemTitle = multiple
+		? NSLocalizedString(@"Show history of files", @"Show history menu item for multiple files")
+		: NSLocalizedString(@"Show history of file", @"Show history menu item for single file");
+	NSMenuItem *historyItem = [[NSMenuItem alloc] initWithTitle:historyItemTitle
 														 action:@selector(showCommitsFromTree:)
 												  keyEquivalent:@""];
 
 	PBGitRef *headRef = [[repository headRef] ref];
 	NSString *headRefName = [headRef shortName];
-	NSString *diffTitle = [NSString stringWithFormat:@"Diff %@ with %@", multiple ? @"files" : @"file", headRefName];
+	NSString *diffTitleFormat = multiple
+		? NSLocalizedString(@"Diff files with %@", @"Diff with ref menu item for multiple files")
+		: NSLocalizedString(@"Diff file with %@", @"Diff with ref menu item for single file");
+	NSString *diffTitle = [NSString stringWithFormat:diffTitleFormat, headRefName];
 	BOOL isHead = [self.selectedCommits.firstObject.OID isEqual:repository.headOID];
 	NSMenuItem *diffItem = [[NSMenuItem alloc] initWithTitle:diffTitle
 													  action:isHead ? nil : @selector(diffFilesAction:)
 											   keyEquivalent:@""];
 
-	NSMenuItem *checkoutItem = [[NSMenuItem alloc] initWithTitle:multiple ? @"Checkout files" : @"Checkout file"
+	NSString *checkoutItemTitle = multiple
+		? NSLocalizedString(@"Checkout files", @"Checkout menu item for multiple files")
+		: NSLocalizedString(@"Checkout file", @"Checkout menu item for single file");
+	NSMenuItem *checkoutItem = [[NSMenuItem alloc] initWithTitle:checkoutItemTitle
 														  action:@selector(checkoutFiles:)
 												   keyEquivalent:@""];
-	NSMenuItem *finderItem = [[NSMenuItem alloc] initWithTitle:@"Show in Finder"
+	
+	NSString *finderItemTitle = NSLocalizedString(@"Show in Finder", @"Show in Finder menu item");
+	NSMenuItem *finderItem = [[NSMenuItem alloc] initWithTitle:finderItemTitle
 														action:@selector(showInFinderAction:)
 												 keyEquivalent:@""];
-	NSMenuItem *openFilesItem = [[NSMenuItem alloc] initWithTitle:multiple? @"Open Files" : @"Open File"
+	
+	NSString *openFilesItemTitle = multiple
+		? NSLocalizedString(@"Open Files", @"Open menu item for multiple files")
+		: NSLocalizedString(@"Open File", @"Open menu item for single file");
+	NSMenuItem *openFilesItem = [[NSMenuItem alloc] initWithTitle:openFilesItemTitle
 														   action:@selector(openFilesAction:)
 													keyEquivalent:@""];
 

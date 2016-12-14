@@ -57,9 +57,9 @@
 		[self.destinationPath setStringValue:path];
 	
 	browseRepositoryPanel = [NSOpenPanel openPanel];
-	[browseRepositoryPanel setTitle:@"Browse for git repository"];
-	[browseRepositoryPanel setMessage:@"Select a folder with a git repository"];
-	[browseRepositoryPanel setPrompt:@"Select"];
+	[browseRepositoryPanel setTitle:NSLocalizedString(@"Browse for git repository", @"Title for the file selector sheet for the source on the local file system to clone _from_")];
+	[browseRepositoryPanel setMessage:NSLocalizedString(@"Select a folder with a git repository", @"Message on the file selector sheet to clone a repository from the local file system")];
+	[browseRepositoryPanel setPrompt:NSLocalizedString(@"Select", @"Select (directory on local file system to clone a new repository from)")];
     [browseRepositoryPanel setCanChooseFiles:NO];
     [browseRepositoryPanel setCanChooseDirectories:YES];
     [browseRepositoryPanel setAllowsMultipleSelection:NO];
@@ -67,9 +67,9 @@
 	[browseRepositoryPanel setAccessoryView:repositoryAccessoryView];
 	
 	browseDestinationPanel = [NSOpenPanel openPanel];
-	[browseDestinationPanel setTitle:@"Browse clone destination"];
-	[browseDestinationPanel setMessage:@"Select a folder to clone the git repository into"];
-	[browseDestinationPanel setPrompt:@"Select"];
+	[browseDestinationPanel setTitle:NSLocalizedString(@"Browse clone destination", @"Title for the file selector sheet for the destination of a clone operation")];
+	[browseDestinationPanel setMessage:NSLocalizedString(@"Select a folder to clone the git repository into", @"Message on the file selector sheet for the destination of a clone operation")];
+	[browseDestinationPanel setPrompt:NSLocalizedString(@"Select",  @"Select (destination to clone a new repository to)")];
     [browseDestinationPanel setCanChooseFiles:NO];
     [browseDestinationPanel setCanChooseDirectories:YES];
     [browseDestinationPanel setAllowsMultipleSelection:NO];
@@ -101,13 +101,13 @@
 	
 	NSString *url = [self.repositoryURL stringValue];
 	if ([url isEqualToString:@""]) {
-		[self.errorMessage setStringValue:@"Repository URL is required"];
+		[self.errorMessage setStringValue:NSLocalizedString(@"Repository URL is required", @"Error message for missing source location when starting a clone operation")];
 		return;
 	}
 	
 	path = [self.destinationPath stringValue];
 	if ([path isEqualToString:@""]) {
-		[self.errorMessage setStringValue:@"Destination path is required"];
+		[self.errorMessage setStringValue:NSLocalizedString(@"Destination path is required", @"Error message for missing target location when starting a clone operation")];
 		return;
 	}
 
@@ -115,8 +115,8 @@
 	if (isBare)
 		[arguments insertObject:@"--bare" atIndex:1];
 	
-	NSString *description = [NSString stringWithFormat:@"Cloning repository at: %@", url];
-	NSString *title = @"Cloning Repository";
+	NSString *title = NSLocalizedString(@"Cloning Repository", @"Title of clone dialogue while clone is running");
+	NSString *description = [NSString stringWithFormat:NSLocalizedString(@"Cloning repository at: %@", @"Message in clone dialogue while clone is running."), url];
 	[PBRemoteProgressSheet beginRemoteProgressSheetForArguments:arguments
 														  title:title
 													description:description

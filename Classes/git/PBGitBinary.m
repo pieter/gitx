@@ -55,13 +55,17 @@ static NSString* gitPath = nil;
 	if (gitPath.length > 0) {
 		if ([self acceptBinary:gitPath])
 			return;
-		[[NSAlert alertWithMessageText:@"Invalid git path"
-						defaultButton:@"OK"
-					  alternateButton:nil
-						  otherButton:nil
-			informativeTextWithFormat:@"You entered a custom git path in the Preferences pane, "
-		 "but this path is not a valid git v" MIN_GIT_VERSION " or higher binary. We're going to use the default "
-		 "search paths instead"] runModal];
+		[[NSAlert alertWithMessageText:NSLocalizedString(@"Invalid git path", @"Error message for NSUserDefaults configured path to git binary that does not point to a git binary")
+					  	 defaultButton:NSLocalizedString(@"OK", @"OK")
+					   alternateButton:nil
+						   otherButton:nil
+			 informativeTextWithFormat:NSLocalizedString(
+										@"The path „%@“, which is configured as a custom git path in the "
+										"preferences window, is not a valid git v" MIN_GIT_VERSION " or higher binary. "
+										"Using the default search paths instead.",
+										"Informative text for NSUserDefaults configured path to git binary that does not point to a git binary"),
+										gitPath]
+		runModal];
 	}
 
 	// Try to find the path of the Git binary
@@ -121,13 +125,14 @@ static NSMutableArray *locations = nil;
 
 + (NSString *) notFoundError
 {
-	NSMutableString *error = [NSMutableString stringWithString:
-							  @"Could not find a git binary version " MIN_GIT_VERSION " or higher.\n"
-							  @"Please make sure there is a git binary in one of the following locations:\n\n"];
-	for (NSString *location in [PBGitBinary searchLocations]) {
-		[error appendFormat:@"\t%@\n", location];
-	}
-	return error;
+	NSString * searchPathsString = [[PBGitBinary searchLocations] componentsJoinedByString:@"\n\t"];
+	return [NSString stringWithFormat:
+			NSLocalizedString(
+				@"Could not find a git binary version " MIN_GIT_VERSION " or higher.\n"
+				@"Please make sure there is a git binary in one of the following locations:"
+				@"\n\n\t%s",
+				@"Error message when no git client can be found."),
+			searchPathsString];
 }
 
 

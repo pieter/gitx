@@ -138,7 +138,7 @@
 	}
 
 	if (numberOfSelectedFiles == 1) {
-		NSMenuItem *showInFinderItem = [[NSMenuItem alloc] initWithTitle:@"Show in Finder" action:@selector(showInFinderAction:) keyEquivalent:@""];
+		NSMenuItem *showInFinderItem = [[NSMenuItem alloc] initWithTitle:NSLocalizedString(@"Show in Finder", @"Show in Finder contextual menu item") action:@selector(showInFinderAction:) keyEquivalent:@""];
 		showInFinderItem.target = self;
 		[menu addItem:showInFinderItem];
     }
@@ -155,13 +155,13 @@
 
 	if (addDiscardMenu)
     {
-        NSMenuItem *discardItem = [[NSMenuItem alloc] initWithTitle:@"Discard changes…" action:@selector(discardFilesAction:) keyEquivalent:@""];
+        NSMenuItem *discardItem = [[NSMenuItem alloc] initWithTitle:NSLocalizedString(@"Discard changes…", @"Discard changes contextual menu item (will ask for confirmation)") action:@selector(discardFilesAction:) keyEquivalent:@""];
         [discardItem setAlternate:NO];
         [discardItem setTarget:self];
 
         [menu addItem:discardItem];
 
-        NSMenuItem *discardForceItem = [[NSMenuItem alloc] initWithTitle:@"Discard changes" action:@selector(forceDiscardFilesAction:) keyEquivalent:@""];
+        NSMenuItem *discardForceItem = [[NSMenuItem alloc] initWithTitle:NSLocalizedString(@"Discard changes",  @"Force Discard changes contextual menu item (will NOT ask for confirmation)") action:@selector(forceDiscardFilesAction:) keyEquivalent:@""];
         [discardForceItem setAlternate:YES];
         [discardForceItem setKeyEquivalentModifierMask:NSAlternateKeyMask];
         [discardForceItem setTarget:self];
@@ -182,7 +182,7 @@
 
         if (trashInsteadOfDiscard && [selectedFiles count] > 0)
         {
-            NSMenuItem* moveToTrashItem = [[NSMenuItem alloc] initWithTitle:@"Move to Trash" action:@selector(moveToTrashAction:) keyEquivalent:@""];
+            NSMenuItem* moveToTrashItem = [[NSMenuItem alloc] initWithTitle:NSLocalizedString(@"Move to Trash", @"Move to Trash contextual menu item") action:@selector(moveToTrashAction:) keyEquivalent:@""];
             [moveToTrashItem setTarget:self];
             [menu addItem:moveToTrashItem];
 
@@ -315,11 +315,11 @@
 - (void) discardChangesForFiles:(NSArray *)files force:(BOOL)force
 {
 	if (!force) {
-		NSAlert *alert = [NSAlert alertWithMessageText:@"Discard changes"
+		NSAlert *alert = [NSAlert alertWithMessageText:NSLocalizedString(@"Discard changes", @"Title for Discard Changes sheet")
                                          defaultButton:nil
-                                       alternateButton:@"Cancel"
+                                       alternateButton:NSLocalizedString(@"Cancel", @"Cancel button in Discard Changes sheet")
                                            otherButton:nil
-                             informativeTextWithFormat:@"Are you sure you wish to discard the changes to this file?\n\nYou cannot undo this operation."];
+                             informativeTextWithFormat:NSLocalizedString(@"Are you sure you wish to discard the changes to this file?\n\nYou cannot undo this operation.", @"Informative text for Discard Changes sheet")];
         [alert beginSheetModalForWindow:[[commitController view] window]
                           modalDelegate:self
                          didEndSelector:@selector(discardChangesForFilesAlertDidEnd:returnCode:contextInfo:)

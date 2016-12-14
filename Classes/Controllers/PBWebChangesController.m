@@ -117,11 +117,11 @@
 - (void)discardHunk:(NSString *)hunk altKey:(BOOL)altKey
 {
 	if (!altKey) {
-        NSAlert *alert = [NSAlert alertWithMessageText:@"Discard hunk"
+        NSAlert *alert = [NSAlert alertWithMessageText:NSLocalizedString(@"Discard hunk", @"Title of dialogue asking whether the user really wanted to press the Discard button on a hunk in the changes view")
                                          defaultButton:nil
-                                       alternateButton:@"Cancel"
+                                       alternateButton:NSLocalizedString(@"Cancel", @"Cancel (discarding a hunk in the changes view)")
                                            otherButton:nil
-                             informativeTextWithFormat:@"Are you sure you wish to discard the changes in this hunk?\n\nYou cannot undo this operation."];
+                             informativeTextWithFormat:NSLocalizedString(@"Are you sure you wish to discard the changes in this hunk?\n\nYou cannot undo this operation.", @"Asks whether the user really wants to discard a hunk in changes view after pressing the Discard Hunk button")];
 		[alert beginSheetModalForWindow:[[controller view] window]
                           modalDelegate:self
                          didEndSelector:@selector(discardHunkAlertDidEnd:returnCode:contextInfo:)

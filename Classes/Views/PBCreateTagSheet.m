@@ -62,7 +62,7 @@
 
 	NSString *refName = [@"refs/tags/" stringByAppendingString:tagName];
 	if (![self.repository checkRefFormat:refName]) {
-		[self.errorMessageField setStringValue:@"Invalid name"];
+		[self.errorMessageField setStringValue:NSLocalizedString(@"Invalid name", @"Error message for create tag command when the entered name cannot be used as a tag name")];
 		[self.errorMessageField setHidden:NO];
 		return;
 	}
@@ -70,7 +70,7 @@
 	for (PBGitRevSpecifier *rev in self.repository.branches) {
 		NSString *name = [[rev ref] tagName];
 		if ([tagName isEqualToString:name]) {
-			[self.errorMessageField setStringValue:@"Tag already exists"];
+			[self.errorMessageField setStringValue:NSLocalizedString(@"Tag already exists", @"Error message for create tag command when the entered tag name already exists")];
 			[self.errorMessageField setHidden:NO];
 			return;
 		}

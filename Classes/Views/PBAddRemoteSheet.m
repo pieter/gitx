@@ -37,8 +37,8 @@
 	PBAddRemoteSheet *me = self;
 	NSOpenPanel *browseSheet = [NSOpenPanel openPanel];
 
-	[browseSheet setTitle:@"Add remote"];
-    [browseSheet setMessage:@"Select a folder with a git repository"];
+	[browseSheet setTitle:NSLocalizedString(@"Add remote", @"Title of sheet to enter data for a new remote")];
+    [browseSheet setMessage:NSLocalizedString(@"Select a folder with a git repository", @"Title of sheet to enter data for a new remote")];
     [browseSheet setCanChooseFiles:NO];
     [browseSheet setCanChooseDirectories:YES];
     [browseSheet setAllowsMultipleSelection:NO];
@@ -65,18 +65,18 @@
 	NSString *name = [[self.remoteName stringValue] copy];
 
 	if ([name isEqualToString:@""]) {
-		[self.errorMessage setStringValue:@"Remote name is required"];
+		[self.errorMessage setStringValue:NSLocalizedString(@"Remote name is required", @"Add Remote error message: missing name")];
 		return;
 	}
 
 	if (![self.repository checkRefFormat:[@"refs/remotes/" stringByAppendingString:name]]) {
-		[self.errorMessage setStringValue:@"Invalid remote name"];
+		[self.errorMessage setStringValue:NSLocalizedString(@"Invalid remote name", @"Add Remote error message: invalid name")];
 		return;
 	}
 
 	NSString *url = [[self.remoteURL stringValue] copy];
 	if ([url isEqualToString:@""]) {
-		[self.errorMessage setStringValue:@"Remote URL is required"];
+		[self.errorMessage setStringValue:NSLocalizedString(@"Remote URL is required", @"Add Remote error message: missing URL")];
 		return;
 	}
 

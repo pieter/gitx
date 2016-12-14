@@ -154,7 +154,7 @@
 		if ([remoteNames count] && !(hasDefaultRemote && ([remoteNames count] == 1))) {
 			NSString *pushToTitle = [NSString stringWithFormat:@"Push %@ to", refName];
 			PBRefMenuItem *pushToItem = [PBRefMenuItem itemWithTitle:pushToTitle action:nil enabled:YES];
-			NSMenu *remotesMenu = [[NSMenu alloc] initWithTitle:@"remotesMenu"];
+			NSMenu *remotesMenu = [[NSMenu alloc] initWithTitle:NSLocalizedString(@"Remotes Menu", @"Menu listing the repository’s remotes")];
 			for (NSString *remote in remoteNames) {
 				PBRefMenuItem *remoteItem = [PBRefMenuItem itemWithTitle:remote action:@selector(pushToRemote:) enabled:YES];
 				remoteItem.target = target;

@@ -185,19 +185,15 @@ static OpenRecentController* recentsDialog = nil;
 		}
 	}
 
+	NSAlert * alert = [[NSAlert alloc] init];
 	if (success) {
-		[[NSAlert alertWithMessageText:@"Installation Complete"
-	                    defaultButton:nil
-	                  alternateButton:nil
-	                      otherButton:nil
-	        informativeTextWithFormat:@"The gitx tool has been installed to %@", installationPath] runModal];
+		alert.messageText = NSLocalizedString(@"Installation Complete", @"Headline for successfully completed installation of the command line tool");
+		alert.informativeText = [NSString stringWithFormat:NSLocalizedString(@"The gitx tool has been installed to %@.", @"Informative text for successfully completed installation of the command line tool at the location %@"), installationPath];
 	} else {
-		[[NSAlert alertWithMessageText:@"Installation Failed"
-	                    defaultButton:nil
-	                  alternateButton:nil
-	                      otherButton:nil
-	        informativeTextWithFormat:@"Installation to %@ failed", installationPath] runModal];
+		alert.messageText = NSLocalizedString(@"Installation Failed", @"Headline for failed installation of the command line tool");
+		alert.informativeText = [NSString stringWithFormat:NSLocalizedString(@"Installation to %@ failed.", @"Informative text for successfully completed installation of the command line tool at the location %@"), installationPath];
 	}
+	[alert runModal];
 }
 
 #pragma mark Sparkle delegate methods
