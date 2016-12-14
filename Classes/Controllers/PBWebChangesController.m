@@ -52,7 +52,7 @@
 {
 	NSArrayController *otherController;
 	otherController = object == unstagedFilesController ? cachedFilesController : unstagedFilesController;
-	int count = [[object selectedObjects] count];
+	NSUInteger count = [object selectedObjects].count;
 	if (count == 0) {
 		if([[otherController selectedObjects] count] == 0 && selectedFile) {
 			selectedFile = nil;

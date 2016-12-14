@@ -8,6 +8,7 @@
 
 #import <Cocoa/Cocoa.h>
 #import "PBViewController.h"
+#import "PBHistorySearchMode.h"
 
 @class PBSourceViewItem;
 @class PBGitHistoryController;
@@ -39,7 +40,7 @@
 
 - (IBAction) fetchPullPushAction:(id)sender;
 
-- (void)setHistorySearch:(NSString *)searchString mode:(NSInteger)mode;
+- (void)setHistorySearch:(NSString *)searchString mode:(PBHistorySearchMode)mode;
 
 @property(readonly) NSMutableArray *items;
 @property(readonly) PBSourceViewItem *remotes;

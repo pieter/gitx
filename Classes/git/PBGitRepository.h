@@ -25,23 +25,6 @@ typedef enum branchFilterTypes {
 	kGitXSelectedBranchFilter
 } PBGitXBranchFilterType;
 
-static NSString * PBStringFromBranchFilterType(PBGitXBranchFilterType type) {
-    switch (type) {
-        case kGitXAllBranchesFilter:
-            return @"All";
-            break;
-        case kGitXLocalRemoteBranchesFilter:
-            return @"Local";
-            break;
-        case kGitXSelectedBranchFilter:
-            return @"Selected";
-            break;
-        default:
-            break;
-    }
-    return @"Not a branch filter type";
-}
-
 @class PBGitWindowController;
 @class PBGitCommit;
 @class PBGitIndex;

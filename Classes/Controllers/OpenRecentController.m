@@ -101,8 +101,10 @@
 	}
 	else if(commandSelector == @selector(moveUp:)) {
 		if(selectedResult != nil) {
-			int index = [currentResults indexOfObject: selectedResult]-1;
-			if(index < 0) index = 0;
+			NSUInteger index = [currentResults indexOfObject:selectedResult] - 1;
+			if (index > 0) {
+				index -= 1;
+			}
 			selectedResult = [currentResults objectAtIndex:index];
 			[resultViewer selectRowIndexes:[NSIndexSet indexSetWithIndex:index] byExtendingSelection:FALSE];
 			[resultViewer scrollRowToVisible:index];
@@ -111,7 +113,7 @@
 	}
 	else if(commandSelector == @selector(moveDown:)) {
 		if(selectedResult != nil) {
-			int index = [currentResults indexOfObject: selectedResult]+1;
+			NSUInteger index = [currentResults indexOfObject:selectedResult] + 1;
 			if(index >= [currentResults count]) index = [currentResults count] - 1;
 			selectedResult = [currentResults objectAtIndex:index];
 			[resultViewer selectRowIndexes:[NSIndexSet indexSetWithIndex:index] byExtendingSelection:FALSE];
@@ -146,8 +148,8 @@
 }
 
 - (IBAction)changeSelection:(id) sender {
-	int i = [resultViewer selectedRow];
-	if(i >= 0 && i < [currentResults count])
+	NSInteger i = resultViewer.selectedRow;
+	if(i >= 0 && i < currentResults.count)
 		selectedResult = [currentResults objectAtIndex: i];
 	else 
 		selectedResult = nil;

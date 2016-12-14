@@ -7,18 +7,9 @@
 //
 
 #import <Cocoa/Cocoa.h>
-
-
-typedef enum historySearchModes {
-	kGitXBasicSeachMode = 1,
-	kGitXPickaxeSearchMode,
-	kGitXRegexSearchMode,
-	kGitXPathSearchMode,
-	kGitXMaxSearchMode    // always keep this item last
-} PBHistorySearchMode;
+#import "PBHistorySearchMode.h"
 
 @class PBGitHistoryController;
-
 
 @interface PBHistorySearchController : NSObject {
 	PBHistorySearchMode searchMode;
@@ -51,6 +42,6 @@ typedef enum historySearchModes {
 - (void)clearSearch;
 - (IBAction)updateSearch:(id)sender;
 
-- (void)setHistorySearch:(NSString *)searchString mode:(NSInteger)mode;
+- (void)setHistorySearch:(NSString *)searchString mode:(PBHistorySearchMode)mode;
 
 @end

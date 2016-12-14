@@ -44,7 +44,7 @@
 
 	NSArray *currentFileBrowserSelectionPath;
     QLPreviewPanel *previewPanel;
-	int selectedCommitDetailsIndex;
+	NSInteger selectedCommitDetailsIndex;
 	BOOL forceSelectionUpdate;
 	PBGitTree *gitTree;
 	NSArray<PBGitCommit *> *webCommits;
@@ -56,7 +56,7 @@
 @property (readonly) PBRefController *refController;
 @property (readonly) PBHistorySearchController *searchController;
 
-@property (assign) int selectedCommitDetailsIndex;
+@property (assign) NSInteger selectedCommitDetailsIndex;
 @property PBGitTree* gitTree;
 @property NSArray<PBGitCommit *> *webCommits;
 @property NSArray<PBGitCommit *> *selectedCommits;

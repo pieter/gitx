@@ -240,7 +240,7 @@
 	[super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
 }
 
-- (void)setHistorySearch:(NSString *)searchString mode:(NSInteger)mode
+- (void)setHistorySearch:(NSString *)searchString mode:(PBHistorySearchMode)mode
 {
 	[sidebarController setHistorySearch:searchString mode:mode];
 }

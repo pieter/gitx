@@ -42,11 +42,11 @@
     bool commandDown = theEvent.modifierFlags & NSCommandKeyMask;
     
     if([theEvent.characters isEqualTo:@"s"] && commandDown && isUnstagedView) {
-        int oldSelectedRowIndex = self.selectedRow;
+        NSInteger oldSelectedRowIndex = self.selectedRow;
         [controller stageSelectedFiles];
 
         // Try to select the file after the one that was just staged, which will have the same index now
-        int rowIndexToSelect = oldSelectedRowIndex;
+        NSInteger rowIndexToSelect = oldSelectedRowIndex;
         if(rowIndexToSelect > self.numberOfRows - 1) {
             rowIndexToSelect = self.numberOfRows - 1;
         }
@@ -55,11 +55,11 @@
         [self selectRowIndexes:[NSIndexSet indexSetWithIndex:rowIndexToSelect] byExtendingSelection:NO];
     }
     else if([theEvent.characters isEqualTo:@"u"] && commandDown && isStagedView) {
-        int oldSelectedRowIndex = self.selectedRow;
+        NSInteger oldSelectedRowIndex = self.selectedRow;
         [controller unstageSelectedFiles];
 
         // Try to select the file after the one that was just staged, which will have the same index now
-        int rowIndexToSelect = oldSelectedRowIndex;
+        NSInteger rowIndexToSelect = oldSelectedRowIndex;
         if(rowIndexToSelect > self.numberOfRows - 1) {
             rowIndexToSelect = self.numberOfRows - 1;
         }

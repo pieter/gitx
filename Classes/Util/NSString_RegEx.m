@@ -75,7 +75,7 @@ catch_error:
 		// Construct error object
 		NSMutableDictionary * userInfo = [NSMutableDictionary dictionary];
 		char errbuf[256];
-		int len = regerror(errcode, &preg, errbuf, sizeof(errbuf));
+		size_t len = regerror(errcode, &preg, errbuf, sizeof(errbuf));
 		if (len > 0)
 			[userInfo setObject:[NSString stringWithUTF8String:errbuf] forKey:NSLocalizedDescriptionKey];
 		*error = [NSError errorWithDomain:@"regerror" code:errcode userInfo:userInfo];

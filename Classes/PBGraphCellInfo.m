@@ -10,8 +10,9 @@
 
 
 @implementation PBGraphCellInfo
-@synthesize position, numColumns, sign, nLines;
-- (id)initWithPosition:(int)p andLines:(struct PBGitGraphLine *)l
+@synthesize nLines, position, numColumns, sign;
+
+- (id)initWithPosition:(long)p andLines:(struct PBGitGraphLine *)l
 {
 	position = p;
 	lines = l;

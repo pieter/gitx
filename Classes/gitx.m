@@ -171,16 +171,16 @@ NSArray *commandLineSearchPrefixes()
 PBHistorySearchMode searchModeForCommandLineArgument(NSString *argument)
 {
 	if ([argument hasPrefix:kShortBasicSearch] || [argument hasPrefix:kBasicSearch])
-		return kGitXBasicSeachMode;
+		return PBHistorySearchModeBasic;
 
 	if ([argument hasPrefix:kShortPickaxeSearch] || [argument hasPrefix:kPickaxeSearch])
-		return kGitXPickaxeSearchMode;
+		return PBHistorySearchModePickaxe;
 
 	if ([argument hasPrefix:kShortRegexSearch] || [argument hasPrefix:kRegexSearch])
-		return kGitXRegexSearchMode;
+		return PBHistorySearchModeRegex;
 
 	if ([argument hasPrefix:kShortPathSearch] || [argument hasPrefix:kPathSearch])
-		return kGitXPathSearchMode;
+		return PBHistorySearchModePath;
 
 	return 0;
 }

@@ -62,7 +62,7 @@ static OpenRecentController* recentsDialog = nil;
 	[NSApp setServicesProvider:services];
 
 	// Force update the services menu if we have a new services version
-	int serviceVersion = [[NSUserDefaults standardUserDefaults] integerForKey:@"Services Version"];
+	NSInteger serviceVersion = [[NSUserDefaults standardUserDefaults] integerForKey:@"Services Version"];
 	if (serviceVersion < 2)
 	{
 		NSLog(@"Updating services menu…");

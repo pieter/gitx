@@ -214,7 +214,7 @@
 	[sourceView reloadData];
 }
 
-- (void)setHistorySearch:(NSString *)searchString mode:(NSInteger)mode
+- (void)setHistorySearch:(NSString *)searchString mode:(PBHistorySearchMode)mode
 {
 	[historyViewController.searchController setHistorySearch:searchString mode:mode];
 }

@@ -11,8 +11,8 @@
 
 }
 
-+ (int) commitMessageViewVerticalLineLength;
-+ (int) commitMessageViewVerticalBodyLineLength;
++ (NSInteger) commitMessageViewVerticalLineLength;
++ (NSInteger) commitMessageViewVerticalBodyLineLength;
 + (BOOL) commitMessageViewHasVerticalLine;
 + (BOOL) isGistEnabled;
 + (BOOL) isGravatarEnabled;

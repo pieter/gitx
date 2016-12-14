@@ -362,8 +362,8 @@
 {
     
 	NSPoint location = [(PBCommitList *)tv mouseDownPoint];
-	int row = [tv rowAtPoint:location];
-	int column = [tv columnAtPoint:location];
+	NSInteger row = [tv rowAtPoint:location];
+	NSInteger column = [tv columnAtPoint:location];
 	
 	PBGitRevisionCell *cell = (PBGitRevisionCell *)[tv preparedCellAtColumn:column row:row];
 	PBGitCommit *commit = [[commitController arrangedObjects] objectAtIndex:row];
@@ -382,7 +382,7 @@
 		if ([[[historyController.repository headRef] ref] isEqualToRef:ref])
 			return NO;
 
-		NSData *data = [NSKeyedArchiver archivedDataWithRootObject:[NSArray arrayWithObjects:[NSNumber numberWithInt:row], [NSNumber numberWithInt:index], NULL]];
+		NSData *data = [NSKeyedArchiver archivedDataWithRootObject:[NSArray arrayWithObjects:[NSNumber numberWithInteger:row], [NSNumber numberWithInt:index], NULL]];
 		[pboard declareTypes:[NSArray arrayWithObject:@"PBGitRef"] owner:self];
 		[pboard setData:data forType:@"PBGitRef"];
 	} else {

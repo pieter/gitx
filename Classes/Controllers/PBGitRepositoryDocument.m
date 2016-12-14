@@ -228,9 +228,9 @@ NSString *PBGitRepositoryDocumentType = @"Git Repository";
 	NSDictionary *arguments = [command arguments];
 	NSString *searchString = [arguments objectForKey:kGitXFindSearchStringKey];
 	if (searchString) {
-		NSInteger mode = [[arguments objectForKey:kGitXFindInModeKey] integerValue];
 		[PBGitDefaults setShowStageView:NO];
 		[self.windowController showHistoryView:self];
+		PBHistorySearchMode mode = PBSearchModeForInteger([[arguments objectForKey:kGitXFindInModeKey] integerValue]);
 		[self.windowController setHistorySearch:searchString mode:mode];
 	}
 }

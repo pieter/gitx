@@ -336,7 +336,7 @@
 - (void)flagsChanged:(NSEvent *)theEvent
 {
     BOOL altDown = !!([theEvent modifierFlags] & NSAlternateKeyMask);
-    int currIndex = [controlsTabView indexOfTabViewItem:controlsTabView.selectedTabViewItem];
+    NSInteger currIndex = [controlsTabView indexOfTabViewItem:controlsTabView.selectedTabViewItem];
     int desiredIndex = altDown ? kControlsTabIndexStash : kControlsTabIndexCommit;
     if (currIndex != desiredIndex) {
         [controlsTabView selectTabViewItemAtIndex:desiredIndex];

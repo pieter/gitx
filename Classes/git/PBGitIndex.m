@@ -375,15 +375,15 @@ NS_ENUM(NSUInteger, PBGitIndexOperation) {
 {
 	// Do staging files by chunks of 1000 files each, to prevent program freeze (because NSPipe has limited capacity)
 
-	int filesCount = [files count];
-	const int MAX_FILES_PER_STAGE = 1000;
+	NSUInteger filesCount = files.count;
+	const NSUInteger MAX_FILES_PER_STAGE = 1000;
 
 	// Prepare first iteration
-	int loopFrom = 0;
-	int loopTo = MAX_FILES_PER_STAGE;
+	NSUInteger loopFrom = 0;
+	NSUInteger loopTo = MAX_FILES_PER_STAGE;
 	if (loopTo > filesCount)
 		loopTo = filesCount;
-	int loopCount = 0;
+	NSUInteger loopCount = 0;
 
 	// Staging
 	while (loopCount < filesCount) {
@@ -393,7 +393,7 @@ NS_ENUM(NSUInteger, PBGitIndexOperation) {
 		// "git add -- <files>
 		NSMutableString *input = [NSMutableString string];
 
-		for (int i = loopFrom; i < loopTo; i++) {
+		for (NSUInteger i = loopFrom; i < loopTo; i++) {
 			loopCount++;
 
 			PBChangedFile *file = [files objectAtIndex:i];
@@ -428,7 +428,7 @@ NS_ENUM(NSUInteger, PBGitIndexOperation) {
 			return NO;
 		}
 
-		for (int i = loopFrom; i < loopTo; i++) {
+		for (NSUInteger i = loopFrom; i < loopTo; i++) {
 			PBChangedFile *file = [files objectAtIndex:i];
 			file.hasStagedChanges = stage;
 			file.hasUnstagedChanges = !stage;

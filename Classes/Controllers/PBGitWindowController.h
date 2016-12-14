@@ -7,6 +7,7 @@
 //
 
 #import <Cocoa/Cocoa.h>
+#import "PBHistorySearchMode.h"
 
 @class PBViewController, PBGitSidebarController, PBGitCommitController, PBGitRepository;
 @class RJModalRepoSheet;
@@ -60,6 +61,6 @@
 - (IBAction) stashSaveWithKeepIndex:(id) sender;
 - (IBAction) stashPop:(id) sender;
 
-- (void)setHistorySearch:(NSString *)searchString mode:(NSInteger)mode;
+- (void)setHistorySearch:(NSString *)searchString mode:(PBHistorySearchMode)mode;
 
 @end

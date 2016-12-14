@@ -35,6 +35,10 @@
 
 @implementation GAPAppDelegate
 
+static const NSInteger kReturnCodeOK = 0;
+static const NSInteger kReturnCodeCancel = 1;
+
+
 -(NSPanel*)	passwordPanel
 {
 	if( !mPasswordPanel )
@@ -133,7 +137,7 @@
 -(IBAction)	doOKButton: (id)sender
 {
 	printf( "%s\n", [[mPasswordField stringValue] UTF8String] );
-	[[NSApplication sharedApplication] stopModalWithCode: 0];
+	[[NSApplication sharedApplication] stopModalWithCode:kReturnCodeOK];
 }
 
 
@@ -142,7 +146,7 @@
 //       many times the remote server allows failed attempts.
 -(IBAction)	doCancelButton: (id)sender
 {
-	[[NSApplication sharedApplication] stopModalWithCode: 1];
+	[[NSApplication sharedApplication] stopModalWithCode:kReturnCodeCancel];
 }
 
 @end
@@ -170,8 +174,8 @@ int	main( int argc, const char** argv )
 		NSInteger code = [app runModalForWindow: passPanel];
 		
 		[defaults synchronize];
-		
-		return code;
+
+		return code == kReturnCodeOK ? EXIT_SUCCESS : EXIT_FAILURE;
 	}
 }
 

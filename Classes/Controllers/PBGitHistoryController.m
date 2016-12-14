@@ -206,7 +206,7 @@
 	return [self.selectedCommits isEqualToArray:[commitController selectedObjects]];
 }
 
-- (void) setSelectedCommitDetailsIndex:(int)detailsIndex
+- (void) setSelectedCommitDetailsIndex:(NSInteger)detailsIndex
 {
 	if (selectedCommitDetailsIndex == detailsIndex)
 		return;
@@ -217,7 +217,7 @@
 	[self updateKeys];
 }
 
-- (int) selectedCommitDetailsIndex
+- (NSInteger) selectedCommitDetailsIndex
 {
 	return selectedCommitDetailsIndex;
 }
@@ -582,7 +582,7 @@
 - (void)showCommitsFromTree:(id)sender
 {
 	NSString *searchString = [(NSArray *)[sender representedObject] componentsJoinedByString:@" "];
-	[searchController setHistorySearch:searchString mode:kGitXPathSearchMode];
+	[searchController setHistorySearch:searchString mode:PBHistorySearchModePath];
 }
 
 - (void) checkoutFiles:(id)sender
