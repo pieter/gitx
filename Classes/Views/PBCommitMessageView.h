@@ -6,11 +6,11 @@
 //  Copyright 2008 Jeff Mesnil (http://jmesnil.net/). All rights reserved.
 //
 
-#import <Cocoa/Cocoa.h>
+#import "GitXTextView.h"
 
 @class PBGitRepository;
 
-@interface PBCommitMessageView : NSTextView
+@interface PBCommitMessageView : GitXTextView
 
 @property (nonatomic, strong) PBGitRepository *repository;
 
