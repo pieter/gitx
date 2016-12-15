@@ -15,6 +15,8 @@
 
 - (void) awakeFromNib
 {
+    [super awakeFromNib];
+
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
 
     [defaults addObserver:self
