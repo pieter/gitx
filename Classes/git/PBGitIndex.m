@@ -404,7 +404,7 @@ NS_ENUM(NSUInteger, PBGitIndexOperation) {
 				NSString *indexInfo;
 				if (file.status == NEW) {
 					// Index info lies because the file is NEW
-					indexInfo = [NSString stringWithFormat:@"0 0000000000000000000000000000000000000000\t\"%@\"", file.path];
+					indexInfo = [NSString stringWithFormat:@"0 0000000000000000000000000000000000000000\t%@\0", file.path];
 				} else {
 					indexInfo = [file indexInfo];
 				}
