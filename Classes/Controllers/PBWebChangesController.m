@@ -10,6 +10,9 @@
 #import "PBGitIndexController.h"
 #import "PBGitIndex.h"
 
+@interface PBWebChangesController () <WebEditingDelegate, WebUIDelegate>
+@end
+
 @implementation PBWebChangesController
 
 - (void) awakeFromNib
@@ -22,6 +25,9 @@
 
 	[unstagedFilesController addObserver:self forKeyPath:@"selection" options:0 context:@"UnstagedFileSelected"];
 	[cachedFilesController addObserver:self forKeyPath:@"selection" options:0 context:@"cachedFileSelected"];
+
+	self.view.editingDelegate = self;
+	self.view.UIDelegate = self;
 }
 
 - (void)closeView
@@ -134,6 +140,8 @@
 -(void)copy: (NSString *)text{
 	NSArray *lines = [text componentsSeparatedByString:@"\n"];
 	NSMutableArray *processedLines = [NSMutableArray arrayWithCapacity:lines.count -1];
+	// FIXME Don't unconditionally skip the first line, expecting it to contain the
+	//       CopyStage button text. The buttons are only added if changed text is selected.
 	for (int i = 1; i < lines.count; i++) {
 		NSString *line = [lines objectAtIndex:i];
 		if (line.length>0) {
@@ -145,6 +153,27 @@
 	NSString *result = [processedLines componentsJoinedByString:@"\n"];
 	[[NSPasteboard generalPasteboard] declareTypes:[NSArray arrayWithObject:NSStringPboardType] owner:nil];
 	[[NSPasteboard generalPasteboard] setString:result forType:NSStringPboardType];
+}
+
+- (BOOL)webView:(WebView *)webView
+	validateUserInterfaceItem:(id<NSValidatedUserInterfaceItem>)item
+	defaultValidation:(BOOL)defaultValidation
+{
+	if (item.action == @selector(copy:)) {
+		return YES;
+	} else {
+		return defaultValidation;
+	}
+}
+
+- (BOOL)webView:(WebView *)webView doCommandBySelector:(SEL)selector
+{
+	if (selector == @selector(copy:)) {
+		[self.script callWebScriptMethod:@"copy" withArguments:@[]];
+		return YES;
+	} else {
+		return NO;
+	}
 }
 
 @end

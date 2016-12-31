@@ -479,6 +479,10 @@ var showSelection = function(file, from, to, trust)
 	file.insertBefore(selection, from);
 	for (i = 0; i < elementList.length; i++)
 		selection.appendChild(elementList[i]);
+
+	// Drag-selecting does not select the WebView, so make sure
+	// it's selected so that menu items work.
+	Controller.makeWebViewFirstResponder();
 }
 
 var copy = function()

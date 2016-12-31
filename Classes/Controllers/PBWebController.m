@@ -219,4 +219,9 @@ dragDestinationActionMaskForDraggingInfo:(id<NSDraggingInfo>)draggingInfo
 	[self preferencesChanged];
 }
 
+- (void)makeWebViewFirstResponder
+{
+	[self.view.window makeFirstResponder:self.view];
+}
+
 @end
