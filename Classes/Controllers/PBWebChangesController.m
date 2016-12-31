@@ -140,9 +140,7 @@
 -(void)copy: (NSString *)text{
 	NSArray *lines = [text componentsSeparatedByString:@"\n"];
 	NSMutableArray *processedLines = [NSMutableArray arrayWithCapacity:lines.count -1];
-	// FIXME Don't unconditionally skip the first line, expecting it to contain the
-	//       CopyStage button text. The buttons are only added if changed text is selected.
-	for (int i = 1; i < lines.count; i++) {
+	for (int i = 0; i < lines.count; i++) {
 		NSString *line = [lines objectAtIndex:i];
 		if (line.length>0) {
 			[processedLines addObject:[line substringFromIndex:1]];

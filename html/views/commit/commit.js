@@ -489,7 +489,15 @@ var copy = function()
 {
 	var selection = document.getElementById("selected");
 	if(!selection) return false;
-	Controller.copy_(selection.innerText);
+	var selectedText = "";
+	for (var i = 0, n = selection.childNodes.length; i < n; ++i) {
+		var line = selection.childNodes[i];
+		if (line.getAttribute("index") !== null) {
+			selectedText += line.innerText;
+			selectedText += "\n";
+		}
+	}
+	Controller.copy_(selectedText);
 }
 
 
