@@ -91,11 +91,6 @@
 - (IBAction)selectNext:(id)sender;
 - (IBAction)selectPrevious:(id)sender;
 
-- (void) copyCommitInfo;
-- (void) copyCommitSHA;
-- (void) copyCommitShortName;
-- (void) copyCommitPatch;
-
 
 - (BOOL) hasNonlinearPath;
 

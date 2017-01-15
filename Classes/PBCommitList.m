@@ -47,40 +47,6 @@
 		[super keyDown: event];
 }
 
-
-
-- (BOOL) validateUserInterfaceItem:(id<NSValidatedUserInterfaceItem>)item {
-	if (item.action == @selector(copy:)
-		|| item.action == @selector(copySHA:)
-		|| item.action == @selector(copyShortName:)
-		|| item.action == @selector(copyPatch:)) {
-		return controller.commitController.selectedObjects.count > 0;
-	}
-	
-	return [super validateUserInterfaceItem:item];
-}
-
-- (IBAction) copy:(id)sender
-{
-	[controller copyCommitInfo];
-}
-
-- (IBAction) copySHA:(id)sender
-{
-	[controller copyCommitSHA];
-}
-
-- (IBAction) copyShortName:(id)sender
-{
-	[controller copyCommitShortName];
-}
-
-- (IBAction) copyPatch:(id)sender
-{
-	[controller copyCommitPatch];
-}
-
-
 // !!! Andre Berg 20100330: Used from -scrollSelectionToTopOfViewFrom: of PBGitHistoryController
 // so that when the history controller udpates the branch filter the origin of the superview gets
 // shifted into multiples of the row height. Otherwise the top selected row will always be off by

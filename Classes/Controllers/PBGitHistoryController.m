@@ -338,7 +338,7 @@
 		[menuItem setState:(self.selectedCommitDetailsIndex == kHistoryDetailViewIndex) ? NSOnState : NSOffState];
     } else if (action == @selector(setTreeView:)) {
 		[menuItem setState:(self.selectedCommitDetailsIndex == kHistoryTreeViewIndex) ? NSOnState : NSOffState];
-	} 
+	}
 	
 	if ([self respondsToSelector:action]) {
 		if (action == @selector(createBranch:) || action == @selector(createTag:)) {
@@ -346,6 +346,13 @@
 		}
 		
         return YES;
+	}
+
+	if (action == @selector(copy:)
+		|| action == @selector(copySHA:)
+		|| action == @selector(copyShortName:)
+		|| action == @selector(copyPatch:)) {
+		return self.commitController.selectedObjects.count > 0;
 	}
 	
     return [[self nextResponder] validateMenuItem:menuItem];
@@ -403,27 +410,25 @@
 	[searchController selectPreviousResult];
 }
 
-- (void) copyCommitInfo
+- (IBAction) copy:(id)sender
 {
 	[GitXCommitCopier putStringToPasteboard:[GitXCommitCopier toSHAAndHeadingString:commitController.selectedObjects]];
 }
 
-- (void) copyCommitSHA
+- (IBAction) copySHA:(id)sender
 {
 	[GitXCommitCopier putStringToPasteboard:[GitXCommitCopier toFullSHA:commitController.selectedObjects]];
 }
 
-- (void) copyCommitShortName
+- (IBAction) copyShortName:(id)sender
 {
 	[GitXCommitCopier putStringToPasteboard:[GitXCommitCopier toShortName:commitController.selectedObjects]];
 }
 
-- (void) copyCommitPatch
+- (IBAction) copyPatch:(id)sender
 {
 	[GitXCommitCopier putStringToPasteboard:[GitXCommitCopier toPatch:commitController.selectedObjects]];
 }
-
-
 
 - (IBAction) toggleQLPreviewPanel:(id)sender
 {

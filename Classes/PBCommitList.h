@@ -29,9 +29,4 @@ typedef void(^PBFindPanelActionBlock)(id sender);
 @property (assign) BOOL useAdjustScroll;
 @property (copy) PBFindPanelActionBlock findPanelActionBlock;
 
-- (IBAction) copy:(id)sender;
-- (IBAction) copySHA:(id)sender;
-- (IBAction) copyShortName:(id)sender;
-- (IBAction) copyPatch:(id)sender;
-
 @end
