@@ -78,7 +78,7 @@ void add_line(struct PBGitGraphLine *lines, int *nLines, int upper, long from, l
 	NSUInteger nParents = [parents count];
 
 	unsigned long maxLines = (previousLanes->size() + nParents + 2) * 2;
-	struct PBGitGraphLine *lines = (struct PBGitGraphLine *)malloc(sizeof(struct PBGitGraphLine) * maxLines);
+	struct PBGitGraphLine *lines = (struct PBGitGraphLine *)calloc(maxLines, sizeof(struct PBGitGraphLine));
 	int currentLine = 0;
 
 	PBGitLane *currentLane = NULL;
