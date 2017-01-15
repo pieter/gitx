@@ -158,8 +158,14 @@
 	if ([self fileSize] > 52428800) // ~50MB
 		return [NSString stringWithFormat:@"%@ is too big to be displayed (%lld bytes)", [self fullPath], [self fileSize]];
 
-	NSString *contents=[repository outputInWorkdirForArguments:[NSArray arrayWithObjects:@"log", [NSString stringWithFormat:@"--pretty=format:%@",format], @"--", [self fullPath], nil]];
-	
+	NSString *contents = [repository outputInWorkdirForArguments:@[
+		@"log",
+		[NSString stringWithFormat:@"--pretty=format:%@",format],
+		@"--follow",
+		@"--",
+		[self fullPath],
+	]];
+
 	if ([self hasBinaryHeader:contents])
 		return [NSString stringWithFormat:@"%@ appears to be a binary file of %lld bytes", [self fullPath], [self fileSize]];
 	
