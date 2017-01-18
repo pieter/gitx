@@ -46,11 +46,11 @@
 
     if ([PBGitDefaults commitMessageViewHasVerticalLine]) {
 
-        float characterWidth = [@" " sizeWithAttributes:[self typingAttributes]].width;
-        float lineWidth = characterWidth * [PBGitDefaults commitMessageViewVerticalLineLength];
+        CGFloat characterWidth = [@" " sizeWithAttributes:[self typingAttributes]].width;
+        CGFloat lineWidth = characterWidth * [PBGitDefaults commitMessageViewVerticalLineLength];
         NSRect line;
-        float padding;
-        float textViewHeight = [self bounds].size.height;
+        CGFloat padding;
+        CGFloat textViewHeight = [self bounds].size.height;
 
         // draw a vertical line after the given size (used as an indicator
         // for the first line of the commit message)

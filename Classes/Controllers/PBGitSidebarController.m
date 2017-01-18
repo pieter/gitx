@@ -356,7 +356,7 @@
 
 - (BOOL)outlineView:(NSOutlineView *)outlineView isItemExpandable:(id)item
 {
-	return [[(PBSourceViewItem *)item sortedChildren] count];
+	return [[(PBSourceViewItem *)item sortedChildren] count] > 0;
 }
 
 - (NSInteger)outlineView:(NSOutlineView *)outlineView numberOfChildrenOfItem:(id)item

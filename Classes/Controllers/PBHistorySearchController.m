@@ -519,17 +519,8 @@
 {
 	CAKeyframeAnimation *animation = [CAKeyframeAnimation animation];
 	animation.duration = 1.0f;
-	animation.values = [NSArray arrayWithObjects:
-						[NSNumber numberWithFloat:1.0f],
-						[NSNumber numberWithFloat:1.0f],
-						[NSNumber numberWithFloat:0.0f],
-						[NSNumber numberWithFloat:0.0f], nil];
-	animation.keyTimes = [NSArray arrayWithObjects:
-						  [NSNumber numberWithFloat:0.1f],
-						  [NSNumber numberWithFloat:0.3f],
-						  [NSNumber numberWithFloat:0.7f],
-						  [NSNumber numberWithFloat:animation.duration], nil];
-
+	animation.values = @[@1.0f, @1.0f, @0.0f, @0.0f];
+	animation.keyTimes = @[@0.1f, @0.3f, @0.7f, [NSNumber numberWithDouble:animation.duration]];
 	return animation;
 }
 

@@ -86,11 +86,11 @@
 	[badgeTextAttributes setObject:textColor forKey:NSForegroundColorAttributeName];
 	NSAttributedString *badgeString = [[NSAttributedString alloc] initWithString:badge attributes:badgeTextAttributes];
 
-	float imageHeight = ceilf([badgeString size].height);
-	float radius = ceilf(imageHeight / 4) * 2;
-	float minWidth = ceilf(radius * 2.5);
+	CGFloat imageHeight = ceil([badgeString size].height);
+	CGFloat radius = ceil(imageHeight / 4) * 2;
+	CGFloat minWidth = ceil(radius * 2.5);
 
-	float imageWidth = ceilf([badgeString size].width + radius);
+	CGFloat imageWidth = ceil([badgeString size].width + radius);
 	if (imageWidth < minWidth)
 		imageWidth = minWidth;
 	NSRect badgeRect = NSMakeRect(0, 0, imageWidth, imageHeight);

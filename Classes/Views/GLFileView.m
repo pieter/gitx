@@ -292,7 +292,7 @@
 {
 	NSRect newFrame = [splitView frame];
 
-	float dividerThickness = [splitView dividerThickness];
+	CGFloat dividerThickness = [splitView dividerThickness];
 
 	NSView *leftView = [[splitView subviews] objectAtIndex:0];
 	NSRect leftFrame = [leftView frame];
@@ -315,15 +315,15 @@
 // NSSplitView does not save and restore the position of the SplitView correctly so do it manually
 - (void)saveSplitViewPosition
 {
-	float position = [[[fileListSplitView subviews] objectAtIndex:0] frame].size.width;
-	[[NSUserDefaults standardUserDefaults] setFloat:position forKey:kHFileListSplitViewPositionDefault];
+	CGFloat position = [[[fileListSplitView subviews] objectAtIndex:0] frame].size.width;
+	[[NSUserDefaults standardUserDefaults] setDouble:position forKey:kHFileListSplitViewPositionDefault];
 	[[NSUserDefaults standardUserDefaults] synchronize];
 }
 
 // make sure this happens after awakeFromNib
 - (void)restoreSplitViewPositiion
 {
-	float position = [[NSUserDefaults standardUserDefaults] floatForKey:kHFileListSplitViewPositionDefault];
+	CGFloat position = [[NSUserDefaults standardUserDefaults] doubleForKey:kHFileListSplitViewPositionDefault];
 	if (position < 1.0)
 		position = 200;
 

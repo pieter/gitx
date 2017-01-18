@@ -284,7 +284,7 @@
 {
 	NSRect newFrame = [commitSplitView frame];
 
-	float dividerThickness = [commitSplitView dividerThickness];
+	CGFloat dividerThickness = commitSplitView.dividerThickness;
 
 	NSView *upperView = [[commitSplitView subviews] objectAtIndex:0];
 	NSRect upperFrame = [upperView frame];
@@ -314,17 +314,17 @@
 // NSSplitView does not save and restore the position of the splitView correctly so do it manually
 - (void)saveCommitSplitViewPosition
 {
-	float position = [[[commitSplitView subviews] objectAtIndex:0] frame].size.height;
-	[[NSUserDefaults standardUserDefaults] setFloat:position forKey:kCommitSplitViewPositionDefault];
+	CGFloat position = [[[commitSplitView subviews] objectAtIndex:0] frame].size.height;
+	[[NSUserDefaults standardUserDefaults] setDouble:position forKey:kCommitSplitViewPositionDefault];
 	[[NSUserDefaults standardUserDefaults] synchronize];
 }
 
 // make sure this happens after awakeFromNib
 - (void)restoreCommitSplitViewPositiion
 {
-	float position = [[NSUserDefaults standardUserDefaults] floatForKey:kCommitSplitViewPositionDefault];
+	CGFloat position = [[NSUserDefaults standardUserDefaults] doubleForKey:kCommitSplitViewPositionDefault];
 	if (position < 1.0)
-		position = [commitSplitView frame].size.height - 225;
+		position = commitSplitView.frame.size.height - 225;
 
 	[commitSplitView setPosition:position ofDividerAtIndex:0];
 	[commitSplitView setHidden:NO];

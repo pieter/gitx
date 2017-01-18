@@ -371,7 +371,7 @@
 {
 	NSRect newFrame = [sender frame];
 
-	float dividerThickness = [sender dividerThickness];
+	CGFloat dividerThickness = [sender dividerThickness];
 
 	NSView *sourceView = [[sender subviews] objectAtIndex:0];
 	NSRect sourceFrame = [sourceView frame];

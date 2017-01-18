@@ -101,7 +101,7 @@
 	[historySplitView setHidden:YES];
 	[self performSelector:@selector(restoreSplitViewPositiion) withObject:nil afterDelay:0];
 
-	[upperToolbarView setTopShade:237/255.0 bottomShade:216/255.0];
+	[upperToolbarView setTopShade:237/255.0f bottomShade:216/255.0f];
 	[scopeBarView setTopColor:[NSColor colorWithCalibratedHue:0.579 saturation:0.068 brightness:0.898 alpha:1.000] 
 				  bottomColor:[NSColor colorWithCalibratedHue:0.579 saturation:0.119 brightness:0.765 alpha:1.000]];
 	[self updateBranchFilterMatrix];
@@ -490,15 +490,15 @@
 	if (oldIndex == NSNotFound)
 		oldIndex = 0;
 
-	NSInteger newIndex = [[commitController selectionIndexes] firstIndex];
+	NSInteger newIndex = commitController.selectionIndexes.firstIndex;
 
 	if (newIndex > oldIndex) {
-        CGFloat sviewHeight = [[commitList superview] bounds].size.height;
-        CGFloat rowHeight = [commitList rowHeight];
-		NSInteger visibleRows = roundf(sviewHeight / rowHeight );
+        CGFloat sviewHeight = commitList.superview.bounds.size.height;
+        CGFloat rowHeight = commitList.rowHeight;
+		NSInteger visibleRows = lround(sviewHeight / rowHeight);
 		newIndex += (visibleRows - 1);
-		if (newIndex >= [[commitController content] count])
-			newIndex = [[commitController content] count] - 1;
+		if (newIndex >= [commitController.content count])
+			newIndex = [commitController.content count] - 1;
 	}
 
     if (newIndex != oldIndex) {
@@ -705,15 +705,15 @@
 // NSSplitView does not save and restore the position of the SplitView correctly so do it manually
 - (void)saveSplitViewPosition
 {
-	float position = [[[historySplitView subviews] objectAtIndex:0] frame].size.height;
-	[[NSUserDefaults standardUserDefaults] setFloat:position forKey:kHistorySplitViewPositionDefault];
+	CGFloat position = [[historySplitView subviews] objectAtIndex:0].frame.size.height;
+	[[NSUserDefaults standardUserDefaults] setDouble:position forKey:kHistorySplitViewPositionDefault];
 	[[NSUserDefaults standardUserDefaults] synchronize];
 }
 
 // make sure this happens after awakeFromNib
 - (void)restoreSplitViewPositiion
 {
-	float position = [[NSUserDefaults standardUserDefaults] floatForKey:kHistorySplitViewPositionDefault];
+	CGFloat position = [[NSUserDefaults standardUserDefaults] doubleForKey:kHistorySplitViewPositionDefault];
 	if (position < 1.0)
 		position = 175;
 

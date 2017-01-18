@@ -371,7 +371,8 @@
 	int index = -1;
 	if ([cell respondsToSelector:@selector(indexAtX:)]) {
 		NSRect cellFrame = [tv frameOfCellAtColumn:column row:row];
-		index = [cell indexAtX:(location.x - cellFrame.origin.x)];
+		CGFloat deltaX = location.x - cellFrame.origin.x;
+		index = [cell indexAtX:deltaX];
 	}
 	
 	if (index != -1) {

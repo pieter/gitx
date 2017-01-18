@@ -289,7 +289,7 @@ const BOOL SHUFFLE_COLORS = NO;
 	[[ref shortName] drawInRect:rect withAttributes:attributes];
 }
 
-- (void) drawRefsInRect: (NSRect *)refRect
+- (void) drawRefsInRect:(NSRect *)refRect
 {
 	[[NSColor blackColor] setStroke];
 
@@ -312,7 +312,7 @@ const BOOL SHUFFLE_COLORS = NO;
     }
 }
 
-- (void) drawWithFrame: (NSRect) rect inView:(NSView *)view
+- (void) drawWithFrame:(NSRect)rect inView:(NSView *)view
 {
 	cellInfo = [self.objectValue lineInfo];
 	
@@ -326,7 +326,7 @@ const BOOL SHUFFLE_COLORS = NO;
 		struct PBGitGraphLine *lines = cellInfo.lines;
 		for (i = 0; i < cellInfo.nLines; i++) {
 			if (lines[i].upper == 0)
-				[self drawLineFromColumn: lines[i].from toColumn: lines[i].to inRect:ownRect offset: ownRect.size.height color: lines[i].colorIndex];
+				[self drawLineFromColumn: lines[i].from toColumn: lines[i].to inRect:ownRect offset: (int)ownRect.size.height color: lines[i].colorIndex];
 			else
 				[self drawLineFromColumn: lines[i].from toColumn: lines[i].to inRect:ownRect offset: 0 color:lines[i].colorIndex];
 		}
@@ -357,7 +357,7 @@ const BOOL SHUFFLE_COLORS = NO;
     return [[super objectValue] nonretainedObjectValue];
 }
 
-- (int) indexAtX:(float)x
+- (int) indexAtX:(CGFloat)x
 {
 	cellInfo = [self.objectValue lineInfo];
 	float pathWidth = 0;
