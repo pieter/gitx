@@ -63,12 +63,14 @@ table.diff {
 
 .diff .hunkbutton {
 	min-width: 5em;
-	padding: 3px 0;
+	padding: 2px 0;
+	border: 1px solid #9abbea;
     top: 4px;
 	margin-bottom: 4px;
 	margin-right: 3px;
 	float: right;
 	position: relative;
+	box-sizing: border-box;
 	z-index: 1;
 
 	background-color: #cce5ff;
@@ -94,7 +96,7 @@ table.diff {
     background-color: #7795c7;
 }
 
-#selected #stagelines {
+#selected .hunkbutton {
     background-color: #FFF;
 }
 

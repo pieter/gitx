@@ -189,8 +189,8 @@ var displayDiff = function(diff, cached)
 		if (cached)
 			header.innerHTML = "<a href='#' class='hunkbutton' onclick='addHunk(this, true); return false'>Unstage</a>" + header.innerHTML;
 		else {
-			header.innerHTML = "<a href='#' class='hunkbutton' onclick='addHunk(this, false); return false'>Stage</a>" + header.innerHTML;
 			header.innerHTML = "<a href='#' class='hunkbutton' onclick='discardHunk(this, event); return false'>Discard</a>" + header.innerHTML;
+			header.innerHTML = "<a href='#' class='hunkbutton' onclick='addHunk(this, false); return false'>Stage</a>" + header.innerHTML;
 		}
 	}
 	setSelectHandlers();
@@ -456,11 +456,13 @@ var showSelection = function(file, from, to, trust)
 				   (originalCached?"Uns":"S")+"tage"));
 	button.setAttribute("class","hunkbutton");
 	button.setAttribute("id","stagelines");
+	
 	var copy_button = document.createElement('a');
 	copy_button.setAttribute("href","#");
 	copy_button.appendChild(document.createTextNode("Copy"));
 	copy_button.setAttribute("class","hunkbutton");
 	copy_button.setAttribute("id","copylines");
+	
 	var buttons_div = document.createElement('div');
 	buttons_div.appendChild(button);
 	buttons_div.appendChild(copy_button);
