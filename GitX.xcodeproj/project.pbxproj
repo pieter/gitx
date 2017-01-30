@@ -30,7 +30,6 @@
 		4A467EEE1546D1CD00F8902B /* ObjectiveGit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4A4EF0AF142CBAD5001B8CDF /* ObjectiveGit.framework */; };
 		4A4EF0BB142CBBC2001B8CDF /* ObjectiveGit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4A4EF0AF142CBAD5001B8CDF /* ObjectiveGit.framework */; };
 		4A5D75C114A9A90500DF6C68 /* Credits.html in Resources */ = {isa = PBXBuildFile; fileRef = 4A5D757D14A9A90500DF6C68 /* Credits.html */; };
-		4A5D75C214A9A90500DF6C68 /* gitx.icns in Resources */ = {isa = PBXBuildFile; fileRef = 4A5D757E14A9A90500DF6C68 /* gitx.icns */; };
 		4A5D75DE14A9A90500DF6C68 /* mainSplitterBar.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 4A5D759B14A9A90500DF6C68 /* mainSplitterBar.tiff */; };
 		4A5D75DF14A9A90500DF6C68 /* mainSplitterDimple.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 4A5D759C14A9A90500DF6C68 /* mainSplitterDimple.tiff */; };
 		4A5D75E214A9A90500DF6C68 /* Updates.png in Resources */ = {isa = PBXBuildFile; fileRef = 4A5D75A014A9A90500DF6C68 /* Updates.png */; };
@@ -183,6 +182,7 @@
 		A2F8D0DF17AAB32500580B84 /* PBGitStash.m in Sources */ = {isa = PBXBuildFile; fileRef = A2F8D0DE17AAB32500580B84 /* PBGitStash.m */; };
 		A2F8D0EB17AAB95E00580B84 /* PBGitSVStashItem.m in Sources */ = {isa = PBXBuildFile; fileRef = A2F8D0EA17AAB95E00580B84 /* PBGitSVStashItem.m */; };
 		BF42F1331E025403004769FF /* GitXTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = BF42F1321E025403004769FF /* GitXTextView.m */; };
+		BFFCB5471E3EFA9F00E0B254 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BFFCB5461E3EFA9F00E0B254 /* Images.xcassets */; };
 		D87127011229A21C00012334 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D87127001229A21C00012334 /* QuartzCore.framework */; };
 		D89E9B141218BA260097A90B /* ScriptingBridge.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D89E9AB21218A9DA0097A90B /* ScriptingBridge.framework */; };
 		D8E3B2B810DC9FB2001096A3 /* ScriptingBridge.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D8E3B2B710DC9FB2001096A3 /* ScriptingBridge.framework */; };
@@ -633,6 +633,7 @@
 		A2F8D0EA17AAB95E00580B84 /* PBGitSVStashItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PBGitSVStashItem.m; sourceTree = "<group>"; };
 		BF42F1321E025403004769FF /* GitXTextView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GitXTextView.m; sourceTree = "<group>"; };
 		BF42F1431E025411004769FF /* GitXTextView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GitXTextView.h; sourceTree = "<group>"; };
+		BFFCB5461E3EFA9F00E0B254 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		D87127001229A21C00012334 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		D89E9AB21218A9DA0097A90B /* ScriptingBridge.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ScriptingBridge.framework; path = System/Library/Frameworks/ScriptingBridge.framework; sourceTree = SDKROOT; };
 		D8E3B2B710DC9FB2001096A3 /* ScriptingBridge.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ScriptingBridge.framework; path = /System/Library/Frameworks/ScriptingBridge.framework; sourceTree = "<absolute>"; };
@@ -748,6 +749,7 @@
 				4A90A72914A9C12F00D0DA02 /* GitX_Prefix.pch */,
 				F5D619ED0EAE62EA00341D73 /* html */,
 				4A5D758114A9A90500DF6C68 /* Images */,
+				BFFCB5461E3EFA9F00E0B254 /* Images.xcassets */,
 				4A5D75B414A9A90500DF6C68 /* Info.plist */,
 				4A5D75B514A9A90500DF6C68 /* source.css */,
 				4A5D75B714A9A90500DF6C68 /* UpdateKey.pem */,
@@ -1328,6 +1330,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				913D5E500E55645900CECEA2 /* gitx in Resources */,
+				BFFCB5471E3EFA9F00E0B254 /* Images.xcassets in Resources */,
 				551BF176112F3F4B00265053 /* gitx_askpasswd in Resources */,
 				978357C5189C238300ADC689 /* DetailViewTemplate.pdf in Resources */,
 				4A5D75C114A9A90500DF6C68 /* Credits.html in Resources */,
@@ -1335,7 +1338,6 @@
 				978357A7189C05B100ADC689 /* FolderTemplate.pdf in Resources */,
 				978357A6189C05B100ADC689 /* FolderClosedTemplate.pdf in Resources */,
 				978357BB189C19A000ADC689 /* FetchTemplate.pdf in Resources */,
-				4A5D75C214A9A90500DF6C68 /* gitx.icns in Resources */,
 				978357AE189C074500ADC689 /* RemoteBranchTemplate.pdf in Resources */,
 				97CF01F918A6C5BB00E30F2B /* deleted_file.pdf in Resources */,
 				978357B0189C074500ADC689 /* StageTemplate.pdf in Resources */,
@@ -1661,6 +1663,7 @@
 		26FC0A850875C7B200E6366F /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-gitx";
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = "\"$(PROJECT_DIR)\"";
 				GCC_DYNAMIC_NO_PIC = NO;
@@ -1679,6 +1682,7 @@
 		26FC0A860875C7B200E6366F /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-gitx";
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = "\"$(PROJECT_DIR)\"";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
