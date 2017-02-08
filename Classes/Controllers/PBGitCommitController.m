@@ -640,11 +640,20 @@ BOOL shouldTrashInsteadOfDiscardAnyFileIn(NSArray <PBChangedFile *> *files)
 		return filesForStaging.count > 0 && canDiscardAnyFileIn(filesForStaging);
 	}
 	else if (menuItem.action == @selector(openFilesAction:)) {
-		menuItem.title = PBLocalizedStringForArray(selectedFiles,
-												   NSLocalizedString(@"Open “%@”", @"Open File menu item (single file with name)"),
-												   NSLocalizedString(@"Open %i Files", @"Open File menu item (multiple files with number)"),
-												   NSLocalizedString(@"Open", @"Open File menu item (empty selection)"));
-		return selectedFiles.count > 0;
+		if (selectedFiles.count > 0) {
+			NSString *filePath = selectedFiles.firstObject.path;
+			if (selectedFiles.count == 1 && [self.repository submoduleAtPath:filePath error:NULL] != nil) {
+				menuItem.title = [NSString stringWithFormat:NSLocalizedString(@"Open Submodule “%@” in GitX", @"Open Submodule Repository in GitX menu item (single file with name)"),
+								  filePath.stringByStandardizingPath];
+			} else {
+				menuItem.title = PBLocalizedStringForArray(selectedFiles,
+														   NSLocalizedString(@"Open “%@”", @"Open File menu item (single file with name)"),
+														   NSLocalizedString(@"Open %i Files", @"Open File menu item (multiple files with number)"),
+														   NSLocalizedString(@"Open", @"Open File menu item (empty selection)"));
+			}
+			return YES;
+		}
+		return NO;
 	}
 	else if (menuItem.action == @selector(ignoreFilesAction:)) {
 		menuItem.title = PBLocalizedStringForArray(selectedFiles,

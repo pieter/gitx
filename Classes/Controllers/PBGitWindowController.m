@@ -376,11 +376,35 @@
 	return URLs;
 }
 
++ (void) openSubmoduleInGitX:(GTSubmodule * _Nonnull) submodule
+{
+	NSURL *submoduleURL = [submodule.parentRepository.fileURL URLByAppendingPathComponent:submodule.path isDirectory:YES];
+	[[NSDocumentController sharedDocumentController] openDocumentWithContentsOfURL:submoduleURL
+																		   display:YES
+																 completionHandler:^(NSDocument * _Nullable document, BOOL documentWasAlreadyOpen, NSError * _Nullable error) {
+																	 // Do nothing on completion.
+																	 return;
+																 }];
+}
+
 - (IBAction)openFilesAction:(id)sender
 {
 	NSArray *URLs = [self selectedURLsFromSender:sender];
 
-	[self openURLs:URLs];
+	if ([URLs count] == 0)
+		return;
+
+	NSMutableArray *fileURLs = [NSMutableArray array];
+	for (NSURL *fileURL in URLs) {
+		GTSubmodule *submodule = [self.repository submoduleAtPath:fileURL.path error:NULL];
+		if (submodule != nil) {
+			[self.class openSubmoduleInGitX:submodule];
+			continue;
+		}
+		[fileURLs addObject:fileURL];
+	}
+
+	[self openURLs:fileURLs];
 }
 
 - (IBAction)showInFinderAction:(id)sender
