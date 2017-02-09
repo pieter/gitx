@@ -169,23 +169,30 @@
                                     <action selector="copy:" target="-1" id="181"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Copy short SHA" alternate="YES" keyEquivalent="c" id="Q6u-9U-Mue">
-                                <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
-                                <connections>
-                                    <action selector="copyShortName:" target="-1" id="feT-ND-ZxS"/>
-                                </connections>
-                            </menuItem>
-                            <menuItem title="Copy full SHA" alternate="YES" keyEquivalent="C" id="964">
-                                <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
-                                <connections>
-                                    <action selector="copySHA:" target="-1" id="966"/>
-                                </connections>
-                            </menuItem>
-                            <menuItem title="Copy Patch" alternate="YES" keyEquivalent="c" id="ZiX-Nf-qba">
-                                <modifierMask key="keyEquivalentModifierMask" control="YES" option="YES" command="YES"/>
-                                <connections>
-                                    <action selector="copyPatch:" target="-1" id="vCt-5K-3aG"/>
-                                </connections>
+                            <menuItem title="Copy As" id="2CQ-ZD-RrO">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <menu key="submenu" title="Copy As" id="RnK-23-C6S">
+                                    <items>
+                                        <menuItem title="Short SHA" keyEquivalent="c" id="Z5d-Br-R3f">
+                                            <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
+                                            <connections>
+                                                <action selector="copyShortName:" target="-1" id="xNJ-mK-bok"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Full SHA" keyEquivalent="C" id="ga6-fl-0Fb">
+                                            <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
+                                            <connections>
+                                                <action selector="copySHA:" target="-1" id="U5K-pv-qz0"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Patch" keyEquivalent="c" id="1Lm-2I-i9S">
+                                            <modifierMask key="keyEquivalentModifierMask" control="YES" option="YES" command="YES"/>
+                                            <connections>
+                                                <action selector="copyPatch:" target="-1" id="1ME-xY-B5B"/>
+                                            </connections>
+                                        </menuItem>
+                                    </items>
+                                </menu>
                             </menuItem>
                             <menuItem title="Paste" keyEquivalent="v" id="171">
                                 <connections>

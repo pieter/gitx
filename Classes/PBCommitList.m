@@ -47,22 +47,35 @@
 		[super keyDown: event];
 }
 
-- (void) copy:(id)sender
+
+
+- (BOOL) validateUserInterfaceItem:(id<NSValidatedUserInterfaceItem>)item {
+	if (item.action == @selector(copy:)
+		|| item.action == @selector(copySHA:)
+		|| item.action == @selector(copyShortName:)
+		|| item.action == @selector(copyPatch:)) {
+		return controller.commitController.selectedObjects.count > 0;
+	}
+	
+	return [super validateUserInterfaceItem:item];
+}
+
+- (IBAction) copy:(id)sender
 {
 	[controller copyCommitInfo];
 }
 
-- (void) copySHA:(id)sender
+- (IBAction) copySHA:(id)sender
 {
 	[controller copyCommitSHA];
 }
 
-- (void) copyShortName:(id)sender
+- (IBAction) copyShortName:(id)sender
 {
 	[controller copyCommitShortName];
 }
 
-- (void) copyPatch:(id)sender
+- (IBAction) copyPatch:(id)sender
 {
 	[controller copyCommitPatch];
 }
