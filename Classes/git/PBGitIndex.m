@@ -46,15 +46,6 @@ NS_ENUM(NSUInteger, PBGitIndexOperation) {
 	dispatch_group_t _indexRefreshGroup;
 }
 
-// Returns the tree to compare the index to, based
-// on whether amend is set or not.
-- (NSString *) parentTree;
-- (void)postCommitUpdate:(NSString *)update;
-- (void)postCommitFailure:(NSString *)reason;
-- (void)postCommitHookFailure:(NSString *)reason;
-- (void)postIndexChange;
-- (void)postOperationFailed:(NSString *)description;
-
 @property (retain) NSDictionary *amendEnvironment;
 @property (retain) NSMutableArray *files;
 @property (assign) BOOL amend;
@@ -126,6 +117,37 @@ NS_ENUM(NSUInteger, PBGitIndexOperation) {
 	return _amend;
 }
 
+
+- (void)postIndexRefreshFinished {
+	dispatch_async(dispatch_get_main_queue(), ^{
+		[[NSNotificationCenter defaultCenter] postNotificationName:PBGitIndexFinishedIndexRefresh object:self];
+	});
+}
+
+// A multi-purpose notification sender for a refresh operation
+// TODO: make -refresh take a completion handler, an NSError or *anything else*
+- (void)postIndexRefreshStatus:(BOOL)failed message:(nullable NSString *)message {
+	dispatch_async(dispatch_get_main_queue(), ^{
+		if (failed) {
+			[[NSNotificationCenter defaultCenter] postNotificationName:PBGitIndexIndexRefreshFailed
+																object:self
+															  userInfo:@{@"description": message}];
+		} else {
+			[[NSNotificationCenter defaultCenter] postNotificationName:PBGitIndexIndexRefreshStatus
+																object:self
+															  userInfo:@{@"description": message}];
+		}
+	});
+
+	[self postIndexUpdated];
+}
+
+- (void)postIndexUpdated {
+	dispatch_async(dispatch_get_main_queue(), ^{
+		[[NSNotificationCenter defaultCenter] postNotificationName:PBGitIndexIndexUpdated object:self];
+	});
+}
+
 - (void)refresh
 {
 	dispatch_group_enter(_indexRefreshGroup);
@@ -135,24 +157,19 @@ NS_ENUM(NSUInteger, PBGitIndexOperation) {
 					 arguments:@[@"update-index", @"-q", @"--unmerged", @"--ignore-missing", @"--refresh"]
 				   inDirectory:self.repository.workingDirectoryURL.path
 			 terminationHandler:^(NSTask *task, NSError *error) {
-				 if (task.terminationStatus != 0)
-				 {
-					 [[NSNotificationCenter defaultCenter] postNotificationName:PBGitIndexIndexRefreshFailed
-																		 object:self
-																	   userInfo:@{@"description": @"update-index failed"}];
+				 if (error || task.terminationStatus != 0) {
+					 [self postIndexRefreshStatus:NO message:@"update-index failed"];
 				 } else {
-					 [[NSNotificationCenter defaultCenter] postNotificationName:PBGitIndexIndexRefreshStatus
-																		 object:self
-																	   userInfo:@{@"description": @"update-index success"}];
+					 [self postIndexRefreshStatus:YES message:@"update-index success"];
 				 }
 
-				 [self postIndexChange];
 				 dispatch_group_leave(_indexRefreshGroup);
 			 }];
 
 
 	// This block is called when each of the other blocks scheduled are done,
-	// which means we can delete all files previously marked as deletable
+	// which means we can delete all files previously marked as deletable.
+	// Note, there are scheduled blocks *below* this one ;-).
 	dispatch_group_notify(_indexRefreshGroup, dispatch_get_main_queue(), ^{
 
 		// At this point, all index operations have finished.
@@ -172,9 +189,7 @@ NS_ENUM(NSUInteger, PBGitIndexOperation) {
 			[self didChangeValueForKey:@"indexChanges"];
 		}
 
-		[[NSNotificationCenter defaultCenter] postNotificationName:PBGitIndexFinishedIndexRefresh
-															object:self];
-		[self postIndexChange];
+		[self postIndexRefreshFinished];
 	});
 
 	if ([self.repository isBareRepository])
@@ -188,20 +203,24 @@ NS_ENUM(NSUInteger, PBGitIndexOperation) {
 					 arguments:@[@"ls-files", @"--others", @"--exclude-standard", @"-z"]
 				   inDirectory:self.repository.workingDirectoryURL.path
 			 completionHandler:^(NSTask *task, NSData *readData, NSError *error) {
-				 NSArray *lines = [self linesFromData:readData];
-				 NSMutableDictionary *dictionary = [[NSMutableDictionary alloc] initWithCapacity:[lines count]];
-				 // Other files are untracked, so we don't have any real index information. Instead, we can just fake it.
-				 // The line below is not used at all, as for these files the commitBlob isn't set
-				 NSArray *fileStatus = [NSArray arrayWithObjects:@":000000", @"100644", @"0000000000000000000000000000000000000000", @"0000000000000000000000000000000000000000", @"A", nil];
-				 for (NSString *path in lines) {
-					 if ([path length] == 0)
-						 continue;
-					 [dictionary setObject:fileStatus forKey:path];
+				 if (error || task.terminationStatus != 0) {
+					 [self postIndexRefreshStatus:NO message:@"ls-files failed"];
+				 } else {
+					 NSArray *lines = [self linesFromData:readData];
+					 NSMutableDictionary *dictionary = [[NSMutableDictionary alloc] initWithCapacity:[lines count]];
+					 // Other files are untracked, so we don't have any real index information. Instead, we can just fake it.
+					 // The line below is not used at all, as for these files the commitBlob isn't set
+					 NSArray *fileStatus = [NSArray arrayWithObjects:@":000000", @"100644", @"0000000000000000000000000000000000000000", @"0000000000000000000000000000000000000000", @"A", nil];
+					 for (NSString *path in lines) {
+						 if ([path length] == 0)
+							 continue;
+						 [dictionary setObject:fileStatus forKey:path];
+					 }
+
+					 [self addFilesFromDictionary:dictionary staged:NO tracked:NO];
 				 }
 
-				 [self addFilesFromDictionary:dictionary staged:NO tracked:NO];
-
-				 [self postIndexChange];
+				 [self postIndexRefreshStatus:YES message:@"ls-files success"];
 				 dispatch_group_leave(_indexRefreshGroup);
 			 }];
 
@@ -211,11 +230,16 @@ NS_ENUM(NSUInteger, PBGitIndexOperation) {
 					 arguments:@[@"diff-index", @"--cached", @"-z", [self parentTree]]
 				   inDirectory:self.repository.workingDirectoryURL.path
 			 completionHandler:^(NSTask *task, NSData *readData, NSError *error) {
-				 NSArray *lines = [self linesFromData:readData];
-				 NSMutableDictionary *dic = [self dictionaryForLines:lines];
-				 [self addFilesFromDictionary:dic staged:YES tracked:YES];
+				 if (error || task.terminationStatus != 0) {
+					 [self postIndexRefreshStatus:NO message:@"diff-index failed"];
+				 } else {
+					 NSArray *lines = [self linesFromData:readData];
+					 NSMutableDictionary *dic = [self dictionaryForLines:lines];
+					 [self addFilesFromDictionary:dic staged:YES tracked:YES];
+				 }
 
-				 [self postIndexChange];
+				 [self postIndexRefreshStatus:YES message:@"diff-index success"];
+
 				 dispatch_group_leave(_indexRefreshGroup);
 			 }];
 
@@ -225,15 +249,21 @@ NS_ENUM(NSUInteger, PBGitIndexOperation) {
 					 arguments:@[@"diff-files", @"-z"]
 				   inDirectory:self.repository.workingDirectoryURL.path
 			 completionHandler:^(NSTask *task, NSData *readData, NSError *error) {
-				 NSArray *lines = [self linesFromData:readData];
-				 NSMutableDictionary *dic = [self dictionaryForLines:lines];
-				 [self addFilesFromDictionary:dic staged:NO tracked:YES];
+				 if (error || task.terminationStatus != 0) {
+					 [self postIndexRefreshStatus:NO message:@"diff-files failed"];
+				 } else {
+					 NSArray *lines = [self linesFromData:readData];
+					 NSMutableDictionary *dic = [self dictionaryForLines:lines];
+					 [self addFilesFromDictionary:dic staged:NO tracked:YES];
+				 }
+				 [self postIndexRefreshStatus:NO message:@"diff-files success"];
 
-				 [self postIndexChange];
 				 dispatch_group_leave(_indexRefreshGroup);
 			 }];
 }
 
+// Returns the tree to compare the index to, based
+// on whether amend is set or not.
 - (NSString *) parentTree
 {
 	NSString *parent = self.amend ? @"HEAD^" : @"HEAD";
@@ -440,8 +470,8 @@ NS_ENUM(NSUInteger, PBGitIndexOperation) {
 		if (loopTo > filesCount)
 			loopTo = filesCount;
 	}
-	
-	[self postIndexChange];
+
+	[self postIndexUpdated];
 	
 	return YES;
 }
@@ -475,7 +505,7 @@ NS_ENUM(NSUInteger, PBGitIndexOperation) {
 		if (file.status != NEW)
 			file.hasUnstagedChanges = NO;
 
-	[self postIndexChange];
+	[self postIndexUpdated];
 }
 
 - (BOOL)applyPatch:(NSString *)hunk stage:(BOOL)stage reverse:(BOOL)reverse;
@@ -529,13 +559,6 @@ NS_ENUM(NSUInteger, PBGitIndexOperation) {
 	}
 
 	return [self.repository outputInWorkdirForArguments:[NSArray arrayWithObjects:@"diff-files", parameter, @"--", file.path, nil]];
-}
-
-- (void)postIndexChange
-{
-	dispatch_async(dispatch_get_main_queue(), ^{
-		[[NSNotificationCenter defaultCenter] postNotificationName:PBGitIndexIndexUpdated object:self];
-	});
 }
 
 # pragma mark WebKit Accessibility
