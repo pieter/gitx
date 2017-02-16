@@ -331,6 +331,7 @@
 
 - (void)setSearchMode:(PBHistorySearchMode)mode
 {
+	searchMode = mode;
 	[PBGitDefaults setHistorySearchMode:mode];
 
 	[self updateSearchMenuState];
