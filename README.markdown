@@ -1,5 +1,7 @@
 # What is GitX?
 
+[![Build Status](https://travis-ci.org/gitx/gitx.svg?branch=master)](https://travis-ci.org/gitx/gitx)
+
 GitX is an OS X (MacOS) native graphical client for the `git` version
 control system.
 
