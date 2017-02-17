@@ -52,7 +52,6 @@ NSString *PBGitRepositoryDocumentType = @"Git Repository";
 		return NO;
 	}
 
-	[_repository setDocument:self];
 
 	return YES;
 }

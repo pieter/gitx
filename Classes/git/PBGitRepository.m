@@ -94,15 +94,6 @@
 }
 
 #pragma mark -
-#pragma mark Backward-compatibility
-// PBGitRepository is responsible for both repository actions and document management
-// This is here for the time being while the controller code gets updated to use PBGitRepositoryDocument.
-
-- (PBGitWindowController *)windowController {
-	return _document.windowController;
-}
-
-#pragma mark -
 #pragma mark Properties/General methods
 
 - (NSURL *)getIndexURL

@@ -32,14 +32,13 @@ typedef enum branchFilterTypes {
 @class PBGitRepositoryWatcher;
 @class GTSubmodule;
 
-@interface PBGitRepository : NSDocument
+@interface PBGitRepository : NSObject
 
 @property (nonatomic, weak) PBGitRepositoryDocument *document; // Backward-compatibility while PBGitRepository gets "modelized";
 
 @property (nonatomic, assign) BOOL hasChanged;
 @property (nonatomic, assign) NSInteger currentBranchFilter;
 
-@property (readonly, strong) PBGitWindowController *windowController;
 @property (readonly, getter = getIndexURL) NSURL* indexURL;
 
 @property (nonatomic, strong) PBGitHistoryList *revisionList;
