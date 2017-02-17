@@ -95,14 +95,15 @@
 		return;
 	}
 
-	[self closeCreateBranchSheet:self];
+	PBCreateBranchSheet *ownRef = self; // ensures self exists after close
+	[ownRef closeCreateBranchSheet:ownRef];
 
-	[self.repository createBranch:name atRefish:self.startRefish];
+	[self.repository createBranch:name atRefish:ownRef.startRefish];
 	
-	[PBGitDefaults setShouldCheckoutBranch:self.shouldCheckoutBranch];
+	[PBGitDefaults setShouldCheckoutBranch:ownRef.shouldCheckoutBranch];
 
-	if (self.shouldCheckoutBranch)
-		[self.repository checkoutRefish:ref];
+	if (ownRef.shouldCheckoutBranch)
+		[ownRef.repository checkoutRefish:ref];
 }
 
 
