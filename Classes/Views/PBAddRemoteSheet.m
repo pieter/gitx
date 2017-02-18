@@ -95,8 +95,7 @@
 
 - (IBAction) cancelOperation:(id)sender
 {
-//	[super cancelOperation:sender];
-	[self hide];
+	[self cancelSheet:sender];
 }
 
 @end
