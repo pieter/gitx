@@ -15,8 +15,6 @@
 
 
 @interface PBCreateTagSheet : RJModalRepoSheet
-{
-}
 
 + (void) beginCreateTagSheetAtRefish:(id <PBGitRefish>)refish inRepository:(PBGitRepository *)repo;
 
