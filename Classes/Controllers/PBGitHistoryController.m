@@ -638,17 +638,6 @@
 
 #pragma mark Repository Methods
 
-- (IBAction) createBranch:(id)sender
-{
-	PBGitRef *currentRef = [repository.currentBranch ref];
-	
-	PBGitCommit *selectedCommit = self.selectedCommits.firstObject;
-	if (!selectedCommits.firstObject || [selectedCommit hasRef:currentRef])
-		[PBCreateBranchSheet beginSheetWithRefish:currentRef windowController:self.windowController];
-	else
-		[PBCreateBranchSheet beginSheetWithRefish:selectedCommit windowController:self.windowController];
-}
-
 - (IBAction) createTag:(id)sender
 {
 	PBGitCommit *selectedCommit = self.selectedCommits.firstObject;

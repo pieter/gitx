@@ -33,7 +33,6 @@
 - (IBAction) merge:(PBRefMenuItem *)sender;
 - (IBAction) cherryPick:(PBRefMenuItem *)sender;
 - (IBAction) rebaseHeadBranch:(PBRefMenuItem *)sender;
-- (IBAction) createBranch:(PBRefMenuItem *)sender;
 - (IBAction) copySHA:(PBRefMenuItem *)sender;
 - (IBAction) copyShortSHA:(PBRefMenuItem *)sender;
 - (IBAction) copyPatch:(PBRefMenuItem *)sender;

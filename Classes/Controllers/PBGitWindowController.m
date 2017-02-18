@@ -13,13 +13,15 @@
 #import "PBCommitHookFailedSheet.h"
 #import "PBGitXMessageSheet.h"
 #import "PBGitSidebarController.h"
-#import "RJModalRepoSheet.h"
 #import "PBAddRemoteSheet.h"
+#import "PBCreateBranchSheet.h"
+#import "PBGitDefaults.h"
 #import "PBSourceViewItem.h"
 #import "PBGitRevSpecifier.h"
 #import "PBGitRef.h"
 #import "PBError.h"
 #import "PBRepositoryDocumentController.h"
+#import "PBRefMenuItem.h"
 
 @implementation PBGitWindowController
 
@@ -390,6 +392,44 @@
 - (IBAction) refresh:(id)sender
 {
 	[contentController refresh:self];
+}
+
+- (void) createBranch:(id)sender
+{
+	PBGitRef *currentRef = [repository.currentBranch ref];
+
+	id <PBGitRefish> refish = nil;
+	if ([sender isKindOfClass:[PBRefMenuItem class]]) {
+		refish = [[(PBRefMenuItem *)sender refishs] firstObject];
+	} else {
+		PBGitCommit *selectedCommit = sidebarController.historyViewController.selectedCommits.firstObject;
+		if (!selectedCommit || [selectedCommit hasRef:currentRef]) {
+			refish = currentRef;
+		} else {
+			refish = selectedCommit;
+		}
+	}
+
+	[PBCreateBranchSheet beginSheetWithRefish:refish windowController:self completionHandler:^(PBCreateBranchSheet *sheet, NSModalResponse returnCode) {
+		if (returnCode != NSModalResponseOK) return;
+
+		NSError *error = nil;
+		BOOL success = [self.repository createBranch:[sheet.branchNameField stringValue] atRefish:sheet.startRefish error:&error];
+		if (!success) {
+			[self showErrorSheet:error];
+			return;
+		}
+
+		[PBGitDefaults setShouldCheckoutBranch:sheet.shouldCheckoutBranch];
+
+		if (sheet.shouldCheckoutBranch) {
+			success = [self.repository checkoutRefish:sheet.selectedRef error:&error];
+			if (!success) {
+				[self showErrorSheet:error];
+				return;
+			}
+		}
+	}];
 }
 
 @end

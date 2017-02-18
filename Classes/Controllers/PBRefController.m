@@ -198,16 +198,6 @@
 	}
 }
 
-
-#pragma mark Create Branch
-
-- (void) createBranch:(PBRefMenuItem *)sender
-{
-	id <PBGitRefish> refish = sender.refishs.firstObject;
-	[PBCreateBranchSheet beginSheetWithRefish:refish windowController:historyController.windowController];
-}
-
-
 #pragma mark Copy info
 
 - (void) copySHA:(PBRefMenuItem *)sender

@@ -7,21 +7,24 @@
 //
 
 #import <Cocoa/Cocoa.h>
-#import "PBGitRefish.h"
+
 #import "RJModalRepoSheet.h"
 
+@protocol PBGitRefish;
+@class PBGitRef;
 @class PBGitRepositoryDocument;
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface PBCreateBranchSheet : RJModalRepoSheet
 
-+ (void)beginSheetWithRefish:(id <PBGitRefish>)ref windowController:(PBGitWindowController *)windowController;
++ (void)beginSheetWithRefish:(id <PBGitRefish>)ref windowController:(PBGitWindowController *)windowController completionHandler:(nullable RJSheetCompletionHandler)handler;
 
 - (IBAction) createBranch:(nullable id)sender;
 - (IBAction) closeCreateBranchSheet:(nullable id)sender;
 
 @property (nonatomic, strong) id <PBGitRefish> startRefish;
+@property (nonatomic, strong) PBGitRef *selectedRef;
 @property (nonatomic, assign) BOOL shouldCheckoutBranch;
 
 @property (nonatomic, assign) IBOutlet NSTextField *branchNameField;
