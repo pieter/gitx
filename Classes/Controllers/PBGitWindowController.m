@@ -156,7 +156,12 @@
 {
 	[PBCommitHookFailedSheet beginWithMessageText:messageText
 										 infoText:infoText
-								 commitController:controller];
+								 commitController:controller
+	 completionHandler:^(id  _Nonnull sheet, NSModalResponse returnCode) {
+		 if (returnCode != NSModalResponseOK) return;
+
+		 [sidebarController.commitViewController forceCommit:self];
+	 }];
 }
 
 - (void)showMessageSheet:(NSString *)messageText infoText:(NSString *)infoText

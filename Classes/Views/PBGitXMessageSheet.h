@@ -25,8 +25,19 @@
 + (void)beginSheetWithError:(NSError *)error
 		   windowController:(PBGitWindowController *)windowController;
 
++ (void)beginSheetWithMessage:(NSString *)message
+						 info:(NSString *)info
+			 windowController:(PBGitWindowController *)windowController
+			completionHandler:(RJSheetCompletionHandler)handler;
+
++ (void)beginSheetWithError:(NSError *)error
+		   windowController:(PBGitWindowController *)windowController
+		  completionHandler:(RJSheetCompletionHandler)handler;
+
 - (void)beginMessageSheetWithMessageText:(NSString *)message
-								infoText:(NSString *)info;
+								infoText:(NSString *)info
+					   completionHandler:(RJSheetCompletionHandler)handler;
+
 - (IBAction)closeMessageSheet:(id)sender;
 
 
