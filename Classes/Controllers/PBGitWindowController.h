@@ -36,8 +36,6 @@
 - (void)showMessageSheet:(NSString *)messageText infoText:(NSString *)infoText;
 - (void)showErrorSheet:(NSError *)error;
 
-- (void)showModalSheet:(RJModalRepoSheet*)sheet;
-- (void)hideModalSheet:(RJModalRepoSheet*)sheet;
 
 - (void)openURLs:(NSArray <NSURL *> *)fileURLs;
 - (void)revealURLsInFinder:(NSArray <NSURL *> *)fileURLs;

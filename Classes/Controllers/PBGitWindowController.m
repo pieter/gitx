@@ -21,16 +21,9 @@
 #import "PBError.h"
 #import "PBRepositoryDocumentController.h"
 
-@interface PBGitWindowController ()
-
-@property (nonatomic, strong) RJModalRepoSheet* currentModalSheet;
-
-@end
-
 @implementation PBGitWindowController
 
 @synthesize repository;
-@synthesize currentModalSheet;
 
 - (id)initWithRepository:(PBGitRepository*)theRepository displayDefault:(BOOL)displayDefault
 {
@@ -221,28 +214,6 @@
 	[sidebarController setHistorySearch:searchString mode:mode];
 }
 
-- (void)showModalSheet:(RJModalRepoSheet *)sheet
-{
-	if (self.currentModalSheet == nil) {
-		[NSApp beginSheet:[sheet window]
-		   modalForWindow:self.window
-			modalDelegate:sheet
-		   didEndSelector:nil
-			  contextInfo:NULL];
-		self.currentModalSheet = sheet;
-	}
-}
-
-- (void)hideModalSheet:(RJModalRepoSheet *)sheet
-{
-	if (self.currentModalSheet == sheet) {
-		[NSApp endSheet:sheet.window];
-		[sheet.window orderOut:sheet];
-		self.currentModalSheet = nil;
-	} else {
-		assert(self.currentModalSheet == sheet);
-	}
-}
 
 
 - (void)openURLs:(NSArray <NSURL *> *)fileURLs

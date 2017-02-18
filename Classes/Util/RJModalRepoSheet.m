@@ -37,14 +37,36 @@
 	return self.document.repository;
 }
 
-- (void) show
+- (void)beginSheetWithCompletionHandler:(RJSheetCompletionHandler)handler
 {
-	[self.windowController showModalSheet:self];
+	[self.windowController.window beginSheet:self.window completionHandler:^(NSModalResponse returnCode) {
+		if (handler) handler(self, returnCode);
+	}];
 }
 
-- (void) hide
+- (void)endSheetWithReturnCode:(NSModalResponse)returnCode
 {
-	[self.windowController hideModalSheet:self];
+	[self.windowController.window endSheet:self.window returnCode:returnCode];
+}
+
+- (IBAction)acceptSheet:(id)sender
+{
+	[self endSheetWithReturnCode:NSModalResponseOK];
+}
+
+- (IBAction)cancelSheet:(id)sender
+{
+	[self endSheetWithReturnCode:NSModalResponseCancel];
+}
+
+- (void)show
+{
+	[self beginSheetWithCompletionHandler:nil];
+}
+
+- (void)hide
+{
+	[self endSheetWithReturnCode:NSModalResponseAbort];
 }
 
 @end

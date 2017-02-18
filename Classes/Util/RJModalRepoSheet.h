@@ -22,8 +22,14 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (instancetype)initWithWindowNibName:(NSString *)windowNibName windowController:(PBGitWindowController *)windowController;
 
-- (void) show;
-- (void) hide;
+typedef void(^RJSheetCompletionHandler)(id sheet, NSModalResponse returnCode);
+
+- (void)beginSheetWithCompletionHandler:(nullable RJSheetCompletionHandler)handler;
+- (void)show;
+- (void)hide;
+
+- (IBAction)acceptSheet:(nullable id)sender;
+- (IBAction)cancelSheet:(nullable id)sender;
 
 @end
 
