@@ -7,21 +7,20 @@
 //
 
 #import <Cocoa/Cocoa.h>
+
 #import "PBGitRepository.h"
 #import "PBGitWindowController.h"
 
 @interface PBViewController : NSViewController {
+	// FIXME: these ivars must go, but most controller out there access it directly, so, not today
 	__weak PBGitRepository *repository;
 	__weak PBGitWindowController *superController;
-
-	NSString *status;
-	BOOL isBusy;
-	BOOL hasViewLoaded;
 }
 
-@property (weak, readonly)  PBGitRepository *repository;
-@property(copy) NSString *status;
-@property(assign) BOOL isBusy;
+@property (weak, readonly) PBGitRepository *repository;
+@property (weak, readonly) PBGitWindowController *windowController;
+@property (copy) NSString *status;
+@property (assign) BOOL isBusy;
 
 - (id)initWithRepository:(PBGitRepository *)theRepository superController:(PBGitWindowController *)controller;
 
