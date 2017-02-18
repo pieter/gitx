@@ -19,21 +19,21 @@
 #pragma mark -
 #pragma mark PBCreateTagSheet
 
-+ (void) beginSheetWithRefish:(id <PBGitRefish>)refish windowController:(PBGitWindowController *)windowController
++ (void) beginSheetWithRefish:(id <PBGitRefish>)refish windowController:(PBGitWindowController *)windowController completionHandler:(RJSheetCompletionHandler)handler
 {
 	PBCreateTagSheet *sheet = [[self alloc] initWithWindowNibName:@"PBCreateTagSheet" windowController:windowController];
-	[sheet beginCreateTagSheetAtRefish:refish];
+	[sheet beginCreateTagSheetAtRefish:refish completionHandler:handler];
 }
 
 
-- (void) beginCreateTagSheetAtRefish:(id <PBGitRefish>)refish
+- (void) beginCreateTagSheetAtRefish:(id <PBGitRefish>)refish completionHandler:(RJSheetCompletionHandler)handler
 {
-	self.targetRefish  = refish;
+	self.targetRefish = refish;
 
 	[self window];
 	[self.errorMessageField setStringValue:@""];
 
-	[self show];
+	[self beginSheetWithCompletionHandler:handler];
 }
 
 
@@ -60,22 +60,13 @@
 			return;
 		}
 	}
-
-
-	NSString *message = [self.tagMessageText string];
-	NSError *error = nil;
-	BOOL success = [self.repository createTag:tagName message:message atRefish:self.targetRefish error:&error];
-	if (!success) {
-		[self.document.windowController showErrorSheet:error];
-	}
-	
-	[self closeCreateTagSheet:sender];
+	[self acceptSheet:sender];
 }
 
 
 - (IBAction) closeCreateTagSheet:(id)sender
 {
-	[self hide];
+	[self cancelSheet:sender];
 }
 
 

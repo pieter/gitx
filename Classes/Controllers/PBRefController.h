@@ -37,7 +37,6 @@
 - (IBAction) copyShortSHA:(PBRefMenuItem *)sender;
 - (IBAction) copyPatch:(PBRefMenuItem *)sender;
 - (IBAction) diffWithHEAD:(PBRefMenuItem *)sender;
-- (IBAction) createTag:(PBRefMenuItem *)sender;
 - (IBAction) showTagInfoSheet:(PBRefMenuItem *)sender;
 
 @end

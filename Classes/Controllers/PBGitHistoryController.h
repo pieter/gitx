@@ -78,7 +78,6 @@
 - (void)showCommitsFromTree:(id)sender;
 
 // Repository Methods
-- (IBAction) createTag:(id)sender;
 - (IBAction) merge:(id)sender;
 - (IBAction) cherryPick:(id)sender;
 - (IBAction) rebase:(id)sender;

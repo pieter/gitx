@@ -15,6 +15,7 @@
 #import "PBGitSidebarController.h"
 #import "PBAddRemoteSheet.h"
 #import "PBCreateBranchSheet.h"
+#import "PBCreateTagSheet.h"
 #import "PBGitDefaults.h"
 #import "PBSourceViewItem.h"
 #import "PBGitRevSpecifier.h"
@@ -433,6 +434,32 @@
 				[self showErrorSheet:error];
 				return;
 			}
+		}
+	}];
+}
+
+- (void) createTag:(PBRefMenuItem *)sender
+{
+	id <PBGitRefish> refish = nil;
+	if ([sender isKindOfClass:[PBRefMenuItem class]]) {
+		refish = [sender refishs].firstObject;
+	} else {
+		PBGitCommit *selectedCommit = sidebarController.historyViewController.selectedCommits.firstObject;
+		if (selectedCommit)
+			refish = selectedCommit;
+		else
+			refish = repository.currentBranch.ref;
+	}
+
+	[PBCreateTagSheet beginSheetWithRefish:refish windowController:self completionHandler:^(PBCreateTagSheet *sheet, NSModalResponse returnCode) {
+		if (returnCode != NSModalResponseOK) return;
+
+		NSString *tagName = [sheet.tagNameField stringValue];
+		NSString *message = [sheet.tagMessageText string];
+		NSError *error = nil;
+		BOOL success = [self.repository createTag:tagName message:message atRefish:sheet.targetRefish error:&error];
+		if (!success) {
+			[self showErrorSheet:error];
 		}
 	}];
 }

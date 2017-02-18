@@ -290,12 +290,6 @@
 
 #pragma mark Tags
 
-- (void) createTag:(PBRefMenuItem *)sender
-{
-	id <PBGitRefish> refish = [sender refishs].firstObject;
-	[PBCreateTagSheet beginSheetWithRefish:refish windowController:historyController.windowController];
-}
-
 - (void) showTagInfoSheet:(PBRefMenuItem *)sender
 {
 	id<PBGitRefish> refish = sender.refishs.firstObject;

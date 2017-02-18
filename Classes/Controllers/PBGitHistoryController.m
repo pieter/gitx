@@ -638,15 +638,6 @@
 
 #pragma mark Repository Methods
 
-- (IBAction) createTag:(id)sender
-{
-	PBGitCommit *selectedCommit = self.selectedCommits.firstObject;
-	if (!selectedCommit)
-		[PBCreateTagSheet beginSheetWithRefish:[repository.currentBranch ref] windowController:self.windowController];
-	else
-		[PBCreateTagSheet beginSheetWithRefish:selectedCommit windowController:self.windowController];
-}
-
 - (IBAction) merge:(id)sender
 {
 	PBGitCommit *selectedCommit = self.selectedCommits.firstObject;
