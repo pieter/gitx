@@ -13,13 +13,6 @@
 #import "PBGitWindowController.h"
 #import "PBGitRevSpecifier.h"
 
-@interface PBCreateTagSheet ()
-
-- (void) beginCreateTagSheetAtRefish:(id <PBGitRefish>)refish;
-
-@end
-
-
 @implementation PBCreateTagSheet
 
 @synthesize repository;
