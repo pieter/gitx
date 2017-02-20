@@ -55,7 +55,6 @@ typedef enum branchFilterTypes {
 
 - (void)setDocument:(NSDocument *)document; // Backward-compatibility while PBGitRepository gets "modelized";
 
-- (void) cloneRepositoryToPath:(NSString *)path bare:(BOOL)isBare;
 - (void) beginAddRemote:(NSString *)remoteName forURL:(NSString *)remoteURL;
 - (void) beginFetchFromRemoteForRef:(PBGitRef *)ref;
 - (void) beginPullFromRemote:(PBGitRef *)remoteRef forRef:(PBGitRef *)ref rebase:(BOOL)rebase;

@@ -663,20 +663,6 @@
 
 #pragma mark Repository commands
 
-- (void) cloneRepositoryToPath:(NSString *)path bare:(BOOL)isBare
-{
-	if (!path || [path isEqualToString:@""])
-		return;
-
-	NSMutableArray *arguments = [NSMutableArray arrayWithObjects:@"clone", @"--no-hardlinks", @"--", @".", path, nil];
-	if (isBare)
-		[arguments insertObject:@"--bare" atIndex:1];
-
-	NSString *description = [NSString stringWithFormat:@"Cloning the repository %@ to %@", [self projectName], path];
-	NSString *title = @"Cloning Repository";
-	[PBRemoteProgressSheet beginRemoteProgressSheetWithTitle:title description:description arguments:arguments windowController:self.windowController];
-}
-
 - (void) beginAddRemote:(NSString *)remoteName forURL:(NSString *)remoteURL
 {
 	NSArray *arguments = [NSArray arrayWithObjects:@"remote",  @"add", @"-f", remoteName, remoteURL, nil];
