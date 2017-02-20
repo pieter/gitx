@@ -209,7 +209,7 @@ NSString * const kGitXProgressErrorInfo          = @"PBGitXProgressErrorInfo";
 	[info appendString:[self commandDescription]];
 	[info appendString:[self standardOutputDescription]];
 
-	[self.repoWindow showMessageSheet:self.successTitle infoText:info];
+	[self.windowController showMessageSheet:self.successTitle infoText:info];
 }
 
 
@@ -227,7 +227,7 @@ NSString * const kGitXProgressErrorInfo          = @"PBGitXProgressErrorInfo";
 								   nil];
 	NSError *error = [NSError errorWithDomain:PBGitXErrorDomain code:0 userInfo:errorUserInfo];
 
-	[self.repoWindow showErrorSheet:error];
+	[self.windowController showErrorSheet:error];
 }
 
 

@@ -47,7 +47,7 @@
 
 	self.browseSheet = browseSheet;
 	[me hide];
-    [browseSheet beginSheetModalForWindow:me.repoWindow.window
+    [browseSheet beginSheetModalForWindow:me.windowController.window
                         completionHandler:^(NSInteger result) {
                             if (result == NSOKButton) {
                                 NSString* directory = browseSheet.directoryURL.path;

@@ -13,8 +13,8 @@
 
 @interface RJModalRepoSheet : NSWindowController
 
-@property (nonatomic, strong) PBGitRepository* repository;
-@property (nonatomic, strong) PBGitWindowController* repoWindow;
+@property (nonatomic, strong) PBGitRepository *repository;
+@property (nonatomic, strong) PBGitWindowController *windowController;
 
 - (id) initWithWindowNibName:(NSString *)windowNibName forRepo:(PBGitRepository*)repo;
 

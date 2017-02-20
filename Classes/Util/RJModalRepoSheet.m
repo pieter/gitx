@@ -13,9 +13,6 @@
 
 @implementation RJModalRepoSheet
 
-@synthesize repository;
-@synthesize repoWindow;
-
 - (id) initWithWindowNibName:(NSString *)windowNibName forRepo:(PBGitRepository*)repo
 {
 	self = [super initWithWindowNibName:windowNibName];
@@ -23,19 +20,19 @@
 		return nil;
 
 	self.repository = repo;
-	self.repoWindow = repo.windowController;
+	self.windowController = repo.windowController;
 	
 	return self;
 }
 
 - (void) show
 {
-	[repoWindow showModalSheet:self];
+	[self.windowController showModalSheet:self];
 }
 
 - (void) hide
 {
-	[repoWindow hideModalSheet:self];
+	[self.windowController hideModalSheet:self];
 }
 
 @end
