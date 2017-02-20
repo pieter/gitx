@@ -19,42 +19,24 @@ extern NSString * const kGitXProgressErrorInfo;
 @class PBGitWindowController;
 @class PBGitRepository;
 
-@interface PBRemoteProgressSheet : RJModalRepoSheet {
-	NSArray  *arguments;
-	NSString *title;
-	NSString *description;
-	bool hideSuccessScreen;
+@interface PBRemoteProgressSheet : RJModalRepoSheet
 
-	NSTask    *gitTask;
-	NSInteger  returnCode;
++ (void) beginRemoteProgressSheetWithTitle:(NSString *)theTitle
+							   description:(NSString *)theDescription
+								 arguments:(NSArray *)args
+									 inDir:(NSString *)dir
+						  windowController:(PBGitWindowController *)windowController;
 
-	NSTextField         *progressDescription;
-	NSProgressIndicator *progressIndicator;
++ (void) beginRemoteProgressSheetWithTitle:(NSString *)theTitle
+							   description:(NSString *)theDescription
+								 arguments:(NSArray *)args
+						  windowController:(PBGitWindowController *)windowController;
 
-	NSTimer *taskTimer;
-}
-
-+ (void) beginRemoteProgressSheetForArguments:(NSArray *)args
-										title:(NSString *)theTitle
-								  description:(NSString *)theDescription
-										inDir:(NSString *)dir
-							 windowController:(PBGitWindowController *)windowController;
-+ (void) beginRemoteProgressSheetForArguments:(NSArray *)args
-										title:(NSString *)theTitle
-								  description:(NSString *)theDescription
-										inDir:(NSString *)dir
-							 windowController:(PBGitWindowController *)windowController 
-							hideSuccessScreen:(bool)hideSucc;
-
-+ (void) beginRemoteProgressSheetForArguments:(NSArray *)args
-										title:(NSString *)theTitle
-								  description:(NSString *)theDescription
-								 inRepository:(PBGitRepository *)repo;
-+ (void) beginRemoteProgressSheetForArguments:(NSArray *)args
-										title:(NSString *)theTitle
-								  description:(NSString *)theDescription
-								 inRepository:(PBGitRepository *)repo
-							hideSuccessScreen:(bool)hideSucc;
++ (void) beginRemoteProgressSheetWithTitle:(NSString *)theTitle
+							   description:(NSString *)theDescription
+								 arguments:(NSArray *)args
+						 hideSuccessScreen:(BOOL)hideSucc
+						  windowController:(PBGitWindowController *)windowController;
 
 @property  IBOutlet NSTextField         *progressDescription;
 @property  IBOutlet NSProgressIndicator *progressIndicator;

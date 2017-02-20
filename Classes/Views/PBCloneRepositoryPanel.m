@@ -117,11 +117,12 @@
 	
 	NSString *title = NSLocalizedString(@"Cloning Repository", @"Title of clone dialogue while clone is running");
 	NSString *description = [NSString stringWithFormat:NSLocalizedString(@"Cloning repository at: %@", @"Message in clone dialogue while clone is running."), url];
-	[PBRemoteProgressSheet beginRemoteProgressSheetForArguments:arguments
-														  title:title
-													description:description
-														  inDir:nil
-											   windowController:nil/*self?*/];
+	[PBRemoteProgressSheet beginRemoteProgressSheetWithTitle:title
+												 description:description
+												   arguments:arguments
+													   inDir:nil
+											windowController:nil];
+
 }
 
 

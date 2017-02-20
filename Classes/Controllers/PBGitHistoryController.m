@@ -735,18 +735,18 @@
 	
 	PBGitCommit *selectedCommit = self.selectedCommits.firstObject;
 	if (!selectedCommits.firstObject || [selectedCommit hasRef:currentRef])
-		[PBCreateBranchSheet beginCreateBranchSheetAtRefish:currentRef inRepository:self.repository];
+		[PBCreateBranchSheet beginSheetWithRefish:currentRef windowController:self.windowController];
 	else
-		[PBCreateBranchSheet beginCreateBranchSheetAtRefish:selectedCommit inRepository:self.repository];
+		[PBCreateBranchSheet beginSheetWithRefish:selectedCommit windowController:self.windowController];
 }
 
 - (IBAction) createTag:(id)sender
 {
 	PBGitCommit *selectedCommit = self.selectedCommits.firstObject;
 	if (!selectedCommit)
-		[PBCreateTagSheet beginCreateTagSheetAtRefish:[repository.currentBranch ref] inRepository:repository];
+		[PBCreateTagSheet beginSheetWithRefish:[repository.currentBranch ref] windowController:self.windowController];
 	else
-		[PBCreateTagSheet beginCreateTagSheetAtRefish:selectedCommit inRepository:repository];
+		[PBCreateTagSheet beginSheetWithRefish:selectedCommit windowController:self.windowController];
 }
 
 - (IBAction) merge:(id)sender

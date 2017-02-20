@@ -162,16 +162,14 @@
 
 - (void)showMessageSheet:(NSString *)messageText infoText:(NSString *)infoText
 {
-	[PBGitXMessageSheet beginMessageSheetForRepo:self.repository
-								 withMessageText:messageText
-										infoText:infoText];
+	[PBGitXMessageSheet beginSheetWithMessage:messageText info:infoText windowController:self];
 }
 
 - (void)showErrorSheet:(NSError *)error
 {
 	if ([[error domain] isEqualToString:PBGitXErrorDomain])
 	{
-		[PBGitXMessageSheet beginMessageSheetForRepo:self.repository withError:error];
+		[PBGitXMessageSheet beginSheetWithError:error windowController:self];
 	}
 	else
 	{
@@ -273,7 +271,7 @@
 
 - (IBAction) showAddRemoteSheet:(id)sender
 {
-	[[[PBAddRemoteSheet alloc] initWithRepository:self.repository] show];
+	[[[PBAddRemoteSheet alloc] initWithWindowController:self] show];
 }
 
 

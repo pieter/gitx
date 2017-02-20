@@ -9,15 +9,17 @@
 #import "PBAddRemoteSheet.h"
 #import "PBGitWindowController.h"
 #import "PBGitRepository.h"
+#import "PBGitRepositoryDocument.h"
+
 
 @implementation PBAddRemoteSheet
 
 #pragma mark -
 #pragma mark PBAddRemoteSheet
 
-- (id) initWithRepository:(PBGitRepository *)repo
+- (id)initWithWindowController:(PBGitWindowController *)windowController
 {
-	self = [super initWithWindowNibName:@"PBAddRemoteSheet" forRepo:repo];
+	self = [super initWithWindowNibName:@"PBAddRemoteSheet" windowController:windowController];
 	if (!self)
 		return nil;
 
@@ -47,7 +49,7 @@
 
 	self.browseSheet = browseSheet;
 	[me hide];
-    [browseSheet beginSheetModalForWindow:me.windowController.window
+    [browseSheet beginSheetModalForWindow:self.windowController.window
                         completionHandler:^(NSInteger result) {
                             if (result == NSOKButton) {
                                 NSString* directory = browseSheet.directoryURL.path;
@@ -82,6 +84,7 @@
 
 	PBGitRepository* repo = self.repository;
 	[self hide]; // may deallocate self
+
 	[repo beginAddRemote:name forURL:url];
 }
 

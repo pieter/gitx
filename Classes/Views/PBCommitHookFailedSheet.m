@@ -31,7 +31,7 @@
 - (id)initWithWindowNibName:(NSString*)windowNibName
 			  andController:(PBGitCommitController*)controller;
 {
-    self = [self initWithWindowNibName:windowNibName forRepo:controller.repository];
+    self = [self initWithWindowNibName:windowNibName windowController:controller.windowController];
 	if (!self)
 		return nil;
 	

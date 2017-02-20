@@ -30,35 +30,23 @@
 #pragma mark -
 #pragma mark PBGitXMessageSheet
 
-+ (void)beginMessageSheetForRepo:(PBGitRepository *)repo
-				 withMessageText:(NSString *)message
-						infoText:(NSString *)info
+
++ (void)beginSheetWithMessage:(NSString *)message
+						 info:(NSString *)info
+			 windowController:(PBGitWindowController *)windowController
 {
-	PBGitXMessageSheet *sheet = [[self alloc] initWithWindowNibName:@"PBGitXMessageSheet"
-															forRepo:repo];
+	PBGitXMessageSheet *sheet = [[self alloc] initWithWindowNibName:@"PBGitXMessageSheet" windowController:windowController];
 	[sheet beginMessageSheetWithMessageText:message
 								   infoText:info];
 }
 
 
-+ (void)beginMessageSheetForRepo:(PBGitRepository *)repo
-					   withError:(NSError *)error
++ (void)beginSheetWithError:(NSError *)error
+		   windowController:(PBGitWindowController *)windowController
 {
-	PBGitXMessageSheet *sheet = [[self alloc] initWithWindowNibName:@"PBGitXMessageSheet" forRepo:repo];
+	PBGitXMessageSheet *sheet = [[self alloc] initWithWindowNibName:@"PBGitXMessageSheet" windowController:windowController];
 	[sheet beginMessageSheetWithMessageText:[error localizedDescription]
 								   infoText:[error localizedRecoverySuggestion]];
-}
-
-- (id)initWithWindowNibName:(NSString *)windowNibName
-					forRepo:(PBGitRepository *)repo
-{
-	self = [super initWithWindowNibName:windowNibName forRepo:repo];
-	if (!self)
-		return nil;
-	
-	
-	
-	return self;
 }
 
 - (IBAction)closeMessageSheet:(id)sender

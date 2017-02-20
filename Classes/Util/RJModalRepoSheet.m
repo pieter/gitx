@@ -10,19 +10,31 @@
 
 #import "PBGitRepository.h"
 #import "PBGitWindowController.h"
+#import "PBGitRepositoryDocument.h"
 
 @implementation RJModalRepoSheet
 
-- (id) initWithWindowNibName:(NSString *)windowNibName forRepo:(PBGitRepository*)repo
-{
-	self = [super initWithWindowNibName:windowNibName];
-	if (!self)
-		return nil;
+@dynamic document;
 
-	self.repository = repo;
-	self.windowController = repo.windowController;
-	
+- (instancetype)initWithWindowNibName:(NSString *)windowNibName windowController:(nonnull PBGitWindowController *)windowController
+{
+	NSParameterAssert(windowController != nil);
+
+	self = [super initWithWindowNibName:windowNibName owner:self];
+	if (!self) return nil;
+
+	_windowController = windowController;
+
 	return self;
+}
+
+- (PBGitRepositoryDocument *)document {
+	return self.windowController.document;
+}
+
+- (PBGitRepository *)repository
+{
+	return self.document.repository;
 }
 
 - (void) show

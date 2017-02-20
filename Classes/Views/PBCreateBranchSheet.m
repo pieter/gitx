@@ -12,50 +12,35 @@
 #import "PBGitCommit.h"
 #import "PBGitRef.h"
 #import "PBGitWindowController.h"
-
-@interface PBCreateBranchSheet ()
-
-- (void) beginCreateBranchSheetAtRefish:(id <PBGitRefish>)ref inRepository:(PBGitRepository *)repo;
-- (id) initWithRepositoryWindow:(PBGitWindowController*)parent atRefish:(id <PBGitRefish>)ref;
-
-@end
-
+#import "PBGitRepositoryDocument.h"
 
 @implementation PBCreateBranchSheet
-
-
-@synthesize repository;
-@synthesize startRefish;
-@synthesize shouldCheckoutBranch;
-
-@synthesize branchNameField;
-@synthesize errorMessageField;
-
-
 
 #pragma mark -
 #pragma mark PBCreateBranchSheet
 
-+ (void) beginCreateBranchSheetAtRefish:(id <PBGitRefish>)ref inRepository:(PBGitRepository *)repo
++ (void)beginSheetWithRefish:(id <PBGitRefish>)ref windowController:(PBGitWindowController *)windowController
 {
-	PBCreateBranchSheet *sheet = [[self alloc] initWithRepositoryWindow:repo.windowController
-															   atRefish:ref];
-	[sheet beginCreateBranchSheetAtRefish:ref inRepository:repo];
+	PBCreateBranchSheet *sheet = [[self alloc] initWithWindowController:windowController atRefish:ref];
+	[sheet beginCreateBranchSheetAtRefish:ref];
 }
 
-- (id) initWithRepositoryWindow:(PBGitWindowController *)parent atRefish:(id<PBGitRefish>)ref
+
+- (id)initWithWindowController:(PBGitWindowController *)windowController atRefish:(id<PBGitRefish>)ref
 {
-	self = [super initWithWindowNibName:@"PBCreateBranchSheet" forRepo:parent.repository];
+	NSParameterAssert(windowController != nil);
+	NSParameterAssert(ref != nil);
+
+	self = [super initWithWindowNibName:@"PBCreateBranchSheet" windowController:windowController];
 	if (!self)
 		return nil;
-	
-	self.repository = parent.repository;
+
 	self.startRefish = ref;
 	
 	return self;
 }
 
-- (void) beginCreateBranchSheetAtRefish:(id <PBGitRefish>)ref inRepository:(PBGitRepository *)repo
+- (void) beginCreateBranchSheetAtRefish:(id <PBGitRefish>)ref
 {
 	[self window]; // loads the window (if it wasn't already)
 	[self.errorMessageField setStringValue:@""];
