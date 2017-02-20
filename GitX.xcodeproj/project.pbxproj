@@ -354,7 +354,6 @@
 		4A40159614067B6300DB9C07 /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
 		4A40159814067B7A00DB9C07 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
 		4A4EF09F142CBAD5001B8CDF /* ObjectiveGitFramework.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ObjectiveGitFramework.xcodeproj; path = "objective-git/ObjectiveGitFramework.xcodeproj"; sourceTree = "<group>"; };
-		4A52D2CD1558187800B778A5 /* GitX-dev.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = "GitX-dev.html"; path = "updates/GitX-dev.html"; sourceTree = SOURCE_ROOT; };
 		4A5D757D14A9A90500DF6C68 /* Credits.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = Credits.html; sourceTree = "<group>"; };
 		4A5D757E14A9A90500DF6C68 /* gitx.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = gitx.icns; sourceTree = "<group>"; };
 		4A5D759814A9A90500DF6C68 /* gitx_icon.psd */ = {isa = PBXFileReference; lastKnownFileType = file; path = gitx_icon.psd; sourceTree = "<group>"; };
@@ -559,14 +558,10 @@
 		4A5D777214A9AEB000DF6C68 /* PBSourceViewRemote.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PBSourceViewRemote.m; sourceTree = "<group>"; };
 		4A68AD5814A0050E006DE321 /* Sparkle.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Sparkle.xcodeproj; path = Sparkle/Sparkle.xcodeproj; sourceTree = "<group>"; };
 		4A8F6B3B14A9B6100002F4D7 /* MGScopeBar.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = MGScopeBar.xcodeproj; path = MGScopeBar/MGScopeBar.xcodeproj; sourceTree = "<group>"; };
-		4A90A72714A9C12F00D0DA02 /* Common.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Common.xcconfig; sourceTree = SOURCE_ROOT; };
-		4A90A72814A9C12F00D0DA02 /* Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Debug.xcconfig; sourceTree = SOURCE_ROOT; };
-		4A90A72914A9C12F00D0DA02 /* GitX_Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GitX_Prefix.pch; sourceTree = SOURCE_ROOT; };
-		4A90A72A14A9C12F00D0DA02 /* Install.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Install.xcconfig; sourceTree = SOURCE_ROOT; };
+		4A90A72914A9C12F00D0DA02 /* GitX_Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GitX_Prefix.pch; sourceTree = "<group>"; };
 		4A90A72B14A9C12F00D0DA02 /* README.markdown */ = {isa = PBXFileReference; lastKnownFileType = text; path = README.markdown; sourceTree = SOURCE_ROOT; };
-		4A90A72C14A9C12F00D0DA02 /* Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Release.xcconfig; sourceTree = SOURCE_ROOT; };
-		4A90A73314A9D1E800D0DA02 /* GitX.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GitX.h; sourceTree = SOURCE_ROOT; };
-		4A90A73414A9D24300D0DA02 /* GitX.sdef */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = GitX.sdef; sourceTree = SOURCE_ROOT; };
+		4A90A73314A9D1E800D0DA02 /* GitX.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GitX.h; sourceTree = "<group>"; };
+		4A90A73414A9D24300D0DA02 /* GitX.sdef */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = GitX.sdef; sourceTree = "<group>"; };
 		4AB057E11652652000DE751D /* PBRepositoryFinder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PBRepositoryFinder.h; sourceTree = "<group>"; };
 		4AB057E21652652000DE751D /* PBRepositoryFinder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PBRepositoryFinder.m; sourceTree = "<group>"; usesTabs = 0; };
 		4AB71FF614B7EDD400F1DFFC /* RJModalRepoSheet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RJModalRepoSheet.h; sourceTree = "<group>"; };
@@ -624,7 +619,7 @@
 		D89E9AB21218A9DA0097A90B /* ScriptingBridge.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ScriptingBridge.framework; path = System/Library/Frameworks/ScriptingBridge.framework; sourceTree = SDKROOT; };
 		D8E3B2B710DC9FB2001096A3 /* ScriptingBridge.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ScriptingBridge.framework; path = /System/Library/Frameworks/ScriptingBridge.framework; sourceTree = "<absolute>"; };
 		F56526230E03D85900F03B52 /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = /System/Library/Frameworks/WebKit.framework; sourceTree = "<absolute>"; };
-		F5D619ED0EAE62EA00341D73 /* html */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = folder; name = html; path = ../html; sourceTree = "<group>"; };
+		F5D619ED0EAE62EA00341D73 /* html */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = folder; path = html; sourceTree = "<group>"; };
 		F5E4DBFA0EAB58D90013FAFC /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = /System/Library/Frameworks/SystemConfiguration.framework; sourceTree = "<absolute>"; };
 /* End PBXFileReference section */
 
@@ -682,6 +677,7 @@
 		29B97314FDCFA39411CA2CEA /* GitTest */ = {
 			isa = PBXGroup;
 			children = (
+				4A90A72B14A9C12F00D0DA02 /* README.markdown */,
 				4A5D762114A9A9CC00DF6C68 /* Classes */,
 				4A5D773E14A9AB3A00DF6C68 /* External Sources */,
 				4A5D757C14A9A90500DF6C68 /* Resources */,
@@ -726,21 +722,15 @@
 		4A5D757C14A9A90500DF6C68 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				4A52D2CD1558187800B778A5 /* GitX-dev.html */,
-				4A90A73414A9D24300D0DA02 /* GitX.sdef */,
-				4A90A72714A9C12F00D0DA02 /* Common.xcconfig */,
 				4A5D757D14A9A90500DF6C68 /* Credits.html */,
-				4A90A72814A9C12F00D0DA02 /* Debug.xcconfig */,
 				4A5D760214A9A99E00DF6C68 /* English.lproj */,
+				4A90A73414A9D24300D0DA02 /* GitX.sdef */,
 				4A90A73314A9D1E800D0DA02 /* GitX.h */,
 				4A5D757E14A9A90500DF6C68 /* gitx.icns */,
 				4A90A72914A9C12F00D0DA02 /* GitX_Prefix.pch */,
 				F5D619ED0EAE62EA00341D73 /* html */,
 				4A5D758114A9A90500DF6C68 /* Images */,
 				4A5D75B414A9A90500DF6C68 /* Info.plist */,
-				4A90A72A14A9C12F00D0DA02 /* Install.xcconfig */,
-				4A90A72B14A9C12F00D0DA02 /* README.markdown */,
-				4A90A72C14A9C12F00D0DA02 /* Release.xcconfig */,
 				4A5D75B514A9A90500DF6C68 /* source.css */,
 				4A5D75B714A9A90500DF6C68 /* UpdateKey.pem */,
 				4A5D75B914A9A90500DF6C68 /* XIBs */,
@@ -818,7 +808,7 @@
 				4A5D761514A9A99E00DF6C68 /* RepositoryWindow.xib */,
 			);
 			path = English.lproj;
-			sourceTree = SOURCE_ROOT;
+			sourceTree = "<group>";
 		};
 		4A5D762114A9A9CC00DF6C68 /* Classes */ = {
 			isa = PBXGroup;
@@ -1072,6 +1062,7 @@
 				4A68AD5814A0050E006DE321 /* Sparkle.xcodeproj */,
 			);
 			name = "External Sources";
+			path = External;
 			sourceTree = "<group>";
 		};
 		4A68AD5914A0050E006DE321 /* Products */ = {
@@ -1356,15 +1347,15 @@
 			files = (
 			);
 			inputPaths = (
-				"$(SRCROOT)/GitX.sdef",
+				"$(SRCROOT)/Resources/GitX.sdef",
 			);
 			name = "Generate Scripting Header";
 			outputPaths = (
-				"$(SRCROOT)/GitX.h",
+				"$(SRCROOT)/Resources/GitX.h",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# Build the scripting bridge header GitX.h if the GitX.sdef file changes\nsdp -fh --basename GitX $SRCROOT/GitX.sdef\n";
+			shellScript = "# Build the scripting bridge header GitX.h if the GitX.sdef file changes\nsdp -fh --basename GitX $SRCROOT/Resources/GitX.sdef -o $SRCROOT/Resources\n";
 		};
 		F5CF04A20EAE696C00D75C81 /* Copy HTML files */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -1379,7 +1370,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "resource_path=\"$TARGET_BUILD_DIR/$UNLOCALIZED_RESOURCES_FOLDER_PATH\"\nrm -rf \"$resource_path/html\"\ncp -r html \"$resource_path\"";
+			shellScript = "resource_path=\"$TARGET_BUILD_DIR/$UNLOCALIZED_RESOURCES_FOLDER_PATH\"\nrm -rf \"$resource_path/html\"\ncp -r Resources/html \"$resource_path\"";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -1635,7 +1626,7 @@
 				FRAMEWORK_SEARCH_PATHS = "\"$(PROJECT_DIR)\"";
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = GitX_Prefix.pch;
+				GCC_PREFIX_HEADER = Resources/GitX_Prefix.pch;
 				INFOPLIST_FILE = Resources/Info.plist;
 				INFOPLIST_OTHER_PREPROCESSOR_FLAGS = "-traditional";
 				INSTALL_PATH = /Applications;
@@ -1652,7 +1643,7 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = "\"$(PROJECT_DIR)\"";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = GitX_Prefix.pch;
+				GCC_PREFIX_HEADER = Resources/GitX_Prefix.pch;
 				GCC_PREPROCESSOR_DEFINITIONS_NOT_USED_IN_PRECOMPS = "";
 				INFOPLIST_FILE = Resources/Info.plist;
 				INFOPLIST_OTHER_PREPROCESSOR_FLAGS = "-traditional";
@@ -1696,7 +1687,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
-					"$(PROJECT_DIR)/objective-git/External/libgit2/include",
+					"\"$(PROJECT_DIR)/External/objective-git/External/libgit2/include\"",
 				);
 				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 10.9;
@@ -1737,7 +1728,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
-					"$(PROJECT_DIR)/objective-git/External/libgit2/include",
+					"\"$(PROJECT_DIR)/External/objective-git/External/libgit2/include\"",
 				);
 				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 10.9;
@@ -1796,7 +1787,7 @@
 			buildSettings = {
 				CREATE_INFOPLIST_SECTION_IN_BINARY = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = GitX_Prefix.pch;
+				GCC_PREFIX_HEADER = Resources/GitX_Prefix.pch;
 				INFOPLIST_FILE = "Resources/Info-gitx.plist";
 				INSTALL_PATH = /usr/local/bin;
 				PRODUCT_BUNDLE_IDENTIFIER = "net.phere.gitx-cli";
@@ -1810,7 +1801,7 @@
 			buildSettings = {
 				CREATE_INFOPLIST_SECTION_IN_BINARY = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = GitX_Prefix.pch;
+				GCC_PREFIX_HEADER = Resources/GitX_Prefix.pch;
 				INFOPLIST_FILE = "Resources/Info-gitx.plist";
 				INSTALL_PATH = /usr/local/bin;
 				PRODUCT_BUNDLE_IDENTIFIER = "net.phere.gitx-cli";
