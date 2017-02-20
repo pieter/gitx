@@ -559,7 +559,13 @@
 	NSMutableArray *files = [NSMutableArray array];
 	for (NSString *filePath in [sender representedObject])
 		[files addObject:[filePath stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]]];
-	[repository checkoutFiles:files fromRefish:self.selectedCommits.firstObject];
+
+	NSError *error = nil;
+	BOOL success = [repository checkoutFiles:files fromRefish:self.selectedCommits.firstObject error:&error];
+	if (!success) {
+		[self.windowController showErrorSheet:error];
+	}
+
 }
 
 - (void) diffFilesAction:(id)sender
@@ -655,22 +661,37 @@
 - (IBAction) merge:(id)sender
 {
 	PBGitCommit *selectedCommit = self.selectedCommits.firstObject;
-	if (selectedCommit)
-		[repository mergeWithRefish:selectedCommit];
+	if (!selectedCommit) return;
+
+	NSError *error = nil;
+	BOOL success = [repository mergeWithRefish:selectedCommit error:&error];
+	if (!success) {
+		[self.windowController showErrorSheet:error];
+	}
 }
 
 - (IBAction) cherryPick:(id)sender
 {
 	PBGitCommit *selectedCommit = self.selectedCommits.firstObject;
-	if (selectedCommit)
-		[repository cherryPickRefish:selectedCommit];
+	if (!selectedCommit) return;
+
+	NSError *error = nil;
+	BOOL success = [repository cherryPickRefish:selectedCommit error:&error];
+	if (!success) {
+		[self.windowController showErrorSheet:error];
+	}
 }
 
 - (IBAction) rebase:(id)sender
 {
 	PBGitCommit *selectedCommit = self.selectedCommits.firstObject;
-	if (selectedCommit)
-		[repository rebaseBranch:nil onRefish:selectedCommit];
+	if (!selectedCommit) return;
+
+	NSError *error = nil;
+	BOOL success = [repository rebaseBranch:nil onRefish:selectedCommit error:&error];
+	if (!success) {
+		[self.windowController showErrorSheet:error];
+	}
 }
 
 #pragma mark -

@@ -302,11 +302,45 @@
 
 - (IBAction) fetchRemote:(id)sender {
 	PBGitRef *ref = [self selectedItem].ref;
-	[repository beginFetchFromRemoteForRef:ref];
+
+	NSError *error = nil;
+	BOOL success = [repository beginFetchFromRemoteForRef:ref error:&error];
+	if (!success) {
+		[self showErrorSheet:error];
+	}
 }
 
 - (IBAction) fetchAllRemotes:(id)sender {
-	[repository beginFetchFromRemoteForRef:nil];
+	NSError *error = nil;
+	BOOL success = [repository beginFetchFromRemoteForRef:nil error:&error];
+	if (!success) {
+		[self showErrorSheet:error];
+	}
+}
+
+- (void) pull:(id)sender rebase:(BOOL)rebase {
+	PBGitRef *ref = [self selectedItem].revSpecifier.ref;
+	PBGitRef *remoteRef = [repository remoteRefForBranch:ref error:NULL];
+
+	NSError *error = nil;
+	BOOL success = [repository beginPullFromRemote:remoteRef forRef:ref rebase:rebase error:&error];
+	if (!success) {
+		[self showErrorSheet:error];
+	}
+}
+
+/* FIXME: It might be possible to merge this with the previous method.
+ * It doesn't help that it ignores its rebase parameter, and that it passes nil
+ * which ultimately will result in the same thing (use remoteRefForBranch:).
+ */
+- (void) pullDefault:(id)sender rebase:(BOOL)rebase {
+	PBGitRef *ref = [self selectedItem].revSpecifier.ref;
+
+	NSError *error = nil;
+	BOOL success = [repository beginPullFromRemote:nil forRef:ref rebase:NO error:&error];
+	if (!success) {
+		[self showErrorSheet:error];
+	}
 }
 
 - (IBAction) pullRemote:(id)sender {
@@ -317,23 +351,12 @@
 	[self pull:sender rebase:YES];
 }
 
-- (void) pull:(id)sender rebase:(BOOL)rebase {
-	PBGitRef *ref = [self selectedItem].revSpecifier.ref;
-	PBGitRef *remoteRef = [repository remoteRefForBranch:ref error:NULL];
-	[repository beginPullFromRemote:remoteRef forRef:ref rebase:rebase];
-}
-
 - (IBAction) pullDefaultRemote:(id)sender {
 	[self pullDefault:sender rebase:NO];
 }
 
 - (IBAction) pullRebaseDefaultRemote:(id)sender {
 	[self pullDefault:sender rebase:YES];
-}
-
-- (void) pullDefault:(id)sender rebase:(BOOL)rebase {
-	PBGitRef *ref = [self selectedItem].revSpecifier.ref;
-	[repository beginPullFromRemote:nil forRef:ref rebase:NO];
 }
 
 - (PBSourceViewItem *) selectedItem {
@@ -343,20 +366,29 @@
 
 - (IBAction) stashSave:(id) sender
 {
-    [repository stashSaveWithKeepIndex:NO];
+	NSError *error = nil;
+	BOOL success = [repository stashSaveWithKeepIndex:NO error:&error];
+
+	if (!success) [self showErrorSheet:error];
 }
 
 - (IBAction) stashSaveWithKeepIndex:(id) sender
 {
-    [repository stashSaveWithKeepIndex:YES];
+	NSError *error = nil;
+	BOOL success = [repository stashSaveWithKeepIndex:YES error:&error];
+
+	if (!success) [self showErrorSheet:error];
 }
 
 - (IBAction) stashPop:(id) sender
 {
-    if ([repository.stashes count] > 0) {
-        PBGitStash * latestStash = [repository.stashes objectAtIndex:0];
-        [repository stashPop:latestStash];
-    }
+	if ([repository.stashes count] <= 0) return;
+
+	PBGitStash * latestStash = [repository.stashes objectAtIndex:0];
+	NSError *error = nil;
+	BOOL success = [repository stashPop:latestStash error:&error];
+
+	if (!success) [self showErrorSheet:error];
 }
 
 

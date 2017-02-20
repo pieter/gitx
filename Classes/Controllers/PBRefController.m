@@ -30,7 +30,6 @@
 	[commitList registerForDraggedTypes:[NSArray arrayWithObject:@"PBGitRef"]];
 }
 
-
 #pragma mark Fetch
 
 - (void) fetchRemote:(PBRefMenuItem *)sender
@@ -39,7 +38,11 @@
 	if ([refish refishType] == kGitXCommitType)
 		return;
 
-	[historyController.repository beginFetchFromRemoteForRef:refish];
+	NSError *error = nil;
+	BOOL success = [historyController.repository beginFetchFromRemoteForRef:refish error:&error];
+	if (!success) {
+		[historyController.windowController showErrorSheet:error];
+	}
 }
 
 
@@ -48,7 +51,12 @@
 - (void) pullRemote:(PBRefMenuItem *)sender
 {
 	id <PBGitRefish> refish = sender.refishs.firstObject;
-	[historyController.repository beginPullFromRemote:nil forRef:refish rebase:NO];
+
+	NSError *error = nil;
+	BOOL success = [historyController.repository beginPullFromRemote:nil forRef:refish rebase:NO error:&error];
+	if (!success) {
+		[historyController.windowController showErrorSheet:error];
+	}
 }
 
 
@@ -62,7 +70,11 @@
 		return;
 
 	if ([PBGitDefaults isDialogWarningSuppressedForDialog:kDialogConfirmPush]) {
-		[historyController.repository beginPushRef:ref toRemote:remoteRef];
+		NSError *error = nil;
+		BOOL success = [historyController.repository beginPushRef:ref toRemote:remoteRef error:&error];
+		if (!success) {
+			[historyController.windowController showErrorSheet:error];
+		}
 		return;
 	}
 
@@ -88,7 +100,7 @@
 	if (remoteRef)
 		[info setObject:remoteRef forKey:kGitXRemoteType];
 
-	[alert beginSheetModalForWindow:[historyController.repository.windowController window]
+	[alert beginSheetModalForWindow:[historyController.windowController window]
 					  modalDelegate:self
 					 didEndSelector:@selector(confirmPushRefSheetDidEnd:returnCode:contextInfo:)
 						contextInfo:(__bridge_retained void*)info];
@@ -105,7 +117,11 @@
 		PBGitRef *ref = [(__bridge NSDictionary *)contextInfo objectForKey:kGitXBranchType];
 		PBGitRef *remoteRef = [(__bridge NSDictionary *)contextInfo objectForKey:kGitXRemoteType];
 
-		[historyController.repository beginPushRef:ref toRemote:remoteRef];
+		NSError *error = nil;
+		BOOL success = [historyController.repository beginPushRef:ref toRemote:remoteRef error:&error];
+		if (!success) {
+			[historyController.windowController showErrorSheet:error];
+		}
 	}
 }
 
@@ -136,7 +152,11 @@
 - (void) merge:(PBRefMenuItem *)sender
 {
 	id <PBGitRefish> refish = sender.refishs.firstObject;
-	[historyController.repository mergeWithRefish:refish];
+	NSError *error = nil;
+	BOOL success = [historyController.repository mergeWithRefish:refish error:&error];
+	if (!success) {
+		[historyController.windowController showErrorSheet:error];
+	}
 }
 
 
@@ -145,7 +165,11 @@
 - (void) checkout:(PBRefMenuItem *)sender
 {
 	id <PBGitRefish> refish = sender.refishs.firstObject;
-	[historyController.repository checkoutRefish:refish];
+	NSError *error = nil;
+	BOOL success = [historyController.repository checkoutRefish:refish error:&error];
+	if (!success) {
+		[historyController.windowController showErrorSheet:error];
+	}
 }
 
 
@@ -154,7 +178,11 @@
 - (void) cherryPick:(PBRefMenuItem *)sender
 {
 	id <PBGitRefish> refish = sender.refishs.firstObject;
-	[historyController.repository cherryPickRefish:refish];
+	NSError *error = nil;
+	BOOL success = [historyController.repository cherryPickRefish:refish error:&error];
+	if (!success) {
+		[historyController.windowController showErrorSheet:error];
+	}
 }
 
 
@@ -163,7 +191,11 @@
 - (void) rebaseHeadBranch:(PBRefMenuItem *)sender
 {
 	id <PBGitRefish> refish = sender.refishs.firstObject;
-	[historyController.repository rebaseBranch:nil onRefish:refish];
+	NSError *error = nil;
+	BOOL success = [historyController.repository rebaseBranch:nil onRefish:refish error:&error];
+	if (!success) {
+		[historyController.windowController showErrorSheet:error];
+	}
 }
 
 
@@ -221,34 +253,46 @@
 
 #pragma mark Stash
 
--(void) stashPop:(PBRefMenuItem *)sender
+- (IBAction) stashPop:(PBRefMenuItem *)sender
 {
-    PBGitStash * stash = [historyController.repository stashForRef:[sender refishs].firstObject];
-    BOOL ok = [historyController.repository stashPop:stash];
-    if (ok) {
-        [historyController.repository.windowController showCommitView:sender];
+    PBGitStash *stash = [historyController.repository stashForRef:[sender refishs].firstObject];
+	NSError *error = nil;
+	BOOL success = [historyController.repository stashPop:stash error:&error];
+
+	if (!success) {
+		[historyController.windowController showErrorSheet:error];
+	} else {
+        [historyController.windowController showCommitView:sender];
     }
 }
 
--(void) stashApply:(PBRefMenuItem *)sender
+- (IBAction) stashApply:(PBRefMenuItem *)sender
 {
-    PBGitStash * stash = [historyController.repository stashForRef:[sender refishs].firstObject];
-    BOOL ok = [historyController.repository stashApply:stash];
-    if (ok) {
-        [historyController.repository.windowController showCommitView:sender];
-    }
+	PBGitStash *stash = [historyController.repository stashForRef:[sender refishs].firstObject];
+	NSError *error = nil;
+	BOOL success = [historyController.repository stashApply:stash error:&error];
+
+	if (!success) {
+		[historyController.windowController showErrorSheet:error];
+	} else {
+		[historyController.windowController showCommitView:sender];
+	}
 }
 
--(void) stashDrop:(PBRefMenuItem *)sender
+- (IBAction) stashDrop:(PBRefMenuItem *)sender
 {
-    PBGitStash * stash = [historyController.repository stashForRef:[sender refishs].firstObject];
-    BOOL ok = [historyController.repository stashDrop:stash];
-    if (ok) {
-        [historyController.repository.windowController showHistoryView:sender];
-    }
+	PBGitStash * stash = [historyController.repository stashForRef:[sender refishs].firstObject];
+	NSError *error = nil;
+	BOOL success = [historyController.repository stashDrop:stash error:&error];
+
+	if (!success) {
+		[historyController.windowController showErrorSheet:error];
+	} else {
+		[historyController.windowController showHistoryView:sender];
+	}
 }
 
--(void) stashViewDiff:(PBRefMenuItem *)sender
+- (IBAction) stashViewDiff:(PBRefMenuItem *)sender
 {
     PBGitStash * stash = [historyController.repository stashForRef:sender.refishs.firstObject];
     [PBDiffWindowController showDiffWindowWithFiles:nil fromCommit:stash.ancestorCommit diffCommit:stash.commit];
@@ -299,7 +343,11 @@
 	PBGitRef *ref = (PBGitRef *)refish;
 
 	if ([PBGitDefaults isDialogWarningSuppressedForDialog:kDialogDeleteRef]) {
-		[historyController.repository deleteRef:ref];
+		NSError *error = nil;
+		BOOL success = [historyController.repository deleteRef:ref error:&error];
+		if (!success) {
+			[historyController.windowController showErrorSheet:error];
+		}
 		return;
 	}
 
@@ -312,7 +360,7 @@
 						 informativeTextWithFormat:@"Are you sure you want to remove the %@?", ref_desc];
     [alert setShowsSuppressionButton:YES];
 	
-	[alert beginSheetModalForWindow:[historyController.repository.windowController window]
+	[alert beginSheetModalForWindow:[historyController.windowController window]
 					  modalDelegate:self
 					 didEndSelector:@selector(deleteRefSheetDidEnd:returnCode:contextInfo:)
 						contextInfo:(__bridge_retained void*)ref];
@@ -327,7 +375,12 @@
 
 	if (returnCode == NSAlertDefaultReturn) {
 		PBGitRef *ref = (__bridge PBGitRef *)contextInfo;
-		[historyController.repository deleteRef:ref];
+
+		NSError *error = nil;
+		BOOL success = [historyController.repository deleteRef:ref error:&error];
+		if (!success) {
+			[historyController.windowController showErrorSheet:error];
+		}
 	}
 }
 
@@ -479,7 +532,7 @@
 						 informativeTextWithFormat:@"%@", infoText];
     [alert setShowsSuppressionButton:YES];
 
-	[alert beginSheetModalForWindow:[historyController.repository.windowController window]
+	[alert beginSheetModalForWindow:[historyController.windowController window]
 					  modalDelegate:self
 					 didEndSelector:@selector(acceptDropInfoAlertDidEnd:returnCode:contextInfo:)
 						contextInfo:(__bridge_retained void*)dropInfo];

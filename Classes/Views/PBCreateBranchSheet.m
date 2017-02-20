@@ -83,12 +83,22 @@
 	PBCreateBranchSheet *ownRef = self; // ensures self exists after close
 	[ownRef closeCreateBranchSheet:ownRef];
 
-	[self.repository createBranch:name atRefish:ownRef.startRefish];
-	
+	NSError *error = nil;
+	BOOL success = [self.repository createBranch:name atRefish:ownRef.startRefish error:&error];
+	if (!success) {
+		[self.windowController showErrorSheet:error];
+		return;
+	}
+
 	[PBGitDefaults setShouldCheckoutBranch:ownRef.shouldCheckoutBranch];
 
-	if (ownRef.shouldCheckoutBranch)
-		[ownRef.repository checkoutRefish:ref];
+	if (ownRef.shouldCheckoutBranch) {
+		success = [self.repository checkoutRefish:ref error:&error];
+		if (!success) {
+			[self.windowController showErrorSheet:error];
+			return;
+		}
+	}
 }
 
 

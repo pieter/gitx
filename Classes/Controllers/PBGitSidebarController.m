@@ -495,15 +495,24 @@ enum  {
 	if (!remoteRef)
 		return;
 
+	/* FIXME: This is a little bit messy ;-).
+	 * We default to YES because half those calls don't report errors
+	 * and the repository calls are scheduled for deletion sometimes
+	 */
+	NSError *error = nil;
+	BOOL success = YES;
 	if (selectedSegment == kFetchSegment)
-		[repository beginFetchFromRemoteForRef:ref];
+		success = [repository beginFetchFromRemoteForRef:ref error:&error];
 	else if (selectedSegment == kPullSegment)
-		[repository beginPullFromRemote:remoteRef forRef:ref rebase:NO];
+		success = [repository beginPullFromRemote:remoteRef forRef:ref rebase:NO error:&error];
 	else if (selectedSegment == kPushSegment) {
 		if ([ref isRemote])
 			[historyViewController.refController showConfirmPushRefSheet:nil remote:remoteRef];
 		else if ([ref isBranch])
 			[historyViewController.refController showConfirmPushRefSheet:ref remote:remoteRef];
+	}
+	if (!success) {
+		[self.windowController showErrorSheet:error];
 	}
 }
 

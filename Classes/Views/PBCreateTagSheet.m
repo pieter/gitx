@@ -11,6 +11,7 @@
 #import "PBGitCommit.h"
 #import "PBGitRef.h"
 #import "PBGitWindowController.h"
+#import "PBGitRepositoryDocument.h"
 #import "PBGitRevSpecifier.h"
 
 @implementation PBCreateTagSheet
@@ -62,7 +63,11 @@
 
 
 	NSString *message = [self.tagMessageText string];
-	[self.repository createTag:tagName message:message atRefish:self.targetRefish];
+	NSError *error = nil;
+	BOOL success = [self.repository createTag:tagName message:message atRefish:self.targetRefish error:&error];
+	if (!success) {
+		[self.document.windowController showErrorSheet:error];
+	}
 	
 	[self closeCreateTagSheet:sender];
 }

@@ -58,23 +58,25 @@ typedef enum branchFilterTypes {
 - (id)initWithURL:(NSURL *)repositoryURL error:(NSError **)error;
 
 - (void) beginAddRemote:(NSString *)remoteName forURL:(NSString *)remoteURL;
-- (void) beginFetchFromRemoteForRef:(PBGitRef *)ref;
-- (void) beginPullFromRemote:(PBGitRef *)remoteRef forRef:(PBGitRef *)ref rebase:(BOOL)rebase;
-- (void) beginPushRef:(PBGitRef *)ref toRemote:(PBGitRef *)remoteRef;
-- (BOOL) checkoutRefish:(id <PBGitRefish>)ref;
-- (BOOL) checkoutFiles:(NSArray *)files fromRefish:(id <PBGitRefish>)ref;
-- (BOOL) mergeWithRefish:(id <PBGitRefish>)ref;
-- (BOOL) cherryPickRefish:(id <PBGitRefish>)ref;
-- (BOOL) rebaseBranch:(id <PBGitRefish>)branch onRefish:(id <PBGitRefish>)upstream;
-- (BOOL) createBranch:(NSString *)branchName atRefish:(id <PBGitRefish>)ref;
-- (BOOL) createTag:(NSString *)tagName message:(NSString *)message atRefish:(id <PBGitRefish>)commitSHA;
-- (BOOL) deleteRemote:(PBGitRef *)ref;
-- (BOOL) deleteRef:(PBGitRef *)ref;
-- (BOOL) stashPop:(PBGitStash *)stash;
-- (BOOL) stashApply:(PBGitStash *)stash;
-- (BOOL) stashDrop:(PBGitStash *)stash;
-- (BOOL) stashSave;
-- (BOOL) stashSaveWithKeepIndex:(BOOL)keepIndex;
+- (BOOL) beginFetchFromRemoteForRef:(PBGitRef *)ref error:(NSError **)error;
+- (BOOL) beginPullFromRemote:(PBGitRef *)remoteRef forRef:(PBGitRef *)ref rebase:(BOOL)rebase error:(NSError **)error;
+- (BOOL) beginPushRef:(PBGitRef *)ref toRemote:(PBGitRef *)remoteRef error:(NSError **)error;
+
+- (BOOL) checkoutRefish:(id <PBGitRefish>)ref error:(NSError **)error;
+- (BOOL) checkoutFiles:(NSArray *)files fromRefish:(id <PBGitRefish>)ref error:(NSError **)error;
+- (BOOL) mergeWithRefish:(id <PBGitRefish>)ref error:(NSError **)error;
+- (BOOL) cherryPickRefish:(id <PBGitRefish>)ref error:(NSError **)error;
+- (BOOL) rebaseBranch:(id <PBGitRefish>)branch onRefish:(id <PBGitRefish>)upstream error:(NSError **)error;
+- (BOOL) createBranch:(NSString *)branchName atRefish:(id <PBGitRefish>)ref error:(NSError **)error;
+- (BOOL) createTag:(NSString *)tagName message:(NSString *)message atRefish:(id <PBGitRefish>)commitSHA error:(NSError **)error;
+- (BOOL) deleteRemote:(PBGitRef *)ref error:(NSError **)error;
+- (BOOL) deleteRef:(PBGitRef *)ref error:(NSError **)error;
+
+- (BOOL) stashPop:(PBGitStash *)stash error:(NSError **)error;
+- (BOOL) stashApply:(PBGitStash *)stash error:(NSError **)error;
+- (BOOL) stashDrop:(PBGitStash *)stash error:(NSError **)error;
+- (BOOL) stashSave:(NSError **)error;
+- (BOOL) stashSaveWithKeepIndex:(BOOL)keepIndex error:(NSError **)error;
 
 - (BOOL)ignoreFilePaths:(NSArray *)filePaths error:(NSError **)error;
 
