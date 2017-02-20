@@ -686,16 +686,30 @@
 
 #pragma mark Repository commands
 
-- (void) beginAddRemote:(NSString *)remoteName forURL:(NSString *)remoteURL
+- (void) cloneRepositoryToPath:(NSString *)path bare:(BOOL)isBare windowController:(PBGitWindowController *)windowController
+{
+	if (!path || [path isEqualToString:@""])
+		return;
+
+	NSMutableArray *arguments = [NSMutableArray arrayWithObjects:@"clone", @"--no-hardlinks", @"--", @".", path, nil];
+	if (isBare)
+		[arguments insertObject:@"--bare" atIndex:1];
+
+	NSString *description = [NSString stringWithFormat:@"Cloning the repository %@ to %@", [self projectName], path];
+	NSString *title = @"Cloning Repository";
+	[PBRemoteProgressSheet beginRemoteProgressSheetWithTitle:title description:description arguments:arguments windowController:windowController];
+}
+
+- (void) beginAddRemote:(NSString *)remoteName forURL:(NSString *)remoteURL windowController:(PBGitWindowController *)windowController
 {
 	NSArray *arguments = [NSArray arrayWithObjects:@"remote",  @"add", @"-f", remoteName, remoteURL, nil];
 
 	NSString *description = [NSString stringWithFormat:@"Adding the remote %@ and fetching tracking branches", remoteName];
 	NSString *title = @"Adding a remote";
-	[PBRemoteProgressSheet beginRemoteProgressSheetWithTitle:title description:description arguments:arguments windowController:self.windowController];
+	[PBRemoteProgressSheet beginRemoteProgressSheetWithTitle:title description:description arguments:arguments windowController:windowController];
 }
 
-- (BOOL) beginFetchFromRemoteForRef:(PBGitRef *)ref error:(NSError **)error
+- (BOOL) beginFetchFromRemoteForRef:(PBGitRef *)ref error:(NSError **)error windowController:(PBGitWindowController *)windowController
 {
 	NSMutableArray *arguments = [NSMutableArray arrayWithObject:@"fetch"];
 
@@ -715,11 +729,11 @@
 	
 	NSString *description = [NSString stringWithFormat:@"Fetching all tracking branches for %@", remoteName];
 	NSString *title = @"Fetching…";
-	[PBRemoteProgressSheet beginRemoteProgressSheetWithTitle:title description:description arguments:arguments windowController:self.windowController];
+	[PBRemoteProgressSheet beginRemoteProgressSheetWithTitle:title description:description arguments:arguments windowController:windowController];
 	return YES;
 }
 
-- (BOOL) beginPullFromRemote:(PBGitRef *)remoteRef forRef:(PBGitRef *)ref rebase:(BOOL)rebase error:(NSError **)error
+- (BOOL) beginPullFromRemote:(PBGitRef *)remoteRef forRef:(PBGitRef *)ref rebase:(BOOL)rebase error:(NSError **)error windowController:(PBGitWindowController *)windowController
 {
 	NSMutableArray *arguments = [NSMutableArray arrayWithObject:@"pull"];
 	
@@ -738,11 +752,11 @@
 
 	NSString *description = [NSString stringWithFormat:@"Pulling all tracking branches from %@", remoteName];
 	NSString *title = @"Pulling from remote";
-	[PBRemoteProgressSheet beginRemoteProgressSheetWithTitle:title description:description arguments:arguments hideSuccessScreen:YES windowController:self.windowController];
+	[PBRemoteProgressSheet beginRemoteProgressSheetWithTitle:title description:description arguments:arguments hideSuccessScreen:true windowController:windowController];
 	return YES;
 }
 
-- (BOOL) beginPushRef:(PBGitRef *)ref toRemote:(PBGitRef *)remoteRef error:(NSError **)error
+- (BOOL) beginPushRef:(PBGitRef *)ref toRemote:(PBGitRef *)remoteRef error:(NSError **)error windowController:(PBGitWindowController *)windowController
 {
 	NSMutableArray *arguments = [NSMutableArray arrayWithObject:@"push"];
 
@@ -771,7 +785,7 @@
 
 	NSString *description = [NSString stringWithFormat:@"Pushing %@ to %@", branchName, remoteName];
 	NSString *title = @"Pushing to remote";
-	[PBRemoteProgressSheet beginRemoteProgressSheetWithTitle:title description:description arguments:arguments hideSuccessScreen:true windowController:self.windowController];
+	[PBRemoteProgressSheet beginRemoteProgressSheetWithTitle:title description:description arguments:arguments hideSuccessScreen:YES windowController:windowController];
 	return YES;
 }
 

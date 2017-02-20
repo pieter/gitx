@@ -228,7 +228,7 @@
 {
 	[[NSDocumentController sharedDocumentController] openDocumentWithContentsOfURL:submoduleURL display:YES completionHandler:^(NSDocument *document, BOOL documentWasAlreadyOpen, NSError *error) {
 		if (error) {
-			[self.repository.windowController showErrorSheet:error];
+			[self.windowController showErrorSheet:error];
 		}
 	}];
 }
@@ -502,9 +502,9 @@ enum  {
 	NSError *error = nil;
 	BOOL success = YES;
 	if (selectedSegment == kFetchSegment)
-		success = [repository beginFetchFromRemoteForRef:ref error:&error];
+		success = [repository beginFetchFromRemoteForRef:ref error:&error windowController:self.windowController];
 	else if (selectedSegment == kPullSegment)
-		success = [repository beginPullFromRemote:remoteRef forRef:ref rebase:NO error:&error];
+		success = [repository beginPullFromRemote:remoteRef forRef:ref rebase:NO error:&error windowController:self.windowController];
 	else if (selectedSegment == kPushSegment) {
 		if ([ref isRemote])
 			[historyViewController.refController showConfirmPushRefSheet:nil remote:remoteRef];

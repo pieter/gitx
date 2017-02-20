@@ -85,7 +85,7 @@
 	PBGitRepository* repo = self.repository;
 	[self hide]; // may deallocate self
 
-	[repo beginAddRemote:name forURL:url];
+	[repo beginAddRemote:name forURL:url windowController:self.windowController];
 }
 
 - (IBAction) showHideHiddenFiles:(id)sender

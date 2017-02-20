@@ -39,7 +39,7 @@
 		return;
 
 	NSError *error = nil;
-	BOOL success = [historyController.repository beginFetchFromRemoteForRef:refish error:&error];
+	BOOL success = [historyController.repository beginFetchFromRemoteForRef:refish error:&error windowController:historyController.windowController];
 	if (!success) {
 		[historyController.windowController showErrorSheet:error];
 	}
@@ -53,7 +53,7 @@
 	id <PBGitRefish> refish = sender.refishs.firstObject;
 
 	NSError *error = nil;
-	BOOL success = [historyController.repository beginPullFromRemote:nil forRef:refish rebase:NO error:&error];
+	BOOL success = [historyController.repository beginPullFromRemote:nil forRef:refish rebase:NO error:&error windowController:historyController.windowController];
 	if (!success) {
 		[historyController.windowController showErrorSheet:error];
 	}
@@ -71,7 +71,7 @@
 
 	if ([PBGitDefaults isDialogWarningSuppressedForDialog:kDialogConfirmPush]) {
 		NSError *error = nil;
-		BOOL success = [historyController.repository beginPushRef:ref toRemote:remoteRef error:&error];
+		BOOL success = [historyController.repository beginPushRef:ref toRemote:remoteRef error:&error windowController:historyController.windowController];
 		if (!success) {
 			[historyController.windowController showErrorSheet:error];
 		}
@@ -118,7 +118,7 @@
 		PBGitRef *remoteRef = [(__bridge NSDictionary *)contextInfo objectForKey:kGitXRemoteType];
 
 		NSError *error = nil;
-		BOOL success = [historyController.repository beginPushRef:ref toRemote:remoteRef error:&error];
+		BOOL success = [historyController.repository beginPushRef:ref toRemote:remoteRef error:&error windowController:historyController.windowController];
 		if (!success) {
 			[historyController.windowController showErrorSheet:error];
 		}

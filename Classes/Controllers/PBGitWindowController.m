@@ -304,7 +304,7 @@
 	PBGitRef *ref = [self selectedItem].ref;
 
 	NSError *error = nil;
-	BOOL success = [repository beginFetchFromRemoteForRef:ref error:&error];
+	BOOL success = [repository beginFetchFromRemoteForRef:ref error:&error windowController:self];
 	if (!success) {
 		[self showErrorSheet:error];
 	}
@@ -312,7 +312,7 @@
 
 - (IBAction) fetchAllRemotes:(id)sender {
 	NSError *error = nil;
-	BOOL success = [repository beginFetchFromRemoteForRef:nil error:&error];
+	BOOL success = [repository beginFetchFromRemoteForRef:nil error:&error windowController:self];
 	if (!success) {
 		[self showErrorSheet:error];
 	}
@@ -323,7 +323,7 @@
 	PBGitRef *remoteRef = [repository remoteRefForBranch:ref error:NULL];
 
 	NSError *error = nil;
-	BOOL success = [repository beginPullFromRemote:remoteRef forRef:ref rebase:rebase error:&error];
+	BOOL success = [repository beginPullFromRemote:remoteRef forRef:ref rebase:rebase error:&error windowController:self];
 	if (!success) {
 		[self showErrorSheet:error];
 	}
@@ -337,7 +337,7 @@
 	PBGitRef *ref = [self selectedItem].revSpecifier.ref;
 
 	NSError *error = nil;
-	BOOL success = [repository beginPullFromRemote:nil forRef:ref rebase:NO error:&error];
+	BOOL success = [repository beginPullFromRemote:nil forRef:ref rebase:NO error:&error windowController:self];
 	if (!success) {
 		[self showErrorSheet:error];
 	}

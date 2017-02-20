@@ -56,10 +56,14 @@ typedef enum branchFilterTypes {
 // Designated initializer
 - (id)initWithURL:(NSURL *)repositoryURL error:(NSError **)error;
 
-- (void) beginAddRemote:(NSString *)remoteName forURL:(NSString *)remoteURL;
-- (BOOL) beginFetchFromRemoteForRef:(PBGitRef *)ref error:(NSError **)error;
-- (BOOL) beginPullFromRemote:(PBGitRef *)remoteRef forRef:(PBGitRef *)ref rebase:(BOOL)rebase error:(NSError **)error;
-- (BOOL) beginPushRef:(PBGitRef *)ref toRemote:(PBGitRef *)remoteRef error:(NSError **)error;
+/* FIXME: These five methods, as they stand, don't belong here (hence the wacky windowController: parameter).
+ * As long as they delegate to PBRemoteProgressSheet to do their thing, they must go.
+ */
+- (void) cloneRepositoryToPath:(NSString *)path bare:(BOOL)isBare windowController:(PBGitWindowController *)windowController;
+- (void) beginAddRemote:(NSString *)remoteName forURL:(NSString *)remoteURL windowController:(PBGitWindowController *)windowController;
+- (BOOL) beginFetchFromRemoteForRef:(PBGitRef *)ref error:(NSError **)error windowController:(PBGitWindowController *)windowController;
+- (BOOL) beginPullFromRemote:(PBGitRef *)remoteRef forRef:(PBGitRef *)ref rebase:(BOOL)rebase error:(NSError **)error windowController:(PBGitWindowController *)windowController;
+- (BOOL) beginPushRef:(PBGitRef *)ref toRemote:(PBGitRef *)remoteRef error:(NSError **)error windowController:(PBGitWindowController *)windowController;
 
 - (BOOL) checkoutRefish:(id <PBGitRefish>)ref error:(NSError **)error;
 - (BOOL) checkoutFiles:(NSArray *)files fromRefish:(id <PBGitRefish>)ref error:(NSError **)error;
