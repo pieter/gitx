@@ -38,7 +38,6 @@
 
 @implementation PBGitCommitController
 
-@synthesize index;
 @synthesize stashKeepIndex;
 
 - (id)initWithRepository:(PBGitRepository *)theRepository superController:(PBGitWindowController *)controller
@@ -46,8 +45,7 @@
 	if (!(self = [super initWithRepository:theRepository superController:controller]))
 		return nil;
 
-	index = [[PBGitIndex alloc] initWithRepository:theRepository];
-	[index refresh];
+	PBGitIndex *index = theRepository.index;
 
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refreshFinished:) name:PBGitIndexFinishedIndexRefresh object:index];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(commitStatusUpdated:) name:PBGitIndexCommitStatus object:index];
@@ -136,7 +134,7 @@
 
 	self.isBusy = YES;
 	self.status = @"Refreshing index…";
-	[index refresh];
+	[repository.index refresh];
 
 	// Reload refs (in case HEAD changed)
 	[repository reloadRefs];
@@ -187,7 +185,12 @@
 	self.isBusy = YES;
 	[commitMessageView setEditable:NO];
 
-	[index commitWithMessage:commitMessage andVerify:doVerify];
+	[repository.index commitWithMessage:commitMessage andVerify:doVerify];
+}
+
+
+- (PBGitIndex *) index {
+	return repository.index;
 }
 
 

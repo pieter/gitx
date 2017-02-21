@@ -17,10 +17,6 @@
 @class PBCommitMessageView;
 
 @interface PBGitCommitController : PBViewController {
-	// This might have to transfer over to the PBGitRepository
-	// object sometime
-	PBGitIndex *index;
-
 	IBOutlet PBCommitMessageView *commitMessageView;
 
 	BOOL stashKeepIndex;
@@ -38,7 +34,6 @@
 	IBOutlet PBNiceSplitView *commitSplitView;
 }
 
-@property(readonly) PBGitIndex *index;
 @property(assign) BOOL stashKeepIndex;
 
 - (IBAction) refresh:(id) sender;
@@ -46,6 +41,8 @@
 - (IBAction) forceCommit:(id) sender;
 - (IBAction) signOff:(id)sender;
 - (IBAction) stashChanges:(id) sender;
+
+- (PBGitIndex *) index;
 
 - (NSView *) nextKeyViewFor:(NSView *)view;
 - (NSView *) previousKeyViewFor:(NSView *)view;
