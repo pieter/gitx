@@ -26,11 +26,13 @@ NSString *const PBEasyPipeUnderlyingExceptionKey = @"PBEasyPipeUnderlyingExcepti
 		[task launch];
 	}
 	@catch (NSException *exception) {
+		NSString *desc = @"Exception raised while launching task";
+		NSString *failureReason = [NSString stringWithFormat:@"The task \"%@\" failed to launch", command];
 		NSDictionary *info = @{
-									 NSLocalizedFailureReasonErrorKey: @"",
-									 NSLocalizedDescriptionKey: @"",
-									 PBEasyPipeUnderlyingExceptionKey: exception,
-									 };
+							   NSLocalizedDescriptionKey: desc,
+							   NSLocalizedFailureReasonErrorKey: failureReason,
+							   PBEasyPipeUnderlyingExceptionKey: exception,
+							   };
 		NSError *error = [NSError errorWithDomain:PBEasyPipeErrorDomain
 											 code:PBEasyPipeTaskLaunchError
 										 userInfo:info];
@@ -46,6 +48,7 @@ NSString *const PBEasyPipeUnderlyingExceptionKey = @"PBEasyPipeUnderlyingExcepti
 			completionHandler(task, nil, error);
 			return;
 		}
+
 		NSData *data = [[task.standardOutput fileHandleForReading] readDataToEndOfFile];
 		completionHandler(task, data, nil);
 	}];
