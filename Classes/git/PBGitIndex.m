@@ -9,7 +9,7 @@
 #import "PBGitIndex.h"
 #import "PBGitRepository.h"
 #import "PBGitBinary.h"
-#import "PBEasyPipe.h"
+#import "PBTask.h"
 #import "PBChangedFile.h"
 
 NSString *PBGitIndexIndexRefreshStatus = @"PBGitIndexIndexRefreshStatus";
@@ -148,11 +148,11 @@ NS_ENUM(NSUInteger, PBGitIndexOperation) {
 	dispatch_group_enter(_indexRefreshGroup);
 
 	// Ask Git to refresh the index
-	[PBEasyPipe performCommand:[PBGitBinary path]
-					 arguments:@[@"update-index", @"-q", @"--unmerged", @"--ignore-missing", @"--refresh"]
-				   inDirectory:self.repository.workingDirectoryURL.path
-			 terminationHandler:^(NSTask *task, NSError *error) {
-				 if (error || task.terminationStatus != 0) {
+	[PBTask launchTask:[PBGitBinary path]
+			 arguments:@[@"update-index", @"-q", @"--unmerged", @"--ignore-missing", @"--refresh"]
+		   inDirectory:self.repository.workingDirectoryURL.path
+	 completionHandler:^(NSData *readData, NSError *error) {
+				 if (error) {
 					 [self postIndexRefreshStatus:NO message:@"update-index failed"];
 				 } else {
 					 [self postIndexRefreshStatus:YES message:@"update-index success"];
@@ -194,67 +194,68 @@ NS_ENUM(NSUInteger, PBGitIndexOperation) {
 
 	// Other files
 	dispatch_group_enter(_indexRefreshGroup);
-	[PBEasyPipe performCommand:[PBGitBinary path]
-					 arguments:@[@"ls-files", @"--others", @"--exclude-standard", @"-z"]
-				   inDirectory:self.repository.workingDirectoryURL.path
-			 completionHandler:^(NSTask *task, NSData *readData, NSError *error) {
-				 if (error || task.terminationStatus != 0) {
-					 [self postIndexRefreshStatus:NO message:@"ls-files failed"];
-				 } else {
-					 NSArray *lines = [self linesFromData:readData];
-					 NSMutableDictionary *dictionary = [[NSMutableDictionary alloc] initWithCapacity:[lines count]];
-					 // Other files are untracked, so we don't have any real index information. Instead, we can just fake it.
-					 // The line below is not used at all, as for these files the commitBlob isn't set
-					 NSArray *fileStatus = [NSArray arrayWithObjects:@":000000", @"100644", @"0000000000000000000000000000000000000000", @"0000000000000000000000000000000000000000", @"A", nil];
-					 for (NSString *path in lines) {
-						 if ([path length] == 0)
-							 continue;
-						 [dictionary setObject:fileStatus forKey:path];
-					 }
+	[PBTask launchTask:[PBGitBinary path]
+			 arguments:@[@"ls-files", @"--others", @"--exclude-standard", @"-z"]
+		   inDirectory:self.repository.workingDirectoryURL.path
+	 completionHandler:^(NSData *readData, NSError *error) {
+		 if (error) {
+			 [self postIndexRefreshStatus:NO message:@"ls-files failed"];
+		 } else {
+			 NSArray *lines = [self linesFromData:readData];
+			 NSMutableDictionary *dictionary = [[NSMutableDictionary alloc] initWithCapacity:[lines count]];
+			 // Other files are untracked, so we don't have any real index information. Instead, we can just fake it.
+			 // The line below is not used at all, as for these files the commitBlob isn't set
+			 NSArray *fileStatus = [NSArray arrayWithObjects:@":000000", @"100644", @"0000000000000000000000000000000000000000", @"0000000000000000000000000000000000000000", @"A", nil];
+			 for (NSString *path in lines) {
+				 if ([path length] == 0)
+					 continue;
+				 [dictionary setObject:fileStatus forKey:path];
+			 }
 
-					 [self addFilesFromDictionary:dictionary staged:NO tracked:NO];
-				 }
+			 [self addFilesFromDictionary:dictionary staged:NO tracked:NO];
+		 }
 
-				 [self postIndexRefreshStatus:YES message:@"ls-files success"];
-				 dispatch_group_leave(_indexRefreshGroup);
-			 }];
+		 [self postIndexRefreshStatus:YES message:@"ls-files success"];
+		 dispatch_group_leave(_indexRefreshGroup);
+	 }];
 
 	// Staged files
 	dispatch_group_enter(_indexRefreshGroup);
-	[PBEasyPipe performCommand:[PBGitBinary path]
-					 arguments:@[@"diff-index", @"--cached", @"-z", [self parentTree]]
-				   inDirectory:self.repository.workingDirectoryURL.path
-			 completionHandler:^(NSTask *task, NSData *readData, NSError *error) {
-				 if (error || task.terminationStatus != 0) {
-					 [self postIndexRefreshStatus:NO message:@"diff-index failed"];
-				 } else {
-					 NSArray *lines = [self linesFromData:readData];
-					 NSMutableDictionary *dic = [self dictionaryForLines:lines];
-					 [self addFilesFromDictionary:dic staged:YES tracked:YES];
-				 }
+	[PBTask launchTask:[PBGitBinary path]
+			 arguments:@[@"diff-index", @"--cached", @"-z", [self parentTree]]
+		   inDirectory:self.repository.workingDirectoryURL.path
+	 completionHandler:^(NSData *readData, NSError *error) {
+		 if (error) {
+			 [self postIndexRefreshStatus:NO message:@"diff-index failed"];
+		 } else {
+			 NSArray *lines = [self linesFromData:readData];
+			 NSMutableDictionary *dic = [self dictionaryForLines:lines];
+			 [self addFilesFromDictionary:dic staged:YES tracked:YES];
+		 }
 
-				 [self postIndexRefreshStatus:YES message:@"diff-index success"];
+		 [self postIndexRefreshStatus:YES message:@"diff-index success"];
 
-				 dispatch_group_leave(_indexRefreshGroup);
-			 }];
+		 dispatch_group_leave(_indexRefreshGroup);
+	 }];
+
 
 	// Unstaged files
 	dispatch_group_enter(_indexRefreshGroup);
-	[PBEasyPipe performCommand:[PBGitBinary path]
-					 arguments:@[@"diff-files", @"-z"]
-				   inDirectory:self.repository.workingDirectoryURL.path
-			 completionHandler:^(NSTask *task, NSData *readData, NSError *error) {
-				 if (error || task.terminationStatus != 0) {
-					 [self postIndexRefreshStatus:NO message:@"diff-files failed"];
-				 } else {
-					 NSArray *lines = [self linesFromData:readData];
-					 NSMutableDictionary *dic = [self dictionaryForLines:lines];
-					 [self addFilesFromDictionary:dic staged:NO tracked:YES];
-				 }
-				 [self postIndexRefreshStatus:NO message:@"diff-files success"];
+	[PBTask launchTask:[PBGitBinary path]
+			 arguments:@[@"diff-files", @"-z"]
+		   inDirectory:self.repository.workingDirectoryURL.path
+	 completionHandler:^(NSData *readData, NSError *error) {
+		 if (error) {
+			 [self postIndexRefreshStatus:NO message:@"diff-files failed"];
+		 } else {
+			 NSArray *lines = [self linesFromData:readData];
+			 NSMutableDictionary *dic = [self dictionaryForLines:lines];
+			 [self addFilesFromDictionary:dic staged:NO tracked:YES];
+		 }
+		 [self postIndexRefreshStatus:NO message:@"diff-files success"];
 
-				 dispatch_group_leave(_indexRefreshGroup);
-			 }];
+		 dispatch_group_leave(_indexRefreshGroup);
+	 }];
 }
 
 // Returns the tree to compare the index to, based
@@ -486,13 +487,17 @@ NS_ENUM(NSUInteger, PBGitIndexOperation) {
 	NSArray *paths = [discardFiles valueForKey:@"path"];
 	NSString *input = [paths componentsJoinedByString:@"\0"];
 
-	NSArray *arguments = [NSArray arrayWithObjects:@"checkout-index", @"--index", @"--quiet", @"--force", @"-z", @"--stdin", nil];
+	NSArray *arguments = @[@"checkout-index", @"--index", @"--quiet", @"--force", @"-z", @"--stdin"];
 
-	int ret = 1;
-	[PBEasyPipe outputForCommand:[PBGitBinary path]	withArgs:arguments inDir:self.repository.workingDirectoryURL.path inputString:input retValue:&ret];
+	PBTask *task = [PBTask taskWithLaunchPath:[PBGitBinary path]
+									arguments:arguments
+								  inDirectory:self.repository.workingDirectoryURL.path];
+	task.standardInputData = [input dataUsingEncoding:NSUTF8StringEncoding];
 
-	if (ret) {
-		[self postOperationFailed:[NSString stringWithFormat:@"Discarding changes failed with return value %i", ret]];
+	NSError *error = nil;
+	BOOL success = [task launchTask:&error];
+	if (!success) {
+		[self postOperationFailed:[NSString stringWithFormat:@"Discarding changes failed with return value %@", error.userInfo[PBTaskTerminationStatusKey]]];
 		return;
 	}
 

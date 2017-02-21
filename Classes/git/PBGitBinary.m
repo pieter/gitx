@@ -7,7 +7,7 @@
 //
 
 #import "PBGitBinary.h"
-#import "PBEasyPipe.h"
+#import "PBTask.h"
 
 @implementation PBGitBinary
 
@@ -21,7 +21,7 @@ static NSString* gitPath = nil;
 	if (![[NSFileManager defaultManager] fileExistsAtPath:path])
 		return nil;
 
-	NSString *version = [PBEasyPipe outputForCommand:path withArgs:[NSArray arrayWithObject:@"--version"]];
+	NSString *version = [PBTask outputForCommand:path arguments:@[@"--version"]];
 
 	return [self extractGitVersion:version];
 }
@@ -89,8 +89,7 @@ static NSString* gitPath = nil;
 	// No explicit path.
 	
 	// Try to find git with "which"
-	NSString* whichPath = [PBEasyPipe outputForCommand:@"/usr/bin/which"
-											  withArgs:[NSArray arrayWithObject:@"git"]];
+	NSString* whichPath = [PBTask outputForCommand:@"/usr/bin/which" arguments:@[@"git"]];
 	if ([self acceptBinary:whichPath])
 		return;
 
@@ -101,8 +100,7 @@ static NSString* gitPath = nil;
 	}
 	
 	// Lastly, try `xcrun git`
-	NSString* xcrunPath = [PBEasyPipe outputForCommand:@"/usr/bin/xcrun"
-											  withArgs:[NSArray arrayWithObjects:@"-f", @"git", nil]];
+	NSString* xcrunPath = [PBTask outputForCommand:@"/usr/bin/xcrun" arguments:@[@"-f", @"git"]];
 	if ([self acceptBinary:xcrunPath])
 	{
 		return;
@@ -153,6 +151,5 @@ static NSMutableArray *locations = nil;
 {
 	return [self versionForPath:gitPath];
 }
-
 
 @end

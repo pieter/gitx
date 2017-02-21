@@ -7,102 +7,10 @@
 //
 
 #import "PBEasyPipe.h"
-#import <objc/runtime.h>
-
-NSString *const PBEasyPipeErrorDomain = @"PBEasyPipeErrorDomain";
-NSString *const PBEasyPipeUnderlyingExceptionKey = @"PBEasyPipeUnderlyingExceptionKey";
-
-#pragma mark - NSPipe category
-
-/* Some NSTask's generate a lot of output. Using a regular pipe with these tasks causes the pipe to fill up before the
- task completes; it will basically fail silently. To fix this, the pipe must occasionally be read into a
- cache, but because this can occur at the end of a chain of async operations, it gets complicated. Instead, you can set
- the .dataOutput property on this NSPipe category, and the intermittent results automatically will be read into
- that NSMutableData.
- */
-
-@interface NSPipe (PBEasyPipe)
-
-@property (nonatomic, strong) NSMutableData *dataOutput;
-
-@end
-
-@implementation NSPipe (PBEasyPipe)
-
-- (void)setDataOutput:(nonnull NSMutableData *)dataOutput {
-	objc_setAssociatedObject(self, @selector(dataOutput), dataOutput, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-
-	NSFileHandle *fileHandle = self.fileHandleForReading;
-	NSAssert(fileHandle != nil, @"should have file handle for reading");
-
-	fileHandle.readabilityHandler = ^(NSFileHandle * _Nonnull fileHandle) {
-		NSData *data = fileHandle.availableData;
-		if (data.length) {
-			[dataOutput appendData:data];
-		} else {
-			[fileHandle closeFile];
-		}
-	};
-}
-
-- (NSMutableData *)dataOutput {
-	return objc_getAssociatedObject(self, @selector(dataOutput));
-}
-
-- (void)clear {
-	self.fileHandleForReading.readabilityHandler = nil;
-}
-
-@end
 
 #pragma mark - PBEasyPipe implementation
 
 @implementation PBEasyPipe
-
-+ (nullable NSTask *)performCommand:(NSString *)command arguments:(NSArray *)arguments inDirectory:(NSString *)directory terminationHandler:(void (^)(NSTask *, NSError *error))terminationHandler {
-	NSParameterAssert(command != nil);
-
-	NSTask *task = [self taskForCommand:command arguments:arguments inDirectory:directory];
-	NSPipe *pipe = task.standardOutput;
-	pipe.dataOutput = [NSMutableData data];
-
-	task.terminationHandler = ^(NSTask *task) {
-		dispatch_async(dispatch_get_main_queue(), ^{
-			terminationHandler(task, nil);
-		});
-	};
-
-	@try {
-		[task launch];
-	} @catch (NSException *exception) {
-		NSString *desc = @"Exception raised while launching task";
-		NSString *failureReason = [NSString stringWithFormat:@"The task \"%@\" failed to launch", command];
-		NSDictionary *info = @{NSLocalizedDescriptionKey: desc,
-													 NSLocalizedFailureReasonErrorKey: failureReason,
-													 PBEasyPipeUnderlyingExceptionKey: exception};
-		NSError *error = [NSError errorWithDomain:PBEasyPipeErrorDomain code:PBEasyPipeTaskLaunchError userInfo:info];
-		terminationHandler(task, error);
-	}
-
-	return task;
-}
-
-+ (nullable NSTask *)performCommand:(NSString *)command arguments:(NSArray *)arguments inDirectory:(NSString *)directory completionHandler:(void (^)(NSTask *, NSData *readData, NSError *error))completionHandler {
-
-	return [self performCommand:command arguments:arguments inDirectory:directory terminationHandler:^(NSTask *task, NSError *error) {
-		NSPipe *pipe = task.standardOutput;
-
-		if (error) {
-			[pipe clear];
-			completionHandler(task, nil, error);
-			return;
-		}
-
-		[pipe clear];
-
-		completionHandler(task, pipe.dataOutput, nil);
-	}];
-}
 
 + (NSTask *)taskForCommand:(NSString *)cmd arguments:(NSArray *)args inDirectory:(NSString *)directory
 {
