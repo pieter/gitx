@@ -592,6 +592,33 @@
     return retValue ? NO : YES;
 }
 
+- (BOOL)ignoreFilePaths:(NSArray *)filePaths error:(NSError **)error
+{
+	NSString *filesAsString = [filePaths componentsJoinedByString:@"\n"];
+
+	// Write to the file
+	NSString *gitIgnoreName = [self gitIgnoreFilename];
+
+	NSStringEncoding enc = NSUTF8StringEncoding;
+	NSString *ignoreFile;
+
+	if (![[NSFileManager defaultManager] fileExistsAtPath:gitIgnoreName]) {
+		ignoreFile = filesAsString;
+	} else {
+		NSMutableString *currentFile = [NSMutableString stringWithContentsOfFile:gitIgnoreName usedEncoding:&enc error:error];
+		if (!currentFile) return NO;
+
+		// Add a newline if not yet present
+		if ([currentFile characterAtIndex:([ignoreFile length] - 1)] != '\n')
+			[currentFile appendString:@"\n"];
+		[currentFile appendString:filesAsString];
+
+		ignoreFile = currentFile;
+	}
+
+	return [ignoreFile writeToFile:gitIgnoreName atomically:YES encoding:enc error:error];
+}
+
 - (PBGitIndex *)index
 {
 	if (!_index) {

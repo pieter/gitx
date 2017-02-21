@@ -52,32 +52,12 @@
 		if ([name length] > 0)
 			[fileList addObject:name];
 	}
-	NSString *filesAsString = [fileList componentsJoinedByString:@"\n"];
 
-	// Write to the file
-	NSString *gitIgnoreName = [commitController.repository gitIgnoreFilename];
-
-	NSStringEncoding enc = NSUTF8StringEncoding;
 	NSError *error = nil;
-	NSMutableString *ignoreFile;
-
-	if (![[NSFileManager defaultManager] fileExistsAtPath:gitIgnoreName]) {
-		ignoreFile = [filesAsString mutableCopy];
-	} else {
-		ignoreFile = [NSMutableString stringWithContentsOfFile:gitIgnoreName usedEncoding:&enc error:&error];
-		if (error) {
-			[[commitController.repository windowController] showErrorSheet:error];
-			return;
-		}
-		// Add a newline if not yet present
-		if ([ignoreFile characterAtIndex:([ignoreFile length] - 1)] != '\n')
-			[ignoreFile appendString:@"\n"];
-		[ignoreFile appendString:filesAsString];
+	BOOL success = [commitController.repository ignoreFilePaths:fileList error:&error];
+	if (!success) {
+		[commitController.windowController showErrorSheet:error];
 	}
-
-	[ignoreFile writeToFile:gitIgnoreName atomically:YES encoding:enc error:&error];
-	if (error)
-		[[commitController.repository windowController] showErrorSheet:error];
 }
 
 # pragma mark Context Menu methods
