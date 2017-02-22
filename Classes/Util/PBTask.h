@@ -70,6 +70,7 @@ typedef NS_ENUM(NSUInteger, PBTaskErrorCode) {
 @property (readonly, retain) NSData *standardOutputData;
 /// Set this if you want to pass data to the command on its standard input
 @property (retain) NSData *standardInputData;
+@property (retain) NSDictionary *additionalEnvironment;
 
 - (void)terminate;
 
