@@ -30,4 +30,8 @@ extern NSString * const PBGitXErrorDomain;
 + (NSError *)pb_errorWithDescription:(NSString *)description failureReason:(NSString *)failureReason underlyingError:(nullable NSError *)underError userInfo:(nullable NSDictionary *)userInfo;
 @end
 
+BOOL PBReturnError(NSError **error, NSString *description, NSString *failureReason);
+BOOL PBReturnErrorWithUserInfo(NSError **error, NSString *description, NSString *failureReason, NSDictionary * _Nullable userInfo);
+BOOL PBReturnErrorWithBuilder(NSError **error, NSError * (^errorBuilder)(void));
+
 NS_ASSUME_NONNULL_END
