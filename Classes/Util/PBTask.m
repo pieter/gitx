@@ -186,7 +186,7 @@ NSString *const PBTaskTerminationOutputKey = @"PBTaskTerminationOutputKey";
 	BOOL success = [task launchTask:error];
 	if (!success) return nil;
 
-	return [[NSString alloc] initWithData:task.standardOutputData encoding:NSUTF8StringEncoding];
+	return task.standardOutputString;
 }
 
 + (void)launchTask:(NSString *)launchPath arguments:(NSArray *)arguments inDirectory:(NSString *)directory completionHandler:(void (^)(NSData *readData, NSError *error))completionHandler {
@@ -194,5 +194,8 @@ NSString *const PBTaskTerminationOutputKey = @"PBTaskTerminationOutputKey";
 	[task performTaskWithCompletionHandler:completionHandler];
 }
 
+- (NSString *)standardOutputString {
+	return [[NSString alloc] initWithData:self.standardOutputData encoding:NSUTF8StringEncoding];
+}
 
 @end

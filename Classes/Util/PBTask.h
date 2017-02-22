@@ -106,6 +106,12 @@ typedef NS_ENUM(NSUInteger, PBTaskErrorCode) {
 ///
 + (void)launchTask:(NSString *)launchPath arguments:(nullable NSArray *)arguments inDirectory:(nullable NSString *)directory completionHandler:(void (^)(NSData * __nullable readData, NSError * __nullable error))completionHandler;
 
+/// Return the standard output data as a string
+///
+/// If the data is not valid UTF-8, nil will be returned.
+///
+- (nullable NSString *)standardOutputString;
+
 @end
 
 NS_ASSUME_NONNULL_END
