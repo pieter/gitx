@@ -99,6 +99,11 @@
     }
 }
 
+- (void) updateView
+{
+	[self refresh:nil];
+}
+
 - (void)closeView
 {
 	[self saveCommitSplitViewPosition];
@@ -110,6 +115,55 @@
 {
 	return commitMessageView;
 }
+
+- (PBGitIndex *) index {
+	return repository.index;
+}
+
+- (void) commitWithVerification:(BOOL) doVerify
+{
+	if ([[NSFileManager defaultManager] fileExistsAtPath:[repository.gitURL.path stringByAppendingPathComponent:@"MERGE_HEAD"]]) {
+		NSString * message = NSLocalizedString(@"Cannot commit merges",
+											   @"Title for sheet that GitX cannot create merge commits");
+		NSString * info = NSLocalizedString(@"GitX cannot commit merges yet. Please commit your changes from the command line.",
+											@"Information text for sheet that GitX cannot create merge commits");
+
+		[self.windowController showMessageSheet:message infoText:info];
+		return;
+	}
+
+	if ([[cachedFilesController arrangedObjects] count] == 0) {
+		NSString * message = NSLocalizedString(@"No changes to commit",
+											   @"Title for sheet that you need to stage changes before creating a commit");
+		NSString * info = NSLocalizedString(@"You need to stage some changed files before committing by moving them to the list of Staged Changes.",
+											@"Information text for sheet that you need to stage changes before creating a commit");
+
+		[self.windowController showMessageSheet:message infoText:info];
+		return;
+	}
+
+	NSString *commitMessage = [commitMessageView string];
+	if (commitMessage.length < kMinimalCommitMessageLength) {
+		NSString * message = NSLocalizedString(@"Missing commit message",
+											   @"Title for sheet that you need to enter a commit message before creating a commit");
+		NSString * info = [NSString stringWithFormat:
+						   NSLocalizedString(@"Please enter a commit message at least %i characters long before commiting.",
+											 @"Format for sheet that you need to enter a commit message before creating a commit giving the minimum length of the commit message required"),
+						   kMinimalCommitMessageLength ];
+		[self.windowController showMessageSheet:message infoText:info ];
+		return;
+	}
+
+	[cachedFilesController setSelectionIndexes:[NSIndexSet indexSet]];
+	[unstagedFilesController setSelectionIndexes:[NSIndexSet indexSet]];
+
+	self.isBusy = YES;
+	commitMessageView.editable = NO;
+
+	[repository.index commitWithMessage:commitMessage andVerify:doVerify];
+}
+
+#pragma mark IBActions
 
 - (IBAction)signOff:(id)sender
 {
@@ -137,7 +191,7 @@
 	}
 }
 
-- (void) refresh:(id) sender
+- (IBAction) refresh:(id) sender
 {
 	[controlsTabView selectTabViewItemAtIndex:kControlsTabIndexCommit];
 
@@ -147,11 +201,6 @@
 
 	// Reload refs (in case HEAD changed)
 	[repository reloadRefs];
-}
-
-- (void) updateView
-{
-	[self refresh:nil];
 }
 
 - (IBAction) stashChanges:(id)sender
@@ -169,55 +218,6 @@
 {
     [self commitWithVerification:NO];
 }
-
-- (void) commitWithVerification:(BOOL) doVerify
-{
-	if ([[NSFileManager defaultManager] fileExistsAtPath:[repository.gitURL.path stringByAppendingPathComponent:@"MERGE_HEAD"]]) {
-		NSString * message = NSLocalizedString(@"Cannot commit merges",
-											   @"Title for sheet that GitX cannot create merge commits");
-		NSString * info = NSLocalizedString(@"GitX cannot commit merges yet. Please commit your changes from the command line.",
-											@"Information text for sheet that GitX cannot create merge commits");
-
-		[repository.windowController showMessageSheet:message infoText:info];
-		return;
-	}
-
-	if ([[cachedFilesController arrangedObjects] count] == 0) {
-		NSString * message = NSLocalizedString(@"No changes to commit",
-											   @"Title for sheet that you need to stage changes before creating a commit");
-		NSString * info = NSLocalizedString(@"You need to stage some changed files before committing by moving them to the list of Staged Changes.",
-											@"Information text for sheet that you need to stage changes before creating a commit");
-
-		[repository.windowController showMessageSheet:message infoText:info];
-		return;
-	}
-	
-	NSString *commitMessage = [commitMessageView string];
-	if (commitMessage.length < kMinimalCommitMessageLength) {
-		NSString * message = NSLocalizedString(@"Missing commit message",
-											   @"Title for sheet that you need to enter a commit message before creating a commit");
-		NSString * info = [NSString stringWithFormat:
-						   NSLocalizedString(@"Please enter a commit message at least %i characters long before commiting.",
-											 @"Format for sheet that you need to enter a commit message before creating a commit giving the minimum length of the commit message required"),
-						   kMinimalCommitMessageLength ];
-		[repository.windowController showMessageSheet:message infoText:info ];
-		return;
-	}
-
-	[cachedFilesController setSelectionIndexes:[NSIndexSet indexSet]];
-	[unstagedFilesController setSelectionIndexes:[NSIndexSet indexSet]];
-
-	self.isBusy = YES;
-	commitMessageView.editable = NO;
-
-	[repository.index commitWithMessage:commitMessage andVerify:doVerify];
-}
-
-
-- (PBGitIndex *) index {
-	return repository.index;
-}
-
 
 # pragma mark PBGitIndex Notification handling
 
