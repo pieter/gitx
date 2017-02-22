@@ -16,7 +16,7 @@
 #import "PBGitBinary.h"
 
 #import "NSFileHandleExt.h"
-#import "PBEasyPipe.h"
+#import "PBTask.h"
 #import "PBGitRef.h"
 #import "PBGitRevSpecifier.h"
 #import "PBRemoteProgressSheet.h"
@@ -434,21 +434,17 @@
 	if (!name)
 		return nil;
 
-	int retValue = 1;
-    NSString *output = [self outputInWorkdirForArguments:[NSArray arrayWithObjects:@"show-ref", name, nil] retValue:&retValue];
-	if (retValue)
-		return nil;
+	NSError *taskError = nil;
+	NSString *output = [self outputOfTaskWithArguments:@[@"show-ref", name] error:&taskError];
 
 	// the output is in the format: <SHA-1 ID> <space> <reference name>
 	// with potentially multiple lines if there are multiple matching refs (ex: refs/remotes/origin/master)
 	// here we only care about the first match
 	NSArray *refList = [output componentsSeparatedByCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-	if ([refList count] > 1) {
-		NSString *refName = [refList objectAtIndex:1];
-		return [PBGitRef refFromString:refName];
-	}
+	if (refList.count != 1) return nil;
 
-	return nil;
+	NSString *refName = [refList objectAtIndex:1];
+	return [PBGitRef refFromString:refName];
 }
 
 - (NSArray*)branches
@@ -1080,34 +1076,32 @@
 		return YES;
 	}
 
-	NSDictionary *info = @{
-						   @"GIT_DIR": self.gitURL.path,
-						   @"GIT_INDEX_FILE": [self.gitURL.path stringByAppendingPathComponent:@"index"],
-						   };
+	PBTask *task = [PBTask taskWithLaunchPath:hookPath arguments:arguments inDirectory:self.workingDirectory];
+	task.additionalEnvironment = @{
+								   @"GIT_DIR": self.gitURL.path,
+								   @"GIT_INDEX_FILE": [self.gitURL.path stringByAppendingPathComponent:@"index"],
+								   };
 
-	int ret = 1;
-	NSString *output = [PBEasyPipe outputForCommand:hookPath withArgs:arguments inDir:[self workingDirectory] byExtendingEnvironment:info inputString:nil retValue:&ret];
-	if (ret != 0) {
-		NSString *failureReason = [NSString localizedStringWithFormat:@"Hook %@ failed", name];
-		NSString *desc = nil;
-		if (output.length == 0) {
-			desc = [NSString localizedStringWithFormat:@"The %@ hook failed to run.", name];
-		} else {
-			desc = [NSString localizedStringWithFormat:@"The %@ hook failed to run and returned the following:\n%@", name, output];
-		}
+	NSError *taskError = nil;
+	BOOL success = [task launchTask:&taskError];
 
-		if (error) *error = [NSError errorWithDomain:PBGitXErrorDomain
-												code:0
-											userInfo:@{
-													   NSLocalizedFailureReasonErrorKey: failureReason,
-													   NSLocalizedDescriptionKey: desc,
-													   }
-							 ];
+	NSString *output = task.standardOutputString;
+	if (!success) {
+		return PBReturnErrorWithBuilder(error, ^{
+			NSString *failureReason = [NSString localizedStringWithFormat:@"Hook %@ failed", name];
+			NSString *desc = nil;
+			if (output.length == 0) {
+				desc = [NSString localizedStringWithFormat:@"The %@ hook failed to run.", name];
+			} else {
+				desc = [NSString localizedStringWithFormat:@"The %@ hook failed to run and returned the following:\n%@", name, output];
+			}
+			return [NSError pb_errorWithDescription:desc failureReason:failureReason underlyingError:taskError];
+		});
 	}
 
 	if (outputPtr) *outputPtr = output;
 
-	return (ret == 0);
+	return YES;
 }
 
 - (BOOL)revisionExists:(NSString *)spec

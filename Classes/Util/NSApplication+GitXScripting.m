@@ -12,7 +12,7 @@
 #import "PBGitRepository.h"
 #import "PBCloneRepositoryPanel.h"
 #import "PBGitBinary.h"
-#import "PBEasyPipe.h"
+#import "PBTask.h"
 
 
 @implementation NSApplication (GitXScripting)
@@ -31,23 +31,18 @@
     NSURL *repositoryURL = command.directParameter;
     NSArray *diffOptions = command.arguments[@"diffOptions"];
 
-	diffOptions = [[NSArray arrayWithObjects:@"diff", @"--no-ext-diff", nil] arrayByAddingObjectsFromArray:diffOptions];
+	diffOptions = [@[@"diff", @"--no-ext-diff"] arrayByAddingObjectsFromArray:diffOptions];
 
-	int retValue = 1;
-	NSString *diffOutput = [PBEasyPipe outputForCommand:[PBGitBinary path] withArgs:diffOptions inDir:[repositoryURL path] retValue:&retValue];
-	if (retValue) {
+	NSError *error = nil;
+	NSString *diffOutput = [PBTask outputForCommand:[PBGitBinary path] arguments:diffOptions inDirectory:repositoryURL.path error:&error];
+	if (!diffOutput) {
 		// if there is an error diffOutput should have the error output from git
-		if (diffOutput)
-			NSLog(@"%s\n", [diffOutput UTF8String]);
-		else
-			NSLog(@"Invalid diff command [%d]\n", retValue);
+		NSLog(@"Invalid diff command: %@", error);
         return;
 	}
 
-    if (diffOutput) {
-        PBDiffWindowController *diffController = [[PBDiffWindowController alloc] initWithDiff:diffOutput];
-        [diffController showWindow:self];
-    }
+	PBDiffWindowController *diffController = [[PBDiffWindowController alloc] initWithDiff:diffOutput];
+	[diffController showWindow:self];
 }
 
 - (void)initRepositoryScriptCommand:(NSScriptCommand *)command
