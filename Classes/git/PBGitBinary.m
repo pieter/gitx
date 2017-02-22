@@ -21,7 +21,7 @@ static NSString* gitPath = nil;
 	if (![[NSFileManager defaultManager] fileExistsAtPath:path])
 		return nil;
 
-	NSString *version = [PBTask outputForCommand:path arguments:@[@"--version"]];
+	NSString *version = [PBTask outputForCommand:path arguments:@[@"--version"] error:NULL];
 
 	return [self extractGitVersion:version];
 }
@@ -89,7 +89,7 @@ static NSString* gitPath = nil;
 	// No explicit path.
 	
 	// Try to find git with "which"
-	NSString* whichPath = [PBTask outputForCommand:@"/usr/bin/which" arguments:@[@"git"]];
+	NSString* whichPath = [PBTask outputForCommand:@"/usr/bin/which" arguments:@[@"git"] error:NULL];
 	if ([self acceptBinary:whichPath])
 		return;
 
@@ -100,7 +100,7 @@ static NSString* gitPath = nil;
 	}
 	
 	// Lastly, try `xcrun git`
-	NSString* xcrunPath = [PBTask outputForCommand:@"/usr/bin/xcrun" arguments:@[@"-f", @"git"]];
+	NSString* xcrunPath = [PBTask outputForCommand:@"/usr/bin/xcrun" arguments:@[@"-f", @"git"] error:NULL];
 	if ([self acceptBinary:xcrunPath])
 	{
 		return;

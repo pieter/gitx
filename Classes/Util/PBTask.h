@@ -80,13 +80,21 @@ typedef NS_ENUM(NSUInteger, PBTaskErrorCode) {
 
 /// Execute a command, only caring for its output
 ///
+/// @see -[PBTask outputForCommand:arguments:inDirectory:error]
+///
++ (nullable NSString *)outputForCommand:(NSString *)launchPath arguments:(nullable NSArray *)arguments error:(NSError **)error;
+
+
+/// Execute a command, only caring for its output
+///
 /// @param launchPath The absolute path to the executable that should be run.
 /// @param arguments  The arguments to pass to the executable. Can be nil.
+/// @param directory  The directory to use as the executable working directory. Can be nil.
 ///
 /// @return The data outputted by the command as a string, nil in case of failure.
 /// Hint: We only try to convert from UTF-8 data, so that might fail.
 ///
-+ (nullable NSString *)outputForCommand:(NSString *)launchPath arguments:(nullable NSArray *)arguments;
++ (nullable NSString *)outputForCommand:(NSString *)launchPath arguments:(nullable NSArray *)arguments inDirectory:(nullable NSString *)directory error:(NSError **)error;
 
 /// Directly launch a task with a completion handler
 ///

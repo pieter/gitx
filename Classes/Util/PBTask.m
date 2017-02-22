@@ -177,9 +177,13 @@ NSString *const PBTaskTerminationOutputKey = @"PBTaskTerminationOutputKey";
 
 @implementation PBTask (PBBellsAndWhistles)
 
-+ (NSString *)outputForCommand:(NSString *)launchPath arguments:(NSArray *)arguments {
-	PBTask *task = [self taskWithLaunchPath:launchPath arguments:arguments inDirectory:nil];
-	BOOL success = [task launchTask:NULL];
++ (NSString *)outputForCommand:(NSString *)launchPath arguments:(NSArray *)arguments error:(NSError **)error {
+	return [self outputForCommand:launchPath arguments:arguments inDirectory:nil error:error];
+}
+
++ (NSString *)outputForCommand:(NSString *)launchPath arguments:(NSArray *)arguments inDirectory:(NSString *)directory error:(NSError **)error {
+	PBTask *task = [self taskWithLaunchPath:launchPath arguments:arguments inDirectory:directory];
+	BOOL success = [task launchTask:error];
 	if (!success) return nil;
 
 	return [[NSString alloc] initWithData:task.standardOutputData encoding:NSUTF8StringEncoding];
