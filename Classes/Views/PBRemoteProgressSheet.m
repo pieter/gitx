@@ -11,6 +11,7 @@
 #import "PBGitRepository.h"
 #import "PBGitBinary.h"
 #import "PBEasyPipe.h"
+#import "PBError.h"
 
 
 
@@ -224,7 +225,7 @@ NSString * const kGitXProgressErrorInfo          = @"PBGitXProgressErrorInfo";
 								   [self errorTitle], NSLocalizedDescriptionKey,
 								   info, NSLocalizedRecoverySuggestionErrorKey,
 								   nil];
-	NSError *error = [NSError errorWithDomain:PBGitRepositoryErrorDomain code:0 userInfo:errorUserInfo];
+	NSError *error = [NSError errorWithDomain:PBGitXErrorDomain code:0 userInfo:errorUserInfo];
 
 	[self.repoWindow showErrorSheet:error];
 }

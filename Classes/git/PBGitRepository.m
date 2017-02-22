@@ -26,6 +26,7 @@
 #import "PBRepositoryFinder.h"
 #import "PBGitHistoryList.h"
 #import "PBGitStash.h"
+#import "PBError.h"
 
 @interface PBGitRepository () {
 	__strong PBGitRepositoryWatcher *watcher;
@@ -73,7 +74,7 @@
                                       [NSString stringWithFormat:@"%@ does not appear to be a git repository.", [repositoryURL path]], NSLocalizedRecoverySuggestionErrorKey,
                                       gtError, NSUnderlyingErrorKey,
                                       nil];
-			*error = [NSError errorWithDomain:PBGitRepositoryErrorDomain code:0 userInfo:userInfo];
+			*error = [NSError errorWithDomain:PBGitXErrorDomain code:0 userInfo:userInfo];
 		}
 		return nil;
 	}
@@ -641,7 +642,7 @@
 
 	if (error != NULL) {
 		NSString *info = [NSString stringWithFormat:@"There is no remote configured for the %@ '%@'.\n\nPlease select a branch from the popup menu, which has a corresponding remote tracking branch set up.\n\nYou can also use a contextual menu to choose a branch by right clicking on its label in the commit history list.", [branch refishType], [branch shortName]];
-		*error = [NSError errorWithDomain:PBGitRepositoryErrorDomain code:0
+		*error = [NSError errorWithDomain:PBGitXErrorDomain code:0
 								 userInfo:[NSDictionary dictionaryWithObjectsAndKeys:
 										   @"No remote configured for branch", NSLocalizedDescriptionKey,
 										   info, NSLocalizedRecoverySuggestionErrorKey,
@@ -1141,7 +1142,7 @@
 			desc = [NSString localizedStringWithFormat:@"The %@ hook failed to run and returned the following:\n%@", name, output];
 		}
 
-		if (error) *error = [NSError errorWithDomain:PBGitRepositoryErrorDomain
+		if (error) *error = [NSError errorWithDomain:PBGitXErrorDomain
 												code:0
 											userInfo:@{
 													   NSLocalizedFailureReasonErrorKey: failureReason,

@@ -15,6 +15,7 @@
 #import "PBRepositoryFinder.h"
 #import "PBGitDefaults.h"
 #import "PBOpenShallowRepositoryErrorRecoveryAttempter.h"
+#import "PBError.h"
 
 NSString *PBGitRepositoryDocumentType = @"Git Repository";
 
@@ -35,7 +36,7 @@ NSString *PBGitRepositoryDocumentType = @"Git Repository";
 		if (outError) {
 			NSDictionary* userInfo = [NSDictionary dictionaryWithObject:[PBGitBinary notFoundError]
 																 forKey:NSLocalizedRecoverySuggestionErrorKey];
-			*outError = [NSError errorWithDomain:PBGitRepositoryErrorDomain code:0 userInfo:userInfo];
+			*outError = [NSError errorWithDomain:PBGitXErrorDomain code:0 userInfo:userInfo];
 		}
 		return NO;
 	}
@@ -46,7 +47,7 @@ NSString *PBGitRepositoryDocumentType = @"Git Repository";
 		if (outError) {
 			NSDictionary* userInfo = [NSDictionary dictionaryWithObject:@"Reading files is not supported."
 																 forKey:NSLocalizedRecoverySuggestionErrorKey];
-			*outError = [NSError errorWithDomain:PBGitRepositoryErrorDomain code:0 userInfo:userInfo];
+			*outError = [NSError errorWithDomain:PBGitXErrorDomain code:0 userInfo:userInfo];
 		}
 		return NO;
 	}
@@ -64,7 +65,7 @@ NSString *PBGitRepositoryDocumentType = @"Git Repository";
 				NSLocalizedRecoveryOptionsErrorKey: [PBOpenShallowRepositoryErrorRecoveryAttempter errorDialogButtonNames],
 				NSRecoveryAttempterErrorKey: [[PBOpenShallowRepositoryErrorRecoveryAttempter alloc] initWithURL:_repository.workingDirectoryURL]
 			};
-			*outError = [NSError errorWithDomain:PBGitRepositoryErrorDomain code:0 userInfo:userInfo];
+			*outError = [NSError errorWithDomain:PBGitXErrorDomain code:0 userInfo:userInfo];
 		}
 		return NO;
 	}

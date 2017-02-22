@@ -18,6 +18,7 @@
 #import "PBSourceViewItem.h"
 #import "PBGitRevSpecifier.h"
 #import "PBGitRef.h"
+#import "PBError.h"
 
 @interface PBGitWindowController ()
 
@@ -168,7 +169,7 @@
 
 - (void)showErrorSheet:(NSError *)error
 {
-	if ([[error domain] isEqualToString:PBGitRepositoryErrorDomain])
+	if ([[error domain] isEqualToString:PBGitXErrorDomain])
 	{
 		[PBGitXMessageSheet beginMessageSheetForRepo:self.repository withError:error];
 	}
@@ -189,7 +190,7 @@
 							  title, NSLocalizedDescriptionKey,
 							  reason, NSLocalizedRecoverySuggestionErrorKey,
 							  nil];
-	NSError *error = [NSError errorWithDomain:PBGitRepositoryErrorDomain code:0 userInfo:userInfo];
+	NSError *error = [NSError errorWithDomain:PBGitXErrorDomain code:0 userInfo:userInfo];
 	[self showErrorSheet:error];
 }
 

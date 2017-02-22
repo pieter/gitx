@@ -16,7 +16,6 @@
 @class GTRepository;
 @class GTConfiguration;
 
-extern NSString* PBGitRepositoryErrorDomain;
 extern NSString *PBGitRepositoryDocumentType;
 
 typedef enum branchFilterTypes {
