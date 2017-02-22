@@ -29,6 +29,16 @@ NSString * const PBGitXErrorDomain      = @"PBGitXErrorDomain";
 }
 
 + (NSError *)pb_errorWithDescription:(NSString *)description failureReason:(NSString *)failureReason userInfo:(nullable NSDictionary *)userInfo
+{
+	return [self pb_errorWithDescription:description failureReason:failureReason underlyingError:nil userInfo:userInfo];
+}
+
++ (NSError *)pb_errorWithDescription:(NSString *)description failureReason:(NSString *)failureReason underlyingError:(NSError *)underError
+{
+	return [self pb_errorWithDescription:description failureReason:failureReason underlyingError:underError userInfo:nil];
+}
+
++ (NSError *)pb_errorWithDescription:(NSString *)description failureReason:(NSString *)failureReason underlyingError:(NSError *)underError userInfo:(NSDictionary *)userInfo {
 	NSParameterAssert(description != nil);
 	NSParameterAssert(failureReason != nil);
 
@@ -38,6 +48,10 @@ NSString * const PBGitXErrorDomain      = @"PBGitXErrorDomain";
 										  NSLocalizedDescriptionKey: description,
 										  NSLocalizedFailureReasonErrorKey: failureReason,
 										  }];
+
+	if (underError) {
+		[errorInfo addEntriesFromDictionary:@{ NSUnderlyingErrorKey: underError }];
+	}
 
 	return [NSError errorWithDomain:PBGitXErrorDomain code:0 userInfo:userInfo];
 }
