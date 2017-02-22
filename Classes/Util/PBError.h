@@ -19,4 +19,13 @@
 
 #import <Cocoa/Cocoa.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 extern NSString * const PBGitXErrorDomain;
+
+@interface NSError (PBError)
++ (NSError *)pb_errorWithDescription:(NSString *)description failureReason:(NSString *)failureReason;
++ (NSError *)pb_errorWithDescription:(NSString *)description failureReason:(NSString *)failureReason userInfo:(nullable NSDictionary *)userInfo;
+@end
+
+NS_ASSUME_NONNULL_END

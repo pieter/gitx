@@ -20,3 +20,26 @@
 #import "PBError.h"
 
 NSString * const PBGitXErrorDomain      = @"PBGitXErrorDomain";
+
+@implementation NSError (PBError)
+
++ (NSError *)pb_errorWithDescription:(NSString *)description failureReason:(NSString *)failureReason
+{
+	return [self pb_errorWithDescription:description failureReason:failureReason underlyingError:nil userInfo:nil];
+}
+
++ (NSError *)pb_errorWithDescription:(NSString *)description failureReason:(NSString *)failureReason userInfo:(nullable NSDictionary *)userInfo
+	NSParameterAssert(description != nil);
+	NSParameterAssert(failureReason != nil);
+
+	NSMutableDictionary *errorInfo = userInfo ? [userInfo mutableCopy] : [NSMutableDictionary dictionary];
+
+	[errorInfo addEntriesFromDictionary:@{
+										  NSLocalizedDescriptionKey: description,
+										  NSLocalizedFailureReasonErrorKey: failureReason,
+										  }];
+
+	return [NSError errorWithDomain:PBGitXErrorDomain code:0 userInfo:userInfo];
+}
+
+@end
