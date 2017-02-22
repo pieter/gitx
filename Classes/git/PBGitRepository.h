@@ -83,19 +83,6 @@ typedef enum branchFilterTypes {
 
 - (NSURL *) gitURL ;
 
-- (NSFileHandle*) handleForCommand:(NSString*) cmd GITX_DEPRECATED;
-- (NSFileHandle*) handleForArguments:(NSArray*) args GITX_DEPRECATED;
-- (NSFileHandle *) handleInWorkDirForArguments:(NSArray *)args GITX_DEPRECATED;
-- (NSString*) outputForCommand:(NSString*) cmd GITX_DEPRECATED;
-- (NSString *)outputForCommand:(NSString *)str retValue:(int *)ret GITX_DEPRECATED;
-- (NSString *)outputForArguments:(NSArray *)arguments inputString:(NSString *)input retValue:(int *)ret GITX_DEPRECATED;
-- (NSString *)outputForArguments:(NSArray *)arguments inputString:(NSString *)input byExtendingEnvironment:(NSDictionary *)dict retValue:(int *)ret GITX_DEPRECATED;
-
-
-- (NSString*) outputForArguments:(NSArray*) args GITX_DEPRECATED;
-- (NSString*) outputForArguments:(NSArray*) args retValue:(int *)ret GITX_DEPRECATED;
-- (NSString *)outputInWorkdirForArguments:(NSArray*) arguments GITX_DEPRECATED;
-- (NSString *)outputInWorkdirForArguments:(NSArray*) arguments retValue:(int *)ret GITX_DEPRECATED;
 - (BOOL)executeHook:(NSString *)name output:(NSString **)output GITX_DEPRECATED;
 - (BOOL)executeHook:(NSString *)name withArgs:(NSArray*) arguments output:(NSString **)output GITX_DEPRECATED;
 

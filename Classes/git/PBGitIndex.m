@@ -8,6 +8,7 @@
 
 #import "PBGitIndex.h"
 #import "PBGitRepository.h"
+#import "PBGitRepository_PBGitBinarySupport.h"
 #import "PBGitBinary.h"
 #import "PBTask.h"
 #import "PBChangedFile.h"

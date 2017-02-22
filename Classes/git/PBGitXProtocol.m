@@ -8,6 +8,7 @@
 
 #import "PBGitXProtocol.h"
 #import "PBGitRepository.h"
+#import "PBGitRepository_PBGitBinarySupport.h"
 
 @implementation PBGitXProtocol
 

@@ -8,6 +8,7 @@
 
 #import "PBWebController.h"
 #import "PBGitRepository.h"
+#import "PBGitRepository_PBGitBinarySupport.h"
 #import "PBGitXProtocol.h"
 #import "PBGitDefaults.h"
 

@@ -7,6 +7,8 @@
 //
 
 #import "PBGitRepository.h"
+
+#import "PBGitRepository_PBGitBinarySupport.h"
 #import "PBGitCommit.h"
 #import "PBGitIndex.h"
 #import "PBGitWindowController.h"
@@ -1051,87 +1053,7 @@
 	return nil;
 }
 
-#pragma mark low level
-
-- (int) returnValueForCommand:(NSString *)cmd
-{
-	int i;
-	[self outputForCommand:cmd retValue: &i];
-	return i;
-}
-
-- (NSFileHandle*) handleForArguments:(NSArray *)args
-{
-	NSString* gitDirArg = [@"--git-dir=" stringByAppendingString:self.gitURL.path];
-	NSMutableArray* arguments =  [NSMutableArray arrayWithObject: gitDirArg];
-	[arguments addObjectsFromArray: args];
-	return [PBEasyPipe handleForCommand:[PBGitBinary path] withArgs:arguments];
-}
-
-- (NSFileHandle*) handleInWorkDirForArguments:(NSArray *)args
-{
-	NSString* gitDirArg = [@"--git-dir=" stringByAppendingString:self.gitURL.path];
-	NSMutableArray* arguments =  [NSMutableArray arrayWithObject: gitDirArg];
-	[arguments addObjectsFromArray: args];
-	return [PBEasyPipe handleForCommand:[PBGitBinary path] withArgs:arguments inDir:[self workingDirectory]];
-}
-
-- (NSFileHandle*) handleForCommand:(NSString *)cmd
-{
-	NSArray* arguments = [cmd componentsSeparatedByString:@" "];
-	return [self handleForArguments:arguments];
-}
-
-- (NSString*) outputForCommand:(NSString *)cmd
-{
-	NSArray* arguments = [cmd componentsSeparatedByString:@" "];
-	return [self outputForArguments: arguments];
-}
-
-- (NSString*) outputForCommand:(NSString *)str retValue:(int *)ret;
-{
-	NSArray* arguments = [str componentsSeparatedByString:@" "];
-	return [self outputForArguments: arguments retValue: ret];
-}
-
-- (NSString*) outputForArguments:(NSArray*) arguments
-{
-	return [PBEasyPipe outputForCommand:[PBGitBinary path] withArgs:arguments inDir: self.workingDirectory];
-}
-
-- (NSString*) outputInWorkdirForArguments:(NSArray*) arguments
-{
-	return [PBEasyPipe outputForCommand:[PBGitBinary path] withArgs:arguments inDir:self.workingDirectory];
-}
-
-- (NSString*) outputInWorkdirForArguments:(NSArray *)arguments retValue:(int *)ret
-{
-	return [PBEasyPipe outputForCommand:[PBGitBinary path] withArgs:arguments inDir:self.workingDirectory retValue: ret];
-}
-
-- (NSString*) outputForArguments:(NSArray *)arguments retValue:(int *)ret
-{
-	return [PBEasyPipe outputForCommand:[PBGitBinary path] withArgs:arguments inDir: self.workingDirectory retValue: ret];
-}
-
-- (NSString*) outputForArguments:(NSArray *)arguments inputString:(NSString *)input retValue:(int *)ret
-{
-	return [PBEasyPipe outputForCommand:[PBGitBinary path]
-							   withArgs:arguments
-								  inDir:self.workingDirectory
-							inputString:input
-							   retValue: ret];
-}
-
-- (NSString *)outputForArguments:(NSArray *)arguments inputString:(NSString *)input byExtendingEnvironment:(NSDictionary *)dict retValue:(int *)ret
-{
-	return [PBEasyPipe outputForCommand:[PBGitBinary path]
-							   withArgs:arguments
-								  inDir:self.workingDirectory
-				 byExtendingEnvironment:dict
-							inputString:input
-							   retValue: ret];
-}
+#pragma mark Hooks
 
 - (BOOL)executeHook:(NSString *)name output:(NSString **)output {
 	return [self executeHook:name withArgs:[NSArray array] output:output];

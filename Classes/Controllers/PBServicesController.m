@@ -9,6 +9,7 @@
 #import "PBServicesController.h"
 #import "PBGitRepositoryDocument.h"
 #import "PBGitRepository.h"
+#import "PBGitRepository_PBGitBinarySupport.h"
 
 @implementation PBServicesController
 

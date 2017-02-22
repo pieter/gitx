@@ -7,6 +7,7 @@
 //
 
 #import "PBGitRepository.h"
+#import "PBGitRepository_PBGitBinarySupport.h"
 #import "PBGitTree.h"
 #import "PBGitCommit.h"
 #import "NSFileHandleExt.h"
