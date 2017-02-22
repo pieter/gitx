@@ -27,8 +27,4 @@
 - (NSView *) nextKeyViewFor:(NSView *)view;
 - (NSView *) previousKeyViewFor:(NSView *)view;
 
-
-- (void) stageSelectedFiles;
-- (void) unstageSelectedFiles;
-
 @end

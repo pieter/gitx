@@ -163,6 +163,38 @@
 	[repository.index commitWithMessage:commitMessage andVerify:doVerify];
 }
 
+- (void)discardChangesForFilesAlertDidEnd:(NSAlert *)alert returnCode:(NSInteger)returnCode contextInfo:(void *)contextInfo
+{
+	[[alert window] orderOut:nil];
+
+	if (returnCode == NSAlertDefaultReturn) {
+		[self.repository.index discardChangesForFiles:(__bridge NSArray*)contextInfo];
+	}
+}
+
+- (void)discardChangesForFiles:(NSArray *)files force:(BOOL)force
+{
+	void (^performDiscard)(NSModalResponse) = ^(NSModalResponse returnCode) {
+		if (returnCode != NSModalResponseOK) return;
+
+		[self.repository.index discardChangesForFiles:files];
+	};
+
+	if (!force) {
+		NSAlert *alert = [[NSAlert alloc] init];
+		alert.messageText = NSLocalizedString(@"Discard changes", @"Title for Discard Changes sheet");
+		alert.informativeText = NSLocalizedString(@"Are you sure you wish to discard the changes to this file?\n\nYou cannot undo this operation.", @"Informative text for Discard Changes sheet");
+
+		[alert addButtonWithTitle:NSLocalizedString(@"OK", @"OK button in Discard Changes sheet")];
+		[alert addButtonWithTitle:NSLocalizedString(@"Cancel", @"Cancel button in Discard Changes sheet")];
+
+
+		[alert beginSheetModalForWindow:self.windowController.window completionHandler:performDiscard];
+	} else {
+		performDiscard(NSModalResponseOK);
+	}
+}
+
 #pragma mark IBActions
 
 - (IBAction)signOff:(id)sender
@@ -218,6 +250,97 @@
 {
     [self commitWithVerification:NO];
 }
+
+- (IBAction)moveToTrash:(id)sender
+{
+	NSArray *selectedFiles = [sender representedObject];
+
+	NSURL *workingDirectoryURL = self.repository.workingDirectoryURL;
+
+	BOOL anyTrashed = NO;
+	for (PBChangedFile *file in selectedFiles)
+	{
+		NSURL* fileURL = [workingDirectoryURL URLByAppendingPathComponent:[file path]];
+
+		NSError* error = nil;
+		NSURL* resultURL = nil;
+		if ([[NSFileManager defaultManager] trashItemAtURL:fileURL
+										  resultingItemURL:&resultURL
+													 error:&error])
+		{
+			anyTrashed = YES;
+		}
+	}
+	if (anyTrashed)
+	{
+		[self.repository.index refresh];
+	}
+}
+
+- (IBAction)ignoreFiles:(id) sender
+{
+	NSArray *selectedFiles = [sender representedObject];
+	if ([selectedFiles count] == 0)
+		return;
+
+	// Build selected files
+	NSMutableArray *fileList = [NSMutableArray array];
+	for (PBChangedFile *file in selectedFiles) {
+		NSString *name = file.path;
+		if ([name length] > 0)
+			[fileList addObject:name];
+	}
+
+	NSError *error = nil;
+	BOOL success = [self.repository ignoreFilePaths:fileList error:&error];
+	if (!success) {
+		[self.windowController showErrorSheet:error];
+	}
+	[self.repository.index refresh];
+}
+
+static void reselectNextFile(NSArrayController *controller)
+{
+	NSUInteger currentSelectionIndex = controller.selectionIndex;
+	dispatch_async(dispatch_get_main_queue(), ^{
+		NSUInteger newSelectionIndex = MIN(currentSelectionIndex, [controller.arrangedObjects count] - 1);
+		controller.selectionIndex = newSelectionIndex;
+	});
+}
+
+- (IBAction)stageFiles:(id)sender {
+	[self.repository.index stageFiles:unstagedFilesController.selectedObjects];
+	reselectNextFile(unstagedFilesController);
+}
+
+- (IBAction)unstageFiles:(id)sender {
+	[self.repository.index unstageFiles:cachedFilesController.selectedObjects];
+	reselectNextFile(cachedFilesController);
+}
+
+- (IBAction)discardFiles:(id)sender
+{
+	NSArray *selectedFiles = [sender representedObject];
+	if ([selectedFiles count] > 0)
+		[self discardChangesForFiles:selectedFiles force:FALSE];
+}
+
+- (IBAction)forceDiscardFiles:(id)sender
+{
+	NSArray *selectedFiles = [sender representedObject];
+	if ([selectedFiles count] > 0)
+		[self discardChangesForFiles:selectedFiles force:TRUE];
+}
+
+// TODO: XIB file update
+
+- (void)moveToTrashAction:(id)sender { [self moveToTrash:sender]; }
+- (void)ignoreFilesAction:(id)sender { [self ignoreFiles:sender]; }
+- (void)stageFilesAction:(id)sender { [self stageFiles:sender]; }
+- (void)unstageFilesAction:(id)sender { [self unstageFiles:sender]; }
+- (void)discardFilesAction:(id) sender { [self discardFiles:sender]; }
+- (void)forceDiscardFilesAction:(id)sender { [self forceDiscardFiles:sender]; }
+
 
 # pragma mark PBGitIndex Notification handling
 

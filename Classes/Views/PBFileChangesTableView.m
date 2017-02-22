@@ -34,8 +34,6 @@
 
 - (void)keyDown:(NSEvent *)theEvent
 {
-    PBGitIndexController* controller = (PBGitIndexController*)[self delegate];
-
     bool isUnstagedView = [self tag] == 0;
     bool isStagedView = !isUnstagedView;
     
@@ -43,7 +41,7 @@
     
     if([theEvent.characters isEqualTo:@"s"] && commandDown && isUnstagedView) {
         NSInteger oldSelectedRowIndex = self.selectedRow;
-        [controller stageSelectedFiles];
+		[self tryToPerform:@selector(stageFiles:) with:self];
 
         // Try to select the file after the one that was just staged, which will have the same index now
         NSInteger rowIndexToSelect = oldSelectedRowIndex;
@@ -55,8 +53,8 @@
         [self selectRowIndexes:[NSIndexSet indexSetWithIndex:rowIndexToSelect] byExtendingSelection:NO];
     }
     else if([theEvent.characters isEqualTo:@"u"] && commandDown && isStagedView) {
-        NSInteger oldSelectedRowIndex = self.selectedRow;
-        [controller unstageSelectedFiles];
+		NSInteger oldSelectedRowIndex = self.selectedRow;
+		[self tryToPerform:@selector(unstageFiles:) with:self];
 
         // Try to select the file after the one that was just staged, which will have the same index now
         NSInteger rowIndexToSelect = oldSelectedRowIndex;
