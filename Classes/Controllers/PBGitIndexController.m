@@ -15,14 +15,20 @@
 #define FileChangesTableViewType @"GitFileChangedType"
 
 @interface PBGitIndexController ()
-- (void)discardChangesForFiles:(NSArray *)files force:(BOOL)force;
+
+@property (weak) IBOutlet PBGitCommitController *commitController;
+
 @end
 
 // FIXME: This isn't a view/window/whatever controller, though it acts like one...
 // See for example -menuForTable and its setTarget: calls.
 @implementation PBGitIndexController
 
-@synthesize stagedTable, unstagedTable;
+@synthesize commitController=commitController;
+@synthesize stagedFilesController=stagedFilesController;
+@synthesize unstagedFilesController=unstagedFilesController;
+@synthesize stagedTable=stagedTable;
+@synthesize unstagedTable=unstagedTable;
 
 - (void)awakeFromNib
 {

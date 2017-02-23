@@ -10,16 +10,13 @@
 #import "PBGitCommitController.h"
 #import "PBChangedFile.h"
 
-@interface PBGitIndexController : NSObject {
-	IBOutlet NSArrayController *stagedFilesController, *unstagedFilesController;
-	IBOutlet PBGitCommitController *commitController;
+@interface PBGitIndexController : NSObject
 
-	IBOutlet NSTableView *unstagedTable;
-	IBOutlet NSTableView *stagedTable;	
-}
+@property (readonly) IBOutlet NSArrayController *stagedFilesController;
+@property (readonly) IBOutlet NSArrayController *unstagedFilesController;
 
-@property (readonly) NSTableView *unstagedTable;
-@property (readonly) NSTableView *stagedTable;
+@property (readonly) IBOutlet NSTableView *unstagedTable;
+@property (readonly) IBOutlet NSTableView *stagedTable;
 
 - (IBAction) rowClicked:(NSCell *) sender;
 - (IBAction) tableClicked:(NSTableView *)tableView;
