@@ -20,6 +20,7 @@
 #import "PBGitBinary.h"
 
 #import <Sparkle/SUUpdater.h>
+#import <Sparkle/SUUpdaterDelegate.h>
 
 static OpenRecentController* recentsDialog = nil;
 

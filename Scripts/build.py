@@ -11,25 +11,28 @@ app = "GitX"
 product = "%s.app" % (app,)
 label = "dev"
 base_version = "0.15"
-signing_key = "Developer ID Application: Rowan James"
-
-artifact_prefix = "%s-%s" % (app, label)
-workspace = "%s.xcodeproj/project.xcworkspace" % (app,)
-debug_scheme = "Debug"
-release_scheme = "Release"
-agvtool = "xcrun agvtool"
 release_branch = "master"
 
-updates_template_file = os.path.join('updates', 'GitX-dev.xml.tmpl')
-release_notes_file = os.path.join('updates', 'GitX-dev.html')
-updates_signing_key_file = os.path.expanduser(os.path.join('~', 'Documents', 'gitx-updates.key'))
+signing_key = "Developer ID Application: Rowan James"
+
+project_root = os.getcwd()
+artifact_prefix = "%s-%s" % (app, label)
+workspace = "%s.xcworkspace" % (app,)
+scheme = "GitX"
+debug_config = "Debug"
+release_config = "Release"
+
+agvtool = "xcrun agvtool"
+
+updates_template_file = os.path.join(project_root, 'updates', 'GitX-dev.xml.tmpl')
+release_notes_file = os.path.join(project_root, 'updates', 'GitX-dev.html')
+updates_signing_key_file = os.path.join(project_root, 'updates', 'gitx-updates.key')
 updates_appcast_file = 'GitX-dev.xml'
 
 clean = ""
 pause = 3
 
-build_base_dir = os.path.join(os.getcwd(), "build")
-
+build_base_dir = os.path.join(project_root, "build")
 
 class BuildError(RuntimeError):
     pass
@@ -47,9 +50,9 @@ def release():
         build_number = commit_count()
         set_versions(base_version, build_number, "dev")
 
-        build_scheme(release_scheme)
+        build_scheme(scheme, release_config)
 
-        build_dir = os.path.join(build_base_dir, release_scheme)
+        build_dir = os.path.join(build_base_dir, release_config)
         built_product = os.path.join(build_dir, product)
         sign_app(built_product)
 
@@ -65,7 +68,7 @@ def release():
 
 def debug():
     try:
-        build_scheme(debug_scheme)
+        build_scheme(scheme, debug_config)
 
     except BuildError as e:
         print("error: %s" % (str(e),))
@@ -75,9 +78,10 @@ def prepare_release(build_number, image_source_path):
     release_dir = "release"
     try:
         os.makedirs(release_dir)
-    except FileExistsError:
+    except OSError:
         pass
 
+    # Tag the release
     tag = 'builds/%s/%s' % (base_version, build_number)
     subprocess.check_call(['git', 'tag', tag])
 
@@ -108,9 +112,10 @@ def build(scheme):
 
 
 def assert_clean():
-    status = check_string_output(["git", "status", "--porcelain"])
-    if len(status):
-        raise BuildError("Working copy must be clean")
+    0
+    # status = check_string_output(["git", "status", "--porcelain", "--untracked-files=no"])
+    # if len(status):
+    #     raise BuildError("Working copy must be clean\n%s" % status)
 
 
 def assert_branch(branch="master"):
@@ -119,14 +124,12 @@ def assert_branch(branch="master"):
         raise BuildError("HEAD must be %s, but is %s" % (branch, ref))
 
 
-def build_scheme(scheme):
-    build_dir = os.path.join(build_base_dir, scheme)
-    xcodebuild(scheme, workspace, ["build"], build_dir)
+def build_scheme(scheme, config):
+    xcodebuild(scheme, workspace, config, ["build"])
 
 
-def clean_scheme(scheme):
-    build_dir = os.path.join(build_base_dir, scheme)
-    xcodebuild(scheme, workspace, ["clean"], build_dir)
+def clean_scheme(scheme, config):
+    xcodebuild(scheme, workspace, config, ["clean"])
 
 
 def commit_count():
@@ -143,10 +146,10 @@ def set_versions(base_version, build_number, label):
     subprocess.check_call(["agvtool", "new-version", "-all", build_version])
 
 
-def xcodebuild(scheme, workspace, commands, build_dir):
-    cmd = ["xcrun", "xcodebuild", "-scheme", scheme, "-workspace", workspace]
+def xcodebuild(scheme, workspace, config, commands):
+    cmd = ["xcrun", "xcodebuild", "-workspace", workspace, "-scheme", scheme, "-configuration", config]
     cmd = cmd + commands
-    cmd.append('CONFIGURATION_BUILD_DIR=%s' % (build_dir))
+    cmd.append('BUILD_DIR=%s' % (build_base_dir))
     try:
         output = check_string_output(cmd)
         return output
@@ -167,5 +170,4 @@ def package_app(app_path, image_path, image_name):
 
 if __name__ == "__main__":
     script_dir = os.path.dirname(os.path.abspath(__file__))
-    os.chdir(script_dir)
     argh.dispatch_commands([clean, build])

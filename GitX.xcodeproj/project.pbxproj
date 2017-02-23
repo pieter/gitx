@@ -311,6 +311,27 @@
 			remoteGlobalIDString = 4D3F252B18C37D2E000922D9;
 			remoteInfo = "Generate Scripting Header";
 		};
+		4D761CE51E552B1F004C3A6F /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 4A68AD5814A0050E006DE321 /* Sparkle.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 726B2B5D1C645FC900388755;
+			remoteInfo = "UI Tests";
+		};
+		4D761CE71E552B1F004C3A6F /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 4A68AD5814A0050E006DE321 /* Sparkle.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 722954B41D04ADAF00ECF9CA;
+			remoteInfo = fileop;
+		};
+		4D761CE91E552B1F004C3A6F /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 4A68AD5814A0050E006DE321 /* Sparkle.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 5AE13FB31E0D9E07000D2C2C;
+			remoteInfo = generate_appcast;
+		};
 		4D901E031C237186004C3A6F /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 4A4EF09F142CBAD5001B8CDF /* ObjectiveGitFramework.xcodeproj */;
@@ -1073,6 +1094,9 @@
 				4A68AD6B14A0050F006DE321 /* Sparkle Unit Tests.xctest */,
 				4A68AD6D14A0050F006DE321 /* BinaryDelta */,
 				4A68AD6F14A0050F006DE321 /* Autoupdate.app */,
+				4D761CE61E552B1F004C3A6F /* UI Tests.xctest */,
+				4D761CE81E552B1F004C3A6F /* fileop */,
+				4D761CEA1E552B1F004C3A6F /* generate_appcast */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1271,6 +1295,27 @@
 			fileType = wrapper.cfbundle;
 			path = "ObjectiveGit-MacTests.xctest";
 			remoteRef = 4ADAA9C11602ADB8007A0E6F /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		4D761CE61E552B1F004C3A6F /* UI Tests.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = "UI Tests.xctest";
+			remoteRef = 4D761CE51E552B1F004C3A6F /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		4D761CE81E552B1F004C3A6F /* fileop */ = {
+			isa = PBXReferenceProxy;
+			fileType = "compiled.mach-o.executable";
+			path = fileop;
+			remoteRef = 4D761CE71E552B1F004C3A6F /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		4D761CEA1E552B1F004C3A6F /* generate_appcast */ = {
+			isa = PBXReferenceProxy;
+			fileType = "compiled.mach-o.executable";
+			path = generate_appcast;
+			remoteRef = 4D761CE91E552B1F004C3A6F /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		4D901E041C237186004C3A6F /* ObjectiveGit-iOSTests.xctest */ = {
