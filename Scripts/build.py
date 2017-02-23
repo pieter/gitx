@@ -37,11 +37,9 @@ build_base_dir = os.path.join(project_root, "build")
 class BuildError(RuntimeError):
     pass
 
-
-def clean():
-    clean_scheme(debug_scheme)
-    clean_scheme(release_scheme)
-
+@argh.arg("config", choices=['debug', 'release'])
+def clean(config):
+    clean_scheme(scheme, config)
 
 def release():
     try:
