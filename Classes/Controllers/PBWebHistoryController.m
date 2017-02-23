@@ -169,16 +169,19 @@ static NSDictionary *loadCommitSummary(GTRepository *repo, GTCommit *commit, BOO
 	GTDiff *d = [GTDiff diffOldTree:commit.parents.firstObject.tree
 	                    withNewTree:commit.tree
 	                   inRepository:repo
-	                        options:@{
-	                            GTDiffFindOptionsFlagsKey : @(flags)
-	                        }
+							options:@{}
 	                          error:&err];
+
 	if (!d) {
 		NSLog(@"Commit summary diff error: %@", err);
 		return nil;
 	}
+
+	// Rewrite the diff to display moved files.
+	[d findSimilarWithOptions:@{GTDiffFindOptionsFlagsKey:@(flags)}];
+
 	if (isCanceled()) return nil;
-	NSMutableArray *fileDeltas = [NSMutableArray array];
+	NSMutableArray<NSDictionary<NSString *, NSObject *> *> *fileDeltas = [NSMutableArray array];
 	NSMutableString *fullDiff = [NSMutableString string];
 	[d enumerateDeltasUsingBlock:^(GTDiffDelta *_Nonnull delta, BOOL *_Nonnull stop) {
 		if (isCanceled()) {
@@ -234,8 +237,7 @@ static NSDictionary *loadCommitSummary(GTRepository *repo, GTCommit *commit, BOO
 			@"newFileSize" : @(newFileSize),
 			@"numLinesAdded" : @(numLinesAdded),
 			@"numLinesRemoved" : @(numLinesRemoved),
-			@"binary" :
-			    [NSNumber numberWithBool:(delta.flags & GTDiffFileFlagBinary) != 0],
+			@"binary" : [NSNumber numberWithBool:(delta.flags & GTDiffFileFlagBinary) != 0],
 		}];
 	}];
 	if (isCanceled()) return nil;

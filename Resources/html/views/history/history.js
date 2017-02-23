@@ -312,8 +312,8 @@ var loadCommitDiff = function(jsonData)
 			fileElem.targetFileId = "file_index_"+i;
 			
 			var displayName, representedFile;
-			if (fileInfo.changeType == "renamed") {
-				displayName = fileInfo.filename;
+			if (fileInfo.changeType === "renamed") {
+				displayName = formatRenameDiff(renameDiff(fileInfo.oldFilename, fileInfo.newFilename));
 				representedFile = fileInfo.newFilename;
 			}
 			else {
