@@ -45,7 +45,7 @@ extern NSString *PBGitIndexOperationFailed;
 
 // Whether we want the changes for amending,
 // or for making a new commit.
-@property (assign, readonly, getter=isAmend) BOOL amend;
+@property (assign, getter=isAmend) BOOL amend;
 @property (weak, readonly) PBGitRepository *repository;
 
 - (id)initWithRepository:(PBGitRepository *)repository;
@@ -61,9 +61,9 @@ extern NSString *PBGitIndexOperationFailed;
 - (void)commitWithMessage:(NSString *)commitMessage andVerify:(BOOL) doVerify;
 
 // Inter-file changes:
-- (BOOL)stageFiles:(NSArray *)stageFiles;
-- (BOOL)unstageFiles:(NSArray *)unstageFiles;
-- (void)discardChangesForFiles:(NSArray *)discardFiles;
+- (BOOL)stageFiles:(NSArray<PBChangedFile *> *)stageFiles;
+- (BOOL)unstageFiles:(NSArray<PBChangedFile *> *)unstageFiles;
+- (void)discardChangesForFiles:(NSArray<PBChangedFile *> *)discardFiles;
 
 // Intra-file changes
 - (BOOL)applyPatch:(NSString *)hunk stage:(BOOL)stage reverse:(BOOL)reverse;
