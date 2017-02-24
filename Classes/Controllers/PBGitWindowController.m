@@ -19,6 +19,7 @@
 #import "PBGitRevSpecifier.h"
 #import "PBGitRef.h"
 #import "PBError.h"
+#import "PBRepositoryDocumentController.h"
 
 @interface PBGitWindowController ()
 
@@ -194,7 +195,7 @@
 
 - (IBAction) revealInFinder:(id)sender
 {
-	[[NSWorkspace sharedWorkspace] openURL:self.repository.workingDirectoryURL];
+	[[PBRepositoryDocumentController sharedDocumentController] revealURLsInFinder:@[self.repository.workingDirectoryURL]];
 }
 
 - (IBAction) openInTerminal:(id)sender
@@ -265,6 +266,25 @@
 	} else {
 		assert(self.currentModalSheet == sheet);
 	}
+}
+
+
+- (void)openURLs:(NSArray <NSURL *> *)fileURLs
+{
+	if (fileURLs.count == 0) return;
+
+	[[NSWorkspace sharedWorkspace] openURLs:fileURLs
+					withAppBundleIdentifier:nil
+									options:0
+			 additionalEventParamDescriptor:nil
+						  launchIdentifiers:NULL];
+}
+
+- (void)revealURLsInFinder:(NSArray <NSURL *> *)fileURLs
+{
+	if (fileURLs.count == 0) return;
+
+	[[NSWorkspace sharedWorkspace] activateFileViewerSelectingURLs:fileURLs];
 }
 
 #pragma mark IBActions
@@ -339,6 +359,42 @@
 }
 
 
+- (NSArray <NSURL *> *)selectedURLsFromSender:(id)sender {
+	NSArray *selectedFiles = [sender representedObject];
+	if (![selectedFiles isKindOfClass:[NSArray class]] || [selectedFiles count] == 0)
+		return nil;
+
+	NSMutableArray *URLs = [NSMutableArray array];
+	for (id file in selectedFiles) {
+		NSString *path = file;
+		// Those can be PBChangedFiles sent by PBGitIndexController. Get their path.
+		if ([file respondsToSelector:@selector(path)]) {
+			path = [file path];
+		}
+
+		if (![path isKindOfClass:[NSString class]])
+			continue;
+		[URLs addObject:[self.repository.workingDirectoryURL URLByAppendingPathComponent:path]];
+	}
+
+	return URLs;
+}
+
+- (IBAction)openFilesAction:(id)sender
+{
+	NSArray *URLs = [self selectedURLsFromSender:sender];
+
+	[self openURLs:URLs];
+}
+
+- (IBAction)showInFinderAction:(id)sender
+{
+	NSArray *URLs = [self selectedURLsFromSender:sender];
+	if ([URLs count] == 0)
+		return;
+
+	[self revealURLsInFinder:URLs];
+}
 
 #pragma mark -
 #pragma mark SplitView Delegates

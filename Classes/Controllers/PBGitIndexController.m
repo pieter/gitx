@@ -10,7 +10,6 @@
 #import "PBChangedFile.h"
 #import "PBGitRepository.h"
 #import "PBGitIndex.h"
-#import "PBOpenFiles.h"
 
 #define FileChangesTableViewType @"GitFileChangedType"
 
@@ -249,11 +248,6 @@
 	});
 }
 
-- (void) openFilesAction:(id) sender
-{
-	[PBOpenFiles openFilesAction:sender with:commitController.repository.workingDirectoryURL];
-}
-
 - (void) ignoreFilesAction:(id) sender
 {
 	NSArray *selectedFiles = [sender representedObject];
@@ -262,11 +256,6 @@
 
 	[self ignoreFiles:selectedFiles];
 	[commitController.index refresh];
-}
-
-- (void) showInFinderAction:(id) sender
-{
-	[PBOpenFiles showInFinderAction:sender with:commitController.repository.workingDirectoryURL];
 }
 
 - (void)discardFilesAction:(id) sender
