@@ -28,7 +28,7 @@
 
 #define FileChangesTableViewType @"GitFileChangedType"
 
-@interface PBGitCommitController () <NSTextViewDelegate> {
+@interface PBGitCommitController () <NSTextViewDelegate, NSMenuDelegate> {
 	IBOutlet PBCommitMessageView *commitMessageView;
 
 	BOOL stashKeepIndex;
@@ -112,6 +112,10 @@
 
 	[unstagedTable registerForDraggedTypes: [NSArray arrayWithObject:FileChangesTableViewType]];
 	[stagedTable registerForDraggedTypes: [NSArray arrayWithObject:FileChangesTableViewType]];
+
+	// Copy the menu over so we have two discrete menu objects
+	// which allows us to tell them apart in our delegate methods
+	stagedTable.menu = [unstagedTable.menu copy];
 }
 
 - (void) _repositoryUpdatedNotification:(NSNotification *)notification {
@@ -355,7 +359,6 @@ static void reselectNextFile(NSArrayController *controller)
 - (void)discardFilesAction:(id) sender { [self discardFiles:sender]; }
 - (void)forceDiscardFilesAction:(id)sender { [self forceDiscardFiles:sender]; }
 
-
 # pragma mark PBGitIndex Notification handling
 
 - (void)refreshFinished:(NSNotification *)notification
@@ -546,133 +549,147 @@ static void reselectNextFile(NSArrayController *controller)
     return NO;
 }
 
-# pragma mark Context Menu methods
+#pragma mark NSMenu delegate
 
-- (BOOL) allSelectedCanBeIgnored:(NSArray *)selectedFiles
+NSString *PBLocalizedStringForArray(NSArray<PBChangedFile *> *array, NSString *singleFormat, NSString *multipleFormat, NSString *defaultString)
 {
-	if ([selectedFiles count] == 0)
-	{
-		return NO;
+	if (array.count == 0) {
+		return defaultString;
 	}
-	for (PBChangedFile *selectedItem in selectedFiles) {
-		if (selectedItem.status != NEW) {
+	else if (array.count == 1) {
+		return [NSString stringWithFormat:singleFormat, array.firstObject.path.lastPathComponent];
+	}
+	return [NSString stringWithFormat:multipleFormat, array.count];
+}
+
+void possiblySetHidden(BOOL shouldHide, NSMenuItem *menuItem)
+{
+	BOOL isInContextualMenu = (menuItem.parentItem == nil);
+	menuItem.hidden = isInContextualMenu && shouldHide;
+}
+
+
+BOOL canDiscardAnyFileIn(NSArray<PBChangedFile *> *files)
+{
+	for (PBChangedFile *file in files)
+	{
+		if (file.hasUnstagedChanges)
+		{
+			return YES;
+		}
+	}
+	return NO;
+}
+
+BOOL shouldTrashInsteadOfDiscardAnyFileIn(NSArray <PBChangedFile *> *files)
+{
+	for (PBChangedFile *file in files)
+	{
+		if (file.status != NEW)
+		{
 			return NO;
 		}
 	}
 	return YES;
 }
 
-- (NSMenu *) menuForTable:(NSTableView *)table
+- (NSInteger)numberOfItemsInMenu:(NSMenu *)menu
 {
-	NSMenu *menu = [[NSMenu alloc] init];
-	NSArrayController *controller = table.tag == 0 ? unstagedFilesController : stagedFilesController;
-	NSArray *selectedFiles = controller.selectedObjects;
-
-	NSUInteger numberOfSelectedFiles = selectedFiles.count;
-
-	if (numberOfSelectedFiles == 0)
-	{
-		return menu;
-	}
-
-	// Stage/Unstage changes
-	if (table.tag == 0) {
-		NSString *stageTitle = numberOfSelectedFiles == 1
-		? [NSString stringWithFormat:NSLocalizedString( @"Stage “%@”", @"Stage single file contextual menu item" ), [self getNameOfFirstSelectedFile:selectedFiles]]
-		: [NSString stringWithFormat:NSLocalizedString( @"Stage %i Files", @"Stage multiple files contextual menu item"), numberOfSelectedFiles ];
-		NSMenuItem *stageItem = [[NSMenuItem alloc] initWithTitle:stageTitle action:@selector(stageFilesAction:) keyEquivalent:@"s"];
-		stageItem.target = self;
-		[menu addItem:stageItem];
-	}
-	else if (table.tag == 1) {
-		NSString *stageTitle = numberOfSelectedFiles == 1
-		? [NSString stringWithFormat:NSLocalizedString( @"Unstage “%@”", @"Unstage single file contextual menu item" ), [self getNameOfFirstSelectedFile:selectedFiles]]
-		: [NSString stringWithFormat:NSLocalizedString( @"Unstage %i Files", @"Unstage multiple files contextual menu item"), numberOfSelectedFiles ];
-		NSMenuItem *unstageItem = [[NSMenuItem alloc] initWithTitle:stageTitle action:@selector(unstageFilesAction:) keyEquivalent:@"u"];
-		unstageItem.target = self;
-		[menu addItem:unstageItem];
-	}
-
-	NSString *openTitle = numberOfSelectedFiles == 1
-	? [NSString stringWithFormat:NSLocalizedString( @"Open ”%@“", @"Open single file contextual menu item" ), [self getNameOfFirstSelectedFile:selectedFiles]]
-	: [NSString stringWithFormat:NSLocalizedString( @"Open %i Files", @"Open multiple files contextual menu item"), numberOfSelectedFiles ];
-	NSMenuItem *openItem = [[NSMenuItem alloc] initWithTitle:openTitle action:@selector(openFilesAction:) keyEquivalent:@""];
-	openItem.target = self;
-	[menu addItem:openItem];
-
-	// Attempt to ignore
-	if ([self allSelectedCanBeIgnored:selectedFiles]) {
-		NSString *ignoreText = numberOfSelectedFiles == 1
-		? [NSString stringWithFormat:NSLocalizedString( @"Ignore ”%@“", @"Ignore single file contextual menu item" ), [self getNameOfFirstSelectedFile:selectedFiles]]
-		: [NSString stringWithFormat:NSLocalizedString( @"Ignore %i Files", @"Ignore multiple files contextual menu item"), numberOfSelectedFiles ];
-		NSMenuItem *ignoreItem = [[NSMenuItem alloc] initWithTitle:ignoreText action:@selector(ignoreFilesAction:) keyEquivalent:@""];
-		ignoreItem.target = self;
-		[menu addItem:ignoreItem];
-	}
-
-	if (numberOfSelectedFiles == 1) {
-		NSMenuItem *showInFinderItem = [[NSMenuItem alloc] initWithTitle:NSLocalizedString(@"Show in Finder", @"Show in Finder contextual menu item") action:@selector(showInFinderAction:) keyEquivalent:@""];
-		showInFinderItem.target = self;
-		[menu addItem:showInFinderItem];
-	}
-
-	BOOL addDiscardMenu = NO;
-	for (PBChangedFile *file in selectedFiles)
-	{
-		if (file.hasUnstagedChanges)
-		{
-			addDiscardMenu = YES;
-			break;
-		}
-	}
-
-	if (addDiscardMenu)
-	{
-		NSMenuItem *discardItem = [[NSMenuItem alloc] initWithTitle:NSLocalizedString(@"Discard changes…", @"Discard changes contextual menu item (will ask for confirmation)") action:@selector(discardFilesAction:) keyEquivalent:@""];
-		[discardItem setAlternate:NO];
-		[discardItem setTarget:self];
-
-		[menu addItem:discardItem];
-
-		NSMenuItem *discardForceItem = [[NSMenuItem alloc] initWithTitle:NSLocalizedString(@"Discard changes",  @"Force Discard changes contextual menu item (will NOT ask for confirmation)") action:@selector(forceDiscardFilesAction:) keyEquivalent:@""];
-		[discardForceItem setAlternate:YES];
-		[discardForceItem setKeyEquivalentModifierMask:NSAlternateKeyMask];
-		[discardForceItem setTarget:self];
-		[menu addItem:discardForceItem];
-
-		BOOL trashInsteadOfDiscard = floor(NSAppKitVersionNumber) > NSAppKitVersionNumber10_7;
-		if (trashInsteadOfDiscard)
-		{
-			for (PBChangedFile* file in selectedFiles)
-			{
-				if (file.status != NEW)
-				{
-					trashInsteadOfDiscard = NO;
-					break;
-				}
-			}
-		}
-
-		if (trashInsteadOfDiscard && [selectedFiles count] > 0)
-		{
-			NSMenuItem* moveToTrashItem = [[NSMenuItem alloc] initWithTitle:NSLocalizedString(@"Move to Trash", @"Move to Trash contextual menu item") action:@selector(moveToTrashAction:) keyEquivalent:@""];
-			[moveToTrashItem setTarget:self];
-			[menu addItem:moveToTrashItem];
-
-			[menu removeItem:discardItem];
-			[menu removeItem:discardForceItem];
-		}
-	}
-
-	for (NSMenuItem *item in [menu itemArray]) {
-		[item setRepresentedObject:selectedFiles];
-	}
-
-	return menu;
+	// We want our delegate below to be called. Hence, lies.
+	return menu.itemArray.count;
 }
 
-- (NSString *) getNameOfFirstSelectedFile:(NSArray<PBChangedFile *> *) selectedFiles {
-	return selectedFiles.firstObject.path.lastPathComponent;
+- (BOOL)menu:(NSMenu *)menu updateItem:(NSMenuItem *)menuItem atIndex:(NSInteger)index shouldCancel:(BOOL)shouldCancel
+{
+	// Delegate our update to our Stage-menu bar validation method.
+	[self validateMenuItem:menuItem];
+	return YES;
+}
+
+- (BOOL)validateMenuItem:(NSMenuItem *)menuItem
+{
+	NSTableView *table = (menuItem.menu == stagedTable.menu ? stagedTable : unstagedTable);
+	NSArray <PBChangedFile *> *filesForStaging = unstagedFilesController.selectedObjects;
+	NSArray <PBChangedFile *> *filesForUnstaging = stagedFilesController.selectedObjects;
+	NSArray <PBChangedFile *> *selectedFiles = (table.tag == 0 ? filesForUnstaging : filesForStaging);
+
+	if (menuItem.action == @selector(stageFilesAction:)) {
+		menuItem.title = PBLocalizedStringForArray(filesForStaging,
+												   NSLocalizedString(@"Stage “%@”", @"Stage file menu item (single file with name)"),
+												   NSLocalizedString(@"Stage %i Files", @"Stage file menu item (multiple files with number)"),
+												   NSLocalizedString(@"Stage", @"Stage file menu item (empty selection)"));
+
+		possiblySetHidden(filesForStaging.count == 0, menuItem);
+		return filesForStaging.count > 0;
+	}
+	else if (menuItem.action == @selector(unstageFilesAction:)) {
+		menuItem.title = PBLocalizedStringForArray(filesForUnstaging,
+												   NSLocalizedString(@"Unstage “%@”", @"Unstage file menu item (single file with name)"),
+												   NSLocalizedString(@"Unstage %i Files", @"Unstage file menu item (multiple files with number)"),
+												   NSLocalizedString(@"Unstage", @"Unstage file menu item (empty selection)"));
+
+		possiblySetHidden(filesForUnstaging.count == 0, menuItem);
+		return filesForUnstaging.count > 0;
+	}
+	else if (menuItem.action == @selector(discardFilesAction:)) {
+		menuItem.title = PBLocalizedStringForArray(filesForStaging,
+												   NSLocalizedString(@"Discard changes to “%@”…", @"Discard changes menu item (single file with name)"),
+												   NSLocalizedString(@"Discard changes to %i Files…", @"Discard changes menu item (multiple files with number)"),
+												   NSLocalizedString(@"Discard…", @"Discard changes menu item (empty selection)"));
+
+		possiblySetHidden(shouldTrashInsteadOfDiscardAnyFileIn(filesForStaging), menuItem);
+		return filesForStaging.count > 0 && canDiscardAnyFileIn(filesForStaging);
+	}
+	else if (menuItem.action == @selector(forceDiscardFilesAction:)) {
+		menuItem.title = PBLocalizedStringForArray(filesForStaging,
+												   NSLocalizedString(@"Discard changes to “%@”", @"Force Discard changes menu item (single file with name)"),
+												   NSLocalizedString(@"Discard changes to  %i Files", @"Force Discard changes menu item (multiple files with number)"),
+												   NSLocalizedString(@"Discard", @"Force Discard changes menu item (empty selection)"));
+		BOOL shouldHide = shouldTrashInsteadOfDiscardAnyFileIn(filesForStaging);
+		possiblySetHidden(shouldHide, menuItem);
+		// NSMenu does not seem to hide alternative items properly: only activate the alternative seeing when menu item is shown.
+		menuItem.alternate = !shouldHide;
+		return filesForStaging.count > 0 && canDiscardAnyFileIn(filesForStaging);
+	}
+	else if (menuItem.action == @selector(trashFilesAction:)) {
+		menuItem.title = PBLocalizedStringForArray(filesForStaging,
+												   NSLocalizedString(@"Move “%@” to Trash", @"Move to Trash menu item (single file with name)"),
+												   NSLocalizedString(@"Move %i Files to Trash", @"Move to Trash menu item (multiple files with number)"),
+												   NSLocalizedString(@"Move to Trash", @"Move to Trash menu item (empty selection)"));
+		BOOL isVisible = shouldTrashInsteadOfDiscardAnyFileIn(filesForStaging) && table.tag != 1;
+		possiblySetHidden(!isVisible, menuItem);
+		return filesForStaging.count > 0 && canDiscardAnyFileIn(filesForStaging);
+	}
+	else if (menuItem.action == @selector(openFilesAction:)) {
+		menuItem.title = PBLocalizedStringForArray(selectedFiles,
+												   NSLocalizedString(@"Open “%@”", @"Open File menu item (single file with name)"),
+												   NSLocalizedString(@"Open %i Files", @"Open File menu item (multiple files with number)"),
+												   NSLocalizedString(@"Open", @"Open File menu item (empty selection)"));
+		return selectedFiles.count > 0;
+	}
+	else if (menuItem.action == @selector(ignoreFilesAction:)) {
+		menuItem.title = PBLocalizedStringForArray(selectedFiles,
+												   NSLocalizedString(@"Ignore “%@”", @"Ignore File menu item (single file with name)"),
+												   NSLocalizedString(@"Ignore %i Files", @"Ignore File menu item (multiple files with number)"),
+												   NSLocalizedString(@"Ignore", @"Ignore File menu item (empty selection)"));
+		BOOL isActive = selectedFiles.count > 0 && table == 0;
+		possiblySetHidden(!isActive, menuItem);
+		return isActive;
+	}
+	else if (menuItem.action == @selector(showInFinderAction:)) {
+		BOOL active = NO;
+		if (selectedFiles.count == 1) {
+			menuItem.title = [NSString stringWithFormat:NSLocalizedString(@"Reveal “%@” in Finder", @"Reveal File in Finder contextual menu item (single file with name)"),
+							  selectedFiles.firstObject.path.lastPathComponent];
+			active = YES;
+		} else {
+			menuItem.title = NSLocalizedString(@"Reveal in Finder", @"Reveal File in Finder contextual menu item (empty selection)");
+		}
+		possiblySetHidden(!active, menuItem);
+		return active;
+	}
+
+	return menuItem.enabled;
 }
 
 #pragma mark PBFileChangedTableView delegate

@@ -11,6 +11,7 @@
 #import "PBGitRepository.h"
 #import "PBGitIndex.h"
 #import "PBGitCommitController.h"
+#import "PBFileChangesTableView.h"
 
 @interface PBGitIndexController ()
 
@@ -25,17 +26,6 @@
 @synthesize commitController=commitController;
 @synthesize stagedFilesController=stagedFilesController;
 @synthesize unstagedFilesController=unstagedFilesController;
-
-- (BOOL)validateMenuItem:(NSMenuItem *)menuItem
-{
-    if ([self respondsToSelector:[menuItem action]])
-        return YES;
-
-    if ([commitController respondsToSelector:[menuItem action]])
-        return YES;
-
-    return [[commitController nextResponder] validateMenuItem:menuItem];
-}
 
 # pragma mark Key View Chain
 
