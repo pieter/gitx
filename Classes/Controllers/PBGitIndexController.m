@@ -10,6 +10,7 @@
 #import "PBChangedFile.h"
 #import "PBGitRepository.h"
 #import "PBGitIndex.h"
+#import "PBGitCommitController.h"
 
 #define FileChangesTableViewType @"GitFileChangedType"
 

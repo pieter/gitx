@@ -7,8 +7,10 @@
 //
 
 #import <Cocoa/Cocoa.h>
-#import "PBGitCommitController.h"
-#import "PBChangedFile.h"
+
+@class PBGitCommitController;
+@class PBChangedFile;
+@class GTSubmodule;
 
 @interface PBGitIndexController : NSObject
 
