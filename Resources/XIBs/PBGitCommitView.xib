@@ -118,7 +118,7 @@
                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                     <subviews>
                                                         <textView importsGraphics="NO" richText="NO" verticallyResizable="NO" allowsUndo="YES" linkDetection="YES" smartInsertDelete="YES" id="133" customClass="PBCommitMessageView">
-                                                            <rect key="frame" x="0.0" y="0.0" width="464" height="196"/>
+                                                            <rect key="frame" x="0.0" y="0.0" width="473" height="200"/>
                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                             <size key="minSize" width="436" height="192"/>
@@ -285,37 +285,37 @@ DQ
                 <menuItem title="Stage" id="VI6-no-AIt">
                     <modifierMask key="keyEquivalentModifierMask"/>
                     <connections>
-                        <action selector="stageFilesAction:" target="-1" id="oUn-qs-04r"/>
+                        <action selector="stageFiles:" target="-1" id="Avi-fC-AgQ"/>
                     </connections>
                 </menuItem>
                 <menuItem title="Unstage" id="quC-vb-AsO">
                     <modifierMask key="keyEquivalentModifierMask"/>
                     <connections>
-                        <action selector="unstageFilesAction:" target="-1" id="1MK-fw-nUq"/>
+                        <action selector="unstageFiles:" target="-1" id="4Ay-Kf-OCd"/>
                     </connections>
                 </menuItem>
                 <menuItem title="Ignore" id="Byd-H8-Nne">
                     <modifierMask key="keyEquivalentModifierMask"/>
                     <connections>
-                        <action selector="ignoreFilesAction:" target="-1" id="W1Z-db-dsw"/>
+                        <action selector="ignoreFiles:" target="-1" id="rDg-6s-Wb5"/>
                     </connections>
                 </menuItem>
                 <menuItem title="Discard…" id="R0k-Tl-SMw">
                     <modifierMask key="keyEquivalentModifierMask"/>
                     <connections>
-                        <action selector="discardFilesAction:" target="-1" id="2wg-uu-rkP"/>
+                        <action selector="discardFiles:" target="-1" id="0gn-w8-wD3"/>
                     </connections>
                 </menuItem>
                 <menuItem title="Discard" alternate="YES" id="ele-Mb-t4c">
                     <modifierMask key="keyEquivalentModifierMask" option="YES"/>
                     <connections>
-                        <action selector="forceDiscardFilesAction:" target="-1" id="o5b-cW-ieu"/>
+                        <action selector="discardFilesForcibly:" target="-1" id="Bhk-sU-mKt"/>
                     </connections>
                 </menuItem>
                 <menuItem title="Trash…" id="GpS-4j-Lc3">
                     <modifierMask key="keyEquivalentModifierMask"/>
                     <connections>
-                        <action selector="trashFilesAction:" target="-1" id="GKN-b3-eps"/>
+                        <action selector="moveToTrash:" target="-1" id="BIm-TI-ivu"/>
                     </connections>
                 </menuItem>
                 <menuItem isSeparatorItem="YES" id="Lw9-2j-4Yt"/>

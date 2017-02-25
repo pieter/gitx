@@ -327,21 +327,12 @@ static void reselectNextFile(NSArrayController *controller)
 		[self discardChangesForFiles:selectedFiles force:FALSE];
 }
 
-- (IBAction)forceDiscardFiles:(id)sender
+- (IBAction)discardFilesForcibly:(id)sender
 {
 	NSArray *selectedFiles = unstagedFilesController.selectedObjects;
 	if ([selectedFiles count] > 0)
 		[self discardChangesForFiles:selectedFiles force:TRUE];
 }
-
-// TODO: XIB file update
-
-- (void)moveToTrashAction:(id)sender { [self moveToTrash:sender]; }
-- (void)ignoreFilesAction:(id)sender { [self ignoreFiles:sender]; }
-- (void)stageFilesAction:(id)sender { [self stageFiles:sender]; }
-- (void)unstageFilesAction:(id)sender { [self unstageFiles:sender]; }
-- (void)discardFilesAction:(id) sender { [self discardFiles:sender]; }
-- (void)forceDiscardFilesAction:(id)sender { [self forceDiscardFiles:sender]; }
 
 # pragma mark PBGitIndex Notification handling
 
@@ -581,7 +572,7 @@ BOOL shouldTrashInsteadOfDiscardAnyFileIn(NSArray <PBChangedFile *> *files)
 	NSArray <PBChangedFile *> *filesForUnstaging = stagedFilesController.selectedObjects;
 	NSArray <PBChangedFile *> *selectedFiles = (table.tag == 0 ? filesForUnstaging : filesForStaging);
 
-	if (menuItem.action == @selector(stageFilesAction:)) {
+	if (menuItem.action == @selector(stageFiles:)) {
 		menuItem.title = PBLocalizedStringForArray(filesForStaging,
 												   NSLocalizedString(@"Stage “%@”", @"Stage file menu item (single file with name)"),
 												   NSLocalizedString(@"Stage %i Files", @"Stage file menu item (multiple files with number)"),
@@ -590,7 +581,7 @@ BOOL shouldTrashInsteadOfDiscardAnyFileIn(NSArray <PBChangedFile *> *files)
 		possiblySetHidden(filesForStaging.count == 0, menuItem);
 		return filesForStaging.count > 0;
 	}
-	else if (menuItem.action == @selector(unstageFilesAction:)) {
+	else if (menuItem.action == @selector(unstageFiles:)) {
 		menuItem.title = PBLocalizedStringForArray(filesForUnstaging,
 												   NSLocalizedString(@"Unstage “%@”", @"Unstage file menu item (single file with name)"),
 												   NSLocalizedString(@"Unstage %i Files", @"Unstage file menu item (multiple files with number)"),
@@ -599,7 +590,7 @@ BOOL shouldTrashInsteadOfDiscardAnyFileIn(NSArray <PBChangedFile *> *files)
 		possiblySetHidden(filesForUnstaging.count == 0, menuItem);
 		return filesForUnstaging.count > 0;
 	}
-	else if (menuItem.action == @selector(discardFilesAction:)) {
+	else if (menuItem.action == @selector(discardFiles:)) {
 		menuItem.title = PBLocalizedStringForArray(filesForStaging,
 												   NSLocalizedString(@"Discard changes to “%@”…", @"Discard changes menu item (single file with name)"),
 												   NSLocalizedString(@"Discard changes to %i Files…", @"Discard changes menu item (multiple files with number)"),
@@ -608,7 +599,7 @@ BOOL shouldTrashInsteadOfDiscardAnyFileIn(NSArray <PBChangedFile *> *files)
 		possiblySetHidden(shouldTrashInsteadOfDiscardAnyFileIn(filesForStaging), menuItem);
 		return filesForStaging.count > 0 && canDiscardAnyFileIn(filesForStaging);
 	}
-	else if (menuItem.action == @selector(forceDiscardFilesAction:)) {
+	else if (menuItem.action == @selector(discardFilesForcibly:)) {
 		menuItem.title = PBLocalizedStringForArray(filesForStaging,
 												   NSLocalizedString(@"Discard changes to “%@”", @"Force Discard changes menu item (single file with name)"),
 												   NSLocalizedString(@"Discard changes to  %i Files", @"Force Discard changes menu item (multiple files with number)"),
@@ -619,7 +610,7 @@ BOOL shouldTrashInsteadOfDiscardAnyFileIn(NSArray <PBChangedFile *> *files)
 		menuItem.alternate = !shouldHide;
 		return filesForStaging.count > 0 && canDiscardAnyFileIn(filesForStaging);
 	}
-	else if (menuItem.action == @selector(trashFilesAction:)) {
+	else if (menuItem.action == @selector(trashFiles:)) {
 		menuItem.title = PBLocalizedStringForArray(filesForStaging,
 												   NSLocalizedString(@"Move “%@” to Trash", @"Move to Trash menu item (single file with name)"),
 												   NSLocalizedString(@"Move %i Files to Trash", @"Move to Trash menu item (multiple files with number)"),
@@ -644,7 +635,7 @@ BOOL shouldTrashInsteadOfDiscardAnyFileIn(NSArray <PBChangedFile *> *files)
 		}
 		return NO;
 	}
-	else if (menuItem.action == @selector(ignoreFilesAction:)) {
+	else if (menuItem.action == @selector(ignoreFiles:)) {
 		menuItem.title = PBLocalizedStringForArray(selectedFiles,
 												   NSLocalizedString(@"Ignore “%@”", @"Ignore File menu item (single file with name)"),
 												   NSLocalizedString(@"Ignore %i Files", @"Ignore File menu item (multiple files with number)"),

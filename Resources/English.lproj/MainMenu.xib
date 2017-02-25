@@ -446,30 +446,30 @@
                         <items>
                             <menuItem title="Stage" keyEquivalent="s" id="det-Cq-XRQ">
                                 <connections>
-                                    <action selector="stageFilesAction:" target="-1" id="Koe-8j-1zA"/>
+                                    <action selector="stageFiles:" target="-1" id="gJU-JB-Ium"/>
                                 </connections>
                             </menuItem>
                             <menuItem title="Discard Changes…" id="p3Q-13-2BQ">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
-                                    <action selector="discardFilesAction:" target="-1" id="pfc-hw-jWe"/>
+                                    <action selector="discardFiles:" target="-1" id="Pkc-0O-Irh"/>
                                 </connections>
                             </menuItem>
                             <menuItem title="Discard Changes" alternate="YES" id="IVV-3d-PrA">
                                 <modifierMask key="keyEquivalentModifierMask" option="YES"/>
                                 <connections>
-                                    <action selector="forceDiscardFilesAction:" target="-1" id="0pt-fk-fRS"/>
+                                    <action selector="discardFilesForcibly:" target="-1" id="mXQ-89-nSV"/>
                                 </connections>
                             </menuItem>
                             <menuItem title="Move to Trash" alternate="YES" id="KcT-Go-9If">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
-                                    <action selector="trashFilesAction:" target="-1" id="UdN-FS-2af"/>
+                                    <action selector="moveToTrash:" target="-1" id="6Rl-Yo-KMB"/>
                                 </connections>
                             </menuItem>
                             <menuItem title="Unstage" keyEquivalent="u" id="L5a-nu-g7s">
                                 <connections>
-                                    <action selector="unstageFilesAction:" target="-1" id="hoS-gx-1Ne"/>
+                                    <action selector="unstageFiles:" target="-1" id="jOw-yu-SaB"/>
                                 </connections>
                             </menuItem>
                             <menuItem isSeparatorItem="YES" id="YAj-JN-RZ1"/>
@@ -478,7 +478,7 @@
 DQ
 </string>
                                 <connections>
-                                    <action selector="commit:" target="-1" id="UyA-A9-6cT"/>
+                                    <action selector="commit:" target="-1" id="OCa-qf-HXC"/>
                                 </connections>
                             </menuItem>
                             <menuItem title="Force Commit" alternate="YES" id="7jt-v0-QYq">
@@ -487,13 +487,13 @@ DQ
 </string>
                                 <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
                                 <connections>
-                                    <action selector="forceCommit:" target="-1" id="Je0-Mj-sqx"/>
+                                    <action selector="forceCommit:" target="-1" id="zWw-yj-Le3"/>
                                 </connections>
                             </menuItem>
                             <menuItem title="Sign Off" id="Kf0-IT-iDP">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
-                                    <action selector="signOff:" target="-1" id="uhZ-5j-Bgx"/>
+                                    <action selector="signOff:" target="-1" id="Nf5-ot-gyR"/>
                                 </connections>
                             </menuItem>
                             <menuItem title="Amend Commit" keyEquivalent="a" id="W5p-JV-xeS">
