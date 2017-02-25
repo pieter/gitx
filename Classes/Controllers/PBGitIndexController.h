@@ -8,22 +8,11 @@
 
 #import <Cocoa/Cocoa.h>
 
-@class PBGitCommitController;
-@class PBChangedFile;
-@class GTSubmodule;
-
 @interface PBGitIndexController : NSObject
 
 @property (readonly) IBOutlet NSArrayController *stagedFilesController;
 @property (readonly) IBOutlet NSArrayController *unstagedFilesController;
 
-@property (readonly) IBOutlet NSTableView *unstagedTable;
-@property (readonly) IBOutlet NSTableView *stagedTable;
-
-- (IBAction) rowClicked:(NSCell *) sender;
-- (IBAction) tableClicked:(NSTableView *)tableView;
-
-- (NSMenu *) menuForTable:(NSTableView *)table;
 - (NSView *) nextKeyViewFor:(NSView *)view;
 - (NSView *) previousKeyViewFor:(NSView *)view;
 

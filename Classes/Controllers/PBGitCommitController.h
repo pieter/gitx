@@ -26,4 +26,6 @@
 - (NSView *) nextKeyViewFor:(NSView *)view;
 - (NSView *) previousKeyViewFor:(NSView *)view;
 
+- (NSMenu *) menuForTable:(NSTableView *)table; // Must go
+
 @end

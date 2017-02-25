@@ -7,7 +7,7 @@
 //
 
 #import "PBFileChangesTableView.h"
-#import "PBGitIndexController.h"
+#import "PBGitCommitController.h"
 
 @implementation PBFileChangesTableView
 
@@ -19,7 +19,7 @@
 		NSPoint eventLocation = [self convertPoint: [theEvent locationInWindow] fromView: nil];
 		NSInteger rowIndex = [self rowAtPoint:eventLocation];
 		[self selectRowIndexes:[NSIndexSet indexSetWithIndex:rowIndex] byExtendingSelection:TRUE];
-		return [(PBGitIndexController*)[self delegate] menuForTable: self];
+		return [(PBGitCommitController *)[self delegate] menuForTable: self];
 	}
 
 	return nil;
@@ -77,12 +77,12 @@
 
 -(NSView *)nextKeyView
 {
-    return [(PBGitIndexController*)[self delegate] nextKeyViewFor:self];
+    return [(PBGitCommitController*)[self delegate] nextKeyViewFor:self];
 }
 
 -(NSView *)previousKeyView
 {
-    return [(PBGitIndexController*)[self delegate] previousKeyViewFor:self];
+    return [(PBGitCommitController*)[self delegate] previousKeyViewFor:self];
 }
 
 @end
