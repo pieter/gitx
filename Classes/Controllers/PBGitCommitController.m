@@ -20,8 +20,6 @@
 #import <ObjectiveGit/GTConfiguration.h>
 
 #define kCommitSplitViewPositionDefault @"Commit SplitView Position"
-#define kControlsTabIndexCommit 0
-#define kControlsTabIndexStash  1
 #define kMinimalCommitMessageLength 3
 #define kNotificationDictionaryDescriptionKey @"description"
 #define kNotificationDictionaryMessageKey @"message"
@@ -243,8 +241,6 @@
 
 - (IBAction) refresh:(id) sender
 {
-	[controlsTabView selectTabViewItemAtIndex:kControlsTabIndexCommit];
-
 	self.isBusy = YES;
 	self.status = NSLocalizedString(@"Refreshing index…", @"Message in status bar while the index is refreshing");
 	[repository.index refresh];
@@ -255,7 +251,6 @@
 
 - (IBAction) stashChanges:(id)sender
 {
-    NSLog(@"stash changes: %@", stashKeepIndex ? @"keep index" : @"");
     [self.repository stashSaveWithKeepIndex:stashKeepIndex];
 }
 
@@ -425,11 +420,7 @@ static void reselectNextFile(NSArrayController *controller)
 	[stagedFilesController rearrangeObjects];
 	[unstagedFilesController rearrangeObjects];
     
-    NSUInteger tracked = [[trackedFilesController arrangedObjects] count];
-    NSUInteger staged = [[stagedFilesController arrangedObjects] count];
-    
-    [commitButton setEnabled:(staged > 0)];
-    [stashButton setEnabled:(staged > 0 || tracked > 0)];
+    commitButton.enabled = ([[stagedFilesController arrangedObjects] count] > 0);
 }
 
 - (void)indexOperationFailed:(NSNotification *)notification
@@ -512,18 +503,6 @@ static void reselectNextFile(NSArrayController *controller)
 	[commitSplitView setHidden:NO];
 }
 
-#pragma mark Handle "alt" key-down/up events
-// to toggle commit/stash controls
-
-- (void)flagsChanged:(NSEvent *)theEvent
-{
-    BOOL altDown = !!([theEvent modifierFlags] & NSAlternateKeyMask);
-    NSInteger currIndex = [controlsTabView indexOfTabViewItem:controlsTabView.selectedTabViewItem];
-    int desiredIndex = altDown ? kControlsTabIndexStash : kControlsTabIndexCommit;
-    if (currIndex != desiredIndex) {
-        [controlsTabView selectTabViewItemAtIndex:desiredIndex];
-    }
-}
 
 #pragma mark NSTextView delegate methods
 

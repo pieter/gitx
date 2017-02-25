@@ -354,10 +354,6 @@
     }
 }
 
-- (void)flagsChanged:(NSEvent *)theEvent {
-	[sidebarController.commitViewController flagsChanged:theEvent];
-}
-
 
 - (NSArray <NSURL *> *)selectedURLsFromSender:(id)sender {
 	NSArray *selectedFiles = [sender representedObject];
