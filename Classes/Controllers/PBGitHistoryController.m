@@ -647,16 +647,16 @@
 														  action:@selector(checkoutFiles:)
 												   keyEquivalent:@""];
 	
-	NSString *finderItemTitle = NSLocalizedString(@"Show in Finder", @"Show in Finder menu item");
+	NSString *finderItemTitle = NSLocalizedString(@"Reveal in Finder", @"Show in Finder menu item");
 	NSMenuItem *finderItem = [[NSMenuItem alloc] initWithTitle:finderItemTitle
-														action:@selector(showInFinderAction:)
+														action:@selector(revealInFinder:)
 												 keyEquivalent:@""];
 	
 	NSString *openFilesItemTitle = multiple
 		? NSLocalizedString(@"Open Files", @"Open menu item for multiple files")
 		: NSLocalizedString(@"Open File", @"Open menu item for single file");
 	NSMenuItem *openFilesItem = [[NSMenuItem alloc] initWithTitle:openFilesItemTitle
-														   action:@selector(openFilesAction:)
+														   action:@selector(openFiles:)
 													keyEquivalent:@""];
 
 	NSArray *menuItems = [NSArray arrayWithObjects:historyItem, diffItem, checkoutItem, finderItem, openFilesItem, nil];

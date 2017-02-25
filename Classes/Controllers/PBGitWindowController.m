@@ -193,21 +193,6 @@
 	[self showErrorSheet:error];
 }
 
-- (IBAction) revealInFinder:(id)sender
-{
-	[[PBRepositoryDocumentController sharedDocumentController] revealURLsInFinder:@[self.repository.workingDirectoryURL]];
-}
-
-- (IBAction) openInTerminal:(id)sender
-{
-	[PBTerminalUtil runCommand:@"git status" inDirectory:self.repository.workingDirectoryURL];
-}
-
-- (IBAction) refresh:(id)sender
-{
-	[contentController refresh:self];
-}
-
 - (void) updateStatus
 {
 	NSString *status = contentController.status;
@@ -273,7 +258,24 @@
 {
 	if (fileURLs.count == 0) return;
 
-	[[NSWorkspace sharedWorkspace] openURLs:fileURLs
+	NSMutableArray *nonSubmoduleURLs = [NSMutableArray array];
+
+	for (NSURL *fileURL in fileURLs) {
+		GTSubmodule *submodule = [self.repository submoduleAtPath:fileURL.path error:NULL];
+		if (!submodule) {
+			[nonSubmoduleURLs addObject:fileURL];
+		} else {
+			NSURL *submoduleURL = [submodule.parentRepository.fileURL URLByAppendingPathComponent:submodule.path isDirectory:YES];
+			[[NSDocumentController sharedDocumentController] openDocumentWithContentsOfURL:submoduleURL
+																				   display:YES
+																		 completionHandler:^(NSDocument * _Nullable document, BOOL documentWasAlreadyOpen, NSError * _Nullable error) {
+																			 // Do nothing on completion.
+																			 return;
+																		 }];
+		}
+	}
+
+	[[NSWorkspace sharedWorkspace] openURLs:nonSubmoduleURLs
 					withAppBundleIdentifier:nil
 									options:0
 			 additionalEventParamDescriptor:nil
@@ -376,44 +378,19 @@
 	return URLs;
 }
 
-+ (void) openSubmoduleInGitX:(GTSubmodule * _Nonnull) submodule
+- (IBAction) revealInFinder:(id)sender
 {
-	NSURL *submoduleURL = [submodule.parentRepository.fileURL URLByAppendingPathComponent:submodule.path isDirectory:YES];
-	[[NSDocumentController sharedDocumentController] openDocumentWithContentsOfURL:submoduleURL
-																		   display:YES
-																 completionHandler:^(NSDocument * _Nullable document, BOOL documentWasAlreadyOpen, NSError * _Nullable error) {
-																	 // Do nothing on completion.
-																	 return;
-																 }];
+	[self revealURLsInFinder:@[self.repository.workingDirectoryURL]];
 }
 
-- (IBAction)openFilesAction:(id)sender
+- (IBAction) openInTerminal:(id)sender
 {
-	NSArray *URLs = [self selectedURLsFromSender:sender];
-
-	if ([URLs count] == 0)
-		return;
-
-	NSMutableArray *fileURLs = [NSMutableArray array];
-	for (NSURL *fileURL in URLs) {
-		GTSubmodule *submodule = [self.repository submoduleAtPath:fileURL.path error:NULL];
-		if (submodule != nil) {
-			[self.class openSubmoduleInGitX:submodule];
-			continue;
-		}
-		[fileURLs addObject:fileURL];
-	}
-
-	[self openURLs:fileURLs];
+	[PBTerminalUtil runCommand:@"git status" inDirectory:self.repository.workingDirectoryURL];
 }
 
-- (IBAction)showInFinderAction:(id)sender
+- (IBAction) refresh:(id)sender
 {
-	NSArray *URLs = [self selectedURLsFromSender:sender];
-	if ([URLs count] == 0)
-		return;
-
-	[self revealURLsInFinder:URLs];
+	[contentController refresh:self];
 }
 
 #pragma mark -

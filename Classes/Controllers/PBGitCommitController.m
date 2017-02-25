@@ -264,6 +264,30 @@
 	return controller.selectedObjects;
 }
 
+- (IBAction)openFiles:(id)sender
+{
+	NSArray <PBChangedFile *> *selectedFiles = [self selectedFilesForSender:sender];
+
+	NSMutableArray <NSURL *> *fileURLs = [NSMutableArray array];
+	NSURL *workingDirectoryURL = self.repository.workingDirectoryURL;
+	for (PBChangedFile *file in selectedFiles) {
+		[fileURLs addObject:[workingDirectoryURL URLByAppendingPathComponent:file.path]];
+	}
+	[self.windowController openURLs:fileURLs];
+}
+
+- (IBAction)revealInFinder:(id)sender
+{
+	NSArray <PBChangedFile *> *selectedFiles = [self selectedFilesForSender:sender];
+
+	NSMutableArray <NSURL *> *fileURLs = [NSMutableArray array];
+	NSURL *workingDirectoryURL = self.repository.workingDirectoryURL;
+	for (PBChangedFile *file in selectedFiles) {
+		[fileURLs addObject:[workingDirectoryURL URLByAppendingPathComponent:file.path]];
+	}
+	[self.windowController revealURLsInFinder:fileURLs];
+}
+
 - (IBAction)moveToTrash:(id)sender
 {
 	NSArray <PBChangedFile *> *selectedFiles = [self selectedFilesForSender:sender];
@@ -630,7 +654,7 @@ BOOL shouldTrashInsteadOfDiscardAnyFileIn(NSArray <PBChangedFile *> *files)
 		possiblySetHidden(!isVisible, menuItem);
 		return filesForStaging.count > 0 && canDiscardAnyFileIn(filesForStaging);
 	}
-	else if (menuItem.action == @selector(openFilesAction:)) {
+	else if (menuItem.action == @selector(openFiles:)) {
 		if (selectedFiles.count > 0) {
 			NSString *filePath = selectedFiles.firstObject.path;
 			if (selectedFiles.count == 1 && [self.repository submoduleAtPath:filePath error:NULL] != nil) {
@@ -655,7 +679,7 @@ BOOL shouldTrashInsteadOfDiscardAnyFileIn(NSArray <PBChangedFile *> *files)
 		possiblySetHidden(!isActive, menuItem);
 		return isActive;
 	}
-	else if (menuItem.action == @selector(showInFinderAction:)) {
+	else if (menuItem.action == @selector(revealInFinder:)) {
 		BOOL active = NO;
 		if (selectedFiles.count == 1) {
 			menuItem.title = [NSString stringWithFormat:NSLocalizedString(@"Reveal “%@” in Finder", @"Reveal File in Finder contextual menu item (single file with name)"),

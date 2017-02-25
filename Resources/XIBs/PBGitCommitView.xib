@@ -312,23 +312,23 @@ DQ
                         <action selector="discardFilesForcibly:" target="-1" id="Bhk-sU-mKt"/>
                     </connections>
                 </menuItem>
-                <menuItem title="Trash…" id="GpS-4j-Lc3">
+                <menuItem title="Move to Trash…" id="GpS-4j-Lc3">
                     <modifierMask key="keyEquivalentModifierMask"/>
                     <connections>
                         <action selector="moveToTrash:" target="-1" id="BIm-TI-ivu"/>
                     </connections>
                 </menuItem>
                 <menuItem isSeparatorItem="YES" id="Lw9-2j-4Yt"/>
-                <menuItem title="Open" id="Ldk-Ut-al3">
+                <menuItem title="Open Files" id="Ldk-Ut-al3">
                     <modifierMask key="keyEquivalentModifierMask"/>
                     <connections>
-                        <action selector="openFilesAction:" target="-1" id="Al8-xI-PvD"/>
+                        <action selector="openFiles:" target="-1" id="3f7-KE-yYt"/>
                     </connections>
                 </menuItem>
                 <menuItem title="Reveal in Finder" id="Af1-tD-CGZ">
                     <modifierMask key="keyEquivalentModifierMask"/>
                     <connections>
-                        <action selector="showInFinderAction:" target="-1" id="eyM-ee-Fy4"/>
+                        <action selector="revealInFinder:" target="-1" id="5WR-5x-LDB"/>
                     </connections>
                 </menuItem>
             </items>

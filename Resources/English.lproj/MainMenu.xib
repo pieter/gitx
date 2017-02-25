@@ -427,6 +427,12 @@
                                 </connections>
                             </menuItem>
                             <menuItem isSeparatorItem="YES" id="DoS-f9-CnX"/>
+                            <menuItem title="Open Files" id="v0g-0H-6cS">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="openFiles:" target="-1" id="iuN-jM-CtN"/>
+                                </connections>
+                            </menuItem>
                             <menuItem title="Open in Terminal" keyEquivalent="T" id="942">
                                 <connections>
                                     <action selector="openInTerminal:" target="-1" id="944"/>
@@ -500,18 +506,6 @@ DQ
                                 <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
                                 <connections>
                                     <binding destination="oqX-ct-wMx" name="value" keyPath="currentDocument.windowController.repository.index.amend" id="qcF-1I-xfx"/>
-                                </connections>
-                            </menuItem>
-                            <menuItem isSeparatorItem="YES" id="BgS-57-7bg"/>
-                            <menuItem title="Reveal in Finder" keyEquivalent="R" id="VgQ-bz-uO9">
-                                <connections>
-                                    <action selector="showInFinderAction:" target="-1" id="1PN-mC-i31"/>
-                                </connections>
-                            </menuItem>
-                            <menuItem title="Open" id="v0g-0H-6cS">
-                                <modifierMask key="keyEquivalentModifierMask"/>
-                                <connections>
-                                    <action selector="openFilesAction:" target="-1" id="Kyj-uD-swp"/>
                                 </connections>
                             </menuItem>
                             <menuItem isSeparatorItem="YES" id="IxF-3J-qF1"/>
