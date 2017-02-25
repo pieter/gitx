@@ -29,6 +29,7 @@ typedef enum branchFilterTypes {
 @class PBGitIndex;
 @class GTOID;
 @class PBGitRepositoryWatcher;
+@class GTSubmodule;
 
 @interface PBGitRepository : NSDocument
 
@@ -47,7 +48,7 @@ typedef enum branchFilterTypes {
 @property (readonly, strong) GTRepository* gtRepo;
 @property (nonatomic, readonly) BOOL isShallowRepository;
 
-@property (nonatomic, strong) NSMutableArray* submodules;
+@property (nonatomic, strong) NSMutableArray<GTSubmodule *>* submodules;
 @property (readonly, strong) PBGitIndex *index;
 
 // Designated initializer
@@ -140,5 +141,7 @@ typedef enum branchFilterTypes {
 
 - (void) forceUpdateRevisions;
 - (NSURL*) getIndexURL;
+
+- (GTSubmodule *)submoduleAtPath:(NSString *)path error:(NSError **)error;
 
 @end

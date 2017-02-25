@@ -1032,6 +1032,21 @@
 	return retValue != 0;
 }
 
+- (GTSubmodule *)submoduleAtPath:(NSString *)path error:(NSError **)error;
+{
+	NSString *standardizedPath = path.stringByStandardizingPath;
+	for (GTSubmodule *submodule in self.submodules) {
+		if ([submodule.path isEqualToString:standardizedPath]) {
+			return submodule;
+		}
+	}
+	if (error) {
+		NSString *failure = [NSString stringWithFormat:@"The submodule at path \"%@\" couldn't be found.", path];
+		*error = [NSError pb_errorWithDescription:@"Submodule not found" failureReason:failure];
+	}
+	return nil;
+}
+
 #pragma mark low level
 
 - (int) returnValueForCommand:(NSString *)cmd
