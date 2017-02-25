@@ -1,20 +1,20 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="11201" systemVersion="16B2548a" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="10117" systemVersion="15G31" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="11201"/>
-        <plugIn identifier="com.apple.WebKitIBPlugin" version="11201"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="10117"/>
+        <plugIn identifier="com.apple.WebKitIBPlugin" version="10117"/>
         <capability name="box content view" minToolsVersion="7.0"/>
     </dependencies>
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="PBGitCommitController">
             <connections>
-                <outlet property="cachedFilesController" destination="86" id="155"/>
                 <outlet property="commitButton" destination="coC-RC-dhM" id="Zqw-Gy-05Z"/>
                 <outlet property="commitMessageView" destination="133" id="213"/>
                 <outlet property="commitSplitView" destination="186" id="314"/>
                 <outlet property="controlsTabView" destination="4Ld-Yb-msh" id="Ogf-eR-aMr"/>
                 <outlet property="indexController" destination="254" id="256"/>
+                <outlet property="stagedFilesController" destination="86" id="DEn-cJ-SoD"/>
                 <outlet property="trackedFilesController" destination="EmG-y5-6ms" id="mqT-Qm-7zo"/>
                 <outlet property="unstagedFilesController" destination="81" id="156"/>
                 <outlet property="view" destination="1" id="44"/>
@@ -45,7 +45,7 @@
                             <rect key="frame" x="0.0" y="190" width="852" height="242"/>
                             <autoresizingMask key="autoresizingMask"/>
                             <subviews>
-                                <box autoresizesSubviews="NO" borderType="none" title="Unstaged Changes" id="206">
+                                <box autoresizesSubviews="NO" title="Unstaged Changes" borderType="none" id="206">
                                     <rect key="frame" x="-3" y="0.0" width="194" height="246"/>
                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                     <view key="contentView" id="o6a-kT-Geh">
@@ -105,7 +105,7 @@
                                         </subviews>
                                     </view>
                                 </box>
-                                <box autoresizesSubviews="NO" borderType="none" title="Commit Message" id="207">
+                                <box autoresizesSubviews="NO" title="Commit Message" borderType="none" id="207">
                                     <rect key="frame" x="194" y="0.0" width="438" height="246"/>
                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                     <view key="contentView" id="KUO-uW-2Ed">
@@ -119,13 +119,15 @@
                                                     <rect key="frame" x="1" y="1" width="436" height="188"/>
                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                     <subviews>
-                                                        <textView importsGraphics="NO" richText="NO" allowsUndo="YES" linkDetection="YES" smartInsertDelete="YES" id="133" customClass="PBCommitMessageView">
-                                                            <rect key="frame" x="0.0" y="0.0" width="446" height="188"/>
+                                                        <textView importsGraphics="NO" richText="NO" verticallyResizable="NO" allowsUndo="YES" linkDetection="YES" smartInsertDelete="YES" id="133" customClass="PBCommitMessageView">
+                                                            <rect key="frame" x="0.0" y="0.0" width="455" height="192"/>
                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                             <size key="minSize" width="436" height="188"/>
                                                             <size key="maxSize" width="1161" height="10000000"/>
                                                             <color key="insertionPointColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                                            <size key="minSize" width="436" height="188"/>
+                                                            <size key="maxSize" width="1161" height="10000000"/>
                                                         </textView>
                                                     </subviews>
                                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -134,8 +136,8 @@
                                                     <rect key="frame" x="-100" y="-100" width="87" height="18"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                 </scroller>
-                                                <scroller key="verticalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="NO" id="131">
-                                                    <rect key="frame" x="422" y="1" width="16" height="0.0"/>
+                                                <scroller key="verticalScroller" verticalHuggingPriority="750" horizontal="NO" id="131">
+                                                    <rect key="frame" x="421" y="1" width="16" height="188"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                 </scroller>
                                             </scrollView>
@@ -226,7 +228,7 @@ DQ
                                         </subviews>
                                     </view>
                                 </box>
-                                <box autoresizesSubviews="NO" borderType="none" title="Staged Changes" id="208">
+                                <box autoresizesSubviews="NO" title="Staged Changes" borderType="none" id="208">
                                     <rect key="frame" x="635" y="0.0" width="220" height="246"/>
                                     <autoresizingMask key="autoresizingMask" flexibleMinX="YES" heightSizable="YES"/>
                                     <view key="contentView" id="WaF-YV-oYS">
@@ -247,7 +249,7 @@ DQ
                                                             <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                                             <color key="gridColor" name="gridColor" catalog="System" colorSpace="catalog"/>
                                                             <tableColumns>
-                                                                <tableColumn width="215.5" minWidth="10" maxWidth="3.4028229999999999e+38" id="113">
+                                                                <tableColumn width="216" minWidth="10" maxWidth="3.4028229999999999e+38" id="113">
                                                                     <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left">
                                                                         <font key="font" metaFont="smallSystem"/>
                                                                         <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
@@ -314,7 +316,7 @@ DQ
                 <binding destination="-2" name="contentArray" keyPath="index.indexChanges" id="281"/>
             </connections>
         </arrayController>
-        <arrayController selectsInsertedObjects="NO" avoidsEmptySelection="NO" clearsFilterPredicateOnInsertion="NO" automaticallyRearrangesObjects="YES" id="86" userLabel="Cached Files">
+        <arrayController selectsInsertedObjects="NO" avoidsEmptySelection="NO" clearsFilterPredicateOnInsertion="NO" automaticallyRearrangesObjects="YES" id="86" userLabel="Staged Files">
             <declaredKeys>
                 <string>value</string>
                 <string>description</string>
@@ -333,9 +335,9 @@ DQ
         </arrayController>
         <customObject id="96" userLabel="Diff Controller" customClass="PBWebChangesController">
             <connections>
-                <outlet property="cachedFilesController" destination="86" id="97"/>
                 <outlet property="controller" destination="-2" id="101"/>
                 <outlet property="indexController" destination="254" id="262"/>
+                <outlet property="stagedFilesController" destination="86" id="haI-nn-yTo"/>
                 <outlet property="unstagedFilesController" destination="81" id="98"/>
                 <outlet property="view" destination="125" id="136"/>
             </connections>

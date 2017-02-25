@@ -32,7 +32,7 @@
 	BOOL stashKeepIndex;
 
 	IBOutlet NSArrayController *unstagedFilesController;
-	IBOutlet NSArrayController *cachedFilesController;
+	IBOutlet NSArrayController *stagedFilesController;
 	IBOutlet NSArrayController *trackedFilesController;
 
 	IBOutlet NSTabView *controlsTabView;
@@ -78,19 +78,19 @@
 	[commitMessageView setTypingAttributes:[NSDictionary dictionaryWithObject:[NSFont fontWithName:@"Menlo" size:12.0] forKey:NSFontAttributeName]];
 	
 	[unstagedFilesController setFilterPredicate:[NSPredicate predicateWithFormat:@"hasUnstagedChanges == 1"]];
-	[cachedFilesController setFilterPredicate:[NSPredicate predicateWithFormat:@"hasStagedChanges == 1"]];
+	[stagedFilesController setFilterPredicate:[NSPredicate predicateWithFormat:@"hasStagedChanges == 1"]];
     [trackedFilesController setFilterPredicate:[NSPredicate predicateWithFormat:@"status > 0"]];
 	
 	[unstagedFilesController setSortDescriptors:[NSArray arrayWithObjects:
 		[[NSSortDescriptor alloc] initWithKey:@"status" ascending:false],
 		[[NSSortDescriptor alloc] initWithKey:@"path" ascending:true], nil]];
-	[cachedFilesController setSortDescriptors:[NSArray arrayWithObject:
+	[stagedFilesController setSortDescriptors:[NSArray arrayWithObject:
 		[[NSSortDescriptor alloc] initWithKey:@"path" ascending:true]]];
 
     // listen for updates
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_repositoryUpdatedNotification:) name:PBGitRepositoryEventNotification object:repository];
 
-	[cachedFilesController setAutomaticallyRearrangesObjects:NO];
+	[stagedFilesController setAutomaticallyRearrangesObjects:NO];
 	[unstagedFilesController setAutomaticallyRearrangesObjects:NO];
 
 	[commitSplitView setHidden:YES];
@@ -138,7 +138,7 @@
 		return;
 	}
 
-	if ([[cachedFilesController arrangedObjects] count] == 0) {
+	if ([[stagedFilesController arrangedObjects] count] == 0) {
 		NSString * message = NSLocalizedString(@"No changes to commit",
 											   @"Title for sheet that you need to stage changes before creating a commit");
 		NSString * info = NSLocalizedString(@"You need to stage some changed files before committing by moving them to the list of Staged Changes.",
@@ -160,7 +160,7 @@
 		return;
 	}
 
-	[cachedFilesController setSelectionIndexes:[NSIndexSet indexSet]];
+	[stagedFilesController setSelectionIndexes:[NSIndexSet indexSet]];
 	[unstagedFilesController setSelectionIndexes:[NSIndexSet indexSet]];
 
 	self.isBusy = YES;
@@ -311,8 +311,8 @@ static void reselectNextFile(NSArrayController *controller)
 }
 
 - (IBAction)unstageFiles:(id)sender {
-	[self.repository.index unstageFiles:cachedFilesController.selectedObjects];
-	reselectNextFile(cachedFilesController);
+	[self.repository.index unstageFiles:stagedFilesController.selectedObjects];
+	reselectNextFile(stagedFilesController);
 }
 
 - (IBAction)discardFiles:(id)sender
@@ -402,11 +402,11 @@ static void reselectNextFile(NSArrayController *controller)
 
 - (void)indexChanged:(NSNotification *)notification
 {
-	[cachedFilesController rearrangeObjects];
+	[stagedFilesController rearrangeObjects];
 	[unstagedFilesController rearrangeObjects];
     
     NSUInteger tracked = [[trackedFilesController arrangedObjects] count];
-    NSUInteger staged = [[cachedFilesController arrangedObjects] count];
+    NSUInteger staged = [[stagedFilesController arrangedObjects] count];
     
     [commitButton setEnabled:(staged > 0)];
     [stashButton setEnabled:(staged > 0 || tracked > 0)];
