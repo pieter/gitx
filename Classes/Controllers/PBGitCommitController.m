@@ -26,17 +26,23 @@
 #define kNotificationDictionaryDescriptionKey @"description"
 #define kNotificationDictionaryMessageKey @"message"
 
-@interface PBGitCommitController () <NSTextViewDelegate>
-- (void)refreshFinished:(NSNotification *)notification;
-- (void)commitWithVerification:(BOOL) doVerify;
-- (void)commitStatusUpdated:(NSNotification *)notification;
-- (void)commitFinished:(NSNotification *)notification;
-- (void)commitFailed:(NSNotification *)notification;
-- (void)commitHookFailed:(NSNotification *)notification;
-- (void)amendCommit:(NSNotification *)notification;
-- (void)indexChanged:(NSNotification *)notification;
-- (void)indexOperationFailed:(NSNotification *)notification;
-- (void)saveCommitSplitViewPosition;
+@interface PBGitCommitController () <NSTextViewDelegate> {
+	IBOutlet PBCommitMessageView *commitMessageView;
+
+	BOOL stashKeepIndex;
+
+	IBOutlet NSArrayController *unstagedFilesController;
+	IBOutlet NSArrayController *cachedFilesController;
+	IBOutlet NSArrayController *trackedFilesController;
+
+	IBOutlet NSTabView *controlsTabView;
+	IBOutlet NSButton *commitButton;
+	IBOutlet NSButton *stashButton;
+
+	IBOutlet PBGitIndexController *indexController;
+	IBOutlet PBWebChangesController *webController;
+	IBOutlet PBNiceSplitView *commitSplitView;
+}
 @end
 
 @implementation PBGitCommitController

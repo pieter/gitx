@@ -9,30 +9,9 @@
 #import <Cocoa/Cocoa.h>
 #import "PBViewController.h"
 
-@class PBGitIndexController;
-@class PBIconAndTextCell;
-@class PBWebChangesController;
 @class PBGitIndex;
-@class PBNiceSplitView;
-@class PBCommitMessageView;
 
-@interface PBGitCommitController : PBViewController {
-	IBOutlet PBCommitMessageView *commitMessageView;
-
-	BOOL stashKeepIndex;
-
-	IBOutlet NSArrayController *unstagedFilesController;
-	IBOutlet NSArrayController *cachedFilesController;
-	IBOutlet NSArrayController *trackedFilesController;
-
-	IBOutlet NSTabView *controlsTabView;
-	IBOutlet NSButton *commitButton;
-	IBOutlet NSButton *stashButton;
-
-	IBOutlet PBGitIndexController *indexController;
-	IBOutlet PBWebChangesController *webController;
-	IBOutlet PBNiceSplitView *commitSplitView;
-}
+@interface PBGitCommitController : PBViewController
 
 @property(assign) BOOL stashKeepIndex;
 
