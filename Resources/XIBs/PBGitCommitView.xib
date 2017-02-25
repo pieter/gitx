@@ -12,7 +12,6 @@
                 <outlet property="commitButton" destination="coC-RC-dhM" id="Zqw-Gy-05Z"/>
                 <outlet property="commitMessageView" destination="133" id="213"/>
                 <outlet property="commitSplitView" destination="186" id="314"/>
-                <outlet property="indexController" destination="254" id="256"/>
                 <outlet property="stagedFilesController" destination="86" id="DEn-cJ-SoD"/>
                 <outlet property="stagedTable" destination="57" id="itl-qb-bA3"/>
                 <outlet property="trackedFilesController" destination="EmG-y5-6ms" id="mqT-Qm-7zo"/>
@@ -276,17 +275,9 @@ DQ
         <customObject id="96" userLabel="Diff Controller" customClass="PBWebChangesController">
             <connections>
                 <outlet property="controller" destination="-2" id="101"/>
-                <outlet property="indexController" destination="254" id="262"/>
                 <outlet property="stagedFilesController" destination="86" id="haI-nn-yTo"/>
                 <outlet property="unstagedFilesController" destination="81" id="98"/>
                 <outlet property="view" destination="125" id="136"/>
-            </connections>
-        </customObject>
-        <customObject id="254" customClass="PBGitIndexController">
-            <connections>
-                <outlet property="commitController" destination="-2" id="257"/>
-                <outlet property="stagedFilesController" destination="86" id="261"/>
-                <outlet property="unstagedFilesController" destination="81" id="260"/>
             </connections>
         </customObject>
         <menu id="dTv-VG-m3c" userLabel="Contextual Menu">

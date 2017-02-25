@@ -7,7 +7,6 @@
 //
 
 #import "PBWebChangesController.h"
-#import "PBGitIndexController.h"
 #import "PBGitIndex.h"
 
 @interface PBWebChangesController () <WebEditingDelegate, WebUIDelegate>

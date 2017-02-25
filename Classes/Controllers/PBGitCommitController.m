@@ -14,7 +14,6 @@
 #import "PBNiceSplitView.h"
 #import "PBGitRepositoryWatcher.h"
 #import "PBCommitMessageView.h"
-#import "PBGitIndexController.h"
 
 #import <ObjectiveGit/GTRepository.h>
 #import <ObjectiveGit/GTConfiguration.h>
@@ -39,7 +38,6 @@
 	IBOutlet NSButton *commitButton;
 	IBOutlet NSButton *stashButton;
 
-	IBOutlet PBGitIndexController *indexController;
 	IBOutlet PBWebChangesController *webController;
 	IBOutlet PBNiceSplitView *commitSplitView;
 }
