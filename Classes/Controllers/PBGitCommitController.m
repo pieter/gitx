@@ -243,11 +243,6 @@
 	[repository reloadRefs];
 }
 
-- (IBAction) stashChanges:(id)sender
-{
-    [self.repository stashSaveWithKeepIndex:stashKeepIndex];
-}
-
 - (IBAction) commit:(id) sender
 {
     [self commitWithVerification:YES];
