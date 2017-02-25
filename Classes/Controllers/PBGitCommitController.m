@@ -333,14 +333,14 @@ static void reselectNextFile(NSArrayController *controller)
 
 - (IBAction)discardFiles:(id)sender
 {
-	NSArray *selectedFiles = [sender representedObject];
+	NSArray *selectedFiles = unstagedFilesController.selectedObjects;
 	if ([selectedFiles count] > 0)
 		[self discardChangesForFiles:selectedFiles force:FALSE];
 }
 
 - (IBAction)forceDiscardFiles:(id)sender
 {
-	NSArray *selectedFiles = [sender representedObject];
+	NSArray *selectedFiles = unstagedFilesController.selectedObjects;
 	if ([selectedFiles count] > 0)
 		[self discardChangesForFiles:selectedFiles force:TRUE];
 }
