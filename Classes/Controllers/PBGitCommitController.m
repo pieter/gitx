@@ -605,7 +605,7 @@ BOOL shouldTrashInsteadOfDiscardAnyFileIn(NSArray <PBChangedFile *> *files)
 	NSTableView *table = (menuItem.menu == stagedTable.menu ? stagedTable : unstagedTable);
 	NSArray <PBChangedFile *> *filesForStaging = unstagedFilesController.selectedObjects;
 	NSArray <PBChangedFile *> *filesForUnstaging = stagedFilesController.selectedObjects;
-	NSArray <PBChangedFile *> *selectedFiles = (table.tag == 0 ? filesForUnstaging : filesForStaging);
+	NSArray <PBChangedFile *> *selectedFiles = (table.tag == 0 ? filesForStaging : filesForUnstaging);
 
 	if (menuItem.action == @selector(stageFiles:)) {
 		menuItem.title = PBLocalizedStringForArray(filesForStaging,
