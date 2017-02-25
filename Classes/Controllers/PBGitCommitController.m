@@ -191,7 +191,7 @@
 - (void)discardChangesForFiles:(NSArray *)files force:(BOOL)force
 {
 	void (^performDiscard)(NSModalResponse) = ^(NSModalResponse returnCode) {
-		if (returnCode != NSModalResponseOK) return;
+		if (returnCode != NSAlertFirstButtonReturn) return;
 
 		[self.repository.index discardChangesForFiles:files];
 	};
@@ -207,7 +207,7 @@
 
 		[alert beginSheetModalForWindow:self.windowController.window completionHandler:performDiscard];
 	} else {
-		performDiscard(NSModalResponseOK);
+		performDiscard(NSAlertFirstButtonReturn);
 	}
 }
 
