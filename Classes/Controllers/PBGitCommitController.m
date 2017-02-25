@@ -28,15 +28,12 @@
 @interface PBGitCommitController () <NSTextViewDelegate, NSMenuDelegate> {
 	IBOutlet PBCommitMessageView *commitMessageView;
 
-	BOOL stashKeepIndex;
-
 	IBOutlet NSArrayController *unstagedFilesController;
 	IBOutlet NSArrayController *stagedFilesController;
 	IBOutlet NSArrayController *trackedFilesController;
 
 	IBOutlet NSTabView *controlsTabView;
 	IBOutlet NSButton *commitButton;
-	IBOutlet NSButton *stashButton;
 
 	IBOutlet PBWebChangesController *webController;
 	IBOutlet PBNiceSplitView *commitSplitView;
@@ -49,7 +46,6 @@
 
 @implementation PBGitCommitController
 
-@synthesize stashKeepIndex;
 @synthesize stagedTable=stagedTable;
 @synthesize unstagedTable=unstagedTable;
 

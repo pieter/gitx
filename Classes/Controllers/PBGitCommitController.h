@@ -13,8 +13,6 @@
 
 @interface PBGitCommitController : PBViewController
 
-@property(assign) BOOL stashKeepIndex;
-
 - (IBAction) refresh:(id) sender;
 - (IBAction) commit:(id) sender;
 - (IBAction) forceCommit:(id) sender;
