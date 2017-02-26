@@ -1036,7 +1036,7 @@
 {
 	NSString *standardizedPath = path.stringByStandardizingPath;
 	for (GTSubmodule *submodule in self.submodules) {
-		if ([submodule.path isEqualToString:standardizedPath]) {
+		if ([standardizedPath hasSuffix:submodule.path]) {
 			return submodule;
 		}
 	}
