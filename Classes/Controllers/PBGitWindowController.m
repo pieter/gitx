@@ -378,6 +378,11 @@
 	return URLs;
 }
 
+- (IBAction) openFiles:(id)sender {
+	NSArray <NSURL *> *fileURLs = [self selectedURLsFromSender:sender];
+	[self openURLs:fileURLs];
+}
+
 - (IBAction) revealInFinder:(id)sender
 {
 	[self revealURLsInFinder:@[self.repository.workingDirectoryURL]];
