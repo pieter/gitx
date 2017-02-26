@@ -10,7 +10,6 @@
 #import "PBGitRepository.h"
 #import "PBGitBinary.h"
 #import "PBEasyPipe.h"
-#import "NSString_RegEx.h"
 #import "PBChangedFile.h"
 
 NSString *PBGitIndexIndexRefreshStatus = @"PBGitIndexIndexRefreshStatus";
