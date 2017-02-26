@@ -156,7 +156,7 @@ def xcodebuild(scheme, workspace, config, commands):
 
 
 def check_string_output(command):
-    return subprocess.check_output(command).decode().strip()
+    return subprocess.check_output(command).decode('utf-8').strip()
 
 
 def sign_app(app_path):
