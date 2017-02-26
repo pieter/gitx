@@ -118,7 +118,7 @@
                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                     <subviews>
                                                         <textView importsGraphics="NO" richText="NO" verticallyResizable="NO" allowsUndo="YES" linkDetection="YES" smartInsertDelete="YES" id="133" customClass="PBCommitMessageView">
-                                                            <rect key="frame" x="0.0" y="0.0" width="473" height="200"/>
+                                                            <rect key="frame" x="0.0" y="0.0" width="482" height="204"/>
                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                             <size key="minSize" width="436" height="192"/>
@@ -312,12 +312,6 @@ DQ
                         <action selector="discardFilesForcibly:" target="-1" id="Bhk-sU-mKt"/>
                     </connections>
                 </menuItem>
-                <menuItem title="Move to Trash…" id="GpS-4j-Lc3">
-                    <modifierMask key="keyEquivalentModifierMask"/>
-                    <connections>
-                        <action selector="moveToTrash:" target="-1" id="BIm-TI-ivu"/>
-                    </connections>
-                </menuItem>
                 <menuItem isSeparatorItem="YES" id="Lw9-2j-4Yt"/>
                 <menuItem title="Open Files" id="Ldk-Ut-al3">
                     <modifierMask key="keyEquivalentModifierMask"/>
@@ -329,6 +323,12 @@ DQ
                     <modifierMask key="keyEquivalentModifierMask"/>
                     <connections>
                         <action selector="revealInFinder:" target="-1" id="5WR-5x-LDB"/>
+                    </connections>
+                </menuItem>
+                <menuItem title="Move to Trash…" id="GpS-4j-Lc3">
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                    <connections>
+                        <action selector="moveToTrash:" target="-1" id="BIm-TI-ivu"/>
                     </connections>
                 </menuItem>
             </items>

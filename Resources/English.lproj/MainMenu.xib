@@ -450,9 +450,14 @@
                     <modifierMask key="keyEquivalentModifierMask"/>
                     <menu key="submenu" title="Stage" id="9hl-o6-08g">
                         <items>
-                            <menuItem title="Stage" keyEquivalent="s" id="det-Cq-XRQ">
+                            <menuItem title="Stage Changes" keyEquivalent="s" id="det-Cq-XRQ">
                                 <connections>
                                     <action selector="stageFiles:" target="-1" id="gJU-JB-Ium"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Unstage Changes" keyEquivalent="u" id="L5a-nu-g7s">
+                                <connections>
+                                    <action selector="unstageFiles:" target="-1" id="jOw-yu-SaB"/>
                                 </connections>
                             </menuItem>
                             <menuItem title="Discard Changes…" id="p3Q-13-2BQ">
@@ -473,9 +478,27 @@
                                     <action selector="moveToTrash:" target="-1" id="6Rl-Yo-KMB"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Unstage" keyEquivalent="u" id="L5a-nu-g7s">
+                            <menuItem isSeparatorItem="YES" id="IxF-3J-qF1"/>
+                            <menuItem title="Stash Changes" keyEquivalent="y" id="2gL-ib-nL8">
                                 <connections>
-                                    <action selector="unstageFiles:" target="-1" id="jOw-yu-SaB"/>
+                                    <action selector="stashSave:" target="-1" id="9uu-ug-Nha"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Stash Changes and Keep Index" alternate="YES" keyEquivalent="y" id="nNv-D1-3XH">
+                                <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
+                                <connections>
+                                    <action selector="stashSaveWithKeepIndex:" target="-1" id="cWe-1t-xf6"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Pop Stash" keyEquivalent="Y" id="pKw-dO-def">
+                                <connections>
+                                    <action selector="stashPop:" target="-1" id="UlH-Mz-PFW"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Apply Stash" alternate="YES" keyEquivalent="Y" id="o86-xc-e8m">
+                                <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
+                                <connections>
+                                    <action selector="stashPop:" target="-1" id="48D-kd-utF"/>
                                 </connections>
                             </menuItem>
                             <menuItem isSeparatorItem="YES" id="YAj-JN-RZ1"/>
@@ -506,29 +529,6 @@ DQ
                                 <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
                                 <connections>
                                     <binding destination="oqX-ct-wMx" name="value" keyPath="currentDocument.windowController.repository.index.amend" id="qcF-1I-xfx"/>
-                                </connections>
-                            </menuItem>
-                            <menuItem isSeparatorItem="YES" id="IxF-3J-qF1"/>
-                            <menuItem title="Stash Changes" keyEquivalent="y" id="2gL-ib-nL8">
-                                <connections>
-                                    <action selector="stashSave:" target="-1" id="9uu-ug-Nha"/>
-                                </connections>
-                            </menuItem>
-                            <menuItem title="Stash Changes and Keep Index" alternate="YES" keyEquivalent="y" id="nNv-D1-3XH">
-                                <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
-                                <connections>
-                                    <action selector="stashSaveWithKeepIndex:" target="-1" id="cWe-1t-xf6"/>
-                                </connections>
-                            </menuItem>
-                            <menuItem title="Pop Stash" keyEquivalent="Y" id="pKw-dO-def">
-                                <connections>
-                                    <action selector="stashPop:" target="-1" id="UlH-Mz-PFW"/>
-                                </connections>
-                            </menuItem>
-                            <menuItem title="Apply Stash" alternate="YES" keyEquivalent="Y" id="o86-xc-e8m">
-                                <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
-                                <connections>
-                                    <action selector="stashPop:" target="-1" id="48D-kd-utF"/>
                                 </connections>
                             </menuItem>
                         </items>
