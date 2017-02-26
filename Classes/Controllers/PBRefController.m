@@ -172,7 +172,7 @@
 - (void) createBranch:(PBRefMenuItem *)sender
 {
 	id <PBGitRefish> refish = sender.refishs.firstObject;
-	[PBCreateBranchSheet beginCreateBranchSheetAtRefish:refish inRepository:historyController.repository];
+	[PBCreateBranchSheet beginSheetWithRefish:refish windowController:historyController.windowController];
 }
 
 
@@ -259,7 +259,7 @@
 - (void) createTag:(PBRefMenuItem *)sender
 {
 	id <PBGitRefish> refish = [sender refishs].firstObject;
-	[PBCreateTagSheet beginCreateTagSheetAtRefish:refish inRepository:historyController.repository];
+	[PBCreateTagSheet beginSheetWithRefish:refish windowController:historyController.windowController];
 }
 
 - (void) showTagInfoSheet:(PBRefMenuItem *)sender
@@ -284,7 +284,7 @@
 		GTTag *tag = (GTTag*)object;
 		info = tag.message;
 	}
-	[historyController.repository.windowController showMessageSheet:title infoText:info];
+	[historyController.windowController showMessageSheet:title infoText:info];
 }
 
 

@@ -41,6 +41,9 @@
 - (void)showModalSheet:(RJModalRepoSheet*)sheet;
 - (void)hideModalSheet:(RJModalRepoSheet*)sheet;
 
+- (void)openURLs:(NSArray <NSURL *> *)fileURLs;
+- (void)revealURLsInFinder:(NSArray <NSURL *> *)fileURLs;
+
 - (IBAction) showCommitView:(id)sender;
 - (IBAction) showHistoryView:(id)sender;
 - (IBAction) revealInFinder:(id)sender;

@@ -18,6 +18,8 @@
 #import "PBSourceViewItem.h"
 #import "PBGitRevSpecifier.h"
 #import "PBGitRef.h"
+#import "PBError.h"
+#import "PBRepositoryDocumentController.h"
 
 @interface PBGitWindowController ()
 
@@ -161,16 +163,14 @@
 
 - (void)showMessageSheet:(NSString *)messageText infoText:(NSString *)infoText
 {
-	[PBGitXMessageSheet beginMessageSheetForRepo:self.repository
-								 withMessageText:messageText
-										infoText:infoText];
+	[PBGitXMessageSheet beginSheetWithMessage:messageText info:infoText windowController:self];
 }
 
 - (void)showErrorSheet:(NSError *)error
 {
-	if ([[error domain] isEqualToString:PBGitRepositoryErrorDomain])
+	if ([[error domain] isEqualToString:PBGitXErrorDomain])
 	{
-		[PBGitXMessageSheet beginMessageSheetForRepo:self.repository withError:error];
+		[PBGitXMessageSheet beginSheetWithError:error windowController:self];
 	}
 	else
 	{
@@ -189,23 +189,8 @@
 							  title, NSLocalizedDescriptionKey,
 							  reason, NSLocalizedRecoverySuggestionErrorKey,
 							  nil];
-	NSError *error = [NSError errorWithDomain:PBGitRepositoryErrorDomain code:0 userInfo:userInfo];
+	NSError *error = [NSError errorWithDomain:PBGitXErrorDomain code:0 userInfo:userInfo];
 	[self showErrorSheet:error];
-}
-
-- (IBAction) revealInFinder:(id)sender
-{
-	[[NSWorkspace sharedWorkspace] openURL:self.repository.workingDirectoryURL];
-}
-
-- (IBAction) openInTerminal:(id)sender
-{
-	[PBTerminalUtil runCommand:@"git status" inDirectory:self.repository.workingDirectoryURL];
-}
-
-- (IBAction) refresh:(id)sender
-{
-	[contentController refresh:self];
 }
 
 - (void) updateStatus
@@ -268,11 +253,47 @@
 	}
 }
 
+
+- (void)openURLs:(NSArray <NSURL *> *)fileURLs
+{
+	if (fileURLs.count == 0) return;
+
+	NSMutableArray *nonSubmoduleURLs = [NSMutableArray array];
+
+	for (NSURL *fileURL in fileURLs) {
+		GTSubmodule *submodule = [self.repository submoduleAtPath:fileURL.path error:NULL];
+		if (!submodule) {
+			[nonSubmoduleURLs addObject:fileURL];
+		} else {
+			NSURL *submoduleURL = [submodule.parentRepository.fileURL URLByAppendingPathComponent:submodule.path isDirectory:YES];
+			[[NSDocumentController sharedDocumentController] openDocumentWithContentsOfURL:submoduleURL
+																				   display:YES
+																		 completionHandler:^(NSDocument * _Nullable document, BOOL documentWasAlreadyOpen, NSError * _Nullable error) {
+																			 // Do nothing on completion.
+																			 return;
+																		 }];
+		}
+	}
+
+	[[NSWorkspace sharedWorkspace] openURLs:nonSubmoduleURLs
+					withAppBundleIdentifier:nil
+									options:0
+			 additionalEventParamDescriptor:nil
+						  launchIdentifiers:NULL];
+}
+
+- (void)revealURLsInFinder:(NSArray <NSURL *> *)fileURLs
+{
+	if (fileURLs.count == 0) return;
+
+	[[NSWorkspace sharedWorkspace] activateFileViewerSelectingURLs:fileURLs];
+}
+
 #pragma mark IBActions
 
 - (IBAction) showAddRemoteSheet:(id)sender
 {
-	[[[PBAddRemoteSheet alloc] initWithRepository:self.repository] show];
+	[[[PBAddRemoteSheet alloc] initWithWindowController:self] show];
 }
 
 
@@ -335,11 +356,47 @@
     }
 }
 
-- (void)flagsChanged:(NSEvent *)theEvent {
-	[sidebarController.commitViewController flagsChanged:theEvent];
+
+- (NSArray <NSURL *> *)selectedURLsFromSender:(id)sender {
+	NSArray *selectedFiles = [sender representedObject];
+	if (![selectedFiles isKindOfClass:[NSArray class]] || [selectedFiles count] == 0)
+		return nil;
+
+	NSMutableArray *URLs = [NSMutableArray array];
+	for (id file in selectedFiles) {
+		NSString *path = file;
+		// Those can be PBChangedFiles sent by PBGitIndexController. Get their path.
+		if ([file respondsToSelector:@selector(path)]) {
+			path = [file path];
+		}
+
+		if (![path isKindOfClass:[NSString class]])
+			continue;
+		[URLs addObject:[self.repository.workingDirectoryURL URLByAppendingPathComponent:path]];
+	}
+
+	return URLs;
 }
 
+- (IBAction) openFiles:(id)sender {
+	NSArray <NSURL *> *fileURLs = [self selectedURLsFromSender:sender];
+	[self openURLs:fileURLs];
+}
 
+- (IBAction) revealInFinder:(id)sender
+{
+	[self revealURLsInFinder:@[self.repository.workingDirectoryURL]];
+}
+
+- (IBAction) openInTerminal:(id)sender
+{
+	[PBTerminalUtil runCommand:@"git status" inDirectory:self.repository.workingDirectoryURL];
+}
+
+- (IBAction) refresh:(id)sender
+{
+	[contentController refresh:self];
+}
 
 #pragma mark -
 #pragma mark SplitView Delegates

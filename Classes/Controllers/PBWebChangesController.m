@@ -7,7 +7,6 @@
 //
 
 #import "PBWebChangesController.h"
-#import "PBGitIndexController.h"
 #import "PBGitIndex.h"
 
 @interface PBWebChangesController () <WebEditingDelegate, WebUIDelegate>
@@ -24,7 +23,7 @@
 	[super awakeFromNib];
 
 	[unstagedFilesController addObserver:self forKeyPath:@"selection" options:0 context:@"UnstagedFileSelected"];
-	[cachedFilesController addObserver:self forKeyPath:@"selection" options:0 context:@"cachedFileSelected"];
+	[stagedFilesController addObserver:self forKeyPath:@"selection" options:0 context:@"cachedFileSelected"];
 
 	self.view.editingDelegate = self;
 	self.view.UIDelegate = self;
@@ -34,7 +33,7 @@
 {
 	[[self script] removeWebScriptKey:@"Index"];
 	[unstagedFilesController removeObserver:self forKeyPath:@"selection"];
-	[cachedFilesController removeObserver:self forKeyPath:@"selection"];
+	[stagedFilesController removeObserver:self forKeyPath:@"selection"];
 
 	[super closeView];
 }
@@ -51,7 +50,7 @@
 					   context:(void *)context
 {
 	NSArrayController *otherController;
-	otherController = object == unstagedFilesController ? cachedFilesController : unstagedFilesController;
+	otherController = object == unstagedFilesController ? stagedFilesController : unstagedFilesController;
 	NSUInteger count = [object selectedObjects].count;
 	if (count == 0) {
 		if([[otherController selectedObjects] count] == 0 && selectedFile) {
@@ -71,7 +70,7 @@
 	}
 
 	selectedFile = [[object selectedObjects] objectAtIndex:0];
-	selectedFileIsCached = object == cachedFilesController;
+	selectedFileIsCached = object == stagedFilesController;
 
 	[self refresh];
 }

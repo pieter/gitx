@@ -53,7 +53,7 @@
 {
 	if ([item action] == @selector(newDocument:))
 		return ([PBGitBinary path] != nil);
-	return [super validateMenuItem:item];
+	return YES;
 }
 
 @end

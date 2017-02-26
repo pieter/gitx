@@ -26,6 +26,7 @@
 #import "PBRepositoryFinder.h"
 #import "PBGitHistoryList.h"
 #import "PBGitStash.h"
+#import "PBError.h"
 
 @interface PBGitRepository () {
 	__strong PBGitRepositoryWatcher *watcher;
@@ -73,7 +74,7 @@
                                       [NSString stringWithFormat:@"%@ does not appear to be a git repository.", [repositoryURL path]], NSLocalizedRecoverySuggestionErrorKey,
                                       gtError, NSUnderlyingErrorKey,
                                       nil];
-			*error = [NSError errorWithDomain:PBGitRepositoryErrorDomain code:0 userInfo:userInfo];
+			*error = [NSError errorWithDomain:PBGitXErrorDomain code:0 userInfo:userInfo];
 		}
 		return nil;
 	}
@@ -591,6 +592,33 @@
     return retValue ? NO : YES;
 }
 
+- (BOOL)ignoreFilePaths:(NSArray *)filePaths error:(NSError **)error
+{
+	NSString *filesAsString = [filePaths componentsJoinedByString:@"\n"];
+
+	// Write to the file
+	NSString *gitIgnoreName = [self gitIgnoreFilename];
+
+	NSStringEncoding enc = NSUTF8StringEncoding;
+	NSString *ignoreFile;
+
+	if (![[NSFileManager defaultManager] fileExistsAtPath:gitIgnoreName]) {
+		ignoreFile = filesAsString;
+	} else {
+		NSMutableString *currentFile = [NSMutableString stringWithContentsOfFile:gitIgnoreName usedEncoding:&enc error:error];
+		if (!currentFile) return NO;
+
+		// Add a newline if not yet present
+		if ([currentFile characterAtIndex:([ignoreFile length] - 1)] != '\n')
+			[currentFile appendString:@"\n"];
+		[currentFile appendString:filesAsString];
+
+		ignoreFile = currentFile;
+	}
+
+	return [ignoreFile writeToFile:gitIgnoreName atomically:YES encoding:enc error:error];
+}
+
 - (PBGitIndex *)index
 {
 	if (!_index) {
@@ -641,7 +669,7 @@
 
 	if (error != NULL) {
 		NSString *info = [NSString stringWithFormat:@"There is no remote configured for the %@ '%@'.\n\nPlease select a branch from the popup menu, which has a corresponding remote tracking branch set up.\n\nYou can also use a contextual menu to choose a branch by right clicking on its label in the commit history list.", [branch refishType], [branch shortName]];
-		*error = [NSError errorWithDomain:PBGitRepositoryErrorDomain code:0
+		*error = [NSError errorWithDomain:PBGitXErrorDomain code:0
 								 userInfo:[NSDictionary dictionaryWithObjectsAndKeys:
 										   @"No remote configured for branch", NSLocalizedDescriptionKey,
 										   info, NSLocalizedRecoverySuggestionErrorKey,
@@ -662,27 +690,13 @@
 
 #pragma mark Repository commands
 
-- (void) cloneRepositoryToPath:(NSString *)path bare:(BOOL)isBare
-{
-	if (!path || [path isEqualToString:@""])
-		return;
-
-	NSMutableArray *arguments = [NSMutableArray arrayWithObjects:@"clone", @"--no-hardlinks", @"--", @".", path, nil];
-	if (isBare)
-		[arguments insertObject:@"--bare" atIndex:1];
-
-	NSString *description = [NSString stringWithFormat:@"Cloning the repository %@ to %@", [self projectName], path];
-	NSString *title = @"Cloning Repository";
-	[PBRemoteProgressSheet beginRemoteProgressSheetForArguments:arguments title:title description:description inRepository:self];
-}
-
 - (void) beginAddRemote:(NSString *)remoteName forURL:(NSString *)remoteURL
 {
 	NSArray *arguments = [NSArray arrayWithObjects:@"remote",  @"add", @"-f", remoteName, remoteURL, nil];
 
 	NSString *description = [NSString stringWithFormat:@"Adding the remote %@ and fetching tracking branches", remoteName];
 	NSString *title = @"Adding a remote";
-	[PBRemoteProgressSheet beginRemoteProgressSheetForArguments:arguments title:title description:description inRepository:self];
+	[PBRemoteProgressSheet beginRemoteProgressSheetWithTitle:title description:description arguments:arguments windowController:self.windowController];
 }
 
 - (void) beginFetchFromRemoteForRef:(PBGitRef *)ref
@@ -710,7 +724,7 @@
 	
 	NSString *description = [NSString stringWithFormat:@"Fetching all tracking branches for %@", remoteName];
 	NSString *title = @"Fetching…";
-	[PBRemoteProgressSheet beginRemoteProgressSheetForArguments:arguments title:title description:description inRepository:self];
+	[PBRemoteProgressSheet beginRemoteProgressSheetWithTitle:title description:description arguments:arguments windowController:self.windowController];
 }
 
 - (void) beginPullFromRemote:(PBGitRef *)remoteRef forRef:(PBGitRef *)ref rebase:(BOOL)rebase
@@ -736,7 +750,7 @@
 
 	NSString *description = [NSString stringWithFormat:@"Pulling all tracking branches from %@", remoteName];
 	NSString *title = @"Pulling from remote";
-	[PBRemoteProgressSheet beginRemoteProgressSheetForArguments:arguments title:title description:description inRepository:self hideSuccessScreen:true];
+	[PBRemoteProgressSheet beginRemoteProgressSheetWithTitle:title description:description arguments:arguments hideSuccessScreen:YES windowController:self.windowController];
 }
 
 - (void) beginPushRef:(PBGitRef *)ref toRemote:(PBGitRef *)remoteRef
@@ -772,7 +786,7 @@
 
 	NSString *description = [NSString stringWithFormat:@"Pushing %@ to %@", branchName, remoteName];
 	NSString *title = @"Pushing to remote";
-	[PBRemoteProgressSheet beginRemoteProgressSheetForArguments:arguments title:title description:description inRepository:self hideSuccessScreen:true];
+	[PBRemoteProgressSheet beginRemoteProgressSheetWithTitle:title description:description arguments:arguments hideSuccessScreen:true windowController:self.windowController];
 }
 
 - (BOOL) checkoutRefish:(id <PBGitRefish>)ref
@@ -1018,6 +1032,21 @@
 	return retValue != 0;
 }
 
+- (GTSubmodule *)submoduleAtPath:(NSString *)path error:(NSError **)error;
+{
+	NSString *standardizedPath = path.stringByStandardizingPath;
+	for (GTSubmodule *submodule in self.submodules) {
+		if ([standardizedPath hasSuffix:submodule.path]) {
+			return submodule;
+		}
+	}
+	if (error) {
+		NSString *failure = [NSString stringWithFormat:@"The submodule at path \"%@\" couldn't be found.", path];
+		*error = [NSError pb_errorWithDescription:@"Submodule not found" failureReason:failure];
+	}
+	return nil;
+}
+
 #pragma mark low level
 
 - (int) returnValueForCommand:(NSString *)cmd
@@ -1141,7 +1170,7 @@
 			desc = [NSString localizedStringWithFormat:@"The %@ hook failed to run and returned the following:\n%@", name, output];
 		}
 
-		if (error) *error = [NSError errorWithDomain:PBGitRepositoryErrorDomain
+		if (error) *error = [NSError errorWithDomain:PBGitXErrorDomain
 												code:0
 											userInfo:@{
 													   NSLocalizedFailureReasonErrorKey: failureReason,

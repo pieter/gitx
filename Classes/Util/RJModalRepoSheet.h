@@ -10,15 +10,21 @@
 
 @class PBGitRepository;
 @class PBGitWindowController;
+@class PBGitRepositoryDocument;
+
+NS_ASSUME_NONNULL_BEGIN
 
 @interface RJModalRepoSheet : NSWindowController
 
-@property (nonatomic, strong) PBGitRepository* repository;
-@property (nonatomic, strong) PBGitWindowController* repoWindow;
+@property (nonnull, strong) PBGitWindowController *windowController;
+@property (nonnull, assign) PBGitRepositoryDocument *document;
+@property (nonnull, readonly) PBGitRepository *repository;
 
-- (id) initWithWindowNibName:(NSString *)windowNibName forRepo:(PBGitRepository*)repo;
+- (instancetype)initWithWindowNibName:(NSString *)windowNibName windowController:(PBGitWindowController *)windowController;
 
 - (void) show;
 - (void) hide;
 
 @end
+
+NS_ASSUME_NONNULL_END

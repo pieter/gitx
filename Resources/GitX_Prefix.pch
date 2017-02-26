@@ -3,10 +3,5 @@
 #ifdef __OBJC__
     #import <Cocoa/Cocoa.h>
     #import <ObjectiveGit/ObjectiveGit.h>
-#endif
-
-#if (GITX_NO_DEPRECATE || DEBUG)
-#define GITX_DEPRECATED
-#else
-#define GITX_DEPRECATED __attribute__ ((deprecated))
+	#import "PBMacros.h"
 #endif

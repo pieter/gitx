@@ -16,7 +16,6 @@
 @class GTRepository;
 @class GTConfiguration;
 
-extern NSString* PBGitRepositoryErrorDomain;
 extern NSString *PBGitRepositoryDocumentType;
 
 typedef enum branchFilterTypes {
@@ -30,6 +29,7 @@ typedef enum branchFilterTypes {
 @class PBGitIndex;
 @class GTOID;
 @class PBGitRepositoryWatcher;
+@class GTSubmodule;
 
 @interface PBGitRepository : NSDocument
 
@@ -48,7 +48,7 @@ typedef enum branchFilterTypes {
 @property (readonly, strong) GTRepository* gtRepo;
 @property (nonatomic, readonly) BOOL isShallowRepository;
 
-@property (nonatomic, strong) NSMutableArray* submodules;
+@property (nonatomic, strong) NSMutableArray<GTSubmodule *>* submodules;
 @property (readonly, strong) PBGitIndex *index;
 
 // Designated initializer
@@ -56,7 +56,6 @@ typedef enum branchFilterTypes {
 
 - (void)setDocument:(NSDocument *)document; // Backward-compatibility while PBGitRepository gets "modelized";
 
-- (void) cloneRepositoryToPath:(NSString *)path bare:(BOOL)isBare;
 - (void) beginAddRemote:(NSString *)remoteName forURL:(NSString *)remoteURL;
 - (void) beginFetchFromRemoteForRef:(PBGitRef *)ref;
 - (void) beginPullFromRemote:(PBGitRef *)remoteRef forRef:(PBGitRef *)ref rebase:(BOOL)rebase;
@@ -75,6 +74,8 @@ typedef enum branchFilterTypes {
 - (BOOL) stashDrop:(PBGitStash *)stash;
 - (BOOL) stashSave;
 - (BOOL) stashSaveWithKeepIndex:(BOOL)keepIndex;
+
+- (BOOL)ignoreFilePaths:(NSArray *)filePaths error:(NSError **)error;
 
 - (BOOL)updateReference:(PBGitRef *)ref toPointAtCommit:(PBGitCommit *)newCommit;
 - (NSString *)performDiff:(PBGitCommit *)startCommit against:(PBGitCommit *)diffCommit forFiles:(NSArray *)filePaths;
@@ -140,5 +141,7 @@ typedef enum branchFilterTypes {
 
 - (void) forceUpdateRevisions;
 - (NSURL*) getIndexURL;
+
+- (GTSubmodule *)submoduleAtPath:(NSString *)path error:(NSError **)error;
 
 @end

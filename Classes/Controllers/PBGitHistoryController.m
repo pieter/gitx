@@ -32,7 +32,6 @@
 #import "PBQLTextView.h"
 #import "GLFileView.h"
 #import "GitXCommitCopier.h"
-#import "PBOpenFiles.h"
 
 
 #define kHistorySelectedDetailIndexKey @"PBHistorySelectedDetailIndex"
@@ -600,16 +599,6 @@
 	[repository checkoutFiles:files fromRefish:self.selectedCommits.firstObject];
 }
 
-- (void) openFilesAction:(id) sender
-{
-	[PBOpenFiles openFilesAction:sender with:repository.workingDirectoryURL];
-}
-
-- (void) showInFinderAction:(id) sender
-{
-	[PBOpenFiles showInFinderAction:sender with:repository.workingDirectoryURL];
-}
-
 - (void) diffFilesAction:(id)sender
 {
 	/* TODO: Move that to the document */
@@ -658,16 +647,16 @@
 														  action:@selector(checkoutFiles:)
 												   keyEquivalent:@""];
 	
-	NSString *finderItemTitle = NSLocalizedString(@"Show in Finder", @"Show in Finder menu item");
+	NSString *finderItemTitle = NSLocalizedString(@"Reveal in Finder", @"Show in Finder menu item");
 	NSMenuItem *finderItem = [[NSMenuItem alloc] initWithTitle:finderItemTitle
-														action:@selector(showInFinderAction:)
+														action:@selector(revealInFinder:)
 												 keyEquivalent:@""];
 	
 	NSString *openFilesItemTitle = multiple
 		? NSLocalizedString(@"Open Files", @"Open menu item for multiple files")
 		: NSLocalizedString(@"Open File", @"Open menu item for single file");
 	NSMenuItem *openFilesItem = [[NSMenuItem alloc] initWithTitle:openFilesItemTitle
-														   action:@selector(openFilesAction:)
+														   action:@selector(openFiles:)
 													keyEquivalent:@""];
 
 	NSArray *menuItems = [NSArray arrayWithObjects:historyItem, diffItem, checkoutItem, finderItem, openFilesItem, nil];
@@ -735,18 +724,18 @@
 	
 	PBGitCommit *selectedCommit = self.selectedCommits.firstObject;
 	if (!selectedCommits.firstObject || [selectedCommit hasRef:currentRef])
-		[PBCreateBranchSheet beginCreateBranchSheetAtRefish:currentRef inRepository:self.repository];
+		[PBCreateBranchSheet beginSheetWithRefish:currentRef windowController:self.windowController];
 	else
-		[PBCreateBranchSheet beginCreateBranchSheetAtRefish:selectedCommit inRepository:self.repository];
+		[PBCreateBranchSheet beginSheetWithRefish:selectedCommit windowController:self.windowController];
 }
 
 - (IBAction) createTag:(id)sender
 {
 	PBGitCommit *selectedCommit = self.selectedCommits.firstObject;
 	if (!selectedCommit)
-		[PBCreateTagSheet beginCreateTagSheetAtRefish:[repository.currentBranch ref] inRepository:repository];
+		[PBCreateTagSheet beginSheetWithRefish:[repository.currentBranch ref] windowController:self.windowController];
 	else
-		[PBCreateTagSheet beginCreateTagSheetAtRefish:selectedCommit inRepository:repository];
+		[PBCreateTagSheet beginSheetWithRefish:selectedCommit windowController:self.windowController];
 }
 
 - (IBAction) merge:(id)sender

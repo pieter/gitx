@@ -13,6 +13,7 @@
 #import "PBGitBinary.h"
 #import "PBDiffWindowController.h"
 #import "PBGitRepositoryDocument.h"
+#import "PBError.h"
 
 @implementation PBCLIProxy
 @synthesize connection;
@@ -46,7 +47,7 @@
 			NSDictionary *userInfo = [NSDictionary dictionaryWithObject:[NSString stringWithFormat:@"Could not create document. Perhaps %@", suggestion]
 																 forKey:NSLocalizedFailureReasonErrorKey];
 
-			*error = [NSError errorWithDomain:PBGitRepositoryErrorDomain code:2 userInfo:userInfo];
+			*error = [NSError errorWithDomain:PBGitXErrorDomain code:2 userInfo:userInfo];
 		}
 		return NO;
 	}

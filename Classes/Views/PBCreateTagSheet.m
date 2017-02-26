@@ -13,13 +13,6 @@
 #import "PBGitWindowController.h"
 #import "PBGitRevSpecifier.h"
 
-@interface PBCreateTagSheet ()
-
-- (void) beginCreateTagSheetAtRefish:(id <PBGitRefish>)refish;
-
-@end
-
-
 @implementation PBCreateTagSheet
 
 @synthesize repository;
@@ -34,9 +27,9 @@
 #pragma mark -
 #pragma mark PBCreateTagSheet
 
-+ (void) beginCreateTagSheetAtRefish:(id <PBGitRefish>)refish inRepository:(PBGitRepository *)repo
++ (void) beginSheetWithRefish:(id <PBGitRefish>)refish windowController:(PBGitWindowController *)windowController
 {
-	PBCreateTagSheet *sheet = [[self alloc] initWithWindowNibName:@"PBCreateTagSheet" forRepo:repo];
+	PBCreateTagSheet *sheet = [[self alloc] initWithWindowNibName:@"PBCreateTagSheet" windowController:windowController];
 	[sheet beginCreateTagSheetAtRefish:refish];
 }
 

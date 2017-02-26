@@ -13,7 +13,6 @@
 
 
 @interface PBCommitHookFailedSheet : PBGitXMessageSheet
-{}
 
 + (void)beginWithMessageText:(NSString *)message
 					infoText:(NSString *)info

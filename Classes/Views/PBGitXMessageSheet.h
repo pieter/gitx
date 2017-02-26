@@ -18,12 +18,12 @@
 	NSScrollView *scrollView;
 }
 
-+ (void)beginMessageSheetForRepo:(PBGitRepository *)repo
-				 withMessageText:(NSString *)message
-						infoText:(NSString *)info;
-+ (void)beginMessageSheetForRepo:(PBGitRepository *)repo
-					   withError:(NSError *)error;
++ (void)beginSheetWithMessage:(NSString *)message
+						 info:(NSString *)info
+			 windowController:(PBGitWindowController *)windowController;
 
++ (void)beginSheetWithError:(NSError *)error
+		   windowController:(PBGitWindowController *)windowController;
 
 - (void)beginMessageSheetWithMessageText:(NSString *)message
 								infoText:(NSString *)info;
