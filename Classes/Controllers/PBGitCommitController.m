@@ -163,15 +163,6 @@
 	[repository.index commitWithMessage:commitMessage andVerify:doVerify];
 }
 
-- (void)discardChangesForFilesAlertDidEnd:(NSAlert *)alert returnCode:(NSInteger)returnCode contextInfo:(void *)contextInfo
-{
-	[[alert window] orderOut:nil];
-
-	if (returnCode == NSAlertDefaultReturn) {
-		[self.repository.index discardChangesForFiles:(__bridge NSArray*)contextInfo];
-	}
-}
-
 - (void)discardChangesForFiles:(NSArray *)files force:(BOOL)force
 {
 	void (^performDiscard)(NSModalResponse) = ^(NSModalResponse returnCode) {
