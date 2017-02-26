@@ -253,9 +253,20 @@
     [self commitWithVerification:NO];
 }
 
+- (NSArray <PBChangedFile *> *)selectedFilesForSender:(id)sender
+{
+	NSParameterAssert(sender != nil);
+
+	if ([sender isKindOfClass:[NSMenuItem class]]) return nil;
+
+	NSTableView *table = (sender == stagedTable.menu ? stagedTable : unstagedTable);
+	NSArrayController *controller = (table.tag == 0 ? unstagedFilesController : stagedFilesController);
+	return controller.selectedObjects;
+}
+
 - (IBAction)moveToTrash:(id)sender
 {
-	NSArray *selectedFiles = [sender representedObject];
+	NSArray <PBChangedFile *> *selectedFiles = [self selectedFilesForSender:sender];
 
 	NSURL *workingDirectoryURL = self.repository.workingDirectoryURL;
 
@@ -281,7 +292,7 @@
 
 - (IBAction)ignoreFiles:(id) sender
 {
-	NSArray *selectedFiles = [sender representedObject];
+	NSArray <PBChangedFile *> *selectedFiles = [self selectedFilesForSender:sender];
 	if ([selectedFiles count] == 0)
 		return;
 
