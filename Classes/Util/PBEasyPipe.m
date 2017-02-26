@@ -62,7 +62,10 @@ NSString *const PBEasyPipeUnderlyingExceptionKey = @"PBEasyPipeUnderlyingExcepti
 
     // Prepare ourselves a nicer environment
     NSMutableDictionary *env = [[[NSProcessInfo processInfo] environment] mutableCopy];
-    [env removeObjectsForKeys:@[@"MallocStackLogging", @"MallocStackLoggingNoCompact", @"NSZombieEnabled"]];
+    [env removeObjectsForKeys:@[@"MallocStackLogging",
+								@"MallocStackLoggingNoCompact",
+								@"DYLD_INSERT_LIBRARIES", // to avoid GuardMalloc logging
+								@"NSZombieEnabled"]];
     [task setEnvironment:env];
 
 	if (directory)
