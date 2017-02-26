@@ -22,9 +22,22 @@ static NSString* gitPath = nil;
 		return nil;
 
 	NSString *version = [PBEasyPipe outputForCommand:path withArgs:[NSArray arrayWithObject:@"--version"]];
-	if ([version hasPrefix:@"git version "])
-		return [version substringFromIndex:12];
 
+	return [self extractGitVersion:version];
+}
+
++ (NSString *) extractGitVersion:(NSString *)versionString
+{
+	NSError * error;
+	NSRegularExpression * regex = [NSRegularExpression regularExpressionWithPattern:@"git version ([0-9.]+)"
+																			options:0
+																			  error:&error];
+	NSTextCheckingResult * result = [regex firstMatchInString:versionString
+													  options:0
+														range:NSMakeRange(0, versionString.length)];
+	if (result != nil && result.numberOfRanges == 2) {
+		return [versionString substringWithRange:[result rangeAtIndex:1]];
+	}
 	return nil;
 }
 
@@ -37,7 +50,7 @@ static NSString* gitPath = nil;
 	if (!version)
 		return NO;
 
-	int c = [version compare:@"" MIN_GIT_VERSION];
+	int c = [version compare:@"" MIN_GIT_VERSION options:NSNumericSearch];
 	if (c == NSOrderedSame || c == NSOrderedDescending) {
 		gitPath = path;
 		return YES;
