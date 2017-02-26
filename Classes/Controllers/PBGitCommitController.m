@@ -257,7 +257,7 @@
 {
 	NSParameterAssert(sender != nil);
 
-	if ([sender isKindOfClass:[NSMenuItem class]]) return nil;
+	if (![sender isKindOfClass:[NSMenuItem class]]) return nil;
 
 	NSTableView *table = (sender == stagedTable.menu ? stagedTable : unstagedTable);
 	NSArrayController *controller = (table.tag == 0 ? unstagedFilesController : stagedFilesController);
