@@ -74,17 +74,19 @@
 	[[self script] callWebScriptMethod:@"showMultipleSelectionMessage" withArguments:arguments];
 }
 
-static NSString *deltaTypeName(GTDiffDeltaType t) {
+static NSString *deltaTypeName(GTDeltaType t) {
 	switch (t) {
-		case GTDiffFileDeltaUnmodified: return @"unmodified";
-		case GTDiffFileDeltaAdded: return @"added";
-		case GTDiffFileDeltaDeleted: return @"removed";
-		case GTDiffFileDeltaModified: return @"modified";
-		case GTDiffFileDeltaRenamed: return @"renamed";
-		case GTDiffFileDeltaCopied: return @"copied";
-		case GTDiffFileDeltaIgnored: return @"ignored";
-		case GTDiffFileDeltaUntracked: return @"untracked";
-		case GTDiffFileDeltaTypeChange: return @"type changed";
+		case GTDeltaTypeUnmodified: return @"unmodified";
+		case GTDeltaTypeAdded: return @"added";
+		case GTDeltaTypeDeleted: return @"removed";
+		case GTDeltaTypeModified: return @"modified";
+		case GTDeltaTypeRenamed: return @"renamed";
+		case GTDeltaTypeCopied: return @"copied";
+		case GTDeltaTypeIgnored: return @"ignored";
+		case GTDeltaTypeUntracked: return @"untracked";
+		case GTDeltaTypeTypeChange: return @"type changed";
+		case GTDeltaTypeUnreadable: return @"unreadable";
+		case GTDeltaTypeConflicted: return @"conflicted";
 	}
 }
 
