@@ -149,6 +149,7 @@
 		4AC42F7D16BFBADA007CCA3A /* AppKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4A40159814067B7A00DB9C07 /* AppKit.framework */; };
 		4D3FB3E7198AEAAF000B4A58 /* PBGitRepositoryDocument.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D3FB3E6198AEAAF000B4A58 /* PBGitRepositoryDocument.m */; };
 		4D6E4F7A1E56851A004C3A6F /* PBMacros.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D6E4F781E56851A004C3A6F /* PBMacros.m */; };
+		4DECFBB21E662962004C3A6F /* ObjectiveGit+PBCategories.m in Sources */ = {isa = PBXBuildFile; fileRef = 4DECFBB11E662962004C3A6F /* ObjectiveGit+PBCategories.m */; };
 		551BF176112F3F4B00265053 /* gitx_askpasswd in Resources */ = {isa = PBXBuildFile; fileRef = 551BF111112F371800265053 /* gitx_askpasswd */; };
 		643952771603EF9B00BB7AFF /* PBGitSVSubmoduleItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 643952761603EF9B00BB7AFF /* PBGitSVSubmoduleItem.m */; };
 		6C25810B1C2720E60080A89A /* GitXCommitCopier.m in Sources */ = {isa = PBXBuildFile; fileRef = 6C25810A1C2720E60080A89A /* GitXCommitCopier.m */; };
@@ -588,6 +589,8 @@
 		4DC1853818E6F93200E8DB8F /* Info-gitx.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Info-gitx.plist"; sourceTree = "<group>"; };
 		4DE23D041CF31237004C3A6F /* src */ = {isa = PBXFileReference; lastKnownFileType = folder; name = src; path = "objective-git/External/libgit2/src"; sourceTree = "<group>"; };
 		4DE23D051CF31252004C3A6F /* include */ = {isa = PBXFileReference; lastKnownFileType = folder; name = include; path = "objective-git/External/libgit2/include"; sourceTree = "<group>"; };
+		4DECFBB01E662962004C3A6F /* ObjectiveGit+PBCategories.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "ObjectiveGit+PBCategories.h"; sourceTree = "<group>"; };
+		4DECFBB11E662962004C3A6F /* ObjectiveGit+PBCategories.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "ObjectiveGit+PBCategories.m"; sourceTree = "<group>"; };
 		551BF111112F371800265053 /* gitx_askpasswd */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = gitx_askpasswd; sourceTree = BUILT_PRODUCTS_DIR; };
 		643952751603EF9B00BB7AFF /* PBGitSVSubmoduleItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PBGitSVSubmoduleItem.h; sourceTree = "<group>"; };
 		643952761603EF9B00BB7AFF /* PBGitSVSubmoduleItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PBGitSVSubmoduleItem.m; sourceTree = "<group>"; };
@@ -1002,6 +1005,8 @@
 				4AB71FF714B7EDD400F1DFFC /* RJModalRepoSheet.m */,
 				6C2581091C2720E60080A89A /* GitXCommitCopier.h */,
 				6C25810A1C2720E60080A89A /* GitXCommitCopier.m */,
+				4DECFBB01E662962004C3A6F /* ObjectiveGit+PBCategories.h */,
+				4DECFBB11E662962004C3A6F /* ObjectiveGit+PBCategories.m */,
 			);
 			path = Util;
 			sourceTree = "<group>";
@@ -1430,6 +1435,7 @@
 				4A5D76E514A9A9CC00DF6C68 /* PBGitCommitController.m in Sources */,
 				4A5D76E614A9A9CC00DF6C68 /* PBGitHistoryController.m in Sources */,
 				4A5D76E814A9A9CC00DF6C68 /* PBGitSidebarController.m in Sources */,
+				4DECFBB21E662962004C3A6F /* ObjectiveGit+PBCategories.m in Sources */,
 				4A5D76E914A9A9CC00DF6C68 /* PBGitWindowController.m in Sources */,
 				4A5D76EA14A9A9CC00DF6C68 /* PBHistorySearchController.m in Sources */,
 				4A5D76EB14A9A9CC00DF6C68 /* PBPrefsWindowController.m in Sources */,

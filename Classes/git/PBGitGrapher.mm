@@ -74,7 +74,7 @@ void add_line(struct PBGitGraphLine *lines, int *nLines, int upper, long from, l
 	long newPos = -1;
 	LaneCollection *currentLanes = new LaneCollection;
 	LaneCollection *previousLanes = self.pl;
-	NSArray *parents = [commit parents];
+	NSArray <GTOID *> *parents = [commit parents];
 	NSUInteger nParents = [parents count];
 
 	unsigned long maxLines = (previousLanes->size() + nParents + 2) * 2;
