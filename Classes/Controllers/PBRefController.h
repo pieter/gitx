@@ -21,23 +21,24 @@
 	__weak IBOutlet PBCommitList *commitList;
 }
 
-- (void) fetchRemote:(PBRefMenuItem *)sender;
-- (void) pullRemote:(PBRefMenuItem *)sender;
-- (void) pushUpdatesToRemote:(PBRefMenuItem *)sender;
-- (void) pushDefaultRemoteForRef:(PBRefMenuItem *)sender;
-- (void) pushToRemote:(PBRefMenuItem *)sender;
-- (void) showConfirmPushRefSheet:(PBGitRef *)ref remote:(PBGitRef *)remoteRef;
+- (IBAction) fetchRemote:(PBRefMenuItem *)sender;
+- (IBAction) pullRemote:(PBRefMenuItem *)sender;
+- (IBAction) pushUpdatesToRemote:(PBRefMenuItem *)sender;
+- (IBAction) pushDefaultRemoteForRef:(PBRefMenuItem *)sender;
+- (IBAction) pushToRemote:(PBRefMenuItem *)sender;
+- (IBAction) showConfirmPushRefSheet:(PBGitRef *)ref remote:(PBGitRef *)remoteRef;
+- (IBAction)showDeleteRefSheet:(PBRefMenuItem *)sender;
 
-- (void) checkout:(PBRefMenuItem *)sender;
-- (void) merge:(PBRefMenuItem *)sender;
-- (void) cherryPick:(PBRefMenuItem *)sender;
-- (void) rebaseHeadBranch:(PBRefMenuItem *)sender;
-- (void) createBranch:(PBRefMenuItem *)sender;
-- (void) copySHA:(PBRefMenuItem *)sender;
-- (void) copyShortSHA:(PBRefMenuItem *)sender;
-- (void) copyPatch:(PBRefMenuItem *)sender;
-- (void) diffWithHEAD:(PBRefMenuItem *)sender;
-- (void) createTag:(PBRefMenuItem *)sender;
-- (void) showTagInfoSheet:(PBRefMenuItem *)sender;
+- (IBAction) checkout:(PBRefMenuItem *)sender;
+- (IBAction) merge:(PBRefMenuItem *)sender;
+- (IBAction) cherryPick:(PBRefMenuItem *)sender;
+- (IBAction) rebaseHeadBranch:(PBRefMenuItem *)sender;
+- (IBAction) createBranch:(PBRefMenuItem *)sender;
+- (IBAction) copySHA:(PBRefMenuItem *)sender;
+- (IBAction) copyShortSHA:(PBRefMenuItem *)sender;
+- (IBAction) copyPatch:(PBRefMenuItem *)sender;
+- (IBAction) diffWithHEAD:(PBRefMenuItem *)sender;
+- (IBAction) createTag:(PBRefMenuItem *)sender;
+- (IBAction) showTagInfoSheet:(PBRefMenuItem *)sender;
 
 @end

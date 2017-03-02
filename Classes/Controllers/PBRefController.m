@@ -290,7 +290,7 @@
 
 #pragma mark Remove a branch, remote or tag
 
-- (void)showDeleteRefSheet:(PBRefMenuItem *)sender
+- (IBAction)showDeleteRefSheet:(PBRefMenuItem *)sender
 {
 	id<PBGitRefish> refish = sender.refishs.firstObject;
 	if ([refish refishType] == kGitXCommitType)
