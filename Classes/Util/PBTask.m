@@ -178,7 +178,8 @@ NSString *const PBTaskTerminationOutputKey = @"PBTaskTerminationOutputKey";
 		return NO;
 	}
 
-	return YES;
+	if (error) *error = taskError;
+	return (taskError == nil);
 }
 
 - (void)terminate {
