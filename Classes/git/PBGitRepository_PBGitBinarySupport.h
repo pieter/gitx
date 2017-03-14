@@ -8,8 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import "PBGitRepository.h"
-
-@class PBTask;
+#import "PBTask.h" // Imported so our includers don't have to add it
 
 NS_ASSUME_NONNULL_BEGIN
 
