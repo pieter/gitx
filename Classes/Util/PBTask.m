@@ -185,6 +185,14 @@ NSString *const PBTaskTerminationOutputKey = @"PBTaskTerminationOutputKey";
 	[self.task terminate];
 }
 
+- (NSString *)description {
+	NSArray *taskArguments = [@[self.task.launchPath] arrayByAddingObjectsFromArray:self.task.arguments];
+	return [NSString stringWithFormat:@"<%@ %p command: %@ stdin: %@>", NSStringFromClass([self class]), self,
+			[taskArguments componentsJoinedByString:@" "],
+			(self.standardInputData ? @"YES" : @"NO")
+			];
+}
+
 @end
 
 @implementation PBTask (PBBellsAndWhistles)
