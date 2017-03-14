@@ -146,10 +146,8 @@ using namespace std;
 {
 	NSError *error = nil;
 	GTRepository *repo = enumerator.repository;
-	[enumerator resetWithOptions:GTEnumeratorOptionsTimeSort];
-//	[enumerator resetWithOptions:GTEnumeratorOptionsTopologicalSort];
-//	[enumerator resetWithOptions:GTEnumeratorOptionsTopologicalSort|GTEnumeratorOptionsTimeSort];
-	NSMutableSet *enumCommits = [NSMutableSet new];
+	[enumerator resetWithOptions:GTEnumeratorOptionsTopologicalSort|GTEnumeratorOptionsTimeSort];
+
 	if (rev.isSimpleRef) {
 		GTObject *object = [repo lookUpObjectByRevParse:rev.simpleRef error:&error];
 		[self addGitObject:object toCommitSet:enumCommits];
