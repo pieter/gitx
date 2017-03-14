@@ -11,6 +11,7 @@
 #import "PBGitTree.h"
 #import "PBGitRef.h"
 #import "PBGitDefaults.h"
+#import "ObjectiveGit+PBCategories.h"
 
 NSString * const kGitXCommitType = @"commit";
 
@@ -71,15 +72,10 @@ NSString * const kGitXCommitType = @"commit";
 }
 
 
-- (NSArray *)parents
+- (NSArray <GTOID *>*)parents
 {
 	if (!self->_parents) {
-		NSArray *gtParents = self.gtCommit.parents;
-		NSMutableArray *parents = [NSMutableArray arrayWithCapacity:gtParents.count];
-		for (GTCommit *parent in gtParents) {
-			[parents addObject:parent.OID];
-		}
-		self.parents = parents;
+		self.parents = self.gtCommit.parentOIDs;
 	}
 	return self->_parents;
 }

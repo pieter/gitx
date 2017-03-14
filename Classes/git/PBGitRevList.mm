@@ -129,12 +129,6 @@ using namespace std;
 
 	NSAssert(commit, @"Can't add nil commit to set");
 
-	for (GTCommit *item in set) {
-		if ([item.OID isEqual:commit.OID]) {
-			return;
-		}
-	}
-
 	[set addObject:commit];
 }
 
@@ -228,21 +222,24 @@ using namespace std;
 	dispatch_group_t decorateGroup = dispatch_group_create();
 	
 	BOOL enumSuccess = FALSE;
-	GTCommit *commit = nil;
 	__block int num = 0;
 	__block NSMutableArray *revisions = [NSMutableArray array];
 	NSError *enumError = nil;
-	while ((commit = [enumerator nextObjectWithSuccess:&enumSuccess error:&enumError]) && enumSuccess) {
-		//GTOID *oid = [[GTOID alloc] initWithSHA:commit.sha];
-		
+	GTOID *oid = nil;
+	while ((oid = [enumerator nextOIDWithSuccess:&enumSuccess error:&enumError]) && enumSuccess) {
 		dispatch_group_async(loadGroup, loadQueue, ^{
 			PBGitCommit *newCommit = nil;
-			PBGitCommit *cachedCommit = [self.commitCache objectForKey:commit.SHA];
+			PBGitCommit *cachedCommit = [self.commitCache objectForKey:oid];
 			if (cachedCommit) {
 				newCommit = cachedCommit;
 			} else {
+				GTCommit *commit = (GTCommit *)[pbRepo.gtRepo lookUpObjectByOID:oid error:NULL];
+				if (!commit) {
+					[NSException raise:NSInternalInconsistencyException format:@"Missing commit with OID %@", oid];
+				}
+
 				newCommit = [[PBGitCommit alloc] initWithRepository:pbRepo andCommit:commit];
-				[self.commitCache setObject:newCommit forKey:commit.SHA];
+				[self.commitCache setObject:newCommit forKey:oid];
 			}
 			
 			[revisions addObject:newCommit];
