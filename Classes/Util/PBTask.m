@@ -76,6 +76,10 @@ NSString *const PBTaskTerminationOutputKey = @"PBTaskTerminationOutputKey";
 			error = [NSError errorWithDomain:PBTaskErrorDomain code:PBTaskCaughtSignalError userInfo:userInfo];
 
 		} else if (task.terminationReason == NSTaskTerminationReasonExit && task.terminationStatus != 0) {
+			// Since we're on an error path, grab the output now and stash it in the returned error
+			NSPipe *pipe = task.standardOutput;
+			NSData *outputData = [[pipe fileHandleForReading] readDataToEndOfFile];
+			NSString *outputString = [[NSString alloc] initWithData:outputData encoding:NSUTF8StringEncoding];
 
 			NSString *desc = @"Task exited unsuccessfully";
 			NSArray *taskArguments = [@[task.launchPath] arrayByAddingObjectsFromArray:task.arguments];
@@ -84,6 +88,7 @@ NSString *const PBTaskTerminationOutputKey = @"PBTaskTerminationOutputKey";
 									   NSLocalizedDescriptionKey: desc,
 									   NSLocalizedFailureReasonErrorKey: failureReason,
 									   PBTaskTerminationStatusKey: @(task.terminationStatus),
+									   PBTaskTerminationOutputKey: outputString,
 									   };
 			error = [NSError errorWithDomain:PBTaskErrorDomain code:PBTaskNonZeroExitCodeError userInfo:userInfo];
 
