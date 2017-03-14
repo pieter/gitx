@@ -32,8 +32,9 @@
 - (void)changeContentController:(PBViewController *)controller;
 
 - (void)showCommitHookFailedSheet:(NSString *)messageText infoText:(NSString *)infoText commitController:(PBGitCommitController *)controller GITX_DEPRECATED;
-- (void)showMessageSheet:(NSString *)messageText infoText:(NSString *)infoText GITX_DEPRECATED;
-- (void)showErrorSheet:(NSError *)error GITX_DEPRECATED;
+
+- (void)showMessageSheet:(NSString *)messageText infoText:(NSString *)infoText;
+- (void)showErrorSheet:(NSError *)error;
 
 - (void)showModalSheet:(RJModalRepoSheet*)sheet;
 - (void)hideModalSheet:(RJModalRepoSheet*)sheet;
