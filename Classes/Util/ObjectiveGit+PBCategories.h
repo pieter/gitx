@@ -11,3 +11,7 @@
 @interface GTCommit (PBCategories)
 - (NSArray <GTOID *> *)parentOIDs;
 @end
+
+@interface GTEnumerator (PBCategories)
+- (BOOL)pushReferenceName:(NSString *)refName error:(NSError **)error;
+@end
