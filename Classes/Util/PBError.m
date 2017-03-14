@@ -53,7 +53,7 @@ NSString * const PBGitXErrorDomain      = @"PBGitXErrorDomain";
 		[errorInfo addEntriesFromDictionary:@{ NSUnderlyingErrorKey: underError }];
 	}
 
-	return [NSError errorWithDomain:PBGitXErrorDomain code:0 userInfo:userInfo];
+	return [NSError errorWithDomain:PBGitXErrorDomain code:0 userInfo:errorInfo];
 }
 
 @end
