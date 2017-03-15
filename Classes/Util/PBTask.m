@@ -68,7 +68,7 @@ NSString *const PBTaskTerminationOutputKey = @"PBTaskTerminationOutputKey";
 
 			NSString *desc = @"Task killed";
 			NSArray *taskArguments = [@[task.launchPath] arrayByAddingObjectsFromArray:task.arguments];
-			NSString *failureReason = [NSString stringWithFormat:@"The task \"%@\" caught a termination signal", taskArguments];
+			NSString *failureReason = [NSString stringWithFormat:@"The task \"%@\" caught a termination signal", [taskArguments componentsJoinedByString:@" "]];
 			NSDictionary *userInfo = @{
 									   NSLocalizedDescriptionKey: desc,
 									   NSLocalizedFailureReasonErrorKey: failureReason,
@@ -83,7 +83,7 @@ NSString *const PBTaskTerminationOutputKey = @"PBTaskTerminationOutputKey";
 
 			NSString *desc = @"Task exited unsuccessfully";
 			NSArray *taskArguments = [@[task.launchPath] arrayByAddingObjectsFromArray:task.arguments];
-			NSString *failureReason = [NSString stringWithFormat:@"The task \"%@\" returned a non-zero return code", taskArguments];
+			NSString *failureReason = [NSString stringWithFormat:@"The task \"%@\" returned a non-zero return code", [taskArguments componentsJoinedByString:@" "]];
 			NSDictionary *userInfo = @{
 									   NSLocalizedDescriptionKey: desc,
 									   NSLocalizedFailureReasonErrorKey: failureReason,
