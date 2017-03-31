@@ -144,10 +144,6 @@ static OpenRecentController* recentsDialog = nil;
 				if (!document) {
 					NSLog(@"Error opening repository \"%@\": %@", panel.URL.path, error);
 					[controller presentError:error];
-					[sender replyToOpenOrPrint:NSApplicationDelegateReplyFailure];
-				}
-				else {
-					[sender replyToOpenOrPrint:NSApplicationDelegateReplySuccess];
 				}
 			}];
 		}
