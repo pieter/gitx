@@ -84,39 +84,27 @@ var highlightDiff = function(diff, element, callbacks) {
 		else if (startname != endname)
 			title = startname + " renamed to " + endname;
 		
-		if (binary && endname == "/dev/null") {	// in cases of a deleted binary file, there is no diff/file to display
-			line1 = "";
-			line2 = "";
-			diffContent = "";
-			file_index++;
-			startname = "";
-			endname = "";
-			return;				// so printing the filename in the file-list is enough
-		}
+		// Show file list header
+		finalContent += '<div class="file" id="file_index_' + (file_index - 1) + '">';
+		finalContent += '<div id="title_' + title + '" class="expanded fileHeader"><a href="javascript:toggleDiff(\'' + title + '\');">' + title + '</a></div>';
 
-		if (diffContent != "" || binary) {
-			finalContent += '<div class="file" id="file_index_' + (file_index - 1) + '">' +
-				'<div id="title_' + title + '" class="expanded fileHeader"><a href="javascript:toggleDiff(\'' + title + '\');">' + title + '</a></div>';
-		}
-
-		if (!binary && (diffContent != ""))  {
-			finalContent +=		'<div id="content_' + title + '" class="diffContent">' +
-								'<div class="lineno">' + line1 + "</div>" +
-								'<div class="lineno">' + line2 + "</div>" +
-								'<div class="lines">' + postProcessDiffContents(diffContent).replace(/\t/g, "    ") + "</div>" +
-							'</div>';
-		}
-		else {
-			if (binary) {
-				if (callbacks["binaryFile"])
-					finalContent += callbacks["binaryFile"](binaryname);
-				else
-					finalContent += '<div id="content_' + title + '">Binary file differs</div>';
+		if (binary) {
+			// diffContent is assumed to be empty for binary files
+			if (callbacks["binaryFile"]) {
+				finalContent += callbacks["binaryFile"](binaryname);
+			} else {
+				finalContent += '<div id="content_' + title + '">Binary file differs</div>';
 			}
+		} else if (diffContent != "") {
+			finalContent += '<div id="content_' + title + '" class="diffContent">' +
+				'<div class="lineno">' + line1 + '</div>' +
+				'<div class="lineno">' + line2 + '</div>' +
+				'<div class="lines">' + postProcessDiffContents(diffContent).replace(/\t/g, "    ") + '</div>' +
+			'</div>';
 		}
 
-		if (diffContent != "" || binary)
-			finalContent += '</div>' + linkToTop;
+		// Close div.file
+		finalContent += '</div>' + linkToTop;
 
 		line1 = "";
 		line2 = "";
