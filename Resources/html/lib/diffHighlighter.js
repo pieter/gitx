@@ -118,18 +118,25 @@ var highlightDiff = function(diff, element, callbacks) {
 
 		var firstChar = l.charAt(0);
 
-		if (firstChar == "d" && l.charAt(1) == "i") {			// "diff", i.e. new file, we have to reset everything
-			header = true;						// diff always starts with a header
+		if (firstChar == "d" && l.charAt(1) == "i") {
+			// "diff", i.e. new file, we have to reset everything
 
-			finishContent(); // Finish last file
+			// diff always starts with a header
+			header = true;
+
+			// Finish last file
+			finishContent();
 
 			binary = false;
 			mode_change = false;
 
-			if(match = l.match(/^diff --git (a\/)+(.*) (b\/)+(.*)$/)) {	// there are cases when we need to capture filenames from
-				startname = match[2];					// the diff line, like with mode-changes.
-				endname = match[4];					// this can get overwritten later if there is a diff or if
-			}								// the file is binary
+			// there are cases when we need to capture filenames from the diff
+			// line, like with mode-changes. this can get overridden later if
+			// there is a diff or if the file is binary
+			if (match = l.match(/^diff --git ([a-z]\/)+(.*) ([a-z]\/)+(.*)$/)) {
+				startname = match[2];
+				endname = match[4];
+			}
 
 			continue;
 		}
@@ -159,12 +166,12 @@ var highlightDiff = function(diff, element, callbacks) {
 				continue;
 			}
 			if (firstChar == "-") {
-				if (match = l.match(/^--- (a\/)?(.*)$/))
+				if (match = l.match(/^--- ([a-z]\/)?(.*)$/))
 					startname = match[2];
 				continue;
 			}
 			if (firstChar == "+") {
-				if (match = l.match(/^\+\+\+ (b\/)?(.*)$/))
+				if (match = l.match(/^\+\+\+ ([a-z]\/)?(.*)$/))
 					endname = match[2];
 				continue;
 			}
@@ -187,7 +194,7 @@ var highlightDiff = function(diff, element, callbacks) {
 				// We might not have a diff from the binary file if it's new.
 				// So, we use a regex to figure that out
 
-				if (match = l.match(/^Binary files (a\/)?(.*) and (b\/)?(.*) differ$/))
+				if (match = l.match(/^Binary files ([a-z]\/)?(.*) and ([a-z]\/)?(.*) differ$/))
 				{
 					startname = match[2];
 					endname = match[4];
