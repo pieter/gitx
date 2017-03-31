@@ -26,3 +26,8 @@ void PBLogFunctionImpl(const char *function, NSString *format, ...) {
 
 	NSLog(@"%s: %@", function, log);
 }
+
+void PBLogErrorImpl(const char *function, NSError *error) {
+	if (!error) return;
+	NSLog(@"%s: %@", function, error);
+}

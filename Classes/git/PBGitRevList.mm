@@ -15,6 +15,7 @@
 #import "PBGitBinary.h"
 
 #import <ObjectiveGit/ObjectiveGit.h>
+#import "ObjectiveGit+PBCategories.h"
 
 #import <iostream>
 #import <string>
@@ -117,96 +118,76 @@ using namespace std;
 	[self addCommitsFromEnumerator:enu inPBRepo:pbRepo];
 }
 
-- (void) addGitObject:(GTObject *)obj toCommitSet:(NSMutableSet *)set
-{
-	GTCommit *commit = nil;
-	if ([obj isKindOfClass:[GTCommit class]]) {
-		commit = (GTCommit *)obj;
-	} else {
-		NSError *peelError = nil;
-		commit = [obj objectByPeelingToType:GTObjectTypeCommit error:&peelError];
-	}
+static BOOL hasParameter(NSMutableArray *parameters, NSString *paramName) {
+	NSUInteger index = NSNotFound;
 
-	NSAssert(commit, @"Can't add nil commit to set");
+	index = [parameters indexOfObject:@"--branches"];
+	if (index == NSNotFound) return NO;
 
-	[set addObject:commit];
-}
-
-- (void) addGitBranches:(NSArray *)branches fromRepo:(GTRepository *)repo toCommitSet:(NSMutableSet *)set
-{
-	for (GTBranch *branch in branches) {
-		NSError *objectLookupError = nil;
-		GTObject *gtObject = [repo lookUpObjectByOID:branch.OID error:&objectLookupError];
-		[self addGitObject:gtObject toCommitSet:set];
-	}
+	[parameters removeObjectAtIndex:index];
+	return YES;
 }
 
 - (void) setupEnumerator:(GTEnumerator*)enumerator
-			  forRevspec:(PBGitRevSpecifier*)rev
+			  forRevspec:(PBGitRevSpecifier *)rev
 {
 	NSError *error = nil;
+	BOOL success = NO;
 	GTRepository *repo = enumerator.repository;
-	[enumerator resetWithOptions:GTEnumeratorOptionsTimeSort];
-//	[enumerator resetWithOptions:GTEnumeratorOptionsTopologicalSort];
-//	[enumerator resetWithOptions:GTEnumeratorOptionsTopologicalSort|GTEnumeratorOptionsTimeSort];
-	NSMutableSet *enumCommits = [NSMutableSet new];
+	[enumerator resetWithOptions:GTEnumeratorOptionsTopologicalSort|GTEnumeratorOptionsTimeSort];
+
 	if (rev.isSimpleRef) {
 		GTObject *object = [repo lookUpObjectByRevParse:rev.simpleRef error:&error];
-		[self addGitObject:object toCommitSet:enumCommits];
-	} else {
-		NSArray *allRefs = [repo referenceNamesWithError:&error];
-		for (NSString *param in rev.parameters) {
-			if ([param isEqualToString:@"--branches"]) {
-				NSArray *branches = [repo localBranchesWithError:&error];
-				[self addGitBranches:branches fromRepo:repo toCommitSet:enumCommits];
-			} else if ([param isEqualToString:@"--remotes"]) {
-				NSArray *branches = [repo remoteBranchesWithError:&error];
-				[self addGitBranches:branches fromRepo:repo toCommitSet:enumCommits];
-			} else if ([param isEqualToString:@"--tags"]) {
-				for (NSString *ref in allRefs) {
-					if ([ref hasPrefix:@"refs/tags/"]) {
-						GTObject *tag = [repo lookUpObjectByRevParse:ref error:&error];
-						GTCommit *commit = nil;
-						if ([tag isKindOfClass:[GTCommit class]]) {
-							commit = (GTCommit *)tag;
-						} else if ([tag isKindOfClass:[GTTag class]]) {
-							NSError *tagError = nil;
-							commit = [(GTTag *)tag objectByPeelingTagError:&tagError];
-						}
+		if (object) {
+			success = [enumerator pushSHA:object.SHA error:&error];
+		}
+		if (!object || (object && !success)) {
+			NSLog(@"Failed to push simple ref %@: %@", rev.simpleRef, error);
+		}
+		return;
+	}
 
-						if ([commit isKindOfClass:[GTCommit class]])
-						{
-							[self addGitObject:commit toCommitSet:enumCommits];
-						}
-					}
-				}
-			} else if ([param hasPrefix:@"--glob="]) {
-				[enumerator pushGlob:[param substringFromIndex:@"--glob=".length] error:&error];
-			} else {
-				NSError *lookupError = nil;
-				GTObject *obj = [repo lookUpObjectByRevParse:param error:&lookupError];
-				if (obj && !lookupError) {
-					[self addGitObject:obj toCommitSet:enumCommits];
-				} else {
-					[enumerator pushGlob:param error:&error];
+	NSMutableArray *parameters = [rev.parameters mutableCopy];
+	BOOL addBranches = hasParameter(parameters, @"--branches");
+	BOOL addRemotes = hasParameter(parameters, @"--remotes");
+	BOOL addTags = hasParameter(parameters, @"--tags");
+
+	NSArray *allRefs = [repo referenceNamesWithError:&error];
+
+	// First, loop over all the known references, and add the ones we want
+	if (addBranches || addRemotes || addTags) {
+		for (NSString *referenceName in allRefs) {
+			if ((addBranches && [referenceName hasPrefix:[GTBranch localNamePrefix]])
+				|| (addRemotes && [referenceName hasPrefix:[GTBranch remoteNamePrefix]])
+				|| (addTags && [referenceName hasPrefix:@"refs/tags/"])) {
+				success = [enumerator pushReferenceName:referenceName error:&error];
+				if (!success) {
+					NSLog(@"Failed to push reference %@: %@", referenceName, error);
 				}
 			}
 		}
 	}
 
-//	NSArray *sortedBranchesAndTags = [[enumCommits allObjects] sortedArrayWithOptions:NSSortStable usingComparator:^NSComparisonResult(id obj1, id obj2) {
-//		GTCommit *branchCommit1 = obj1;
-//		GTCommit *branchCommit2 = obj2;
-//
-//		return [branchCommit2.commitDate compare:branchCommit1.commitDate];
-//	}];
-	NSArray *sortedBranchesAndTags = [enumCommits allObjects];
-
-	for (GTCommit *commit in sortedBranchesAndTags) {
-		NSError *pushError = nil;
-		[enumerator pushSHA:commit.SHA error:&pushError];
+	// Handle the rest of our (less obvious) parameters
+	for (NSString *param in parameters) {
+		if ([param hasPrefix:@"--glob="]) {
+			success = [enumerator pushGlob:[param substringFromIndex:@"--glob=".length] error:&error];
+			if (!success) {
+				NSLog(@"Failed to push glob %@: %@", param, error);
+			}
+		} else {
+			NSError *lookupError = nil;
+			GTObject *obj = [repo lookUpObjectByRevParse:param error:&lookupError];
+			if (obj) {
+				success = [enumerator pushSHA:obj.SHA error:&error];
+			} else {
+				success = [enumerator pushGlob:param error:&error];
+			}
+			if (!success) {
+				NSLog(@"Failed to push remaining parameter %@: %@", param, error);
+			}
+		}
 	}
-
 
 }
 

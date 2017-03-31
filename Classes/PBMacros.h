@@ -15,5 +15,17 @@
 #endif
 
 #define PBLogFunction(x, ...) PBLogFunctionImpl(__FUNCTION__, x, ## __VA_ARGS__)
+#define PBLogError(x) PBLogErrorImpl(__FUNCTION__, x)
+
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 void PBLogFunctionImpl(const char *function, NSString *format, ...);
+
+void PBLogErrorImpl(const char *function, NSError *error);
+
+#ifdef __cplusplus
+}
+#endif
