@@ -17,9 +17,6 @@
 #import "PBGitStash.h"
 #import "GitXCommitCopier.h"
 
-#define kDialogAcceptDroppedRef @"Accept Dropped Ref"
-#define kDialogConfirmPush @"Confirm Push"
-#define kDialogDeleteRef @"Delete Ref"
 
 
 
