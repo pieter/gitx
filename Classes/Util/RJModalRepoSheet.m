@@ -12,6 +12,12 @@
 #import "PBGitWindowController.h"
 #import "PBGitRepositoryDocument.h"
 
+@interface RJModalRepoSheet ()
+
+@property (copy) RJSheetCompletionHandler completionHandler;
+
+@end
+
 @implementation RJModalRepoSheet
 
 @dynamic document;
@@ -39,8 +45,26 @@
 
 - (void)beginSheetWithCompletionHandler:(RJSheetCompletionHandler)handler
 {
+	// Stash the completion handler so we can setup this sheet again in -show
+	self.completionHandler = handler;
+
+	[self presentSheet];
+}
+
+- (void)presentSheet
+{
+	NSAssert(self.windowController != nil, @"-beginSheetWithCompletionHandler: called with nil windowController");
+
 	[self.windowController.window beginSheet:self.window completionHandler:^(NSModalResponse returnCode) {
-		if (handler) handler(self, returnCode);
+		if (returnCode == NSModalResponseStop) {
+			// Something called -hide on us, because it needed to display another sheet.
+			// Don't call our handler, because we're not actually done yet.
+			return;
+		}
+
+		if (self.completionHandler) {
+			self.completionHandler(self, returnCode);
+		}
 	}];
 }
 
@@ -61,10 +85,15 @@
 
 - (void)show
 {
-	[self beginSheetWithCompletionHandler:nil];
+	[self presentSheet];
 }
 
 - (void)hide
+{
+	[self endSheetWithReturnCode:NSModalResponseStop];
+}
+
+- (void)dismiss
 {
 	[self endSheetWithReturnCode:NSModalResponseAbort];
 }

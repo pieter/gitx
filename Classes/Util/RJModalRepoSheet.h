@@ -27,8 +27,25 @@ NS_ASSUME_NONNULL_BEGIN
 typedef void(^RJSheetCompletionHandler)(id sheet, NSModalResponse returnCode);
 
 - (void)beginSheetWithCompletionHandler:(nullable RJSheetCompletionHandler)handler;
-- (void)show;
+
+/**
+ * Temporarily hide the sheet.
+ *
+ * You must call -show afterward, or the initial completion handler will not be called.
+ */
 - (void)hide;
+
+/**
+ * Dismiss the sheet.
+ *
+ * This will cause the handler to be called with an NSModalResponseAbort code.
+ */
+- (void)dismiss;
+
+/**
+ * Redisplay a hidden sheet.
+ */
+- (void)show;
 
 - (IBAction)acceptSheet:(nullable id)sender;
 - (IBAction)cancelSheet:(nullable id)sender;
