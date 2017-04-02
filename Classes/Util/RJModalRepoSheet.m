@@ -69,4 +69,10 @@
 	[self endSheetWithReturnCode:NSModalResponseAbort];
 }
 
+// For Cmd-. support
+- (IBAction)cancelOperation:(id)sender
+{
+	[self cancelSheet:self];
+}
+
 @end
