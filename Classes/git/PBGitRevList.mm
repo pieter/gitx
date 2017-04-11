@@ -121,7 +121,7 @@ using namespace std;
 static BOOL hasParameter(NSMutableArray *parameters, NSString *paramName) {
 	NSUInteger index = NSNotFound;
 
-	index = [parameters indexOfObject:@"--branches"];
+	index = [parameters indexOfObject:paramName];
 	if (index == NSNotFound) return NO;
 
 	[parameters removeObjectAtIndex:index];
