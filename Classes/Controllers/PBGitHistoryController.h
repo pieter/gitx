@@ -17,7 +17,6 @@
 @class PBWebHistoryController;
 @class PBGitGradientBarView;
 @class PBRefController;
-@class QLPreviewPanel;
 @class PBCommitList;
 @class GLFileView;
 @class GTOID;
@@ -43,7 +42,6 @@
 	__weak IBOutlet id webView;
 
 	NSArray *currentFileBrowserSelectionPath;
-    QLPreviewPanel *previewPanel;
 	NSInteger selectedCommitDetailsIndex;
 	BOOL forceSelectionUpdate;
 	PBGitTree *gitTree;
