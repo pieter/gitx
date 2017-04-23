@@ -174,7 +174,6 @@ void add_line(struct PBGitGraphLine *lines, int *nLines, int upper, long from, l
 		NSLog(@"Number of lines: %i vs allocated: %lu", currentLine, maxLines);
 
 	self.previous.nLines = currentLine;
-	self.previous.sign = commit.sign;
 
 	// If a parent was added, we have room to not indent.
 	if (addedParent)
