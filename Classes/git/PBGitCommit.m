@@ -19,7 +19,7 @@ NSString * const kGitXCommitType = @"commit";
 
 @property (nonatomic, weak) PBGitRepository *repository;
 @property (nonatomic, strong) GTCommit *gtCommit;
-@property (nonatomic, strong) NSArray *parents;
+@property (nonatomic, copy) NSArray<GTOID *> *parents;
 
 @property (nonatomic, strong) NSString *patch;
 @property (nonatomic, strong) GTOID *oid;
