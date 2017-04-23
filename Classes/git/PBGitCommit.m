@@ -189,12 +189,6 @@ NSString * const kGitXCommitType = @"commit";
 	return self.OID.hash;
 }
 
-// FIXME: Remove this method once it's unused.
-- (NSString*) details
-{
-	return @"";
-}
-
 - (NSString *) patch
 {
 	if (self->_patch != nil)
