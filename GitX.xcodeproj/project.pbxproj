@@ -570,7 +570,7 @@
 		4A8F6B3B14A9B6100002F4D7 /* MGScopeBar.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = MGScopeBar.xcodeproj; path = MGScopeBar/MGScopeBar.xcodeproj; sourceTree = "<group>"; };
 		4A90A72914A9C12F00D0DA02 /* GitX_Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GitX_Prefix.pch; sourceTree = "<group>"; };
 		4A90A72B14A9C12F00D0DA02 /* README.markdown */ = {isa = PBXFileReference; lastKnownFileType = text; path = README.markdown; sourceTree = SOURCE_ROOT; };
-		4A90A73314A9D1E800D0DA02 /* GitX.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GitX.h; sourceTree = "<group>"; };
+		4A90A73314A9D1E800D0DA02 /* GitX.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GitX.h; path = ../Resources/GitX.h; sourceTree = "<group>"; };
 		4A90A73414A9D24300D0DA02 /* GitX.sdef */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = GitX.sdef; sourceTree = "<group>"; };
 		4AB057E11652652000DE751D /* PBRepositoryFinder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PBRepositoryFinder.h; sourceTree = "<group>"; };
 		4AB057E21652652000DE751D /* PBRepositoryFinder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PBRepositoryFinder.m; sourceTree = "<group>"; usesTabs = 0; };
@@ -580,7 +580,7 @@
 		4D3FB3E6198AEAAF000B4A58 /* PBGitRepositoryDocument.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = PBGitRepositoryDocument.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		4D6E4F781E56851A004C3A6F /* PBMacros.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PBMacros.m; sourceTree = "<group>"; };
 		4D6E4F791E56851A004C3A6F /* PBMacros.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PBMacros.h; sourceTree = "<group>"; };
-		4DC1853818E6F93200E8DB8F /* Info-gitx.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Info-gitx.plist"; sourceTree = "<group>"; };
+		4DC1853818E6F93200E8DB8F /* Info-gitx.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "Info-gitx.plist"; path = "../Resources/Info-gitx.plist"; sourceTree = "<group>"; };
 		4DE23D041CF31237004C3A6F /* src */ = {isa = PBXFileReference; lastKnownFileType = folder; name = src; path = "objective-git/External/libgit2/src"; sourceTree = "<group>"; };
 		4DE23D051CF31252004C3A6F /* include */ = {isa = PBXFileReference; lastKnownFileType = folder; name = include; path = "objective-git/External/libgit2/include"; sourceTree = "<group>"; };
 		4DECFBB01E662962004C3A6F /* ObjectiveGit+PBCategories.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "ObjectiveGit+PBCategories.h"; sourceTree = "<group>"; };
@@ -694,6 +694,8 @@
 				4A5D762114A9A9CC00DF6C68 /* Classes */,
 				4A5D773E14A9AB3A00DF6C68 /* External Sources */,
 				4A5D757C14A9A90500DF6C68 /* Resources */,
+				37A5656C1EAD077400CA0332 /* cli tool */,
+				37A5656D1EAD07C200CA0332 /* gitx_askpasswd */,
 				29B97323FDCFA39411CA2CEA /* Frameworks */,
 				19C28FACFE9D520D11CA2CBB /* Products */,
 			);
@@ -721,6 +723,26 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		37A5656C1EAD077400CA0332 /* cli tool */ = {
+			isa = PBXGroup;
+			children = (
+				4A5D768614A9A9CC00DF6C68 /* gitx.m */,
+				4A90A73314A9D1E800D0DA02 /* GitX.h */,
+				4DC1853818E6F93200E8DB8F /* Info-gitx.plist */,
+			);
+			name = "cli tool";
+			path = Classes;
+			sourceTree = "<group>";
+		};
+		37A5656D1EAD07C200CA0332 /* gitx_askpasswd */ = {
+			isa = PBXGroup;
+			children = (
+				4A5D768714A9A9CC00DF6C68 /* gitx_askpasswd_main.m */,
+			);
+			name = gitx_askpasswd;
+			path = Classes;
+			sourceTree = "<group>";
+		};
 		4A4EF0A0142CBAD5001B8CDF /* Products */ = {
 			isa = PBXGroup;
 			children = (
@@ -738,7 +760,6 @@
 				4A5D757D14A9A90500DF6C68 /* Credits.html */,
 				4A5D760214A9A99E00DF6C68 /* English.lproj */,
 				4A90A73414A9D24300D0DA02 /* GitX.sdef */,
-				4A90A73314A9D1E800D0DA02 /* GitX.h */,
 				4A90A72914A9C12F00D0DA02 /* GitX_Prefix.pch */,
 				F5D619ED0EAE62EA00341D73 /* html */,
 				4A5D758114A9A90500DF6C68 /* Images */,
@@ -747,7 +768,6 @@
 				4A5D75B514A9A90500DF6C68 /* source.css */,
 				4A5D75B714A9A90500DF6C68 /* UpdateKey.pem */,
 				4A5D75B914A9A90500DF6C68 /* XIBs */,
-				4DC1853818E6F93200E8DB8F /* Info-gitx.plist */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -828,8 +848,6 @@
 				4A5D762514A9A9CC00DF6C68 /* Controllers */,
 				4A5D764C14A9A9CC00DF6C68 /* CWQuickLook.h */,
 				4A5D764D14A9A9CC00DF6C68 /* git */,
-				4A5D768614A9A9CC00DF6C68 /* gitx.m */,
-				4A5D768714A9A9CC00DF6C68 /* gitx_askpasswd_main.m */,
 				4A5D768814A9A9CC00DF6C68 /* GitXRelativeDateFormatter.h */,
 				4A5D768914A9A9CC00DF6C68 /* GitXRelativeDateFormatter.m */,
 				4A5D768A14A9A9CC00DF6C68 /* GitXScriptingConstants.h */,
