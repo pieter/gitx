@@ -13,7 +13,7 @@
 @class RJModalRepoSheet;
 
 @interface PBGitWindowController : NSWindowController<NSWindowDelegate> {
-	PBViewController *contentController;
+	__weak PBViewController *contentController;
 
 	PBGitSidebarController *sidebarController;
 	__weak IBOutlet NSView *sourceListControlsView;
@@ -23,11 +23,9 @@
 
 	__weak IBOutlet NSTextField *statusField;
 	__weak IBOutlet NSProgressIndicator *progressIndicator;
-
-	PBViewController* viewController;
 }
 
-@property (nonatomic, weak)  PBGitRepository *repository;
+@property (nonatomic, strong)  PBGitRepository *repository;
 
 - (id)initWithRepository:(PBGitRepository*)theRepository displayDefault:(BOOL)display;
 

@@ -13,6 +13,7 @@
 @protocol PBGitRefish;
 @class PBGitRef;
 @class PBGitStash;
+@class PBGitRepositoryDocument;
 @class GTRepository;
 @class GTConfiguration;
 
@@ -32,6 +33,8 @@ typedef enum branchFilterTypes {
 @class GTSubmodule;
 
 @interface PBGitRepository : NSDocument
+
+@property (nonatomic, weak) PBGitRepositoryDocument *document; // Backward-compatibility while PBGitRepository gets "modelized";
 
 @property (nonatomic, assign) BOOL hasChanged;
 @property (nonatomic, assign) NSInteger currentBranchFilter;
@@ -53,8 +56,6 @@ typedef enum branchFilterTypes {
 
 // Designated initializer
 - (id)initWithURL:(NSURL *)repositoryURL error:(NSError **)error;
-
-- (void)setDocument:(NSDocument *)document; // Backward-compatibility while PBGitRepository gets "modelized";
 
 - (void) beginAddRemote:(NSString *)remoteName forURL:(NSString *)remoteURL;
 - (void) beginFetchFromRemoteForRef:(PBGitRef *)ref;

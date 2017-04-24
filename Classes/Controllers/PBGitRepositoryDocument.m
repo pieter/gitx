@@ -21,14 +21,6 @@ NSString *PBGitRepositoryDocumentType = @"Git Repository";
 
 @implementation PBGitRepositoryDocument
 
-- (id)init
-{
-    self = [super init];
-    if (!self) return nil;
-
-    return self;
-}
-
 - (BOOL)readFromURL:(NSURL *)absoluteURL ofType:(NSString *)typeName error:(NSError **)outError
 {
 	if (![PBGitBinary path])

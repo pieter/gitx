@@ -775,33 +775,4 @@ BOOL shouldTrashInsteadOfDiscardAnyFileIn(NSArray <PBChangedFile *> *files)
 	return YES;
 }
 
-# pragma mark Key View Chain
-
--(NSView *)nextKeyViewFor:(NSView *)view
-{
-    NSView * next = nil;
-    if (view == unstagedTable) {
-        next = commitMessageView;
-    }
-    else if (view == commitMessageView) {
-        next = stagedTable;
-    }
-    else if (view == stagedTable) {
-        next = commitButton;
-    }
-    return next;
-}
-
--(NSView *)previousKeyViewFor:(NSView *)view
-{
-    NSView * next = nil;
-    if (view == stagedTable) {
-        next = commitMessageView;
-    }
-    else if (view == commitMessageView) {
-        next = unstagedTable;
-    }
-    return next;
-}
-
 @end

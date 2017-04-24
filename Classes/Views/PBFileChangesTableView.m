@@ -9,19 +9,9 @@
 #import "PBFileChangesTableView.h"
 #import "PBGitCommitController.h"
 
-@interface PBFileChangesTableView ()
-- (PBGitCommitController *) delegate;
-@end
-
-
 @implementation PBFileChangesTableView
 
 #pragma mark NSTableView overrides
-
-- (PBGitCommitController *) delegate
-{
-	return (PBGitCommitController *)[super delegate];
-}
 
 - (NSMenu *)menuForEvent:(NSEvent *)theEvent
 {
@@ -45,16 +35,6 @@
 -(BOOL)acceptsFirstResponder
 {
     return [self numberOfRows] > 0;
-}
-
--(NSView *)nextKeyView
-{
-    return [[self delegate] nextKeyViewFor:self];
-}
-
--(NSView *)previousKeyView
-{
-    return [[self delegate] previousKeyViewFor:self];
 }
 
 @end
