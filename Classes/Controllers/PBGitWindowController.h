@@ -27,7 +27,7 @@
 	PBViewController* viewController;
 }
 
-@property (nonatomic, weak)  PBGitRepository *repository;
+@property (nonatomic, strong)  PBGitRepository *repository;
 
 - (id)initWithRepository:(PBGitRepository*)theRepository displayDefault:(BOOL)display;
 
