@@ -11,7 +11,6 @@
 #import "PBGitRef.h"
 #import "PBGitHistoryList.h"
 #import "PBGitRevSpecifier.h"
-#import "PBCollapsibleSplitView.h"
 #import "PBGitHistoryController.h"
 #import "PBWebHistoryController.h"
 #import "PBGitGrapher.h"
@@ -37,14 +36,11 @@
 #define kHistoryDetailViewIndex 0
 #define kHistoryTreeViewIndex 1
 
-#define kHistorySplitViewPositionDefault @"History SplitView Position"
-
 @interface PBGitHistoryController ()
 
 - (void) updateBranchFilterMatrix;
 - (void) restoreFileBrowserSelection;
 - (void) saveFileBrowserSelection;
-- (void)saveSplitViewPosition;
 
 @end
 
@@ -94,10 +90,6 @@
 	[[commitList tableColumnWithIdentifier:@"SubjectColumn"] setSortDescriptorPrototype:[[NSSortDescriptor alloc] initWithKey:@"subject" ascending:YES]];
 	// Add a menu that allows a user to select which columns to view
 	[[commitList headerView] setMenu:[self tableColumnMenu]];
-
-	[historySplitView setTopMin:58.0 andBottomMin:100.0];
-	[historySplitView setHidden:YES];
-	[self performSelector:@selector(restoreSplitViewPositiion) withObject:nil afterDelay:0];
 
 	[upperToolbarView setTopShade:237/255.0f bottomShade:216/255.0f];
 	[scopeBarView setTopColor:[NSColor colorWithCalibratedHue:0.579 saturation:0.068 brightness:0.898 alpha:1.000] 
@@ -517,8 +509,6 @@
 
 - (void)closeView
 {
-	[self saveSplitViewPosition];
-
 	if (commitController) {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 		[commitController removeObserver:self forKeyPath:@"selection"];
@@ -636,55 +626,6 @@
 
 	return menuItems;
 }
-
-
-#pragma mark NSSplitView delegate methods
-
-- (BOOL)splitView:(NSSplitView *)splitView canCollapseSubview:(NSView *)subview
-{
-	return TRUE;
-}
-
-- (BOOL)splitView:(NSSplitView *)splitView shouldCollapseSubview:(NSView *)subview forDoubleClickOnDividerAtIndex:(NSInteger)dividerIndex
-{
-	NSUInteger index = [[splitView subviews] indexOfObject:subview];
-	// this method (and canCollapse) are called by the splitView to decide how to collapse on double-click
-	// we compare our two subviews, so that always the smaller one is collapsed.
-	if([[[splitView subviews] objectAtIndex:index] frame].size.height < [[[splitView subviews] objectAtIndex:((index+1)%2)] frame].size.height) {
-		return TRUE;
-	}
-	return FALSE;
-}
-
-- (CGFloat)splitView:(NSSplitView *)splitView constrainMinCoordinate:(CGFloat)proposedMin ofSubviewAt:(NSInteger)dividerIndex
-{
-	return historySplitView.topViewMin;
-}
-
-- (CGFloat)splitView:(NSSplitView *)splitView constrainMaxCoordinate:(CGFloat)proposedMax ofSubviewAt:(NSInteger)dividerIndex
-{
-	return [splitView frame].size.height - [splitView dividerThickness] - historySplitView.bottomViewMin;
-}
-
-// NSSplitView does not save and restore the position of the SplitView correctly so do it manually
-- (void)saveSplitViewPosition
-{
-	CGFloat position = [[historySplitView subviews] objectAtIndex:0].frame.size.height;
-	[[NSUserDefaults standardUserDefaults] setDouble:position forKey:kHistorySplitViewPositionDefault];
-	[[NSUserDefaults standardUserDefaults] synchronize];
-}
-
-// make sure this happens after awakeFromNib
-- (void)restoreSplitViewPositiion
-{
-	CGFloat position = [[NSUserDefaults standardUserDefaults] doubleForKey:kHistorySplitViewPositionDefault];
-	if (position < 1.0)
-		position = 175;
-
-	[historySplitView setPosition:position ofDividerAtIndex:0];
-	[historySplitView setHidden:NO];
-}
-
 
 #pragma mark Repository Methods
 

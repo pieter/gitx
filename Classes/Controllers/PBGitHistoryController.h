@@ -11,7 +11,6 @@
 
 @class PBGitCommit;
 @class PBGitTree;
-@class PBCollapsibleSplitView;
 
 @class PBGitSidebarController;
 @class PBWebHistoryController;
@@ -33,7 +32,7 @@
 	__weak IBOutlet NSSearchField *searchField;
 	__weak IBOutlet NSOutlineView *fileBrowser;
 	__weak IBOutlet PBCommitList *commitList;
-	__weak IBOutlet PBCollapsibleSplitView *historySplitView;
+	__weak IBOutlet NSSplitView *historySplitView;
 	__weak IBOutlet PBGitGradientBarView *upperToolbarView;
 	__weak IBOutlet PBGitGradientBarView *scopeBarView;
 	__weak IBOutlet NSButton *allBranchesFilterItem;
@@ -93,10 +92,5 @@
 - (BOOL) hasNonlinearPath;
 
 - (NSMenu *)tableColumnMenu;
-
-- (BOOL)splitView:(NSSplitView *)sender canCollapseSubview:(NSView *)subview;
-- (BOOL)splitView:(NSSplitView *)splitView shouldCollapseSubview:(NSView *)subview forDoubleClickOnDividerAtIndex:(NSInteger)dividerIndex;
-- (CGFloat)splitView:(NSSplitView *)sender constrainMinCoordinate:(CGFloat)proposedMin ofSubviewAt:(NSInteger)offset;
-- (CGFloat)splitView:(NSSplitView *)sender constrainMaxCoordinate:(CGFloat)proposedMax ofSubviewAt:(NSInteger)offset;
 
 @end

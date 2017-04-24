@@ -18,7 +18,6 @@
 #import <ObjectiveGit/GTRepository.h>
 #import <ObjectiveGit/GTConfiguration.h>
 
-#define kCommitSplitViewPositionDefault @"Commit SplitView Position"
 #define kMinimalCommitMessageLength 3
 #define kNotificationDictionaryDescriptionKey @"description"
 #define kNotificationDictionaryMessageKey @"message"
@@ -93,9 +92,6 @@
 	[stagedFilesController setAutomaticallyRearrangesObjects:NO];
 	[unstagedFilesController setAutomaticallyRearrangesObjects:NO];
 
-	[commitSplitView setHidden:YES];
-	[self performSelector:@selector(restoreCommitSplitViewPositiion) withObject:nil afterDelay:0];
-
 	[unstagedTable setDoubleAction:@selector(didDoubleClickOnTable:)];
 	[stagedTable setDoubleAction:@selector(didDoubleClickOnTable:)];
 
@@ -125,7 +121,6 @@
 
 - (void)closeView
 {
-	[self saveCommitSplitViewPosition];
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 	[webController closeView];
 }
@@ -459,81 +454,6 @@ static void reselectNextFile(NSArrayController *controller)
 	[repository.windowController showMessageSheet:NSLocalizedString(@"Index operation failed", @"Title for sheet that running an index operation has failed")
 										 infoText:notification.userInfo[kNotificationDictionaryDescriptionKey]];
 }
-
-
-#pragma mark NSSplitView delegate methods
-
-#define kCommitSplitViewTopViewMin 150
-#define kCommitSplitViewBottomViewMin 100
-
-- (CGFloat)splitView:(NSSplitView *)splitView constrainMinCoordinate:(CGFloat)proposedMin ofSubviewAt:(NSInteger)dividerIndex
-{
-	if (splitView == commitSplitView)
-		return kCommitSplitViewTopViewMin;
-
-	return proposedMin;
-}
-
-- (CGFloat)splitView:(NSSplitView *)splitView constrainMaxCoordinate:(CGFloat)proposedMax ofSubviewAt:(NSInteger)dividerIndex
-{
-	if (splitView == commitSplitView)
-		return splitView.frame.size.height - splitView.dividerThickness - kCommitSplitViewBottomViewMin;
-
-	return proposedMax;
-}
-
-// while the user resizes the window keep the lower (changes/message) view constant and just resize the upper view
-// unless the upper view gets too small
-- (void)resizeCommitSplitView
-{
-	NSRect newFrame = [commitSplitView frame];
-
-	CGFloat dividerThickness = commitSplitView.dividerThickness;
-
-	NSView *upperView = [[commitSplitView subviews] objectAtIndex:0];
-	NSRect upperFrame = [upperView frame];
-	upperFrame.size.width = newFrame.size.width;
-
-	NSView *lowerView = [[commitSplitView subviews] objectAtIndex:1];
-	NSRect lowerFrame = [lowerView frame];
-	lowerFrame.size.width = newFrame.size.width;
-
-	upperFrame.size.height = newFrame.size.height - lowerFrame.size.height - dividerThickness;
-	if (upperFrame.size.height < kCommitSplitViewTopViewMin)
-		upperFrame.size.height = kCommitSplitViewTopViewMin;
-
-	lowerFrame.size.height = newFrame.size.height - upperFrame.size.height - dividerThickness;
-	lowerFrame.origin.y = newFrame.size.height - lowerFrame.size.height;
-
-	[upperView setFrame:upperFrame];
-	[lowerView setFrame:lowerFrame];
-}
-
-- (void)splitView:(NSSplitView *)splitView resizeSubviewsWithOldSize:(NSSize)oldSize
-{
-	if (splitView == commitSplitView)
-		[self resizeCommitSplitView];
-}
-
-// NSSplitView does not save and restore the position of the splitView correctly so do it manually
-- (void)saveCommitSplitViewPosition
-{
-	CGFloat position = [[[commitSplitView subviews] objectAtIndex:0] frame].size.height;
-	[[NSUserDefaults standardUserDefaults] setDouble:position forKey:kCommitSplitViewPositionDefault];
-	[[NSUserDefaults standardUserDefaults] synchronize];
-}
-
-// make sure this happens after awakeFromNib
-- (void)restoreCommitSplitViewPositiion
-{
-	CGFloat position = [[NSUserDefaults standardUserDefaults] doubleForKey:kCommitSplitViewPositionDefault];
-	if (position < 1.0)
-		position = commitSplitView.frame.size.height - 225;
-
-	[commitSplitView setPosition:position ofDividerAtIndex:0];
-	[commitSplitView setHidden:NO];
-}
-
 
 #pragma mark NSTextView delegate methods
 

@@ -102,8 +102,6 @@
 - (void) awakeFromNib
 {
 	[[self window] setDelegate:self];
-	[[self window] setAutorecalculatesContentBorderThickness:NO forEdge:NSMinYEdge];
-	[[self window] setContentBorderThickness:31.0f forEdge:NSMinYEdge];
 
 	sidebarController = [[PBGitSidebarController alloc] initWithRepository:repository superController:self];
 	[[sidebarController view] setFrame:[sourceSplitView bounds]];
@@ -396,52 +394,6 @@
 - (IBAction) refresh:(id)sender
 {
 	[contentController refresh:self];
-}
-
-#pragma mark -
-#pragma mark SplitView Delegates
-
-#define kGitSplitViewMinWidth 150.0f
-#define kGitSplitViewMaxWidth 300.0f
-
-#pragma mark min/max widths while moving the divider
-
-- (CGFloat)splitView:(NSSplitView *)view constrainMinCoordinate:(CGFloat)proposedMin ofSubviewAt:(NSInteger)dividerIndex
-{
-	if (proposedMin < kGitSplitViewMinWidth)
-		return kGitSplitViewMinWidth;
-
-	return proposedMin;
-}
-
-- (CGFloat)splitView:(NSSplitView *)view constrainMaxCoordinate:(CGFloat)proposedMax ofSubviewAt:(NSInteger)dividerIndex
-{
-	if (dividerIndex == 0)
-		return kGitSplitViewMaxWidth;
-
-	return proposedMax;
-}
-
-#pragma mark constrain sidebar width while resizing the window
-
-- (void)splitView:(NSSplitView *)sender resizeSubviewsWithOldSize:(NSSize)oldSize
-{
-	NSRect newFrame = [sender frame];
-
-	CGFloat dividerThickness = [sender dividerThickness];
-
-	NSView *sourceView = [[sender subviews] objectAtIndex:0];
-	NSRect sourceFrame = [sourceView frame];
-	sourceFrame.size.height = newFrame.size.height;
-
-	NSView *mainView = [[sender subviews] objectAtIndex:1];
-	NSRect mainFrame = [mainView frame];
-	mainFrame.origin.x = sourceFrame.size.width + dividerThickness;
-	mainFrame.size.width = newFrame.size.width - mainFrame.origin.x;
-	mainFrame.size.height = newFrame.size.height;
-
-	[sourceView setFrame:sourceFrame];
-	[mainView setFrame:mainFrame];
 }
 
 @end
