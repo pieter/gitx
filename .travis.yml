@@ -1,5 +1,6 @@
 language: objective-c
-xcode_project: GitX.xcodeproj
+xcode_worksspace: GitX.xcworkspace
+xcode_scheme: GitX
 osx_image: xcode8.3
 before_install:
  - External/objective-git/script/bootstrap
