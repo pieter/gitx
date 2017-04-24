@@ -17,7 +17,22 @@ NSString *PBGitRepositoryEventNotification = @"PBGitRepositoryModifiedNotificati
 NSString *kPBGitRepositoryEventTypeUserInfoKey = @"kPBGitRepositoryEventTypeUserInfoKey";
 NSString *kPBGitRepositoryEventPathsUserInfoKey = @"kPBGitRepositoryEventPathsUserInfoKey";
 
-@interface PBGitRepositoryWatcher ()
+typedef void (^PBGitRepositoryWatcherCallbackBlock)(NSArray *changedFiles);
+
+@interface PBGitRepositoryWatcher () {
+	FSEventStreamRef gitDirEventStream;
+	FSEventStreamRef workDirEventStream;
+	PBGitRepositoryWatcherCallbackBlock gitDirChangedBlock;
+	PBGitRepositoryWatcherCallbackBlock workDirChangedBlock;
+	NSDate *gitDirTouchDate;
+	NSDate *indexTouchDate;
+
+	NSString *gitDir;
+	NSString *workDir;
+
+	__strong PBGitRepositoryWatcher *ownRef;
+	BOOL _running;
+}
 
 @property (nonatomic, strong) NSMutableDictionary *statusCache;
 
