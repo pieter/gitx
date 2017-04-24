@@ -26,7 +26,7 @@ extern NSString *kPBGitRepositoryEventPathsUserInfoKey;
 
 @property (readonly, weak) PBGitRepository *repository;
 
-- (id) initWithRepository:(PBGitRepository *)repository;
+- (instancetype) initWithRepository:(PBGitRepository *)repository;
 - (void) start;
 - (void) stop;
 

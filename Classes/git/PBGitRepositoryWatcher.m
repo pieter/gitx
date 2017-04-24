@@ -68,7 +68,7 @@ void PBGitRepositoryWatcherCallback(ConstFSEventStreamRef streamRef,
 
 @synthesize repository;
 
-- (id) initWithRepository:(PBGitRepository *)theRepository {
+- (instancetype) initWithRepository:(PBGitRepository *)theRepository {
     self = [super init];
     if (!self) {
         return nil;
