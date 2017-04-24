@@ -30,16 +30,15 @@ typedef void (^PBGitRepositoryWatcherCallbackBlock)(NSArray *changedFiles);
 @interface PBGitRepositoryWatcher () {
 	FSEventStreamRef gitDirEventStream;
 	FSEventStreamRef workDirEventStream;
-	PBGitRepositoryWatcherCallbackBlock gitDirChangedBlock;
-	PBGitRepositoryWatcherCallbackBlock workDirChangedBlock;
 	NSDate *gitDirTouchDate;
 	NSDate *indexTouchDate;
 
-	NSString *gitDir;
-	NSString *workDir;
-
 	__strong PBGitRepositoryWatcher *ownRef;
 	BOOL _running;
+
+@public
+	NSString *gitDir;
+	NSString *workDir;
 }
 
 @property (nonatomic, strong) NSMutableDictionary *statusCache;
@@ -55,20 +54,34 @@ void PBGitRepositoryWatcherCallback(ConstFSEventStreamRef streamRef,
 									void *_eventPaths,
 									const FSEventStreamEventFlags eventFlags[],
 									const FSEventStreamEventId eventIds[]){
-	PBGitRepositoryWatcherCallbackBlock block = (__bridge PBGitRepositoryWatcherCallbackBlock)clientCallBackInfo;
-	
-	NSMutableArray *changePaths = [[NSMutableArray alloc] init];
+	PBGitRepositoryWatcher *watcher = (__bridge PBGitRepositoryWatcher *)clientCallBackInfo;
+
+	NSMutableArray *gitDirEvents = [NSMutableArray array];
+	NSMutableArray *workDirEvents = [NSMutableArray array];
 	NSArray *eventPaths = (__bridge NSArray*)_eventPaths;
 	for (int i = 0; i < numEvents; ++i) {
 		NSString *path = [eventPaths objectAtIndex:i];
 		PBGitRepositoryWatcherEventPath *ep = [[PBGitRepositoryWatcherEventPath alloc] init];
 		ep.path = [path stringByStandardizingPath];
 		ep.flag = eventFlags[i];
-		[changePaths addObject:ep];
 
+
+		if ([ep.path hasPrefix:watcher->gitDir]) {
+			// exclude all changes to .lock files
+			if ([ep.path hasSuffix:@".lock"]) {
+				continue;
+			}
+			[gitDirEvents addObject:ep];
+		} else if ([ep.path hasPrefix:watcher->workDir]) {
+			[workDirEvents addObject:ep];
+		}
 	}
-	if (block && changePaths.count) {
-		block(changePaths);
+
+	if (workDirEvents.count) {
+		[watcher handleWorkDirEventCallback:workDirEvents];
+	}
+	if (gitDirEvents.count) {
+		[watcher handleGitDirEventCallback:gitDirEvents];
 	}
 }
 
@@ -81,8 +94,7 @@ void PBGitRepositoryWatcherCallback(ConstFSEventStreamRef streamRef,
     if (!self) {
         return nil;
 	}
-	
-	__weak PBGitRepositoryWatcher* weakSelf = self;
+
 	repository = theRepository;
 
 	{
@@ -90,20 +102,7 @@ void PBGitRepositoryWatcherCallback(ConstFSEventStreamRef streamRef,
 		if (!gitDir) {
 			return nil;
 		}
-		gitDirChangedBlock = ^(NSArray *changeEvents){
-			NSMutableArray *filteredEvents = [NSMutableArray new];
-			for (PBGitRepositoryWatcherEventPath *event in changeEvents) {
-				// exclude all changes to .lock files
-				if ([event.path hasSuffix:@".lock"]) {
-					continue;
-				}
-				[filteredEvents addObject:event];
-			}
-			if (filteredEvents.count) {
-				[weakSelf handleGitDirEventCallback:filteredEvents];
-			}
-		};
-		FSEventStreamContext gitDirWatcherContext = {0, (__bridge void *)(gitDirChangedBlock), NULL, NULL, NULL};
+		FSEventStreamContext gitDirWatcherContext = {0, (__bridge void *)(self), NULL, NULL, NULL};
 		gitDirEventStream = FSEventStreamCreate(kCFAllocatorDefault, PBGitRepositoryWatcherCallback, &gitDirWatcherContext,
 												(__bridge CFArrayRef)@[gitDir],
 												kFSEventStreamEventIdSinceNow, 1.0,
@@ -115,24 +114,7 @@ void PBGitRepositoryWatcherCallback(ConstFSEventStreamRef streamRef,
 	{
 		workDir = repository.gtRepo.isBare ? nil : [repository.gtRepo.fileURL.path stringByStandardizingPath];
 		if (workDir) {
-			workDirChangedBlock = ^(NSArray *changeEvents){
-				NSMutableArray *filteredEvents = [NSMutableArray new];
-				PBGitRepositoryWatcher *watcher = weakSelf;
-				if (!watcher) {
-					return;
-				}
-				for (PBGitRepositoryWatcherEventPath *event in changeEvents) {
-					// exclude anything under the .git dir
-					if ([event.path hasPrefix:watcher->gitDir]) {
-						continue;
-					}
-					[filteredEvents addObject:event];
-				}
-				if (filteredEvents.count) {
-					[watcher handleWorkDirEventCallback:filteredEvents];
-				}
-			};
-			FSEventStreamContext workDirWatcherContext = {0, (__bridge void *)(workDirChangedBlock), NULL, NULL, NULL};
+			FSEventStreamContext workDirWatcherContext = {0, (__bridge void *)(self), NULL, NULL, NULL};
 			workDirEventStream = FSEventStreamCreate(kCFAllocatorDefault, PBGitRepositoryWatcherCallback, &workDirWatcherContext,
 													 (__bridge CFArrayRef)@[workDir],
 													 kFSEventStreamEventIdSinceNow, 1.0,
