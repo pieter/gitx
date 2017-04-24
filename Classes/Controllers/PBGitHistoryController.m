@@ -14,7 +14,6 @@
 #import "PBCollapsibleSplitView.h"
 #import "PBGitHistoryController.h"
 #import "PBWebHistoryController.h"
-#import "CWQuickLook.h"
 #import "PBGitGrapher.h"
 #import "PBGitRevisionCell.h"
 #import "PBCommitList.h"
@@ -28,10 +27,10 @@
 #import "PBGitRevList.h"
 #import "PBHistorySearchController.h"
 #import "PBGitRepositoryWatcher.h"
-#define QLPreviewPanel NSClassFromString(@"QLPreviewPanel")
 #import "PBQLTextView.h"
 #import "GLFileView.h"
 #import "GitXCommitCopier.h"
+#import <Quartz/Quartz.h>
 
 
 #define kHistorySelectedDetailIndexKey @"PBHistorySelectedDetailIndex"
@@ -431,47 +430,18 @@
 
 - (IBAction) toggleQLPreviewPanel:(id)sender
 {
-	if ([[QLPreviewPanel sharedPreviewPanel] respondsToSelector:@selector(setDataSource:)]) {
-		// Public QL API
-		if ([QLPreviewPanel sharedPreviewPanelExists] && [[QLPreviewPanel sharedPreviewPanel] isVisible])
-			[[QLPreviewPanel sharedPreviewPanel] orderOut:nil];
-		else
-			[[QLPreviewPanel sharedPreviewPanel] makeKeyAndOrderFront:nil];
-	}
-	else {
-		// Private QL API (10.5 only)
-		if ([[QLPreviewPanel sharedPreviewPanel] isOpen])
-			[[QLPreviewPanel sharedPreviewPanel] closePanel];
-		else {
-			[[QLPreviewPanel sharedPreviewPanel] makeKeyAndOrderFrontWithEffect:1];
-			[self updateQuicklookForce:YES];
-		}
-	}
+	if ([QLPreviewPanel sharedPreviewPanelExists] && [[QLPreviewPanel sharedPreviewPanel] isVisible])
+		[[QLPreviewPanel sharedPreviewPanel] orderOut:nil];
+	else
+		[[QLPreviewPanel sharedPreviewPanel] makeKeyAndOrderFront:nil];
 }
 
 - (void) updateQuicklookForce:(BOOL)force
 {
-	if (!force && ![[QLPreviewPanel sharedPreviewPanel] isOpen])
+	if (!force && ![[QLPreviewPanel sharedPreviewPanel] isVisible])
 		return;
 
-	if ([[QLPreviewPanel sharedPreviewPanel] respondsToSelector:@selector(setDataSource:)]) {
-		// Public QL API
-		[previewPanel reloadData];
-	}
-	else {
-		// Private QL API (10.5 only)
-		NSArray *selectedFiles = [treeController selectedObjects];
-
-		NSMutableArray *fileNames = [NSMutableArray array];
-		for (PBGitTree *tree in selectedFiles) {
-			NSString *filePath = [tree tmpFileNameForContents];
-			if (filePath)
-				[fileNames addObject:[NSURL fileURLWithPath:filePath]];
-		}
-
-		if ([fileNames count])
-			[[QLPreviewPanel sharedPreviewPanel] setURLs:fileNames currentIndex:0 preservingDisplayState:YES];
-	}
+	[[QLPreviewPanel sharedPreviewPanel] reloadData];
 }
 
 - (IBAction) refresh:(id)sender
@@ -760,33 +730,7 @@
 }
 
 #pragma mark -
-#pragma mark Quick Look Public API support
-
-@protocol QLPreviewItem;
-
-#pragma mark (QLPreviewPanelController)
-
-- (BOOL) acceptsPreviewPanelControl:(id)panel
-{
-    return YES;
-}
-
-- (void)beginPreviewPanelControl:(id)panel
-{
-    // This document is now responsible of the preview panel
-    // It is allowed to set the delegate, data source and refresh panel.
-    previewPanel = panel;
-	[previewPanel setDelegate:self];
-	[previewPanel setDataSource:self];
-}
-
-- (void)endPreviewPanelControl:(id)panel
-{
-    // This document loses its responsisibility on the preview panel
-    // Until the next call to -beginPreviewPanelControl: it must not
-    // change the panel's delegate, data source or refresh it.
-    previewPanel = nil;
-}
+#pragma mark Quick Look
 
 #pragma mark <QLPreviewPanelDataSource>
 

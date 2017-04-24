@@ -38,10 +38,9 @@ extern NSString * const kGitXCommitType;
 @property (nonatomic, strong, readonly) NSString *SHA;
 @property (nonatomic, strong, readonly) NSString *SVNRevision;
 
-@property (nonatomic, strong, readonly) NSArray <GTOID *> *parents;
+@property (nonatomic, copy, readonly) NSArray <GTOID *> *parents;
 @property  NSMutableArray* refs;
 
-@property (nonatomic, assign)	char sign;
 @property (nonatomic, strong) PBGraphCellInfo *lineInfo;
 
 @property (nonatomic, readonly) PBGitTree* tree;

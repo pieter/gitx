@@ -10,7 +10,6 @@
 #import "PBGitRef.h"
 #import "PBGitCommit.h"
 #import "PBGitRevSpecifier.h"
-#import "RoundedRectangle.h"
 #import "GitXTextFieldCell.h"
 
 #import "NSColor+RGB.h"
@@ -267,7 +266,7 @@ const BOOL SHUFFLE_COLORS = NO;
 	PBGitRef *ref = [refs objectAtIndex:index];
 	
 	NSMutableDictionary* attributes = [self attributesForRefLabelSelected:[self isHighlighted]];
-	NSBezierPath *border = [NSBezierPath bezierPathWithRoundedRect:rect cornerRadius:2];
+	NSBezierPath *border = [NSBezierPath bezierPathWithRoundedRect:rect xRadius:2 yRadius:2];
 	[[self colorForRef:ref] set];
 	
 

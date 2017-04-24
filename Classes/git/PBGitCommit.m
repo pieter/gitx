@@ -19,7 +19,7 @@ NSString * const kGitXCommitType = @"commit";
 
 @property (nonatomic, weak) PBGitRepository *repository;
 @property (nonatomic, strong) GTCommit *gtCommit;
-@property (nonatomic, strong) NSArray *parents;
+@property (nonatomic, copy) NSArray<GTOID *> *parents;
 
 @property (nonatomic, strong) NSString *patch;
 @property (nonatomic, strong) GTOID *oid;
@@ -187,12 +187,6 @@ NSString * const kGitXCommitType = @"commit";
 - (NSUInteger)hash
 {
 	return self.OID.hash;
-}
-
-// FIXME: Remove this method once it's unused.
-- (NSString*) details
-{
-	return @"";
 }
 
 - (NSString *) patch
