@@ -11,12 +11,11 @@
 #import <Foundation/Foundation.h>
 @class PBGitRepository;
 
-typedef UInt32 PBGitRepositoryWatcherEventType;
-enum {
-	PBGitRepositoryWatcherEventTypeNone = 0x00000000,
-	PBGitRepositoryWatcherEventTypeGitDirectory = 0x00000001,
-	PBGitRepositoryWatcherEventTypeWorkingDirectory = 0x00000002,
-	PBGitRepositoryWatcherEventTypeIndex = 0x00000004
+typedef NS_ENUM(UInt32, PBGitRepositoryWatcherEventType) {
+	PBGitRepositoryWatcherEventTypeNone = (1 << 0),
+	PBGitRepositoryWatcherEventTypeGitDirectory = (1 << 1),
+	PBGitRepositoryWatcherEventTypeWorkingDirectory = (1 << 2),
+	PBGitRepositoryWatcherEventTypeIndex = (1 << 3),
 };
 
 extern NSString *PBGitRepositoryEventNotification;
