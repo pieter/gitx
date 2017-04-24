@@ -35,6 +35,15 @@
                   context:NULL];
 }
 
+- (void)dealloc
+{
+	NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+
+	[defaults removeObserver:self forKeyPath:@"PBCommitMessageViewHasVerticalLine"];
+	[defaults removeObserver:self forKeyPath:@"PBCommitMessageViewVerticalLineLength"];
+	[defaults removeObserver:self forKeyPath:@"PBCommitMessageViewVerticalBodyLineLength"];
+}
+
 -(void) observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
 {
     [self setNeedsDisplay:YES];

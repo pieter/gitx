@@ -12,6 +12,6 @@
 
 @interface PBCommitMessageView : GitXTextView
 
-@property (nonatomic, strong) PBGitRepository *repository;
+@property (nonatomic, weak) PBGitRepository *repository;
 
 @end

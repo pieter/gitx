@@ -16,7 +16,7 @@
 @interface PBWebChangesController : PBWebController {
 	IBOutlet NSArrayController *unstagedFilesController;
 	IBOutlet NSArrayController *stagedFilesController;
-	IBOutlet PBGitCommitController *controller;
+	__weak IBOutlet PBGitCommitController *controller;
 	IBOutlet PBGitIndexController *indexController;
 
 	PBChangedFile *selectedFile;

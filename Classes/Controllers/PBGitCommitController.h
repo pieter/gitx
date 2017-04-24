@@ -20,7 +20,4 @@
 
 - (PBGitIndex *) index;
 
-- (NSView *) nextKeyViewFor:(NSView *)view;
-- (NSView *) previousKeyViewFor:(NSView *)view;
-
 @end
