@@ -150,6 +150,18 @@ void PBGitRepositoryWatcherCallback(ConstFSEventStreamRef streamRef,
 	return self;
 }
 
+- (void)dealloc {
+	FSEventStreamStop(gitDirEventStream);
+	FSEventStreamInvalidate(gitDirEventStream);
+	FSEventStreamRelease(gitDirEventStream);
+
+	if (workDirEventStream) {
+		FSEventStreamStop(workDirEventStream);
+		FSEventStreamInvalidate(workDirEventStream);
+		FSEventStreamRelease(workDirEventStream);
+	}
+}
+
 - (NSDate *) fileModificationDateAtPath:(NSString *)path {
 	NSError* error;
     NSDictionary *attrs = [[NSFileManager defaultManager] attributesOfItemAtPath:path
