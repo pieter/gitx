@@ -11,13 +11,21 @@
 #import "PBGitRepository.h"
 #import "PBEasyPipe.h"
 #import "PBGitDefaults.h"
-#import "PBGitRepositoryWatcherEventPath.h"
 
 NSString *PBGitRepositoryEventNotification = @"PBGitRepositoryModifiedNotification";
 NSString *kPBGitRepositoryEventTypeUserInfoKey = @"kPBGitRepositoryEventTypeUserInfoKey";
 NSString *kPBGitRepositoryEventPathsUserInfoKey = @"kPBGitRepositoryEventPathsUserInfoKey";
 
 typedef void (^PBGitRepositoryWatcherCallbackBlock)(NSArray *changedFiles);
+
+/* Small helper class to keep track of events */
+@interface PBGitRepositoryWatcherEventPath : NSObject
+@property NSString *path;
+@property (assign) FSEventStreamEventFlags flag;
+@end
+
+@implementation PBGitRepositoryWatcherEventPath
+@end
 
 @interface PBGitRepositoryWatcher () {
 	FSEventStreamRef gitDirEventStream;
