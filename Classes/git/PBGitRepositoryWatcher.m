@@ -85,6 +85,8 @@ void PBGitRepositoryWatcherCallback(ConstFSEventStreamRef streamRef,
 @implementation PBGitRepositoryWatcher
 
 - (instancetype) initWithRepository:(PBGitRepository *)theRepository {
+	NSParameterAssert(theRepository != nil);
+
     self = [super init];
     if (!self) {
         return nil;
