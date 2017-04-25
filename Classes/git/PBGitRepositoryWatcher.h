@@ -11,7 +11,7 @@
 #import <Foundation/Foundation.h>
 @class PBGitRepository;
 
-typedef NS_ENUM(UInt32, PBGitRepositoryWatcherEventType) {
+typedef NS_ENUM(NSUInteger, PBGitRepositoryWatcherEventType) {
 	PBGitRepositoryWatcherEventTypeNone = (1 << 0),
 	PBGitRepositoryWatcherEventTypeGitDirectory = (1 << 1),
 	PBGitRepositoryWatcherEventTypeWorkingDirectory = (1 << 2),
