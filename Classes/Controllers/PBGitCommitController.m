@@ -11,7 +11,6 @@
 #import "PBChangedFile.h"
 #import "PBWebChangesController.h"
 #import "PBGitIndex.h"
-#import "PBNiceSplitView.h"
 #import "PBGitRepositoryWatcher.h"
 #import "PBCommitMessageView.h"
 #import "NSSplitView+GitX.h"
@@ -36,7 +35,7 @@
 	IBOutlet NSButton *commitButton;
 
 	IBOutlet PBWebChangesController *webController;
-	IBOutlet PBNiceSplitView *commitSplitView;
+	IBOutlet NSSplitView *commitSplitView;
 }
 
 @property (weak) IBOutlet NSTableView *unstagedTable;

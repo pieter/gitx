@@ -91,7 +91,7 @@
             <rect key="frame" x="0.0" y="0.0" width="955" height="434"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <splitView focusRingType="none" autosaveName="History" dividerStyle="thin" translatesAutoresizingMaskIntoConstraints="NO" id="2" userLabel="History Content View">
+                <splitView focusRingType="none" autosaveName="History" translatesAutoresizingMaskIntoConstraints="NO" id="2" userLabel="History Content View">
                     <rect key="frame" x="0.0" y="0.0" width="955" height="404"/>
                     <subviews>
                         <customView fixedFrame="YES" id="309" userLabel="Commits Split View">
@@ -390,20 +390,20 @@
                             </subviews>
                         </customView>
                         <customView id="310" userLabel="Details Split View">
-                            <rect key="frame" x="0.0" y="190" width="955" height="214"/>
+                            <rect key="frame" x="0.0" y="198" width="955" height="206"/>
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                             <subviews>
                                 <tabView type="noTabsNoBorder" translatesAutoresizingMaskIntoConstraints="NO" id="4" userLabel="Detail / Tree Tab View">
-                                    <rect key="frame" x="0.0" y="0.0" width="955" height="214"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="955" height="206"/>
                                     <font key="font" metaFont="system"/>
                                     <tabViewItems>
                                         <tabViewItem label="Details" identifier="1" id="6" userLabel="Details Tab">
                                             <view key="view" focusRingType="none" id="20">
-                                                <rect key="frame" x="0.0" y="0.0" width="955" height="214"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="955" height="206"/>
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
                                                     <webView focusRingType="none" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="21">
-                                                        <rect key="frame" x="1" y="0.0" width="954" height="215"/>
+                                                        <rect key="frame" x="1" y="0.0" width="954" height="207"/>
                                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                         <webPreferences key="preferences" defaultFontSize="12" defaultFixedFontSize="12">
                                                             <nil key="identifier"/>
@@ -562,7 +562,7 @@ IA
                     <rect key="frame" x="0.0" y="404" width="955" height="30"/>
                     <subviews>
                         <box verticalHuggingPriority="750" fixedFrame="YES" boxType="separator" translatesAutoresizingMaskIntoConstraints="NO" id="317">
-                            <rect key="frame" x="0.0" y="-2" width="955" height="4"/>
+                            <rect key="frame" x="0.0" y="-2" width="955" height="5"/>
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                         </box>
                         <button toolTip="Create Branch" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="330">
