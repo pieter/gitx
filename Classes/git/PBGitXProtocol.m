@@ -13,7 +13,11 @@
 
 + (BOOL) canInitWithRequest:(NSURLRequest *)request
 {
-	return [[[[request URL] scheme] lowercaseString] isEqualToString:@"gitx"];
+	NSString *URLScheme = request.URL.scheme;
+	if ([[URLScheme lowercaseString] isEqualToString:@"gitx"])
+		return YES;
+
+	return NO;
 }
 
 + (NSURLRequest *)canonicalRequestForRequest:(NSURLRequest *)request

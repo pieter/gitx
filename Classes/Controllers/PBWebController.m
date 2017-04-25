@@ -86,8 +86,7 @@
 	if (!self.repository)
 		return request;
 
-	// TODO: Change this to canInitWithRequest
-	if ([[[[request URL] scheme] lowercaseString] isEqualToString:@"gitx"]) {
+	if ([PBGitXProtocol canInitWithRequest:request]) {
 		NSMutableURLRequest *newRequest = [request mutableCopy];
 		[newRequest setRepository:self.repository];
 		return newRequest;
