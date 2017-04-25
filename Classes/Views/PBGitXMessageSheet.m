@@ -45,8 +45,20 @@
 		   windowController:(PBGitWindowController *)windowController
 {
 	PBGitXMessageSheet *sheet = [[self alloc] initWithWindowNibName:@"PBGitXMessageSheet" windowController:windowController];
+
+	NSString *infoText = nil;
+	NSString *desc = error.localizedDescription;
+	NSString *recovery = error.localizedRecoverySuggestion;
+	if (desc && recovery) {
+		infoText = [NSString stringWithFormat:@"%@\n\n%@", desc, recovery];
+	} else if (desc) {
+		infoText = desc;
+	} else if (recovery) {
+		infoText = recovery;
+	}
+
 	[sheet beginMessageSheetWithMessageText:[error localizedDescription]
-								   infoText:[error localizedRecoverySuggestion]];
+								   infoText:infoText];
 }
 
 - (IBAction)closeMessageSheet:(id)sender
