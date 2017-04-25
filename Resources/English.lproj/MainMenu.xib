@@ -1,8 +1,8 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="10117" systemVersion="15G31" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="12120" systemVersion="16E195" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="10117"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="12120"/>
     </dependencies>
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="ApplicationController"/>
@@ -643,10 +643,6 @@ DQ
         </customObject>
         <userDefaultsController representsSharedInstance="YES" id="912"/>
         <customObject id="918" customClass="SUUpdater"/>
-        <customObject id="oqX-ct-wMx" userLabel="Document Controller" customClass="NSDocumentController">
-            <connections>
-                <outlet property="firstResponder" destination="-2" id="uGz-RU-RIl"/>
-            </connections>
-        </customObject>
+        <customObject id="oqX-ct-wMx" userLabel="Document Controller" customClass="NSDocumentController"/>
     </objects>
 </document>
