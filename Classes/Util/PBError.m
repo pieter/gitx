@@ -59,8 +59,11 @@ NSString * const PBGitXErrorDomain      = @"PBGitXErrorDomain";
 @end
 
 
-BOOL PBReturnError(NSError **error, NSString *description, NSString *failureReason) {
-	return PBReturnErrorWithUserInfo(error, description, failureReason, nil);
+BOOL PBReturnError(NSError **error, NSString *description, NSString *failureReason, NSError *underlyingError) {
+	if (error) {
+		*error = [NSError pb_errorWithDescription:description failureReason:failureReason underlyingError:underlyingError];
+	}
+	return NO;
 }
 
 BOOL PBReturnErrorWithUserInfo(NSError **error, NSString *description, NSString *failureReason, NSDictionary *userInfo) {

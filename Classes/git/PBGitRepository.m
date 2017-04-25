@@ -68,11 +68,9 @@
 	_gtRepo = [GTRepository repositoryWithURL:repoURL error:&gtError];
 	if (!_gtRepo) {
 		if (error) {
-			NSDictionary* userInfo = [NSDictionary dictionaryWithObjectsAndKeys:
-                                      [NSString stringWithFormat:@"%@ does not appear to be a git repository.", [repositoryURL path]], NSLocalizedRecoverySuggestionErrorKey,
-                                      gtError, NSUnderlyingErrorKey,
-                                      nil];
-			*error = [NSError errorWithDomain:PBGitXErrorDomain code:0 userInfo:userInfo];
+			*error = [NSError pb_errorWithDescription:NSLocalizedString(@"Repository initialization failed", @"")
+										failureReason:[NSString stringWithFormat:NSLocalizedString(@"%@ does not appear to be a git repository.", @""), repositoryURL.path]
+									  underlyingError:gtError];
 		}
 		return nil;
 	}
@@ -644,32 +642,44 @@
 		return [branch remoteRef];
 	}
 
-	NSString *branchRef = branch.ref;
-	if (branchRef) {
-		NSError *branchError = nil;
-		BOOL lookupSuccess = NO;
-		GTBranch *gtBranch = [self.gtRepo lookUpBranchWithName:branch.branchName type:GTBranchTypeLocal success:&lookupSuccess error:&branchError];
-		if (gtBranch && lookupSuccess) {
-			NSError *trackingError = nil;
-			BOOL trackingSuccess = NO;
-			GTBranch *trackingBranch = [gtBranch trackingBranchWithError:&trackingError success:&trackingSuccess];
-			if (trackingBranch && trackingSuccess) {
-				NSString *trackingBranchRefName = trackingBranch.reference.name;
-				PBGitRef *trackingBranchRef = [PBGitRef refFromString:trackingBranchRefName];
-				return trackingBranchRef;
-			}
-		}
+	NSError *gtError = nil;
+	BOOL success = NO;
+	NSAssert(branch.ref != nil, @"Unexpected nil ref");
+
+	GTBranch *gtBranch = [self.gtRepo lookUpBranchWithName:branch.branchName type:GTBranchTypeLocal success:&success error:&gtError];
+	if (!success) {
+		NSString *failure = [NSString stringWithFormat:NSLocalizedString(@"There was an error looking up the branch \"%@\"", @""), branch.shortName];
+		PBReturnError(error, NSLocalizedString(@"Branch lookup failed", @""), failure, gtError);
+		return nil;
+	}
+	if (!gtBranch) {
+		NSString *failure = [NSString stringWithFormat:NSLocalizedString(@"There doesn't seem to be a branch named \"%@\"", @""), branch.shortName];
+		PBReturnError(error, NSLocalizedString(@"Branch lookup failed", @""), failure, gtError);
+		return nil;
 	}
 
-	if (error != NULL) {
-		NSString *info = [NSString stringWithFormat:@"There is no remote configured for the %@ '%@'.\n\nPlease select a branch from the popup menu, which has a corresponding remote tracking branch set up.\n\nYou can also use a contextual menu to choose a branch by right clicking on its label in the commit history list.", [branch refishType], [branch shortName]];
-		*error = [NSError errorWithDomain:PBGitXErrorDomain code:0
-								 userInfo:[NSDictionary dictionaryWithObjectsAndKeys:
-										   @"No remote configured for branch", NSLocalizedDescriptionKey,
-										   info, NSLocalizedRecoverySuggestionErrorKey,
-										   nil]];
+	GTBranch *trackingBranch = [gtBranch trackingBranchWithError:&gtError success:&success];
+	if (!success) {
+		NSString *failure = [NSString stringWithFormat:NSLocalizedString(@"There was an error finding the tracking branch of branch \"%@\"", @""), branch.shortName];
+		PBReturnError(error, NSLocalizedString(@"Branch lookup failed", @""), failure, gtError);
+		return nil;
 	}
-	return nil;
+	if (!trackingBranch) {
+		PBReturnErrorWithBuilder(error, ^{
+			NSString *info = [NSString stringWithFormat:@"There is no remote configured for branch \"%@\".", branch.shortName];
+			NSString *recovery = NSLocalizedString(@"Please select a branch from the popup menu, which has a corresponding remote tracking branch set up.\n\nYou can also use a contextual menu to choose a branch by right clicking on its label in the commit history list.", @"");
+
+			return [NSError pb_errorWithDescription:NSLocalizedString(@"No remote configured for branch", @"")
+										failureReason:info
+									  underlyingError:gtError
+											 userInfo:@{NSLocalizedRecoverySuggestionErrorKey: recovery}];
+		});
+		return nil;
+	}
+
+	NSString *trackingBranchRefName = trackingBranch.reference.name;
+	PBGitRef *trackingBranchRef = [PBGitRef refFromString:trackingBranchRefName];
+	return trackingBranchRef;
 }
 
 - (NSString *) infoForRemote:(NSString *)remoteName

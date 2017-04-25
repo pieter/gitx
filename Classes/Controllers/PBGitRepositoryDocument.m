@@ -25,23 +25,13 @@ NSString *PBGitRepositoryDocumentType = @"Git Repository";
 {
 	if (![PBGitBinary path])
 	{
-		if (outError) {
-			NSDictionary* userInfo = [NSDictionary dictionaryWithObject:[PBGitBinary notFoundError]
-																 forKey:NSLocalizedRecoverySuggestionErrorKey];
-			*outError = [NSError errorWithDomain:PBGitXErrorDomain code:0 userInfo:userInfo];
-		}
-		return NO;
+		return PBReturnError(outError, @"Unable to find git", [PBGitBinary notFoundError], nil);
 	}
 
 	BOOL isDirectory = FALSE;
 	[[NSFileManager defaultManager] fileExistsAtPath:[absoluteURL path] isDirectory:&isDirectory];
 	if (!isDirectory) {
-		if (outError) {
-			NSDictionary* userInfo = [NSDictionary dictionaryWithObject:@"Reading files is not supported."
-																 forKey:NSLocalizedRecoverySuggestionErrorKey];
-			*outError = [NSError errorWithDomain:PBGitXErrorDomain code:0 userInfo:userInfo];
-		}
-		return NO;
+		return PBReturnError(outError, @"Unable to read files", @"Reading files is not supported", nil);
 	}
 
 	_repository = [[PBGitRepository alloc] initWithURL:absoluteURL error:outError];
