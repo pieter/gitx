@@ -137,18 +137,19 @@ void PBGitRepositoryWatcherCallback(ConstFSEventStreamRef streamRef,
 
 - (BOOL) gitDirectoryChanged {
 
-	for (NSURL* fileURL in [[NSFileManager defaultManager] contentsOfDirectoryAtURL:repository.gitURL
-														 includingPropertiesForKeys:[NSArray arrayWithObject:NSURLContentModificationDateKey]
-																			options:0
-						
-																			  error:nil])
+	NSArray *properties = @[NSURLIsDirectoryKey, NSURLContentModificationDateKey];
+	NSArray <NSURL *> *urls = [[NSFileManager defaultManager] contentsOfDirectoryAtURL:self.repository.gitURL
+															 includingPropertiesForKeys:properties
+																				options:0
+																				  error:nil];
+	for (NSURL *fileURL in urls)
 	{
-		BOOL isDirectory = NO;
-		[[NSFileManager defaultManager] fileExistsAtPath:[fileURL path] isDirectory:&isDirectory];
-		if (isDirectory) 
+		NSNumber *number = nil;
+		if (![fileURL getResourceValue:&number forKey:NSURLIsDirectoryKey error:nil] || [number boolValue]) {
 			continue;
+		}
 
-		NSDate* modTime = nil;
+		NSDate *modTime = nil;
 		if (![fileURL getResourceValue:&modTime forKey:NSURLContentModificationDateKey error:nil])
 			continue;
 		
