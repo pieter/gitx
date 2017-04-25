@@ -28,12 +28,10 @@ typedef void (^PBGitRepositoryWatcherCallbackBlock)(NSArray *changedFiles);
 @end
 
 @interface PBGitRepositoryWatcher () {
-	FSEventStreamRef gitDirEventStream;
-	FSEventStreamRef workDirEventStream;
+	FSEventStreamRef eventStream;
 	NSDate *gitDirTouchDate;
 	NSDate *indexTouchDate;
 
-	__strong PBGitRepositoryWatcher *ownRef;
 	BOOL _running;
 }
 
@@ -96,32 +94,6 @@ void PBGitRepositoryWatcherCallback(ConstFSEventStreamRef streamRef,
 
 	repository = theRepository;
 
-	{
-		if (!self.gitDir) {
-			return nil;
-		}
-		FSEventStreamContext gitDirWatcherContext = {0, (__bridge void *)(self), NULL, NULL, NULL};
-		gitDirEventStream = FSEventStreamCreate(kCFAllocatorDefault, PBGitRepositoryWatcherCallback, &gitDirWatcherContext,
-												(__bridge CFArrayRef)@[self.gitDir],
-												kFSEventStreamEventIdSinceNow, 1.0,
-												kFSEventStreamCreateFlagUseCFTypes |
-												kFSEventStreamCreateFlagIgnoreSelf |
-												kFSEventStreamCreateFlagFileEvents);
-		
-	}
-	{
-		if (self.workDir) {
-			FSEventStreamContext workDirWatcherContext = {0, (__bridge void *)(self), NULL, NULL, NULL};
-			workDirEventStream = FSEventStreamCreate(kCFAllocatorDefault, PBGitRepositoryWatcherCallback, &workDirWatcherContext,
-													 (__bridge CFArrayRef)@[self.workDir],
-													 kFSEventStreamEventIdSinceNow, 1.0,
-													 kFSEventStreamCreateFlagUseCFTypes |
-													 kFSEventStreamCreateFlagIgnoreSelf |
-													 kFSEventStreamCreateFlagFileEvents);
-		}
-	}
-
-
 	self.statusCache = [NSMutableDictionary new];
 	
 	if ([PBGitDefaults useRepositoryWatcher])
@@ -130,14 +102,10 @@ void PBGitRepositoryWatcherCallback(ConstFSEventStreamRef streamRef,
 }
 
 - (void)dealloc {
-	FSEventStreamStop(gitDirEventStream);
-	FSEventStreamInvalidate(gitDirEventStream);
-	FSEventStreamRelease(gitDirEventStream);
-
-	if (workDirEventStream) {
-		FSEventStreamStop(workDirEventStream);
-		FSEventStreamInvalidate(workDirEventStream);
-		FSEventStreamRelease(workDirEventStream);
+	if (eventStream) {
+		FSEventStreamStop(eventStream);
+		FSEventStreamInvalidate(eventStream);
+		FSEventStreamRelease(eventStream);
 	}
 }
 
@@ -288,6 +256,24 @@ void PBGitRepositoryWatcherCallback(ConstFSEventStreamRef streamRef,
 	return !repository.gtRepo.isBare ? [repository.gtRepo.fileURL.path stringByStandardizingPath] : nil;
 }
 
+- (void) _initializeStream {
+	if (eventStream) return;
+
+	NSMutableArray *array = [NSMutableArray array];
+	if (self.gitDir) [array addObject:self.gitDir];
+	if (self.workDir) [array addObject:self.workDir];
+
+	if (!array.count) return;
+
+	FSEventStreamContext gitDirWatcherContext = {0, (__bridge void *)(self), NULL, NULL, NULL};
+	eventStream = FSEventStreamCreate(kCFAllocatorDefault, PBGitRepositoryWatcherCallback, &gitDirWatcherContext,
+											(__bridge CFArrayRef)array,
+											kFSEventStreamEventIdSinceNow, 1.0,
+											kFSEventStreamCreateFlagUseCFTypes |
+											kFSEventStreamCreateFlagIgnoreSelf |
+											kFSEventStreamCreateFlagFileEvents);
+}
+
 - (void) start {
     if (_running)
 		return;
@@ -295,14 +281,12 @@ void PBGitRepositoryWatcherCallback(ConstFSEventStreamRef streamRef,
 	// set initial state
 	[self gitDirectoryChanged];
 	[self indexChanged];
-	ownRef = self; // The callback has no reference to us, so we need to stay alive as long as it may be called
-	FSEventStreamScheduleWithRunLoop(gitDirEventStream, CFRunLoopGetCurrent(), kCFRunLoopDefaultMode);
-	FSEventStreamStart(gitDirEventStream);
+	[self _initializeStream];
 
-	if (workDirEventStream) {
-		FSEventStreamScheduleWithRunLoop(workDirEventStream, CFRunLoopGetCurrent(), kCFRunLoopDefaultMode);
-		FSEventStreamStart(workDirEventStream);
-	}
+	if (!eventStream) return;
+
+	FSEventStreamScheduleWithRunLoop(eventStream, CFRunLoopGetCurrent(), kCFRunLoopDefaultMode);
+	FSEventStreamStart(eventStream);
 
 	_running = YES;
 }
@@ -311,13 +295,11 @@ void PBGitRepositoryWatcherCallback(ConstFSEventStreamRef streamRef,
     if (!_running)
 		return;
 
-	if (workDirEventStream) {
-		FSEventStreamStop(workDirEventStream);
-		FSEventStreamUnscheduleFromRunLoop(workDirEventStream, CFRunLoopGetCurrent(), kCFRunLoopDefaultMode);
+	if (eventStream) {
+		FSEventStreamStop(eventStream);
+		FSEventStreamUnscheduleFromRunLoop(eventStream, CFRunLoopGetCurrent(), kCFRunLoopDefaultMode);
 	}
-	FSEventStreamStop(gitDirEventStream);
-	FSEventStreamUnscheduleFromRunLoop(gitDirEventStream, CFRunLoopGetCurrent(), kCFRunLoopDefaultMode);
-	ownRef = nil; // Now that we can't be called anymore, we can allow ourself to be -dealloc'd
+
 	_running = NO;
 }
 
