@@ -29,6 +29,7 @@
 #import "PBQLTextView.h"
 #import "GLFileView.h"
 #import "GitXCommitCopier.h"
+#import "NSSplitView+GitX.h"
 #import <Quartz/Quartz.h>
 
 
@@ -54,6 +55,8 @@
 
 - (void)awakeFromNib
 {
+	[historySplitView pb_restoreAutosavedPositions];
+
 	self.selectedCommitDetailsIndex = [[NSUserDefaults standardUserDefaults] integerForKey:kHistorySelectedDetailIndexKey];
 
 	[commitController addObserver:self forKeyPath:@"selection" options:0 context:@"commitChange"];

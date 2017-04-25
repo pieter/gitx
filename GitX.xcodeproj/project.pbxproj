@@ -23,6 +23,7 @@
 /* Begin PBXBuildFile section */
 		0A6858C711F7EA8A00AC2BE4 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A6858C611F7EA8A00AC2BE4 /* CoreServices.framework */; };
 		2682AABB1929140E00271A4D /* GTOID+JavaScript.m in Sources */ = {isa = PBXBuildFile; fileRef = 2682AABA1929140E00271A4D /* GTOID+JavaScript.m */; };
+		373F9A201EAF97A200A77B4C /* NSSplitView+GitX.m in Sources */ = {isa = PBXBuildFile; fileRef = 373F9A1F1EAF97A200A77B4C /* NSSplitView+GitX.m */; };
 		37A5657D1EAD096300CA0332 /* Quartz.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 37A5657C1EAD096300CA0332 /* Quartz.framework */; };
 		4A1F4E6917AFE969004D51E9 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 29B97325FDCFA39411CA2CEA /* Foundation.framework */; };
 		4A2125A417C0C78A00B5B582 /* NSColor+RGB.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A2125A317C0C78A00B5B582 /* NSColor+RGB.m */; };
@@ -367,6 +368,8 @@
 		2682AABA1929140E00271A4D /* GTOID+JavaScript.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "GTOID+JavaScript.m"; sourceTree = "<group>"; };
 		29B97324FDCFA39411CA2CEA /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
 		29B97325FDCFA39411CA2CEA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
+		373F9A1E1EAF97A200A77B4C /* NSSplitView+GitX.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSSplitView+GitX.h"; sourceTree = "<group>"; };
+		373F9A1F1EAF97A200A77B4C /* NSSplitView+GitX.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSSplitView+GitX.m"; sourceTree = "<group>"; };
 		37A5657C1EAD096300CA0332 /* Quartz.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Quartz.framework; path = System/Library/Frameworks/Quartz.framework; sourceTree = SDKROOT; };
 		4A2125A217C0C78A00B5B582 /* NSColor+RGB.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSColor+RGB.h"; sourceTree = "<group>"; };
 		4A2125A317C0C78A00B5B582 /* NSColor+RGB.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSColor+RGB.m"; sourceTree = "<group>"; };
@@ -850,6 +853,8 @@
 				4A5D768B14A9A9CC00DF6C68 /* main.m */,
 				4A2125A217C0C78A00B5B582 /* NSColor+RGB.h */,
 				4A2125A317C0C78A00B5B582 /* NSColor+RGB.m */,
+				373F9A1E1EAF97A200A77B4C /* NSSplitView+GitX.h */,
+				373F9A1F1EAF97A200A77B4C /* NSSplitView+GitX.m */,
 				4A5D768C14A9A9CC00DF6C68 /* PBChangedFile.h */,
 				4A5D768D14A9A9CC00DF6C68 /* PBChangedFile.m */,
 				4A5D768E14A9A9CC00DF6C68 /* PBCLIProxy.h */,
@@ -1512,6 +1517,7 @@
 				4A5D773614A9A9CC00DF6C68 /* PBRefMenuItem.m in Sources */,
 				4A5D773714A9A9CC00DF6C68 /* PBRemoteProgressSheet.m in Sources */,
 				4A5D773814A9A9CC00DF6C68 /* PBSourceViewCell.m in Sources */,
+				373F9A201EAF97A200A77B4C /* NSSplitView+GitX.m in Sources */,
 				4A5D773914A9A9CC00DF6C68 /* PBSourceViewItem.m in Sources */,
 				4A5D777314A9AEB000DF6C68 /* PBSourceViewAction.m in Sources */,
 				4A5D777414A9AEB000DF6C68 /* PBSourceViewBadge.m in Sources */,

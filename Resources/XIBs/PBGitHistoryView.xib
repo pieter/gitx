@@ -187,7 +187,7 @@
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                         <subviews>
                                             <tableView focusRingType="none" verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="firstColumnOnly" alternatingRowBackgroundColors="YES" autosaveName="CommitView" headerView="30" id="27" userLabel="Commit List" customClass="PBCommitList">
-                                                <rect key="frame" x="0.0" y="0.0" width="1056.5" height="127"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="1056" height="127"/>
                                                 <autoresizingMask key="autoresizingMask"/>
                                                 <size key="intercellSpacing" width="3" height="2"/>
                                                 <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -372,11 +372,11 @@
                                         <autoresizingMask key="autoresizingMask"/>
                                     </scroller>
                                     <scroller key="verticalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="NO" id="28">
-                                        <rect key="frame" x="940" y="23" width="15" height="17.5"/>
+                                        <rect key="frame" x="-15" y="23" width="15" height="0.0"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                     </scroller>
                                     <tableHeaderView key="headerView" id="30" customClass="PBUnsortableTableHeader">
-                                        <rect key="frame" x="0.0" y="0.0" width="1056.5" height="23"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="1056" height="23"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <connections>
                                             <outlet property="controller" destination="39" id="217"/>
@@ -430,7 +430,7 @@
                                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" heightSizable="YES"/>
                                                                 <clipView key="contentView" id="TgF-cp-2Rq">
                                                                     <rect key="frame" x="0.0" y="0.0" width="218" height="214"/>
-                                                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                                                    <autoresizingMask key="autoresizingMask"/>
                                                                     <subviews>
                                                                         <outlineView focusRingType="none" verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" alternatingRowBackgroundColors="YES" autosaveColumns="NO" indentationPerLevel="16" autoresizesOutlineColumn="YES" outlineTableColumn="18" id="15" customClass="PBQLOutlineView">
                                                                             <rect key="frame" x="0.0" y="0.0" width="218" height="214"/>
@@ -562,7 +562,7 @@ IA
                     <rect key="frame" x="0.0" y="404" width="955" height="30"/>
                     <subviews>
                         <box verticalHuggingPriority="750" fixedFrame="YES" boxType="separator" translatesAutoresizingMaskIntoConstraints="NO" id="317">
-                            <rect key="frame" x="0.0" y="-2" width="955" height="5"/>
+                            <rect key="frame" x="0.0" y="-2" width="955" height="4"/>
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                         </box>
                         <button toolTip="Create Branch" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="330">

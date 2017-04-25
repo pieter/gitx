@@ -14,6 +14,7 @@
 #import "PBNiceSplitView.h"
 #import "PBGitRepositoryWatcher.h"
 #import "PBCommitMessageView.h"
+#import "NSSplitView+GitX.h"
 
 #import <ObjectiveGit/GTRepository.h>
 #import <ObjectiveGit/GTConfiguration.h>
@@ -69,6 +70,8 @@
 
 - (void)awakeFromNib
 {
+	[commitSplitView pb_restoreAutosavedPositions];
+
 	[super awakeFromNib];
 
 	commitMessageView.repository = self.repository;
