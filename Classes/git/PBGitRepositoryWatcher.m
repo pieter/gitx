@@ -84,17 +84,14 @@ void PBGitRepositoryWatcherCallback(ConstFSEventStreamRef streamRef,
 
 @implementation PBGitRepositoryWatcher
 
-@synthesize repository, gitDir, workDir;
-
 - (instancetype) initWithRepository:(PBGitRepository *)theRepository {
     self = [super init];
     if (!self) {
         return nil;
 	}
 
-	repository = theRepository;
-
-	self.statusCache = [NSMutableDictionary new];
+	_repository = theRepository;
+	_statusCache = [NSMutableDictionary new];
 	
 	if ([PBGitDefaults useRepositoryWatcher])
 		[self start];
@@ -201,7 +198,7 @@ void PBGitRepositoryWatcherCallback(ConstFSEventStreamRef streamRef,
 		NSDictionary *eventInfo = @{kPBGitRepositoryEventTypeUserInfoKey:@(event),
 							  kPBGitRepositoryEventPathsUserInfoKey:paths};
 
-		[[NSNotificationCenter defaultCenter] postNotificationName:PBGitRepositoryEventNotification object:repository userInfo:eventInfo];
+		[[NSNotificationCenter defaultCenter] postNotificationName:PBGitRepositoryEventNotification object:self.repository userInfo:eventInfo];
 	}
 }
 
@@ -245,7 +242,7 @@ void PBGitRepositoryWatcherCallback(ConstFSEventStreamRef streamRef,
 		NSDictionary *eventInfo = @{kPBGitRepositoryEventTypeUserInfoKey:@(event),
 							  kPBGitRepositoryEventPathsUserInfoKey:paths};
 
-		[[NSNotificationCenter defaultCenter] postNotificationName:PBGitRepositoryEventNotification object:repository userInfo:eventInfo];
+		[[NSNotificationCenter defaultCenter] postNotificationName:PBGitRepositoryEventNotification object:self.repository userInfo:eventInfo];
 	}
 }
 
@@ -254,7 +251,7 @@ void PBGitRepositoryWatcherCallback(ConstFSEventStreamRef streamRef,
 }
 
 - (NSString *)workDir {
-	return !repository.gtRepo.isBare ? [repository.gtRepo.fileURL.path stringByStandardizingPath] : nil;
+	return !self.repository.gtRepo.isBare ? [self.repository.gtRepo.fileURL.path stringByStandardizingPath] : nil;
 }
 
 - (void) _initializeStream {
