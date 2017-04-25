@@ -35,11 +35,10 @@ typedef void (^PBGitRepositoryWatcherCallbackBlock)(NSArray *changedFiles);
 
 	__strong PBGitRepositoryWatcher *ownRef;
 	BOOL _running;
-
-@public
-	NSString *gitDir;
-	NSString *workDir;
 }
+
+@property (readonly) NSString *gitDir;
+@property (readonly) NSString *workDir;
 
 @property (nonatomic, strong) NSMutableDictionary *statusCache;
 
@@ -66,13 +65,13 @@ void PBGitRepositoryWatcherCallback(ConstFSEventStreamRef streamRef,
 		ep.flag = eventFlags[i];
 
 
-		if ([ep.path hasPrefix:watcher->gitDir]) {
+		if ([ep.path hasPrefix:watcher.gitDir]) {
 			// exclude all changes to .lock files
 			if ([ep.path hasSuffix:@".lock"]) {
 				continue;
 			}
 			[gitDirEvents addObject:ep];
-		} else if ([ep.path hasPrefix:watcher->workDir]) {
+		} else if ([ep.path hasPrefix:watcher.workDir]) {
 			[workDirEvents addObject:ep];
 		}
 	}
@@ -87,7 +86,7 @@ void PBGitRepositoryWatcherCallback(ConstFSEventStreamRef streamRef,
 
 @implementation PBGitRepositoryWatcher
 
-@synthesize repository;
+@synthesize repository, gitDir, workDir;
 
 - (instancetype) initWithRepository:(PBGitRepository *)theRepository {
     self = [super init];
@@ -98,13 +97,12 @@ void PBGitRepositoryWatcherCallback(ConstFSEventStreamRef streamRef,
 	repository = theRepository;
 
 	{
-		gitDir = [repository.gtRepo.gitDirectoryURL.path stringByStandardizingPath];
-		if (!gitDir) {
+		if (!self.gitDir) {
 			return nil;
 		}
 		FSEventStreamContext gitDirWatcherContext = {0, (__bridge void *)(self), NULL, NULL, NULL};
 		gitDirEventStream = FSEventStreamCreate(kCFAllocatorDefault, PBGitRepositoryWatcherCallback, &gitDirWatcherContext,
-												(__bridge CFArrayRef)@[gitDir],
+												(__bridge CFArrayRef)@[self.gitDir],
 												kFSEventStreamEventIdSinceNow, 1.0,
 												kFSEventStreamCreateFlagUseCFTypes |
 												kFSEventStreamCreateFlagIgnoreSelf |
@@ -112,11 +110,10 @@ void PBGitRepositoryWatcherCallback(ConstFSEventStreamRef streamRef,
 		
 	}
 	{
-		workDir = repository.gtRepo.isBare ? nil : [repository.gtRepo.fileURL.path stringByStandardizingPath];
-		if (workDir) {
+		if (self.workDir) {
 			FSEventStreamContext workDirWatcherContext = {0, (__bridge void *)(self), NULL, NULL, NULL};
 			workDirEventStream = FSEventStreamCreate(kCFAllocatorDefault, PBGitRepositoryWatcherCallback, &workDirWatcherContext,
-													 (__bridge CFArrayRef)@[workDir],
+													 (__bridge CFArrayRef)@[self.workDir],
 													 kFSEventStreamEventIdSinceNow, 1.0,
 													 kFSEventStreamCreateFlagUseCFTypes |
 													 kFSEventStreamCreateFlagIgnoreSelf |
@@ -161,7 +158,7 @@ void PBGitRepositoryWatcherCallback(ConstFSEventStreamRef streamRef,
 		return NO;
 	}
 	
-    NSDate *newTouchDate = [self fileModificationDateAtPath:[gitDir stringByAppendingPathComponent:@"index"]];
+    NSDate *newTouchDate = [self fileModificationDateAtPath:[self.gitDir stringByAppendingPathComponent:@"index"]];
 	if (![newTouchDate isEqual:indexTouchDate]) {
 		indexTouchDate = newTouchDate;
 		return YES;
@@ -210,22 +207,22 @@ void PBGitRepositoryWatcherCallback(ConstFSEventStreamRef streamRef,
     NSMutableArray *paths = [NSMutableArray array];
 	for (PBGitRepositoryWatcherEventPath *eventPath in eventPaths) {
 		// .git dir
-		if ([eventPath.path isEqualToString:gitDir]) {
+		if ([eventPath.path isEqualToString:self.gitDir]) {
 			if ([self gitDirectoryChanged] || eventPath.flag != kFSEventStreamEventFlagNone) {
 				event |= PBGitRepositoryWatcherEventTypeGitDirectory;
                 [paths addObject:eventPath.path];
 			}
 		}
 		// ignore objects dir  ... ?
-		else if ([eventPath.path rangeOfString:[gitDir stringByAppendingPathComponent:@"objects"]].location != NSNotFound) {
+		else if ([eventPath.path rangeOfString:[self.gitDir stringByAppendingPathComponent:@"objects"]].location != NSNotFound) {
 			continue;
 		}
 		// index is already covered
-		else if ([eventPath.path rangeOfString:[gitDir stringByAppendingPathComponent:@"index"]].location != NSNotFound) {
+		else if ([eventPath.path rangeOfString:[self.gitDir stringByAppendingPathComponent:@"index"]].location != NSNotFound) {
 			continue;
 		}
 		// subdirs of .git dir
-		else if ([eventPath.path rangeOfString:gitDir].location != NSNotFound) {
+		else if ([eventPath.path rangeOfString:self.gitDir].location != NSNotFound) {
 			event |= PBGitRepositoryWatcherEventTypeGitDirectory;
             [paths addObject:eventPath.path];
 		}
@@ -246,15 +243,15 @@ void PBGitRepositoryWatcherCallback(ConstFSEventStreamRef streamRef,
     NSMutableArray *paths = [NSMutableArray array];
 	for (PBGitRepositoryWatcherEventPath *eventPath in eventPaths) {
 		unsigned int fileStatus = 0;
-		if (![eventPath.path hasPrefix:workDir]) {
+		if (![eventPath.path hasPrefix:self.workDir]) {
 			continue;
 		}
-		if ([eventPath.path isEqualToString:workDir]) {
+		if ([eventPath.path isEqualToString:self.workDir]) {
 			event |= PBGitRepositoryWatcherEventTypeWorkingDirectory;
 			[paths addObject:eventPath.path];
 			continue;
 		}
-		NSString *eventRepoRelativePath = [eventPath.path substringFromIndex:(workDir.length + 1)];
+		NSString *eventRepoRelativePath = [eventPath.path substringFromIndex:(self.workDir.length + 1)];
 		int ignoreResult = 0;
 		int ignoreError = git_status_should_ignore(&ignoreResult, self.repository.gtRepo.git_repository, eventRepoRelativePath.UTF8String);
 		if (ignoreError == GIT_OK && ignoreResult) {
@@ -281,6 +278,14 @@ void PBGitRepositoryWatcherCallback(ConstFSEventStreamRef streamRef,
 
 		[[NSNotificationCenter defaultCenter] postNotificationName:PBGitRepositoryEventNotification object:repository userInfo:eventInfo];
 	}
+}
+
+- (NSString *)gitDir {
+	return [self.repository.gtRepo.gitDirectoryURL.path stringByStandardizingPath];
+}
+
+- (NSString *)workDir {
+	return !repository.gtRepo.isBare ? [repository.gtRepo.fileURL.path stringByStandardizingPath] : nil;
 }
 
 - (void) start {
