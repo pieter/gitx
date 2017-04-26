@@ -1181,7 +1181,6 @@
 													   NSLocalizedDescriptionKey: desc,
 													   }
 							 ];
-		return NO;
 	}
 
 	if (outputPtr) *outputPtr = output;
