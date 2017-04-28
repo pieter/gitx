@@ -135,7 +135,7 @@
 
 - (void) finishedGraphing
 {
-	if (!currentRevList.isParsing && ([[graphQueue operations] count] == 0)) {
+	if (!currentRevList.parsing && ([[graphQueue operations] count] == 0)) {
 		self.isUpdating = NO;
 	}
 }
