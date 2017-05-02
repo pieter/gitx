@@ -253,6 +253,11 @@
     [self commitWithVerification:NO];
 }
 
+- (IBAction)toggleAmendCommit:(id)sender
+{
+	[[[self repository] index] setAmend:![[[self repository] index] isAmend]];
+}
+
 - (NSArray <PBChangedFile *> *)selectedFilesForSender:(id)sender
 {
 	NSParameterAssert(sender != nil);
@@ -691,6 +696,9 @@ BOOL shouldTrashInsteadOfDiscardAnyFileIn(NSArray <PBChangedFile *> *files)
 			menuItem.hidden = !active;
 		}
 		return active;
+	}
+	else if (menuItem.action == @selector(toggleAmendCommit:)) {
+		menuItem.state = [[[self repository] index] isAmend] ? NSOnState : NSOffState;
 	}
 
 	return menuItem.enabled;

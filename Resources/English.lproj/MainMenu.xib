@@ -528,7 +528,7 @@ DQ
                             <menuItem title="Amend Commit" keyEquivalent="a" id="W5p-JV-xeS">
                                 <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
                                 <connections>
-                                    <binding destination="oqX-ct-wMx" name="value" keyPath="currentDocument.windowController.repository.index.amend" id="qcF-1I-xfx"/>
+                                    <action selector="toggleAmendCommit:" target="-1" id="sQs-hs-7cR"/>
                                 </connections>
                             </menuItem>
                         </items>
