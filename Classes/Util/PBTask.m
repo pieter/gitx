@@ -13,6 +13,13 @@ NSString *const PBTaskUnderlyingExceptionKey = @"PBTaskUnderlyingExceptionKey";
 NSString *const PBTaskTerminationStatusKey = @"PBTaskTerminationStatusKey";
 NSString *const PBTaskTerminationOutputKey = @"PBTaskTerminationOutputKey";
 
+const BOOL PBTaskDebugEnable = NO;
+
+#define PBTaskLog(...) \
+do { \
+	if (PBTaskDebugEnable) NSLog(__VA_ARGS__); \
+} while (0)
+
 @interface PBTask ()
 
 @property (retain) NSTask *task;
@@ -63,10 +70,18 @@ NSString *const PBTaskTerminationOutputKey = @"PBTaskTerminationOutputKey";
 	_standardOutputData = [NSMutableData data];
 	__weak PBTask *weakSelf = self;
 	pipe.fileHandleForReading.readabilityHandler = ^(NSFileHandle *handle) {
+		PBTaskLog(@"task %p: can read %d", weakSelf, handle.fileDescriptor);
+
 		[(NSMutableData *)weakSelf.standardOutputData appendData:handle.availableData];
 	};
 
+	PBTaskLog(@"task %p: init", self);
+
 	return self;
+}
+
+- (void)dealloc {
+	PBTaskLog(@"task %p: dealloc", self);
 }
 
 
@@ -77,6 +92,7 @@ NSString *const PBTaskTerminationOutputKey = @"PBTaskTerminationOutputKey";
 	self.task.terminationHandler = ^(NSTask *task) {
 		NSError *error = nil;
 		if (task.terminationReason == NSTaskTerminationReasonUncaughtSignal) {
+			PBTaskLog(@"task %p: caught signal", weakSelf);
 
 			NSString *desc = @"Task killed";
 			NSArray *taskArguments = [@[task.launchPath] arrayByAddingObjectsFromArray:task.arguments];
@@ -89,6 +105,8 @@ NSString *const PBTaskTerminationOutputKey = @"PBTaskTerminationOutputKey";
 
 		} else if (task.terminationReason == NSTaskTerminationReasonExit && task.terminationStatus != 0) {
 			// Since we're on an error path, grab the output now and stash it in the returned error
+
+			PBTaskLog(@"task %p: exit != 0", weakSelf);
 
 			[(NSMutableData *)weakSelf.standardOutputData appendData:[[task.standardOutput fileHandleForReading] readDataToEndOfFile]];
 			NSString *outputString = [[NSString alloc] initWithData:weakSelf.standardOutputData encoding:NSUTF8StringEncoding];
@@ -104,7 +122,8 @@ NSString *const PBTaskTerminationOutputKey = @"PBTaskTerminationOutputKey";
 									   PBTaskTerminationOutputKey: outputString,
 									   };
 			error = [NSError errorWithDomain:PBTaskErrorDomain code:PBTaskNonZeroExitCodeError userInfo:userInfo];
-
+		} else {
+			PBTaskLog(@"task %p: exit success", weakSelf);
 		}
 
 		dispatch_async(queue, ^{
@@ -118,12 +137,15 @@ NSString *const PBTaskTerminationOutputKey = @"PBTaskTerminationOutputKey";
 		self.task.standardInput = inputPipe;
 
 		inputPipe.fileHandleForWriting.writeabilityHandler = ^(NSFileHandle *handle) {
+			PBTaskLog(@"task %p: can write %d", weakSelf, handle.fileDescriptor);
+
 			[handle writeData:weakSelf.standardInputData];
 			[handle closeFile];
 		};
 	}
 
 	@try {
+		PBTaskLog(@"task %p: launching", self);
 		[self.task launch];
 	}
 	@catch (NSException *exception) {
@@ -171,6 +193,7 @@ NSString *const PBTaskTerminationOutputKey = @"PBTaskTerminationOutputKey";
 	}];
 
 	dispatch_time_t timeout = dispatch_time(DISPATCH_TIME_NOW, 30 * NSEC_PER_SEC);
+	PBTaskLog(@"task %p: waiting for completion", self);
 	if (dispatch_semaphore_wait(sem, timeout) != 0) {
 		// Timeout !
 		// Unset the termination handler before calling, so we don't trigger it
