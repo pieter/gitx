@@ -36,7 +36,11 @@ NSString *const PBTaskTerminationOutputKey = @"PBTaskTerminationOutputKey";
 
 	// Prepare ourselves a nicer environment
 	NSMutableDictionary *env = [[[NSProcessInfo processInfo] environment] mutableCopy];
-	[env removeObjectsForKeys:@[@"MallocStackLogging", @"MallocStackLoggingNoCompact", @"NSZombieEnabled"]];
+	[env removeObjectsForKeys:@[
+								@"DYLD_INSERT_LIBRARIES", @"DYLD_LIBRARY_PATH",
+								@"MallocGuardEdges", @"MallocNanoZone", @"MallocScribble", @"MallocStackLogging", @"MallocStackLoggingNoCompact",
+								@"NSZombieEnabled"]
+	 ];
 	if (self.additionalEnvironment) {
 		[env addEntriesFromDictionary:self.additionalEnvironment];
 	}
