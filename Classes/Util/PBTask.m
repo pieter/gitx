@@ -61,8 +61,9 @@ NSString *const PBTaskTerminationOutputKey = @"PBTaskTerminationOutputKey";
 	[_task setStandardError:pipe];
 
 	_standardOutputData = [NSMutableData data];
+	__weak PBTask *weakSelf = self;
 	pipe.fileHandleForReading.readabilityHandler = ^(NSFileHandle *handle) {
-		[(NSMutableData *)self.standardOutputData appendData:handle.availableData];
+		[(NSMutableData *)weakSelf.standardOutputData appendData:handle.availableData];
 	};
 
 	return self;
@@ -72,6 +73,7 @@ NSString *const PBTaskTerminationOutputKey = @"PBTaskTerminationOutputKey";
 - (void)performTaskOnQueue:(dispatch_queue_t)queue terminationHandler:(void (^)(NSError * _Nullable))terminationHandler {
 	NSParameterAssert(terminationHandler != nil);
 
+	__weak PBTask *weakSelf = self;
 	self.task.terminationHandler = ^(NSTask *task) {
 		NSError *error = nil;
 		if (task.terminationReason == NSTaskTerminationReasonUncaughtSignal) {
@@ -88,9 +90,9 @@ NSString *const PBTaskTerminationOutputKey = @"PBTaskTerminationOutputKey";
 		} else if (task.terminationReason == NSTaskTerminationReasonExit && task.terminationStatus != 0) {
 			// Since we're on an error path, grab the output now and stash it in the returned error
 
-			[(NSMutableData *)self.standardOutputData appendData:[[task.standardOutput fileHandleForReading] readDataToEndOfFile]];
-			NSString *outputString = [[NSString alloc] initWithData:self.standardOutputData encoding:NSUTF8StringEncoding];
-			self.standardOutputData = nil;
+			[(NSMutableData *)weakSelf.standardOutputData appendData:[[task.standardOutput fileHandleForReading] readDataToEndOfFile]];
+			NSString *outputString = [[NSString alloc] initWithData:weakSelf.standardOutputData encoding:NSUTF8StringEncoding];
+			weakSelf.standardOutputData = nil;
 
 			NSString *desc = @"Task exited unsuccessfully";
 			NSArray *taskArguments = [@[task.launchPath] arrayByAddingObjectsFromArray:task.arguments];
@@ -116,7 +118,7 @@ NSString *const PBTaskTerminationOutputKey = @"PBTaskTerminationOutputKey";
 		self.task.standardInput = inputPipe;
 
 		inputPipe.fileHandleForWriting.writeabilityHandler = ^(NSFileHandle *handle) {
-			[handle writeData:self.standardInputData];
+			[handle writeData:weakSelf.standardInputData];
 			[handle closeFile];
 		};
 	}
