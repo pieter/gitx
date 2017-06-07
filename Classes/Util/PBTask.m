@@ -16,6 +16,7 @@ NSString *const PBTaskTerminationOutputKey = @"PBTaskTerminationOutputKey";
 @interface PBTask ()
 
 @property (retain) NSTask *task;
+@property (retain) NSMutableData *standardOutputData;
 
 @end
 
@@ -59,6 +60,11 @@ NSString *const PBTaskTerminationOutputKey = @"PBTaskTerminationOutputKey";
 	[_task setStandardOutput:pipe];
 	[_task setStandardError:pipe];
 
+	_standardOutputData = [NSMutableData data];
+	pipe.fileHandleForReading.readabilityHandler = ^(NSFileHandle *handle) {
+		[(NSMutableData *)self.standardOutputData appendData:handle.availableData];
+	};
+
 	return self;
 }
 
@@ -81,9 +87,10 @@ NSString *const PBTaskTerminationOutputKey = @"PBTaskTerminationOutputKey";
 
 		} else if (task.terminationReason == NSTaskTerminationReasonExit && task.terminationStatus != 0) {
 			// Since we're on an error path, grab the output now and stash it in the returned error
-			NSPipe *pipe = task.standardOutput;
-			NSData *outputData = [[pipe fileHandleForReading] readDataToEndOfFile];
-			NSString *outputString = [[NSString alloc] initWithData:outputData encoding:NSUTF8StringEncoding];
+
+			[(NSMutableData *)self.standardOutputData appendData:[[task.standardOutput fileHandleForReading] readDataToEndOfFile]];
+			NSString *outputString = [[NSString alloc] initWithData:self.standardOutputData encoding:NSUTF8StringEncoding];
+			self.standardOutputData = nil;
 
 			NSString *desc = @"Task exited unsuccessfully";
 			NSArray *taskArguments = [@[task.launchPath] arrayByAddingObjectsFromArray:task.arguments];
@@ -142,8 +149,9 @@ NSString *const PBTaskTerminationOutputKey = @"PBTaskTerminationOutputKey";
 			return;
 		}
 
-		NSData *data = [[self.task.standardOutput fileHandleForReading] readDataToEndOfFile];
-		completionHandler(data, nil);
+		[(NSMutableData *)self.standardOutputData appendData:[[self.task.standardOutput fileHandleForReading] readDataToEndOfFile]];
+
+		completionHandler(self.standardOutputData, nil);
 	}];
 }
 
@@ -155,7 +163,6 @@ NSString *const PBTaskTerminationOutputKey = @"PBTaskTerminationOutputKey";
 	[self performTaskOnQueue:dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0)
 		   completionHandler:^(NSData *readData, NSError *error) {
 
-		_standardOutputData = readData;
 		taskError = error;
 
 		dispatch_semaphore_signal(sem);
