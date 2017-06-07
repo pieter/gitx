@@ -21,6 +21,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonnull, readonly) PBGitRepository *repository;
 
 - (instancetype)initWithWindowNibName:(NSString *)windowNibName windowController:(PBGitWindowController *)windowController;
+- (instancetype)initWithWindowNibName:(NSString *)windowNibName;
 
 - (instancetype)init NS_UNAVAILABLE;
 

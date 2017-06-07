@@ -19,6 +19,7 @@ typedef NSError * _Nullable (^PBProgressSheetExecutionHandler)(void);
 @interface PBRemoteProgressSheet : RJModalRepoSheet
 
 + (instancetype)progressSheetWithTitle:(NSString *)title description:(NSString *)description windowController:(PBGitWindowController *)windowController;
++ (instancetype)progressSheetWithTitle:(NSString *)title description:(NSString *)description;
 
 - (void)beginProgressSheetForBlock:(PBProgressSheetExecutionHandler)executionBlock completionHandler:(void (^)(NSError *))completionHandler;
 

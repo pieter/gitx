@@ -12,7 +12,9 @@
 #import "PBGitWindowController.h"
 #import "PBGitRepositoryDocument.h"
 
-@interface RJModalRepoSheet ()
+@interface RJModalRepoSheet () {
+	BOOL _hasWindowController;
+}
 
 @property (copy) RJSheetCompletionHandler completionHandler;
 
@@ -22,6 +24,11 @@
 
 @dynamic document;
 
+- (instancetype)initWithWindowNibName:(NSString *)windowNibName
+{
+	return [super initWithWindowNibName:windowNibName];
+}
+
 - (instancetype)initWithWindowNibName:(NSString *)windowNibName windowController:(nonnull PBGitWindowController *)windowController
 {
 	NSParameterAssert(windowController != nil);
@@ -30,6 +37,7 @@
 	if (!self) return nil;
 
 	_windowController = windowController;
+	_hasWindowController = YES;
 
 	return self;
 }
@@ -53,9 +61,9 @@
 
 - (void)presentSheet
 {
-	NSAssert(self.windowController != nil, @"-beginSheetWithCompletionHandler: called with nil windowController");
+	NSAssert(!_hasWindowController || self.windowController != nil, @"-beginSheetWithCompletionHandler: called with nil windowController");
 
-	[self.windowController.window beginSheet:self.window completionHandler:^(NSModalResponse returnCode) {
+	void (^modalHandler)(NSModalResponse returnCode) = ^(NSModalResponse returnCode) {
 		if (returnCode == NSModalResponseStop) {
 			// Something called -hide on us, because it needed to display another sheet.
 			// Don't call our handler, because we're not actually done yet.
@@ -65,12 +73,25 @@
 		if (self.completionHandler) {
 			self.completionHandler(self, returnCode);
 		}
-	}];
+	};
+
+	if (_hasWindowController) {
+		[self.windowController.window beginSheet:self.window completionHandler:modalHandler];
+	} else {
+		NSInteger modalResponseMaybe = [NSApp runModalForWindow:self.window];
+		modalHandler(modalResponseMaybe);
+	}
 }
 
 - (void)endSheetWithReturnCode:(NSModalResponse)returnCode
 {
-	[self.windowController.window endSheet:self.window returnCode:returnCode];
+	NSAssert(!_hasWindowController || self.windowController != nil, @"-endSheetWithReturnCode: called with nil windowController");
+
+	if (_hasWindowController) {
+		[self.windowController.window endSheet:self.window returnCode:returnCode];
+	} else {
+		[NSApp endSheet:self.window returnCode:returnCode];
+	}
 }
 
 - (IBAction)acceptSheet:(id)sender

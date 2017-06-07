@@ -41,9 +41,17 @@
 	return [[self alloc] initWithTitle:title description:description windowController:windowController];
 }
 
++ (instancetype)progressSheetWithTitle:(NSString *)title description:(NSString *)description {
+	return [[self alloc] initWithTitle:title description:description windowController:nil];
+}
+
 - (instancetype)initWithTitle:(NSString *)title description:(NSString *)description windowController:(PBGitWindowController *)windowController
 {
-	self = [self initWithWindowNibName:@"PBRemoteProgressSheet" windowController:windowController];
+	if (windowController) {
+		self = [self initWithWindowNibName:@"PBRemoteProgressSheet" windowController:windowController];
+	} else {
+		self = [self initWithWindowNibName:@"PBRemoteProgressSheet"];
+	}
 	if (!self) return nil;
 
 	_title = title;
