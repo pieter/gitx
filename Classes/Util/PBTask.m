@@ -59,7 +59,7 @@ NSString *const PBTaskTerminationOutputKey = @"PBTaskTerminationOutputKey";
 }
 
 
-- (void)performTaskWithTerminationHandler:(void (^)(NSError *error))terminationHandler {
+- (void)performTaskOnQueue:(dispatch_queue_t)queue terminationHandler:(void (^)(NSError * _Nullable))terminationHandler {
 	NSParameterAssert(terminationHandler != nil);
 
 	self.task.terminationHandler = ^(NSTask *task) {
@@ -94,7 +94,9 @@ NSString *const PBTaskTerminationOutputKey = @"PBTaskTerminationOutputKey";
 
 		}
 
-		terminationHandler(error);
+		dispatch_async(queue, ^{
+			terminationHandler(error);
+		});
 	};
 
 	if (self.standardInputData) {
@@ -122,12 +124,15 @@ NSString *const PBTaskTerminationOutputKey = @"PBTaskTerminationOutputKey";
 		NSError *error = [NSError errorWithDomain:PBTaskErrorDomain
 											 code:PBTaskLaunchError
 										 userInfo:info];
-		terminationHandler(error);
+
+		dispatch_async(queue, ^{
+			terminationHandler(error);
+		});
 	}
 }
 
-- (void)performTaskWithCompletionHandler:(void (^)(NSData *readData, NSError *error))completionHandler {
-	return [self performTaskWithTerminationHandler:^(NSError *error) {
+- (void)performTaskOnQueue:(dispatch_queue_t)queue completionHandler:(void (^)(NSData *readData, NSError *error))completionHandler {
+	[self performTaskOnQueue:queue terminationHandler:^(NSError *error) {
 		if (error) {
 			completionHandler(nil, error);
 			return;
@@ -142,7 +147,9 @@ NSString *const PBTaskTerminationOutputKey = @"PBTaskTerminationOutputKey";
 	dispatch_semaphore_t sem = dispatch_semaphore_create(0);
 
 	__block NSError *taskError = nil;
-	[self performTaskWithCompletionHandler:^(NSData *readData, NSError *error) {
+	
+	[self performTaskOnQueue:dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0)
+		   completionHandler:^(NSData *readData, NSError *error) {
 
 		_standardOutputData = readData;
 		taskError = error;
@@ -201,6 +208,18 @@ NSString *const PBTaskTerminationOutputKey = @"PBTaskTerminationOutputKey";
 
 - (NSString *)standardOutputString {
 	return [[NSString alloc] initWithData:self.standardOutputData encoding:NSUTF8StringEncoding];
+}
+
+@end
+
+@implementation PBTask (PBMainQueuePerform)
+
+- (void)performTaskWithTerminationHandler:(void (^)(NSError *error))terminationHandler {
+	[self performTaskOnQueue:dispatch_get_main_queue() terminationHandler:terminationHandler];
+}
+
+- (void)performTaskWithCompletionHandler:(void (^)(NSData * __nullable readData, NSError * __nullable error))completionHandler {
+	[self performTaskOnQueue:dispatch_get_main_queue() completionHandler:completionHandler];
 }
 
 @end

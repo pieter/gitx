@@ -36,25 +36,21 @@ typedef NS_ENUM(NSUInteger, PBTaskErrorCode) {
 + (instancetype)taskWithLaunchPath:(NSString *)launchPath arguments:(nullable NSArray *)arguments inDirectory:(nullable NSString *)directory;
 
 ///
-/// Execute a task
+/// Execute a task.
 ///
-/// @warning As per -[NSTask terminationHandler], there is no guarantee on which queue
-/// the block will be executed.
-///
+/// @param queue			  The queue on which the handler will be called.
 /// @param terminationHandler A block that will be called when the executable exits.
 ///
-- (void)performTaskWithTerminationHandler:(void (^)(NSError * __nullable error))terminationHandler;
+- (void)performTaskOnQueue:(dispatch_queue_t)queue terminationHandler:(void (^)(NSError * __nullable error))terminationHandler;
 
 ///
 /// Execute a task, and process its output
 ///
-/// @warning As per -[NSTask terminationHandler], there is no guarantee on which queue
-/// the block will be executed.
-///
+/// @param queue			 The queue on which the handler will be called.
 /// @param completionHandler A block that will be called when the executable exits.
 ///							 If readData is nil, it means an error occurred.
 ///
-- (void)performTaskWithCompletionHandler:(void (^)(NSData * __nullable readData, NSError * __nullable error))completionHandler;
+- (void)performTaskOnQueue:(dispatch_queue_t)queue completionHandler:(void (^)(NSData * __nullable readData, NSError * __nullable error))completionHandler;
 
 /// Execute a task synchronously
 ///
@@ -73,6 +69,24 @@ typedef NS_ENUM(NSUInteger, PBTaskErrorCode) {
 @property (retain) NSDictionary *additionalEnvironment;
 
 - (void)terminate;
+
+@end
+
+@interface PBTask (PBMainQueuePerform)
+
+/// Execute a task
+///
+/// This uses the main queue
+///
+/// @see performTaskOnQueue:terminationHandler:
+- (void)performTaskWithTerminationHandler:(void (^)(NSError * __nullable error))terminationHandler;
+
+/// Execute a task
+///
+/// This uses the main queue
+///
+/// @see performTaskOnQueue:completionHandler:
+- (void)performTaskWithCompletionHandler:(void (^)(NSData * __nullable readData, NSError * __nullable error))completionHandler;
 
 @end
 
@@ -111,7 +125,6 @@ typedef NS_ENUM(NSUInteger, PBTaskErrorCode) {
 /// If the data is not valid UTF-8, nil will be returned.
 ///
 - (nullable NSString *)standardOutputString;
-
 @end
 
 NS_ASSUME_NONNULL_END
