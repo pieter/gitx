@@ -181,33 +181,15 @@ dragDestinationActionMaskForDraggingInfo:(id<NSDraggingInfo>)draggingInfo
 	for (i = 0; i < length; i++)
 		[realArguments addObject:[arguments webScriptValueAtIndex:i]];
 
-	NSFileHandle *handle = [repo handleInWorkDirForArguments:realArguments];
-	[callbacks setObject:callBack forKey:handle];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(JSRunCommandDone:) name:NSFileHandleReadToEndOfFileCompletionNotification object:handle]; 
-	[handle readToEndOfFileInBackgroundAndNotify];
-}
-
-- (void) returnCallBackForObject:(id)object withData:(id)data
-{
-	WebScriptObject *a = [callbacks objectForKey: object];
-	if (!a) {
-		NSLog(@"Could not find a callback for object: %@", object);
-		return;
-	}
-
-	[callbacks removeObjectForKey:object];
-	[a callWebScriptMethod:@"call" withArguments:[NSArray arrayWithObjects:@"", data, nil]];
-}
-
-- (void) threadFinished:(NSArray *)arguments
-{
-	[self returnCallBackForObject:[arguments objectAtIndex:0] withData:[arguments objectAtIndex:1]];
-}
-
-- (void) JSRunCommandDone:(NSNotification *)notification
-{
-	NSString *data = [[NSString alloc] initWithData:[[notification userInfo] valueForKey:NSFileHandleNotificationDataItem] encoding:NSUTF8StringEncoding];
-	[self returnCallBackForObject:[notification object] withData:data];
+	PBTask *task = [repo taskWithArguments:realArguments];
+	[task performTaskWithCompletionHandler:^(NSData * _Nullable readData, NSError * _Nullable error) {
+		if (error) {
+			/* FIXME: Might want to inform the JS that something went wrong */
+			NSLog(@"error: %@", error);
+			return;
+		}
+		[callBack callWebScriptMethod:@"call" withArguments:@[@"", readData]];
+	}];
 }
 
 - (void) preferencesChanged
