@@ -299,24 +299,35 @@
 
 	NSURL *workingDirectoryURL = self.repository.workingDirectoryURL;
 
-	BOOL anyTrashed = NO;
-	for (PBChangedFile *file in selectedFiles)
-	{
-		NSURL* fileURL = [workingDirectoryURL URLByAppendingPathComponent:[file path]];
+	NSAlert *confirmTrash = [[NSAlert alloc] init];
+	confirmTrash.alertStyle = NSAlertStyleWarning;
+	confirmTrash.messageText = NSLocalizedString(@"Move to trash", @"Move to trash alert - title");
+	confirmTrash.informativeText = NSLocalizedString(@"Do you want to move the following files to the trash ?", @"Move to trash alert - message");
+	[confirmTrash addButtonWithTitle:NSLocalizedString(@"OK", @"Move to trash alert - OK button")];
+	[confirmTrash addButtonWithTitle:NSLocalizedString(@"Cancel", @"Move to trash alert - Cancel button")];
 
-		NSError* error = nil;
-		NSURL* resultURL = nil;
-		if ([[NSFileManager defaultManager] trashItemAtURL:fileURL
-										  resultingItemURL:&resultURL
-													 error:&error])
+	[confirmTrash beginSheetModalForWindow:self.windowController.window completionHandler:^(NSModalResponse returnCode) {
+		if (returnCode != NSAlertFirstButtonReturn) return;
+
+		BOOL anyTrashed = NO;
+		for (PBChangedFile *file in selectedFiles)
 		{
-			anyTrashed = YES;
+			NSURL* fileURL = [workingDirectoryURL URLByAppendingPathComponent:[file path]];
+
+			NSError* error = nil;
+			NSURL* resultURL = nil;
+			if ([[NSFileManager defaultManager] trashItemAtURL:fileURL
+											  resultingItemURL:&resultURL
+														 error:&error])
+			{
+				anyTrashed = YES;
+			}
 		}
-	}
-	if (anyTrashed)
-	{
-		[self.repository.index refresh];
-	}
+		if (anyTrashed)
+		{
+			[self.repository.index refresh];
+		}
+	}];
 }
 
 - (IBAction)ignoreFiles:(id) sender
