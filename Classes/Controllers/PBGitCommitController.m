@@ -699,6 +699,7 @@ BOOL shouldTrashInsteadOfDiscardAnyFileIn(NSArray <PBChangedFile *> *files)
 	}
 	else if (menuItem.action == @selector(toggleAmendCommit:)) {
 		menuItem.state = [[[self repository] index] isAmend] ? NSOnState : NSOffState;
+		return YES;
 	}
 
 	return menuItem.enabled;
