@@ -130,6 +130,26 @@ static OpenRecentController* recentsDialog = nil;
 	[firstResponder terminate: sender];
 }
 
+//Override the default behavior
+- (IBAction)openDocument:(id)sender {
+	NSOpenPanel* panel = [[NSOpenPanel alloc] init];
+	
+	[panel setCanChooseFiles:false];
+	[panel setCanChooseDirectories:true];
+	
+	[panel beginWithCompletionHandler:^(NSInteger result) {
+		if (result == NSFileHandlingPanelOKButton) {
+			PBRepositoryDocumentController* controller = [PBRepositoryDocumentController sharedDocumentController];
+			[controller openDocumentWithContentsOfURL:panel.URL display:true completionHandler:^(NSDocument * _Nullable document, BOOL documentWasAlreadyOpen, NSError * _Nullable error) {
+				if (!document) {
+					NSLog(@"Error opening repository \"%@\": %@", panel.URL.path, error);
+					[controller presentError:error];
+				}
+			}];
+		}
+	}];
+}
+
 - (IBAction)openPreferencesWindow:(id)sender
 {
 	[[PBPrefsWindowController sharedPrefsWindowController] showWindow:nil];
