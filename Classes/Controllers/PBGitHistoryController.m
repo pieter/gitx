@@ -433,7 +433,7 @@
 
 - (void) updateQuicklookForce:(BOOL)force
 {
-	if (!force && ![[QLPreviewPanel sharedPreviewPanel] isVisible])
+	if (!force && (![QLPreviewPanel sharedPreviewPanelExists] || ![[QLPreviewPanel sharedPreviewPanel] isVisible]))
 		return;
 
 	[[QLPreviewPanel sharedPreviewPanel] reloadData];
