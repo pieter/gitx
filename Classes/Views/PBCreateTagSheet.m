@@ -15,15 +15,6 @@
 
 @implementation PBCreateTagSheet
 
-@synthesize repository;
-@synthesize targetRefish;
-
-@synthesize tagNameField;
-@synthesize tagMessageText;
-@synthesize errorMessageField;
-
-
-
 #pragma mark -
 #pragma mark PBCreateTagSheet
 
