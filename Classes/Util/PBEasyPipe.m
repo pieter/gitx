@@ -37,6 +37,7 @@ NSString *const PBEasyPipeUnderlyingExceptionKey = @"PBEasyPipeUnderlyingExcepti
 
 	fileHandle.readabilityHandler = ^(NSFileHandle * _Nonnull fileHandle) {
 		[dataOutput appendData:fileHandle.availableData];
+		[fileHandle closeFile];
 	};
 }
 
