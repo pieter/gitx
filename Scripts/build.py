@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-import argh
+import argparse
 import subprocess
 import os
 
@@ -29,7 +29,6 @@ release_notes_file = os.path.join(project_root, 'updates', 'GitX-dev.html')
 updates_signing_key_file = os.path.join(project_root, 'updates', 'gitx-updates.key')
 updates_appcast_file = 'GitX-dev.xml'
 
-clean = ""
 pause = 3
 
 build_base_dir = os.path.join(project_root, "build")
@@ -37,9 +36,8 @@ build_base_dir = os.path.join(project_root, "build")
 class BuildError(RuntimeError):
     pass
 
-@argh.arg("config", choices=['debug', 'release'])
-def clean(config):
-    clean_scheme(scheme, config)
+def clean(args):
+    clean_scheme(scheme, args.config)
 
 def release():
     try:
@@ -101,11 +99,10 @@ def prepare_release(build_number, image_source_path):
     shutil.copyfile(release_notes_file, publish_release_notes_version_file)
 
 
-@argh.arg("scheme", choices=['debug', 'release'])
-def build(scheme):
-    if scheme == "debug":
+def build(args):
+    if args.config == "debug":
         debug()
-    if scheme == "release":
+    if args.config == "release":
         release()
 
 
@@ -168,4 +165,17 @@ def package_app(app_path, image_path, image_name):
 
 if __name__ == "__main__":
     script_dir = os.path.dirname(os.path.abspath(__file__))
-    argh.dispatch_commands([clean, build])
+
+    parser = argparse.ArgumentParser()
+    subparsers = parser.add_subparsers()
+
+    parser_config = subparsers.add_parser('config')
+    parser_config.add_argument('config', choices=['debug', 'release'])
+    parser_config.set_defaults(func=clean)
+
+    parser_build = subparsers.add_parser('build')
+    parser_build.add_argument('config', choices=['debug', 'release'])
+    parser_build.set_defaults(func=build)
+
+    args = parser.parse_args()
+    args.func(args)
