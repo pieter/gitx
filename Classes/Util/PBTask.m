@@ -72,7 +72,13 @@ do { \
 	pipe.fileHandleForReading.readabilityHandler = ^(NSFileHandle *handle) {
 		PBTaskLog(@"task %p: can read %d", weakSelf, handle.fileDescriptor);
 
-		[(NSMutableData *)weakSelf.standardOutputData appendData:handle.availableData];
+		NSData *data = handle.availableData;
+		if (data.length) {
+			[(NSMutableData *)weakSelf.standardOutputData appendData:data];
+		} else {
+			PBTaskLog(@"task %p: EOF, closing %d", weakSelf, handle.fileDescriptor);
+			[handle closeFile];
+		}
 	};
 
 	PBTaskLog(@"task %p: init", self);
