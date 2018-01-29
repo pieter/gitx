@@ -90,7 +90,7 @@ typedef enum branchFilterTypes {
 - (BOOL)executeHook:(NSString *)name arguments:(NSArray *)arguments error:(NSError **)error;
 - (BOOL)executeHook:(NSString *)name arguments:(NSArray *)arguments output:(NSString **)outputPtr error:(NSError **)error;
 
-- (NSString *)workingDirectory GITX_DEPRECATED;
+- (NSString *)workingDirectory;
 - (NSURL *)workingDirectoryURL;
 - (NSString *)projectName;
 
