@@ -74,7 +74,9 @@ do { \
 
 		NSData *data = handle.availableData;
 		if (data.length) {
-			[(NSMutableData *)weakSelf.standardOutputData appendData:data];
+			@synchronized (weakSelf) {
+				[(NSMutableData *)weakSelf.standardOutputData appendData:data];
+			}
 		} else {
 			PBTaskLog(@"task %p: EOF, closing %d", weakSelf, handle.fileDescriptor);
 			[handle closeFile];
@@ -179,7 +181,11 @@ do { \
 			return;
 		}
 
-		[(NSMutableData *)self.standardOutputData appendData:[[self.task.standardOutput fileHandleForReading] readDataToEndOfFile]];
+		@synchronized (self) {
+			PBTaskLog(@"task %p: completed, removing read handler", self);
+			[self.task.standardOutput fileHandleForReading].readabilityHandler = nil;
+			[(NSMutableData *)self.standardOutputData appendData:[[self.task.standardOutput fileHandleForReading] readDataToEndOfFile]];
+		}
 
 		completionHandler(self.standardOutputData, nil);
 	}];
