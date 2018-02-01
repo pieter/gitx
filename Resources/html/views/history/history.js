@@ -177,7 +177,7 @@ var loadCommit = function(commitObject, currentRef) {
 
     var textToHTML = function (txt) {
         return (" "+txt+" ")
-            .replace(/\b(https?:\/\/[^\s<]*)/ig, "<a href=\"$1\">$1</a>")
+            .replace(/(https?:\/\/([^\s\.\)\]\<]+|\.[^\s])+)/ig, "<a href=\"$1\">$1</a>")
             .replace(/\n/g,"<br>")
             .trim();
     }
