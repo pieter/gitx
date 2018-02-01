@@ -175,7 +175,14 @@ var loadCommit = function(commitObject, currentRef) {
 		$("committerDate").parentNode.style.display = "none";
 	}
 
-	$("message").innerHTML = commit.message.replace(/\b(https?:\/\/[^\s<]*)/ig, "<a href=\"$1\">$1</a>").replace(/\n/g,"<br>");
+    var textToHTML = function (txt) {
+        return (" "+txt+" ")
+            .replace(/\b(https?:\/\/[^\s<]*)/ig, "<a href=\"$1\">$1</a>")
+            .replace(/\n/g,"<br>")
+            .trim();
+    }
+
+    $("message").innerHTML = textToHTML(commit.message);
 
 	jQuery("#commit").show();
 	jQuery("#no-commit-message").hide();
