@@ -36,8 +36,12 @@ NSString *const PBEasyPipeUnderlyingExceptionKey = @"PBEasyPipeUnderlyingExcepti
 	NSAssert(fileHandle != nil, @"should have file handle for reading");
 
 	fileHandle.readabilityHandler = ^(NSFileHandle * _Nonnull fileHandle) {
-		[dataOutput appendData:fileHandle.availableData];
-		[fileHandle closeFile];
+		NSData *data = fileHandle.availableData;
+		if (data.length) {
+			[dataOutput appendData:data];
+		} else {
+			[fileHandle closeFile];
+		}
 	};
 }
 
