@@ -9,7 +9,6 @@
 
 #import "PBGitRepositoryWatcher.h"
 #import "PBGitRepository.h"
-#import "PBEasyPipe.h"
 #import "PBGitDefaults.h"
 
 NSString *PBGitRepositoryEventNotification = @"PBGitRepositoryModifiedNotification";

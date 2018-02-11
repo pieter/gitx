@@ -11,7 +11,6 @@
 #import "PBGitTree.h"
 #import "PBGitCommit.h"
 #import "NSFileHandleExt.h"
-#import "PBEasyPipe.h"
 #import "PBEasyFS.h"
 
 @implementation PBGitTree
