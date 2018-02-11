@@ -116,7 +116,6 @@ do { \
 
 			PBTaskLog(@"task %p: exit != 0", weakSelf);
 
-			[(NSMutableData *)weakSelf.standardOutputData appendData:[[task.standardOutput fileHandleForReading] readDataToEndOfFile]];
 			NSString *outputString = [[NSString alloc] initWithData:weakSelf.standardOutputData encoding:NSUTF8StringEncoding];
 			weakSelf.standardOutputData = nil;
 
@@ -189,7 +188,6 @@ do { \
 		@synchronized (self) {
 			PBTaskLog(@"task %p: completed, removing read handler", self);
 			[self.task.standardOutput fileHandleForReading].readabilityHandler = nil;
-			[(NSMutableData *)self.standardOutputData appendData:[[self.task.standardOutput fileHandleForReading] readDataToEndOfFile]];
 		}
 
 		completionHandler(self.standardOutputData, nil);
