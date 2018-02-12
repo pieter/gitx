@@ -24,7 +24,9 @@
 	
 	possibleResults = [NSMutableArray array];
 	for (NSURL *url in [[NSDocumentController sharedDocumentController] recentDocumentURLs]) {
-		[possibleResults addObject: url];
+		if ([url checkResourceIsReachableAndReturnError:NULL]) {
+			[possibleResults addObject: url];
+		}
 	}
 	
 	
