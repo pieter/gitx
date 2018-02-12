@@ -62,7 +62,7 @@ using namespace std;
 	return self;
 }
 
-- (void) loadRevisons
+- (void)loadRevisonsWithCompletionBlock:(void(^)(void))completionBlock
 {
 	[self cancel];
 
@@ -83,6 +83,7 @@ using namespace std;
 		[weakSelf setupEnumerator:enu forRevspec:weakSelf.currentRev];
 		[weakSelf addCommitsFromEnumerator:enu inPBRepo:pbRepo operation:weakParseOperation];
 	}];
+	[parseOperation setCompletionBlock:completionBlock];
 
 	[self.operationQueue addOperation:parseOperation];
 }
