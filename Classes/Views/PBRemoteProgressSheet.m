@@ -16,56 +16,107 @@
 
 
 
-NSString * const kGitXProgressDescription        = @"PBGitXProgressDescription";
-NSString * const kGitXProgressSuccessDescription = @"PBGitXProgressSuccessDescription";
-NSString * const kGitXProgressSuccessInfo        = @"PBGitXProgressSuccessInfo";
-NSString * const kGitXProgressErrorDescription   = @"PBGitXProgressErrorDescription";
-NSString * const kGitXProgressErrorInfo          = @"PBGitXProgressErrorInfo";
-
 @interface PBRemoteProgressSheet () {
+	/* All those ivars are deprecated */
 	NSArray  *arguments;
-	NSString *title;
-	NSString *description;
 	bool hideSuccessScreen;
 
 	NSTask    *gitTask;
 	NSInteger  returnCode;
 
-	NSTextField         *progressDescription;
-	NSProgressIndicator *progressIndicator;
-
 	NSTimer *taskTimer;
 }
 
-- (void) beginRemoteProgressSheetWithTitle:(NSString *)theTitle
-							   description:(NSString *)theDescription
-								 arguments:(NSArray *)args
-									 inDir:(NSString *)dir
-						 hideSuccessScreen:(BOOL)hideSucc;
+@property (weak) IBOutlet NSTextField *descriptionField;
+@property (weak) IBOutlet NSProgressIndicator *progressIndicator;
 
-- (void) showSuccessMessage;
-- (void) showErrorMessage;
-
-- (NSString *) progressTitle;
-- (NSString *) successTitle;
-- (NSString *) successDescription;
-- (NSString *) errorTitle;
-- (NSString *) errorDescription;
-- (NSString *) commandDescription;
-- (NSString *) standardOutputDescription;
-- (NSString *) standardErrorDescription;
+@property NSString *title;
+@property NSString *progressDescription;
 
 @end
 
-
-
 @implementation PBRemoteProgressSheet
 
++ (instancetype)progressSheetWithTitle:(NSString *)title description:(NSString *)description windowController:(PBGitWindowController *)windowController {
+	return [[self alloc] initWithTitle:title description:description windowController:windowController];
+}
 
-@synthesize progressDescription;
-@synthesize progressIndicator;
+- (instancetype)initWithTitle:(NSString *)title description:(NSString *)description windowController:(PBGitWindowController *)windowController
+{
+	self = [self initWithWindowNibName:@"PBRemoteProgressSheet" windowController:windowController];
+	if (!self) return nil;
 
+	_title = title;
+	_progressDescription = description;
 
+	return self;
+}
+
+- (void)beginProgressSheetForBlock:(PBProgressSheetExecutionHandler)executionBlock completionHandler:(void (^)(NSError *))completionHandler
+{
+	__block NSError *executionError = nil;
+
+	// Dispatch the actual execution block
+	dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+		executionError = executionBlock();
+		dispatch_async(dispatch_get_main_queue(), ^{
+			[self acceptSheet:self];
+		});
+	});
+
+	// Bring up our progress sheet
+	[self beginSheetWithCompletionHandler:^(id sheet, NSModalResponse returnCode) {
+		completionHandler(executionError);
+	}];
+}
+
+- (void)awakeFromNib {
+	[self window]; // loads the window (if it wasn't already)
+
+	// resize window if the description is larger than the default text field
+	NSRect originalFrame = self.descriptionField.frame;
+	self.descriptionField.stringValue = self.progressDescription;
+
+	NSAttributedString *attributedTitle = self.descriptionField.attributedStringValue;
+	NSSize boundingSize = originalFrame.size;
+	boundingSize.height = 0.0f;
+	NSRect boundingRect = [attributedTitle boundingRectWithSize:boundingSize
+														options:NSStringDrawingUsesLineFragmentOrigin];
+	CGFloat heightDelta = boundingRect.size.height - originalFrame.size.height;
+	if (heightDelta > 0.0f) {
+		NSRect windowFrame = [[self window] frame];
+		windowFrame.size.height += heightDelta;
+		[[self window] setFrame:windowFrame display:NO];
+	}
+
+	[self.progressIndicator startAnimation:nil];
+}
+
+@end
+
+//@interface PBRemoteProgressSheet (Deprecated)
+//
+//- (void) beginRemoteProgressSheetWithTitle:(NSString *)theTitle
+//							   description:(NSString *)theDescription
+//								 arguments:(NSArray *)args
+//									 inDir:(NSString *)dir
+//						 hideSuccessScreen:(BOOL)hideSucc;
+//
+//- (void) showSuccessMessage;
+//- (void) showErrorMessage;
+//
+//- (NSString *) progressTitle;
+//- (NSString *) successTitle;
+//- (NSString *) successDescription;
+//- (NSString *) errorTitle;
+//- (NSString *) errorDescription;
+//- (NSString *) commandDescription;
+//- (NSString *) standardOutputDescription;
+//- (NSString *) standardErrorDescription;
+//
+//@end
+
+@implementation PBRemoteProgressSheet (Deprecated)
 
 #pragma mark -
 #pragma mark PBRemoteProgressSheet
@@ -120,28 +171,12 @@ NSString * const kGitXProgressErrorInfo          = @"PBGitXProgressErrorInfo";
 						 hideSuccessScreen:(BOOL)hideSucc
 {
 	arguments   = args;
-	title       = theTitle;
-	description = theDescription;
+	_title       = theTitle;
+	_progressDescription = theDescription;
 	hideSuccessScreen = hideSucc;
 
 	[self window]; // loads the window (if it wasn't already)
 
-	// resize window if the description is larger than the default text field
-	NSRect originalFrame = [self.progressDescription frame];
-	[self.progressDescription setStringValue:[self progressTitle]];
-	NSAttributedString *attributedTitle = [self.progressDescription attributedStringValue];
-	NSSize boundingSize = originalFrame.size;
-	boundingSize.height = 0.0f;
-	NSRect boundingRect = [attributedTitle boundingRectWithSize:boundingSize
-														options:NSStringDrawingUsesLineFragmentOrigin];
-	CGFloat heightDelta = boundingRect.size.height - originalFrame.size.height;
-	if (heightDelta > 0.0f) {
-		NSRect windowFrame = [[self window] frame];
-		windowFrame.size.height += heightDelta;
-		[[self window] setFrame:windowFrame display:NO];
-	}
-
-	[self.progressIndicator startAnimation:nil];
 	[self show];
 
 	if (dir == nil)
@@ -234,7 +269,7 @@ NSString * const kGitXProgressErrorInfo          = @"PBGitXProgressErrorInfo";
 
 - (NSString *) progressTitle
 {
-	NSString *progress = description;
+	NSString *progress = _progressDescription;
 	if (!progress)
 		progress = @"Operation in progress.";
 
@@ -244,7 +279,7 @@ NSString * const kGitXProgressErrorInfo          = @"PBGitXProgressErrorInfo";
 
 - (NSString *) successTitle
 {
-	NSString *success = title;
+	NSString *success = _title;
 	if (!success)
 		success = @"Operation";
 
@@ -254,7 +289,7 @@ NSString * const kGitXProgressErrorInfo          = @"PBGitXProgressErrorInfo";
 
 - (NSString *) successDescription
 {
-	NSString *info = description;
+	NSString *info = _progressDescription;
 	if (!info)
 		return @"";
 
@@ -264,7 +299,7 @@ NSString * const kGitXProgressErrorInfo          = @"PBGitXProgressErrorInfo";
 
 - (NSString *) errorTitle
 {
-	NSString *error = title;
+	NSString *error = _title;
 	if (!error)
 		error = @"Operation";
 
@@ -274,7 +309,7 @@ NSString * const kGitXProgressErrorInfo          = @"PBGitXProgressErrorInfo";
 
 - (NSString *) errorDescription
 {
-	NSString *info = description;
+	NSString *info = _progressDescription;
 	if (!info)
 		return @"";
 
