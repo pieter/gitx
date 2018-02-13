@@ -373,6 +373,69 @@
 	[self performPullForBranch:ref remote:nil rebase:YES];
 }
 
+- (void)performPushForBranch:(PBGitRef *)branchRef toRemote:(PBGitRef *)remoteRef
+{
+	if ((!branchRef && !remoteRef)
+		|| (branchRef && !branchRef.isBranch && !branchRef.isRemoteBranch && !branchRef.isTag)
+		|| (remoteRef && !remoteRef.isRemote))
+		return;
+
+	// This block is actually responsible for performing the push operation
+	void (^pushBlock)(void) = ^{
+		NSString *description = nil;
+		if (branchRef && remoteRef)
+			description = [NSString stringWithFormat:@"Pushing %@ '%@' to remote %@", branchRef.refishType, branchRef.shortName, remoteRef.remoteName];
+		else if (branchRef)
+			description = [NSString stringWithFormat:@"Pushing %@ '%@' to default remote", branchRef.refishType, branchRef.shortName];
+		else
+			description = [NSString stringWithFormat:@"Pushing updates to remote %@", remoteRef.remoteName];
+
+		PBRemoteProgressSheet *progressSheet = [PBRemoteProgressSheet progressSheetWithTitle:@"Pushing remote…"
+																				 description:description
+																			windowController:self];
+
+		[progressSheet beginProgressSheetForBlock:^{
+			NSError *error = nil;
+			BOOL success = [repository pushBranch:branchRef toRemote:remoteRef error:&error];
+			return (success ? nil : error);
+		} completionHandler:^(NSError *error) {
+			if (error) {
+				[self showErrorSheet:error];
+			}
+		}];
+	};
+
+	if ([PBGitDefaults isDialogWarningSuppressedForDialog:kDialogConfirmPush]) {
+		pushBlock();
+		return;
+	}
+
+	NSString *description = nil;
+	if (branchRef && remoteRef)
+		description = [NSString stringWithFormat:@"Push %@ '%@' to remote %@", branchRef.refishType, branchRef.shortName, remoteRef.remoteName];
+	else if (branchRef)
+		description = [NSString stringWithFormat:@"Push %@ '%@' to default remote", branchRef.refishType, branchRef.shortName];
+	else
+		description = [NSString stringWithFormat:@"Push updates to remote %@", remoteRef.remoteName];
+
+	NSString *sdesc = [NSString stringWithFormat:@"p%@", [description substringFromIndex:1]];
+	NSAlert *alert = [[NSAlert alloc] init];
+	alert.messageText = description;
+	alert.informativeText = [NSString stringWithFormat:@"Are you sure you want to %@?", sdesc];
+	[alert addButtonWithTitle:@"Push"];
+	[alert addButtonWithTitle:@"Cancel"];
+	[alert setShowsSuppressionButton:YES];
+
+	[alert beginSheetModalForWindow:self.window completionHandler:^(NSModalResponse returnCode) {
+		if ([alert.suppressionButton state] == NSOnState)
+			[PBGitDefaults suppressDialogWarningForDialog:kDialogConfirmPush];
+
+		if (returnCode != NSAlertFirstButtonReturn) return;
+
+		pushBlock();
+	}];
+}
+
 - (PBSourceViewItem *) selectedItem {
 	NSOutlineView *sourceView = sidebarController.sourceView;
 	return [sourceView itemAtRow:sourceView.selectedRow];

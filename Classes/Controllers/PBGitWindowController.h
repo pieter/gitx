@@ -65,5 +65,6 @@
 
 - (void)performFetchForRef:(PBGitRef *)ref;
 - (void)performPullForBranch:(PBGitRef *)branchRef remote:(PBGitRef *)remoteRef rebase:(BOOL)rebase;
+- (void)performPushForBranch:(PBGitRef *)branchRef toRemote:(PBGitRef *)remoteRef;
 
 @end

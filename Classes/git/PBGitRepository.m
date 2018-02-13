@@ -738,37 +738,38 @@
 	return success;
 }
 
-- (BOOL) beginPushRef:(PBGitRef *)ref toRemote:(PBGitRef *)remoteRef error:(NSError **)error windowController:(PBGitWindowController *)windowController
+- (BOOL)pushBranch:(PBGitRef *)branchRef toRemote:(PBGitRef *)remoteRef error:(NSError **)error
 {
 	NSMutableArray *arguments = [NSMutableArray arrayWithObject:@"push"];
 
 	// a nil remoteRef means lookup the ref's default remote
 	if (!remoteRef || ![remoteRef isRemote]) {
 		NSError *error = nil;
-		remoteRef = [self remoteRefForBranch:ref error:&error];
+		remoteRef = [self remoteRefForBranch:branchRef error:&error];
 		if (!remoteRef) return NO;
 	}
+
 	NSString *remoteName = [remoteRef remoteName];
 	[arguments addObject:remoteName];
 
 	NSString *branchName = nil;
-	if ([ref isRemote] || !ref) {
+	if (!branchRef || branchRef.isRemote) {
 		branchName = @"all updates";
-	}
-	else if ([ref isTag]) {
-		branchName = [NSString stringWithFormat:@"tag '%@'", [ref tagName]];
+	} else if (branchRef.isTag) {
+		branchName = [NSString stringWithFormat:@"tag '%@'", [branchRef tagName]];
 		[arguments addObject:@"tag"];
-		[arguments addObject:[ref tagName]];
-	}
-	else {
-		branchName = [ref shortName];
+		[arguments addObject:[branchRef tagName]];
+	} else {
+		branchName = [branchRef shortName];
 		[arguments addObject:branchName];
 	}
 
-	NSString *description = [NSString stringWithFormat:@"Pushing %@ to %@", branchName, remoteName];
-	NSString *title = @"Pushing to remote";
-	[PBRemoteProgressSheet beginRemoteProgressSheetWithTitle:title description:description arguments:arguments hideSuccessScreen:YES windowController:windowController];
-	return YES;
+	PBTask *task = [self taskWithArguments:arguments];
+	BOOL success = [task launchTask:error];
+
+	[self reloadRefs];
+
+	return success;
 }
 
 - (BOOL) checkoutRefish:(id <PBGitRefish>)ref error:(NSError **)error

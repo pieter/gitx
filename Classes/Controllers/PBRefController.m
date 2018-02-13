@@ -51,79 +51,17 @@
 
 #pragma mark Push
 
-- (void)showConfirmPushRefSheet:(PBGitRef *)ref remote:(PBGitRef *)remoteRef
-{
-	if ((!ref && !remoteRef)
-		|| (ref && ![ref isBranch] && ![ref isRemoteBranch] && ![ref isTag])
-		|| (remoteRef && !([remoteRef refishType] == kGitXRemoteType)))
-		return;
-
-	if ([PBGitDefaults isDialogWarningSuppressedForDialog:kDialogConfirmPush]) {
-		NSError *error = nil;
-		BOOL success = [historyController.repository beginPushRef:ref toRemote:remoteRef error:&error windowController:historyController.windowController];
-		if (!success) {
-			[historyController.windowController showErrorSheet:error];
-		}
-		return;
-	}
-
-	NSString *description = nil;
-	if (ref && remoteRef)
-		description = [NSString stringWithFormat:@"Push %@ '%@' to remote %@", [ref refishType], [ref shortName], [remoteRef remoteName]];
-	else if (ref)
-		description = [NSString stringWithFormat:@"Push %@ '%@' to default remote", [ref refishType], [ref shortName]];
-	else
-		description = [NSString stringWithFormat:@"Push updates to remote %@", [remoteRef remoteName]];
-
-    NSString * sdesc = [NSString stringWithFormat:@"p%@", [description substringFromIndex:1]]; 
-	NSAlert *alert = [NSAlert alertWithMessageText:description
-									 defaultButton:@"Push"
-								   alternateButton:@"Cancel"
-									   otherButton:nil
-						 informativeTextWithFormat:@"Are you sure you want to %@?", sdesc];
-    [alert setShowsSuppressionButton:YES];
-
-	NSMutableDictionary *info = [NSMutableDictionary dictionary];
-	if (ref)
-		[info setObject:ref forKey:kGitXBranchType];
-	if (remoteRef)
-		[info setObject:remoteRef forKey:kGitXRemoteType];
-
-	[alert beginSheetModalForWindow:[historyController.windowController window]
-					  modalDelegate:self
-					 didEndSelector:@selector(confirmPushRefSheetDidEnd:returnCode:contextInfo:)
-						contextInfo:(__bridge_retained void*)info];
-}
-
-- (void)confirmPushRefSheetDidEnd:(NSAlert *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo
-{
-    [[sheet window] orderOut:nil];
-
-	if ([[sheet suppressionButton] state] == NSOnState)
-        [PBGitDefaults suppressDialogWarningForDialog:kDialogConfirmPush];
-
-	if (returnCode == NSAlertDefaultReturn) {
-		PBGitRef *ref = [(__bridge NSDictionary *)contextInfo objectForKey:kGitXBranchType];
-		PBGitRef *remoteRef = [(__bridge NSDictionary *)contextInfo objectForKey:kGitXRemoteType];
-
-		NSError *error = nil;
-		BOOL success = [historyController.repository beginPushRef:ref toRemote:remoteRef error:&error windowController:historyController.windowController];
-		if (!success) {
-			[historyController.windowController showErrorSheet:error];
-		}
-	}
-}
-
 - (void) pushUpdatesToRemote:(PBRefMenuItem *)sender
 {
 	PBGitRef *remoteRef = [(PBGitRef *)sender.refishs.firstObject remoteRef];
-	[self showConfirmPushRefSheet:nil remote:remoteRef];
+	[historyController.windowController performPushForBranch:nil toRemote:remoteRef];
 }
 
 - (void) pushDefaultRemoteForRef:(PBRefMenuItem *)sender
 {
 	PBGitRef *ref = sender.refishs.firstObject;
-	[self showConfirmPushRefSheet:ref remote:nil];
+
+	[historyController.windowController performPushForBranch:ref toRemote:nil];
 }
 
 - (void) pushToRemote:(PBRefMenuItem *)sender
@@ -132,7 +70,7 @@
 	NSString *remoteName = [sender representedObject];
 	PBGitRef *remoteRef = [PBGitRef refFromString:[kGitXRemoteRefPrefix stringByAppendingString:remoteName]];
 
-	[self showConfirmPushRefSheet:ref remote:remoteRef];
+	[historyController.windowController performPushForBranch:ref toRemote:remoteRef];
 }
 
 
