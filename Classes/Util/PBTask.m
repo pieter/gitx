@@ -147,7 +147,12 @@ do { \
 		inputPipe.fileHandleForWriting.writeabilityHandler = ^(NSFileHandle *handle) {
 			PBTaskLog(@"task %p: can write %d", weakSelf, handle.fileDescriptor);
 
+			unsigned long long position = handle.offsetInFile;
+			PBTaskLog(@"task %p: at %lld", weakSelf, position);
 			[handle writeData:weakSelf.standardInputData];
+			if (handle.offsetInFile - position < weakSelf.standardInputData.length) {
+				// Did not write everything ?
+			}
 			[handle closeFile];
 		};
 	}
