@@ -158,10 +158,24 @@ var setSelectHandlers = function()
 				return false;
 			}
 
-			var srcElement = findParentElementByTag(event.srcElement, "div");
+			var srcElement = findParentElementByTag(event.target, "div");
 			file.onmouseover = function(event2) {
+                // not quite the right target, but we adjust
 				var target2 = findParentElementByTag(event2.target, "div");
-				showSelection(file, srcElement, target2);
+                if (target2.getAttribute("index") == null) {
+                    // hit testing hit a button -> we need to find the sibling which is under
+                    var hit = function(elem) {
+                        var top = elem.offsetTop;
+                        var bottom = top + elem.offsetHeight;
+                        return  top < event2.y &&
+                                bottom >= event2.y;
+                    }
+                    while (target2 && !hit(target2)) {
+                        target2 = target2.nextSibling
+                    }
+                }
+                if (target2)
+                    showSelection(file, srcElement, target2);
 				return false;
 			};
 			showSelection(file, srcElement, srcElement);
@@ -354,10 +368,15 @@ var stageLines = function(reverse) {
 /* Compute the selection before actually making it.  Return as object
  * with 2-element array "bounds", and "good", which indicates if the
  * selection contains add/del lines. */
-var computeSelection = function(list, from,to)
+var computeSelection = function(list, from, to)
 {
 	var startIndex = parseInt(from.getAttribute("index"));
-	var endIndex = parseInt(to.getAttribute("index"));
+    var toIndex = to.getAttribute("index");
+    if (toIndex === null) {
+        to = to.nextSibling;// or the next one
+        toIndex = to.getAttribute("index");
+    }
+    var endIndex = parseInt(toIndex);
 	if (startIndex == -1 || endIndex == -1) {
 		return false;
 	}
