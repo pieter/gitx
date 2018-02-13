@@ -25,30 +25,4 @@ typedef NSError * _Nullable (^PBProgressSheetExecutionHandler)(void);
 
 @end
 
-@class PBGitRepository;
-
-@interface PBRemoteProgressSheet (Deprecated)
-
-+ (void) beginRemoteProgressSheetWithTitle:(NSString *)theTitle
-							   description:(NSString *)theDescription
-								 arguments:(NSArray *)args
-									 inDir:(nullable NSString *)dir
-						  windowController:(nullable PBGitWindowController *)windowController;
-
-+ (void) beginRemoteProgressSheetWithTitle:(NSString *)theTitle
-							   description:(NSString *)theDescription
-								 arguments:(NSArray *)args
-						  windowController:(nullable PBGitWindowController *)windowController;
-
-+ (void) beginRemoteProgressSheetWithTitle:(NSString *)theTitle
-							   description:(NSString *)theDescription
-								 arguments:(NSArray *)args
-						 hideSuccessScreen:(BOOL)hideSucc
-						  windowController:(nullable PBGitWindowController *)windowController;
-
-@property  IBOutlet NSTextField         *progressDescription;
-@property  IBOutlet NSProgressIndicator *progressIndicator;
-
-@end
-
 NS_ASSUME_NONNULL_END
