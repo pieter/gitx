@@ -14,7 +14,7 @@
 
 @interface PBAddRemoteSheet : RJModalRepoSheet
 
-- (id)initWithWindowController:(PBGitWindowController *)windowController;
++ (void)beginSheetWithWindowController:(PBGitWindowController *)windowController completionHandler:(RJSheetCompletionHandler)handler;
 
 - (IBAction) browseFolders:(id)sender;
 - (IBAction) addRemote:(id)sender;

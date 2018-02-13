@@ -477,7 +477,7 @@ enum  {
 	NSInteger selectedSegment = [sender selectedSegment];
 
 	if (selectedSegment == kAddRemoteSegment) {
-		[[[PBAddRemoteSheet alloc] initWithWindowController:self.windowController] show];
+		[self tryToPerform:@selector(addRemote:) with:self];
 		return;
 	}
 

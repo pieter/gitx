@@ -23,6 +23,7 @@
 #import "PBError.h"
 #import "PBRepositoryDocumentController.h"
 #import "PBRefMenuItem.h"
+#import "PBRemoteProgressSheet.h"
 
 @implementation PBGitWindowController
 
@@ -263,7 +264,40 @@
 
 - (IBAction) showAddRemoteSheet:(id)sender
 {
-	[[[PBAddRemoteSheet alloc] initWithWindowController:self] show];
+	[self addRemote:sender];
+}
+
+- (IBAction)addRemote:(id)sender
+{
+	[PBAddRemoteSheet beginSheetWithWindowController:self completionHandler:^(PBAddRemoteSheet *addSheet, NSModalResponse returnCode) {
+		if (returnCode != NSModalResponseOK) return;
+
+		NSString *remoteName = addSheet.remoteName.stringValue;
+		NSString *remoteURL = addSheet.remoteURL.stringValue;
+
+		NSString *description = [NSString stringWithFormat:@"Adding remote \"%@\"", remoteName];
+
+		PBRemoteProgressSheet *progressSheet = [PBRemoteProgressSheet progressSheetWithTitle:@"Adding remote"
+																				 description:description
+																			windowController:self];
+		[progressSheet beginProgressSheetForBlock:^{
+			NSError *error = nil;
+			BOOL success = [repository addRemote:remoteName withURL:remoteURL error:&error];
+			return success ? nil : error;
+		} completionHandler:^(NSError *error) {
+			if (error) {
+				[self showErrorSheet:error];
+				return;
+			}
+
+			// Now fetch that remote
+			PBGitRef *remoteRef = [repository refForName:remoteName];
+			BOOL success = [repository beginFetchFromRemoteForRef:remoteRef error:&error windowController:self];
+			if (!success) {
+				[self showErrorSheet:error];
+			}
+		}];
+	}];
 }
 
 

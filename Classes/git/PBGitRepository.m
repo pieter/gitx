@@ -686,13 +686,10 @@
 
 #pragma mark Repository commands
 
-- (void) beginAddRemote:(NSString *)remoteName forURL:(NSString *)remoteURL windowController:(PBGitWindowController *)windowController
+- (BOOL)addRemote:(NSString *)remoteName withURL:(NSString *)URLString error:(NSError **)error
 {
-	NSArray *arguments = [NSArray arrayWithObjects:@"remote",  @"add", @"-f", remoteName, remoteURL, nil];
-
-	NSString *description = [NSString stringWithFormat:@"Adding the remote %@ and fetching tracking branches", remoteName];
-	NSString *title = @"Adding a remote";
-	[PBRemoteProgressSheet beginRemoteProgressSheetWithTitle:title description:description arguments:arguments windowController:windowController];
+	PBTask *task = [self taskWithArguments:@[@"remote", @"add", @"-f", remoteName, URLString]];
+	return [task launchTask:error];
 }
 
 - (BOOL) beginFetchFromRemoteForRef:(PBGitRef *)ref error:(NSError **)error windowController:(PBGitWindowController *)windowController
