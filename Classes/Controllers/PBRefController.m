@@ -35,11 +35,7 @@
 	if ([refish refishType] == kGitXCommitType)
 		return;
 
-	NSError *error = nil;
-	BOOL success = [historyController.repository beginFetchFromRemoteForRef:refish error:&error windowController:historyController.windowController];
-	if (!success) {
-		[historyController.windowController showErrorSheet:error];
-	}
+	[historyController.windowController performFetchForRef:refish];
 }
 
 

@@ -502,7 +502,7 @@ enum  {
 	NSError *error = nil;
 	BOOL success = YES;
 	if (selectedSegment == kFetchSegment)
-		success = [repository beginFetchFromRemoteForRef:ref error:&error windowController:self.windowController];
+		[self.windowController performFetchForRef:ref];
 	else if (selectedSegment == kPullSegment)
 		success = [repository beginPullFromRemote:remoteRef forRef:ref rebase:NO error:&error windowController:self.windowController];
 	else if (selectedSegment == kPushSegment) {

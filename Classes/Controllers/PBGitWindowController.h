@@ -11,6 +11,7 @@
 
 @class PBViewController, PBGitSidebarController, PBGitCommitController, PBGitRepository;
 @class RJModalRepoSheet;
+@class PBGitRef;
 
 @interface PBGitWindowController : NSWindowController<NSWindowDelegate> {
 	__weak PBViewController *contentController;
@@ -61,5 +62,7 @@
 - (IBAction) stashPop:(id) sender;
 
 - (void)setHistorySearch:(NSString *)searchString mode:(PBHistorySearchMode)mode;
+
+- (void)performFetchForRef:(PBGitRef *)ref;
 
 @end

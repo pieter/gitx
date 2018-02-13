@@ -692,28 +692,25 @@
 	return [task launchTask:error];
 }
 
-- (BOOL) beginFetchFromRemoteForRef:(PBGitRef *)ref error:(NSError **)error windowController:(PBGitWindowController *)windowController
+- (BOOL)fetchRemoteForRef:(PBGitRef *)ref error:(NSError **)error
 {
-	NSMutableArray *arguments = [NSMutableArray arrayWithObject:@"fetch"];
-
-	NSString * remoteName;
-	if (ref != nil) {
-		if (![ref isRemote]) {
+	NSString *fetchArg = nil;
+	if (ref == nil) {
+		fetchArg = @"--all";
+	} else {
+		if (!ref.isRemote) {
 			ref = [self remoteRefForBranch:ref error:error];
 			if (!ref) return NO;
 		}
-		remoteName = [ref remoteName];
-		[arguments addObject:remoteName];
+		fetchArg = ref.remoteName;
 	}
-	else {
-		remoteName = @"all remotes";
-		[arguments addObject:@"--all"];
-	}
-	
-	NSString *description = [NSString stringWithFormat:@"Fetching all tracking branches for %@", remoteName];
-	NSString *title = @"Fetching…";
-	[PBRemoteProgressSheet beginRemoteProgressSheetWithTitle:title description:description arguments:arguments windowController:windowController];
-	return YES;
+
+	PBTask *task = [self taskWithArguments:@[@"fetch", fetchArg]];
+	BOOL success = [task launchTask:error];
+
+	[self reloadRefs];
+
+	return success;
 }
 
 - (BOOL) beginPullFromRemote:(PBGitRef *)remoteRef forRef:(PBGitRef *)ref rebase:(BOOL)rebase error:(NSError **)error windowController:(PBGitWindowController *)windowController

@@ -292,31 +292,38 @@
 
 			// Now fetch that remote
 			PBGitRef *remoteRef = [repository refForName:remoteName];
-			BOOL success = [repository beginFetchFromRemoteForRef:remoteRef error:&error windowController:self];
-			if (!success) {
-				[self showErrorSheet:error];
-			}
+			[self performFetchForRef:remoteRef];
 		}];
 	}];
 }
 
+- (void)performFetchForRef:(PBGitRef *)ref
+{
+	NSString *remoteName = (ref ? ref.remoteName : @"all remotes");
+	NSString *description = [NSString stringWithFormat:@"Fetching tracking branches for %@", remoteName];
+
+	PBRemoteProgressSheet *progressSheet = [PBRemoteProgressSheet progressSheetWithTitle:@"Fetching remote…"
+																			 description:description
+																		windowController:self];
+
+	[progressSheet beginProgressSheetForBlock:^{
+		NSError *error = nil;
+		BOOL success = [repository fetchRemoteForRef:ref error:&error];
+		return (success ? nil : error);
+	} completionHandler:^(NSError *error) {
+		if (error) {
+			[self showErrorSheet:error];
+		}
+	}];
+}
 
 - (IBAction) fetchRemote:(id)sender {
 	PBGitRef *ref = [self selectedItem].ref;
-
-	NSError *error = nil;
-	BOOL success = [repository beginFetchFromRemoteForRef:ref error:&error windowController:self];
-	if (!success) {
-		[self showErrorSheet:error];
-	}
+	[self performFetchForRef:ref];
 }
 
 - (IBAction) fetchAllRemotes:(id)sender {
-	NSError *error = nil;
-	BOOL success = [repository beginFetchFromRemoteForRef:nil error:&error windowController:self];
-	if (!success) {
-		[self showErrorSheet:error];
-	}
+	[self performFetchForRef:nil];
 }
 
 - (void) pull:(id)sender rebase:(BOOL)rebase {

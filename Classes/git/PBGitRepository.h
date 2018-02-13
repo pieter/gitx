@@ -59,10 +59,10 @@ typedef enum branchFilterTypes {
 /* FIXME: These five methods, as they stand, don't belong here (hence the wacky windowController: parameter).
  * As long as they delegate to PBRemoteProgressSheet to do their thing, they must go.
  */
-- (BOOL) beginFetchFromRemoteForRef:(PBGitRef *)ref error:(NSError **)error windowController:(PBGitWindowController *)windowController;
 - (BOOL) beginPullFromRemote:(PBGitRef *)remoteRef forRef:(PBGitRef *)ref rebase:(BOOL)rebase error:(NSError **)error windowController:(PBGitWindowController *)windowController;
 - (BOOL) beginPushRef:(PBGitRef *)ref toRemote:(PBGitRef *)remoteRef error:(NSError **)error windowController:(PBGitWindowController *)windowController;
 - (BOOL) addRemote:(NSString *)remoteName withURL:(NSString *)URLString error:(NSError **)error;
+- (BOOL) fetchRemoteForRef:(PBGitRef *)ref error:(NSError **)error;
 
 - (BOOL) checkoutRefish:(id <PBGitRefish>)ref error:(NSError **)error;
 - (BOOL) checkoutFiles:(NSArray *)files fromRefish:(id <PBGitRefish>)ref error:(NSError **)error;
