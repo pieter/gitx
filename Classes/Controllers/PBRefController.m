@@ -45,11 +45,7 @@
 {
 	id <PBGitRefish> refish = sender.refishs.firstObject;
 
-	NSError *error = nil;
-	BOOL success = [historyController.repository beginPullFromRemote:nil forRef:refish rebase:NO error:&error windowController:historyController.windowController];
-	if (!success) {
-		[historyController.windowController showErrorSheet:error];
-	}
+	[historyController.windowController performPullForBranch:refish remote:nil rebase:NO];
 }
 
 

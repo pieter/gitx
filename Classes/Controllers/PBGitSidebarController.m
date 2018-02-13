@@ -501,11 +501,11 @@ enum  {
 	 */
 	NSError *error = nil;
 	BOOL success = YES;
-	if (selectedSegment == kFetchSegment)
+	if (selectedSegment == kFetchSegment) {
 		[self.windowController performFetchForRef:ref];
-	else if (selectedSegment == kPullSegment)
-		success = [repository beginPullFromRemote:remoteRef forRef:ref rebase:NO error:&error windowController:self.windowController];
-	else if (selectedSegment == kPushSegment) {
+	} else if (selectedSegment == kPullSegment) {
+		[self.windowController performPullForBranch:ref remote:remoteRef rebase:NO];
+	} else if (selectedSegment == kPushSegment) {
 		if ([ref isRemote])
 			[historyViewController.refController showConfirmPushRefSheet:nil remote:remoteRef];
 		else if ([ref isBranch])

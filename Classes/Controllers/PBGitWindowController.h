@@ -64,5 +64,6 @@
 - (void)setHistorySearch:(NSString *)searchString mode:(PBHistorySearchMode)mode;
 
 - (void)performFetchForRef:(PBGitRef *)ref;
+- (void)performPullForBranch:(PBGitRef *)branchRef remote:(PBGitRef *)remoteRef rebase:(BOOL)rebase;
 
 @end

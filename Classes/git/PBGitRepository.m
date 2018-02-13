@@ -713,10 +713,10 @@
 	return success;
 }
 
-- (BOOL) beginPullFromRemote:(PBGitRef *)remoteRef forRef:(PBGitRef *)ref rebase:(BOOL)rebase error:(NSError **)error windowController:(PBGitWindowController *)windowController
+- (BOOL)pullBranch:(PBGitRef *)branchRef fromRemote:(PBGitRef *)remoteRef rebase:(BOOL)rebase error:(NSError **)error
 {
 	NSMutableArray *arguments = [NSMutableArray arrayWithObject:@"pull"];
-	
+
 	if (rebase) {
 		[arguments addObject:@"--rebase"];
 	}
@@ -724,16 +724,18 @@
 	// a nil remoteRef means lookup the ref's default remote
 	if (!remoteRef || ![remoteRef isRemote]) {
 		NSError *error = nil;
-		remoteRef = [self remoteRefForBranch:ref error:&error];
+		remoteRef = [self remoteRefForBranch:branchRef error:&error];
 		if (!remoteRef) return NO;
 	}
 	NSString *remoteName = [remoteRef remoteName];
 	[arguments addObject:remoteName];
 
-	NSString *description = [NSString stringWithFormat:@"Pulling all tracking branches from %@", remoteName];
-	NSString *title = @"Pulling from remote";
-	[PBRemoteProgressSheet beginRemoteProgressSheetWithTitle:title description:description arguments:arguments hideSuccessScreen:true windowController:windowController];
-	return YES;
+	PBTask *task = [self taskWithArguments:arguments];
+	BOOL success = [task launchTask:error];
+
+	[self reloadRefs];
+
+	return success;
 }
 
 - (BOOL) beginPushRef:(PBGitRef *)ref toRemote:(PBGitRef *)remoteRef error:(NSError **)error windowController:(PBGitWindowController *)windowController

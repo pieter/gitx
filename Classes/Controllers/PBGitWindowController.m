@@ -326,45 +326,51 @@
 	[self performFetchForRef:nil];
 }
 
-- (void) pull:(id)sender rebase:(BOOL)rebase {
-	PBGitRef *ref = [self selectedItem].revSpecifier.ref;
-	PBGitRef *remoteRef = [repository remoteRefForBranch:ref error:NULL];
-
-	NSError *error = nil;
-	BOOL success = [repository beginPullFromRemote:remoteRef forRef:ref rebase:rebase error:&error windowController:self];
-	if (!success) {
-		[self showErrorSheet:error];
+- (void)performPullForBranch:(PBGitRef *)branchRef remote:(PBGitRef *)remoteRef rebase:(BOOL)rebase {
+	NSString *description = nil;
+	if (!branchRef && !remoteRef) {
+		NSAssert(NO, @"Asked to pull no branch from no remote");
+	} else if (!branchRef) {
+		description = [NSString stringWithFormat:@"Pulling all tracking branches from %@", remoteRef.remoteName];
+	} else if (!remoteRef) {
+		description = [NSString stringWithFormat:@"Pulling default remote for branch %@", branchRef.shortName];
+	} else {
+		description = [NSString stringWithFormat:@"Pulling branch %@ from remote %@", branchRef.shortName, remoteRef.remoteName];
 	}
-}
 
-/* FIXME: It might be possible to merge this with the previous method.
- * It doesn't help that it ignores its rebase parameter, and that it passes nil
- * which ultimately will result in the same thing (use remoteRefForBranch:).
- */
-- (void) pullDefault:(id)sender rebase:(BOOL)rebase {
-	PBGitRef *ref = [self selectedItem].revSpecifier.ref;
+	PBRemoteProgressSheet *progressSheet = [PBRemoteProgressSheet progressSheetWithTitle:@"Pulling remote…"
+																			 description:description
+																		windowController:self];
 
-	NSError *error = nil;
-	BOOL success = [repository beginPullFromRemote:nil forRef:ref rebase:NO error:&error windowController:self];
-	if (!success) {
-		[self showErrorSheet:error];
-	}
+	[progressSheet beginProgressSheetForBlock:^{
+		NSError *error = nil;
+		BOOL success = [repository pullBranch:branchRef fromRemote:remoteRef rebase:rebase error:&error];
+		return success ? nil : error;
+	} completionHandler:^(NSError *error) {
+		if (error) {
+			[self showErrorSheet:error];
+		}
+	}];
 }
 
 - (IBAction) pullRemote:(id)sender {
-	[self pull:sender rebase:NO];
+	PBGitRef *ref = [self selectedItem].revSpecifier.ref;
+	[self performPullForBranch:ref remote:nil rebase:NO];
 }
 
 - (IBAction) pullRebaseRemote:(id)sender {
-	[self pull:sender rebase:YES];
+	PBGitRef *ref = [self selectedItem].revSpecifier.ref;
+	[self performPullForBranch:ref remote:nil rebase:YES];
 }
 
 - (IBAction) pullDefaultRemote:(id)sender {
-	[self pullDefault:sender rebase:NO];
+	PBGitRef *ref = [self selectedItem].revSpecifier.ref;
+	[self performPullForBranch:ref remote:nil rebase:NO];
 }
 
 - (IBAction) pullRebaseDefaultRemote:(id)sender {
-	[self pullDefault:sender rebase:YES];
+	PBGitRef *ref = [self selectedItem].revSpecifier.ref;
+	[self performPullForBranch:ref remote:nil rebase:YES];
 }
 
 - (PBSourceViewItem *) selectedItem {
