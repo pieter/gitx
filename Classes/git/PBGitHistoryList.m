@@ -135,7 +135,7 @@
 
 - (void) finishedGraphing
 {
-	if (!currentRevList.isParsing && ([[graphQueue operations] count] == 0)) {
+	if (!currentRevList.parsing && ([[graphQueue operations] count] == 0)) {
 		self.isUpdating = NO;
 	}
 }
@@ -318,11 +318,14 @@
 		lastRemoteRef = nil;
 		lastOID = nil;
 		self.commits = [NSMutableArray array];
-		[projectRevList loadRevisons];
-		return;
+		[projectRevList loadRevisonsWithCompletionBlock:^{
+			dispatch_async(dispatch_get_main_queue(), ^{
+				[self finishedGraphing];
+			});
+		}];
+	} else {
+		[graphQueue addOperation:[self operationForCommits:projectRevList.commits]];
 	}
-
-	[graphQueue addOperation:[self operationForCommits:projectRevList.commits]];
 }
 
 
@@ -337,7 +340,11 @@
 	lastOID = nil;
 	self.commits = [NSMutableArray array];
 
-	[otherRevListParser loadRevisons];
+	[otherRevListParser loadRevisonsWithCompletionBlock:^{
+		dispatch_async(dispatch_get_main_queue(), ^{
+			[self finishedGraphing];
+		});
+	}];
 }
 
 
