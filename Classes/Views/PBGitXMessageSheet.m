@@ -7,6 +7,7 @@
 //
 
 #import "PBGitXMessageSheet.h"
+#import "PBTask.h"
 
 
 #define MaxScrollViewHeight 125.0f
@@ -64,16 +65,35 @@
 {
 	PBGitXMessageSheet *sheet = [[self alloc] initWithWindowNibName:@"PBGitXMessageSheet" windowController:windowController];
 
-	NSString *infoText = nil;
-	NSString *desc = error.localizedDescription;
-	NSString *recovery = error.localizedRecoverySuggestion;
-	if (desc && recovery) {
-		infoText = [NSString stringWithFormat:@"%@\n\n%@", desc, recovery];
-	} else if (desc) {
-		infoText = desc;
-	} else if (recovery) {
-		infoText = recovery;
+	NSMutableArray *messageParts = [NSMutableArray array];
+
+	if (error.localizedFailureReason)
+		[messageParts addObject:error.localizedFailureReason];
+
+	if (error.localizedRecoverySuggestion) {
+		NSString *message = NSLocalizedString(@"Maybe you could try the following:", @"PBGitXMessageSheet - localized recovery suggestion header");
+		[message stringByAppendingString:@"\n"];
+		[message stringByAppendingString:error.localizedRecoverySuggestion];
+		[messageParts addObject:message];
 	}
+
+	NSError *taskError = error.userInfo[NSUnderlyingErrorKey];
+	if (taskError && taskError.domain == PBTaskErrorDomain) {
+		[messageParts addObject:NSLocalizedString(@"The underlying task failed:", @"PBGitXMessageSheet - task failed header")];
+		if (taskError.code == PBTaskNonZeroExitCodeError) {
+			NSString *message = NSLocalizedString(@"Return code: %d", @"PBGitXMessageSheet - task return code header");
+			message = [NSString stringWithFormat:message, taskError.userInfo[PBTaskTerminationStatusKey]];
+			[messageParts addObject:message];
+			message = NSLocalizedString(@"Output:", @"PBGitXMessageSheet - task output header");
+			message = [message stringByAppendingString:taskError.userInfo[PBTaskTerminationOutputKey]];
+			[messageParts addObject:message];
+		} else {
+			[messageParts addObject:taskError.localizedDescription];
+			[messageParts addObject:taskError.localizedFailureReason];
+		}
+	}
+
+	NSString *infoText = [messageParts componentsJoinedByString:@"\n\n"];
 
 	[sheet beginMessageSheetWithMessageText:[error localizedDescription]
 								   infoText:infoText
