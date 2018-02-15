@@ -615,12 +615,13 @@
 
 - (NSArray *) remotes
 {
-	int retValue = 1;
-	NSString *remotes = [self outputInWorkdirForArguments:[NSArray arrayWithObject:@"remote"] retValue:&retValue];
-	if (retValue || [remotes isEqualToString:@""])
+	NSError *error = nil;
+	NSArray *remotes = [self.gtRepo remoteNamesWithError:&error];
+	if (!remotes) {
+		PBLogError(error);
 		return nil;
-
-	return [remotes componentsSeparatedByCharactersInSet:[NSCharacterSet newlineCharacterSet]];
+	}
+	return remotes;
 }
 
 - (BOOL) hasRemotes
