@@ -706,7 +706,14 @@
 	}
 
 	PBTask *task = [self taskWithArguments:@[@"fetch", fetchArg]];
-	BOOL success = [task launchTask:error];
+	NSError *taskError = nil;
+	BOOL success = [task launchTask:&taskError];
+	if (!success) {
+		NSString *desc = NSLocalizedString(@"Fetch failed", @"PBGitRepository - push error description");
+		NSString *reason = [NSString stringWithFormat:NSLocalizedString(@"An error occurred while fetching remote \"%@\".", @"PBGitRepostory - push error reason"), ref.remoteName];
+		PBReturnError(error, desc, reason, taskError);
+	}
+
 
 	dispatch_async(dispatch_get_main_queue(), ^{
 		[self reloadRefs];
@@ -733,7 +740,14 @@
 	[arguments addObject:remoteName];
 
 	PBTask *task = [self taskWithArguments:arguments];
+	NSError *taskError = nil;
 	BOOL success = [task launchTask:error];
+	if (!success) {
+		NSString *desc = NSLocalizedString(@"Pull failed", @"PBGitRepository - push error description");
+		NSString *reason = [NSString stringWithFormat:NSLocalizedString(@"An error occurred while pulling remote \"%@\" to \"%@\".", @"PBGitRepostory - push error reason"), remoteName, branchRef.shortName];
+		PBReturnError(error, desc, reason, taskError);
+	}
+
 
 	dispatch_async(dispatch_get_main_queue(), ^{
 		[self reloadRefs];
@@ -769,7 +783,14 @@
 	}
 
 	PBTask *task = [self taskWithArguments:arguments];
-	BOOL success = [task launchTask:error];
+
+	NSError *taskError = nil;
+	BOOL success = [task launchTask:&taskError];
+	if (!success) {
+		NSString *desc = NSLocalizedString(@"Push failed", @"PBGitRepository - push error description");
+		NSString *reason = [NSString stringWithFormat:NSLocalizedString(@"An error occurred while pushing %@ to \"%@\".", @"PBGitRepostory - push error reason"), branchName, remoteName];
+		PBReturnError(error, desc, reason, taskError);
+	}
 	dispatch_async(dispatch_get_main_queue(), ^{
 		[self reloadRefs];
 	});
@@ -789,10 +810,10 @@
 	NSArray *arguments = @[@"checkout", refName];
 	NSString *output = [self outputOfTaskWithArguments:arguments error:&gitError];
 	if (!output) {
-		NSString *title = @"Checkout failed!";
+		NSString *title = @"Checkout failed";
 		NSString *message = [NSString stringWithFormat:@"There was an error checking out the %@ '%@'.\n\nPerhaps your working directory is not clean?", [ref refishType], [ref shortName]];
 
-		return PBReturnErrorWithUserInfo(error, title, message, @{NSUnderlyingErrorKey: gitError});
+		return PBReturnError(error, title, message, gitError);
 	}
 
 	[self reloadRefs];
@@ -817,10 +838,10 @@
 	NSError *gitError = nil;
 	NSString *output = [self outputOfTaskWithArguments:arguments error:&gitError];
 	if (!output) {
-		NSString *title = @"Checkout failed!";
+		NSString *title = @"Checkout failed";
 		NSString *message = [NSString stringWithFormat:@"There was an error checking out the file(s) from the %@ '%@'.\n\nPerhaps your working directory is not clean?", [ref refishType], [ref shortName]];
 
-		return PBReturnErrorWithUserInfo(error, title, message, @{NSUnderlyingErrorKey: gitError});
+		return PBReturnError(error, title, message, gitError);
 	}
 
 	return YES;
@@ -839,7 +860,7 @@
 		NSString *headName = [[[self headRef] ref] shortName];
 		NSString *message = [NSString stringWithFormat:@"There was an error merging %@ into %@.", refName, headName];
 
-		return PBReturnErrorWithUserInfo(error, title, message, @{NSUnderlyingErrorKey: gitError});
+		return PBReturnError(error, title, message, gitError);
 	}
 
 	[self reloadRefs];
@@ -861,7 +882,7 @@
 		NSString *title = @"Cherry pick failed!";
 		NSString *message = [NSString stringWithFormat:@"There was an error cherry picking the %@ '%@'.\n\nPerhaps your working directory is not clean?", [ref refishType], [ref shortName]];
 
-		return PBReturnErrorWithUserInfo(error, title, message, @{NSUnderlyingErrorKey: gitError});
+		return PBReturnError(error, title, message, gitError);
 	}
 
 	[self reloadRefs];
@@ -888,7 +909,7 @@
 		NSString *title = @"Rebase failed!";
 		NSString *message = [NSString stringWithFormat:@"There was an error rebasing %@ with %@ '%@'.", branchName, [upstream refishType], [upstream shortName]];
 
-		return PBReturnErrorWithUserInfo(error, title, message, @{NSUnderlyingErrorKey: gitError});
+		return PBReturnError(error, title, message, gitError);
 	}
 
 	[self reloadRefs];
