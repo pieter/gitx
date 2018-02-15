@@ -122,9 +122,9 @@ NS_ENUM(NSUInteger, PBGitIndexOperation) {
 
 // A multi-purpose notification sender for a refresh operation
 // TODO: make -refresh take a completion handler, an NSError or *anything else*
-- (void)postIndexRefreshStatus:(BOOL)failed message:(nullable NSString *)message {
+- (void)postIndexRefreshSuccess:(BOOL)success message:(nullable NSString *)message {
 	dispatch_async(dispatch_get_main_queue(), ^{
-		if (failed) {
+		if (!success) {
 			[[NSNotificationCenter defaultCenter] postNotificationName:PBGitIndexIndexRefreshFailed
 																object:self
 															  userInfo:@{@"description": message}];
@@ -154,9 +154,9 @@ NS_ENUM(NSUInteger, PBGitIndexOperation) {
 		   inDirectory:self.repository.workingDirectoryURL.path
 	 completionHandler:^(NSData *readData, NSError *error) {
 				 if (error) {
-					 [self postIndexRefreshStatus:NO message:@"update-index failed"];
+					 [self postIndexRefreshSuccess:NO message:@"update-index failed"];
 				 } else {
-					 [self postIndexRefreshStatus:YES message:@"update-index success"];
+					 [self postIndexRefreshSuccess:YES message:@"update-index success"];
 				 }
 
 				 dispatch_group_leave(_indexRefreshGroup);
@@ -200,7 +200,7 @@ NS_ENUM(NSUInteger, PBGitIndexOperation) {
 		   inDirectory:self.repository.workingDirectoryURL.path
 	 completionHandler:^(NSData *readData, NSError *error) {
 		 if (error) {
-			 [self postIndexRefreshStatus:NO message:@"ls-files failed"];
+			 [self postIndexRefreshSuccess:NO message:@"ls-files failed"];
 		 } else {
 			 NSArray *lines = [self linesFromData:readData];
 			 NSMutableDictionary *dictionary = [[NSMutableDictionary alloc] initWithCapacity:[lines count]];
@@ -216,7 +216,7 @@ NS_ENUM(NSUInteger, PBGitIndexOperation) {
 			 [self addFilesFromDictionary:dictionary staged:NO tracked:NO];
 		 }
 
-		 [self postIndexRefreshStatus:YES message:@"ls-files success"];
+		 [self postIndexRefreshSuccess:YES message:@"ls-files success"];
 		 dispatch_group_leave(_indexRefreshGroup);
 	 }];
 
@@ -227,14 +227,14 @@ NS_ENUM(NSUInteger, PBGitIndexOperation) {
 		   inDirectory:self.repository.workingDirectoryURL.path
 	 completionHandler:^(NSData *readData, NSError *error) {
 		 if (error) {
-			 [self postIndexRefreshStatus:NO message:@"diff-index failed"];
+			 [self postIndexRefreshSuccess:NO message:@"diff-index failed"];
 		 } else {
 			 NSArray *lines = [self linesFromData:readData];
 			 NSMutableDictionary *dic = [self dictionaryForLines:lines];
 			 [self addFilesFromDictionary:dic staged:YES tracked:YES];
 		 }
 
-		 [self postIndexRefreshStatus:YES message:@"diff-index success"];
+		 [self postIndexRefreshSuccess:YES message:@"diff-index success"];
 
 		 dispatch_group_leave(_indexRefreshGroup);
 	 }];
@@ -247,13 +247,13 @@ NS_ENUM(NSUInteger, PBGitIndexOperation) {
 		   inDirectory:self.repository.workingDirectoryURL.path
 	 completionHandler:^(NSData *readData, NSError *error) {
 		 if (error) {
-			 [self postIndexRefreshStatus:NO message:@"diff-files failed"];
+			 [self postIndexRefreshSuccess:NO message:@"diff-files failed"];
 		 } else {
 			 NSArray *lines = [self linesFromData:readData];
 			 NSMutableDictionary *dic = [self dictionaryForLines:lines];
 			 [self addFilesFromDictionary:dic staged:NO tracked:YES];
 		 }
-		 [self postIndexRefreshStatus:NO message:@"diff-files success"];
+		 [self postIndexRefreshSuccess:YES message:@"diff-files success"];
 
 		 dispatch_group_leave(_indexRefreshGroup);
 	 }];
