@@ -674,16 +674,6 @@
 	return trackingBranchRef;
 }
 
-- (NSString *) infoForRemote:(NSString *)remoteName
-{
-	int retValue = 1;
-	NSString *output = [self outputInWorkdirForArguments:[NSArray arrayWithObjects:@"remote", @"show", remoteName, nil] retValue:&retValue];
-	if (retValue)
-		return nil;
-
-	return output;
-}
-
 #pragma mark Repository commands
 
 - (BOOL)addRemote:(NSString *)remoteName withURL:(NSString *)URLString error:(NSError **)error
