@@ -41,33 +41,12 @@
 
 @implementation PBGitRepository (PBGitBinarySupportDeprecated)
 
-- (int) returnValueForCommand:(NSString *)cmd
-{
-	int i;
-	[self outputForCommand:cmd retValue: &i];
-	return i;
-}
-
 - (NSFileHandle*) handleForArguments:(NSArray *)args
 {
 	NSString* gitDirArg = [@"--git-dir=" stringByAppendingString:self.gitURL.path];
 	NSMutableArray* arguments =  [NSMutableArray arrayWithObject: gitDirArg];
 	[arguments addObjectsFromArray: args];
 	return [PBEasyPipe handleForCommand:[PBGitBinary path] withArgs:arguments];
-}
-
-- (NSFileHandle*) handleInWorkDirForArguments:(NSArray *)args
-{
-	NSString* gitDirArg = [@"--git-dir=" stringByAppendingString:self.gitURL.path];
-	NSMutableArray* arguments =  [NSMutableArray arrayWithObject: gitDirArg];
-	[arguments addObjectsFromArray: args];
-	return [PBEasyPipe handleForCommand:[PBGitBinary path] withArgs:arguments inDir:[self workingDirectory]];
-}
-
-- (NSFileHandle*) handleForCommand:(NSString *)cmd
-{
-	NSArray* arguments = [cmd componentsSeparatedByString:@" "];
-	return [self handleForArguments:arguments];
 }
 
 - (NSString*) outputForCommand:(NSString *)cmd
