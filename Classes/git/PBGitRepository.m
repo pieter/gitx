@@ -708,7 +708,9 @@
 	PBTask *task = [self taskWithArguments:@[@"fetch", fetchArg]];
 	BOOL success = [task launchTask:error];
 
-	[self reloadRefs];
+	dispatch_async(dispatch_get_main_queue(), ^{
+		[self reloadRefs];
+	});
 
 	return success;
 }
@@ -733,7 +735,9 @@
 	PBTask *task = [self taskWithArguments:arguments];
 	BOOL success = [task launchTask:error];
 
-	[self reloadRefs];
+	dispatch_async(dispatch_get_main_queue(), ^{
+		[self reloadRefs];
+	});
 
 	return success;
 }
@@ -766,8 +770,9 @@
 
 	PBTask *task = [self taskWithArguments:arguments];
 	BOOL success = [task launchTask:error];
-
-	[self reloadRefs];
+	dispatch_async(dispatch_get_main_queue(), ^{
+		[self reloadRefs];
+	});
 
 	return success;
 }
