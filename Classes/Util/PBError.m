@@ -77,5 +77,5 @@ BOOL PBReturnErrorWithBuilder(NSError **error, NSError * (^errorBuilder)(void)) 
 	if (error) {
 		*error = errorBuilder();
 	}
-	return YES;
+	return NO;
 }
