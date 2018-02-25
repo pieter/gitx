@@ -716,7 +716,7 @@
 
 - (IBAction)merge:(id)sender
 {
-	id <PBGitRefish> refish = [self refishForSender:sender refishTypes:@[kGitXBranchType, kGitXCommitType, kGitXTagType]];
+	id <PBGitRefish> refish = [self refishForSender:sender refishTypes:@[kGitXBranchType, kGitXRemoteBranchType, kGitXCommitType, kGitXTagType]];
 	if (!refish) return;
 
 	NSError *error = nil;
@@ -728,8 +728,8 @@
 
 - (IBAction)checkout:(id)sender
 {
-	id <PBGitRefish> refish = [self refishForSender:sender refishTypes:@[kGitXBranchType, kGitXCommitType, kGitXTagType]];
-	if (!selectedCommits) return;
+	id <PBGitRefish> refish = [self refishForSender:sender refishTypes:@[kGitXBranchType, kGitXRemoteBranchType, kGitXCommitType, kGitXTagType]];
+	if (!refish) return;
 
 	NSError *error = nil;
 	BOOL success = [repository checkoutRefish:refish error:&error];
@@ -752,7 +752,7 @@
 
 - (IBAction)rebase:(id)sender
 {
-	id <PBGitRefish> refish = [self refishForSender:sender refishTypes:@[kGitXBranchType]];
+	id <PBGitRefish> refish = [self refishForSender:sender refishTypes:@[kGitXBranchType, kGitXRemoteBranchType]];
 	if (!refish) return;
 
 	NSError *error = nil;
@@ -764,7 +764,7 @@
 
 - (IBAction) rebaseHeadBranch:(id)sender
 {
-	id <PBGitRefish> refish = [self refishForSender:sender refishTypes:@[kGitXBranchType]];
+	id <PBGitRefish> refish = [self refishForSender:sender refishTypes:@[kGitXBranchType, kGitXRemoteBranchType]];
 	NSError *error = nil;
 	BOOL success = [self.repository rebaseBranch:nil onRefish:refish error:&error];
 	if (!success) {
