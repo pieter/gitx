@@ -124,7 +124,6 @@ typedef enum branchFilterTypes {
 - (PBGitRevSpecifier*) addBranch: (PBGitRevSpecifier*) rev;
 - (BOOL)removeBranch:(PBGitRevSpecifier *)rev;
 
-- (GTReference*) parseSymbolicReference:(NSString*) ref;
 - (BOOL) revisionExists:(NSString*) spec;
 
 - (void) forceUpdateRevisions;
