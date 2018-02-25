@@ -124,13 +124,14 @@
 	[sheet beginProgressSheetForBlock:^NSError *{
 		NSURL *repoURL = [NSURL URLWithString:url];
 		NSError *error = nil;
-		[GTRepository cloneFromURL:repoURL
-				toWorkingDirectory:documentURL
-						   options:@{GTRepositoryCloneOptionsBare: @(self.isBare)}
-							 error:&error
-			 transferProgressBlock:nil
-			 checkoutProgressBlock:nil];
-		return error;
+		GTRepository *repo = [GTRepository cloneFromURL:repoURL
+									 toWorkingDirectory:documentURL
+												options:@{GTRepositoryCloneOptionsBare: @(self.isBare)}
+												  error:&error
+								  transferProgressBlock:nil];
+		if (!repo)
+			return error;
+		return nil;
 	} completionHandler:^(NSError *error) {
 		if (error) {
 			[self close];
