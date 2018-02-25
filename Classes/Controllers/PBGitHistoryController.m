@@ -768,6 +768,48 @@
 	}
 }
 
+- (IBAction)showDeleteRefSheet:(PBRefMenuItem *)sender
+{
+	id <PBGitRefish> refish = [self refishForSender:sender refishTypes:@[kGitXBranchType]];
+	if (!refish)
+		return;
+
+	PBGitRef *ref = (PBGitRef *)refish;
+
+	void (^performDelete)(void) = ^{
+		NSError *error = nil;
+		BOOL success = [self.repository deleteRef:ref error:&error];
+		if (!success) {
+			[self.windowController showErrorSheet:error];
+		}
+		return;
+	};
+
+	if ([PBGitDefaults isDialogWarningSuppressedForDialog:kDialogDeleteRef]) {
+		performDelete();
+		return;
+	}
+
+	NSString *ref_desc = [NSString stringWithFormat:@"%@ '%@'", [ref refishType], [ref shortName]];
+
+	NSAlert *alert = [NSAlert alertWithMessageText:[NSString stringWithFormat:@"Delete %@?", ref_desc]
+									 defaultButton:@"Delete"
+								   alternateButton:@"Cancel"
+									   otherButton:nil
+						 informativeTextWithFormat:@"Are you sure you want to remove the %@?", ref_desc];
+	[alert setShowsSuppressionButton:YES];
+
+	[alert beginSheetModalForWindow:self.windowController.window
+				  completionHandler:^(NSModalResponse returnCode) {
+					  if ([[alert suppressionButton] state] == NSOnState)
+						  [PBGitDefaults suppressDialogWarningForDialog:kDialogDeleteRef];
+
+					  if (returnCode == NSModalResponseOK) {
+						  performDelete();
+					  }
+				  }];
+}
+
 #pragma mark -
 #pragma mark Quick Look
 
