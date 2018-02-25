@@ -26,23 +26,6 @@
 	[commitList registerForDraggedTypes:[NSArray arrayWithObject:@"PBGitRef"]];
 }
 
-#pragma mark Copy info
-
-- (void) copySHA:(PBRefMenuItem *)sender
-{
-	[GitXCommitCopier putStringToPasteboard:[GitXCommitCopier toFullSHA:[self commitsForMenuItem:sender]]];
-}
-
-- (void) copyShortSHA:(PBRefMenuItem *)sender
-{
-	[GitXCommitCopier putStringToPasteboard:[GitXCommitCopier toShortName:[self commitsForMenuItem:sender]]];
-}
-
-- (void) copyPatch:(PBRefMenuItem *)sender
-{
-	[GitXCommitCopier putStringToPasteboard:[GitXCommitCopier toPatch:[self commitsForMenuItem:sender]]];
-}
-
 - (NSArray<PBGitCommit *> *) commitsForMenuItem:(PBRefMenuItem *)menuItem {
 	NSArray<id<PBGitRefish>> * refishs = menuItem.refishs;
 	NSMutableArray *commits = [NSMutableArray arrayWithCapacity:refishs.count];
