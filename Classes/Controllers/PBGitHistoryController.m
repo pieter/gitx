@@ -648,7 +648,10 @@
 {
 	if ([sender isKindOfClass:[PBRefMenuItem class]]) {
 		id <PBGitRefish> refish = [[(PBRefMenuItem *)sender refishs] firstObject];
-		return refish;
+
+		if (!types || [types indexOfObject:[refish refishType]] != NSNotFound)
+			return refish;
+		return nil;
 	}
 
 	if ([types indexOfObject:kGitXCommitType] == NSNotFound)
@@ -808,6 +811,19 @@
 						  performDelete();
 					  }
 				  }];
+}
+
+- (IBAction)diffWithHEAD:(id)sender
+{
+	id <PBGitRefish> refish = [self refishForSender:sender refishTypes:nil];
+	if (!refish)
+		return;
+
+	PBGitCommit *commit = [self.repository commitForRef:refish];
+
+	NSString *diff = [self.repository performDiff:commit against:nil forFiles:nil];
+
+	[PBDiffWindowController showDiff:diff];
 }
 
 #pragma mark -

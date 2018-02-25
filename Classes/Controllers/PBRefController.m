@@ -26,32 +26,6 @@
 	[commitList registerForDraggedTypes:[NSArray arrayWithObject:@"PBGitRef"]];
 }
 
-- (NSArray<PBGitCommit *> *) commitsForMenuItem:(PBRefMenuItem *)menuItem {
-	NSArray<id<PBGitRefish>> * refishs = menuItem.refishs;
-	NSMutableArray *commits = [NSMutableArray arrayWithCapacity:refishs.count];
-	for (id<PBGitRefish> refish in refishs) {
-		[commits addObject:[self refishToCommit:refish]];
-	}
-	return commits;
-}
-
-- (PBGitCommit *) refishToCommit:(id<PBGitRefish>)refish {
-	return [refish refishType] == kGitXCommitType
-		? (PBGitCommit *)refish
-		: [historyController.repository commitForRef:refish];
-}
-
-
-#pragma mark Diff
-
-- (void) diffWithHEAD:(PBRefMenuItem *)sender
-{
-	PBGitCommit *commit = [self commitsForMenuItem:sender].firstObject;
-	NSString *diff = [historyController.repository performDiff:commit against:nil forFiles:nil];
-
-	[PBDiffWindowController showDiff:diff];
-}
-
 #pragma mark Stash
 
 - (IBAction) stashPop:(PBRefMenuItem *)sender
