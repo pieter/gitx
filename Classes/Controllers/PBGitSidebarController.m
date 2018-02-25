@@ -18,6 +18,7 @@
 #import "PBHistorySearchController.h"
 #import "PBGitStash.h"
 #import "PBGitSVStashItem.h"
+#import "PBGitRef.h"
 
 @interface PBGitSidebarController ()
 

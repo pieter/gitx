@@ -9,14 +9,13 @@
 #import "PBRefController.h"
 #import "PBGitRevisionCell.h"
 #import "PBRefMenuItem.h"
-#import "PBCreateBranchSheet.h"
-#import "PBCreateTagSheet.h"
 #import "PBGitDefaults.h"
 #import "PBDiffWindowController.h"
 #import "PBGitRevSpecifier.h"
 #import "PBGitStash.h"
 #import "GitXCommitCopier.h"
-
+#import "PBCommitList.h"
+#import "PBGitHistoryController.h"
 
 
 
@@ -25,104 +24,6 @@
 - (void)awakeFromNib
 {
 	[commitList registerForDraggedTypes:[NSArray arrayWithObject:@"PBGitRef"]];
-}
-
-#pragma mark Fetch
-
-- (void) fetchRemote:(PBRefMenuItem *)sender
-{
-	id <PBGitRefish> refish = sender.refishs.firstObject;
-	if ([refish refishType] == kGitXCommitType)
-		return;
-
-	[historyController.windowController performFetchForRef:refish];
-}
-
-
-#pragma mark Pull
-
-- (void) pullRemote:(PBRefMenuItem *)sender
-{
-	id <PBGitRefish> refish = sender.refishs.firstObject;
-
-	[historyController.windowController performPullForBranch:refish remote:nil rebase:NO];
-}
-
-
-#pragma mark Push
-
-- (void) pushUpdatesToRemote:(PBRefMenuItem *)sender
-{
-	PBGitRef *remoteRef = [(PBGitRef *)sender.refishs.firstObject remoteRef];
-	[historyController.windowController performPushForBranch:nil toRemote:remoteRef];
-}
-
-- (void) pushDefaultRemoteForRef:(PBRefMenuItem *)sender
-{
-	PBGitRef *ref = sender.refishs.firstObject;
-
-	[historyController.windowController performPushForBranch:ref toRemote:nil];
-}
-
-- (void) pushToRemote:(PBRefMenuItem *)sender
-{
-	PBGitRef *ref = sender.refishs.firstObject;;
-	NSString *remoteName = [sender representedObject];
-	PBGitRef *remoteRef = [PBGitRef refFromString:[kGitXRemoteRefPrefix stringByAppendingString:remoteName]];
-
-	[historyController.windowController performPushForBranch:ref toRemote:remoteRef];
-}
-
-
-#pragma mark Merge
-
-- (void) merge:(PBRefMenuItem *)sender
-{
-	id <PBGitRefish> refish = sender.refishs.firstObject;
-	NSError *error = nil;
-	BOOL success = [historyController.repository mergeWithRefish:refish error:&error];
-	if (!success) {
-		[historyController.windowController showErrorSheet:error];
-	}
-}
-
-
-#pragma mark Checkout
-
-- (void) checkout:(PBRefMenuItem *)sender
-{
-	id <PBGitRefish> refish = sender.refishs.firstObject;
-	NSError *error = nil;
-	BOOL success = [historyController.repository checkoutRefish:refish error:&error];
-	if (!success) {
-		[historyController.windowController showErrorSheet:error];
-	}
-}
-
-
-#pragma mark Cherry Pick
-
-- (void) cherryPick:(PBRefMenuItem *)sender
-{
-	id <PBGitRefish> refish = sender.refishs.firstObject;
-	NSError *error = nil;
-	BOOL success = [historyController.repository cherryPickRefish:refish error:&error];
-	if (!success) {
-		[historyController.windowController showErrorSheet:error];
-	}
-}
-
-
-#pragma mark Rebase
-
-- (void) rebaseHeadBranch:(PBRefMenuItem *)sender
-{
-	id <PBGitRefish> refish = sender.refishs.firstObject;
-	NSError *error = nil;
-	BOOL success = [historyController.repository rebaseBranch:nil onRefish:refish error:&error];
-	if (!success) {
-		[historyController.windowController showErrorSheet:error];
-	}
 }
 
 #pragma mark Copy info

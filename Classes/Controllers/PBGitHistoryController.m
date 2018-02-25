@@ -6,6 +6,8 @@
 //  Copyright 2008 __MyCompanyName__. All rights reserved.
 //
 
+#import <Quartz/Quartz.h>
+
 #import "PBGitCommit.h"
 #import "PBGitTree.h"
 #import "PBGitRef.h"
@@ -30,8 +32,7 @@
 #import "GLFileView.h"
 #import "GitXCommitCopier.h"
 #import "NSSplitView+GitX.h"
-#import <Quartz/Quartz.h>
-
+#import "PBRefMenuItem.h"
 
 #define kHistorySelectedDetailIndexKey @"PBHistorySelectedDetailIndex"
 #define kHistoryDetailViewIndex 0
@@ -638,37 +639,130 @@
 
 #pragma mark Repository Methods
 
-- (IBAction) merge:(id)sender
+- (id <PBGitRefish>)refishForSender:(id)sender
 {
-	PBGitCommit *selectedCommit = self.selectedCommits.firstObject;
-	if (!selectedCommit) return;
+	return [self refishForSender:sender refishTypes:nil];
+}
+
+- (id <PBGitRefish>)refishForSender:(id)sender refishTypes:(NSArray *)types
+{
+	if ([sender isKindOfClass:[PBRefMenuItem class]]) {
+		id <PBGitRefish> refish = [[(PBRefMenuItem *)sender refishs] firstObject];
+		return refish;
+	}
+
+	if ([types indexOfObject:kGitXCommitType] == NSNotFound)
+		return nil;
+
+	return self.selectedCommits.firstObject;
+}
+
+- (IBAction)fetchRemote:(id)sender
+{
+	id <PBGitRefish> refish = [self refishForSender:sender refishTypes:@[kGitXBranchType]];
+	if (!refish)
+		return;
+
+	[self.windowController performFetchForRef:refish];
+}
+
+- (IBAction)pullRemote:(id)sender
+{
+	id <PBGitRefish> refish = [self refishForSender:sender refishTypes:@[kGitXBranchType]];
+	if (!refish)
+		return;
+
+	[self.windowController performPullForBranch:refish remote:nil rebase:NO];
+}
+
+- (IBAction)pushUpdatesToRemote:(id)sender
+{
+	id <PBGitRefish> refish = [self refishForSender:sender refishTypes:@[kGitXBranchType]];
+	if (!refish)
+		return;
+
+	PBGitRef *remoteRef = nil; // [(PBGitRef *)sender.refishs.firstObject remoteRef];
+
+	[self.windowController performPushForBranch:nil toRemote:remoteRef];
+}
+
+- (IBAction)pushDefaultRemoteForRef:(id)sender
+{
+	id <PBGitRefish> refish = [self refishForSender:sender refishTypes:@[kGitXBranchType]];
+	if (!refish)
+		return;
+
+	PBGitRef *ref = nil;
+
+	[self.windowController performPushForBranch:ref toRemote:nil];
+}
+
+- (IBAction)pushToRemote:(id)sender
+{
+	id <PBGitRefish> refish = [self refishForSender:sender refishTypes:@[kGitXBranchType]];
+	if (!refish)
+		return;
+
+	PBGitRef *ref = nil;
+	NSString *remoteName = [sender representedObject];
+	PBGitRef *remoteRef = [PBGitRef refFromString:[kGitXRemoteRefPrefix stringByAppendingString:remoteName]];
+
+	[self.windowController performPushForBranch:ref toRemote:remoteRef];
+}
+
+- (IBAction)merge:(id)sender
+{
+	id <PBGitRefish> refish = [self refishForSender:sender refishTypes:@[kGitXBranchType, kGitXCommitType, kGitXTagType]];
+	if (!refish) return;
 
 	NSError *error = nil;
-	BOOL success = [repository mergeWithRefish:selectedCommit error:&error];
+	BOOL success = [repository mergeWithRefish:refish error:&error];
 	if (!success) {
 		[self.windowController showErrorSheet:error];
 	}
 }
 
-- (IBAction) cherryPick:(id)sender
+- (IBAction)checkout:(id)sender
 {
-	PBGitCommit *selectedCommit = self.selectedCommits.firstObject;
-	if (!selectedCommit) return;
+	id <PBGitRefish> refish = [self refishForSender:sender refishTypes:@[kGitXBranchType, kGitXCommitType, kGitXTagType]];
+	if (!selectedCommits) return;
 
 	NSError *error = nil;
-	BOOL success = [repository cherryPickRefish:selectedCommit error:&error];
+	BOOL success = [repository checkoutRefish:refish error:&error];
 	if (!success) {
 		[self.windowController showErrorSheet:error];
 	}
 }
 
-- (IBAction) rebase:(id)sender
+- (IBAction)cherryPick:(id)sender
 {
-	PBGitCommit *selectedCommit = self.selectedCommits.firstObject;
-	if (!selectedCommit) return;
+	id <PBGitRefish> refish = [self refishForSender:sender refishTypes:@[kGitXCommitType]];
+	if (!refish) return;
 
 	NSError *error = nil;
-	BOOL success = [repository rebaseBranch:nil onRefish:selectedCommit error:&error];
+	BOOL success = [repository cherryPickRefish:refish error:&error];
+	if (!success) {
+		[self.windowController showErrorSheet:error];
+	}
+}
+
+- (IBAction)rebase:(id)sender
+{
+	id <PBGitRefish> refish = [self refishForSender:sender refishTypes:@[kGitXBranchType]];
+	if (!refish) return;
+
+	NSError *error = nil;
+	BOOL success = [repository rebaseBranch:nil onRefish:refish error:&error];
+	if (!success) {
+		[self.windowController showErrorSheet:error];
+	}
+}
+
+- (IBAction) rebaseHeadBranch:(id)sender
+{
+	id <PBGitRefish> refish = [self refishForSender:sender refishTypes:@[kGitXBranchType]];
+	NSError *error = nil;
+	BOOL success = [self.repository rebaseBranch:nil onRefish:refish error:&error];
 	if (!success) {
 		[self.windowController showErrorSheet:error];
 	}
