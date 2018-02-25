@@ -1000,10 +1000,10 @@
 		[arguments addObjectsFromArray:filePaths];
 	}
 
-	int retValue;
-	NSString *diff = [startCommit.repository outputInWorkdirForArguments:arguments retValue:&retValue];
-	if (retValue) {
-		NSLog(@"diff failed with retValue: %d   for command: '%@'    output: '%@'", retValue, [arguments componentsJoinedByString:@" "], diff);
+	NSError *error = nil;
+	NSString *diff = [self outputOfTaskWithArguments:arguments error:&error];
+	if (!diff) {
+		PBLogError(error);
 		return @"";
 	}
 	return diff;
@@ -1036,9 +1036,12 @@
 }
 
 - (BOOL)updateReference:(PBGitRef *)ref toPointAtCommit:(PBGitCommit *)newCommit {
-	int retValue = 1;
-	[self outputForArguments:@[@"update-ref", @"-mUpdate from GitX", ref.ref, newCommit.SHA] retValue:&retValue];
-	return retValue != 0;
+	NSError *error = nil;
+	BOOL success = [self launchTaskWithArguments:@[@"update-ref", @"-mUpdate from GitX", ref.ref, newCommit.SHA] error:&error];
+	if (!success) {
+		PBLogError(error);
+	}
+	return success;
 }
 
 - (GTSubmodule *)submoduleAtPath:(NSString *)path error:(NSError **)error;
