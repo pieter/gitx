@@ -26,53 +26,6 @@
 	[commitList registerForDraggedTypes:[NSArray arrayWithObject:@"PBGitRef"]];
 }
 
-#pragma mark Stash
-
-- (IBAction) stashPop:(PBRefMenuItem *)sender
-{
-    PBGitStash *stash = [historyController.repository stashForRef:[sender refishs].firstObject];
-	NSError *error = nil;
-	BOOL success = [historyController.repository stashPop:stash error:&error];
-
-	if (!success) {
-		[historyController.windowController showErrorSheet:error];
-	} else {
-        [historyController.windowController showCommitView:sender];
-    }
-}
-
-- (IBAction) stashApply:(PBRefMenuItem *)sender
-{
-	PBGitStash *stash = [historyController.repository stashForRef:[sender refishs].firstObject];
-	NSError *error = nil;
-	BOOL success = [historyController.repository stashApply:stash error:&error];
-
-	if (!success) {
-		[historyController.windowController showErrorSheet:error];
-	} else {
-		[historyController.windowController showCommitView:sender];
-	}
-}
-
-- (IBAction) stashDrop:(PBRefMenuItem *)sender
-{
-	PBGitStash * stash = [historyController.repository stashForRef:[sender refishs].firstObject];
-	NSError *error = nil;
-	BOOL success = [historyController.repository stashDrop:stash error:&error];
-
-	if (!success) {
-		[historyController.windowController showErrorSheet:error];
-	} else {
-		[historyController.windowController showHistoryView:sender];
-	}
-}
-
-- (IBAction) stashViewDiff:(PBRefMenuItem *)sender
-{
-    PBGitStash * stash = [historyController.repository stashForRef:sender.refishs.firstObject];
-    [PBDiffWindowController showDiffWindowWithFiles:nil fromCommit:stash.ancestorCommit diffCommit:stash.commit];
-}
-
 #pragma mark Tags
 
 - (IBAction) showTagInfoSheet:(PBRefMenuItem *)sender

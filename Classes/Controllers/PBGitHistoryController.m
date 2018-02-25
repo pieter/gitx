@@ -33,6 +33,7 @@
 #import "GitXCommitCopier.h"
 #import "NSSplitView+GitX.h"
 #import "PBRefMenuItem.h"
+#import "PBGitStash.h"
 
 #define kHistorySelectedDetailIndexKey @"PBHistorySelectedDetailIndex"
 #define kHistoryDetailViewIndex 0
@@ -824,6 +825,55 @@
 	NSString *diff = [self.repository performDiff:commit against:nil forFiles:nil];
 
 	[PBDiffWindowController showDiff:diff];
+}
+
+- (IBAction)stashPop:(id)sender
+{
+	id <PBGitRefish> refish = [self refishForSender:sender refishTypes:@[kGitXStashType]];
+	PBGitStash *stash = [self.repository stashForRef:refish];
+	NSError *error = nil;
+	BOOL success = [self.repository stashPop:stash error:&error];
+
+	if (!success) {
+		[self.windowController showErrorSheet:error];
+	} else {
+		[self.windowController showCommitView:sender];
+	}
+}
+
+- (IBAction)stashApply:(id)sender
+{
+	id <PBGitRefish> refish = [self refishForSender:sender refishTypes:@[kGitXStashType]];
+	PBGitStash *stash = [self.repository stashForRef:refish];
+	NSError *error = nil;
+	BOOL success = [self.repository stashApply:stash error:&error];
+
+	if (!success) {
+		[self.windowController showErrorSheet:error];
+	} else {
+		[self.windowController showCommitView:sender];
+	}
+}
+
+- (IBAction)stashDrop:(id)sender
+{
+	id <PBGitRefish> refish = [self refishForSender:sender refishTypes:@[kGitXStashType]];
+	PBGitStash *stash = [self.repository stashForRef:refish];
+	NSError *error = nil;
+	BOOL success = [self.repository stashDrop:stash error:&error];
+
+	if (!success) {
+		[self.windowController showErrorSheet:error];
+	} else {
+		[self.windowController showHistoryView:sender];
+	}
+}
+
+- (IBAction)stashViewDiff:(id)sender
+{
+	id <PBGitRefish> refish = [self refishForSender:sender refishTypes:@[kGitXStashType]];
+	PBGitStash *stash = [self.repository stashForRef:refish];
+	[PBDiffWindowController showDiffWindowWithFiles:nil fromCommit:stash.ancestorCommit diffCommit:stash.commit];
 }
 
 #pragma mark -
