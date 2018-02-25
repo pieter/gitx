@@ -26,34 +26,6 @@
 	[commitList registerForDraggedTypes:[NSArray arrayWithObject:@"PBGitRef"]];
 }
 
-#pragma mark Tags
-
-- (IBAction) showTagInfoSheet:(PBRefMenuItem *)sender
-{
-	id<PBGitRefish> refish = sender.refishs.firstObject;
-	if ([refish refishType] != kGitXTagType)
-		return;
-
-	PBGitRef *ref = (PBGitRef *)refish;
-
-	NSString *tagName = [ref tagName];
-	NSString *tagRef = [@"refs/tags/" stringByAppendingString:tagName];
-	NSError *error = nil;
-	GTObject *object = [historyController.repository.gtRepo lookUpObjectByRevParse:tagRef error:&error];
-	if (!object) {
-		NSLog(@"Couldn't look up ref %@:%@", tagRef, [error debugDescription]);
-		return;
-	}
-	NSString* title = [NSString stringWithFormat:@"Info for tag: %@", tagName];
-	NSString* info = @"";
-	if ([object isKindOfClass:[GTTag class]]) {
-		GTTag *tag = (GTTag*)object;
-		info = tag.message;
-	}
-	[historyController.windowController showMessageSheet:title infoText:info];
-}
-
-
 #pragma mark Contextual menus
 
 - (NSArray<NSMenuItem *> *) menuItemsForRef:(PBGitRef *)ref

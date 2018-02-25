@@ -876,6 +876,32 @@
 	[PBDiffWindowController showDiffWindowWithFiles:nil fromCommit:stash.ancestorCommit diffCommit:stash.commit];
 }
 
+- (IBAction)showTagInfoSheet:(id)sender
+{
+	id <PBGitRefish> refish = [self refishForSender:sender refishTypes:@[kGitXTagType]];
+	if (!refish)
+		return;
+
+	PBGitRef *ref = (PBGitRef *)refish;
+
+	NSError *error = nil;
+	NSString *tagName = [ref tagName];
+	NSString *tagRef = [@"refs/tags/" stringByAppendingString:tagName];
+	GTObject *object = [self.repository.gtRepo lookUpObjectByRevParse:tagRef error:&error];
+	if (!object) {
+		NSLog(@"Couldn't look up ref %@:%@", tagRef, [error debugDescription]);
+		return;
+	}
+	NSString *title = [NSString stringWithFormat:@"Info for tag: %@", tagName];
+	NSString *info = @"";
+	if ([object isKindOfClass:[GTTag class]]) {
+		GTTag *tag = (GTTag*)object;
+		info = tag.message;
+	}
+
+	[self.windowController showMessageSheet:title infoText:info];
+}
+
 #pragma mark -
 #pragma mark Quick Look
 
