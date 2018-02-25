@@ -217,7 +217,7 @@
 
 #pragma mark Tags
 
-- (void) showTagInfoSheet:(PBRefMenuItem *)sender
+- (IBAction) showTagInfoSheet:(PBRefMenuItem *)sender
 {
 	id<PBGitRefish> refish = sender.refishs.firstObject;
 	if ([refish refishType] != kGitXTagType)
@@ -301,12 +301,12 @@
 
 - (NSArray<NSMenuItem *> *) menuItemsForRef:(PBGitRef *)ref
 {
-	return [PBRefMenuItem defaultMenuItemsForRef:ref inRepository:historyController.repository target:self];
+	return [PBRefMenuItem defaultMenuItemsForRef:ref inRepository:historyController.repository target:nil];
 }
 
 - (NSArray<NSMenuItem *> *) menuItemsForCommits:(NSArray<PBGitCommit *> *)commits
 {
-	return [PBRefMenuItem defaultMenuItemsForCommits:commits target:self];
+	return [PBRefMenuItem defaultMenuItemsForCommits:commits target:nil];
 }
 
 - (NSArray<NSMenuItem *> *)menuItemsForRow:(NSInteger)rowIndex

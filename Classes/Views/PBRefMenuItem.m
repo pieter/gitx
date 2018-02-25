@@ -66,7 +66,7 @@
 
 + (NSArray<NSMenuItem *> *) defaultMenuItemsForRef:(PBGitRef *)ref inRepository:(PBGitRepository *)repo target:(id)target
 {
-	if (!ref || !repo || !target) {
+	if (!ref || !repo) {
 		return nil;
 	}
 	
