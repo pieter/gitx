@@ -10,12 +10,13 @@
 #import "PBHistorySearchMode.h"
 
 @class PBGitHistoryController;
+@class PBTask;
 
 @interface PBHistorySearchController : NSObject {
 	PBHistorySearchMode searchMode;
 	NSIndexSet *results;
 	NSTimer *searchTimer;
-	NSTask *backgroundSearchTask;
+	PBTask *backgroundSearchTask;
 	NSPanel *rewindPanel;
 }
 

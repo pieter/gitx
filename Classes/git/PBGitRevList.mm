@@ -11,7 +11,6 @@
 #import "PBGitCommit.h"
 #import "PBGitGrapher.h"
 #import "PBGitRevSpecifier.h"
-#import "PBEasyPipe.h"
 #import "PBGitBinary.h"
 
 #import <ObjectiveGit/ObjectiveGit.h>

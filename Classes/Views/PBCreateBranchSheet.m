@@ -21,9 +21,14 @@
 
 + (void)beginSheetWithRefish:(id <PBGitRefish>)ref windowController:(PBGitWindowController *)windowController
 {
-	PBCreateBranchSheet *sheet = [[self alloc] initWithWindowController:windowController atRefish:ref];
-	[sheet beginCreateBranchSheetAtRefish:ref];
+	[self beginSheetWithRefish:ref windowController:windowController completionHandler:nil];
 }
+
++ (void)beginSheetWithRefish:(id <PBGitRefish>)ref windowController:(PBGitWindowController *)windowController completionHandler:(RJSheetCompletionHandler)handler {
+	PBCreateBranchSheet *sheet = [[self alloc] initWithWindowController:windowController atRefish:ref];
+	[sheet beginCreateBranchSheetAtRefish:ref completionHandler:handler];
+}
+
 
 
 - (id)initWithWindowController:(PBGitWindowController *)windowController atRefish:(id<PBGitRefish>)ref
@@ -40,7 +45,7 @@
 	return self;
 }
 
-- (void) beginCreateBranchSheetAtRefish:(id <PBGitRefish>)ref
+- (void) beginCreateBranchSheetAtRefish:(id <PBGitRefish>)ref completionHandler:(RJSheetCompletionHandler)handler
 {
 	[self window]; // loads the window (if it wasn't already)
 	[self.errorMessageField setStringValue:@""];
@@ -55,8 +60,7 @@
 			[self.branchNameField setStringValue:branchName];
 		}
 	}
-	
-	[self show];
+	[self beginSheetWithCompletionHandler:handler];
 }
 
 
@@ -66,35 +70,27 @@
 - (IBAction) createBranch:(id)sender
 {
 	NSString *name = [self.branchNameField stringValue];
-	PBGitRef *ref = [PBGitRef refFromString:[kGitXBranchRefPrefix stringByAppendingString:name]];
+	self.selectedRef = [PBGitRef refFromString:[kGitXBranchRefPrefix stringByAppendingString:name]];
 
-	if (![self.repository checkRefFormat:[ref ref]]) {
+	if (![self.repository checkRefFormat:[self.selectedRef ref]]) {
 		[self.errorMessageField setStringValue:NSLocalizedString(@"Invalid name", @"Error message for create branch command when the entered name cannot be used as a branch name")];
 		[self.errorMessageField setHidden:NO];
 		return;
 	}
 
-	if ([self.repository refExists:ref]) {
+	if ([self.repository refExists:self.selectedRef]) {
 		[self.errorMessageField setStringValue:NSLocalizedString(@"Branch already exists", @"Error message for create branch command")];
 		[self.errorMessageField setHidden:NO];
 		return;
 	}
 
-	PBCreateBranchSheet *ownRef = self; // ensures self exists after close
-	[ownRef closeCreateBranchSheet:ownRef];
-
-	[self.repository createBranch:name atRefish:ownRef.startRefish];
-	
-	[PBGitDefaults setShouldCheckoutBranch:ownRef.shouldCheckoutBranch];
-
-	if (ownRef.shouldCheckoutBranch)
-		[ownRef.repository checkoutRefish:ref];
+	[self acceptSheet:sender];
 }
 
 
 - (IBAction) closeCreateBranchSheet:(id)sender
 {
-	[self hide];
+	[self cancelSheet:sender];
 }
 
 @end

@@ -211,11 +211,10 @@
 	NSString *userName = [config stringForKey:@"user.name"];
 	NSString *userEmail = [config stringForKey:@"user.email"];
 	if (!(userName && userEmail)) {
-		return [[repository windowController]
-				showMessageSheet:NSLocalizedString(@"User‘s name not set",
-												   @"Title for sheet that the user’s name is not set in the git configuration")
-				infoText:NSLocalizedString(@"Signing off a commit requires setting user.name and user.email in your git config",
-										   @"Information text for sheet that the user’s name is not set in the git configuration")];
+		return [self.windowController showMessageSheet:NSLocalizedString(@"User‘s name not set",
+																		 @"Title for sheet that the user’s name is not set in the git configuration")
+											  infoText:NSLocalizedString(@"Signing off a commit requires setting user.name and user.email in your git config",
+																		 @"Information text for sheet that the user’s name is not set in the git configuration")];
 	}
 
 	NSString *SOBline = [NSString stringWithFormat:NSLocalizedString(@"Signed-off-by: %@ <%@>",
@@ -412,7 +411,7 @@ static void reselectNextFile(NSArrayController *controller)
 				   NSLocalizedString(@"Commit failed: %@",
 									 @"Message in status bar when creating a commit has failed, including the reason for the failure"),
 				   reason];
-	[repository.windowController showMessageSheet:NSLocalizedString(@"Commit failed", @"Title for sheet that creating a commit has failed")
+	[self.windowController showMessageSheet:NSLocalizedString(@"Commit failed", @"Title for sheet that creating a commit has failed")
 										 infoText:reason];
 }
 
@@ -426,7 +425,7 @@ static void reselectNextFile(NSArrayController *controller)
 				   NSLocalizedString(@"Commit hook failed: %@",
 									 @"Message in status bar when running a commit hook failed, including the reason for the failure"),
 				   reason];
-	[repository.windowController showCommitHookFailedSheet:NSLocalizedString(@"Commit hook failed", @"Title for sheet that running a commit hook has failed")
+	[self.windowController showCommitHookFailedSheet:NSLocalizedString(@"Commit hook failed", @"Title for sheet that running a commit hook has failed")
 												  infoText:reason
 										  commitController:self];
 }
@@ -453,7 +452,7 @@ static void reselectNextFile(NSArrayController *controller)
 
 - (void)indexOperationFailed:(NSNotification *)notification
 {
-	[repository.windowController showMessageSheet:NSLocalizedString(@"Index operation failed", @"Title for sheet that running an index operation has failed")
+	[self.windowController showMessageSheet:NSLocalizedString(@"Index operation failed", @"Title for sheet that running an index operation has failed")
 										 infoText:notification.userInfo[kNotificationDictionaryDescriptionKey]];
 }
 

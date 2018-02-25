@@ -32,14 +32,13 @@ typedef enum branchFilterTypes {
 @class PBGitRepositoryWatcher;
 @class GTSubmodule;
 
-@interface PBGitRepository : NSDocument
+@interface PBGitRepository : NSObject
 
 @property (nonatomic, weak) PBGitRepositoryDocument *document; // Backward-compatibility while PBGitRepository gets "modelized";
 
 @property (nonatomic, assign) BOOL hasChanged;
 @property (nonatomic, assign) NSInteger currentBranchFilter;
 
-@property (readonly, strong) PBGitWindowController *windowController;
 @property (readonly, getter = getIndexURL) NSURL* indexURL;
 
 @property (nonatomic, strong) PBGitHistoryList *revisionList;
@@ -57,24 +56,26 @@ typedef enum branchFilterTypes {
 // Designated initializer
 - (id)initWithURL:(NSURL *)repositoryURL error:(NSError **)error;
 
-- (void) beginAddRemote:(NSString *)remoteName forURL:(NSString *)remoteURL;
-- (void) beginFetchFromRemoteForRef:(PBGitRef *)ref;
-- (void) beginPullFromRemote:(PBGitRef *)remoteRef forRef:(PBGitRef *)ref rebase:(BOOL)rebase;
-- (void) beginPushRef:(PBGitRef *)ref toRemote:(PBGitRef *)remoteRef;
-- (BOOL) checkoutRefish:(id <PBGitRefish>)ref;
-- (BOOL) checkoutFiles:(NSArray *)files fromRefish:(id <PBGitRefish>)ref;
-- (BOOL) mergeWithRefish:(id <PBGitRefish>)ref;
-- (BOOL) cherryPickRefish:(id <PBGitRefish>)ref;
-- (BOOL) rebaseBranch:(id <PBGitRefish>)branch onRefish:(id <PBGitRefish>)upstream;
-- (BOOL) createBranch:(NSString *)branchName atRefish:(id <PBGitRefish>)ref;
-- (BOOL) createTag:(NSString *)tagName message:(NSString *)message atRefish:(id <PBGitRefish>)commitSHA;
-- (BOOL) deleteRemote:(PBGitRef *)ref;
-- (BOOL) deleteRef:(PBGitRef *)ref;
-- (BOOL) stashPop:(PBGitStash *)stash;
-- (BOOL) stashApply:(PBGitStash *)stash;
-- (BOOL) stashDrop:(PBGitStash *)stash;
-- (BOOL) stashSave;
-- (BOOL) stashSaveWithKeepIndex:(BOOL)keepIndex;
+- (BOOL) addRemote:(NSString *)remoteName withURL:(NSString *)URLString error:(NSError **)error;
+- (BOOL) fetchRemoteForRef:(PBGitRef *)ref error:(NSError **)error;
+- (BOOL) pullBranch:(PBGitRef *)branchRef fromRemote:(PBGitRef *)remoteRef rebase:(BOOL)rebase error:(NSError **)error;
+- (BOOL) pushBranch:(PBGitRef *)branchRef toRemote:(PBGitRef *)remoteRef error:(NSError **)error;
+
+- (BOOL) checkoutRefish:(id <PBGitRefish>)ref error:(NSError **)error;
+- (BOOL) checkoutFiles:(NSArray *)files fromRefish:(id <PBGitRefish>)ref error:(NSError **)error;
+- (BOOL) mergeWithRefish:(id <PBGitRefish>)ref error:(NSError **)error;
+- (BOOL) cherryPickRefish:(id <PBGitRefish>)ref error:(NSError **)error;
+- (BOOL) rebaseBranch:(id <PBGitRefish>)branch onRefish:(id <PBGitRefish>)upstream error:(NSError **)error;
+- (BOOL) createBranch:(NSString *)branchName atRefish:(id <PBGitRefish>)ref error:(NSError **)error;
+- (BOOL) createTag:(NSString *)tagName message:(NSString *)message atRefish:(id <PBGitRefish>)commitSHA error:(NSError **)error;
+- (BOOL) deleteRemote:(PBGitRef *)ref error:(NSError **)error;
+- (BOOL) deleteRef:(PBGitRef *)ref error:(NSError **)error;
+
+- (BOOL) stashPop:(PBGitStash *)stash error:(NSError **)error;
+- (BOOL) stashApply:(PBGitStash *)stash error:(NSError **)error;
+- (BOOL) stashDrop:(PBGitStash *)stash error:(NSError **)error;
+- (BOOL) stashSave:(NSError **)error;
+- (BOOL) stashSaveWithKeepIndex:(BOOL)keepIndex error:(NSError **)error;
 
 - (BOOL)ignoreFilePaths:(NSArray *)filePaths error:(NSError **)error;
 
@@ -83,19 +84,6 @@ typedef enum branchFilterTypes {
 
 - (NSURL *) gitURL ;
 
-- (NSFileHandle*) handleForCommand:(NSString*) cmd GITX_DEPRECATED;
-- (NSFileHandle*) handleForArguments:(NSArray*) args GITX_DEPRECATED;
-- (NSFileHandle *) handleInWorkDirForArguments:(NSArray *)args GITX_DEPRECATED;
-- (NSString*) outputForCommand:(NSString*) cmd GITX_DEPRECATED;
-- (NSString *)outputForCommand:(NSString *)str retValue:(int *)ret GITX_DEPRECATED;
-- (NSString *)outputForArguments:(NSArray *)arguments inputString:(NSString *)input retValue:(int *)ret GITX_DEPRECATED;
-- (NSString *)outputForArguments:(NSArray *)arguments inputString:(NSString *)input byExtendingEnvironment:(NSDictionary *)dict retValue:(int *)ret GITX_DEPRECATED;
-
-
-- (NSString*) outputForArguments:(NSArray*) args GITX_DEPRECATED;
-- (NSString*) outputForArguments:(NSArray*) args retValue:(int *)ret GITX_DEPRECATED;
-- (NSString *)outputInWorkdirForArguments:(NSArray*) arguments GITX_DEPRECATED;
-- (NSString *)outputInWorkdirForArguments:(NSArray*) arguments retValue:(int *)ret GITX_DEPRECATED;
 - (BOOL)executeHook:(NSString *)name output:(NSString **)output GITX_DEPRECATED;
 - (BOOL)executeHook:(NSString *)name withArgs:(NSArray*) arguments output:(NSString **)output GITX_DEPRECATED;
 
@@ -103,7 +91,7 @@ typedef enum branchFilterTypes {
 - (BOOL)executeHook:(NSString *)name arguments:(NSArray *)arguments error:(NSError **)error;
 - (BOOL)executeHook:(NSString *)name arguments:(NSArray *)arguments output:(NSString **)outputPtr error:(NSError **)error;
 
-- (NSString *)workingDirectory GITX_DEPRECATED;
+- (NSString *)workingDirectory;
 - (NSURL *)workingDirectoryURL;
 - (NSString *)projectName;
 
@@ -131,13 +119,11 @@ typedef enum branchFilterTypes {
 - (NSArray *) remotes;
 - (BOOL) hasRemotes;
 - (PBGitRef *) remoteRefForBranch:(PBGitRef *)branch error:(NSError **)error;
-- (NSString *) infoForRemote:(NSString *)remoteName;
 
 - (void) readCurrentBranch;
 - (PBGitRevSpecifier*) addBranch: (PBGitRevSpecifier*) rev;
 - (BOOL)removeBranch:(PBGitRevSpecifier *)rev;
 
-- (GTReference*) parseSymbolicReference:(NSString*) ref;
 - (BOOL) revisionExists:(NSString*) spec;
 
 - (void) forceUpdateRevisions;

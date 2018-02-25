@@ -11,10 +11,9 @@
 #import "PBHistorySearchController.h"
 #import "PBGitHistoryController.h"
 #import "PBGitRepository.h"
+#import "PBGitRepository_PBGitBinarySupport.h"
 #import "PBGitDefaults.h"
 #import "PBCommitList.h"
-#import "PBEasyPipe.h"
-#import "PBGitBinary.h"
 #import "PBGitCommit.h"
 
 @interface PBHistorySearchController ()
@@ -394,8 +393,6 @@
 - (void)startBackgroundSearch
 {
 	if (backgroundSearchTask) {
-		NSFileHandle *handle = [[backgroundSearchTask standardOutput] fileHandleForReading];
-		[[NSNotificationCenter defaultCenter] removeObserver:self name:NSFileHandleReadToEndOfFileCompletionNotification object:handle];
 		[backgroundSearchTask terminate];
 	}
 
@@ -422,22 +419,21 @@
 			return;
 	}
 
-	backgroundSearchTask = [PBEasyPipe taskForCommand:[PBGitBinary path] withArgs:searchArguments inDir:[[historyController.repository workingDirectoryURL] path]];
-	[backgroundSearchTask launch];
-
-	NSFileHandle *handle = [[backgroundSearchTask standardOutput] fileHandleForReading];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(parseBackgroundSearchResults:) name:NSFileHandleReadToEndOfFileCompletionNotification object:handle];
-	[handle readToEndOfFileInBackgroundAndNotify];
+	backgroundSearchTask = [historyController.repository taskWithArguments:searchArguments];
+	[backgroundSearchTask performTaskWithCompletionHandler:^(NSData * _Nullable readData, NSError * _Nullable error) {
+		if (!readData) {
+			[historyController.windowController showErrorSheet:error];
+			return;
+		}
+		[self parseBackgroundSearchResults:readData];
+	}];
 
 	[self startProgressIndicator];
 }
 
-- (void)parseBackgroundSearchResults:(NSNotification *)notification
+- (void)parseBackgroundSearchResults:(NSData *)data
 {
-	[[NSNotificationCenter defaultCenter] removeObserver:self name:NSFileHandleReadToEndOfFileCompletionNotification object:[notification object]];
 	backgroundSearchTask = nil;
-
-	NSData *data = [[notification userInfo] valueForKey:NSFileHandleNotificationDataItem];
 
 	NSString *resultsString = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
 	NSArray *resultsArray = [resultsString componentsSeparatedByString:@"\n"];

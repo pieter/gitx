@@ -17,19 +17,16 @@
 #pragma mark -
 #pragma mark PBAddRemoteSheet
 
-- (id)initWithWindowController:(PBGitWindowController *)windowController
++ (void)beginSheetWithWindowController:(PBGitWindowController *)windowController completionHandler:(RJSheetCompletionHandler)handler
 {
-	self = [super initWithWindowNibName:@"PBAddRemoteSheet" windowController:windowController];
-	if (!self)
-		return nil;
-
-	return self;
+	PBAddRemoteSheet *sheet = [[super alloc] initWithWindowNibName:@"PBAddRemoteSheet" windowController:windowController];
+	[sheet beginSheetWithCompletionHandler:handler];
 }
 
-- (void) show
+- (void)beginSheetWithCompletionHandler:(RJSheetCompletionHandler)handler
 {
 	[self.errorMessage setStringValue:@""];
-	[super show];
+	[super beginSheetWithCompletionHandler:handler];
 }
 
 #pragma mark IBActions
@@ -82,10 +79,7 @@
 		return;
 	}
 
-	PBGitRepository* repo = self.repository;
-	[self hide]; // may deallocate self
-
-	[repo beginAddRemote:name forURL:url];
+	[self acceptSheet:sender];
 }
 
 - (IBAction) showHideHiddenFiles:(id)sender
@@ -95,8 +89,7 @@
 
 - (IBAction) cancelOperation:(id)sender
 {
-//	[super cancelOperation:sender];
-	[self hide];
+	[self cancelSheet:sender];
 }
 
 @end

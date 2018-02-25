@@ -6,6 +6,11 @@
 //  Copyright 2008 Jeff Mesnil (http://jmesnil.net/). All rights reserved.
 //
 
+
+#define kDialogAcceptDroppedRef @"Accept Dropped Ref"
+#define kDialogConfirmPush @"Confirm Push"
+#define kDialogDeleteRef @"Delete Ref"
+
 @interface PBGitDefaults : NSObject
 {
 

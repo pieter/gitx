@@ -6,6 +6,8 @@
 //  Copyright 2008 __MyCompanyName__. All rights reserved.
 //
 
+#import <Quartz/Quartz.h>
+
 #import "PBGitCommit.h"
 #import "PBGitTree.h"
 #import "PBGitRef.h"
@@ -30,8 +32,8 @@
 #import "GLFileView.h"
 #import "GitXCommitCopier.h"
 #import "NSSplitView+GitX.h"
-#import <Quartz/Quartz.h>
-
+#import "PBRefMenuItem.h"
+#import "PBGitStash.h"
 
 #define kHistorySelectedDetailIndexKey @"PBHistorySelectedDetailIndex"
 #define kHistoryDetailViewIndex 0
@@ -559,7 +561,13 @@
 	NSMutableArray *files = [NSMutableArray array];
 	for (NSString *filePath in [sender representedObject])
 		[files addObject:[filePath stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]]];
-	[repository checkoutFiles:files fromRefish:self.selectedCommits.firstObject];
+
+	NSError *error = nil;
+	BOOL success = [repository checkoutFiles:files fromRefish:self.selectedCommits.firstObject error:&error];
+	if (!success) {
+		[self.windowController showErrorSheet:error];
+	}
+
 }
 
 - (void) diffFilesAction:(id)sender
@@ -632,45 +640,266 @@
 
 #pragma mark Repository Methods
 
-- (IBAction) createBranch:(id)sender
+- (id <PBGitRefish>)refishForSender:(id)sender
 {
-	PBGitRef *currentRef = [repository.currentBranch ref];
-	
-	PBGitCommit *selectedCommit = self.selectedCommits.firstObject;
-	if (!selectedCommits.firstObject || [selectedCommit hasRef:currentRef])
-		[PBCreateBranchSheet beginSheetWithRefish:currentRef windowController:self.windowController];
-	else
-		[PBCreateBranchSheet beginSheetWithRefish:selectedCommit windowController:self.windowController];
+	return [self refishForSender:sender refishTypes:nil];
 }
 
-- (IBAction) createTag:(id)sender
+- (id <PBGitRefish>)refishForSender:(id)sender refishTypes:(NSArray *)types
 {
-	PBGitCommit *selectedCommit = self.selectedCommits.firstObject;
-	if (!selectedCommit)
-		[PBCreateTagSheet beginSheetWithRefish:[repository.currentBranch ref] windowController:self.windowController];
-	else
-		[PBCreateTagSheet beginSheetWithRefish:selectedCommit windowController:self.windowController];
+	if ([sender isKindOfClass:[PBRefMenuItem class]]) {
+		id <PBGitRefish> refish = [[(PBRefMenuItem *)sender refishs] firstObject];
+
+		if (!types || [types indexOfObject:[refish refishType]] != NSNotFound)
+			return refish;
+		return nil;
+	}
+
+	if ([types indexOfObject:kGitXCommitType] == NSNotFound)
+		return nil;
+
+	return self.selectedCommits.firstObject;
 }
 
-- (IBAction) merge:(id)sender
+- (IBAction)fetchRemote:(id)sender
 {
-	PBGitCommit *selectedCommit = self.selectedCommits.firstObject;
-	if (selectedCommit)
-		[repository mergeWithRefish:selectedCommit];
+	id <PBGitRefish> refish = [self refishForSender:sender refishTypes:@[kGitXBranchType]];
+	if (!refish)
+		return;
+
+	[self.windowController performFetchForRef:refish];
 }
 
-- (IBAction) cherryPick:(id)sender
+- (IBAction)pullRemote:(id)sender
 {
-	PBGitCommit *selectedCommit = self.selectedCommits.firstObject;
-	if (selectedCommit)
-		[repository cherryPickRefish:selectedCommit];
+	id <PBGitRefish> refish = [self refishForSender:sender refishTypes:@[kGitXBranchType]];
+	if (!refish)
+		return;
+
+	[self.windowController performPullForBranch:refish remote:nil rebase:NO];
 }
 
-- (IBAction) rebase:(id)sender
+- (IBAction)pushUpdatesToRemote:(id)sender
 {
-	PBGitCommit *selectedCommit = self.selectedCommits.firstObject;
-	if (selectedCommit)
-		[repository rebaseBranch:nil onRefish:selectedCommit];
+	id <PBGitRefish> refish = [self refishForSender:sender refishTypes:@[kGitXBranchType]];
+	if (!refish)
+		return;
+
+	PBGitRef *remoteRef = nil; // [(PBGitRef *)sender.refishs.firstObject remoteRef];
+
+	[self.windowController performPushForBranch:nil toRemote:remoteRef];
+}
+
+- (IBAction)pushDefaultRemoteForRef:(id)sender
+{
+	id <PBGitRefish> refish = [self refishForSender:sender refishTypes:@[kGitXBranchType]];
+	if (!refish)
+		return;
+
+	PBGitRef *ref = nil;
+
+	[self.windowController performPushForBranch:ref toRemote:nil];
+}
+
+- (IBAction)pushToRemote:(id)sender
+{
+	id <PBGitRefish> refish = [self refishForSender:sender refishTypes:@[kGitXBranchType]];
+	if (!refish)
+		return;
+
+	PBGitRef *ref = nil;
+	NSString *remoteName = [sender representedObject];
+	PBGitRef *remoteRef = [PBGitRef refFromString:[kGitXRemoteRefPrefix stringByAppendingString:remoteName]];
+
+	[self.windowController performPushForBranch:ref toRemote:remoteRef];
+}
+
+- (IBAction)merge:(id)sender
+{
+	id <PBGitRefish> refish = [self refishForSender:sender refishTypes:@[kGitXBranchType, kGitXCommitType, kGitXTagType]];
+	if (!refish) return;
+
+	NSError *error = nil;
+	BOOL success = [repository mergeWithRefish:refish error:&error];
+	if (!success) {
+		[self.windowController showErrorSheet:error];
+	}
+}
+
+- (IBAction)checkout:(id)sender
+{
+	id <PBGitRefish> refish = [self refishForSender:sender refishTypes:@[kGitXBranchType, kGitXCommitType, kGitXTagType]];
+	if (!selectedCommits) return;
+
+	NSError *error = nil;
+	BOOL success = [repository checkoutRefish:refish error:&error];
+	if (!success) {
+		[self.windowController showErrorSheet:error];
+	}
+}
+
+- (IBAction)cherryPick:(id)sender
+{
+	id <PBGitRefish> refish = [self refishForSender:sender refishTypes:@[kGitXCommitType]];
+	if (!refish) return;
+
+	NSError *error = nil;
+	BOOL success = [repository cherryPickRefish:refish error:&error];
+	if (!success) {
+		[self.windowController showErrorSheet:error];
+	}
+}
+
+- (IBAction)rebase:(id)sender
+{
+	id <PBGitRefish> refish = [self refishForSender:sender refishTypes:@[kGitXBranchType]];
+	if (!refish) return;
+
+	NSError *error = nil;
+	BOOL success = [repository rebaseBranch:nil onRefish:refish error:&error];
+	if (!success) {
+		[self.windowController showErrorSheet:error];
+	}
+}
+
+- (IBAction) rebaseHeadBranch:(id)sender
+{
+	id <PBGitRefish> refish = [self refishForSender:sender refishTypes:@[kGitXBranchType]];
+	NSError *error = nil;
+	BOOL success = [self.repository rebaseBranch:nil onRefish:refish error:&error];
+	if (!success) {
+		[self.windowController showErrorSheet:error];
+	}
+}
+
+- (IBAction)showDeleteRefSheet:(PBRefMenuItem *)sender
+{
+	id <PBGitRefish> refish = [self refishForSender:sender refishTypes:@[kGitXBranchType]];
+	if (!refish)
+		return;
+
+	PBGitRef *ref = (PBGitRef *)refish;
+
+	void (^performDelete)(void) = ^{
+		NSError *error = nil;
+		BOOL success = [self.repository deleteRef:ref error:&error];
+		if (!success) {
+			[self.windowController showErrorSheet:error];
+		}
+		return;
+	};
+
+	if ([PBGitDefaults isDialogWarningSuppressedForDialog:kDialogDeleteRef]) {
+		performDelete();
+		return;
+	}
+
+	NSString *ref_desc = [NSString stringWithFormat:@"%@ '%@'", [ref refishType], [ref shortName]];
+
+	NSAlert *alert = [NSAlert alertWithMessageText:[NSString stringWithFormat:@"Delete %@?", ref_desc]
+									 defaultButton:@"Delete"
+								   alternateButton:@"Cancel"
+									   otherButton:nil
+						 informativeTextWithFormat:@"Are you sure you want to remove the %@?", ref_desc];
+	[alert setShowsSuppressionButton:YES];
+
+	[alert beginSheetModalForWindow:self.windowController.window
+				  completionHandler:^(NSModalResponse returnCode) {
+					  if ([[alert suppressionButton] state] == NSOnState)
+						  [PBGitDefaults suppressDialogWarningForDialog:kDialogDeleteRef];
+
+					  if (returnCode == NSModalResponseOK) {
+						  performDelete();
+					  }
+				  }];
+}
+
+- (IBAction)diffWithHEAD:(id)sender
+{
+	id <PBGitRefish> refish = [self refishForSender:sender refishTypes:nil];
+	if (!refish)
+		return;
+
+	PBGitCommit *commit = [self.repository commitForRef:refish];
+
+	NSString *diff = [self.repository performDiff:commit against:nil forFiles:nil];
+
+	[PBDiffWindowController showDiff:diff];
+}
+
+- (IBAction)stashPop:(id)sender
+{
+	id <PBGitRefish> refish = [self refishForSender:sender refishTypes:@[kGitXStashType]];
+	PBGitStash *stash = [self.repository stashForRef:refish];
+	NSError *error = nil;
+	BOOL success = [self.repository stashPop:stash error:&error];
+
+	if (!success) {
+		[self.windowController showErrorSheet:error];
+	} else {
+		[self.windowController showCommitView:sender];
+	}
+}
+
+- (IBAction)stashApply:(id)sender
+{
+	id <PBGitRefish> refish = [self refishForSender:sender refishTypes:@[kGitXStashType]];
+	PBGitStash *stash = [self.repository stashForRef:refish];
+	NSError *error = nil;
+	BOOL success = [self.repository stashApply:stash error:&error];
+
+	if (!success) {
+		[self.windowController showErrorSheet:error];
+	} else {
+		[self.windowController showCommitView:sender];
+	}
+}
+
+- (IBAction)stashDrop:(id)sender
+{
+	id <PBGitRefish> refish = [self refishForSender:sender refishTypes:@[kGitXStashType]];
+	PBGitStash *stash = [self.repository stashForRef:refish];
+	NSError *error = nil;
+	BOOL success = [self.repository stashDrop:stash error:&error];
+
+	if (!success) {
+		[self.windowController showErrorSheet:error];
+	} else {
+		[self.windowController showHistoryView:sender];
+	}
+}
+
+- (IBAction)stashViewDiff:(id)sender
+{
+	id <PBGitRefish> refish = [self refishForSender:sender refishTypes:@[kGitXStashType]];
+	PBGitStash *stash = [self.repository stashForRef:refish];
+	[PBDiffWindowController showDiffWindowWithFiles:nil fromCommit:stash.ancestorCommit diffCommit:stash.commit];
+}
+
+- (IBAction)showTagInfoSheet:(id)sender
+{
+	id <PBGitRefish> refish = [self refishForSender:sender refishTypes:@[kGitXTagType]];
+	if (!refish)
+		return;
+
+	PBGitRef *ref = (PBGitRef *)refish;
+
+	NSError *error = nil;
+	NSString *tagName = [ref tagName];
+	NSString *tagRef = [@"refs/tags/" stringByAppendingString:tagName];
+	GTObject *object = [self.repository.gtRepo lookUpObjectByRevParse:tagRef error:&error];
+	if (!object) {
+		NSLog(@"Couldn't look up ref %@:%@", tagRef, [error debugDescription]);
+		return;
+	}
+	NSString *title = [NSString stringWithFormat:@"Info for tag: %@", tagName];
+	NSString *info = @"";
+	if ([object isKindOfClass:[GTTag class]]) {
+		GTTag *tag = (GTTag*)object;
+		info = tag.message;
+	}
+
+	[self.windowController showMessageSheet:title infoText:info];
 }
 
 #pragma mark -

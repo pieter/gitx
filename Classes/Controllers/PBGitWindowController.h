@@ -11,6 +11,7 @@
 
 @class PBViewController, PBGitSidebarController, PBGitCommitController, PBGitRepository;
 @class RJModalRepoSheet;
+@class PBGitRef;
 
 @interface PBGitWindowController : NSWindowController<NSWindowDelegate> {
 	__weak PBViewController *contentController;
@@ -32,12 +33,10 @@
 - (void)changeContentController:(PBViewController *)controller;
 
 - (void)showCommitHookFailedSheet:(NSString *)messageText infoText:(NSString *)infoText commitController:(PBGitCommitController *)controller GITX_DEPRECATED;
-- (void)showMessageSheet:(NSString *)messageText infoText:(NSString *)infoText GITX_DEPRECATED;
-- (void)showErrorSheet:(NSError *)error GITX_DEPRECATED;
-- (void)showErrorSheetTitle:(NSString *)title message:(NSString *)message arguments:(NSArray *)arguments output:(NSString *)output GITX_DEPRECATED;
 
-- (void)showModalSheet:(RJModalRepoSheet*)sheet;
-- (void)hideModalSheet:(RJModalRepoSheet*)sheet;
+- (void)showMessageSheet:(NSString *)messageText infoText:(NSString *)infoText;
+- (void)showErrorSheet:(NSError *)error;
+
 
 - (void)openURLs:(NSArray <NSURL *> *)fileURLs;
 - (void)revealURLsInFinder:(NSArray <NSURL *> *)fileURLs;
@@ -63,5 +62,9 @@
 - (IBAction) stashPop:(id) sender;
 
 - (void)setHistorySearch:(NSString *)searchString mode:(PBHistorySearchMode)mode;
+
+- (void)performFetchForRef:(PBGitRef *)ref;
+- (void)performPullForBranch:(PBGitRef *)branchRef remote:(PBGitRef *)remoteRef rebase:(BOOL)rebase;
+- (void)performPushForBranch:(PBGitRef *)branchRef toRemote:(PBGitRef *)remoteRef;
 
 @end

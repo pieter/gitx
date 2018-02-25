@@ -16,7 +16,7 @@
 
 @interface PBCreateTagSheet : RJModalRepoSheet
 
-+ (void) beginSheetWithRefish:(id <PBGitRefish>)refish windowController:(PBGitWindowController *)windowController;
++ (void) beginSheetWithRefish:(id <PBGitRefish>)refish windowController:(PBGitWindowController *)windowController completionHandler:(RJSheetCompletionHandler)handler;
 
 - (IBAction) createTag:(id)sender;
 - (IBAction) closeCreateTagSheet:(id)sender;

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="12120" systemVersion="16E195" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="11762" systemVersion="16G29" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="12120"/>
-        <plugIn identifier="com.apple.WebKitIBPlugin" version="12120"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="11762"/>
+        <plugIn identifier="com.apple.WebKitIBPlugin" version="11762"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -183,11 +183,11 @@
                                     <rect key="frame" x="1" y="0.0" width="955" height="165"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <clipView key="contentView" ambiguous="YES" drawsBackground="NO" copiesOnScroll="NO" id="S8C-PP-4nT">
-                                        <rect key="frame" x="0.0" y="0.0" width="955" height="150"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="955" height="165"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                         <subviews>
                                             <tableView focusRingType="none" verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="firstColumnOnly" alternatingRowBackgroundColors="YES" autosaveName="CommitView" headerView="30" id="27" userLabel="Commit List" customClass="PBCommitList">
-                                                <rect key="frame" x="0.0" y="0.0" width="1056" height="127"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="1056.5" height="142"/>
                                                 <autoresizingMask key="autoresizingMask"/>
                                                 <size key="intercellSpacing" width="3" height="2"/>
                                                 <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -368,15 +368,15 @@
                                         </subviews>
                                     </clipView>
                                     <scroller key="horizontalScroller" verticalHuggingPriority="750" horizontal="YES" id="29">
-                                        <rect key="frame" x="0.0" y="150" width="955" height="15"/>
+                                        <rect key="frame" x="0.0" y="149" width="955" height="16"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                     </scroller>
                                     <scroller key="verticalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="NO" id="28">
-                                        <rect key="frame" x="-15" y="23" width="15" height="0.0"/>
+                                        <rect key="frame" x="-16" y="23" width="16" height="0.0"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                     </scroller>
                                     <tableHeaderView key="headerView" id="30" customClass="PBUnsortableTableHeader">
-                                        <rect key="frame" x="0.0" y="0.0" width="1056" height="23"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="1056.5" height="23"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <connections>
                                             <outlet property="controller" destination="39" id="217"/>
@@ -429,11 +429,11 @@
                                                                 <rect key="frame" x="0.0" y="0.0" width="233" height="214"/>
                                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" heightSizable="YES"/>
                                                                 <clipView key="contentView" id="TgF-cp-2Rq">
-                                                                    <rect key="frame" x="0.0" y="0.0" width="218" height="214"/>
+                                                                    <rect key="frame" x="0.0" y="0.0" width="233" height="214"/>
                                                                     <autoresizingMask key="autoresizingMask"/>
                                                                     <subviews>
                                                                         <outlineView focusRingType="none" verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" alternatingRowBackgroundColors="YES" autosaveColumns="NO" indentationPerLevel="16" autoresizesOutlineColumn="YES" outlineTableColumn="18" id="15" customClass="PBQLOutlineView">
-                                                                            <rect key="frame" x="0.0" y="0.0" width="218" height="214"/>
+                                                                            <rect key="frame" x="0.0" y="0.0" width="233" height="214"/>
                                                                             <autoresizingMask key="autoresizingMask" heightSizable="YES"/>
                                                                             <size key="intercellSpacing" width="3" height="2"/>
                                                                             <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -471,7 +471,7 @@
                                                                     <autoresizingMask key="autoresizingMask"/>
                                                                 </scroller>
                                                                 <scroller key="verticalScroller" verticalHuggingPriority="750" horizontal="NO" id="17">
-                                                                    <rect key="frame" x="218" y="0.0" width="15" height="214"/>
+                                                                    <rect key="frame" x="217" y="0.0" width="16" height="214"/>
                                                                     <autoresizingMask key="autoresizingMask"/>
                                                                 </scroller>
                                                             </scrollView>
@@ -573,7 +573,7 @@ IA
                                 <font key="font" metaFont="system"/>
                             </buttonCell>
                             <connections>
-                                <action selector="createBranch:" target="-2" id="335"/>
+                                <action selector="createBranch:" target="-1" id="ewF-3I-r7c"/>
                                 <binding destination="-2" name="enabled" keyPath="singleCommitSelected" id="Ens-Tw-TDc"/>
                             </connections>
                         </button>
@@ -585,7 +585,7 @@ IA
                                 <font key="font" metaFont="system"/>
                             </buttonCell>
                             <connections>
-                                <action selector="createTag:" target="-2" id="334"/>
+                                <action selector="createTag:" target="-1" id="qxl-dw-StB"/>
                                 <binding destination="-2" name="enabled" keyPath="singleCommitSelected" id="aQb-dV-d2k"/>
                             </connections>
                         </button>

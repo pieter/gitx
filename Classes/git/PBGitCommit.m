@@ -7,6 +7,7 @@
 //
 
 #import "PBGitRepository.h"
+#import "PBGitRepository_PBGitBinarySupport.h"
 #import "PBGitCommit.h"
 #import "PBGitTree.h"
 #import "PBGitRef.h"
@@ -194,7 +195,13 @@ NSString * const kGitXCommitType = @"commit";
 	if (self->_patch != nil)
 		return _patch;
 
-	NSString *p = [self.repository outputForArguments:[NSArray arrayWithObjects:@"format-patch",  @"-1", @"--stdout", self.SHA, nil]];
+	NSError *error = nil;
+	NSString *p = [self.repository outputOfTaskWithArguments:@[@"format-patch",  @"-1", @"--stdout", self.SHA] error:&error];
+	if (!p) {
+		PBLogError(error);
+		return nil;
+	}
+
 	// Add a GitX identifier to the patch ;)
 	self.patch = [[p substringToIndex:[p length] -1] stringByAppendingString:@"+GitX"];
 	return self->_patch;

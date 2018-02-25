@@ -10,35 +10,19 @@
 
 #import "RJModalRepoSheet.h"
 
-extern NSString * const kGitXProgressDescription;
-extern NSString * const kGitXProgressSuccessDescription;
-extern NSString * const kGitXProgressSuccessInfo;
-extern NSString * const kGitXProgressErrorDescription;
-extern NSString * const kGitXProgressErrorInfo;
+NS_ASSUME_NONNULL_BEGIN
 
 @class PBGitWindowController;
-@class PBGitRepository;
+
+typedef NSError * _Nullable (^PBProgressSheetExecutionHandler)(void);
 
 @interface PBRemoteProgressSheet : RJModalRepoSheet
 
-+ (void) beginRemoteProgressSheetWithTitle:(NSString *)theTitle
-							   description:(NSString *)theDescription
-								 arguments:(NSArray *)args
-									 inDir:(NSString *)dir
-						  windowController:(PBGitWindowController *)windowController;
++ (instancetype)progressSheetWithTitle:(NSString *)title description:(NSString *)description windowController:(PBGitWindowController *)windowController;
++ (instancetype)progressSheetWithTitle:(NSString *)title description:(NSString *)description;
 
-+ (void) beginRemoteProgressSheetWithTitle:(NSString *)theTitle
-							   description:(NSString *)theDescription
-								 arguments:(NSArray *)args
-						  windowController:(PBGitWindowController *)windowController;
-
-+ (void) beginRemoteProgressSheetWithTitle:(NSString *)theTitle
-							   description:(NSString *)theDescription
-								 arguments:(NSArray *)args
-						 hideSuccessScreen:(BOOL)hideSucc
-						  windowController:(PBGitWindowController *)windowController;
-
-@property  IBOutlet NSTextField         *progressDescription;
-@property  IBOutlet NSProgressIndicator *progressIndicator;
+- (void)beginProgressSheetForBlock:(PBProgressSheetExecutionHandler)executionBlock completionHandler:(void (^)(NSError *))completionHandler;
 
 @end
+
+NS_ASSUME_NONNULL_END

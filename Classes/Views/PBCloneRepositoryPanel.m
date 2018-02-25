@@ -117,12 +117,41 @@
 	
 	NSString *title = NSLocalizedString(@"Cloning Repository", @"Title of clone dialogue while clone is running");
 	NSString *description = [NSString stringWithFormat:NSLocalizedString(@"Cloning repository at: %@", @"Message in clone dialogue while clone is running."), url];
-	[PBRemoteProgressSheet beginRemoteProgressSheetWithTitle:title
-												 description:description
-												   arguments:arguments
-													   inDir:nil
-											windowController:nil];
 
+
+	NSURL *documentURL = [NSURL fileURLWithPath:path];
+	PBRemoteProgressSheet *sheet = [PBRemoteProgressSheet progressSheetWithTitle:title description:description];
+	[sheet beginProgressSheetForBlock:^NSError *{
+		NSURL *repoURL = [NSURL URLWithString:url];
+		NSError *error = nil;
+		[GTRepository cloneFromURL:repoURL
+				toWorkingDirectory:documentURL
+						   options:@{GTRepositoryCloneOptionsBare: @(self.isBare)}
+							 error:&error
+			 transferProgressBlock:nil
+			 checkoutProgressBlock:nil];
+		return error;
+	} completionHandler:^(NSError *error) {
+		if (error) {
+			[self close];
+			[self showErrorSheet:error];
+			return;
+		}
+
+		[[NSDocumentController sharedDocumentController] openDocumentWithContentsOfURL:documentURL display:YES completionHandler:^(NSDocument * _Nullable document, BOOL documentWasAlreadyOpen, NSError * _Nullable error) {
+			if (!document && error) {
+				[self showErrorSheet:error];
+				return;
+			}
+
+			[self close];
+
+			NSString *containingPath = [path stringByDeletingLastPathComponent];
+			[PBGitDefaults setRecentCloneDestination:containingPath];
+			[self.destinationPath setStringValue:containingPath];
+			[self.repositoryURL setStringValue:@""];
+		}];
+	}];
 }
 
 
@@ -160,25 +189,6 @@
 
 
 #pragma mark Callbacks
-
-- (void) messageSheetDidEnd:(NSOpenPanel *)sheet returnCode:(NSInteger)code contextInfo:(void *)info
-{
-	NSURL *documentURL = [NSURL fileURLWithPath:path];
-
-	[[NSDocumentController sharedDocumentController] openDocumentWithContentsOfURL:documentURL display:YES completionHandler:^(NSDocument * _Nullable document, BOOL documentWasAlreadyOpen, NSError * _Nullable error) {
-		if (!document && error) {
-			[self showErrorSheet:error];
-			return;
-		}
-
-		[self close];
-
-		NSString *containingPath = [path stringByDeletingLastPathComponent];
-		[PBGitDefaults setRecentCloneDestination:containingPath];
-		[self.destinationPath setStringValue:containingPath];
-		[self.repositoryURL setStringValue:@""];
-	}];
-}
 
 
 - (void) errorSheetDidEnd:(NSOpenPanel *)sheet returnCode:(NSInteger)code contextInfo:(void *)info
