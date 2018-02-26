@@ -307,21 +307,27 @@ NS_ENUM(NSUInteger, PBGitIndexOperation) {
     if (doVerify) {
         [self postCommitUpdate:@"Running hooks"];
         NSString *hookFailureMessage = nil;
-        NSString *hookOutput = nil;
-        if (![self.repository executeHook:@"pre-commit" output:&hookOutput]) {
+		NSError *error = nil;
+		BOOL success = [self.repository executeHook:@"pre-commit" error:&error];
+		if (!success) {
+			NSError *taskError = error.userInfo[NSUnderlyingErrorKey];
+			NSString *hookOutput = taskError.userInfo[PBTaskTerminationOutputKey];
             hookFailureMessage = [NSString stringWithFormat:@"Pre-commit hook failed%@%@",
-                                  [hookOutput length] > 0 ? @":\n" : @"",
-                                  hookOutput];
+                                  hookOutput && [hookOutput length] > 0 ? @":\n" : @"",
+								  hookOutput];
+			[self postCommitHookFailure:hookFailureMessage];
+			return;
         }
 
-        if (![self.repository executeHook:@"commit-msg" withArgs:[NSArray arrayWithObject:commitMessageFile] output:nil]) {
+		success = [self.repository executeHook:@"commit-msg" arguments:@[commitMessageFile] error:&error];
+		if (!success) {
+			NSError *taskError = error.userInfo[NSUnderlyingErrorKey];
+			NSString *hookOutput = taskError.userInfo[PBTaskTerminationOutputKey];
             hookFailureMessage = [NSString stringWithFormat:@"Commit-msg hook failed%@%@",
-                                  [hookOutput length] > 0 ? @":\n" : @"",
-                                  hookOutput];
-        }
-
-        if (hookFailureMessage != nil) {
-            return [self postCommitHookFailure:hookFailureMessage];
+                                  hookOutput && [hookOutput length] > 0 ? @":\n" : @"",
+								  hookOutput];
+			[self postCommitHookFailure:hookFailureMessage];
+			return;
         }
     }
 	
@@ -343,7 +349,7 @@ NS_ENUM(NSUInteger, PBGitIndexOperation) {
 	
 	[self postCommitUpdate:@"Running post-commit hook"];
 	
-	BOOL success = [self.repository executeHook:@"post-commit" output:nil];
+	BOOL success = [self.repository executeHook:@"post-commit" error:NULL];
 	NSMutableDictionary *userInfo = [NSMutableDictionary dictionaryWithObject:[NSNumber numberWithBool:success] forKey:@"success"];
 	NSString *description;  
 	if (success)
