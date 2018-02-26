@@ -47,4 +47,9 @@
 	[self acceptSheet:sender];
 }
 
+- (IBAction)closeMessageSheet:(id)sender
+{
+	[self cancelSheet:sender];
+}
+
 @end
