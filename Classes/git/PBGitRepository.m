@@ -1061,14 +1061,6 @@
 
 #pragma mark Hooks
 
-- (BOOL)executeHook:(NSString *)name output:(NSString **)output {
-	return [self executeHook:name withArgs:[NSArray array] output:output];
-}
-
-- (BOOL)executeHook:(NSString *)name withArgs:(NSArray *)arguments output:(NSString **)outputPtr {
-	return [self executeHook:name arguments:arguments output:outputPtr error:NULL];
-}
-
 - (BOOL)executeHook:(NSString *)name error:(NSError **)error {
 	return [self executeHook:name arguments:@[] error:error];
 }
