@@ -664,7 +664,7 @@
 - (IBAction)fetchRemote:(id)sender
 {
 	id <PBGitRefish> refish = [self refishForSender:sender refishTypes:@[kGitXBranchType]];
-	if (!refish)
+	if (!refish || ![refish isKindOfClass:[PBGitRef class]])
 		return;
 
 	[self.windowController performFetchForRef:refish];
@@ -673,7 +673,7 @@
 - (IBAction)pullRemote:(id)sender
 {
 	id <PBGitRefish> refish = [self refishForSender:sender refishTypes:@[kGitXBranchType]];
-	if (!refish)
+	if (!refish || ![refish isKindOfClass:[PBGitRef class]])
 		return;
 
 	[self.windowController performPullForBranch:refish remote:nil rebase:NO];
@@ -682,10 +682,10 @@
 - (IBAction)pushUpdatesToRemote:(id)sender
 {
 	id <PBGitRefish> refish = [self refishForSender:sender refishTypes:@[kGitXBranchType]];
-	if (!refish)
+	if (!refish || ![refish isKindOfClass:[PBGitRef class]])
 		return;
 
-	PBGitRef *remoteRef = nil; // [(PBGitRef *)sender.refishs.firstObject remoteRef];
+	PBGitRef *remoteRef = [(PBGitRef *)refish remoteRef];
 
 	[self.windowController performPushForBranch:nil toRemote:remoteRef];
 }
@@ -693,10 +693,10 @@
 - (IBAction)pushDefaultRemoteForRef:(id)sender
 {
 	id <PBGitRefish> refish = [self refishForSender:sender refishTypes:@[kGitXBranchType]];
-	if (!refish)
+	if (!refish || ![refish isKindOfClass:[PBGitRef class]])
 		return;
 
-	PBGitRef *ref = nil;
+	PBGitRef *ref = (PBGitRef *)refish;
 
 	[self.windowController performPushForBranch:ref toRemote:nil];
 }
@@ -704,12 +704,11 @@
 - (IBAction)pushToRemote:(id)sender
 {
 	id <PBGitRefish> refish = [self refishForSender:sender refishTypes:@[kGitXBranchType]];
-	if (!refish)
+	if (!refish || ![refish isKindOfClass:[PBGitRef class]])
 		return;
 
-	PBGitRef *ref = nil;
-	NSString *remoteName = [sender representedObject];
-	PBGitRef *remoteRef = [PBGitRef refFromString:[kGitXRemoteRefPrefix stringByAppendingString:remoteName]];
+	PBGitRef *ref = (PBGitRef *)refish;
+	PBGitRef *remoteRef = ref.remoteRef;
 
 	[self.windowController performPushForBranch:ref toRemote:remoteRef];
 }
@@ -762,7 +761,7 @@
 	}
 }
 
-- (IBAction) rebaseHeadBranch:(id)sender
+- (IBAction)rebaseHeadBranch:(id)sender
 {
 	id <PBGitRefish> refish = [self refishForSender:sender refishTypes:@[kGitXBranchType, kGitXRemoteBranchType]];
 	NSError *error = nil;
@@ -772,10 +771,10 @@
 	}
 }
 
-- (IBAction)showDeleteRefSheet:(PBRefMenuItem *)sender
+- (IBAction)showDeleteRefSheet:(id)sender
 {
 	id <PBGitRefish> refish = [self refishForSender:sender refishTypes:@[kGitXBranchType]];
-	if (!refish)
+	if (!refish || ![refish isKindOfClass:[PBGitRef class]])
 		return;
 
 	PBGitRef *ref = (PBGitRef *)refish;
