@@ -277,16 +277,18 @@
 		return _headRef;
 
 	NSError *error = nil;
-	GTReference *headRef = [self.gtRepo headReferenceWithError:&error];
+	GTReference *headRef = [self.gtRepo lookUpReferenceWithName:@"HEAD" error:&error];
 	if (!headRef) {
 		PBLogError(error);
 		return nil;
 	}
 
 	GTReference *branchRef = [headRef resolvedReferenceWithError:&error];
-	if (!branchRef) {
+	if (!branchRef && !self.gtRepo.isHEADUnborn) {
 		PBLogError(error);
 		return nil;
+	} else if (self.gtRepo.isHEADUnborn) {
+		branchRef = headRef;
 	}
 
 	_headRef = [[PBGitRevSpecifier alloc] initWithRef:[PBGitRef refFromString:branchRef.name]];
