@@ -101,6 +101,7 @@ void handleSTDINDiff()
 
 	if (diff && [diff length] > 0) {
 		GitXApplication *gitXApp = [SBApplication applicationWithBundleIdentifier:kGitXBundleIdentifier];
+		[gitXApp setSendMode:kAENoReply];
 		[gitXApp activate];
 		[gitXApp showDiff:diff];
 		exit(0);
@@ -110,6 +111,7 @@ void handleSTDINDiff()
 void handleDiffWithArguments(NSURL *repositoryURL, NSArray *arguments)
 {
 	GitXApplication *gitXApp = [SBApplication applicationWithBundleIdentifier:kGitXBundleIdentifier];
+	[gitXApp setSendMode:kAENoReply];
 	[gitXApp activate];
 	[gitXApp performDiffIn:repositoryURL withOptions:arguments];
 	exit(0);
@@ -118,6 +120,7 @@ void handleDiffWithArguments(NSURL *repositoryURL, NSArray *arguments)
 void handleOpenRepository(NSURL *repositoryURL, NSArray *arguments)
 {
     GitXApplication *gitXApp = [SBApplication applicationWithBundleIdentifier:kGitXBundleIdentifier];
+	[gitXApp setSendMode:kAENoReply];
 	[gitXApp activate];
     [gitXApp open:repositoryURL withOptions:arguments];
     return;
