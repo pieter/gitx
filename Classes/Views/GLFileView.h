@@ -25,7 +25,7 @@
 - (void)showFile;
 - (void)didLoad;
 - (NSString *)parseBlame:(NSString *)txt;
-- (NSString *)parseHTML:(NSString *)txt;
+- (NSString *)escapeHTML:(NSString *)txt;
 
 @property NSMutableArray *groups;
 @property NSString *logFormat;

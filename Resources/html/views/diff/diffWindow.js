@@ -2,7 +2,6 @@
 
 var setMessage = function(message) {
 	$("message").style.display = "";
-	$("message").innerHTML = message.escapeHTML();
+	$("message").textContent = message;
 	$("diff").style.display = "none";
-}
-
+};

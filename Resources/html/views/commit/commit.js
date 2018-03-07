@@ -5,16 +5,18 @@ var contextLines = 0;
 
 var showNewFile = function(file)
 {
-	setTitle("New file: " + file.path.escapeHTML());
+	setTitle("New file: " + file.path);
+    diff.innerHTML = "";
 
 	var contents = Index.diffForFile_staged_contextLines_(file, false, contextLines);
 	if (!contents) {
 		notify("Can not display changes (Binary file?)", -1);
-		diff.innerHTML = "";
 		return;
 	}
 
-	diff.innerHTML = "<pre>" + contents.escapeHTML() + "</pre>";
+    var pre = document.createElement("pre");
+    pre.textContent = contents;
+    diff.appendChild(pre);
 	diff.style.display = '';
 }
 
@@ -27,11 +29,11 @@ var setState = function(state) {
 	hideNotification();
 	$("state").style.display = "";
 	$("diff").style.display = "none";
-	$("state").innerHTML = state.escapeHTML();
+	$("state").textContent = state;
 }
 
 var setTitle = function(status) {
-	$("status").innerHTML = status;
+	$("status").textContent = status;
 	$("contextSize").style.display = "none";
 	$("contextTitle").style.display = "none";
 }
@@ -59,7 +61,7 @@ var showFileChanges = function(file, cached) {
 	if (file.status == 0) // New file?
 		return showNewFile(file);
 
-	setTitle((cached ? "Staged": "Unstaged") + " changes for " + file.path.escapeHTML());
+	setTitle((cached ? "Staged" : "Unstaged") + " changes for " + file.path);
 	displayContext();
 	var changes = Index.diffForFile_staged_contextLines_(file, cached, contextLines);
 	

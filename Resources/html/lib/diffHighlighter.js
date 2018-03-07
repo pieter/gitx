@@ -86,12 +86,12 @@ var highlightDiff = function(diff, element, callbacks) {
 		
 		// Show file list header
 		finalContent += '<div class="file" id="file_index_' + (file_index - 1) + '">';
-		finalContent += '<div id="title_' + title + '" class="expanded fileHeader"><a href="javascript:toggleDiff(\'' + title + '\');">' + title + '</a></div>';
+		finalContent += '<div id="title_' + title + '" class="expanded fileHeader"><a href="">' + title + '</a></div>';
 
 		if (binary) {
 			// diffContent is assumed to be empty for binary files
-			if (callbacks["binaryFile"]) {
-				finalContent += callbacks["binaryFile"](binaryname);
+			if (callbacks.binaryFileHTML) {
+				finalContent += callbacks.binaryFileHTML(binaryname);
 			} else {
 				finalContent += '<div id="content_' + title + '">Binary file differs</div>';
 			}
@@ -254,6 +254,20 @@ var highlightDiff = function(diff, element, callbacks) {
 	// This takes about 7ms
 	element.innerHTML = finalContent;
 
+	var fileHeaders = element.querySelectorAll(".fileHeader a");
+	for (var i = 0, n = fileHeaders.length; i < n; ++i) {
+		fileHeaders[i].addEventListener("click", function(e) {
+			e.preventDefault();
+			toggleDiff(this.innerHTML);
+		});
+	}
+	if (callbacks.binaryFileClass && callbacks.binaryFileOnClick) {
+		var binaryFiles = element.getElementsByClassName(callbacks.binaryFileClass);
+		for (var i = 0, n = binaryFiles.length; i < n; ++i) {
+			binaryFiles[i].addEventListener("click", callbacks.binaryFileOnClick);
+		}
+	}
+
 	// TODO: Replace this with a performance pref call
 	if (false)
 		Controller.log_("Total time:" + (new Date().getTime() - start));
@@ -360,12 +374,7 @@ var inlinediff = (function () {
   };
 
   function escape(s) {
-      var n = s;
-      n = n.replace(/&/g, "&amp;");
-      n = n.replace(/</g, "&lt;");
-      n = n.replace(/>/g, "&gt;");
-      n = n.replace(/"/g, "&quot;");
-      return n;
+      return s.escapeHTML();
   }
 
   function diffString( o, n ) {

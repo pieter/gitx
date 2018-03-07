@@ -36,11 +36,6 @@
 
 - (void) awakeFromNib
 {
-	NSString *formatFile = [[NSBundle mainBundle] pathForResource:@"format" ofType:@"html" inDirectory:@"html/views/log"];
-	if(formatFile!=nil)
-		logFormat=[NSString stringWithContentsOfURL:[NSURL fileURLWithPath:formatFile] encoding:NSUTF8StringEncoding error:nil];
-	
-	
 	startFile = GROUP_ID_FILEVIEW;
 	//repository = historyController.repository;
 	[super awakeFromNib];
@@ -87,11 +82,11 @@
 
 		NSString *fileTxt = @"";
 		if([startFile isEqualToString:GROUP_ID_FILEVIEW])
-			fileTxt = [self parseHTML:[file textContents]];
+			fileTxt = [self escapeHTML:[file textContents]];
 		else if([startFile isEqualToString:GROUP_ID_BLAME])
 			fileTxt = [self parseBlame:[file blame]];
 		else if([startFile isEqualToString:GROUP_ID_LOG])
-			fileTxt = [file log:logFormat];
+			fileTxt = [self htmlHistory:file];
 
 		id script = self.view.windowScriptObject;
 		NSString *filePath = [file fullPath];
@@ -179,18 +174,15 @@
 	[super closeView];
 }
 
-- (NSString *) parseHTML:(NSString *)txt
+- (NSString *) escapeHTML:(NSString *)txt
 {
-	txt=[txt stringByReplacingOccurrencesOfString:@"&" withString:@"&amp;"];
-	txt=[txt stringByReplacingOccurrencesOfString:@"<" withString:@"&lt;"];
-	txt=[txt stringByReplacingOccurrencesOfString:@">" withString:@"&gt;"];
-	
-	return txt;
+	CFStringRef escaped = CFXMLCreateStringByEscapingEntities(NULL, (__bridge CFStringRef)txt, NULL);
+	return (__bridge_transfer NSString *)escaped;
 }
 
 - (NSString *) parseBlame:(NSString *)txt
 {
-	txt=[self parseHTML:txt];
+	txt=[self escapeHTML:txt];
 	
 	NSArray *lines = [txt componentsSeparatedByString:@"\n"];
 	NSString *line;
@@ -230,7 +222,7 @@
 				if([summary length]>30){
 					truncate_s=[summary substringWithRange:trunc];
 				}
-				NSString *block=[NSString stringWithFormat:@"<td><p class='author'><a href='' onclick='selectCommit(\"%@\"); return false;'>%@</a> %@</p><p class='summary'>%@</p></td>\n<td>\n",commitID,truncate_c,truncate_a,truncate_s];
+				NSString *block=[NSString stringWithFormat:@"<td><p class='author'><a class='commit-link' href='#' data-commit-id='%@'>%@</a> %@</p><p class='summary'>%@</p></td>\n<td>\n",commitID,truncate_c,truncate_a,truncate_s];
 				[headers setObject:block forKey:[header objectAtIndex:0]];
 			}
 			[res appendString:[headers objectForKey:[header objectAtIndex:0]]];
@@ -268,6 +260,38 @@
 	return (NSString *)res;
 }
 
+- (NSString *) htmlHistory:(PBGitTree *)file
+{
+	// \0 can't be passed as a shell argument, so use a sufficiently long random seperator instead
+	NSString *seperator = [[NSUUID UUID] UUIDString];
+	NSString *commitTerminator = [[NSUUID UUID] UUIDString];
+	NSString *logFormat = [[@"%h,%s,%aN,%ar,%H" stringByReplacingOccurrencesOfString:@"," withString:seperator] stringByAppendingString:commitTerminator];
+	NSString *output = [file log:logFormat];
+	NSArray<NSString *> *rawCommits = [output componentsSeparatedByString:commitTerminator];
+	rawCommits = [rawCommits subarrayWithRange:(NSRange){0, rawCommits.count - 1}];
+
+	NSCharacterSet *whitespaceSet = [NSCharacterSet whitespaceCharacterSet];
+
+	NSMutableString *html = [NSMutableString string];
+	for (NSString *rawCommit in rawCommits) {
+		NSArray<NSString *> *parts = [rawCommit componentsSeparatedByString:seperator];
+		[html appendFormat:
+		 @"<div id='%@' class='commit'>"
+			 "<p class='title'>%@</p>"
+			 "<table>"
+				 "<tr><td>Author:</td><td>%@</td></tr>"
+				 "<tr><td>Date:</td><td>%@</td></tr>"
+		 		 "<tr><td>Commit:</td><td><a class='commit-link' href='#'>%@</a></td></tr>"
+			 "</table>"
+		 "</div>",
+		 [self escapeHTML:[parts[0] stringByTrimmingCharactersInSet:whitespaceSet]], // trim leading newline from split
+		 [self escapeHTML:parts[1]],
+		 [self escapeHTML:parts[2]],
+		 [self escapeHTML:parts[3]],
+		 [self escapeHTML:parts[4]]];
+	}
+	return html;
+}
 
 
 #pragma mark NSSplitView delegate methods
@@ -334,6 +358,5 @@
 
 
 @synthesize groups;
-@synthesize logFormat;
 
 @end

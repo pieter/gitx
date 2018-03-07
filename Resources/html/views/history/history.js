@@ -73,7 +73,11 @@ var gistie = function() {
 			var success = t.status >= 200 && t.status < 300;
 			var response = JSON.parse(t.responseText);
 			if (success && response.html_url) {
-				notify("Code uploaded to <a target='_new' href='"+response.html_url+"'>"+response.html_url+"</a>", 1);
+				var a = document.createElement("a");
+				a.target = "_new";
+				a.href = response.html_url;
+				a.textContent = response.html_url;
+				notify("Code uploaded to " + a.outerHTML, 1);
 			} else {
 				notify("Pasting to Gistie failed :(.", -1);
 				Controller.log_(t.responseText);
@@ -91,7 +95,7 @@ var gistie = function() {
 	try {
 		t.send(JSON.stringify(parameters));
 	} catch(e) {
-		notify("Pasting to Gistie failed: " + e, -1);
+		notify("Pasting to Gistie failed: " + e.toString().escapeHTML(), -1);
 	}
 }
 
@@ -127,10 +131,16 @@ var showRefs = function() {
 	var refs = $("refs");
 	if (commit.refs) {
 		refs.parentNode.style.display = "";
-		refs.innerHTML = "";
+		refs.textContent = "";
 		for (var i = 0; i < commit.refs.length; i++) {
 			var ref = commit.refs[i];
-			refs.innerHTML += '<span class="refs ' + ref.type() + (commit.currentRef == ref.ref ? ' currentBranch' : '') + '">' + ref.shortName() + '</span> ';
+			var span = document.createElement("span");
+			span.classList.add("refs", ref.type());
+			if (commit.currentRef == ref.ref) {
+				span.classList.add("currentBranch");
+			}
+			span.textContent = ref.shortName();
+			refs.appendChild(span);
 		}
 	} else
 		refs.parentNode.style.display = "none";
@@ -148,41 +158,54 @@ var loadCommit = function(commitObject, currentRef) {
 	commit = new Commit(commitObject);
 	commit.currentRef = currentRef;
 
-	$("commitID").innerHTML = commit.sha;
-	$("authorID").innerHTML = commit.author_name;
-	$("subjectID").innerHTML = commit.subject.escapeHTML();
-	$("diff").innerHTML = "";
-	$("date").innerHTML = "";
+	$("commitID").textContent = commit.sha;
+	$("subjectID").textContent = commit.subject;
+	$("diff").textContent = "";
+	$("date").textContent = "";
 	$("files").style.display = "none";
 
-	var formatEmail = function(name, email) {
-		return email ? name + " &lt;<a href='mailto:" + email + "'>" + email + "</a>&gt;" : name;
+	var setFormattedEmailContent = function(node, name, email) {
+		if (email) {
+			node.textContent = name + " <";
+			var a = document.createElement("a");
+			a.href = "mailto:" + email;
+			a.textContent = email;
+			node.appendChild(a);
+			node.appendChild(document.createTextNode(">"));
+		} else {
+			node.textContent = name;
+		}
 	}
 
-	$("authorID").innerHTML = formatEmail(commit.author_name, commit.author_email);
-	$("date").innerHTML = commit.author_date;
+	setFormattedEmailContent($("authorID"), commit.author_name, commit.author_email);
+	$("date").textContent = commit.author_date;
 	setGravatar(commit.author_email, $("author_gravatar"));
 
 	if (commit.committer_name != commit.author_name) {
 		$("committerID").parentNode.style.display = "";
-		$("committerID").innerHTML = formatEmail(commit.committer_name, commit.committer_email);
+		setFormattedEmailContent($("committerID"), commit.committer_name, commit.committer_email);
 
 		$("committerDate").parentNode.style.display = "";
-		$("committerDate").innerHTML = commit.committer_date;
+		$("committerDate").textContent = commit.committer_date;
 		setGravatar(commit.committer_email, $("committer_gravatar"));
 	} else {
 		$("committerID").parentNode.style.display = "none";
 		$("committerDate").parentNode.style.display = "none";
 	}
 
-    var textToHTML = function (txt) {
-        return (" "+txt+" ")
-            .replace(/(https?:\/\/([^\s\.\)\]\<]+|\.[^\s])+)/ig, "<a href=\"$1\">$1</a>")
-            .replace(/\n/g,"<br>")
-            .trim();
-    }
+	var textToHTML = function (txt) {
+		return (" " + txt.escapeHTML() + " ")
+			.replace(/(https?:\/\/([^\s\.\)\]\<]+|\.[^\s])+)/ig, function(m, url) {
+				var a = document.createElement("a");
+				a.href = url;
+				a.textContent = url;
+				return a.outerHTML;
+			})
+			.replace(/\n/g,"<br>")
+			.trim();
+	}
 
-    $("message").innerHTML = textToHTML(commit.message);
+	$("message").innerHTML = textToHTML(commit.message);
 
 	jQuery("#commit").show();
 	jQuery("#no-commit-message").hide();
@@ -268,19 +291,36 @@ var formatRenameDiff = function(d) {
 var showDiff = function() {
 
 	// Callback for the diff highlighter. Used to generate a filelist
-	var binaryDiff = function(filename) {
-		if (filename.match(/\.(png|jpg|icns|psd)$/i))
-			return '<a href="#" onclick="return showImage(this, \'' + filename + '\')">Display image</a>';
-		else
+	var binaryDiffClass = "display-binary-as-image"
+	var binaryDiffHTML = function(filename) {
+		if (filename.match(/\.(png|jpg|icns|psd)$/i)) {
+			var a = document.createElement("a");
+			a.href = "#";
+			a.dataset.filename = filename;
+			a.className = binaryDiffClass;
+			a.textContent = "Display image";
+			return a.outerHTML;
+		} else {
 			return "Binary file differs";
-	}
-	
-	highlightDiff(commit.diff, $("diff"), { "binaryFile" : binaryDiff });
+		}
+	};
+	var binaryDiffClick = function(e) {
+		e.preventDefault();
+		return showImage(this, this.dataset.filename);
+	};
+
+	highlightDiff(commit.diff, $("diff"), {
+		"binaryFileHTML" : binaryDiffHTML,
+		"binaryFileClass" : binaryDiffClass,
+		"binaryFileOnClick" : binaryDiffClick,
+	});
 }
 
 var showImage = function(element, filename)
 {
-	element.outerHTML = '<img src="GitX://' + commit.sha + '/' + filename + '">';
+	var img = document.createElement("img");
+	img.src = "GitX://" + commit.sha + "/" + filename;
+	element.outerHTML = img.outerHTML;
 	return false;
 }
 
