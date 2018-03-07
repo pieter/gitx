@@ -5,7 +5,7 @@ var selectCommit = function(a) {
 
 var showFile = function(html) {
 	var el = $("log");
-	el.style.display = "";
+	el.classList.remove("hidden");
 	el.innerHTML = html;
 	bindCommitSelectionLinks(el);
 	return;

@@ -35,25 +35,26 @@ Array.prototype.indexOf = function(item, i) {
 
 var notify = function(html, state) {
 	var n = $("notification");
-	n.style.display = "";
+	n.classList.remove("hidden");
 	$("notification_message").innerHTML = html;
 	
 	// Change color
 	if (!state) { // Busy
-		$("spinner").style.display = "";
-		n.setAttribute("class", "");
+		$("spinner").classList.remove("hidden");
+		n.classList.remove("success");
+		n.classList.remove("fail");
 	}
 	else if (state == 1) { // Success
-		$("spinner").style.display = "none";
-		n.setAttribute("class", "success");
+		$("spinner").classList.add("hidden");
+		n.classList.add("success");
 	} else if (state == -1) {// Fail
-		$("spinner").style.display = "none";
-		n.setAttribute("class", "fail");
+		$("spinner").classList.add("hidden");
+		n.classList.add("fail");
 	}
 }
 
 var hideNotification = function() {
-	$("notification").style.display = "none";
+	$("notification").classList.add("hidden");
 }
 
 var bindCommitSelectionLinks = function(el) {

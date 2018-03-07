@@ -47,12 +47,21 @@ var confirm_gist = function(confirmation_message) {
 	var notification_text = 'This will create a ' + publicMessage + ' paste of your commit to <a href="https://gist.github.com/">https://gist.github.com/</a><br>' +
 	deleteMessage +
 	'Are you sure you want to continue?<br/><br/>' +
-	'<a href="#" onClick="hideNotification();return false;" style="color: red;">No. Cancel.</a> | ' +
-	'<a href="#" onClick="gistie();return false;" style="color: green;">' + confirmation_message + '</a>';
+	'<a href="#" class="cancel">No. Cancel.</a> | ' +
+	'<a href="#" class="confirm">' + confirmation_message + '</a>';
 
 	notify(notification_text, 0);
+	var notification_message = $("notification_message");
+	notification_message.getElementsByClassName("cancel")[0].addEventListener("click", function(e) {
+		e.preventDefault();
+		hideNotification();
+	});
+	notification_message.getElementsByClassName("confirm")[0].addEventListener("click", function(e) {
+		e.preventDefault();
+		gistie();
+	});
 	// Hide img#spinner, since it?s visible by default
-	$("spinner").style.display = "none";
+	$("spinner").classList.add("hidden");
 }
 
 var gistie = function() {
@@ -122,7 +131,7 @@ var selectCommit = function(a) {
 
 // Relead only refs
 var reload = function() {
-	$("notification").style.display = "none";
+	$("notification").classList.add("hidden");
 	commit.reloadRefs();
 	showRefs();
 }
@@ -130,7 +139,7 @@ var reload = function() {
 var showRefs = function() {
 	var refs = $("refs");
 	if (commit.refs) {
-		refs.parentNode.style.display = "";
+		refs.parentNode.classList.remove("hidden");
 		refs.textContent = "";
 		for (var i = 0; i < commit.refs.length; i++) {
 			var ref = commit.refs[i];
@@ -143,7 +152,7 @@ var showRefs = function() {
 			refs.appendChild(span);
 		}
 	} else
-		refs.parentNode.style.display = "none";
+		refs.parentNode.classList.add("hidden");
 }
 
 var loadCommit = function(commitObject, currentRef) {
@@ -162,7 +171,7 @@ var loadCommit = function(commitObject, currentRef) {
 	$("subjectID").textContent = commit.subject;
 	$("diff").textContent = "";
 	$("date").textContent = "";
-	$("files").style.display = "none";
+	$("files").classList.add("hidden");
 
 	var setFormattedEmailContent = function(node, name, email) {
 		if (email) {
@@ -182,15 +191,15 @@ var loadCommit = function(commitObject, currentRef) {
 	setGravatar(commit.author_email, $("author_gravatar"));
 
 	if (commit.committer_name != commit.author_name) {
-		$("committerID").parentNode.style.display = "";
+		$("committerID").parentNode.classList.remove("hidden");
 		setFormattedEmailContent($("committerID"), commit.committer_name, commit.committer_email);
 
-		$("committerDate").parentNode.style.display = "";
+		$("committerDate").parentNode.classList.remove("hidden");
 		$("committerDate").textContent = commit.committer_date;
 		setGravatar(commit.committer_email, $("committer_gravatar"));
 	} else {
-		$("committerID").parentNode.style.display = "none";
-		$("committerDate").parentNode.style.display = "none";
+		$("committerID").parentNode.classList.add("hidden");
+		$("committerDate").parentNode.classList.add("hidden");
 	}
 
 	var textToHTML = function (txt) {
@@ -224,8 +233,9 @@ var loadCommit = function(commitObject, currentRef) {
 	for (var i = 0; i < commit.parents.length; i++) {
 		var newRow = $("commit_header").insertRow(-1);
 		newRow.innerHTML = "<td class='property_name'>Parent:</td><td>" +
-			"<a class=\"SHA\" href='' onclick='selectCommit(this.innerHTML); return false;'>" +
+			"<a class='SHA commit-link' href=''>" +
 			commit.parents[i].SHA() + "</a></td>";
+		bindCommitSelectionLinks(newRow);
 	}
 
 	commit.notificationID = setTimeout(function() { 
@@ -327,9 +337,9 @@ var showImage = function(element, filename)
 var enableFeature = function(feature, element)
 {
 	if(!Controller || Controller.isFeatureEnabled_(feature)) {
-		element.style.display = "";
+		element.classList.remove("hidden");
 	} else {
-		element.style.display = "none";
+		element.classList.add("hidden");
 	}
 }
 
@@ -346,10 +356,11 @@ var loadCommitDiff = function(jsonData)
 	commit.filesInfo = diffData.filesInfo;
 	commit.diff = diffData.fullDiff;
 
-	if (commit.notificationID)
+	if (commit.notificationID) {
 		clearTimeout(commit.notificationID)
-		else
-			$("notification").style.display = "none";
+	} else {
+		$("notification").classList.add("hidden");
+	}
 
 	if (commit.filesInfo.length > 0) {
 		// Create the file list
@@ -421,9 +432,17 @@ var loadCommitDiff = function(jsonData)
 				var numLinesChanged = numLinesAdded + numLinesRemoved;
 				// summarize large numbers
 				if (numLinesChanged > 999) numLinesChanged = "~" + Math.round(numLinesChanged / 1000) + "k";
+
 				// fill in numbers
 				var diffstatSummary = diffstatElem.getElementsByClassName("diffstat-numbers")[1];
 				diffstatSummary.innerText = numLinesChanged;
+				diffstatSummary.addEventListener("mouseover", function() {
+					expandDiffstatDetails(this);
+				});
+				diffstatSummary.addEventListener("mouseout", function() {
+					collapseDiffstatDetails(this);
+				});
+
 				var diffstatDetails = diffstatElem.getElementsByClassName("diffstat-numbers")[0];
 				diffstatDetails.getElementsByClassName("added")[0].innerText = "+"+numLinesAdded;
 				diffstatDetails.getElementsByClassName("removed")[0].innerText = "-"+numLinesRemoved;
@@ -443,14 +462,49 @@ var loadCommitDiff = function(jsonData)
 			}
 			$("filelist").appendChild(fileElem);
 		}
-		$("files").style.display = "";
+		$("files").classList.remove("hidden");
 	}
 
 	if (commit.diff.length < 200000)
 		showDiff();
-	else
-		$("diff").innerHTML = "<a class='showdiff' href='' onclick='showDiff(); return false;'>This is a large commit.<br>Click here or press 'v' to view.</a>";
-
+	else {
+		var diffEl = $("diff");
+		diffEl.innerHTML = "<a class='showdiff' href=''>This is a large commit.<br>Click here or press 'v' to view.</a>";
+		diffEl.getElementsByClassName("showdiff")[0].addEventListener("click", function(e) {
+			e.preventDefault();
+			showDiff();
+		});
+	}
 	hideNotification();
 	enableFeatures();
 }
+
+function expandDiffstatDetails(obj) {
+	var children = obj.parentNode.childNodes;
+	for (i in children) {
+		var c = children[i];
+		if (c.classList.contains("details")) {
+			c.classList.remove("hidden");
+		}
+	}
+	return true;
+}
+
+function collapseDiffstatDetails(obj) {
+	var children = obj.parentNode.childNodes;
+	for (i in children) {
+		var c = children[i];
+		if (c.classList.contains("details")) {
+			c.classList.remove("hidden");
+		}
+	}
+	return true;
+}
+
+document.addEventListener("DOMContentLoaded", function() {
+	extractPrototypes();
+	$("gist").addEventListener("click", function(e) {
+		e.preventDefault();
+		confirm_gist();
+	});
+});
