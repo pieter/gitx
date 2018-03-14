@@ -17,7 +17,6 @@
 	__weak IBOutlet PBGitHistoryController* historyController;
 	__weak IBOutlet MGScopeBar *typeBar;
 	NSMutableArray *groups;
-	NSString *logFormat;
 	__weak IBOutlet NSView *accessoryView;
 	__weak IBOutlet NSSplitView *fileListSplitView;
 }
@@ -28,6 +27,5 @@
 - (NSString *)escapeHTML:(NSString *)txt;
 
 @property NSMutableArray *groups;
-@property NSString *logFormat;
 
 @end
