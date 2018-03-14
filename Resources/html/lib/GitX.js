@@ -10,11 +10,11 @@ function $(element) {
 }
 
 String.prototype.escapeHTML = (function() {
-    var div = document.createElement("div");
-    return function() {
-        div.textContent = this;
-        return div.innerHTML;
-    };
+	var div = document.createElement("div");
+	return function() {
+		div.textContent = this;
+		return div.innerHTML;
+	};
 })();
 
 Element.prototype.toggleDisplay = function() {

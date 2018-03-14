@@ -6,7 +6,7 @@ var contextLines = 0;
 var showNewFile = function(file)
 {
 	setTitle("New file: " + file.path);
-    diff.innerHTML = "";
+	diff.innerHTML = "";
 
 	var contents = Index.diffForFile_staged_contextLines_(file, false, contextLines);
 	if (!contents) {
@@ -14,9 +14,9 @@ var showNewFile = function(file)
 		return;
 	}
 
-    var pre = document.createElement("pre");
-    pre.textContent = contents;
-    diff.appendChild(pre);
+	var pre = document.createElement("pre");
+	pre.textContent = contents;
+	diff.appendChild(pre);
 	diff.style.display = '';
 }
 
