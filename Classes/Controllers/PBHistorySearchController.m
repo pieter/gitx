@@ -405,7 +405,7 @@
 
 	results = nil;
 
-	NSMutableArray *searchArguments = [NSMutableArray arrayWithObjects:@"log", @"--pretty=format:%H", nil];
+	NSMutableArray *searchArguments = [NSMutableArray arrayWithObjects:@"log", @"--pretty=format:%H", @"--no-textconv", nil];
 	switch (self.searchMode) {
 		case PBHistorySearchModeRegex:
 			[searchArguments addObject:@"--pickaxe-regex"];
