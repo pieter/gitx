@@ -28,6 +28,7 @@
 @implementation PBGitWindowController
 
 @synthesize repository;
+@dynamic document;
 
 - (id)initWithRepository:(PBGitRepository*)theRepository displayDefault:(BOOL)displayDefault
 {

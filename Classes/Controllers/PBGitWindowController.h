@@ -12,6 +12,7 @@
 @class PBViewController, PBGitSidebarController, PBGitCommitController, PBGitRepository;
 @class RJModalRepoSheet;
 @class PBGitRef;
+@class PBGitRepositoryDocument;
 
 @interface PBGitWindowController : NSWindowController<NSWindowDelegate> {
 	__weak PBViewController *contentController;
@@ -27,6 +28,8 @@
 }
 
 @property (nonatomic, strong)  PBGitRepository *repository;
+/* This is assign because that's what NSWindowController says :-S */
+@property (assign) PBGitRepositoryDocument *document;
 
 - (id)initWithRepository:(PBGitRepository*)theRepository displayDefault:(BOOL)display;
 
