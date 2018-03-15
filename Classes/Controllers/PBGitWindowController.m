@@ -22,22 +22,26 @@
 #import "PBGitRef.h"
 #import "PBError.h"
 #import "PBRepositoryDocumentController.h"
+#import "PBGitRepositoryDocument.h"
 #import "PBRefMenuItem.h"
 #import "PBRemoteProgressSheet.h"
 
 @implementation PBGitWindowController
 
-@synthesize repository;
 @dynamic document;
 
-- (id)initWithRepository:(PBGitRepository*)theRepository displayDefault:(BOOL)displayDefault
+- (instancetype)init
 {
-	if (!(self = [self initWithWindowNibName:@"RepositoryWindow"]))
+	self = [super initWithWindowNibName:@"RepositoryWindow"];
+	if (!self)
 		return nil;
 
-	self.repository = theRepository;
-
 	return self;
+}
+
+- (PBGitRepository *)repository
+{
+	return [self.document repository];
 }
 
 - (void)synchronizeWindowTitleWithDocumentName
@@ -65,10 +69,10 @@
 {
 	if ([menuItem action] == @selector(showCommitView:)) {
 		[menuItem setState:(contentController == sidebarController.commitViewController) ? YES : NO];
-		return ![repository isBareRepository];
+		return ![self.repository isBareRepository];
 	} else if ([menuItem action] == @selector(showHistoryView:)) {
 		[menuItem setState:(contentController != sidebarController.commitViewController) ? YES : NO];
-		return ![repository isBareRepository];
+		return ![self.repository isBareRepository];
 	} else if (menuItem.action == @selector(fetchRemote:)) {
 		return [self validateMenuItem:menuItem remoteTitle:@"Fetch “%@”" plainTitle:@"Fetch"];
 	} else if (menuItem.action == @selector(pullRemote:)) {
@@ -108,7 +112,8 @@
 	[[self window] setFrameUsingName:@"GitX"];
 	[[self window] setRepresentedURL:self.repository.workingDirectoryURL];
 
-	sidebarController = [[PBGitSidebarController alloc] initWithRepository:repository superController:self];
+	sidebarController = [[PBGitSidebarController alloc] initWithRepository:self.repository superController:self];
+
 	[[sidebarController view] setFrame:[sourceSplitView bounds]];
 	[sourceSplitView addSubview:[sidebarController view]];
 	[sourceListControlsView addSubview:sidebarController.sourceListControlsView];
@@ -283,7 +288,7 @@
 																			windowController:self];
 		[progressSheet beginProgressSheetForBlock:^{
 			NSError *error = nil;
-			BOOL success = [repository addRemote:remoteName withURL:remoteURL error:&error];
+			BOOL success = [self.repository addRemote:remoteName withURL:remoteURL error:&error];
 			return success ? nil : error;
 		} completionHandler:^(NSError *error) {
 			if (error) {
@@ -292,7 +297,7 @@
 			}
 
 			// Now fetch that remote
-			PBGitRef *remoteRef = [repository refForName:remoteName];
+			PBGitRef *remoteRef = [self.repository refForName:remoteName];
 			[self performFetchForRef:remoteRef];
 		}];
 	}];
@@ -309,7 +314,7 @@
 
 	[progressSheet beginProgressSheetForBlock:^{
 		NSError *error = nil;
-		BOOL success = [repository fetchRemoteForRef:ref error:&error];
+		BOOL success = [self.repository fetchRemoteForRef:ref error:&error];
 		return (success ? nil : error);
 	} completionHandler:^(NSError *error) {
 		if (error) {
@@ -345,7 +350,7 @@
 
 	[progressSheet beginProgressSheetForBlock:^{
 		NSError *error = nil;
-		BOOL success = [repository pullBranch:branchRef fromRemote:remoteRef rebase:rebase error:&error];
+		BOOL success = [self.repository pullBranch:branchRef fromRemote:remoteRef rebase:rebase error:&error];
 		return success ? nil : error;
 	} completionHandler:^(NSError *error) {
 		if (error) {
@@ -397,7 +402,7 @@
 
 		[progressSheet beginProgressSheetForBlock:^{
 			NSError *error = nil;
-			BOOL success = [repository pushBranch:branchRef toRemote:remoteRef error:&error];
+			BOOL success = [self.repository pushBranch:branchRef toRemote:remoteRef error:&error];
 			return (success ? nil : error);
 		} completionHandler:^(NSError *error) {
 			if (error) {
@@ -445,7 +450,7 @@
 - (IBAction) stashSave:(id) sender
 {
 	NSError *error = nil;
-	BOOL success = [repository stashSaveWithKeepIndex:NO error:&error];
+	BOOL success = [self.repository stashSaveWithKeepIndex:NO error:&error];
 
 	if (!success) [self showErrorSheet:error];
 }
@@ -453,18 +458,18 @@
 - (IBAction) stashSaveWithKeepIndex:(id) sender
 {
 	NSError *error = nil;
-	BOOL success = [repository stashSaveWithKeepIndex:YES error:&error];
+	BOOL success = [self.repository stashSaveWithKeepIndex:YES error:&error];
 
 	if (!success) [self showErrorSheet:error];
 }
 
 - (IBAction) stashPop:(id) sender
 {
-	if ([repository.stashes count] <= 0) return;
+	if ([self.repository.stashes count] <= 0) return;
 
-	PBGitStash * latestStash = [repository.stashes objectAtIndex:0];
+	PBGitStash * latestStash = [self.repository.stashes objectAtIndex:0];
 	NSError *error = nil;
-	BOOL success = [repository stashPop:latestStash error:&error];
+	BOOL success = [self.repository stashPop:latestStash error:&error];
 
 	if (!success) [self showErrorSheet:error];
 }
@@ -513,7 +518,7 @@
 
 - (void) createBranch:(id)sender
 {
-	PBGitRef *currentRef = [repository.currentBranch ref];
+	PBGitRef *currentRef = [self.repository.currentBranch ref];
 
 	id <PBGitRefish> refish = nil;
 	if ([sender isKindOfClass:[PBRefMenuItem class]]) {
@@ -559,7 +564,7 @@
 		if (selectedCommit)
 			refish = selectedCommit;
 		else
-			refish = repository.currentBranch.ref;
+			refish = self.repository.currentBranch.ref;
 	}
 
 	[PBCreateTagSheet beginSheetWithRefish:refish windowController:self completionHandler:^(PBCreateTagSheet *sheet, NSModalResponse returnCode) {

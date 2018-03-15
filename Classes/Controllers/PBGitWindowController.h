@@ -27,11 +27,11 @@
 	__weak IBOutlet NSProgressIndicator *progressIndicator;
 }
 
-@property (nonatomic, strong)  PBGitRepository *repository;
+@property (nonatomic, strong) PBGitRepository *repository;
 /* This is assign because that's what NSWindowController says :-S */
 @property (assign) PBGitRepositoryDocument *document;
 
-- (id)initWithRepository:(PBGitRepository*)theRepository displayDefault:(BOOL)display;
+- (instancetype)init;
 
 - (void)changeContentController:(PBViewController *)controller;
 

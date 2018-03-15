@@ -85,7 +85,7 @@ NSString *PBGitRepositoryDocumentType = @"Git Repository";
 {
     // Create our custom window controller
 #ifndef CLI
-	[self addWindowController: [[PBGitWindowController alloc] initWithRepository:self.repository displayDefault:YES]];
+	[self addWindowController:[[PBGitWindowController alloc] init]];
 #endif
 }
 
