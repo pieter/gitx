@@ -645,15 +645,6 @@
 	return [self.windowController performSelector:@selector(refishForSender:refishTypes:) withObject:sender withObject:types];
 }
 
-- (IBAction)fetchRemote:(id)sender
-{
-	id <PBGitRefish> refish = [self refishForSender:sender refishTypes:@[kGitXBranchType]];
-	if (!refish || ![refish isKindOfClass:[PBGitRef class]])
-		return;
-
-	[self.windowController performFetchForRef:refish];
-}
-
 - (IBAction)pullRemote:(id)sender
 {
 	id <PBGitRefish> refish = [self refishForSender:sender refishTypes:@[kGitXBranchType]];

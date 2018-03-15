@@ -92,9 +92,10 @@
 	if (!ref && (item.parent == sidebarController.remotes)) {
 		ref = [PBGitRef refFromString:[kGitXRemoteRefPrefix stringByAppendingString:item.title]];
 	}
-	
-	if (ref.isRemote) {
-		menuItem.title = [NSString stringWithFormat:NSLocalizedString(localisationKeyWithRemote, @""), ref.remoteName];
+
+	PBGitRef *remoteRef = [self.repository remoteRefForBranch:ref error:NULL];
+	if (ref.isRemote || remoteRef) {
+		menuItem.title = [NSString stringWithFormat:NSLocalizedString(localisationKeyWithRemote, @""), (!remoteRef ? ref.remoteName : remoteRef.remoteName)];
 		menuItem.representedObject = ref;
 		return YES;
 	}
@@ -269,11 +270,17 @@
 
 - (void)performFetchForRef:(PBGitRef *)ref
 {
-	NSString *remoteName = (ref ? ref.remoteName : @"all remotes");
-	NSString *description = [NSString stringWithFormat:@"Fetching tracking branches for %@", remoteName];
+	NSString *desc = nil;
+	if (ref == nil) {
+		desc = [NSString stringWithFormat:@"Fetching all remotes"];
+	} else if (ref.isRemote || ref.isRemoteBranch) {
+		desc = [NSString stringWithFormat:@"Fetching branches from remote %@", ref.remoteName];
+	} else {
+		desc = [NSString stringWithFormat:@"Fetching tracking branch for %@", ref.shortName];
+	}
 
 	PBRemoteProgressSheet *progressSheet = [PBRemoteProgressSheet progressSheetWithTitle:@"Fetching remote…"
-																			 description:description
+																			 description:desc
 																		windowController:self];
 
 	[progressSheet beginProgressSheetForBlock:^{
@@ -458,10 +465,13 @@
 	}];
 }
 
-- (IBAction) fetchRemote:(id)sender {
-	/* FIXME: this is wrong, you can right-click in the sidebar but try to fetch the *selected* ref */
-	PBGitRef *ref = [self selectedItem].ref;
-	[self performFetchForRef:ref];
+- (IBAction)fetchRemote:(id)sender
+{
+	id <PBGitRefish> refish = [self refishForSender:sender refishTypes:@[kGitXBranchType, kGitXRemoteType]];
+	if (!refish || ![refish isKindOfClass:[PBGitRef class]])
+		return;
+
+	[self performFetchForRef:refish];
 }
 
 - (IBAction) fetchAllRemotes:(id)sender {
