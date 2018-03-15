@@ -30,12 +30,12 @@
 
 - (NSArray<NSMenuItem *> *) menuItemsForRef:(PBGitRef *)ref
 {
-	return [PBRefMenuItem defaultMenuItemsForRef:ref inRepository:historyController.repository target:nil];
+	return [NSMenuItem pb_defaultMenuItemsForRef:ref inRepository:historyController.repository];
 }
 
 - (NSArray<NSMenuItem *> *) menuItemsForCommits:(NSArray<PBGitCommit *> *)commits
 {
-	return [PBRefMenuItem defaultMenuItemsForCommits:commits target:nil];
+	return [NSMenuItem pb_defaultMenuItemsForCommits:commits];
 }
 
 - (NSArray<NSMenuItem *> *)menuItemsForRow:(NSInteger)rowIndex
