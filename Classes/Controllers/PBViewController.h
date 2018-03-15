@@ -30,11 +30,6 @@
 /* Updateview is called every time it is loaded into the main view */
 - (void) updateView;
 
-/* Called after awakeFromNib:, and the view has been loaded into the main view.
- * Useful for resizing stuff after everything has been set in the right position
- */
-- (void)viewLoaded;
-
 - (NSResponder *)firstResponder;
 - (IBAction) refresh:(id)sender;
 

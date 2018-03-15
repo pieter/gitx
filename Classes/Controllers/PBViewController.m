@@ -57,8 +57,4 @@
 {
 }
 
-- (void)viewLoaded
-{
-}
-
 @end
