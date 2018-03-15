@@ -267,61 +267,6 @@
 	[[NSWorkspace sharedWorkspace] activateFileViewerSelectingURLs:fileURLs];
 }
 
-#pragma mark IBActions
-
-- (id <PBGitRefish>)refishForSender:(id)sender refishTypes:(NSArray *)types
-{
-	if ([sender isKindOfClass:[NSMenuItem class]]) {
-		id <PBGitRefish> refish = nil;
-		if ([(refish = [(NSMenuItem *)sender representedObject]) conformsToProtocol:@protocol(PBGitRefish)]) {
-			if (!types || [types indexOfObject:[refish refishType]] != NSNotFound)
-				return refish;
-		}
-
-		return nil;
-	}
-
-	if ([types indexOfObject:kGitXCommitType] == NSNotFound)
-		return nil;
-
-	return sidebarController.historyViewController.selectedCommits.firstObject;
-}
-
-- (IBAction) showAddRemoteSheet:(id)sender
-{
-	[self addRemote:sender];
-}
-
-- (IBAction)addRemote:(id)sender
-{
-	[PBAddRemoteSheet beginSheetWithWindowController:self completionHandler:^(PBAddRemoteSheet *addSheet, NSModalResponse returnCode) {
-		if (returnCode != NSModalResponseOK) return;
-
-		NSString *remoteName = addSheet.remoteName.stringValue;
-		NSString *remoteURL = addSheet.remoteURL.stringValue;
-
-		NSString *description = [NSString stringWithFormat:@"Adding remote \"%@\"", remoteName];
-
-		PBRemoteProgressSheet *progressSheet = [PBRemoteProgressSheet progressSheetWithTitle:@"Adding remote"
-																				 description:description
-																			windowController:self];
-		[progressSheet beginProgressSheetForBlock:^{
-			NSError *error = nil;
-			BOOL success = [self.repository addRemote:remoteName withURL:remoteURL error:&error];
-			return success ? nil : error;
-		} completionHandler:^(NSError *error) {
-			if (error) {
-				[self showErrorSheet:error];
-				return;
-			}
-
-			// Now fetch that remote
-			PBGitRef *remoteRef = [self.repository refForName:remoteName];
-			[self performFetchForRef:remoteRef];
-		}];
-	}];
-}
-
 - (void)performFetchForRef:(PBGitRef *)ref
 {
 	NSString *remoteName = (ref ? ref.remoteName : @"all remotes");
@@ -340,16 +285,6 @@
 			[self showErrorSheet:error];
 		}
 	}];
-}
-
-- (IBAction) fetchRemote:(id)sender {
-	/* FIXME: this is wrong, you can right-click in the sidebar but try to fetch the *selected* ref */
-	PBGitRef *ref = [self selectedItem].ref;
-	[self performFetchForRef:ref];
-}
-
-- (IBAction) fetchAllRemotes:(id)sender {
-	[self performFetchForRef:nil];
 }
 
 - (void)performPullForBranch:(PBGitRef *)branchRef remote:(PBGitRef *)remoteRef rebase:(BOOL)rebase {
@@ -377,26 +312,6 @@
 			[self showErrorSheet:error];
 		}
 	}];
-}
-
-- (IBAction) pullRemote:(id)sender {
-	PBGitRef *ref = [self selectedItem].revSpecifier.ref;
-	[self performPullForBranch:ref remote:nil rebase:NO];
-}
-
-- (IBAction) pullRebaseRemote:(id)sender {
-	PBGitRef *ref = [self selectedItem].revSpecifier.ref;
-	[self performPullForBranch:ref remote:nil rebase:YES];
-}
-
-- (IBAction) pullDefaultRemote:(id)sender {
-	PBGitRef *ref = [self selectedItem].revSpecifier.ref;
-	[self performPullForBranch:ref remote:nil rebase:NO];
-}
-
-- (IBAction) pullRebaseDefaultRemote:(id)sender {
-	PBGitRef *ref = [self selectedItem].revSpecifier.ref;
-	[self performPullForBranch:ref remote:nil rebase:YES];
 }
 
 - (void)performPushForBranch:(PBGitRef *)branchRef toRemote:(PBGitRef *)remoteRef
@@ -462,9 +377,115 @@
 	}];
 }
 
+- (NSArray <NSURL *> *)selectedURLsFromSender:(id)sender {
+	NSArray *selectedFiles = [sender representedObject];
+	if (![selectedFiles isKindOfClass:[NSArray class]] || [selectedFiles count] == 0)
+		return nil;
+
+	NSMutableArray *URLs = [NSMutableArray array];
+	for (id file in selectedFiles) {
+		NSString *path = file;
+		// Those can be PBChangedFiles sent by PBGitIndexController. Get their path.
+		if ([file respondsToSelector:@selector(path)]) {
+			path = [file path];
+		}
+
+		if (![path isKindOfClass:[NSString class]])
+			continue;
+		[URLs addObject:[self.repository.workingDirectoryURL URLByAppendingPathComponent:path]];
+	}
+
+	return URLs;
+}
+
+#pragma mark IBActions
+
+- (id <PBGitRefish>)refishForSender:(id)sender refishTypes:(NSArray *)types
+{
+	if ([sender isKindOfClass:[NSMenuItem class]]) {
+		id <PBGitRefish> refish = nil;
+		if ([(refish = [(NSMenuItem *)sender representedObject]) conformsToProtocol:@protocol(PBGitRefish)]) {
+			if (!types || [types indexOfObject:[refish refishType]] != NSNotFound)
+				return refish;
+		}
+
+		return nil;
+	}
+
+	if ([types indexOfObject:kGitXCommitType] == NSNotFound)
+		return nil;
+
+	return sidebarController.historyViewController.selectedCommits.firstObject;
+}
+
 - (PBSourceViewItem *) selectedItem {
 	NSOutlineView *sourceView = sidebarController.sourceView;
 	return [sourceView itemAtRow:sourceView.selectedRow];
+}
+
+- (IBAction) showAddRemoteSheet:(id)sender
+{
+	[self addRemote:sender];
+}
+
+- (IBAction)addRemote:(id)sender
+{
+	[PBAddRemoteSheet beginSheetWithWindowController:self completionHandler:^(PBAddRemoteSheet *addSheet, NSModalResponse returnCode) {
+		if (returnCode != NSModalResponseOK) return;
+
+		NSString *remoteName = addSheet.remoteName.stringValue;
+		NSString *remoteURL = addSheet.remoteURL.stringValue;
+
+		NSString *description = [NSString stringWithFormat:@"Adding remote \"%@\"", remoteName];
+
+		PBRemoteProgressSheet *progressSheet = [PBRemoteProgressSheet progressSheetWithTitle:@"Adding remote"
+																				 description:description
+																			windowController:self];
+		[progressSheet beginProgressSheetForBlock:^{
+			NSError *error = nil;
+			BOOL success = [self.repository addRemote:remoteName withURL:remoteURL error:&error];
+			return success ? nil : error;
+		} completionHandler:^(NSError *error) {
+			if (error) {
+				[self showErrorSheet:error];
+				return;
+			}
+
+			// Now fetch that remote
+			PBGitRef *remoteRef = [self.repository refForName:remoteName];
+			[self performFetchForRef:remoteRef];
+		}];
+	}];
+}
+
+- (IBAction) fetchRemote:(id)sender {
+	/* FIXME: this is wrong, you can right-click in the sidebar but try to fetch the *selected* ref */
+	PBGitRef *ref = [self selectedItem].ref;
+	[self performFetchForRef:ref];
+}
+
+- (IBAction) fetchAllRemotes:(id)sender {
+	[self performFetchForRef:nil];
+}
+
+- (IBAction) pullRemote:(id)sender {
+	PBGitRef *ref = [self selectedItem].revSpecifier.ref;
+	[self performPullForBranch:ref remote:nil rebase:NO];
+}
+
+- (IBAction) pullRebaseRemote:(id)sender {
+	PBGitRef *ref = [self selectedItem].revSpecifier.ref;
+	[self performPullForBranch:ref remote:nil rebase:YES];
+}
+
+- (IBAction) pullDefaultRemote:(id)sender {
+	PBGitRef *ref = [self selectedItem].revSpecifier.ref;
+	[self performPullForBranch:ref remote:nil rebase:NO];
+}
+
+- (IBAction) pullRebaseDefaultRemote:(id)sender {
+	PBGitRef *ref = [self selectedItem].revSpecifier.ref;
+	[self performPullForBranch:ref remote:nil rebase:YES];
 }
 
 - (IBAction) stashSave:(id) sender
@@ -492,28 +513,6 @@
 	BOOL success = [self.repository stashPop:latestStash error:&error];
 
 	if (!success) [self showErrorSheet:error];
-}
-
-
-- (NSArray <NSURL *> *)selectedURLsFromSender:(id)sender {
-	NSArray *selectedFiles = [sender representedObject];
-	if (![selectedFiles isKindOfClass:[NSArray class]] || [selectedFiles count] == 0)
-		return nil;
-
-	NSMutableArray *URLs = [NSMutableArray array];
-	for (id file in selectedFiles) {
-		NSString *path = file;
-		// Those can be PBChangedFiles sent by PBGitIndexController. Get their path.
-		if ([file respondsToSelector:@selector(path)]) {
-			path = [file path];
-		}
-
-		if (![path isKindOfClass:[NSString class]])
-			continue;
-		[URLs addObject:[self.repository.workingDirectoryURL URLByAppendingPathComponent:path]];
-	}
-
-	return URLs;
 }
 
 - (IBAction) openFiles:(id)sender {
