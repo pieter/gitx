@@ -11,7 +11,6 @@
 #import "PBGitRevSpecifier.h"
 
 @implementation PBRefMenuItem
-@synthesize refishs;
 
 + (PBRefMenuItem *) itemWithTitle:(NSString *)title action:(SEL)selector enabled:(BOOL)isEnabled
 {
@@ -57,7 +56,9 @@
     
 	for (PBRefMenuItem *item in items) {
 		item.target = target;
-		item.refishs = @[ref];
+		if (!item.representedObject) {
+			item.representedObject = ref;
+		}
 	}
     
 	return items;
@@ -170,11 +171,11 @@
 			for (NSString *remote in remoteNames) {
 				PBRefMenuItem *remoteItem = [PBRefMenuItem itemWithTitle:remote action:@selector(pushToRemote:) enabled:YES];
 				remoteItem.target = target;
-				remoteItem.refishs = @[ref];
 				remoteItem.representedObject = remote;
 				[remotesMenu addItem:remoteItem];
 			}
 			[pushToItem setSubmenu:remotesMenu];
+			pushToItem.representedObject = ref;
 			[items addObject:pushToItem];
 		}
 	}
@@ -194,7 +195,9 @@
 
 	for (PBRefMenuItem *item in items) {
 		item.target = target;
-		item.refishs = @[ref];
+		if (!item.representedObject) {
+			item.representedObject = ref;
+		}
 	}
 
 	return items;
@@ -251,7 +254,9 @@
 	
 	for (PBRefMenuItem *item in items) {
 		item.target = target;
-		item.refishs = commits;
+		if (!item.representedObject) {
+			item.representedObject = isSingleCommitSelection ? firstCommit : commits;
+		}
 	}
 
 	return items;

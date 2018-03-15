@@ -640,25 +640,9 @@
 
 #pragma mark Repository Methods
 
-- (id <PBGitRefish>)refishForSender:(id)sender
-{
-	return [self refishForSender:sender refishTypes:nil];
-}
-
 - (id <PBGitRefish>)refishForSender:(id)sender refishTypes:(NSArray *)types
 {
-	if ([sender isKindOfClass:[PBRefMenuItem class]]) {
-		id <PBGitRefish> refish = [[(PBRefMenuItem *)sender refishs] firstObject];
-
-		if (!types || [types indexOfObject:[refish refishType]] != NSNotFound)
-			return refish;
-		return nil;
-	}
-
-	if ([types indexOfObject:kGitXCommitType] == NSNotFound)
-		return nil;
-
-	return self.selectedCommits.firstObject;
+	return [self.windowController performSelector:@selector(refishForSender:refishTypes:) withObject:sender withObject:types];
 }
 
 - (IBAction)fetchRemote:(id)sender

@@ -95,6 +95,7 @@
 	
 	if (ref.isRemote) {
 		menuItem.title = [NSString stringWithFormat:NSLocalizedString(localisationKeyWithRemote, @""), ref.remoteName];
+		menuItem.representedObject = ref;
 		return YES;
 	}
 
@@ -268,6 +269,24 @@
 
 #pragma mark IBActions
 
+- (id <PBGitRefish>)refishForSender:(id)sender refishTypes:(NSArray *)types
+{
+	if ([sender isKindOfClass:[NSMenuItem class]]) {
+		id <PBGitRefish> refish = nil;
+		if ([(refish = [(NSMenuItem *)sender representedObject]) conformsToProtocol:@protocol(PBGitRefish)]) {
+			if (!types || [types indexOfObject:[refish refishType]] != NSNotFound)
+				return refish;
+		}
+
+		return nil;
+	}
+
+	if ([types indexOfObject:kGitXCommitType] == NSNotFound)
+		return nil;
+
+	return sidebarController.historyViewController.selectedCommits.firstObject;
+}
+
 - (IBAction) showAddRemoteSheet:(id)sender
 {
 	[self addRemote:sender];
@@ -324,6 +343,7 @@
 }
 
 - (IBAction) fetchRemote:(id)sender {
+	/* FIXME: this is wrong, you can right-click in the sidebar but try to fetch the *selected* ref */
 	PBGitRef *ref = [self selectedItem].ref;
 	[self performFetchForRef:ref];
 }
@@ -520,10 +540,9 @@
 {
 	PBGitRef *currentRef = [self.repository.currentBranch ref];
 
-	id <PBGitRefish> refish = nil;
-	if ([sender isKindOfClass:[PBRefMenuItem class]]) {
-		refish = [[(PBRefMenuItem *)sender refishs] firstObject];
-	} else {
+	/* WIP: must check */
+	id <PBGitRefish> refish = [self refishForSender:sender refishTypes:nil];
+	if (!refish) {
 		PBGitCommit *selectedCommit = sidebarController.historyViewController.selectedCommits.firstObject;
 		if (!selectedCommit || [selectedCommit hasRef:currentRef]) {
 			refish = currentRef;
@@ -554,12 +573,11 @@
 	}];
 }
 
-- (void) createTag:(PBRefMenuItem *)sender
+- (IBAction) createTag:(id)sender
 {
-	id <PBGitRefish> refish = nil;
-	if ([sender isKindOfClass:[PBRefMenuItem class]]) {
-		refish = [sender refishs].firstObject;
-	} else {
+	/* WIP: must check */
+	id <PBGitRefish> refish = [self refishForSender:sender refishTypes:nil];
+	if (!refish) {
 		PBGitCommit *selectedCommit = sidebarController.historyViewController.selectedCommits.firstObject;
 		if (selectedCommit)
 			refish = selectedCommit;
