@@ -184,7 +184,7 @@
 			? NSLocalizedString(@"Delete “%@”…", @"Contextual Menu Item to delete a local ref (e.g. branch)")
 			: NSLocalizedString(@"Remove “%@”…", @"Contextual Menu Item to remove a remote");
 		NSString *deleteItemTitle = [NSString stringWithFormat:deleteFormat, refName];
-		NSMenuItem *deleteItem = [NSMenuItem pb_itemWithTitle:deleteItemTitle action:@selector(showDeleteRefSheet:) enabled:YES];
+		NSMenuItem *deleteItem = [NSMenuItem pb_itemWithTitle:deleteItemTitle action:@selector(deleteRef:) enabled:YES];
 		[items addObject:deleteItem];
 	}
 
