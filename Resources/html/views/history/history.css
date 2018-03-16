@@ -1,3 +1,8 @@
+body {
+	padding: 0px;
+	border: 0px;
+}
+
 #commit_header {
 	width: auto;
 	font-size: 12px;
@@ -68,6 +73,9 @@ a.servicebutton:hover {
 	font-weight: bold;
 }
 
+#subjectID {
+	font-weight: bold;
+}
 
 #message_files {
 	margin: 5px;
@@ -302,3 +310,11 @@ div.renamed
 	// No colour needed right now.
 }
 */
+
+#notification_message .cancel {
+	color: red;
+}
+
+#notification_message .confirm {
+	color: green;
+}

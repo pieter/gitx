@@ -47,12 +47,21 @@ var confirm_gist = function(confirmation_message) {
 	var notification_text = 'This will create a ' + publicMessage + ' paste of your commit to <a href="https://gist.github.com/">https://gist.github.com/</a><br>' +
 	deleteMessage +
 	'Are you sure you want to continue?<br/><br/>' +
-	'<a href="#" onClick="hideNotification();return false;" style="color: red;">No. Cancel.</a> | ' +
-	'<a href="#" onClick="gistie();return false;" style="color: green;">' + confirmation_message + '</a>';
+	'<a href="#" class="cancel">No. Cancel.</a> | ' +
+	'<a href="#" class="confirm">' + confirmation_message + '</a>';
 
 	notify(notification_text, 0);
+	var notification_message = $("notification_message");
+	notification_message.getElementsByClassName("cancel")[0].addEventListener("click", function(e) {
+		e.preventDefault();
+		hideNotification();
+	});
+	notification_message.getElementsByClassName("confirm")[0].addEventListener("click", function(e) {
+		e.preventDefault();
+		gistie();
+	});
 	// Hide img#spinner, since it?s visible by default
-	$("spinner").style.display = "none";
+	$("spinner").classList.add("hidden");
 }
 
 var gistie = function() {
@@ -73,7 +82,11 @@ var gistie = function() {
 			var success = t.status >= 200 && t.status < 300;
 			var response = JSON.parse(t.responseText);
 			if (success && response.html_url) {
-				notify("Code uploaded to <a target='_new' href='"+response.html_url+"'>"+response.html_url+"</a>", 1);
+				var a = document.createElement("a");
+				a.target = "_new";
+				a.href = response.html_url;
+				a.textContent = response.html_url;
+				notify("Code uploaded to " + a.outerHTML, 1);
 			} else {
 				notify("Pasting to Gistie failed :(.", -1);
 				Controller.log_(t.responseText);
@@ -91,7 +104,7 @@ var gistie = function() {
 	try {
 		t.send(JSON.stringify(parameters));
 	} catch(e) {
-		notify("Pasting to Gistie failed: " + e, -1);
+		notify("Pasting to Gistie failed: " + e.toString().escapeHTML(), -1);
 	}
 }
 
@@ -118,7 +131,7 @@ var selectCommit = function(a) {
 
 // Relead only refs
 var reload = function() {
-	$("notification").style.display = "none";
+	$("notification").classList.add("hidden");
 	commit.reloadRefs();
 	showRefs();
 }
@@ -126,14 +139,20 @@ var reload = function() {
 var showRefs = function() {
 	var refs = $("refs");
 	if (commit.refs) {
-		refs.parentNode.style.display = "";
-		refs.innerHTML = "";
+		refs.parentNode.classList.remove("hidden");
+		refs.textContent = "";
 		for (var i = 0; i < commit.refs.length; i++) {
 			var ref = commit.refs[i];
-			refs.innerHTML += '<span class="refs ' + ref.type() + (commit.currentRef == ref.ref ? ' currentBranch' : '') + '">' + ref.shortName() + '</span> ';
+			var span = document.createElement("span");
+			span.classList.add("refs", ref.type());
+			if (commit.currentRef == ref.ref) {
+				span.classList.add("currentBranch");
+			}
+			span.textContent = ref.shortName();
+			refs.appendChild(span);
 		}
 	} else
-		refs.parentNode.style.display = "none";
+		refs.parentNode.classList.add("hidden");
 }
 
 var loadCommit = function(commitObject, currentRef) {
@@ -148,41 +167,54 @@ var loadCommit = function(commitObject, currentRef) {
 	commit = new Commit(commitObject);
 	commit.currentRef = currentRef;
 
-	$("commitID").innerHTML = commit.sha;
-	$("authorID").innerHTML = commit.author_name;
-	$("subjectID").innerHTML = commit.subject.escapeHTML();
-	$("diff").innerHTML = "";
-	$("date").innerHTML = "";
-	$("files").style.display = "none";
+	$("commitID").textContent = commit.sha;
+	$("subjectID").textContent = commit.subject;
+	$("diff").textContent = "";
+	$("date").textContent = "";
+	$("files").classList.add("hidden");
 
-	var formatEmail = function(name, email) {
-		return email ? name + " &lt;<a href='mailto:" + email + "'>" + email + "</a>&gt;" : name;
+	var setFormattedEmailContent = function(node, name, email) {
+		if (email) {
+			node.textContent = name + " <";
+			var a = document.createElement("a");
+			a.href = "mailto:" + email;
+			a.textContent = email;
+			node.appendChild(a);
+			node.appendChild(document.createTextNode(">"));
+		} else {
+			node.textContent = name;
+		}
 	}
 
-	$("authorID").innerHTML = formatEmail(commit.author_name, commit.author_email);
-	$("date").innerHTML = commit.author_date;
+	setFormattedEmailContent($("authorID"), commit.author_name, commit.author_email);
+	$("date").textContent = commit.author_date;
 	setGravatar(commit.author_email, $("author_gravatar"));
 
 	if (commit.committer_name != commit.author_name) {
-		$("committerID").parentNode.style.display = "";
-		$("committerID").innerHTML = formatEmail(commit.committer_name, commit.committer_email);
+		$("committerID").parentNode.classList.remove("hidden");
+		setFormattedEmailContent($("committerID"), commit.committer_name, commit.committer_email);
 
-		$("committerDate").parentNode.style.display = "";
-		$("committerDate").innerHTML = commit.committer_date;
+		$("committerDate").parentNode.classList.remove("hidden");
+		$("committerDate").textContent = commit.committer_date;
 		setGravatar(commit.committer_email, $("committer_gravatar"));
 	} else {
-		$("committerID").parentNode.style.display = "none";
-		$("committerDate").parentNode.style.display = "none";
+		$("committerID").parentNode.classList.add("hidden");
+		$("committerDate").parentNode.classList.add("hidden");
 	}
 
-    var textToHTML = function (txt) {
-        return (" "+txt+" ")
-            .replace(/(https?:\/\/([^\s\.\)\]\<]+|\.[^\s])+)/ig, "<a href=\"$1\">$1</a>")
-            .replace(/\n/g,"<br>")
-            .trim();
-    }
+	var textToHTML = function (txt) {
+		return (" " + txt.escapeHTML() + " ")
+			.replace(/(https?:\/\/([^\s\.\)\]\<]+|\.[^\s])+)/ig, function(m, url) {
+				var a = document.createElement("a");
+				a.href = url;
+				a.textContent = url;
+				return a.outerHTML;
+			})
+			.replace(/\n/g,"<br>")
+			.trim();
+	}
 
-    $("message").innerHTML = textToHTML(commit.message);
+	$("message").innerHTML = textToHTML(commit.message);
 
 	jQuery("#commit").show();
 	jQuery("#no-commit-message").hide();
@@ -201,8 +233,9 @@ var loadCommit = function(commitObject, currentRef) {
 	for (var i = 0; i < commit.parents.length; i++) {
 		var newRow = $("commit_header").insertRow(-1);
 		newRow.innerHTML = "<td class='property_name'>Parent:</td><td>" +
-			"<a class=\"SHA\" href='' onclick='selectCommit(this.innerHTML); return false;'>" +
+			"<a class='SHA commit-link' href=''>" +
 			commit.parents[i].SHA() + "</a></td>";
+		bindCommitSelectionLinks(newRow);
 	}
 
 	commit.notificationID = setTimeout(function() { 
@@ -268,28 +301,45 @@ var formatRenameDiff = function(d) {
 var showDiff = function() {
 
 	// Callback for the diff highlighter. Used to generate a filelist
-	var binaryDiff = function(filename) {
-		if (filename.match(/\.(png|jpg|icns|psd)$/i))
-			return '<a href="#" onclick="return showImage(this, \'' + filename + '\')">Display image</a>';
-		else
+	var binaryDiffClass = "display-binary-as-image"
+	var binaryDiffHTML = function(filename) {
+		if (filename.match(/\.(png|jpg|icns|psd)$/i)) {
+			var a = document.createElement("a");
+			a.href = "#";
+			a.dataset.filename = filename;
+			a.className = binaryDiffClass;
+			a.textContent = "Display image";
+			return a.outerHTML;
+		} else {
 			return "Binary file differs";
-	}
-	
-	highlightDiff(commit.diff, $("diff"), { "binaryFile" : binaryDiff });
+		}
+	};
+	var binaryDiffClick = function(e) {
+		e.preventDefault();
+		return showImage(this, this.dataset.filename);
+	};
+
+	highlightDiff(commit.diff, $("diff"), {
+		"binaryFileHTML" : binaryDiffHTML,
+		"binaryFileClass" : binaryDiffClass,
+		"binaryFileOnClick" : binaryDiffClick,
+	});
 }
 
 var showImage = function(element, filename)
 {
-	element.outerHTML = '<img src="GitX://' + commit.sha + '/' + filename + '">';
+	var img = document.createElement("img");
+	img.src = "GitX://" + commit.sha + "/" + filename;
+	element.outerHTML = img.outerHTML;
 	return false;
 }
 
 var enableFeature = function(feature, element)
 {
 	if(!Controller || Controller.isFeatureEnabled_(feature)) {
-		element.style.display = "";
+		element.classList.remove("hidden");
 	} else {
-		element.style.display = "none";
+		element.classList.add("hidden");
 	}
 }
 
@@ -306,10 +356,11 @@ var loadCommitDiff = function(jsonData)
 	commit.filesInfo = diffData.filesInfo;
 	commit.diff = diffData.fullDiff;
 
-	if (commit.notificationID)
+	if (commit.notificationID) {
 		clearTimeout(commit.notificationID)
-		else
-			$("notification").style.display = "none";
+	} else {
+		$("notification").classList.add("hidden");
+	}
 
 	if (commit.filesInfo.length > 0) {
 		// Create the file list
@@ -381,9 +432,17 @@ var loadCommitDiff = function(jsonData)
 				var numLinesChanged = numLinesAdded + numLinesRemoved;
 				// summarize large numbers
 				if (numLinesChanged > 999) numLinesChanged = "~" + Math.round(numLinesChanged / 1000) + "k";
+
 				// fill in numbers
 				var diffstatSummary = diffstatElem.getElementsByClassName("diffstat-numbers")[1];
 				diffstatSummary.innerText = numLinesChanged;
+				diffstatSummary.addEventListener("mouseover", function() {
+					expandDiffstatDetails(this);
+				});
+				diffstatSummary.addEventListener("mouseout", function() {
+					collapseDiffstatDetails(this);
+				});
+
 				var diffstatDetails = diffstatElem.getElementsByClassName("diffstat-numbers")[0];
 				diffstatDetails.getElementsByClassName("added")[0].innerText = "+"+numLinesAdded;
 				diffstatDetails.getElementsByClassName("removed")[0].innerText = "-"+numLinesRemoved;
@@ -403,14 +462,49 @@ var loadCommitDiff = function(jsonData)
 			}
 			$("filelist").appendChild(fileElem);
 		}
-		$("files").style.display = "";
+		$("files").classList.remove("hidden");
 	}
 
 	if (commit.diff.length < 200000)
 		showDiff();
-	else
-		$("diff").innerHTML = "<a class='showdiff' href='' onclick='showDiff(); return false;'>This is a large commit.<br>Click here or press 'v' to view.</a>";
-
+	else {
+		var diffEl = $("diff");
+		diffEl.innerHTML = "<a class='showdiff' href=''>This is a large commit.<br>Click here or press 'v' to view.</a>";
+		diffEl.getElementsByClassName("showdiff")[0].addEventListener("click", function(e) {
+			e.preventDefault();
+			showDiff();
+		});
+	}
 	hideNotification();
 	enableFeatures();
 }
+
+function expandDiffstatDetails(obj) {
+	var children = obj.parentNode.childNodes;
+	for (i in children) {
+		var c = children[i];
+		if (c.classList.contains("details")) {
+			c.classList.remove("hidden");
+		}
+	}
+	return true;
+}
+
+function collapseDiffstatDetails(obj) {
+	var children = obj.parentNode.childNodes;
+	for (i in children) {
+		var c = children[i];
+		if (c.classList.contains("details")) {
+			c.classList.remove("hidden");
+		}
+	}
+	return true;
+}
+
+document.addEventListener("DOMContentLoaded", function() {
+	extractPrototypes();
+	$("gist").addEventListener("click", function(e) {
+		e.preventDefault();
+		confirm_gist();
+	});
+});

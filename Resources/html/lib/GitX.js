@@ -9,13 +9,13 @@ function $(element) {
 	return document.getElementById(element);
 }
 
-String.prototype.escapeHTML = function() {
-  return this.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-};
-
-String.prototype.unEscapeHTML = function() {
-  return this.replace(/&amp;/g,'&').replace(/&lt;/g,'<').replace(/&gt;/g,'>');
-};
+String.prototype.escapeHTML = (function() {
+	var div = document.createElement("div");
+	return function() {
+		div.textContent = this;
+		return div.innerHTML;
+	};
+})();
 
 Element.prototype.toggleDisplay = function() {
 	if (this.style.display != "")
@@ -33,25 +33,36 @@ Array.prototype.indexOf = function(item, i) {
   return -1;
 };
 
-var notify = function(text, state) {
+var notify = function(html, state) {
 	var n = $("notification");
-	n.style.display = "";
-	$("notification_message").innerHTML = text;
+	n.classList.remove("hidden");
+	$("notification_message").innerHTML = html;
 	
 	// Change color
 	if (!state) { // Busy
-		$("spinner").style.display = "";
-		n.setAttribute("class", "");
+		$("spinner").classList.remove("hidden");
+		n.classList.remove("success");
+		n.classList.remove("fail");
 	}
 	else if (state == 1) { // Success
-		$("spinner").style.display = "none";
-		n.setAttribute("class", "success");
+		$("spinner").classList.add("hidden");
+		n.classList.add("success");
 	} else if (state == -1) {// Fail
-		$("spinner").style.display = "none";
-		n.setAttribute("class", "fail");
+		$("spinner").classList.add("hidden");
+		n.classList.add("fail");
 	}
 }
 
 var hideNotification = function() {
-	$("notification").style.display = "none";
+	$("notification").classList.add("hidden");
 }
+
+var bindCommitSelectionLinks = function(el) {
+	var links = el.getElementsByClassName("commit-link");
+	for (var i = 0, n = links.length; i < n; ++i) {
+		links[i].addEventListener("click", function(e) {
+			e.preventDefault();
+			selectCommit(this.dataset.commitId || this.innerHTML);
+		}, false);
+	}
+};

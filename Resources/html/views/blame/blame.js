@@ -1,6 +1,8 @@
-var showFile = function(txt) {
-	$("txt").style.display = "";
-	$("txt").innerHTML="<pre>"+txt+"</pre>";
+var showFile = function(html) {
+	var el = $("txt");
+	el.style.display = "";
+	el.innerHTML = "<pre>" + html + "</pre>";
+	bindCommitSelectionLinks(el);
 	
 	SyntaxHighlighter.defaults['toolbar'] = false;
 

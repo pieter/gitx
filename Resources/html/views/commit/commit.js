@@ -5,16 +5,18 @@ var contextLines = 0;
 
 var showNewFile = function(file)
 {
-	setTitle("New file: " + file.path.escapeHTML());
+	setTitle("New file: " + file.path);
+	diff.innerHTML = "";
 
 	var contents = Index.diffForFile_staged_contextLines_(file, false, contextLines);
 	if (!contents) {
 		notify("Can not display changes (Binary file?)", -1);
-		diff.innerHTML = "";
 		return;
 	}
 
-	diff.innerHTML = "<pre>" + contents.escapeHTML() + "</pre>";
+	var pre = document.createElement("pre");
+	pre.textContent = contents;
+	diff.appendChild(pre);
 	diff.style.display = '';
 }
 
@@ -27,11 +29,11 @@ var setState = function(state) {
 	hideNotification();
 	$("state").style.display = "";
 	$("diff").style.display = "none";
-	$("state").innerHTML = state.escapeHTML();
+	$("state").textContent = state;
 }
 
 var setTitle = function(status) {
-	$("status").innerHTML = status;
+	$("status").textContent = status;
 	$("contextSize").style.display = "none";
 	$("contextTitle").style.display = "none";
 }
@@ -59,7 +61,7 @@ var showFileChanges = function(file, cached) {
 	if (file.status == 0) // New file?
 		return showNewFile(file);
 
-	setTitle((cached ? "Staged": "Unstaged") + " changes for " + file.path.escapeHTML());
+	setTitle((cached ? "Staged" : "Unstaged") + " changes for " + file.path);
 	displayContext();
 	var changes = Index.diffForFile_staged_contextLines_(file, cached, contextLines);
 	
@@ -110,8 +112,8 @@ var setSelectHandlers = function()
 			if (file.id = "selected")
 				file = file.parentNode;
 			var start = target;
-			var elem_class = start.getAttribute("class");
-			if(!elem_class || !(elem_class == "addline" | elem_class == "delline")) 
+			var elemClasses = start.classList;
+			if (!(elemClasses.contains("addline") || elemClasses.contains("delline")))
 				return false;
 			deselect();
 			var bounds = findsubhunk(start);
@@ -120,11 +122,11 @@ var setSelectHandlers = function()
 		};
 
 		file.onmousedown = function(event) {
-			if (event.which != 1) 
+			if (event.which != 1)
 				return false;
-			var elem_class = event.target.getAttribute("class")
+			var elemClasses = event.target.classList;
 			event.stopPropagation();
-			if (elem_class == "hunkheader" || elem_class == "hunkbutton")
+			if (elemClasses.contains("hunkheader") || elemClasses.contains("hunkbutton"))
 				return false;
 
 			var target = findParentElementByTag(event.target, "div");
@@ -200,11 +202,26 @@ var displayDiff = function(diff, cached)
 
 	for (i = 0; i < hunkHeaders.length; ++i) {
 		var header = hunkHeaders[i];
-		if (cached)
-			header.innerHTML = "<a href='#' class='hunkbutton' onclick='addHunk(this, true); return false'>Unstage</a>" + header.innerHTML;
+		if (cached) {
+			header.innerHTML = "<a href='#' class='hunkbutton unstage-button'>Unstage</a>" + header.innerHTML;
+			header.getElementsByClassName('unstage-button')[0].addEventListener("click", function(e) {
+				e.preventDefault();
+				addHunk(this, true);
+			});
+		}
 		else {
-			header.innerHTML = "<a href='#' class='hunkbutton' onclick='discardHunk(this, event); return false'>Discard</a>" + header.innerHTML;
-			header.innerHTML = "<a href='#' class='hunkbutton' onclick='addHunk(this, false); return false'>Stage</a>" + header.innerHTML;
+			header.innerHTML =
+				"<a href='#' class='hunkbutton add-hunk-button'>Stage</a>" +
+				"<a href='#' class='hunkbutton discard-hunk-button'>Discard</a>" +
+				header.innerHTML;
+			header.getElementsByClassName("add-hunk-button")[0].addEventListener("click", function(e) {
+				e.preventDefault();
+				addHunk(this, false);
+			});
+			header.getElementsByClassName("discard-hunk-button")[0].addEventListener("click", function(e) {
+				e.preventDefault();
+				discardHunk(this, event);
+			});
 		}
 	}
 	setSelectHandlers();
@@ -273,19 +290,19 @@ var discardHunk = function(hunk, event)
 
 /* Find all contiguous add/del lines. A quick way to select "just this
  * chunk". */
-var findsubhunk = function(start) { 
-        var findBound = function(direction) { 
+var findsubhunk = function(start) {
+	var findBound = function(direction) {
 		var element=start;
-                for (var next = element[direction]; next; next = next[direction]) { 
-                        var elem_class = next.getAttribute("class"); 
-                        if (elem_class == "hunkheader" || elem_class == "noopline") 
-                                break; 
+		for (var next = element[direction]; next; next = next[direction]) {
+			var elemClasses = next.classList;
+			if (elemClasses.contains("hunkheader") || elemClasses.contains("noopline"))
+				break;
 			element=next;
 		}
-		return element; 
-        }
-        return [findBound("previousSibling"), findBound("nextSibling")]; 
-} 
+		return element;
+	}
+	return [findBound("previousSibling"), findBound("nextSibling")];
+}
 
 /* Remove existing selection */
 var deselect = function() {
@@ -304,11 +321,10 @@ var stageLines = function(reverse) {
 	if(!selection) return false;
 	currentSelection = false;
 	var hunkHeader = false;
-	var preselect = 0,elem_class;
+	var preselect = 0;
 
 	for(var next = selection.previousSibling; next; next = next.previousSibling) {
-		elem_class = next.getAttribute("class");
-		if(elem_class == "hunkheader") {
+		if (next.classList.contains("hunkheader")) {
 			hunkHeader = next.lastChild.data;
 			break;
 		}
@@ -393,13 +409,13 @@ var computeSelection = function(list, from, to)
 			insel = true;
 		}
 
-		var elem_class = elem.getAttribute("class");
-		if(elem_class) {
-			if(elem_class == "hunkheader") {
+		var elemClasses = elem.classList;
+		if (elem.className) {
+			if (elemClasses.contains("hunkheader")) {
 				elem = last;
 				break; // Stay inside this hunk
 			}
-			if(!good && (elem_class == "addline" || elem_class == "delline"))
+			if (!good && (elemClasses.contains("addline") || elemClasses.contains("delline")))
 				good = true; // A good selection
 		}
 		if (elem == to) break;
@@ -487,10 +503,14 @@ var showSelection = function(file, from, to, trust)
 	buttons_div.appendChild(copy_button);
 
 	if (sel.good) {
-		button.setAttribute('onclick','stageLines('+
-				    (originalCached?'true':'false')+
-				    '); return false;');
-		copy_button.setAttribute('onclick','copy(); return false;');
+		button.addEventListener("click", function(e) {
+			e.preventDefault();
+			stageLines(originalCached);
+		});
+		copy_button.addEventListener("click", function(e) {
+			e.preventDefault();
+			copy();
+		});
 	} else {
 		button.setAttribute("class","disabled");
 		copy_button.setAttribute("class","disabled");

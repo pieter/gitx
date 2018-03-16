@@ -3,8 +3,10 @@ var selectCommit = function(a) {
 	return false;
 }
 
-var showFile = function(txt) {
-	$("log").style.display = "";
-	$("log").innerHTML=txt;
+var showFile = function(html) {
+	var el = $("log");
+	el.classList.remove("hidden");
+	el.innerHTML = html;
+	bindCommitSelectionLinks(el);
 	return;
 }
