@@ -258,12 +258,22 @@
 }
 
 - (void)doubleClicked:(id)object {
-    NSInteger rowNumber = [sourceView selectedRow];
-    if ([[sourceView itemAtRow:rowNumber] isKindOfClass:[PBGitSVSubmoduleItem class]]) {
-        PBGitSVSubmoduleItem *subModule = [sourceView itemAtRow:rowNumber];
+	NSInteger rowNumber = [sourceView selectedRow];
+	
+	id item = [sourceView itemAtRow:rowNumber];
+	if ([item isKindOfClass:[PBGitSVSubmoduleItem class]]) {
+		PBGitSVSubmoduleItem *subModule = item;
 
-        [self openSubmoduleAtURL:[subModule path]];
-    }
+		[self openSubmoduleAtURL:[subModule path]];
+	} else if ([item isKindOfClass:[PBGitSVBranchItem class]]) {
+		PBGitSVBranchItem *branch = item;
+		
+		NSError *error = nil;
+		BOOL success = [repository checkoutRefish:[branch ref] error:&error];
+		if (!success) {
+			[self.windowController showErrorSheet:error];
+		}
+	}
 }
 
 - (BOOL)outlineView:(NSOutlineView *)outlineView shouldEditTableColumn:(NSTableColumn *)tableColumn item:(id)item
