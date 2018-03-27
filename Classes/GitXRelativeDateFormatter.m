@@ -69,7 +69,7 @@
 		}
 
 		if (monthsAgo == 1)
-			return @"1 month ago";
+			return @"1 mth";
 
 		return [NSString stringWithFormat:@"%ld mths", monthsAgo];
 	}
