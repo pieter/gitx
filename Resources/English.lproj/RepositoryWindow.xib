@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="12120" systemVersion="16E195" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="14105" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="12120"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="14105"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -24,7 +24,7 @@
             <windowCollectionBehavior key="collectionBehavior" fullScreenPrimary="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="4" y="290" width="890" height="514"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="1920" height="1177"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="1440" height="900"/>
             <value key="minSize" type="size" width="600" height="450"/>
             <view key="contentView" id="5">
                 <rect key="frame" x="0.0" y="0.0" width="890" height="514"/>
@@ -61,7 +61,7 @@
                     <customView translatesAutoresizingMaskIntoConstraints="NO" id="396" userLabel="Status View">
                         <rect key="frame" x="322" y="0.0" width="246" height="31"/>
                         <subviews>
-                            <textField verticalHuggingPriority="750" fixedFrame="YES" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="397">
+                            <textField verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="397">
                                 <rect key="frame" x="41" y="8" width="188" height="14"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                                 <textFieldCell key="cell" controlSize="small" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" alignment="left" title="Label" id="398">
@@ -81,11 +81,20 @@
                         </constraints>
                     </customView>
                     <customView translatesAutoresizingMaskIntoConstraints="NO" id="443" userLabel="RefreshTermFind View">
-                        <rect key="frame" x="624" y="0.0" width="246" height="31"/>
+                        <rect key="frame" x="718" y="0.0" width="172" height="31"/>
                         <subviews>
-                            <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="430">
-                                <rect key="frame" x="110" y="3" width="25" height="25"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                            <button verticalHuggingPriority="750" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="439">
+                                <rect key="frame" x="111" y="3" width="53" height="25"/>
+                                <buttonCell key="cell" type="roundTextured" title="Finder" alternateTitle="Reveal" bezelStyle="texturedRounded" imagePosition="overlaps" alignment="center" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="440">
+                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                    <font key="font" metaFont="system"/>
+                                    <connections>
+                                        <action selector="revealInFinder:" target="-2" id="442"/>
+                                    </connections>
+                                </buttonCell>
+                            </button>
+                            <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="430">
+                                <rect key="frame" x="8" y="3" width="21" height="25"/>
                                 <buttonCell key="cell" type="roundTextured" bezelStyle="texturedRounded" image="NSRefreshTemplate" imagePosition="only" alignment="center" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="431">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                     <font key="font" metaFont="system"/>
@@ -94,10 +103,9 @@
                                     <action selector="refresh:" target="-2" id="432"/>
                                 </connections>
                             </button>
-                            <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="435">
-                                <rect key="frame" x="143" y="3" width="70" height="25"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                <buttonCell key="cell" type="roundTextured" title="Console" alternateTitle="Terminal" bezelStyle="texturedRounded" alignment="center" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="436">
+                            <button verticalHuggingPriority="750" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="435">
+                                <rect key="frame" x="37" y="3" width="66" height="25"/>
+                                <buttonCell key="cell" type="roundTextured" title="Terminal" alternateTitle="Terminal" bezelStyle="texturedRounded" alignment="center" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="436">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                     <font key="font" metaFont="system"/>
                                 </buttonCell>
@@ -105,20 +113,13 @@
                                     <action selector="openInTerminal:" target="-2" id="438"/>
                                 </connections>
                             </button>
-                            <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="439">
-                                <rect key="frame" x="221" y="3" width="25" height="25"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                <buttonCell key="cell" type="roundTextured" alternateTitle="Reveal" bezelStyle="texturedRounded" image="NSRevealFreestandingTemplate" imagePosition="only" alignment="center" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="440">
-                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                                    <font key="font" metaFont="system"/>
-                                    <connections>
-                                        <action selector="revealInFinder:" target="-2" id="442"/>
-                                    </connections>
-                                </buttonCell>
-                            </button>
                         </subviews>
                         <constraints>
-                            <constraint firstAttribute="width" constant="246" id="FFQ-Te-DMv"/>
+                            <constraint firstItem="439" firstAttribute="leading" secondItem="435" secondAttribute="trailing" constant="8" id="6eT-dH-xhU"/>
+                            <constraint firstItem="430" firstAttribute="leading" secondItem="443" secondAttribute="leading" constant="8" id="7ec-Pt-Wkc"/>
+                            <constraint firstAttribute="trailing" secondItem="439" secondAttribute="trailing" constant="8" id="FzC-UB-eDj"/>
+                            <constraint firstItem="430" firstAttribute="centerY" secondItem="443" secondAttribute="centerY" id="UNA-gF-tzH"/>
+                            <constraint firstItem="435" firstAttribute="leading" secondItem="430" secondAttribute="trailing" constant="8" id="XmQ-Du-8sP"/>
                             <constraint firstAttribute="height" constant="31" id="kbj-zH-ihc"/>
                         </constraints>
                     </customView>
@@ -131,7 +132,7 @@
                     <constraint firstAttribute="bottom" secondItem="443" secondAttribute="bottom" id="QTm-LQ-USz"/>
                     <constraint firstItem="393" firstAttribute="top" secondItem="351" secondAttribute="bottom" constant="-1" id="TBA-8y-G81"/>
                     <constraint firstAttribute="trailing" secondItem="351" secondAttribute="trailing" id="VJA-d6-nLw"/>
-                    <constraint firstAttribute="trailing" secondItem="443" secondAttribute="trailing" constant="20" id="atn-Rd-9Ge"/>
+                    <constraint firstAttribute="trailing" secondItem="443" secondAttribute="trailing" id="atn-Rd-9Ge"/>
                     <constraint firstItem="393" firstAttribute="leading" secondItem="5" secondAttribute="leading" id="j4W-RV-3aQ"/>
                     <constraint firstAttribute="bottom" secondItem="396" secondAttribute="bottom" id="pIe-nQ-ntf"/>
                 </constraints>
@@ -143,6 +144,5 @@
     </objects>
     <resources>
         <image name="NSRefreshTemplate" width="11" height="15"/>
-        <image name="NSRevealFreestandingTemplate" width="14" height="14"/>
     </resources>
 </document>
