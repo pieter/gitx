@@ -29,9 +29,6 @@
     if (secondsAgo < 0)
         return @"Future";
 
-	if (secondsAgo < MINUTE)
-        return @"s";
-
 	if (secondsAgo < (2 * MINUTE))
 		return @"1 mn";
 
