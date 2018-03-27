@@ -8,6 +8,7 @@ body {
 	font-size: 12px;
 	padding-left: 5px;
 	padding-right: 5px;
+    display: none;
 }
 
 #commit_header tr {
@@ -16,12 +17,18 @@ body {
 
 #authorTable {
 	margin: -4px;
+    display: none;
+}
+
+#mxcl {
+    display: none;
 }
 
 #rightcontent {
 	position: absolute;
 	right: 5px;
 	top: 5px;
+    display: none;
 }
 
 #buttons {
@@ -57,6 +64,7 @@ a.servicebutton:hover {
 
 	border: solid gray 1px;
 	-webkit-border-radius: 2px;
+    display: none;
 }
 
 .gravatar img {
@@ -64,6 +72,7 @@ a.servicebutton:hover {
 	height: 2.9em;
 	max-height: 60px;
 	max-width: 60px;
+    display: none;
 }
 
 .property_name {
@@ -203,6 +212,7 @@ a {
     margin-right: 20px;
     padding-bottom: 5px;
     font-size: 90%;
+    display: none;
 }
 
 #files .diffstat-info {
@@ -317,4 +327,8 @@ div.renamed
 
 #notification_message .confirm {
 	color: green;
+}
+
+hr {
+    display: none;
 }
