@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="12120" systemVersion="16E195" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="14105" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="12120"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="14105"/>
     </dependencies>
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="ApplicationController"/>
@@ -26,20 +26,9 @@
                             <menuItem isSeparatorItem="YES" id="196">
                                 <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                             </menuItem>
-                            <menuItem title="Enable Terminal Usage…" id="909">
-                                <connections>
-                                    <action selector="installCliTool:" target="-1" id="A89-7Z-hf3"/>
-                                </connections>
-                            </menuItem>
                             <menuItem title="Preferences…" keyEquivalent="," id="129">
                                 <connections>
                                     <action selector="openPreferencesWindow:" target="-1" id="wRi-Ra-7Ua"/>
-                                </connections>
-                            </menuItem>
-                            <menuItem title="Check for Updates…" id="919">
-                                <modifierMask key="keyEquivalentModifierMask"/>
-                                <connections>
-                                    <action selector="checkForUpdates:" target="918" id="920"/>
                                 </connections>
                             </menuItem>
                             <menuItem isSeparatorItem="YES" id="143">
@@ -642,7 +631,6 @@ DQ
             </connections>
         </customObject>
         <userDefaultsController representsSharedInstance="YES" id="912"/>
-        <customObject id="918" customClass="SUUpdater"/>
         <customObject id="oqX-ct-wMx" userLabel="Document Controller" customClass="NSDocumentController"/>
     </objects>
 </document>

@@ -42,11 +42,11 @@
                       forKey:kCommitMessageViewVerticalBodyLineLength];
     [defaultValues setObject:[NSNumber numberWithBool:YES]
                       forKey:kCommitMessageViewHasVerticalLine];
-	[defaultValues setObject:[NSNumber numberWithBool:YES]
+	[defaultValues setObject:[NSNumber numberWithBool:NO]
 			  forKey:kEnableGist];
 	[defaultValues setObject:[NSNumber numberWithBool:YES]
 			  forKey:kEnableGravatar];
-	[defaultValues setObject:[NSNumber numberWithBool:YES]
+	[defaultValues setObject:[NSNumber numberWithBool:NO]
 			  forKey:kConfirmPublicGists];
 	[defaultValues setObject:[NSNumber numberWithBool:NO]
 			  forKey:kPublicGist];
@@ -84,7 +84,7 @@
 
 + (BOOL) isGistEnabled
 {
-	return [[NSUserDefaults standardUserDefaults] boolForKey:kEnableGist];
+	return NO;
 }
 
 + (BOOL) isGravatarEnabled
@@ -94,12 +94,12 @@
 
 + (BOOL) confirmPublicGists
 {
-	return [[NSUserDefaults standardUserDefaults] boolForKey:kConfirmPublicGists];
+	return NO;
 }
 
 + (BOOL) isGistPublic
 {
-	return [[NSUserDefaults standardUserDefaults] boolForKey:kPublicGist];
+	return NO;
 }
 
 + (BOOL)showWhitespaceDifferences

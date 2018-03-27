@@ -345,7 +345,7 @@ var enableFeature = function(feature, element)
 
 var enableFeatures = function()
 {
-	enableFeature("gist", $("gist"))
+	//enableFeature("gist", $("gist"))
 	enableFeature("gravatar", $("author_gravatar").parentNode)
 	enableFeature("gravatar", $("committer_gravatar").parentNode)
 }

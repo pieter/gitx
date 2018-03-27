@@ -12,19 +12,15 @@
 #import "PBGitWindowController.h"
 #import "PBServicesController.h"
 #import "PBGitXProtocol.h"
-#import "PBPrefsWindowController.h"
 #import "PBNSURLPathUserDefaultsTransfomer.h"
 #import "PBGitDefaults.h"
 #import "PBCloneRepositoryPanel.h"
 #import "OpenRecentController.h"
 #import "PBGitBinary.h"
 
-#import <Sparkle/SUUpdater.h>
-#import <Sparkle/SUUpdaterDelegate.h>
-
 static OpenRecentController* recentsDialog = nil;
 
-@interface ApplicationController () <SUUpdaterDelegate>
+@interface ApplicationController ()
 @end
 
 @implementation ApplicationController
@@ -114,9 +110,6 @@ static OpenRecentController* recentsDialog = nil;
 
 - (void)applicationDidFinishLaunching:(NSNotification*)notification
 {
-	[[SUUpdater sharedUpdater] setSendsSystemProfile:YES];
-    [[SUUpdater sharedUpdater] setDelegate:self];
-
 	// Make sure Git's SSH password requests get forwarded to our little UI tool:
 	setenv( "SSH_ASKPASS", [[[NSBundle mainBundle] pathForResource: @"gitx_askpasswd" ofType: @""] UTF8String], 1 );
 	setenv( "DISPLAY", "localhost:0", 1 );
@@ -150,11 +143,6 @@ static OpenRecentController* recentsDialog = nil;
 	}];
 }
 
-- (IBAction)openPreferencesWindow:(id)sender
-{
-	[[PBPrefsWindowController sharedPrefsWindowController] showWindow:nil];
-}
-
 - (IBAction)showAboutPanel:(id)sender
 {
 	NSString *gitversion = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleGitVersion"];
@@ -177,67 +165,6 @@ static OpenRecentController* recentsDialog = nil;
 		cloneRepositoryPanel = [PBCloneRepositoryPanel panel];
 
 	[cloneRepositoryPanel showWindow:self];
-}
-
-- (IBAction)installCliTool:(id)sender;
-{
-	BOOL success               = NO;
-	NSString* installationPath = @"/usr/local/bin/";
-	NSString* installationName = @"gitx";
-	NSString* toolPath         = [[NSBundle mainBundle] pathForResource:@"gitx" ofType:@""];
-	if (toolPath) {
-		AuthorizationRef auth;
-		if (AuthorizationCreate(NULL, kAuthorizationEmptyEnvironment, kAuthorizationFlagDefaults, &auth) == errAuthorizationSuccess) {
-			char const* mkdir_arg[] = { "-p", [installationPath UTF8String], NULL};
-			char const* mkdir	= "/bin/mkdir";
-			AuthorizationExecuteWithPrivileges(auth, mkdir, kAuthorizationFlagDefaults, (char**)mkdir_arg, NULL);
-			char const* arguments[] = { "-f", "-s", [toolPath UTF8String], [[installationPath stringByAppendingString: installationName] UTF8String],  NULL };
-			char const* helperTool  = "/bin/ln";
-			if (AuthorizationExecuteWithPrivileges(auth, helperTool, kAuthorizationFlagDefaults, (char**)arguments, NULL) == errAuthorizationSuccess) {
-				int status;
-				int pid = wait(&status);
-				if (pid != -1 && WIFEXITED(status) && WEXITSTATUS(status) == 0)
-					success = true;
-				else
-					errno = WEXITSTATUS(status);
-			}
-
-			AuthorizationFree(auth, kAuthorizationFlagDefaults);
-		}
-	}
-
-	NSAlert * alert = [[NSAlert alloc] init];
-	if (success) {
-		alert.messageText = NSLocalizedString(@"Installation Complete", @"Headline for successfully completed installation of the command line tool");
-		alert.informativeText = [NSString stringWithFormat:NSLocalizedString(@"The gitx tool has been installed to %@.", @"Informative text for successfully completed installation of the command line tool at the location %@"), installationPath];
-	} else {
-		alert.messageText = NSLocalizedString(@"Installation Failed", @"Headline for failed installation of the command line tool");
-		alert.informativeText = [NSString stringWithFormat:NSLocalizedString(@"Installation to %@ failed.", @"Informative text for successfully completed installation of the command line tool at the location %@"), installationPath];
-	}
-	[alert runModal];
-}
-
-#pragma mark Sparkle delegate methods
-
-- (NSArray *)feedParametersForUpdater:(SUUpdater *)updater sendingSystemProfile:(BOOL)sendingProfile
-{
-	NSArray *keys = [NSArray arrayWithObjects:@"key", @"displayKey", @"value", @"displayValue", nil];
-	NSMutableArray *feedParameters = [NSMutableArray array];
-
-    // only add parameters if the profile is being sent this time
-    if (sendingProfile) {
-        NSString *CFBundleGitVersion = [[[NSBundle mainBundle] infoDictionary] valueForKey:@"CFBundleGitVersion"];
-		if (CFBundleGitVersion)
-			[feedParameters addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:@"CFBundleGitVersion", @"Full Version", CFBundleGitVersion, CFBundleGitVersion, nil] 
-																  forKeys:keys]];
-
-        NSString *gitVersion = [PBGitBinary version];
-		if (gitVersion)
-			[feedParameters addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:@"gitVersion", @"git Version", gitVersion, gitVersion, nil] 
-																  forKeys:keys]];
-	}
-
-    return feedParameters;
 }
 
 
