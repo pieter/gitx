@@ -9,6 +9,9 @@
 #import "PBQLOutlineView.h"
 #import "PBGitTree.h"
 
+@interface PBQLOutlineView () <NSDraggingSource>
+@end
+
 @implementation PBQLOutlineView
 
 - initWithCoder: (NSCoder *) coder
@@ -19,9 +22,7 @@
 	return a;
 }
 
-/* Needed to drag outside application */
-- (NSDragOperation)draggingSourceOperationMaskForLocal:(BOOL) local
-{
+- (NSDragOperation)draggingSession:(NSDraggingSession *)session sourceOperationMaskForDraggingContext:(NSDraggingContext)context {
 	return NSDragOperationCopy;
 }
 

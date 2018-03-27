@@ -9,6 +9,9 @@
 #import <Cocoa/Cocoa.h>
 #import "PBHistorySearchMode.h"
 
+#undef GITX_DEPRECATED
+#define GITX_DEPRECATED
+
 @class PBViewController, PBGitSidebarController, PBGitCommitController, PBGitRepository;
 @class RJModalRepoSheet;
 @class PBGitRef;

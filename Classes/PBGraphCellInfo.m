@@ -35,7 +35,7 @@
 
 - (NSString *)debugDescription
 {
-	NSMutableString *desc = [NSMutableString stringWithFormat:@"<%@: %p position: %d numColumns: %d nLines: %d sign: '%c'>",
+	NSMutableString *desc = [NSMutableString stringWithFormat:@"<%@: %p position: %ld numColumns: %ld nLines: %ld sign: '%c'>",
 							 NSStringFromClass([self class]), self, position, numColumns, nLines, sign];
 	for (int lineIndex = 0; lineIndex < nLines; lineIndex++) {
 		struct PBGitGraphLine line = lines[lineIndex];

@@ -159,7 +159,7 @@ NS_ENUM(NSUInteger, PBGitIndexOperation) {
 					 [self postIndexRefreshSuccess:YES message:@"update-index success"];
 				 }
 
-				 dispatch_group_leave(_indexRefreshGroup);
+				 dispatch_group_leave(self->_indexRefreshGroup);
 			 }];
 
 
@@ -217,7 +217,7 @@ NS_ENUM(NSUInteger, PBGitIndexOperation) {
 		 }
 
 		 [self postIndexRefreshSuccess:YES message:@"ls-files success"];
-		 dispatch_group_leave(_indexRefreshGroup);
+		 dispatch_group_leave(self->_indexRefreshGroup);
 	 }];
 
 	// Staged files
@@ -236,7 +236,7 @@ NS_ENUM(NSUInteger, PBGitIndexOperation) {
 
 		 [self postIndexRefreshSuccess:YES message:@"diff-index success"];
 
-		 dispatch_group_leave(_indexRefreshGroup);
+		 dispatch_group_leave(self->_indexRefreshGroup);
 	 }];
 
 
@@ -255,7 +255,7 @@ NS_ENUM(NSUInteger, PBGitIndexOperation) {
 		 }
 		 [self postIndexRefreshSuccess:YES message:@"diff-files success"];
 
-		 dispatch_group_leave(_indexRefreshGroup);
+		 dispatch_group_leave(self->_indexRefreshGroup);
 	 }];
 }
 

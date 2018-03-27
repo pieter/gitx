@@ -45,7 +45,7 @@ static const NSInteger kReturnCodeCancel = 1;
 	{
 		NSRect box = NSMakeRect( 100, 100, 400, 134 );
 		mPasswordPanel = [[NSPanel alloc] initWithContentRect: box
-													styleMask: NSTitledWindowMask
+													styleMask: NSWindowStyleMaskTitled
 													  backing: NSBackingStoreBuffered defer: NO];
 		[mPasswordPanel setHidesOnDeactivate: NO];
 		[mPasswordPanel setLevel: NSFloatingWindowLevel];

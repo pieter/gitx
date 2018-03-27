@@ -435,7 +435,7 @@
 			NSError *error = [NSError pb_errorWithDescription:desc
 												failureReason:reason
 											  underlyingError:taskError];
-			[historyController.windowController showErrorSheet:error];
+			[self->historyController.windowController showErrorSheet:error];
 			return;
 		}
 		[self parseBackgroundSearchResults:readData];
@@ -496,7 +496,7 @@
 	panelRect.origin.y = windowFrame.origin.y + historyFrame.origin.y + ((historyFrame.size.height - kRewindPanelSize) / 2.0f);
 
 	NSPanel *panel = [[NSPanel alloc] initWithContentRect:panelRect
-												styleMask:NSBorderlessWindowMask
+												styleMask:NSWindowStyleMaskBorderless
 												  backing:NSBackingStoreBuffered
 													defer:YES];
 	[panel setIgnoresMouseEvents:YES];
@@ -504,7 +504,6 @@
 	[panel setOpaque:NO];
 	[panel setBackgroundColor:[NSColor clearColor]];
 	[panel setHasShadow:NO];
-	[panel useOptimizedDrawing:YES];
 	[panel setAlphaValue:0.0f];
 
 	NSBox *box = [[NSBox alloc] initWithFrame:[[panel contentView] frame]];
@@ -551,7 +550,7 @@
 	NSImage *reversedRewindImage = [NSImage imageWithSize:rewindImage.size
 												  flipped:isReversed
 										   drawingHandler:^BOOL(NSRect destRect) {
-		[rewindImage drawInRect:destRect fromRect:NSZeroRect operation:NSCompositeCopy fraction:1.0];
+	    [rewindImage drawInRect:destRect fromRect:NSZeroRect operation:NSCompositingOperationCopy fraction:1.0];
 		return YES;
 	}];
 	NSImageView *rewindImageView = [rewindPanel.contentView viewWithTag:kRewindPanelImageViewTag];

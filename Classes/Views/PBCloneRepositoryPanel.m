@@ -147,7 +147,7 @@
 
 			[self close];
 
-			NSString *containingPath = [path stringByDeletingLastPathComponent];
+			NSString *containingPath = [self->path stringByDeletingLastPathComponent];
 			[PBGitDefaults setRecentCloneDestination:containingPath];
 			[self.destinationPath setStringValue:containingPath];
 			[self.repositoryURL setStringValue:@""];
@@ -160,8 +160,8 @@
 {
     [browseRepositoryPanel beginSheetModalForWindow:[self window]
                                   completionHandler:^(NSInteger result) {
-                                      if (result == NSOKButton) {
-                                          NSURL *url = [[browseRepositoryPanel URLs] lastObject];
+                                      if (result == NSModalResponseOK) {
+										  NSURL *url = [[self->browseRepositoryPanel URLs] lastObject];
                                           [self.repositoryURL setStringValue:[url path]];
                                       }
                                   }];
@@ -180,8 +180,8 @@
 {
     [browseDestinationPanel beginSheetModalForWindow:[self window]
                                    completionHandler:^(NSInteger result) {
-                                       if (result == NSOKButton) {
-                                           NSURL *url = [[browseDestinationPanel URLs] lastObject];
+                                       if (result == NSModalResponseOK) {
+										   NSURL *url = [[self->browseDestinationPanel URLs] lastObject];
                                            [self.destinationPath setStringValue:[url path]];
                                        }
                                    }];

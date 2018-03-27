@@ -131,7 +131,7 @@ static OpenRecentController* recentsDialog = nil;
 	[panel setCanChooseDirectories:true];
 	
 	[panel beginWithCompletionHandler:^(NSInteger result) {
-		if (result == NSFileHandlingPanelOKButton) {
+		if (result == NSModalResponseOK) {
 			PBRepositoryDocumentController* controller = [PBRepositoryDocumentController sharedDocumentController];
 			[controller openDocumentWithContentsOfURL:panel.URL display:true completionHandler:^(NSDocument * _Nullable document, BOOL documentWasAlreadyOpen, NSError * _Nullable error) {
 				if (!document) {

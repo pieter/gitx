@@ -20,10 +20,7 @@
 	bool started;
 }
 
-- (IBAction)openPreferencesWindow:(id)sender;
 - (IBAction)showAboutPanel:(id)sender;
-
-- (IBAction)installCliTool:(id)sender;
 
 - (IBAction)showHelp:(id)sender;
 - (IBAction)showChangeLog:(id)sender;

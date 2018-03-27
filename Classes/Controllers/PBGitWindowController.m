@@ -172,7 +172,7 @@
 	 completionHandler:^(id  _Nonnull sheet, NSModalResponse returnCode) {
 		 if (returnCode != NSModalResponseOK) return;
 
-		 [sidebarController.commitViewController forceCommit:self];
+		 [self->sidebarController.commitViewController forceCommit:self];
 	 }];
 }
 
@@ -372,8 +372,8 @@
 	NSAlert *alert = [[NSAlert alloc] init];
 	alert.messageText = description;
 	alert.informativeText = [NSString stringWithFormat:@"Are you sure you want to %@?", sdesc];
-	[alert addButtonWithTitle:@"Push"];
-	[alert addButtonWithTitle:@"Cancel"];
+	[alert addButtonWithTitle:NSLocalizedString(@"Push", @"")];
+	[alert addButtonWithTitle:NSLocalizedString(@"Cancel", @"")];
 	[alert setShowsSuppressionButton:YES];
 
 	[alert beginSheetModalForWindow:self.window completionHandler:^(NSModalResponse returnCode) {

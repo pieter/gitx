@@ -194,15 +194,6 @@ const BOOL SHUFFLE_COLORS = NO;
 
 	NSShadow *shadow = nil;
 
-	if (selected && false) { // white text is a bit too hard to read (even with shadow) on refs
-		[attributes setObject:[NSColor alternateSelectedControlTextColor] forKey:NSForegroundColorAttributeName];
-		if (ENABLE_SHADOW) {
-			shadow = [NSShadow new];
-			[shadow setShadowColor:[NSColor blackColor]];
-			[shadow setShadowBlurRadius:2.0f];
-		}
-	}
-
 	if (shadow) {
 		attributes[NSShadowAttributeName] = shadow;
 	}

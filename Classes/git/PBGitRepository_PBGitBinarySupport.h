@@ -18,6 +18,9 @@ NS_ASSUME_NONNULL_BEGIN
 - (nullable NSString *)outputOfTaskWithArguments:(nullable NSArray *)arguments error:(NSError **)error;
 @end
 
+#undef GITX_DEPRECATED
+#define GITX_DEPRECATED
+
 @interface PBGitRepository (PBGitBinarySupportDeprecated)
 - (NSFileHandle*) handleForArguments:(NSArray*) args GITX_DEPRECATED;
 - (NSString*) outputForCommand:(NSString*) cmd GITX_DEPRECATED;

@@ -32,14 +32,3 @@
 @interface GTEnumerator (Private)
 @property (nonatomic, assign, readonly) git_revwalk *walk;
 @end
-
-@implementation GTEnumerator (PBCategories)
-- (BOOL)pushReferenceName:(NSString *)refName error:(NSError **)error {
-	int gitError = git_revwalk_push_ref(self.walk, refName.UTF8String);
-	if (gitError != 0) {
-		if (error) *error = [NSError git_errorFor:gitError description:@"Failed to push reference %@", refName];
-		return NO;
-	}
-	return YES;
-}
-@end

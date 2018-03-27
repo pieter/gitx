@@ -11,13 +11,15 @@
 #import "PBWebHistoryController.h"
 #import "PBHistorySearchController.h"
 
+@interface PBCommitList () <NSDraggingSource>
+@end
+
 @implementation PBCommitList
 
 @synthesize mouseDownPoint;
 @synthesize useAdjustScroll;
 
-- (NSDragOperation)draggingSourceOperationMaskForLocal:(BOOL) local
-{
+- (NSDragOperation)draggingSession:(NSDraggingSession *)session sourceOperationMaskForDraggingContext:(NSDraggingContext)context {
 	return NSDragOperationCopy;
 }
 

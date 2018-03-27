@@ -365,7 +365,7 @@
 
 - (void)keyDown:(NSEvent*)event
 {
-	if ([[event charactersIgnoringModifiers] isEqualToString: @"f"] && [event modifierFlags] & NSAlternateKeyMask && [event modifierFlags] & NSCommandKeyMask)
+	if ([[event charactersIgnoringModifiers] isEqualToString: @"f"] && [event modifierFlags] & NSEventModifierFlagOption && [event modifierFlags] & NSCommandKeyMask)
 		[superController.window makeFirstResponder: searchField];
 	else
 		[super keyDown: event];
@@ -651,7 +651,7 @@
 - (BOOL)previewPanel:(id)panel handleEvent:(NSEvent *)event
 {
     // redirect all key down events to the table view
-    if ([event type] == NSKeyDown) {
+	if ([event type] == NSEventTypeKeyDown) {
         [fileBrowser keyDown:event];
         return YES;
     }
