@@ -90,7 +90,7 @@
             <rect key="frame" x="0.0" y="0.0" width="1054" height="521"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <splitView focusRingType="none" autosaveName="History" dividerStyle="thin" vertical="YES" translatesAutoresizingMaskIntoConstraints="NO" id="2" userLabel="History Content View">
+                <splitView focusRingType="none" autosaveName="History" dividerStyle="paneSplitter" vertical="YES" translatesAutoresizingMaskIntoConstraints="NO" id="2" userLabel="History Content View">
                     <rect key="frame" x="0.0" y="0.0" width="1054" height="521"/>
                     <subviews>
                         <customView fixedFrame="YES" id="309" userLabel="Commits Split View">
@@ -382,20 +382,20 @@
                             </subviews>
                         </customView>
                         <customView id="310" userLabel="Details Split View">
-                            <rect key="frame" x="427" y="0.0" width="627" height="521"/>
+                            <rect key="frame" x="436" y="0.0" width="618" height="521"/>
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                             <subviews>
                                 <tabView type="noTabsNoBorder" translatesAutoresizingMaskIntoConstraints="NO" id="4" userLabel="Detail / Tree Tab View">
-                                    <rect key="frame" x="0.0" y="0.0" width="627" height="521"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="618" height="521"/>
                                     <font key="font" metaFont="system"/>
                                     <tabViewItems>
                                         <tabViewItem label="Details" identifier="1" id="6" userLabel="Details Tab">
                                             <view key="view" focusRingType="none" id="20">
-                                                <rect key="frame" x="0.0" y="0.0" width="627" height="521"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="618" height="521"/>
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
                                                     <webView focusRingType="none" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="21">
-                                                        <rect key="frame" x="1" y="0.0" width="626" height="522"/>
+                                                        <rect key="frame" x="1" y="0.0" width="617" height="522"/>
                                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                         <webPreferences key="preferences" defaultFontSize="12" defaultFixedFontSize="12">
                                                             <nil key="identifier"/>
