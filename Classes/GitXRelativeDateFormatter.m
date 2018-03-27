@@ -27,19 +27,19 @@
     NSInteger secondsAgo = lround([now timeIntervalSinceDate:date]);
 
     if (secondsAgo < 0)
-        return @"In the future!";
+        return @"Future";
 
 	if (secondsAgo < MINUTE)
-        return @"seconds ago";
+        return @"s";
 
 	if (secondsAgo < (2 * MINUTE))
-		return @"1 minute ago";
+		return @"1 mn";
 
 	if (secondsAgo < HOUR)
-		return [NSString stringWithFormat:@"%ld minutes ago", (secondsAgo / MINUTE)];
+		return [NSString stringWithFormat:@"%ld mns", (secondsAgo / MINUTE)];
 
 	if (secondsAgo < (2 * HOUR))
-		return @"1 hour ago";
+		return @"1 hr";
 
 	// figure out # of days ago based on calender days (so yesterday is the day before today not 24 hours ago)
 	NSDateFormatter *midnightFormmatter = [[NSDateFormatter alloc] init];
@@ -56,38 +56,28 @@
 	NSInteger monthsAgo = [components month];
 	NSInteger daysAgo = [components day];
 
-	if (yearsAgo == 0) {
+	if (yearsAgo < 2) {
 		if (monthsAgo == 0) {
 			// return "hours ago" if it's still today, but "Yesterday" only if more than 6 hours ago
 			// gives people a little time to get used to the idea that yesterday is over :)
 			if ((daysAgo == 0) || (secondsAgo < (6 * HOUR)))
-				return [NSString stringWithFormat:@"%ld hours ago", (secondsAgo / HOUR)];
+				return [NSString stringWithFormat:@"%ld hrs", (secondsAgo / HOUR)];
 			if (daysAgo == 1)
-				return @"Yesterday";
+				return @"1 dy";
 
 			if (daysAgo >= (2 * WEEK))
-				return [NSString stringWithFormat:@"%ld weeks ago", (daysAgo / WEEK)];
+				return [NSString stringWithFormat:@"%ld wks", (daysAgo / WEEK)];
 
-			return [NSString stringWithFormat:@"%ld days ago", daysAgo];
+			return [NSString stringWithFormat:@"%ld dys", daysAgo];
 		}
 
 		if (monthsAgo == 1)
 			return @"1 month ago";
 
-		return [NSString stringWithFormat:@"%ld months ago", monthsAgo];
+		return [NSString stringWithFormat:@"%ld mths", monthsAgo];
 	}
 
-	if (yearsAgo == 1) {
-		if (monthsAgo == 0)
-			return @"1 year ago";
-
-		if (monthsAgo == 1)
-			return @"1 year 1 month ago";
-
-		return [NSString stringWithFormat:@"1 year %ld months ago", monthsAgo];
-	}
-
-	return [NSString stringWithFormat:@"%ld years ago", yearsAgo];
+	return [NSString stringWithFormat:@"%ld yrs", yearsAgo];
 }
 
 @end

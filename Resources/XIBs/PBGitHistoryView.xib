@@ -22,7 +22,6 @@
                 <outlet property="searchField" destination="297" id="315"/>
                 <outlet property="selectedBranchFilterItem" destination="359" id="383"/>
                 <outlet property="treeController" destination="38" id="41"/>
-                <outlet property="upperToolbarView" destination="316" id="326"/>
                 <outlet property="view" destination="46" id="53"/>
                 <outlet property="webHistoryController" destination="40" id="402"/>
                 <outlet property="webView" destination="21" id="112"/>
@@ -88,18 +87,18 @@
             </connections>
         </customObject>
         <customView focusRingType="none" id="46" userLabel="History">
-            <rect key="frame" x="0.0" y="0.0" width="955" height="434"/>
+            <rect key="frame" x="0.0" y="0.0" width="1054" height="521"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <splitView focusRingType="none" autosaveName="History" vertical="YES" translatesAutoresizingMaskIntoConstraints="NO" id="2" userLabel="History Content View">
-                    <rect key="frame" x="0.0" y="0.0" width="955" height="404"/>
+                    <rect key="frame" x="0.0" y="0.0" width="1054" height="521"/>
                     <subviews>
                         <customView fixedFrame="YES" id="309" userLabel="Commits Split View">
-                            <rect key="frame" x="0.0" y="0.0" width="491" height="404"/>
+                            <rect key="frame" x="0.0" y="0.0" width="426" height="521"/>
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                             <subviews>
                                 <customView fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="311" userLabel="Commits Scope Bar" customClass="PBGitGradientBarView">
-                                    <rect key="frame" x="0.0" y="380" width="491" height="24"/>
+                                    <rect key="frame" x="0.0" y="497" width="426" height="24"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                                     <subviews>
                                         <button toolTip="View commits from all branches" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="355">
@@ -136,7 +135,7 @@
                                             </connections>
                                         </button>
                                         <textField verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="430">
-                                            <rect key="frame" x="166" y="5" width="80" height="14"/>
+                                            <rect key="frame" x="101" y="5" width="80" height="14"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
                                             <textFieldCell key="cell" controlSize="small" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="# of matches" id="431">
                                                 <font key="font" metaFont="smallSystem"/>
@@ -145,7 +144,7 @@
                                             </textFieldCell>
                                         </textField>
                                         <segmentedControl verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="427">
-                                            <rect key="frame" x="250" y="3" width="43" height="18"/>
+                                            <rect key="frame" x="185" y="3" width="43" height="18"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
                                             <segmentedCell key="cell" controlSize="small" borderStyle="border" alignment="left" style="roundRect" trackingMode="momentary" id="428">
                                                 <font key="font" metaFont="miniSystem"/>
@@ -159,7 +158,7 @@
                                             </connections>
                                         </segmentedControl>
                                         <searchField wantsLayer="YES" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="297">
-                                            <rect key="frame" x="301" y="2" width="180" height="19"/>
+                                            <rect key="frame" x="236" y="2" width="180" height="19"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
                                             <searchFieldCell key="cell" controlSize="small" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" borderStyle="bezel" bezelStyle="round" recentsAutosaveName="Recent History Searches" id="298">
                                                 <font key="font" metaFont="smallSystem"/>
@@ -174,20 +173,20 @@
                                             </connections>
                                         </searchField>
                                         <progressIndicator hidden="YES" wantsLayer="YES" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" maxValue="100" bezeled="NO" indeterminate="YES" controlSize="small" style="spinning" translatesAutoresizingMaskIntoConstraints="NO" id="447">
-                                            <rect key="frame" x="276" y="3" width="16" height="16"/>
+                                            <rect key="frame" x="211" y="3" width="16" height="16"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
                                         </progressIndicator>
                                     </subviews>
                                 </customView>
                                 <scrollView focusRingType="none" fixedFrame="YES" borderType="none" autohidesScrollers="YES" horizontalLineScroll="19" horizontalPageScroll="10" verticalLineScroll="19" verticalPageScroll="10" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" horizontalScrollElasticity="none" translatesAutoresizingMaskIntoConstraints="NO" id="3" userLabel="Commits Scroll View">
-                                    <rect key="frame" x="1" y="0.0" width="491" height="380"/>
+                                    <rect key="frame" x="1" y="0.0" width="426" height="497"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <clipView key="contentView" ambiguous="YES" drawsBackground="NO" copiesOnScroll="NO" id="S8C-PP-4nT">
-                                        <rect key="frame" x="0.0" y="0.0" width="491" height="380"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="426" height="497"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                         <subviews>
                                             <tableView focusRingType="none" verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="firstColumnOnly" alternatingRowBackgroundColors="YES" autosaveName="CommitView" id="27" userLabel="Commit List" customClass="PBCommitList">
-                                                <rect key="frame" x="0.0" y="0.0" width="921.5" height="380"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="426" height="497"/>
                                                 <autoresizingMask key="autoresizingMask"/>
                                                 <size key="intercellSpacing" width="3" height="2"/>
                                                 <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -216,7 +215,7 @@
                                                             </binding>
                                                         </connections>
                                                     </tableColumn>
-                                                    <tableColumn identifier="SubjectColumn" editable="NO" width="654.34375" minWidth="40" maxWidth="1000" id="32">
+                                                    <tableColumn identifier="SubjectColumn" editable="NO" width="235.84375" minWidth="40" maxWidth="1000" id="32">
                                                         <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="Subject">
                                                             <font key="font" metaFont="smallSystem"/>
                                                             <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
@@ -240,7 +239,7 @@
                                                             </binding>
                                                         </connections>
                                                     </tableColumn>
-                                                    <tableColumn identifier="AuthorColumn" editable="NO" width="129" minWidth="40" maxWidth="1000" id="31">
+                                                    <tableColumn identifier="AuthorColumn" editable="NO" width="118" minWidth="40" maxWidth="1000" id="31">
                                                         <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="Author">
                                                             <font key="font" metaFont="smallSystem"/>
                                                             <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
@@ -263,7 +262,7 @@
                                                             </binding>
                                                         </connections>
                                                     </tableColumn>
-                                                    <tableColumn identifier="DateColumn" editable="NO" width="165" minWidth="10" maxWidth="1000" hidden="YES" id="33">
+                                                    <tableColumn identifier="DateColumn" editable="NO" width="132" minWidth="10" maxWidth="1000" hidden="YES" id="33">
                                                         <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="Date">
                                                             <font key="font" metaFont="smallSystem"/>
                                                             <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
@@ -288,7 +287,7 @@
                                                             </binding>
                                                         </connections>
                                                     </tableColumn>
-                                                    <tableColumn identifier="RelativeDateColumn" editable="NO" width="30" minWidth="10" maxWidth="1000" id="409">
+                                                    <tableColumn identifier="RelativeDateColumn" editable="NO" width="63" minWidth="10" maxWidth="1000" id="409">
                                                         <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="Relative Date">
                                                             <font key="font" metaFont="smallSystem"/>
                                                             <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
@@ -336,7 +335,7 @@
                                                             </binding>
                                                         </connections>
                                                     </tableColumn>
-                                                    <tableColumn identifier="GitSVNRevision" width="96" minWidth="10" maxWidth="3.4028234663852886e+38" id="491">
+                                                    <tableColumn identifier="GitSVNRevision" width="96" minWidth="10" maxWidth="3.4028234663852886e+38" hidden="YES" id="491">
                                                         <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="Git SVN Revision">
                                                             <font key="font" metaFont="smallSystem"/>
                                                             <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
@@ -377,26 +376,26 @@
                                     </scroller>
                                 </scrollView>
                                 <box verticalHuggingPriority="750" fixedFrame="YES" boxType="separator" translatesAutoresizingMaskIntoConstraints="NO" id="327">
-                                    <rect key="frame" x="0.0" y="377" width="491" height="5"/>
+                                    <rect key="frame" x="0.0" y="494" width="426" height="5"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                                 </box>
                             </subviews>
                         </customView>
                         <customView id="310" userLabel="Details Split View">
-                            <rect key="frame" x="500" y="0.0" width="455" height="404"/>
+                            <rect key="frame" x="435" y="0.0" width="619" height="521"/>
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                             <subviews>
                                 <tabView type="noTabsNoBorder" translatesAutoresizingMaskIntoConstraints="NO" id="4" userLabel="Detail / Tree Tab View">
-                                    <rect key="frame" x="0.0" y="0.0" width="455" height="404"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="619" height="521"/>
                                     <font key="font" metaFont="system"/>
                                     <tabViewItems>
                                         <tabViewItem label="Details" identifier="1" id="6" userLabel="Details Tab">
                                             <view key="view" focusRingType="none" id="20">
-                                                <rect key="frame" x="0.0" y="0.0" width="455" height="404"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="619" height="521"/>
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
                                                     <webView focusRingType="none" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="21">
-                                                        <rect key="frame" x="1" y="0.0" width="454" height="405"/>
+                                                        <rect key="frame" x="1" y="0.0" width="618" height="522"/>
                                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                         <webPreferences key="preferences" defaultFontSize="12" defaultFixedFontSize="12">
                                                             <nil key="identifier"/>
@@ -551,103 +550,14 @@ IA
                         <outlet property="delegate" destination="-2" id="107"/>
                     </connections>
                 </splitView>
-                <customView translatesAutoresizingMaskIntoConstraints="NO" id="316" userLabel="History Upper Toolbar" customClass="PBGitGradientBarView">
-                    <rect key="frame" x="0.0" y="404" width="955" height="30"/>
-                    <subviews>
-                        <box verticalHuggingPriority="750" fixedFrame="YES" boxType="separator" translatesAutoresizingMaskIntoConstraints="NO" id="317">
-                            <rect key="frame" x="0.0" y="-2" width="955" height="5"/>
-                            <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
-                        </box>
-                        <button toolTip="Create Branch" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="330">
-                            <rect key="frame" x="10" y="3" width="37" height="25"/>
-                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                            <buttonCell key="cell" type="roundTextured" title="Create Branch" bezelStyle="texturedRounded" image="AddBranchTemplate" imagePosition="only" alignment="center" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="331">
-                                <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                                <font key="font" metaFont="system"/>
-                            </buttonCell>
-                            <connections>
-                                <action selector="createBranch:" target="-1" id="ewF-3I-r7c"/>
-                                <binding destination="-2" name="enabled" keyPath="singleCommitSelected" id="Ens-Tw-TDc"/>
-                            </connections>
-                        </button>
-                        <button toolTip="Create Tag" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="332">
-                            <rect key="frame" x="55" y="3" width="37" height="25"/>
-                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                            <buttonCell key="cell" type="roundTextured" title="Create Tag" bezelStyle="texturedRounded" image="AddLabelTemplate" imagePosition="only" alignment="center" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="333">
-                                <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                                <font key="font" metaFont="system"/>
-                            </buttonCell>
-                            <connections>
-                                <action selector="createTag:" target="-1" id="qxl-dw-StB"/>
-                                <binding destination="-2" name="enabled" keyPath="singleCommitSelected" id="aQb-dV-d2k"/>
-                            </connections>
-                        </button>
-                        <button toolTip="Merge" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="337">
-                            <rect key="frame" x="116" y="3" width="37" height="25"/>
-                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                            <buttonCell key="cell" type="roundTextured" title="Merge" bezelStyle="texturedRounded" image="MergeTemplate" imagePosition="only" alignment="center" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="338">
-                                <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                                <font key="font" metaFont="system"/>
-                            </buttonCell>
-                            <connections>
-                                <action selector="merge:" target="-1" id="erW-5A-ACw"/>
-                                <binding destination="-2" name="enabled" keyPath="singleNonHeadCommitSelected" id="yyB-D4-ei2"/>
-                            </connections>
-                        </button>
-                        <button toolTip="Cherry Pick" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="340">
-                            <rect key="frame" x="161" y="3" width="37" height="25"/>
-                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                            <buttonCell key="cell" type="roundTextured" title="Cherry Pick" bezelStyle="texturedRounded" image="CherryPickTemplate" imagePosition="only" alignment="center" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="341">
-                                <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                                <font key="font" metaFont="system"/>
-                            </buttonCell>
-                            <connections>
-                                <action selector="cherryPick:" target="-1" id="5xC-W8-V6g"/>
-                                <binding destination="-2" name="enabled" keyPath="singleNonHeadCommitSelected" id="lJ1-dd-gMR"/>
-                            </connections>
-                        </button>
-                        <button toolTip="Rebase" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="343">
-                            <rect key="frame" x="206" y="3" width="37" height="25"/>
-                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                            <buttonCell key="cell" type="roundTextured" title="Rebase" bezelStyle="texturedRounded" image="RebaseTemplate" imagePosition="only" alignment="center" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="344">
-                                <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                                <font key="font" metaFont="system"/>
-                            </buttonCell>
-                            <connections>
-                                <action selector="rebase:" target="-1" id="YiA-e6-47o"/>
-                                <binding destination="-2" name="enabled" keyPath="singleNonHeadCommitSelected" id="Q5e-kX-JL3"/>
-                            </connections>
-                        </button>
-                        <segmentedControl verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="48">
-                            <rect key="frame" x="268" y="3" width="67" height="23"/>
-                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                            <segmentedCell key="cell" state="on" borderStyle="border" alignment="left" style="texturedSquare" trackingMode="selectOne" id="51">
-                                <font key="font" metaFont="system"/>
-                                <segments>
-                                    <segment toolTip="Detailed View" image="DetailViewTemplate" imageScaling="none" width="32" selected="YES"/>
-                                    <segment toolTip="Tree View" image="TreeViewTemplate" imageScaling="none" width="32" tag="9"/>
-                                </segments>
-                            </segmentedCell>
-                            <connections>
-                                <binding destination="-2" name="selectedIndex" keyPath="selectedCommitDetailsIndex" id="83"/>
-                            </connections>
-                        </segmentedControl>
-                    </subviews>
-                    <constraints>
-                        <constraint firstAttribute="height" constant="30" id="fpn-5C-Gky"/>
-                    </constraints>
-                </customView>
             </subviews>
             <constraints>
                 <constraint firstAttribute="trailing" secondItem="2" secondAttribute="trailing" id="IQk-Io-l7v"/>
                 <constraint firstAttribute="bottom" secondItem="2" secondAttribute="bottom" id="Js3-Zc-2Im"/>
-                <constraint firstAttribute="trailing" secondItem="316" secondAttribute="trailing" id="Nhn-k1-X1I"/>
-                <constraint firstItem="2" firstAttribute="top" secondItem="316" secondAttribute="bottom" id="Q3q-W4-Bp1"/>
-                <constraint firstItem="316" firstAttribute="leading" secondItem="46" secondAttribute="leading" id="lGY-fX-QCA"/>
-                <constraint firstItem="316" firstAttribute="top" secondItem="46" secondAttribute="top" id="o5u-rI-HvB"/>
+                <constraint firstItem="2" firstAttribute="top" secondItem="46" secondAttribute="top" id="ogx-p9-jGo"/>
                 <constraint firstItem="2" firstAttribute="leading" secondItem="46" secondAttribute="leading" id="wKl-ht-Djh"/>
             </constraints>
-            <point key="canvasLocation" x="511.5" y="20"/>
+            <point key="canvasLocation" x="561" y="63.5"/>
         </customView>
         <customObject id="231" customClass="PBRefController">
             <connections>
@@ -669,13 +579,6 @@ IA
         </customObject>
     </objects>
     <resources>
-        <image name="AddBranchTemplate" width="25" height="18"/>
-        <image name="AddLabelTemplate" width="25" height="18"/>
-        <image name="CherryPickTemplate" width="25" height="18"/>
-        <image name="DetailViewTemplate" width="25" height="18"/>
-        <image name="MergeTemplate" width="25" height="18"/>
         <image name="NSQuickLookTemplate" width="19" height="12"/>
-        <image name="RebaseTemplate" width="25" height="18"/>
-        <image name="TreeViewTemplate" width="25" height="18"/>
     </resources>
 </document>
