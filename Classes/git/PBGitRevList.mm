@@ -195,8 +195,8 @@ static BOOL hasParameter(NSMutableArray *parameters, NSString *paramName) {
 	PBGitGrapher *g = [[PBGitGrapher alloc] initWithRepository:pbRepo];
 	__block NSDate *lastUpdate = [NSDate date];
 
-	dispatch_queue_t loadQueue = dispatch_queue_create("net.phere.gitx.loadQueue", 0);
-	dispatch_queue_t decorateQueue = dispatch_queue_create("net.phere.gitx.decorateQueue", 0);
+	dispatch_queue_t loadQueue = dispatch_queue_create("com.codebasesaga.macOS.GitX.loadQueue", 0);
+	dispatch_queue_t decorateQueue = dispatch_queue_create("com.codebasesaga.macOS.GitX.decorateQueue", 0);
 	dispatch_group_t loadGroup = dispatch_group_create();
 	dispatch_group_t decorateGroup = dispatch_group_create();
 	

@@ -6,7 +6,7 @@
 //  Copyright 2010 Nathan Kinsinger. All rights reserved.
 //
 
-#define kGitXBundleIdentifier @"net.phere.GitX"
+#define kGitXBundleIdentifier @"com.codebasesaga.macOS.GitX"
 
 
 #define kGitXAEKeyArgumentsList 'ARGS'
