@@ -111,25 +111,8 @@ NSString *PBGitRepositoryDocumentType = @"Git Repository";
 	[self showHistoryView:self];
 }
 
-- (void)showWindows
-{
-	NSScriptCommand *command = [NSScriptCommand currentCommand];
-
-	if (command) {
-		NSURL *repoURL = [command directParameter];
-
-		// on app launch there may be many repositories opening, so double check that this is the right repo
-		if (repoURL) {
-			repoURL = [PBRepositoryFinder gitDirForURL:repoURL];
-			if ([repoURL isEqual:self.fileURL]) {
-				NSArray *arguments = command.arguments[@"openOptions"];
-				[self handleGitXScriptingArguments:arguments];
-			}
-		}
-	}
-
+- (void)showWindows {
 	[[[self windowController] window] setTitle:[self displayName]];
-
 	[super showWindows];
 }
 

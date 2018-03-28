@@ -17,6 +17,8 @@
 #import "PBCloneRepositoryPanel.h"
 #import "OpenRecentController.h"
 #import "PBGitBinary.h"
+#import "PBGitRepositoryDocument.h"
+#import "PBRepositoryFinder.h"
 
 static OpenRecentController* recentsDialog = nil;
 
@@ -70,20 +72,34 @@ static OpenRecentController* recentsDialog = nil;
 
 - (void)application:(NSApplication *)sender openFiles:(NSArray <NSString *> *)filenames {
 	PBRepositoryDocumentController * controller = [PBRepositoryDocumentController sharedDocumentController];
-	
+
+	NSScriptCommand *command = [NSScriptCommand currentCommand];
 	for (NSString * filename in filenames) {
 		NSURL * repository = [NSURL fileURLWithPath:filename];
-		[controller openDocumentWithContentsOfURL:repository display:YES
-								completionHandler:^void (NSDocument *document, BOOL documentWasAlreadyOpen, NSError *error) {
-									if (!document) {
-										NSLog(@"Error opening repository \"%@\": %@", repository.path, error);
-										[controller presentError:error];
-										[sender replyToOpenOrPrint:NSApplicationDelegateReplyFailure];
-									}
-									else {
-										[sender replyToOpenOrPrint:NSApplicationDelegateReplySuccess];
-									}
-								}];
+		[controller openDocumentWithContentsOfURL:repository display:YES completionHandler:^void (NSDocument *_document, BOOL documentWasAlreadyOpen, NSError *error) {
+			if (!_document) {
+				NSLog(@"Error opening repository \"%@\": %@", repository.path, error);
+				[controller presentError:error];
+				[sender replyToOpenOrPrint:NSApplicationDelegateReplyFailure];
+			}
+			else {
+				[sender replyToOpenOrPrint:NSApplicationDelegateReplySuccess];
+			}
+
+			if (command) {
+				PBGitRepositoryDocument *document = (id)_document;
+				NSURL *repoURL = [command directParameter];
+
+				// on app launch there may be many repositories opening, so double check that this is the right repo
+				if (repoURL) {
+					repoURL = [PBRepositoryFinder gitDirForURL:repoURL];
+					if ([repoURL isEqual:[document.fileURL URLByAppendingPathComponent:@".git"]]) {
+						NSArray *arguments = command.arguments[@"openOptions"];
+						[document handleGitXScriptingArguments:arguments];
+					}
+				}
+			}
+		}];
 	}
 }
 

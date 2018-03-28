@@ -29,4 +29,6 @@ extern NSString *PBGitRepositoryDocumentType;
 
 - (PBGitWindowController *)windowController;
 
+- (void)handleGitXScriptingArguments:(NSArray *)arguments;
+
 @end
