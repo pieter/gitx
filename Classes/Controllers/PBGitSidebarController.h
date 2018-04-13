@@ -40,8 +40,6 @@
 
 - (IBAction) fetchPullPushAction:(id)sender;
 
-- (void)setHistorySearch:(NSString *)searchString mode:(PBHistorySearchMode)mode;
-
 @property(readonly) NSMutableArray *items;
 @property(readonly) PBSourceViewItem *remotes;
 @property(readonly) NSOutlineView *sourceView;

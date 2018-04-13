@@ -230,7 +230,7 @@
 
 - (void)setHistorySearch:(NSString *)searchString mode:(PBHistorySearchMode)mode
 {
-	[sidebarController setHistorySearch:searchString mode:mode];
+	[_historyViewController setHistorySearch:searchString mode:mode];
 }
 
 

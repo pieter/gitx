@@ -78,6 +78,7 @@
 - (void)showCommitsFromTree:(id)sender;
 
 // Find/Search methods
+- (void)setHistorySearch:(NSString *)searchString mode:(PBHistorySearchMode)mode;
 - (IBAction)selectNext:(id)sender;
 - (IBAction)selectPrevious:(id)sender;
 

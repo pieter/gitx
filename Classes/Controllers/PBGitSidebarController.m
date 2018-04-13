@@ -215,11 +215,6 @@
 	[sourceView reloadData];
 }
 
-- (void)setHistorySearch:(NSString *)searchString mode:(PBHistorySearchMode)mode
-{
-	[historyViewController.searchController setHistorySearch:searchString mode:mode];
-}
-
 - (void) openSubmoduleFromMenuItem:(NSMenuItem *)menuItem
 {
     [self openSubmoduleAtURL:[menuItem representedObject]];
