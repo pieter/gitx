@@ -448,7 +448,7 @@
 	return [PBGitRef refFromString:refName];
 }
 
-- (NSArray*)branches
+- (NSArray <PBGitRevSpecifier *> *)branches
 {
     return [self.branchesSet array];
 }
@@ -510,7 +510,7 @@
 
 #pragma mark Stashes
 
-- (NSArray *)stashes
+- (NSArray <PBGitStash *> *)stashes
 {
 	NSMutableArray *stashes = [NSMutableArray array];
 	[self.gtRepo enumerateStashesUsingBlock:^(NSUInteger index, NSString *message, GTOID *oid, BOOL *stop) {
@@ -623,7 +623,7 @@
 
 #pragma mark Remotes
 
-- (NSArray *) remotes
+- (NSArray <NSString *> *)remotes
 {
 	NSError *error = nil;
 	NSArray *remotes = [self.gtRepo remoteNamesWithError:&error];
