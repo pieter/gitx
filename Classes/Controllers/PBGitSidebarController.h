@@ -27,9 +27,6 @@
 	PBSourceViewItem *stage;
 
 	PBSourceViewItem *branches, *remotes, *tags, *others, *submodules, *stashes;
-
-	PBGitHistoryController *historyViewController;
-	PBGitCommitController *commitViewController;
 }
 
 - (void) selectStage;
@@ -44,7 +41,5 @@
 @property(readonly) PBSourceViewItem *remotes;
 @property(readonly) NSOutlineView *sourceView;
 @property(readonly) NSView *sourceListControlsView;
-@property(readonly) PBGitHistoryController *historyViewController;
-@property(readonly) PBGitCommitController *commitViewController;
 
 @end

@@ -35,8 +35,6 @@
 @synthesize remotes;
 @synthesize sourceView;
 @synthesize sourceListControlsView;
-@synthesize historyViewController;
-@synthesize commitViewController;
 
 - (id)initWithRepository:(PBGitRepository *)theRepository superController:(PBGitWindowController *)controller
 {
@@ -52,9 +50,6 @@
 	[super awakeFromNib];
 	window.contentView = self.view;
 	[self populateList];
-
-	historyViewController = [[PBGitHistoryController alloc] initWithRepository:repository superController:superController];
-	commitViewController = [[PBGitCommitController alloc] initWithRepository:repository superController:superController];
 
 	[repository addObserver:self forKeyPath:@"currentBranch" options:0 context:@"currentBranchChange"];
 	[repository addObserver:self forKeyPath:@"branches" options:(NSKeyValueObservingOptionOld | NSKeyValueObservingOptionNew) context:@"branchesModified"];
@@ -83,9 +78,6 @@
 
 - (void)closeView
 {
-	[historyViewController closeView];
-	[commitViewController closeView];
-
 	[repository removeObserver:self forKeyPath:@"currentBranch"];
 	[repository removeObserver:self forKeyPath:@"branches"];
 	[repository removeObserver:self forKeyPath:@"stashes"];
@@ -239,12 +231,12 @@
 	if ([item revSpecifier]) {
 		if (![repository.currentBranch isEqual:[item revSpecifier]])
 			repository.currentBranch = [item revSpecifier];
-		[superController changeContentController:historyViewController];
+		[superController changeContentController:superController.historyViewController];
 		[PBGitDefaults setShowStageView:NO];
 	}
 
 	if (item == stage) {
-		[superController changeContentController:commitViewController];
+		[superController changeContentController:superController.commitViewController];
 		[PBGitDefaults setShowStageView:YES];
 	}
 
@@ -387,7 +379,7 @@
 	if (!ref)
 		return;
 
-	for (NSMenuItem *menuItem in [historyViewController.refController menuItemsForRef:ref])
+	for (NSMenuItem *menuItem in [superController.historyViewController.refController menuItemsForRef:ref])
 		[menu addItem:menuItem];
 }
 

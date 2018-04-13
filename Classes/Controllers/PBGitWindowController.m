@@ -70,10 +70,10 @@
 - (BOOL)validateMenuItem:(NSMenuItem *)menuItem
 {
 	if ([menuItem action] == @selector(showCommitView:)) {
-		[menuItem setState:(contentController == sidebarController.commitViewController) ? YES : NO];
+		[menuItem setState:(contentController == _commitViewController) ? YES : NO];
 		return ![self.repository isBareRepository];
 	} else if ([menuItem action] == @selector(showHistoryView:)) {
-		[menuItem setState:(contentController != sidebarController.commitViewController) ? YES : NO];
+		[menuItem setState:(contentController != _commitViewController) ? YES : NO];
 		return ![self.repository isBareRepository];
 	} else if (menuItem.action == @selector(fetchRemote:)) {
 		return [self validateMenuItem:menuItem remoteTitle:@"Fetch “%@”" plainTitle:@"Fetch"];
@@ -117,6 +117,8 @@
 	[[self window] setRepresentedURL:self.repository.workingDirectoryURL];
 
 	sidebarController = [[PBGitSidebarController alloc] initWithRepository:self.repository superController:self];
+	_historyViewController = [[PBGitHistoryController alloc] initWithRepository:self.repository superController:self];
+	_commitViewController = [[PBGitCommitController alloc] initWithRepository:self.repository superController:self];
 
 	[[sidebarController view] setFrame:[sourceSplitView bounds]];
 	[sourceSplitView addSubview:[sidebarController view]];
@@ -172,7 +174,7 @@
 	 completionHandler:^(id  _Nonnull sheet, NSModalResponse returnCode) {
 		 if (returnCode != NSModalResponseOK) return;
 
-		 [sidebarController.commitViewController forceCommit:self];
+		 [_commitViewController forceCommit:self];
 	 }];
 }
 
@@ -424,7 +426,7 @@
 	if ([types indexOfObject:kGitXCommitType] == NSNotFound)
 		return nil;
 
-	return sidebarController.historyViewController.selectedCommits.firstObject;
+	return _historyViewController.selectedCommits.firstObject;
 }
 
 - (PBSourceViewItem *) selectedItem {
@@ -733,7 +735,7 @@
 	/* WIP: must check */
 	id <PBGitRefish> refish = [self refishForSender:sender refishTypes:nil];
 	if (!refish) {
-		PBGitCommit *selectedCommit = sidebarController.historyViewController.selectedCommits.firstObject;
+		PBGitCommit *selectedCommit = _historyViewController.selectedCommits.firstObject;
 		if (!selectedCommit || [selectedCommit hasRef:currentRef]) {
 			refish = currentRef;
 		} else {
@@ -768,7 +770,7 @@
 	/* WIP: must check */
 	id <PBGitRefish> refish = [self refishForSender:sender refishTypes:nil];
 	if (!refish) {
-		PBGitCommit *selectedCommit = sidebarController.historyViewController.selectedCommits.firstObject;
+		PBGitCommit *selectedCommit = _historyViewController.selectedCommits.firstObject;
 		if (selectedCommit)
 			refish = selectedCommit;
 		else

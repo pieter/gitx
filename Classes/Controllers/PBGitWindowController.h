@@ -22,6 +22,9 @@
 	__weak PBViewController *contentController;
 
 	PBGitSidebarController *sidebarController;
+	PBGitHistoryController *_historyViewController;
+	PBGitCommitController *_commitViewController;
+
 	__weak IBOutlet NSView *sourceListControlsView;
 	__weak IBOutlet NSSplitView *splitView;
 	__weak IBOutlet NSView *sourceSplitView;
@@ -34,6 +37,8 @@
 @property (nonatomic, strong) PBGitRepository *repository;
 /* This is assign because that's what NSWindowController says :-S */
 @property (assign) PBGitRepositoryDocument *document;
+@property (readonly) PBGitHistoryController *historyViewController;
+@property (readonly) PBGitCommitController *commitViewController;
 
 - (instancetype)init;
 
