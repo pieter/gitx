@@ -88,12 +88,9 @@
 
 - (BOOL) validateMenuItem:(NSMenuItem *)menuItem remoteTitle:(NSString *)localisationKeyWithRemote plainTitle:(NSString *)localizationKeyWithoutRemote
 {
-	PBSourceViewItem *item = [self selectedItem];
-	PBGitRef *ref = item.ref;
-
-	if (!ref && (item.parent == sidebarController.remotes)) {
-		ref = [PBGitRef refFromString:[kGitXRemoteRefPrefix stringByAppendingString:item.title]];
-	}
+	PBGitRef *ref = [self selectedRef];
+	if (!ref)
+		return NO;
 
 	PBGitRef *remoteRef = [self.repository remoteRefForBranch:ref error:NULL];
 	if (ref.isRemote || remoteRef) {
@@ -429,9 +426,25 @@
 	return _historyViewController.selectedCommits.firstObject;
 }
 
-- (PBSourceViewItem *) selectedItem {
-	NSOutlineView *sourceView = sidebarController.sourceView;
-	return [sourceView itemAtRow:sourceView.selectedRow];
+- (PBGitRef *)selectedRef {
+	id firstResponder = self.window.firstResponder;
+	if (firstResponder == sidebarController.sourceView) {
+		NSOutlineView *sourceView = sidebarController.sourceView;
+		PBSourceViewItem *item = [sourceView itemAtRow:sourceView.selectedRow];
+		PBGitRef *ref = item.ref;
+		if (ref && (item.parent == sidebarController.remotes)) {
+			ref = [PBGitRef refFromString:[kGitXRemoteRefPrefix stringByAppendingString:item.title]];
+		}
+		return ref;
+	} else if (firstResponder == _historyViewController.commitList && _historyViewController.singleCommitSelected) {
+		NSMutableArray *branchCommits = [NSMutableArray array];
+		for (PBGitRef *ref in _historyViewController.selectedCommits.firstObject.refs) {
+			if (!ref.isBranch) continue;
+			[branchCommits addObject:ref];
+		}
+		return (branchCommits.count == 1 ? branchCommits.firstObject : nil);
+	}
+	return nil;
 }
 
 - (IBAction) showAddRemoteSheet:(id)sender
