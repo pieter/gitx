@@ -692,9 +692,12 @@
 {
 	id <PBGitRefish> refish = [self refishForSender:sender refishTypes:@[kGitXStashType]];
 	PBGitStash *stash = [self.repository stashForRef:refish];
+	if (!stash) {
+		stash = self.repository.stashes.firstObject;
+	}
+
 	NSError *error = nil;
 	BOOL success = [self.repository stashPop:stash error:&error];
-
 	if (!success) {
 		[self showErrorSheet:error];
 	}
