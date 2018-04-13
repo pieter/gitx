@@ -945,8 +945,14 @@
 	GTObject *object = [self.gtRepo lookUpObjectByRevParse:[target refishName] error:error];
 	if (!object) return NO;
 
-	GTTag *newTag  = [self.gtRepo createTagNamed:tagName target:object tagger:self.gtRepo.userSignatureForNow message:message error:error];
-	if (!newTag) return NO;
+	BOOL success = NO;
+	if (message.length == 0) {
+		success = [self.gtRepo createLightweightTagNamed:tagName target:object error:error];
+	} else {
+		GTTag *tag = [self.gtRepo createTagNamed:tagName target:object tagger:self.gtRepo.userSignatureForNow message:message error:error];
+		success = (tag != nil);
+	}
+	if (!success) return NO;
 
 	[self reloadRefs];
 	return YES;
