@@ -9,7 +9,11 @@
 #import <Cocoa/Cocoa.h>
 #import "PBHistorySearchMode.h"
 
-@class PBViewController, PBGitSidebarController, PBGitCommitController, PBGitRepository;
+@class PBViewController;
+@class PBGitSidebarController;
+@class PBGitCommitController;
+@class PBGitHistoryController;
+@class PBGitRepository;
 @class RJModalRepoSheet;
 @class PBGitRef;
 @class PBGitRepositoryDocument;
