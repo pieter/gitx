@@ -63,6 +63,9 @@
 	if (sidebarController)
 		[sidebarController closeView];
 
+	[self.historyViewController closeView];
+	[self.commitViewController closeView];
+
 	if (contentController)
 		[contentController removeObserver:self forKeyPath:@"status"];
 }
