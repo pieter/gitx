@@ -419,6 +419,13 @@
 			if (!types || [types indexOfObject:[refish refishType]] != NSNotFound)
 				return refish;
 		}
+		NSString *remoteName = nil;
+		if ([(remoteName = [(NSMenuItem *)sender representedObject]) isKindOfClass:[NSString class]]) {
+			if ([types indexOfObject:kGitXRemoteType] != NSNotFound
+				&& [self.repository.remotes indexOfObject:remoteName] != NSNotFound) {
+				return [PBGitRef refFromString:[kGitXRemoteRefPrefix stringByAppendingString:remoteName]];
+			}
+		}
 
 		return nil;
 	}
@@ -578,7 +585,7 @@
 
 - (IBAction)pushUpdatesToRemote:(id)sender
 {
-	id <PBGitRefish> refish = [self refishForSender:sender refishTypes:@[kGitXBranchType]];
+	id <PBGitRefish> refish = [self refishForSender:sender refishTypes:@[kGitXRemoteType]];
 	if (!refish || ![refish isKindOfClass:[PBGitRef class]])
 		return;
 
@@ -600,12 +607,16 @@
 
 - (IBAction)pushToRemote:(id)sender
 {
-	id <PBGitRefish> refish = [self refishForSender:sender refishTypes:@[kGitXBranchType]];
-	if (!refish || ![refish isKindOfClass:[PBGitRef class]])
+	NSMenuItem *remoteSubmenu = sender;
+	if (![remoteSubmenu isKindOfClass:[NSMenuItem class]]) return;
+
+	id <PBGitRefish> ref = [self refishForSender:remoteSubmenu.parentItem refishTypes:@[kGitXBranchType]];
+	if (!ref || ![ref isKindOfClass:[PBGitRef class]])
 		return;
 
-	PBGitRef *ref = (PBGitRef *)refish;
-	PBGitRef *remoteRef = ref.remoteRef;
+	id <PBGitRefish> remoteRef = [self refishForSender:sender refishTypes:@[kGitXRemoteType]];
+	if (!remoteRef || ![remoteRef isKindOfClass:[PBGitRef class]])
+		return;
 
 	[self performPushForBranch:ref toRemote:remoteRef];
 }
