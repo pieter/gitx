@@ -710,8 +710,8 @@
 	NSError *taskError = nil;
 	BOOL success = [task launchTask:&taskError];
 	if (!success) {
-		NSString *desc = NSLocalizedString(@"Fetch failed", @"PBGitRepository - push error description");
-		NSString *reason = [NSString stringWithFormat:NSLocalizedString(@"An error occurred while fetching remote \"%@\".", @"PBGitRepostory - push error reason"), ref.remoteName];
+		NSString *desc = NSLocalizedString(@"Fetch failed", @"PBGitRepository - fetch error description");
+		NSString *reason = [NSString stringWithFormat:NSLocalizedString(@"An error occurred while fetching remote \"%@\".", @"PBGitRepostory - fetch error reason"), ref.remoteName];
 		PBReturnError(error, desc, reason, taskError);
 	}
 
@@ -744,8 +744,8 @@
 	NSError *taskError = nil;
 	BOOL success = [task launchTask:error];
 	if (!success) {
-		NSString *desc = NSLocalizedString(@"Pull failed", @"PBGitRepository - push error description");
-		NSString *reason = [NSString stringWithFormat:NSLocalizedString(@"An error occurred while pulling remote \"%@\" to \"%@\".", @"PBGitRepostory - push error reason"), remoteName, branchRef.shortName];
+		NSString *desc = NSLocalizedString(@"Pull failed", @"PBGitRepository - pull error description");
+		NSString *reason = [NSString stringWithFormat:NSLocalizedString(@"An error occurred while pulling remote \"%@\" to \"%@\".", @"PBGitRepostory - pull error reason"), remoteName, branchRef.shortName];
 		PBReturnError(error, desc, reason, taskError);
 	}
 
