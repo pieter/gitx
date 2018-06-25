@@ -131,6 +131,10 @@ NSString * const kGitXStashRefPrefix  = @"refs/stash@";
 	return self;
 }
 
+- (NSString *)debugDescription {
+	return [NSString stringWithFormat:@"<%@: %p ref: %@", NSStringFromClass([self class]), self, ref];
+}
+
 + (BOOL)isSelectorExcludedFromWebScript:(SEL)aSelector
 {
 	return NO;
