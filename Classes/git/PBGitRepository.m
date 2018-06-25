@@ -893,8 +893,7 @@
 
 - (BOOL) rebaseBranch:(id <PBGitRefish>)branch onRefish:(id <PBGitRefish>)upstream error:(NSError **)error
 {
-	if (!upstream)
-		return NO;
+	NSParameterAssert(upstream != nil);
 
 	NSArray *arguments = @[@"rebase", upstream.refishName];
 

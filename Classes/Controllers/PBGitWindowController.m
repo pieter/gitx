@@ -647,7 +647,7 @@
 
 - (IBAction)rebase:(id)sender
 {
-	id <PBGitRefish> refish = [self refishForSender:sender refishTypes:@[kGitXBranchType, kGitXRemoteBranchType]];
+	id <PBGitRefish> refish = [self refishForSender:sender refishTypes:@[kGitXCommitType]];
 	if (!refish) return;
 
 	NSError *error = nil;
@@ -659,7 +659,10 @@
 
 - (IBAction)rebaseHeadBranch:(id)sender
 {
-	id <PBGitRefish> refish = [self refishForSender:sender refishTypes:@[kGitXBranchType, kGitXRemoteBranchType]];
+	id <PBGitRefish> refish = [self refishForSender:sender refishTypes:@[kGitXCommitType]];
+	if (!refish || ![refish isKindOfClass:[PBGitCommit class]])
+		return;
+
 	NSError *error = nil;
 	BOOL success = [self.repository rebaseBranch:nil onRefish:refish error:&error];
 	if (!success) {
