@@ -122,10 +122,13 @@ do { \
 			NSString *desc = @"Task exited unsuccessfully";
 			NSArray *taskArguments = [@[task.launchPath] arrayByAddingObjectsFromArray:task.arguments];
 			NSString *failureReason = [NSString stringWithFormat:@"The task \"%@\" returned a non-zero return code", [taskArguments componentsJoinedByString:@" "]];
+			int status = task.terminationStatus;
+			NSNumber *terminationStatus = (status < 255 ? [NSNumber numberWithShort:(short)status] : @(status));
+
 			NSDictionary *userInfo = @{
 									   NSLocalizedDescriptionKey: desc,
 									   NSLocalizedFailureReasonErrorKey: failureReason,
-									   PBTaskTerminationStatusKey: @(task.terminationStatus),
+									   PBTaskTerminationStatusKey: terminationStatus,
 									   PBTaskTerminationOutputKey: outputString,
 									   };
 			error = [NSError errorWithDomain:PBTaskErrorDomain code:PBTaskNonZeroExitCodeError userInfo:userInfo];
