@@ -81,10 +81,11 @@
 	if (taskError && taskError.domain == PBTaskErrorDomain) {
 		[messageParts addObject:NSLocalizedString(@"The underlying task failed:", @"PBGitXMessageSheet - task failed header")];
 		if (taskError.code == PBTaskNonZeroExitCodeError) {
-			NSString *message = NSLocalizedString(@"Return code: %d", @"PBGitXMessageSheet - task return code header");
+			NSString *message = NSLocalizedString(@"Return code: %@", @"PBGitXMessageSheet - task return code header");
 			message = [NSString stringWithFormat:message, taskError.userInfo[PBTaskTerminationStatusKey]];
 			[messageParts addObject:message];
 			message = NSLocalizedString(@"Output:", @"PBGitXMessageSheet - task output header");
+			message = [message stringByAppendingString:@"\n"];
 			message = [message stringByAppendingString:taskError.userInfo[PBTaskTerminationOutputKey]];
 			[messageParts addObject:message];
 		} else {

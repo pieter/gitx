@@ -742,7 +742,7 @@
 
 	PBTask *task = [self taskWithArguments:arguments];
 	NSError *taskError = nil;
-	BOOL success = [task launchTask:error];
+	BOOL success = [task launchTask:&taskError];
 	if (!success) {
 		NSString *desc = NSLocalizedString(@"Pull failed", @"PBGitRepository - pull error description");
 		NSString *reason = [NSString stringWithFormat:NSLocalizedString(@"An error occurred while pulling remote \"%@\" to \"%@\".", @"PBGitRepostory - pull error reason"), remoteName, branchRef.shortName];
