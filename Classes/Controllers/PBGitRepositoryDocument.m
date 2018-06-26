@@ -116,12 +116,13 @@ NSString *PBGitRepositoryDocumentType = @"Git Repository";
 	NSScriptCommand *command = [NSScriptCommand currentCommand];
 
 	if (command) {
+		// Check if `gitx` has provided some arguments
 		NSURL *repoURL = [command directParameter];
 
 		// on app launch there may be many repositories opening, so double check that this is the right repo
 		if (repoURL) {
 			repoURL = [PBRepositoryFinder gitDirForURL:repoURL];
-			if ([repoURL isEqual:self.fileURL]) {
+			if ([repoURL isEqual:_repository.gitURL]) {
 				NSArray *arguments = command.arguments[@"openOptions"];
 				[self handleGitXScriptingArguments:arguments];
 			}
