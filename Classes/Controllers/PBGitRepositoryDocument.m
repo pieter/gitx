@@ -120,7 +120,7 @@ NSString *PBGitRepositoryDocumentType = @"Git Repository";
 		NSURL *repoURL = [command directParameter];
 
 		// on app launch there may be many repositories opening, so double check that this is the right repo
-		if (repoURL) {
+		if (repoURL && [repoURL isKindOfClass:[NSURL class]]) {
 			repoURL = [PBRepositoryFinder gitDirForURL:repoURL];
 			if ([repoURL isEqual:_repository.gitURL]) {
 				NSArray *arguments = command.arguments[@"openOptions"];
