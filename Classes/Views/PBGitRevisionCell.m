@@ -113,6 +113,10 @@ const BOOL SHUFFLE_COLORS = NO;
 	return [currentOID isEqual:thisOID];
 }
 
+static BOOL isDarkMode() {
+	return [[[NSUserDefaults standardUserDefaults] stringForKey:@"AppleInterfaceStyle"] isEqualToString:@"Dark"];
+}
+
 - (void) drawCircleInRect: (NSRect) r
 {
 	long c = cellInfo.position;
@@ -130,7 +134,11 @@ const BOOL SHUFFLE_COLORS = NO;
 		[shadow setShadowBlurRadius:2.0f];
 		[shadow set];
 	}
-	[[NSColor blackColor] set];
+	if (isDarkMode()) {
+		[[NSColor whiteColor] set];
+	} else {
+		[[NSColor blackColor] set];
+	}
 	[path fill];
 	if (ENABLE_SHADOW && false) {
 		[NSGraphicsContext restoreGraphicsState];
@@ -141,6 +149,8 @@ const BOOL SHUFFLE_COLORS = NO;
 
 	if ( [self isCurrentCommit ] ) {
 		[[NSColor colorWithCalibratedRed: 0Xfc/256.0 green:0Xa6/256.0 blue: 0X4f/256.0 alpha: 1.0] set];
+	} else if (isDarkMode()) {
+		[[NSColor blackColor] set];
 	} else {
 		[[NSColor whiteColor] set];
 	}
