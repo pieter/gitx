@@ -12,6 +12,7 @@
 #import "PBGitGrapher.h"
 #import "PBGitRevSpecifier.h"
 #import "PBGitBinary.h"
+#import "PBError.h"
 
 #import <ObjectiveGit/ObjectiveGit.h>
 #import "ObjectiveGit+PBCategories.h"
@@ -169,22 +170,32 @@ static BOOL hasParameter(NSMutableArray *parameters, NSString *paramName) {
 
 	// Handle the rest of our (less obvious) parameters
 	for (NSString *param in parameters) {
+		GTObject *obj = nil;
 		if ([param hasPrefix:@"--glob="]) {
 			success = [enumerator pushGlob:[param substringFromIndex:@"--glob=".length] error:&error];
-			if (!success) {
-				NSLog(@"Failed to push glob %@: %@", param, error);
-			}
+		} else if ([param isEqualToString:@"HEAD"]) {
+			success = [enumerator pushHEAD:&error];
+		} else if ((obj = [repo lookUpObjectByRevParse:param error:&error])) {
+			success = [enumerator pushSHA:obj.SHA error:&error];
 		} else {
-			NSError *lookupError = nil;
-			GTObject *obj = [repo lookUpObjectByRevParse:param error:&lookupError];
-			if (obj) {
-				success = [enumerator pushSHA:obj.SHA error:&error];
+			int gitError = git_revwalk_push_range(enumerator.git_revwalk, param.UTF8String);
+			if (gitError != GIT_OK) {
+				NSString *desc = [NSString stringWithFormat:@"Failed to push range"];
+				NSString *fail = [NSString stringWithFormat:@"The range %@ couldn't be pushed", param];
+				error = [NSError errorWithDomain:GTGitErrorDomain
+											code:gitError
+										userInfo:@{
+												   NSLocalizedDescriptionKey: desc,
+												   NSLocalizedFailureReasonErrorKey: fail,
+												   }];
+				success = NO;
 			} else {
-				success = [enumerator pushGlob:param error:&error];
+				success = YES;
 			}
-			if (!success) {
-				NSLog(@"Failed to push remaining parameter %@: %@", param, error);
-			}
+		}
+
+		if (!success) {
+			NSLog(@"Failed to push remaining parameter %@: %@", param, error);
 		}
 	}
 

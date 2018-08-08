@@ -201,10 +201,9 @@ GitXDocument *documentForURL(SBElementArray *documents, NSURL *theURL)
 	return nil;
 }
 
-void handleGitXSearch(NSURL *repositoryURL, NSMutableArray *arguments)
+void handleGitXSearch(NSURL *repositoryURL, PBHistorySearchMode mode, NSMutableArray *arguments)
 {
 	NSString *searchString = [arguments componentsJoinedByString:@" "];
-	NSInteger mode = searchModeForCommandLineArgument(searchString);
 
 	// remove the prefix from search string before sending it
 	NSArray *prefixes = commandLineSearchPrefixes();
@@ -363,9 +362,15 @@ int main(int argc, const char** argv)
 				[arguments removeObjectAtIndex:0];
 				handleClone(wdURL, arguments);
 			}
-			
-			if (searchModeForCommandLineArgument(firstArgument)) {
-				handleGitXSearch(wdURL, arguments);
+
+			PBHistorySearchMode mode;
+			if ((mode = searchModeForCommandLineArgument(firstArgument))) {
+				handleGitXSearch(wdURL, mode, arguments);
+			}
+
+			if ([firstArgument isEqualToString:@"--"]) {
+				[arguments removeObjectAtIndex:0];
+				handleGitXSearch(wdURL, PBHistorySearchModePath, arguments);
 			}
 		}
 		

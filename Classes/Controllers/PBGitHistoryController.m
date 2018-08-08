@@ -371,6 +371,11 @@
 		[super keyDown: event];
 }
 
+- (void)setHistorySearch:(NSString *)searchString mode:(PBHistorySearchMode)mode
+{
+	[searchController setHistorySearch:searchString mode:mode];
+}
+
 // NSSearchField (actually textfields in general) prevent the normal Find operations from working. Setup custom actions for the
 // next and previous menuitems (in MainMenu.nib) so they will work when the search field is active. When searching for text in
 // a file make sure to call the Find panel's action method instead.
@@ -543,7 +548,7 @@
 - (void)showCommitsFromTree:(id)sender
 {
 	NSString *searchString = [(NSArray *)[sender representedObject] componentsJoinedByString:@" "];
-	[searchController setHistorySearch:searchString mode:PBHistorySearchModePath];
+	[self setHistorySearch:searchString mode:PBHistorySearchModePath];
 }
 
 - (void) checkoutFiles:(id)sender

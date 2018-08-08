@@ -63,6 +63,9 @@
 	if (sidebarController)
 		[sidebarController closeView];
 
+	[self.historyViewController closeView];
+	[self.commitViewController closeView];
+
 	if (contentController)
 		[contentController removeObserver:self forKeyPath:@"status"];
 }
@@ -70,10 +73,10 @@
 - (BOOL)validateMenuItem:(NSMenuItem *)menuItem
 {
 	if ([menuItem action] == @selector(showCommitView:)) {
-		[menuItem setState:(contentController == sidebarController.commitViewController) ? YES : NO];
+		[menuItem setState:(contentController == _commitViewController) ? YES : NO];
 		return ![self.repository isBareRepository];
 	} else if ([menuItem action] == @selector(showHistoryView:)) {
-		[menuItem setState:(contentController != sidebarController.commitViewController) ? YES : NO];
+		[menuItem setState:(contentController != _commitViewController) ? YES : NO];
 		return ![self.repository isBareRepository];
 	} else if (menuItem.action == @selector(fetchRemote:)) {
 		return [self validateMenuItem:menuItem remoteTitle:@"Fetch “%@”" plainTitle:@"Fetch"];
@@ -88,12 +91,9 @@
 
 - (BOOL) validateMenuItem:(NSMenuItem *)menuItem remoteTitle:(NSString *)localisationKeyWithRemote plainTitle:(NSString *)localizationKeyWithoutRemote
 {
-	PBSourceViewItem *item = [self selectedItem];
-	PBGitRef *ref = item.ref;
-
-	if (!ref && (item.parent == sidebarController.remotes)) {
-		ref = [PBGitRef refFromString:[kGitXRemoteRefPrefix stringByAppendingString:item.title]];
-	}
+	PBGitRef *ref = [self selectedRef];
+	if (!ref)
+		return NO;
 
 	PBGitRef *remoteRef = [self.repository remoteRefForBranch:ref error:NULL];
 	if (ref.isRemote || remoteRef) {
@@ -117,6 +117,8 @@
 	[[self window] setRepresentedURL:self.repository.workingDirectoryURL];
 
 	sidebarController = [[PBGitSidebarController alloc] initWithRepository:self.repository superController:self];
+	_historyViewController = [[PBGitHistoryController alloc] initWithRepository:self.repository superController:self];
+	_commitViewController = [[PBGitCommitController alloc] initWithRepository:self.repository superController:self];
 
 	[[sidebarController view] setFrame:[sourceSplitView bounds]];
 	[sourceSplitView addSubview:[sidebarController view]];
@@ -172,7 +174,7 @@
 	 completionHandler:^(id  _Nonnull sheet, NSModalResponse returnCode) {
 		 if (returnCode != NSModalResponseOK) return;
 
-		 [self->sidebarController.commitViewController forceCommit:self];
+		 [_commitViewController forceCommit:self];
 	 }];
 }
 
@@ -230,7 +232,7 @@
 
 - (void)setHistorySearch:(NSString *)searchString mode:(PBHistorySearchMode)mode
 {
-	[sidebarController setHistorySearch:searchString mode:mode];
+	[_historyViewController setHistorySearch:searchString mode:mode];
 }
 
 
@@ -417,6 +419,13 @@
 			if (!types || [types indexOfObject:[refish refishType]] != NSNotFound)
 				return refish;
 		}
+		NSString *remoteName = nil;
+		if ([(remoteName = [(NSMenuItem *)sender representedObject]) isKindOfClass:[NSString class]]) {
+			if ([types indexOfObject:kGitXRemoteType] != NSNotFound
+				&& [self.repository.remotes indexOfObject:remoteName] != NSNotFound) {
+				return [PBGitRef refFromString:[kGitXRemoteRefPrefix stringByAppendingString:remoteName]];
+			}
+		}
 
 		return nil;
 	}
@@ -424,12 +433,28 @@
 	if ([types indexOfObject:kGitXCommitType] == NSNotFound)
 		return nil;
 
-	return sidebarController.historyViewController.selectedCommits.firstObject;
+	return _historyViewController.selectedCommits.firstObject;
 }
 
-- (PBSourceViewItem *) selectedItem {
-	NSOutlineView *sourceView = sidebarController.sourceView;
-	return [sourceView itemAtRow:sourceView.selectedRow];
+- (PBGitRef *)selectedRef {
+	id firstResponder = self.window.firstResponder;
+	if (firstResponder == sidebarController.sourceView) {
+		NSOutlineView *sourceView = sidebarController.sourceView;
+		PBSourceViewItem *item = [sourceView itemAtRow:sourceView.selectedRow];
+		PBGitRef *ref = item.ref;
+		if (ref && (item.parent == sidebarController.remotes)) {
+			ref = [PBGitRef refFromString:[kGitXRemoteRefPrefix stringByAppendingString:item.title]];
+		}
+		return ref;
+	} else if (firstResponder == _historyViewController.commitList && _historyViewController.singleCommitSelected) {
+		NSMutableArray *branchCommits = [NSMutableArray array];
+		for (PBGitRef *ref in _historyViewController.selectedCommits.firstObject.refs) {
+			if (!ref.isBranch) continue;
+			[branchCommits addObject:ref];
+		}
+		return (branchCommits.count == 1 ? branchCommits.firstObject : nil);
+	}
+	return nil;
 }
 
 - (IBAction) showAddRemoteSheet:(id)sender
@@ -469,7 +494,7 @@
 
 - (IBAction)deleteRef:(id)sender
 {
-	id <PBGitRefish> refish = [self refishForSender:sender refishTypes:@[kGitXBranchType]];
+	id <PBGitRefish> refish = [self refishForSender:sender refishTypes:@[kGitXBranchType, kGitXRemoteType]];
 	if (!refish || ![refish isKindOfClass:[PBGitRef class]])
 		return;
 
@@ -560,7 +585,7 @@
 
 - (IBAction)pushUpdatesToRemote:(id)sender
 {
-	id <PBGitRefish> refish = [self refishForSender:sender refishTypes:@[kGitXBranchType]];
+	id <PBGitRefish> refish = [self refishForSender:sender refishTypes:@[kGitXRemoteType]];
 	if (!refish || ![refish isKindOfClass:[PBGitRef class]])
 		return;
 
@@ -582,12 +607,16 @@
 
 - (IBAction)pushToRemote:(id)sender
 {
-	id <PBGitRefish> refish = [self refishForSender:sender refishTypes:@[kGitXBranchType]];
-	if (!refish || ![refish isKindOfClass:[PBGitRef class]])
+	NSMenuItem *remoteSubmenu = sender;
+	if (![remoteSubmenu isKindOfClass:[NSMenuItem class]]) return;
+
+	id <PBGitRefish> ref = [self refishForSender:remoteSubmenu.parentItem refishTypes:@[kGitXBranchType]];
+	if (!ref || ![ref isKindOfClass:[PBGitRef class]])
 		return;
 
-	PBGitRef *ref = (PBGitRef *)refish;
-	PBGitRef *remoteRef = ref.remoteRef;
+	id <PBGitRefish> remoteRef = [self refishForSender:sender refishTypes:@[kGitXRemoteType]];
+	if (!remoteRef || ![remoteRef isKindOfClass:[PBGitRef class]])
+		return;
 
 	[self performPushForBranch:ref toRemote:remoteRef];
 }
@@ -618,7 +647,7 @@
 
 - (IBAction)rebase:(id)sender
 {
-	id <PBGitRefish> refish = [self refishForSender:sender refishTypes:@[kGitXBranchType, kGitXRemoteBranchType]];
+	id <PBGitRefish> refish = [self refishForSender:sender refishTypes:@[kGitXCommitType]];
 	if (!refish) return;
 
 	NSError *error = nil;
@@ -630,7 +659,10 @@
 
 - (IBAction)rebaseHeadBranch:(id)sender
 {
-	id <PBGitRefish> refish = [self refishForSender:sender refishTypes:@[kGitXBranchType, kGitXRemoteBranchType]];
+	id <PBGitRefish> refish = [self refishForSender:sender refishTypes:@[kGitXCommitType]];
+	if (!refish || ![refish isKindOfClass:[PBGitCommit class]])
+		return;
+
 	NSError *error = nil;
 	BOOL success = [self.repository rebaseBranch:nil onRefish:refish error:&error];
 	if (!success) {
@@ -674,9 +706,12 @@
 {
 	id <PBGitRefish> refish = [self refishForSender:sender refishTypes:@[kGitXStashType]];
 	PBGitStash *stash = [self.repository stashForRef:refish];
+	if (!stash) {
+		stash = self.repository.stashes.firstObject;
+	}
+
 	NSError *error = nil;
 	BOOL success = [self.repository stashPop:stash error:&error];
-
 	if (!success) {
 		[self showErrorSheet:error];
 	}
@@ -733,7 +768,7 @@
 	/* WIP: must check */
 	id <PBGitRefish> refish = [self refishForSender:sender refishTypes:nil];
 	if (!refish) {
-		PBGitCommit *selectedCommit = sidebarController.historyViewController.selectedCommits.firstObject;
+		PBGitCommit *selectedCommit = _historyViewController.selectedCommits.firstObject;
 		if (!selectedCommit || [selectedCommit hasRef:currentRef]) {
 			refish = currentRef;
 		} else {
@@ -768,7 +803,7 @@
 	/* WIP: must check */
 	id <PBGitRefish> refish = [self refishForSender:sender refishTypes:nil];
 	if (!refish) {
-		PBGitCommit *selectedCommit = sidebarController.historyViewController.selectedCommits.firstObject;
+		PBGitCommit *selectedCommit = _historyViewController.selectedCommits.firstObject;
 		if (selectedCommit)
 			refish = selectedCommit;
 		else

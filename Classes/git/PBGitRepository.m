@@ -448,7 +448,7 @@
 	return [PBGitRef refFromString:refName];
 }
 
-- (NSArray*)branches
+- (NSArray <PBGitRevSpecifier *> *)branches
 {
     return [self.branchesSet array];
 }
@@ -510,7 +510,7 @@
 
 #pragma mark Stashes
 
-- (NSArray *)stashes
+- (NSArray <PBGitStash *> *)stashes
 {
 	NSMutableArray *stashes = [NSMutableArray array];
 	[self.gtRepo enumerateStashesUsingBlock:^(NSUInteger index, NSString *message, GTOID *oid, BOOL *stop) {
@@ -623,7 +623,7 @@
 
 #pragma mark Remotes
 
-- (NSArray *) remotes
+- (NSArray <NSString *> *)remotes
 {
 	NSError *error = nil;
 	NSArray *remotes = [self.gtRepo remoteNamesWithError:&error];
@@ -710,8 +710,8 @@
 	NSError *taskError = nil;
 	BOOL success = [task launchTask:&taskError];
 	if (!success) {
-		NSString *desc = NSLocalizedString(@"Fetch failed", @"PBGitRepository - push error description");
-		NSString *reason = [NSString stringWithFormat:NSLocalizedString(@"An error occurred while fetching remote \"%@\".", @"PBGitRepostory - push error reason"), ref.remoteName];
+		NSString *desc = NSLocalizedString(@"Fetch failed", @"PBGitRepository - fetch error description");
+		NSString *reason = [NSString stringWithFormat:NSLocalizedString(@"An error occurred while fetching remote \"%@\".", @"PBGitRepostory - fetch error reason"), ref.remoteName];
 		PBReturnError(error, desc, reason, taskError);
 	}
 
@@ -742,10 +742,10 @@
 
 	PBTask *task = [self taskWithArguments:arguments];
 	NSError *taskError = nil;
-	BOOL success = [task launchTask:error];
+	BOOL success = [task launchTask:&taskError];
 	if (!success) {
-		NSString *desc = NSLocalizedString(@"Pull failed", @"PBGitRepository - push error description");
-		NSString *reason = [NSString stringWithFormat:NSLocalizedString(@"An error occurred while pulling remote \"%@\" to \"%@\".", @"PBGitRepostory - push error reason"), remoteName, branchRef.shortName];
+		NSString *desc = NSLocalizedString(@"Pull failed", @"PBGitRepository - pull error description");
+		NSString *reason = [NSString stringWithFormat:NSLocalizedString(@"An error occurred while pulling remote \"%@\" to \"%@\".", @"PBGitRepostory - pull error reason"), remoteName, branchRef.shortName];
 		PBReturnError(error, desc, reason, taskError);
 	}
 
@@ -893,8 +893,7 @@
 
 - (BOOL) rebaseBranch:(id <PBGitRefish>)branch onRefish:(id <PBGitRefish>)upstream error:(NSError **)error
 {
-	if (!upstream)
-		return NO;
+	NSParameterAssert(upstream != nil);
 
 	NSArray *arguments = @[@"rebase", upstream.refishName];
 
@@ -945,8 +944,14 @@
 	GTObject *object = [self.gtRepo lookUpObjectByRevParse:[target refishName] error:error];
 	if (!object) return NO;
 
-	GTTag *newTag  = [self.gtRepo createTagNamed:tagName target:object tagger:self.gtRepo.userSignatureForNow message:message error:error];
-	if (!newTag) return NO;
+	BOOL success = NO;
+	if (message.length == 0) {
+		success = [self.gtRepo createLightweightTagNamed:tagName target:object error:error];
+	} else {
+		GTTag *tag = [self.gtRepo createTagNamed:tagName target:object tagger:self.gtRepo.userSignatureForNow message:message error:error];
+		success = (tag != nil);
+	}
+	if (!success) return NO;
 
 	[self reloadRefs];
 	return YES;
