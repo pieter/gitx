@@ -10,7 +10,7 @@ body {
 	border-bottom: 1px solid black;
 	margin: 0px;
 	font-weight: 500;
-	background-color: #ECF3FD;
+	background-color: #130C02;
 	font-size: 100%;
 	position: fixed;
 	z-index: 2;
@@ -27,8 +27,8 @@ body {
 	padding: 20px;
 	width: auto;
 
-	background-color: #B4D7FF;
-	border: 2px solid #45A1FE;
+	background-color: #4B2800;
+	border: 2px solid #BA5E01;
 
 	-webkit-border-radius: 10px;
 }
@@ -64,7 +64,7 @@ table.diff {
 .diff .hunkbutton {
 	min-width: 5em;
 	padding: 2px 0;
-	border: 1px solid #9abbea;
+	border: 1px solid #654415;
     top: 4px;
 	margin-bottom: 4px;
 	margin-right: 3px;
@@ -73,8 +73,8 @@ table.diff {
 	box-sizing: border-box;
 	z-index: 1;
 
-	background-color: #cce5ff;
-	color: #204a87;
+	background-color: #331A00;
+	color: #DFB578;
 
 	font-family: -apple-system, 'Helvetica Neue', 'Lucida Grande';
 	text-decoration: none;
@@ -83,21 +83,21 @@ table.diff {
 	-webkit-border-radius: 2px;
 }
 #selected {
-    background-color: #B5D5FE !important;
+    background-color: #4A2A01 !important;
 }
 #selected div {
-    background-color: #B5D5FE;
+    background-color: #4A2A01;
 }
 #selected div del,
 #selected div ins {
-    background-color: #9abbea;
+    background-color: #654415;
 }
 #selected div .whitespace {
-    background-color: #7795c7;
+    background-color: #886A38;
 }
 
 #selected .hunkbutton {
-    background-color: #FFF;
+    background-color: #000;
 }
 
 .disabled {
@@ -109,13 +109,13 @@ table.diff {
 	margin-right: 100px;
 	padding: 5px;
 	-webkit-border-radius: 5px;
-	border: 1px solid #EEE;
+	border: 1px solid #111;
 }
 
 #multiselect div.title {
-	background-color: #EEE;
+	background-color: #111;
 	font-weight: bold;
-	border: 5px solid #EEE;
+	border: 5px solid #111;
 	margin: -5px;
 	padding-left: 20px;
 }

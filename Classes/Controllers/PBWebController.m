@@ -14,6 +14,10 @@
 
 #include <SystemConfiguration/SCNetworkReachability.h>
 
+static BOOL isDarkMode() {
+	return [[[NSUserDefaults standardUserDefaults] stringForKey:@"AppleInterfaceStyle"] isEqualToString:@"Dark"];
+}
+
 @interface PBWebController () <WebUIDelegate, WebFrameLoadDelegate, WebResourceLoadDelegate>
 - (void)preferencesChangedWithNotification:(NSNotification *)theNotification;
 @end
@@ -41,6 +45,10 @@
 	[self.view setResourceLoadDelegate:self];
 	[self.view.preferences setDefaultFontSize:(int)[NSFont systemFontSize]];
 	[self.view.mainFrame loadRequest:request];
+
+	// mainly for dark mode so it doesn't look white in bounce region
+	//FIXME ideally would be black though!
+	self.view.drawsBackground = false;
 }
 
 - (WebScriptObject *) script

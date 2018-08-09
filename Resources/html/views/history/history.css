@@ -40,9 +40,9 @@ a.servicebutton {
     padding: 2px;
     margin-bottom: 4px;
 
-    border: 1px solid #3465a4;
-    background-color: #cce5ff;
-    color: #204a87;
+    border: 1px solid #CB9A5B;
+    background-color: #331A00;
+    color: #DFB578;
 
     font-size: 65%;
     text-decoration: none;
@@ -53,7 +53,7 @@ a.servicebutton {
 
 a.servicebutton:hover {
 	padding: 1px;
-	border: 2px solid #3465a4;
+	border: 2px solid #CB9A5B;
 }
 
 #gravatar {
@@ -77,7 +77,7 @@ a.servicebutton:hover {
 
 .property_name {
 	width: 6em;
-	color:#7F7F7F;
+	color:#808080;
 	text-align: right;
 	font-weight: bold;
 }
@@ -118,7 +118,7 @@ hr {
 	border: 0;
 	height: 1px;
 	margin: 0 8px;
-	background-color: #DEDEDE;
+	background-color: #212121;
 	clear: both;
 }
 
@@ -130,17 +130,17 @@ a {
 	text-decoration: none;
 	text-align: center;
 	font-size: 1.3em;
-    background-color: #d5d5d5;
+    background-color: #2A2A2A;
 	display: block;
 	padding: 5px 10px;
 	width: 400px;
 	margin: 25px auto 25px auto;
 	-webkit-border-radius: 10px;
-	border: 1px solid #999;
-	-webkit-box-shadow: 1px 1px 2px #DDD;
+	border: 1px solid #666;
+	-webkit-box-shadow: 1px 1px 2px #222;
 }
 .showdiff:hover {
-	background-color: #c4daff;
+	background-color: #3B2500;
 }
 
 .refs {
@@ -152,19 +152,19 @@ a {
 }
 
 .refs.head {
-	background-color: #7ad254;
+	background-color: #852DAB;
 }
 
 .refs.remote {
-	background-color: #82afef;
+	background-color: #7D5010;
 }
 
 .refs.tag {
-	background-color: #fced4f;
+	background-color: #0312B0;
 }
 
 .refs.currentBranch {
-	background-color: #fca64f;
+	background-color: #0359B0;
 }
 #message_files {
 	margin: 0;
@@ -184,11 +184,11 @@ a {
 #files li {
 	list-style-type: none;
 	padding: 4px 10px;
-	color: #000;
+	color: #FFF;
 	height: 18px;
 }
 #files li.odd {
-    background-color: #f2f2f2;
+    background-color: #0D0D0D;
 }
 #files li:hover {
     text-decoration: underline;
@@ -202,7 +202,6 @@ a {
 	position: relative;
 	top: 2px;
 	font-size: 12px;
-	text-shadow: white 0 0 4px;
 	z-index: 100;
 }
 
@@ -228,16 +227,16 @@ a {
 	position: absolute;
 	-webkit-border-top-left-radius: 5px;
 	-webkit-border-bottom-left-radius: 5px;
-	-webkit-box-shadow: 0 1px 1px #fff;
+	-webkit-box-shadow: 0 1px 1px #000;
 }
 #files .changes-bar.added {
-	background-color: #b2ffaf;
-	border: 1px solid #080;
+	background-color: #4D0050;
+	border: 1px solid #F7F;
 }
 #files .changes-bar.removed {
 	top: 10px;
-	background-color: #febfbf;
-	border: 1px solid #B00;
+	background-color: #014040;
+	border: 1px solid #4FF;
 }
 
 #files .diffstat-numbers {
@@ -250,7 +249,7 @@ a {
 }
 
 #files .diffstat-numbers.summary {
-    border-left: 1px solid #656565;
+    border-left: 1px solid #9A9A9A;
 	-webkit-border-top-right-radius: 12px;
 	-webkit-border-bottom-right-radius: 12px;
 	right: 1px;
@@ -258,17 +257,17 @@ a {
 }
 #files .diffstat-numbers.details {
     background-color: black;
-    color: #e3e3e3;
+    color: #1C1C1C;
 	-webkit-border-top-left-radius: 12px;
 	-webkit-border-bottom-left-radius: 12px;
 	right: 46px;
 	text-align: right;
 }
 #files .diffstat-numbers.details .added {
-	color: #5db15d;
+	color: #A24EA2;
 }
 #files .diffstat-numbers.details .removed {
-	color: #f34b4e;
+	color: #0CB4B1;
 }
 
 #files .diffstat-numbers.binary {
@@ -279,7 +278,7 @@ a {
 /*
 div.button
 {
-	color: #666666;
+	color: #999999;
 
 	font-size: 60%;
 	text-align: center;
@@ -299,20 +298,20 @@ div.button
 
 div.created
 {
-	background-color: #ccffcc;
-	border-color: #66ff66;
+	background-color: #330033;
+	border-color: #990099;
 }
 
 div.changed
 {
-	background-color: #ffcc99;
-	border-color: #ff9933;
+	background-color: #003366;
+	border-color: #0066CC;
 }
 
 div.deleted
 {
-	background-color: #ffcccc;
-	border-color: #ff6666;
+	background-color: #003333;
+	border-color: #009999;
 }
 
 div.renamed
