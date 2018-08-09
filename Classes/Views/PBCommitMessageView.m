@@ -33,6 +33,8 @@
                forKeyPath:@"PBCommitMessageViewVerticalBodyLineLength"
                   options:NSKeyValueObservingOptionNew
                   context:NULL];
+
+	self.font = [NSFont fontWithName:@"SF Mono" size:12.0] ?: [NSFont fontWithName:@"Menlo" size:12.0];
 }
 
 - (void)dealloc
@@ -55,7 +57,7 @@
 
     if ([PBGitDefaults commitMessageViewHasVerticalLine]) {
 
-        CGFloat characterWidth = [@" " sizeWithAttributes:[self typingAttributes]].width;
+		CGFloat characterWidth = [@" " sizeWithAttributes:@{NSFontAttributeName: self.font}].width;
         CGFloat lineWidth = characterWidth * [PBGitDefaults commitMessageViewVerticalLineLength];
         NSRect line;
         CGFloat padding;
