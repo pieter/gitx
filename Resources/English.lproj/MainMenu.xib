@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="14105" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="14313.18" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="14105"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="14313.18"/>
     </dependencies>
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="ApplicationController"/>
@@ -67,23 +67,12 @@
                         </items>
                     </menu>
                 </menuItem>
-                <menuItem title="File" id="83">
-                    <menu key="submenu" title="File" id="81">
+                <menuItem title="Repository" id="83" userLabel="Repository">
+                    <menu key="submenu" title="Repository" id="81">
                         <items>
-                            <menuItem title="New…" keyEquivalent="n" id="82">
-                                <connections>
-                                    <action selector="newDocument:" target="-1" id="934"/>
-                                </connections>
-                            </menuItem>
                             <menuItem title="Open…" keyEquivalent="o" id="72">
                                 <connections>
                                     <action selector="openDocument:" target="-1" id="907"/>
-                                </connections>
-                            </menuItem>
-                            <menuItem title="Clone…" id="956">
-                                <modifierMask key="keyEquivalentModifierMask"/>
-                                <connections>
-                                    <action selector="showCloneRepository:" target="-1" id="958"/>
                                 </connections>
                             </menuItem>
                             <menuItem title="Open Recent" id="124">
@@ -97,31 +86,30 @@
                                     </items>
                                 </menu>
                             </menuItem>
-                            <menuItem isSeparatorItem="YES" id="79">
-                                <modifierMask key="keyEquivalentModifierMask" command="YES"/>
-                            </menuItem>
                             <menuItem title="Close" keyEquivalent="w" id="73">
                                 <connections>
                                     <action selector="performClose:" target="-1" id="193"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Clone To…" id="954">
-                                <modifierMask key="keyEquivalentModifierMask"/>
-                                <connections>
-                                    <action selector="cloneTo:" target="-1" id="955"/>
-                                </connections>
-                            </menuItem>
-                            <menuItem isSeparatorItem="YES" hidden="YES" id="74">
+                            <menuItem isSeparatorItem="YES" id="79">
                                 <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                             </menuItem>
-                            <menuItem title="Page Setup…" hidden="YES" keyEquivalent="P" id="77">
+                            <menuItem title="Terminal Here" keyEquivalent="t" id="942">
                                 <connections>
-                                    <action selector="runPageLayout:" target="-1" id="87"/>
+                                    <action selector="openInTerminal:" target="-1" id="944"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Print…" hidden="YES" keyEquivalent="p" id="78">
+                            <menuItem title="Show in Finder" keyEquivalent="R" id="947">
                                 <connections>
-                                    <action selector="print:" target="-1" id="86"/>
+                                    <action selector="revealInFinder:" target="-1" id="948"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem isSeparatorItem="YES" id="BQt-cK-OFg">
+                                <modifierMask key="keyEquivalentModifierMask" command="YES"/>
+                            </menuItem>
+                            <menuItem title="Refresh" keyEquivalent="r" id="915">
+                                <connections>
+                                    <action selector="refresh:" target="-1" id="926"/>
                                 </connections>
                             </menuItem>
                         </items>
@@ -359,82 +347,6 @@
                         </items>
                     </menu>
                 </menuItem>
-                <menuItem title="Repository" id="936">
-                    <modifierMask key="keyEquivalentModifierMask"/>
-                    <menu key="submenu" title="Repository" id="937">
-                        <items>
-                            <menuItem title="Create Tag…" keyEquivalent="t" id="949">
-                                <connections>
-                                    <action selector="createTag:" target="-1" id="950"/>
-                                </connections>
-                            </menuItem>
-                            <menuItem title="Create Branch…" keyEquivalent="b" id="938">
-                                <connections>
-                                    <action selector="createBranch:" target="-1" id="941"/>
-                                </connections>
-                            </menuItem>
-                            <menuItem title="Add Remote…" keyEquivalent="r" id="951">
-                                <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
-                                <connections>
-                                    <action selector="showAddRemoteSheet:" target="-1" id="953"/>
-                                </connections>
-                            </menuItem>
-                            <menuItem isSeparatorItem="YES" id="943"/>
-                            <menuItem title="Fetch" id="hAa-UP-Llb">
-                                <modifierMask key="keyEquivalentModifierMask"/>
-                                <connections>
-                                    <action selector="fetchRemote:" target="-1" id="zxl-J9-UiW"/>
-                                </connections>
-                            </menuItem>
-                            <menuItem title="Fetch All" id="OAK-L4-wE7">
-                                <modifierMask key="keyEquivalentModifierMask"/>
-                                <connections>
-                                    <action selector="fetchAllRemotes:" target="-1" id="gQf-4H-0cg"/>
-                                </connections>
-                            </menuItem>
-                            <menuItem isSeparatorItem="YES" id="CDX-1D-7tK"/>
-                            <menuItem title="Pull" keyEquivalent="l" id="ka6-UF-ky7">
-                                <connections>
-                                    <action selector="pullRemote:" target="-1" id="Uq3-eV-MxO"/>
-                                </connections>
-                            </menuItem>
-                            <menuItem title="Pull and Rebase" alternate="YES" keyEquivalent="l" id="voe-dZ-hNd">
-                                <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
-                                <connections>
-                                    <action selector="pullRebaseRemote:" target="-1" id="QtG-bu-sTO"/>
-                                </connections>
-                            </menuItem>
-                            <menuItem title="Pull From Default Remote" keyEquivalent="L" id="hpV-fp-aO8">
-                                <connections>
-                                    <action selector="pullDefaultRemote:" target="-1" id="X3P-VB-IDo"/>
-                                </connections>
-                            </menuItem>
-                            <menuItem title="Pull From Default Remote and Rebase" alternate="YES" keyEquivalent="L" id="3yY-A6-tCH">
-                                <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
-                                <connections>
-                                    <action selector="pullRebaseDefaultRemote:" target="-1" id="4BD-Fh-yDB"/>
-                                </connections>
-                            </menuItem>
-                            <menuItem isSeparatorItem="YES" id="DoS-f9-CnX"/>
-                            <menuItem title="Open Files" id="v0g-0H-6cS">
-                                <modifierMask key="keyEquivalentModifierMask"/>
-                                <connections>
-                                    <action selector="openFiles:" target="-1" id="iuN-jM-CtN"/>
-                                </connections>
-                            </menuItem>
-                            <menuItem title="Open in Terminal" keyEquivalent="T" id="942">
-                                <connections>
-                                    <action selector="openInTerminal:" target="-1" id="944"/>
-                                </connections>
-                            </menuItem>
-                            <menuItem title="Reveal in Finder" keyEquivalent="F" id="947">
-                                <connections>
-                                    <action selector="revealInFinder:" target="-1" id="948"/>
-                                </connections>
-                            </menuItem>
-                        </items>
-                    </menu>
-                </menuItem>
                 <menuItem title="Stage" id="ZlE-C1-FcX">
                     <modifierMask key="keyEquivalentModifierMask"/>
                     <menu key="submenu" title="Stage" id="9hl-o6-08g">
@@ -468,29 +380,6 @@
                                 </connections>
                             </menuItem>
                             <menuItem isSeparatorItem="YES" id="IxF-3J-qF1"/>
-                            <menuItem title="Stash Changes" keyEquivalent="y" id="2gL-ib-nL8">
-                                <connections>
-                                    <action selector="stashSave:" target="-1" id="9uu-ug-Nha"/>
-                                </connections>
-                            </menuItem>
-                            <menuItem title="Stash Changes and Keep Index" alternate="YES" keyEquivalent="y" id="nNv-D1-3XH">
-                                <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
-                                <connections>
-                                    <action selector="stashSaveWithKeepIndex:" target="-1" id="cWe-1t-xf6"/>
-                                </connections>
-                            </menuItem>
-                            <menuItem title="Pop Stash" keyEquivalent="Y" id="pKw-dO-def">
-                                <connections>
-                                    <action selector="stashPop:" target="-1" id="UlH-Mz-PFW"/>
-                                </connections>
-                            </menuItem>
-                            <menuItem title="Apply Stash" alternate="YES" keyEquivalent="Y" id="o86-xc-e8m">
-                                <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
-                                <connections>
-                                    <action selector="stashPop:" target="-1" id="48D-kd-utF"/>
-                                </connections>
-                            </menuItem>
-                            <menuItem isSeparatorItem="YES" id="YAj-JN-RZ1"/>
                             <menuItem title="Commit" id="6Eq-je-Hbg">
                                 <string key="keyEquivalent" base64-UTF8="YES">
 DQ
@@ -523,55 +412,6 @@ DQ
                         </items>
                     </menu>
                 </menuItem>
-                <menuItem title="View" id="338">
-                    <menu key="submenu" title="View" id="339">
-                        <items>
-                            <menuItem title="Show Toolbar" keyEquivalent="t" id="341">
-                                <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
-                                <connections>
-                                    <action selector="toggleToolbarShown:" target="-1" id="342"/>
-                                </connections>
-                            </menuItem>
-                            <menuItem title="Customize Toolbar…" id="340">
-                                <connections>
-                                    <action selector="runToolbarCustomizationPalette:" target="-1" id="343"/>
-                                </connections>
-                            </menuItem>
-                            <menuItem isSeparatorItem="YES" id="847">
-                                <modifierMask key="keyEquivalentModifierMask" command="YES"/>
-                            </menuItem>
-                            <menuItem title="History" keyEquivalent="1" id="927">
-                                <connections>
-                                    <action selector="showHistoryView:" target="-1" id="930"/>
-                                </connections>
-                            </menuItem>
-                            <menuItem title="Commit" keyEquivalent="2" id="928">
-                                <connections>
-                                    <action selector="showCommitView:" target="-1" id="931"/>
-                                </connections>
-                            </menuItem>
-                            <menuItem isSeparatorItem="YES" id="929"/>
-                            <menuItem title="Detail View" keyEquivalent="1" id="848">
-                                <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
-                                <connections>
-                                    <action selector="setDetailedView:" target="-1" id="962"/>
-                                </connections>
-                            </menuItem>
-                            <menuItem title="Tree View" keyEquivalent="2" id="852">
-                                <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
-                                <connections>
-                                    <action selector="setTreeView:" target="-1" id="963"/>
-                                </connections>
-                            </menuItem>
-                            <menuItem isSeparatorItem="YES" id="916"/>
-                            <menuItem title="Refresh" keyEquivalent="r" id="915">
-                                <connections>
-                                    <action selector="refresh:" target="-1" id="926"/>
-                                </connections>
-                            </menuItem>
-                        </items>
-                    </menu>
-                </menuItem>
                 <menuItem title="Window" id="241">
                     <menu key="submenu" title="Window" systemMenu="window" id="242">
                         <items>
@@ -593,31 +433,16 @@ DQ
                                     <action selector="arrangeInFront:" target="-1" id="249"/>
                                 </connections>
                             </menuItem>
-                        </items>
-                    </menu>
-                </menuItem>
-                <menuItem title="Help" id="103">
-                    <menu key="submenu" title="Help" id="106">
-                        <items>
-                            <menuItem title="GitX Help" keyEquivalent="?" id="111">
+                            <menuItem isSeparatorItem="YES" id="929"/>
+                            <menuItem title="History" keyEquivalent="1" id="927">
                                 <connections>
-                                    <action selector="showHelp:" target="205" id="932"/>
+                                    <action selector="showHistoryView:" target="-1" id="930"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Report a problem" id="969">
-                                <modifierMask key="keyEquivalentModifierMask"/>
+                            <menuItem title="Commit" keyEquivalent="2" id="928">
                                 <connections>
-                                    <action selector="reportAProblem:" target="205" id="971"/>
+                                    <action selector="showCommitView:" target="-1" id="931"/>
                                 </connections>
-                            </menuItem>
-                            <menuItem title="Latest changes" id="974" userLabel="Menu Item - Change Log">
-                                <modifierMask key="keyEquivalentModifierMask"/>
-                                <connections>
-                                    <action selector="showChangeLog:" target="205" id="976"/>
-                                </connections>
-                            </menuItem>
-                            <menuItem title="Discuss GitX" id="972">
-                                <modifierMask key="keyEquivalentModifierMask"/>
                             </menuItem>
                         </items>
                     </menu>
