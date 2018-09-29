@@ -29,6 +29,7 @@
 	__weak IBOutlet NSSplitView *splitView;
 	__weak IBOutlet NSView *sourceSplitView;
 	__weak IBOutlet NSView *contentSplitView;
+	__weak IBOutlet NSSegmentedControl *segmentedControl;
 
 	__weak IBOutlet NSTextField *statusField;
 	__weak IBOutlet NSProgressIndicator *progressIndicator;

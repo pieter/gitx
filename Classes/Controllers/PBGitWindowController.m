@@ -156,14 +156,24 @@
 	[contentController addObserver:self forKeyPath:@"status" options:NSKeyValueObservingOptionInitial context:@"statusChange"];
 }
 
-- (void) showCommitView:(id)sender
+- (void)showCommitView:(id)sender
 {
+	segmentedControl.integerValue = 1;
 	[sidebarController selectStage];
 }
 
-- (void) showHistoryView:(id)sender
+- (void)showHistoryView:(id)sender
 {
+	segmentedControl.integerValue = 0;
 	[sidebarController selectCurrentBranch];
+}
+
+- (IBAction)segmentedControlValueChanged:(NSSegmentedControl *)sender {
+	if (sender.integerValue == 0) {
+		[self showHistoryView:sender];
+	} else {
+		[self showCommitView:sender];
+	}
 }
 
 - (void)showCommitHookFailedSheet:(NSString *)messageText infoText:(NSString *)infoText commitController:(PBGitCommitController *)controller
@@ -174,7 +184,7 @@
 	 completionHandler:^(id  _Nonnull sheet, NSModalResponse returnCode) {
 		 if (returnCode != NSModalResponseOK) return;
 
-		 [_commitViewController forceCommit:self];
+		 [self->_commitViewController forceCommit:self];
 	 }];
 }
 

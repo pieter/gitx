@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="14109" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="14313.18" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="14109"/>
-        <plugIn identifier="com.apple.WebKitIBPlugin" version="14109"/>
-        <capability name="box content view" minToolsVersion="7.0"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="14313.18"/>
+        <plugIn identifier="com.apple.WebKitIBPlugin" version="14313.18"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -73,7 +72,7 @@
                                                         <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                                         <color key="gridColor" name="gridColor" catalog="System" colorSpace="catalog"/>
                                                         <tableColumns>
-                                                            <tableColumn identifier="" editable="NO" width="196" minWidth="10" maxWidth="3.4028229999999999e+38" id="104">
+                                                            <tableColumn editable="NO" width="196" minWidth="10" maxWidth="3.4028229999999999e+38" id="104">
                                                                 <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left">
                                                                     <font key="font" metaFont="smallSystem"/>
                                                                     <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
@@ -98,11 +97,11 @@
                                                     </tableView>
                                                 </subviews>
                                             </clipView>
-                                            <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="YES" id="47">
+                                            <scroller key="horizontalScroller" hidden="YES" wantsLayer="YES" verticalHuggingPriority="750" horizontal="YES" id="47">
                                                 <rect key="frame" x="0.0" y="216" width="0.0" height="15"/>
                                                 <autoresizingMask key="autoresizingMask"/>
                                             </scroller>
-                                            <scroller key="verticalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="NO" id="46">
+                                            <scroller key="verticalScroller" hidden="YES" wantsLayer="YES" verticalHuggingPriority="750" horizontal="NO" id="46">
                                                 <rect key="frame" x="-15" y="0.0" width="15" height="0.0"/>
                                                 <autoresizingMask key="autoresizingMask"/>
                                             </scroller>
@@ -131,39 +130,39 @@
                                             </textFieldCell>
                                         </textField>
                                         <scrollView autohidesScrollers="YES" horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="130">
-                                            <rect key="frame" x="0.0" y="30" width="434" height="190"/>
-                                            <clipView key="contentView" id="0Ty-JR-WNQ">
-                                                <rect key="frame" x="1" y="1" width="432" height="188"/>
+                                            <rect key="frame" x="0.0" y="49" width="434" height="171"/>
+                                            <clipView key="contentView" drawsBackground="NO" id="0Ty-JR-WNQ">
+                                                <rect key="frame" x="1" y="1" width="432" height="169"/>
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
                                                     <textView importsGraphics="NO" richText="NO" verticallyResizable="YES" continuousSpellChecking="YES" allowsUndo="YES" linkDetection="YES" textReplacement="YES" grammarChecking="YES" smartInsertDelete="YES" id="133" customClass="PBCommitMessageView">
-                                                        <rect key="frame" x="0.0" y="0.0" width="432" height="188"/>
+                                                        <rect key="frame" x="0.0" y="0.0" width="432" height="169"/>
                                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                                        <size key="minSize" width="432" height="188"/>
+                                                        <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
+                                                        <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                                        <size key="minSize" width="432" height="169"/>
                                                         <size key="maxSize" width="1161" height="10000000"/>
-                                                        <color key="insertionPointColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                                        <color key="insertionPointColor" name="textColor" catalog="System" colorSpace="catalog"/>
                                                     </textView>
                                                 </subviews>
-                                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                             </clipView>
-                                            <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" doubleValue="1" horizontal="YES" id="132">
+                                            <scroller key="horizontalScroller" hidden="YES" wantsLayer="YES" verticalHuggingPriority="750" doubleValue="1" horizontal="YES" id="132">
                                                 <rect key="frame" x="-100" y="-100" width="87" height="18"/>
                                                 <autoresizingMask key="autoresizingMask"/>
                                             </scroller>
-                                            <scroller key="verticalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="NO" id="131">
-                                                <rect key="frame" x="416" y="2" width="16" height="186"/>
+                                            <scroller key="verticalScroller" hidden="YES" wantsLayer="YES" verticalHuggingPriority="750" horizontal="NO" id="131">
+                                                <rect key="frame" x="417" y="1" width="16" height="165"/>
                                                 <autoresizingMask key="autoresizingMask"/>
                                             </scroller>
                                         </scrollView>
                                         <box borderType="none" title="Commit Actions" titlePosition="noTitle" translatesAutoresizingMaskIntoConstraints="NO" id="etY-27-JTj">
-                                            <rect key="frame" x="-3" y="-4" width="440" height="29"/>
+                                            <rect key="frame" x="-3" y="-4" width="440" height="44"/>
                                             <view key="contentView" id="vlh-ec-vC5">
-                                                <rect key="frame" x="0.0" y="0.0" width="440" height="29"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="440" height="44"/>
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
                                                     <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="coC-RC-dhM">
-                                                        <rect key="frame" x="352" y="-3" width="88" height="32"/>
+                                                        <rect key="frame" x="354" y="9" width="88" height="32"/>
                                                         <buttonCell key="cell" type="push" title="Commit" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="wNE-Rq-NpC">
                                                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                                             <font key="font" metaFont="system"/>
@@ -177,7 +176,7 @@ DQ
                                                         </connections>
                                                     </button>
                                                     <button translatesAutoresizingMaskIntoConstraints="NO" id="e4Y-vA-x9M">
-                                                        <rect key="frame" x="4" y="6" width="65" height="18"/>
+                                                        <rect key="frame" x="281" y="18" width="65" height="18"/>
                                                         <buttonCell key="cell" type="check" title="Amend" bezelStyle="regularSquare" imagePosition="left" alignment="left" state="on" inset="2" id="pYj-lv-tp6">
                                                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                                             <font key="font" metaFont="system"/>
@@ -190,10 +189,10 @@ DQ
                                                     </button>
                                                 </subviews>
                                                 <constraints>
-                                                    <constraint firstItem="coC-RC-dhM" firstAttribute="centerY" secondItem="vlh-ec-vC5" secondAttribute="centerY" id="cB9-4o-nl8"/>
-                                                    <constraint firstAttribute="trailing" secondItem="coC-RC-dhM" secondAttribute="trailing" constant="6" id="g7L-s5-QjA"/>
-                                                    <constraint firstAttribute="bottom" secondItem="coC-RC-dhM" secondAttribute="bottom" constant="4" id="iIW-4E-KKp"/>
-                                                    <constraint firstItem="e4Y-vA-x9M" firstAttribute="leading" secondItem="vlh-ec-vC5" secondAttribute="leading" constant="6" id="s3c-80-Pa9"/>
+                                                    <constraint firstItem="coC-RC-dhM" firstAttribute="leading" secondItem="e4Y-vA-x9M" secondAttribute="trailing" constant="16" id="NdU-II-Bh6"/>
+                                                    <constraint firstItem="coC-RC-dhM" firstAttribute="baseline" secondItem="vlh-ec-vC5" secondAttribute="centerY" id="cB9-4o-nl8"/>
+                                                    <constraint firstAttribute="trailing" secondItem="coC-RC-dhM" secondAttribute="trailing" constant="4" id="g7L-s5-QjA"/>
+                                                    <constraint firstAttribute="bottom" secondItem="coC-RC-dhM" secondAttribute="bottom" constant="16" id="iIW-4E-KKp"/>
                                                     <constraint firstItem="coC-RC-dhM" firstAttribute="baseline" secondItem="e4Y-vA-x9M" secondAttribute="baseline" id="tgU-sM-CsV"/>
                                                 </constraints>
                                             </view>
@@ -204,9 +203,9 @@ DQ
                                         <constraint firstAttribute="trailing" secondItem="130" secondAttribute="trailing" id="Iuc-jL-ZS4"/>
                                         <constraint firstItem="etY-27-JTj" firstAttribute="leading" secondItem="fA8-wt-jQi" secondAttribute="leading" id="Ixi-iZ-LLB"/>
                                         <constraint firstItem="130" firstAttribute="leading" secondItem="fA8-wt-jQi" secondAttribute="leading" id="Kch-IT-q2r"/>
-                                        <constraint firstAttribute="bottom" secondItem="130" secondAttribute="bottom" constant="30" id="Ob9-1e-W3V"/>
                                         <constraint firstItem="P1c-vk-8Qi" firstAttribute="top" secondItem="fA8-wt-jQi" secondAttribute="top" constant="2" id="Rrg-pg-cJH"/>
                                         <constraint firstItem="130" firstAttribute="top" secondItem="P1c-vk-8Qi" secondAttribute="bottom" constant="6" id="SgE-RV-9fr"/>
+                                        <constraint firstItem="coC-RC-dhM" firstAttribute="top" secondItem="130" secondAttribute="bottom" constant="16" id="W4e-oX-tkI"/>
                                         <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="P1c-vk-8Qi" secondAttribute="trailing" constant="8" id="ZoG-34-IyT"/>
                                         <constraint firstItem="etY-27-JTj" firstAttribute="centerX" secondItem="130" secondAttribute="centerX" id="ahQ-wr-Fqq"/>
                                         <constraint firstItem="P1c-vk-8Qi" firstAttribute="leading" secondItem="fA8-wt-jQi" secondAttribute="leading" constant="8" id="op8-MO-G4f"/>
@@ -237,7 +236,7 @@ DQ
                                                         <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                                         <color key="gridColor" name="gridColor" catalog="System" colorSpace="catalog"/>
                                                         <tableColumns>
-                                                            <tableColumn identifier="" width="195" minWidth="10" maxWidth="3.4028229999999999e+38" id="113">
+                                                            <tableColumn width="195" minWidth="10" maxWidth="3.4028229999999999e+38" id="113">
                                                                 <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left">
                                                                     <font key="font" metaFont="smallSystem"/>
                                                                     <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
@@ -263,11 +262,11 @@ DQ
                                                     </tableView>
                                                 </subviews>
                                             </clipView>
-                                            <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="YES" id="56">
+                                            <scroller key="horizontalScroller" hidden="YES" wantsLayer="YES" verticalHuggingPriority="750" horizontal="YES" id="56">
                                                 <rect key="frame" x="1" y="203" width="198" height="16"/>
                                                 <autoresizingMask key="autoresizingMask"/>
                                             </scroller>
-                                            <scroller key="verticalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="NO" id="55">
+                                            <scroller key="verticalScroller" hidden="YES" wantsLayer="YES" verticalHuggingPriority="750" horizontal="NO" id="55">
                                                 <rect key="frame" x="-14" y="1" width="15" height="0.0"/>
                                                 <autoresizingMask key="autoresizingMask"/>
                                             </scroller>

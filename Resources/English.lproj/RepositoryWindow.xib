@@ -9,8 +9,7 @@
         <customObject id="-2" userLabel="File's Owner" customClass="PBGitWindowController">
             <connections>
                 <outlet property="contentSplitView" destination="352" id="356"/>
-                <outlet property="sourceSplitView" destination="353" id="355"/>
-                <outlet property="splitView" destination="351" id="357"/>
+                <outlet property="segmentedControl" destination="oG3-3P-XwS" id="3M2-wP-pER"/>
                 <outlet property="window" destination="3" id="292"/>
             </connections>
         </customObject>
@@ -27,33 +26,15 @@
                 <rect key="frame" x="0.0" y="0.0" width="890" height="514"/>
                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                 <subviews>
-                    <splitView autosaveName="sourceSplitView" dividerStyle="thin" vertical="YES" translatesAutoresizingMaskIntoConstraints="NO" id="351">
+                    <customView translatesAutoresizingMaskIntoConstraints="NO" id="352" userLabel="Content SplitView">
                         <rect key="frame" x="0.0" y="0.0" width="890" height="514"/>
-                        <subviews>
-                            <customView id="353" userLabel="Source SplitView">
-                                <rect key="frame" x="0.0" y="0.0" width="184" height="514"/>
-                                <autoresizingMask key="autoresizingMask" heightSizable="YES"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="150" id="SeR-ak-Dcd"/>
-                                    <constraint firstAttribute="width" relation="lessThanOrEqual" constant="300" id="d1O-hE-tiX"/>
-                                </constraints>
-                            </customView>
-                            <customView fixedFrame="YES" id="352" userLabel="Content SplitView">
-                                <rect key="frame" x="185" y="0.0" width="705" height="514"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                            </customView>
-                        </subviews>
-                        <holdingPriorities>
-                            <real value="251"/>
-                            <real value="250"/>
-                        </holdingPriorities>
-                    </splitView>
+                    </customView>
                 </subviews>
                 <constraints>
-                    <constraint firstItem="351" firstAttribute="top" secondItem="5" secondAttribute="top" id="2S1-Si-krf"/>
-                    <constraint firstItem="351" firstAttribute="leading" secondItem="5" secondAttribute="leading" id="DVR-Db-T5J"/>
-                    <constraint firstAttribute="bottom" secondItem="351" secondAttribute="bottom" id="Mt2-iR-RAE"/>
-                    <constraint firstAttribute="trailing" secondItem="351" secondAttribute="trailing" id="VJA-d6-nLw"/>
+                    <constraint firstItem="352" firstAttribute="top" secondItem="5" secondAttribute="top" id="EoZ-TI-prR"/>
+                    <constraint firstAttribute="trailing" secondItem="352" secondAttribute="trailing" id="dt8-HV-m6Y"/>
+                    <constraint firstItem="352" firstAttribute="leading" secondItem="5" secondAttribute="leading" id="hxm-47-5tK"/>
+                    <constraint firstAttribute="bottom" secondItem="352" secondAttribute="bottom" id="kf5-9y-F6U"/>
                 </constraints>
             </view>
             <toolbar key="toolbar" implicitIdentifier="C6EE1771-2928-4347-A578-EB4D88918F3F" autosavesConfiguration="NO" allowsUserCustomization="NO" displayMode="iconOnly" sizeMode="regular" id="0fA-Gw-ZSG">
@@ -101,8 +82,27 @@
                             </connections>
                         </button>
                     </toolbarItem>
+                    <toolbarItem implicitItemIdentifier="C56384BC-21C1-4998-9876-D6BD076E6857" label="Custom View" paletteLabel="Custom View" sizingBehavior="auto" id="PFA-aN-iNg">
+                        <nil key="toolTip"/>
+                        <segmentedControl key="view" verticalHuggingPriority="750" id="oG3-3P-XwS">
+                            <rect key="frame" x="0.0" y="14" width="118" height="24"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                            <segmentedCell key="cell" borderStyle="border" alignment="left" style="texturedSquare" trackingMode="selectOne" id="Dre-mS-aK2">
+                                <font key="font" metaFont="system"/>
+                                <segments>
+                                    <segment label="Tree" selected="YES"/>
+                                    <segment label="Stage" tag="1"/>
+                                </segments>
+                            </segmentedCell>
+                            <connections>
+                                <action selector="segmentedControlValueChanged:" target="-2" id="HyK-uH-WEe"/>
+                            </connections>
+                        </segmentedControl>
+                    </toolbarItem>
                 </allowedToolbarItems>
                 <defaultToolbarItems>
+                    <toolbarItem reference="Olc-qB-PpU"/>
+                    <toolbarItem reference="PFA-aN-iNg"/>
                     <toolbarItem reference="Olc-qB-PpU"/>
                     <toolbarItem reference="Xwy-wV-psM"/>
                     <toolbarItem reference="dlV-Na-kUm"/>
