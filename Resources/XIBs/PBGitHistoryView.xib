@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="14105" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="14313.18" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="14105"/>
-        <plugIn identifier="com.apple.WebKitIBPlugin" version="14105"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="14313.18"/>
+        <plugIn identifier="com.apple.WebKitIBPlugin" version="14313.18"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -88,18 +88,18 @@
                 <splitView focusRingType="none" autosaveName="History" dividerStyle="paneSplitter" vertical="YES" translatesAutoresizingMaskIntoConstraints="NO" id="2" userLabel="History Content View">
                     <rect key="frame" x="0.0" y="0.0" width="1054" height="521"/>
                     <subviews>
-                        <customView id="309" userLabel="Commits Split View">
+                        <customView misplaced="YES" id="309" userLabel="Commits Split View">
                             <rect key="frame" x="0.0" y="0.0" width="426" height="521"/>
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                             <subviews>
                                 <scrollView focusRingType="none" borderType="none" autohidesScrollers="YES" horizontalLineScroll="19" horizontalPageScroll="10" verticalLineScroll="19" verticalPageScroll="10" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" horizontalScrollElasticity="none" translatesAutoresizingMaskIntoConstraints="NO" id="3" userLabel="Commits Scroll View">
-                                    <rect key="frame" x="0.0" y="0.0" width="426" height="521"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="1043" height="521"/>
                                     <clipView key="contentView" drawsBackground="NO" copiesOnScroll="NO" id="S8C-PP-4nT">
-                                        <rect key="frame" x="0.0" y="0.0" width="426" height="521"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="1043" height="521"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                         <subviews>
                                             <tableView focusRingType="none" verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="firstColumnOnly" alternatingRowBackgroundColors="YES" columnReordering="NO" autosaveName="CommitView" id="27" userLabel="Commit List" customClass="PBCommitList">
-                                                <rect key="frame" x="0.0" y="0.0" width="426" height="521"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="1043" height="521"/>
                                                 <autoresizingMask key="autoresizingMask"/>
                                                 <size key="intercellSpacing" width="3" height="2"/>
                                                 <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -128,7 +128,7 @@
                                                             </binding>
                                                         </connections>
                                                     </tableColumn>
-                                                    <tableColumn identifier="SubjectColumn" editable="NO" width="235.84375" minWidth="40" maxWidth="1000" id="32">
+                                                    <tableColumn identifier="SubjectColumn" editable="NO" width="852.84375" minWidth="40" maxWidth="1000" id="32">
                                                         <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="Subject">
                                                             <font key="font" metaFont="smallSystem"/>
                                                             <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
@@ -278,12 +278,13 @@
                                                 </connections>
                                             </tableView>
                                         </subviews>
+                                        <nil key="backgroundColor"/>
                                     </clipView>
-                                    <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="YES" id="29">
+                                    <scroller key="horizontalScroller" hidden="YES" wantsLayer="YES" verticalHuggingPriority="750" horizontal="YES" id="29">
                                         <rect key="frame" x="-100" y="-100" width="491" height="16"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                     </scroller>
-                                    <scroller key="verticalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="NO" id="28">
+                                    <scroller key="verticalScroller" hidden="YES" wantsLayer="YES" verticalHuggingPriority="750" horizontal="NO" id="28">
                                         <rect key="frame" x="-16" y="0.0" width="16" height="0.0"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                     </scroller>
@@ -296,12 +297,12 @@
                                 <constraint firstAttribute="trailing" secondItem="3" secondAttribute="trailing" id="r0u-hf-ROG"/>
                             </constraints>
                         </customView>
-                        <customView id="310" userLabel="Details Split View">
+                        <customView misplaced="YES" id="310" userLabel="Details Split View">
                             <rect key="frame" x="436" y="0.0" width="618" height="521"/>
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                             <subviews>
                                 <tabView type="noTabsNoBorder" translatesAutoresizingMaskIntoConstraints="NO" id="4" userLabel="Detail / Tree Tab View">
-                                    <rect key="frame" x="0.0" y="0.0" width="618" height="521"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="1" height="521"/>
                                     <font key="font" metaFont="system"/>
                                     <tabViewItems>
                                         <tabViewItem label="Details" identifier="1" id="6" userLabel="Details Tab">
@@ -331,27 +332,27 @@
                                         </tabViewItem>
                                         <tabViewItem label="Tree" identifier="Item 2" id="7" userLabel="Tree Tab">
                                             <view key="view" focusRingType="none" id="8">
-                                                <rect key="frame" x="0.0" y="0.0" width="955" height="214"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="1" height="521"/>
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
                                                     <splitView focusRingType="none" autosaveName="TreeTab" dividerStyle="thin" vertical="YES" translatesAutoresizingMaskIntoConstraints="NO" id="9">
-                                                        <rect key="frame" x="0.0" y="0.0" width="955" height="214"/>
+                                                        <rect key="frame" x="0.0" y="0.0" width="1" height="521"/>
                                                         <subviews>
                                                             <scrollView focusRingType="none" fixedFrame="YES" borderType="none" horizontalLineScroll="19" horizontalPageScroll="10" verticalLineScroll="19" verticalPageScroll="10" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" id="10" userLabel="File List Scroll View">
-                                                                <rect key="frame" x="0.0" y="0.0" width="233" height="214"/>
+                                                                <rect key="frame" x="0.0" y="0.0" width="0.0" height="521"/>
                                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" heightSizable="YES"/>
                                                                 <clipView key="contentView" id="TgF-cp-2Rq">
-                                                                    <rect key="frame" x="0.0" y="0.0" width="233" height="214"/>
-                                                                    <autoresizingMask key="autoresizingMask"/>
+                                                                    <rect key="frame" x="0.0" y="0.0" width="0.0" height="521"/>
+                                                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                                     <subviews>
                                                                         <outlineView focusRingType="none" verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" alternatingRowBackgroundColors="YES" autosaveColumns="NO" indentationPerLevel="16" autoresizesOutlineColumn="YES" outlineTableColumn="18" id="15" customClass="PBQLOutlineView">
-                                                                            <rect key="frame" x="0.0" y="0.0" width="233" height="214"/>
+                                                                            <rect key="frame" x="0.0" y="0.0" width="19" height="521"/>
                                                                             <autoresizingMask key="autoresizingMask" heightSizable="YES"/>
                                                                             <size key="intercellSpacing" width="3" height="2"/>
                                                                             <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                                                             <color key="gridColor" name="gridColor" catalog="System" colorSpace="catalog"/>
                                                                             <tableColumns>
-                                                                                <tableColumn identifier="" editable="NO" width="212" minWidth="16" maxWidth="1000" id="18">
+                                                                                <tableColumn editable="NO" width="16" minWidth="16" maxWidth="1000" id="18">
                                                                                     <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left">
                                                                                         <font key="font" metaFont="smallSystem"/>
                                                                                         <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
@@ -378,36 +379,36 @@
                                                                         </outlineView>
                                                                     </subviews>
                                                                 </clipView>
-                                                                <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" doubleValue="0.0045045050792396069" horizontal="YES" id="16">
+                                                                <scroller key="horizontalScroller" hidden="YES" wantsLayer="YES" verticalHuggingPriority="750" doubleValue="0.0045045050792396069" horizontal="YES" id="16">
                                                                     <rect key="frame" x="-100" y="-100" width="502" height="15"/>
                                                                     <autoresizingMask key="autoresizingMask"/>
                                                                 </scroller>
-                                                                <scroller key="verticalScroller" verticalHuggingPriority="750" horizontal="NO" id="17">
-                                                                    <rect key="frame" x="217" y="0.0" width="16" height="214"/>
+                                                                <scroller key="verticalScroller" wantsLayer="YES" verticalHuggingPriority="750" horizontal="NO" id="17">
+                                                                    <rect key="frame" x="-16" y="0.0" width="16" height="521"/>
                                                                     <autoresizingMask key="autoresizingMask"/>
                                                                 </scroller>
                                                             </scrollView>
                                                             <customView fixedFrame="YES" id="449" userLabel="Viewer">
-                                                                <rect key="frame" x="234" y="0.0" width="721" height="214"/>
+                                                                <rect key="frame" x="1" y="0.0" width="0.0" height="521"/>
                                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                                 <subviews>
                                                                     <webView fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="450" userLabel="FileViewer">
-                                                                        <rect key="frame" x="0.0" y="0.0" width="721" height="189"/>
+                                                                        <rect key="frame" x="0.0" y="0.0" width="0.0" height="496"/>
                                                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                                         <webPreferences key="preferences" defaultFontSize="12" defaultFixedFontSize="12">
                                                                             <nil key="identifier"/>
                                                                         </webPreferences>
                                                                     </webView>
                                                                     <customView fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="475" userLabel="TypeBar" customClass="MGScopeBar">
-                                                                        <rect key="frame" x="0.0" y="190" width="721" height="24"/>
+                                                                        <rect key="frame" x="0.0" y="497" width="0.0" height="24"/>
                                                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                                                                         <subviews>
                                                                             <customView fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="486">
-                                                                                <rect key="frame" x="637" y="0.0" width="84" height="24"/>
+                                                                                <rect key="frame" x="-84" y="0.0" width="84" height="24"/>
                                                                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
                                                                                 <subviews>
                                                                                     <button toolTip="Quick Look" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="49">
-                                                                                        <rect key="frame" x="41" y="1.5" width="29" height="19"/>
+                                                                                        <rect key="frame" x="41" y="2" width="29" height="19"/>
                                                                                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
                                                                                         <buttonCell key="cell" type="recessed" title="QuickLook" bezelStyle="recessed" image="NSQuickLookTemplate" imagePosition="only" alignment="center" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="50">
                                                                                             <behavior key="behavior" lightByContents="YES"/>
