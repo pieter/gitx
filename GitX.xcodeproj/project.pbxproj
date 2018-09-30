@@ -443,7 +443,6 @@
 		630A132E215EB3A000A14FA3 /* libssl.1.0.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libssl.1.0.0.dylib; path = /usr/local/Cellar/openssl/1.0.2p/lib/libssl.1.0.0.dylib; sourceTree = "<absolute>"; };
 		630A132F215EB3A000A14FA3 /* libcrypto.1.0.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libcrypto.1.0.0.dylib; path = /usr/local/Cellar/openssl/1.0.2p/lib/libcrypto.1.0.0.dylib; sourceTree = "<absolute>"; };
 		63663D73215D408300FBAA0A /* ObjectiveGit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ObjectiveGit.framework; path = Carthage/Build/Mac/ObjectiveGit.framework; sourceTree = "<group>"; };
-		63AC64D6215F97C10002AB70 /* GitX.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = GitX.entitlements; path = ../GitX.entitlements; sourceTree = "<group>"; };
 		643952751603EF9B00BB7AFF /* PBGitSVSubmoduleItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PBGitSVSubmoduleItem.h; sourceTree = "<group>"; };
 		643952761603EF9B00BB7AFF /* PBGitSVSubmoduleItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PBGitSVSubmoduleItem.m; sourceTree = "<group>"; };
 		6C2581091C2720E60080A89A /* GitXCommitCopier.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GitXCommitCopier.h; sourceTree = "<group>"; };
@@ -607,7 +606,6 @@
 		4A5D757C14A9A90500DF6C68 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				63AC64D6215F97C10002AB70 /* GitX.entitlements */,
 				4A5D760214A9A99E00DF6C68 /* English.lproj */,
 				4A90A73414A9D24300D0DA02 /* GitX.sdef */,
 				4A90A72914A9C12F00D0DA02 /* GitX_Prefix.pch */,
@@ -984,7 +982,7 @@
 						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
 							com.apple.HardenedRuntime = {
-								enabled = 1;
+								enabled = 0;
 							};
 						};
 					};
@@ -1340,7 +1338,6 @@
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_TEAM = TEQMQBRC7B;
-				ENABLE_HARDENED_RUNTIME = YES;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Resources/GitX_Prefix.pch;
@@ -1365,7 +1362,6 @@
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_TEAM = TEQMQBRC7B;
-				ENABLE_HARDENED_RUNTIME = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Resources/GitX_Prefix.pch;
 				GCC_PREPROCESSOR_DEFINITIONS_NOT_USED_IN_PRECOMPS = "";
@@ -1491,7 +1487,6 @@
 		551BF113112F371800265053 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ENABLE_HARDENED_RUNTIME = YES;
 				INSTALL_PATH = /usr/local/bin;
 				PRODUCT_NAME = gitx_askpasswd;
 				SKIP_INSTALL = YES;
@@ -1501,7 +1496,6 @@
 		551BF114112F371800265053 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ENABLE_HARDENED_RUNTIME = YES;
 				INFOPLIST_PREFIX_HEADER = $PROJECT_TEMP_DIR/revision;
 				INFOPLIST_PREPROCESS = YES;
 				INSTALL_PATH = /usr/local/bin;
@@ -1513,7 +1507,6 @@
 		551BF115112F371800265053 /* Install */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ENABLE_HARDENED_RUNTIME = YES;
 				INSTALL_PATH = /usr/local/bin;
 				PRODUCT_NAME = gitx_askpasswd;
 				SKIP_INSTALL = YES;
@@ -1524,7 +1517,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CREATE_INFOPLIST_SECTION_IN_BINARY = YES;
-				ENABLE_HARDENED_RUNTIME = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Resources/GitX_Prefix.pch;
 				INFOPLIST_FILE = "Resources/Info-gitx.plist";
@@ -1539,7 +1531,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CREATE_INFOPLIST_SECTION_IN_BINARY = YES;
-				ENABLE_HARDENED_RUNTIME = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Resources/GitX_Prefix.pch;
 				INFOPLIST_FILE = "Resources/Info-gitx.plist";

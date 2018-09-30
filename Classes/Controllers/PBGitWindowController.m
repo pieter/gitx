@@ -761,7 +761,7 @@
 	[self revealURLsInFinder:@[self.repository.workingDirectoryURL]];
 }
 
-- (IBAction) openInTerminal:(id)sender
+- (IBAction)openInTerminal:(id)sender
 {
 	[PBTerminalUtil runCommand:@"git status" inDirectory:self.repository.workingDirectoryURL];
 }
