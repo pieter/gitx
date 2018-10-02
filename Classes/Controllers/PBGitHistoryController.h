@@ -70,7 +70,6 @@
 - (IBAction) refresh:(id)sender;
 - (IBAction) toggleQLPreviewPanel:(id)sender;
 - (IBAction) openSelectedFile:(id)sender;
-- (void) updateQuicklookForce: (BOOL) force;
 
 // Context menu methods
 - (NSMenu *)contextMenuForTreeView;

@@ -268,7 +268,6 @@
 	}
 
 	if ([strContext isEqualToString: @"treeChange"]) {
-		[self updateQuicklookForce: NO];
 		[self saveFileBrowserSelection];
 		return;
 	}
@@ -426,14 +425,6 @@
 		[[QLPreviewPanel sharedPreviewPanel] orderOut:nil];
 	else
 		[[QLPreviewPanel sharedPreviewPanel] makeKeyAndOrderFront:nil];
-}
-
-- (void) updateQuicklookForce:(BOOL)force
-{
-	if (!force && (![QLPreviewPanel sharedPreviewPanelExists] || ![[QLPreviewPanel sharedPreviewPanel] isVisible]))
-		return;
-
-	[[QLPreviewPanel sharedPreviewPanel] reloadData];
 }
 
 - (IBAction) refresh:(id)sender
