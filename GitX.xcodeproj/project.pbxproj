@@ -139,7 +139,6 @@
 		551BF176112F3F4B00265053 /* gitx_askpasswd in Resources */ = {isa = PBXBuildFile; fileRef = 551BF111112F371800265053 /* gitx_askpasswd */; };
 		630A1330215EB3A000A14FA3 /* libssl.1.0.0.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 630A132E215EB3A000A14FA3 /* libssl.1.0.0.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		630A1331215EB3A000A14FA3 /* libcrypto.1.0.0.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 630A132F215EB3A000A14FA3 /* libcrypto.1.0.0.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
-		630A1335215F972B00A14FA3 /* ObjectiveGit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63663D73215D408300FBAA0A /* ObjectiveGit.framework */; };
 		630A1336215F972B00A14FA3 /* ObjectiveGit.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 63663D73215D408300FBAA0A /* ObjectiveGit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		63663D74215D408300FBAA0A /* ObjectiveGit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63663D73215D408300FBAA0A /* ObjectiveGit.framework */; };
 		63663D78215D42AE00FBAA0A /* ObjectiveGit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63663D73215D408300FBAA0A /* ObjectiveGit.framework */; };
@@ -257,13 +256,6 @@
 		4A5D75BF14A9A90500DF6C68 /* PBGitSidebarView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PBGitSidebarView.xib; sourceTree = "<group>"; };
 		4A5D75C014A9A90500DF6C68 /* PBGitXMessageSheet.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PBGitXMessageSheet.xib; sourceTree = "<group>"; };
 		4A5D760414A9A99E00DF6C68 /* English */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = English; path = InfoPlist.strings; sourceTree = "<group>"; };
-		4A5D760614A9A99E00DF6C68 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = MainMenu.xib; sourceTree = "<group>"; };
-		4A5D760814A9A99E00DF6C68 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = PBAddRemoteSheet.xib; sourceTree = "<group>"; };
-		4A5D760A14A9A99E00DF6C68 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = PBCloneRepositoryPanel.xib; sourceTree = "<group>"; };
-		4A5D760E14A9A99E00DF6C68 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = PBCreateBranchSheet.xib; sourceTree = "<group>"; };
-		4A5D761014A9A99E00DF6C68 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = PBCreateTagSheet.xib; sourceTree = "<group>"; };
-		4A5D761214A9A99E00DF6C68 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = PBRemoteProgressSheet.xib; sourceTree = "<group>"; };
-		4A5D761614A9A99E00DF6C68 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = RepositoryWindow.xib; sourceTree = "<group>"; };
 		4A5D762614A9A9CC00DF6C68 /* ApplicationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ApplicationController.h; sourceTree = "<group>"; };
 		4A5D762714A9A9CC00DF6C68 /* ApplicationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ApplicationController.m; sourceTree = "<group>"; };
 		4A5D762A14A9A9CC00DF6C68 /* OpenRecentController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OpenRecentController.h; sourceTree = "<group>"; };
@@ -443,6 +435,13 @@
 		630A132E215EB3A000A14FA3 /* libssl.1.0.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libssl.1.0.0.dylib; path = /usr/local/Cellar/openssl/1.0.2p/lib/libssl.1.0.0.dylib; sourceTree = "<absolute>"; };
 		630A132F215EB3A000A14FA3 /* libcrypto.1.0.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libcrypto.1.0.0.dylib; path = /usr/local/Cellar/openssl/1.0.2p/lib/libcrypto.1.0.0.dylib; sourceTree = "<absolute>"; };
 		63663D73215D408300FBAA0A /* ObjectiveGit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ObjectiveGit.framework; path = Carthage/Build/Mac/ObjectiveGit.framework; sourceTree = "<group>"; };
+		638CE7582163BF7B00A2CFA4 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = ../Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
+		638CE7592163BF7B00A2CFA4 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = ../Base.lproj/PBAddRemoteSheet.xib; sourceTree = "<group>"; };
+		638CE75A2163BF7B00A2CFA4 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = ../Base.lproj/PBCloneRepositoryPanel.xib; sourceTree = "<group>"; };
+		638CE75B2163BF7C00A2CFA4 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = ../Base.lproj/PBCreateBranchSheet.xib; sourceTree = "<group>"; };
+		638CE75C2163BF7C00A2CFA4 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = ../Base.lproj/PBCreateTagSheet.xib; sourceTree = "<group>"; };
+		638CE75D2163BF7C00A2CFA4 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = ../Base.lproj/PBRemoteProgressSheet.xib; sourceTree = "<group>"; };
+		638CE75E2163BF7C00A2CFA4 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = ../Base.lproj/RepositoryWindow.xib; sourceTree = "<group>"; };
 		643952751603EF9B00BB7AFF /* PBGitSVSubmoduleItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PBGitSVSubmoduleItem.h; sourceTree = "<group>"; };
 		643952761603EF9B00BB7AFF /* PBGitSVSubmoduleItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PBGitSVSubmoduleItem.m; sourceTree = "<group>"; };
 		6C2581091C2720E60080A89A /* GitXCommitCopier.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GitXCommitCopier.h; sourceTree = "<group>"; };
@@ -512,7 +511,6 @@
 				911112370E5A097800BF76B4 /* Security.framework in Frameworks */,
 				F5E4DBFB0EAB58D90013FAFC /* SystemConfiguration.framework in Frameworks */,
 				63663D74215D408300FBAA0A /* ObjectiveGit.framework in Frameworks */,
-				630A1335215F972B00A14FA3 /* ObjectiveGit.framework in Frameworks */,
 				D8E3B2B810DC9FB2001096A3 /* ScriptingBridge.framework in Frameworks */,
 				D87127011229A21C00012334 /* QuartzCore.framework in Frameworks */,
 				37A5657D1EAD096300CA0332 /* Quartz.framework in Frameworks */,
@@ -975,7 +973,7 @@
 		29B97313FDCFA39411CA2CEA /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0930;
+				LastUpgradeCheck = 1000;
 				TargetAttributes = {
 					8D1107260486CEB800E47090 = {
 						DevelopmentTeam = TEQMQBRC7B;
@@ -997,6 +995,7 @@
 				Japanese,
 				French,
 				German,
+				Base,
 			);
 			mainGroup = 29B97314FDCFA39411CA2CEA /* GitTest */;
 			projectDirPath = "";
@@ -1274,7 +1273,7 @@
 		4A5D760514A9A99E00DF6C68 /* MainMenu.xib */ = {
 			isa = PBXVariantGroup;
 			children = (
-				4A5D760614A9A99E00DF6C68 /* English */,
+				638CE7582163BF7B00A2CFA4 /* Base */,
 			);
 			name = MainMenu.xib;
 			sourceTree = "<group>";
@@ -1282,7 +1281,7 @@
 		4A5D760714A9A99E00DF6C68 /* PBAddRemoteSheet.xib */ = {
 			isa = PBXVariantGroup;
 			children = (
-				4A5D760814A9A99E00DF6C68 /* English */,
+				638CE7592163BF7B00A2CFA4 /* Base */,
 			);
 			name = PBAddRemoteSheet.xib;
 			sourceTree = "<group>";
@@ -1290,7 +1289,7 @@
 		4A5D760914A9A99E00DF6C68 /* PBCloneRepositoryPanel.xib */ = {
 			isa = PBXVariantGroup;
 			children = (
-				4A5D760A14A9A99E00DF6C68 /* English */,
+				638CE75A2163BF7B00A2CFA4 /* Base */,
 			);
 			name = PBCloneRepositoryPanel.xib;
 			sourceTree = "<group>";
@@ -1298,7 +1297,7 @@
 		4A5D760D14A9A99E00DF6C68 /* PBCreateBranchSheet.xib */ = {
 			isa = PBXVariantGroup;
 			children = (
-				4A5D760E14A9A99E00DF6C68 /* English */,
+				638CE75B2163BF7C00A2CFA4 /* Base */,
 			);
 			name = PBCreateBranchSheet.xib;
 			sourceTree = "<group>";
@@ -1306,7 +1305,7 @@
 		4A5D760F14A9A99E00DF6C68 /* PBCreateTagSheet.xib */ = {
 			isa = PBXVariantGroup;
 			children = (
-				4A5D761014A9A99E00DF6C68 /* English */,
+				638CE75C2163BF7C00A2CFA4 /* Base */,
 			);
 			name = PBCreateTagSheet.xib;
 			sourceTree = "<group>";
@@ -1314,7 +1313,7 @@
 		4A5D761114A9A99E00DF6C68 /* PBRemoteProgressSheet.xib */ = {
 			isa = PBXVariantGroup;
 			children = (
-				4A5D761214A9A99E00DF6C68 /* English */,
+				638CE75D2163BF7C00A2CFA4 /* Base */,
 			);
 			name = PBRemoteProgressSheet.xib;
 			sourceTree = "<group>";
@@ -1322,7 +1321,7 @@
 		4A5D761514A9A99E00DF6C68 /* RepositoryWindow.xib */ = {
 			isa = PBXVariantGroup;
 			children = (
-				4A5D761614A9A99E00DF6C68 /* English */,
+				638CE75E2163BF7C00A2CFA4 /* Base */,
 			);
 			name = RepositoryWindow.xib;
 			sourceTree = "<group>";
