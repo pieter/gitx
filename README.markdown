@@ -8,7 +8,7 @@ Vertical split, minimized UI, curated layout. **Dark theme only**
 
 ## Installing the Terminal tool
 
-We bundle this for our classes as part of another installer. The other installer installs `gitx` for our students`.
+We bundle this for our classes as part of another installer. The other installer installs `gitx` for our students.
 
 You can install it by hand:
 
