@@ -1,6 +1,6 @@
 # Codebase GitX
 
-Vertical split, minimized UI, curated layout.
+Vertical split, minimized UI, curated layout. **Dark theme only**
 
 [Binary downloads here](https://github.com/codebasesaga/gitx/releases).
 
