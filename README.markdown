@@ -8,11 +8,11 @@ Vertical split, minimized UI, curated layout. **Dark theme only**
 
 ## Installing the Terminal tool
 
-We bundle this for our classes as part of another installer. The other installer installs `gitx` for our students.
+UI removed. Make a symlink, or you won’t get updates:
 
-You can install it by hand:
+    ln -s /Applications/GitX.app/Contents/Resources/gitx /usr/local/bin
 
-    cp /Applications/GitX.app/Contents/Resources/gitx /usr/local/bin
+Or maybe just a bash-alias.
 
 ## How to Build & Install:
 
