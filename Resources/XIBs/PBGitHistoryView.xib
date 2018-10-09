@@ -1,0 +1,501 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="14313.18" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+    <dependencies>
+        <deployment identifier="macosx"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="14313.18"/>
+        <plugIn identifier="com.apple.WebKitIBPlugin" version="14313.18"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <customObject id="-2" userLabel="File's Owner" customClass="PBGitHistoryController">
+            <connections>
+                <outlet property="commitController" destination="39" id="42"/>
+                <outlet property="commitList" destination="27" id="43"/>
+                <outlet property="fileBrowser" destination="15" id="87"/>
+                <outlet property="fileView" destination="452" id="488"/>
+                <outlet property="historySplitView" destination="2" id="275"/>
+                <outlet property="refController" destination="231" id="329"/>
+                <outlet property="searchController" destination="423" id="446"/>
+                <outlet property="treeController" destination="38" id="41"/>
+                <outlet property="view" destination="46" id="53"/>
+                <outlet property="webHistoryController" destination="40" id="402"/>
+                <outlet property="webView" destination="21" id="112"/>
+            </connections>
+        </customObject>
+        <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
+        <customObject id="-3" userLabel="Application" customClass="NSObject"/>
+        <treeController objectClassName="PBGitTree" editable="NO" childrenKeyPath="children" leafKeyPath="leaf" avoidsEmptySelection="NO" selectsInsertedObjects="NO" id="38">
+            <declaredKeys>
+                <string>path</string>
+                <string>contents</string>
+                <string>selectedCommitDetailsIndex</string>
+                <string>textContents</string>
+            </declaredKeys>
+            <connections>
+                <binding destination="-2" name="contentArray" keyPath="gitTree.children" id="90"/>
+            </connections>
+        </treeController>
+        <arrayController objectClassName="PBGitCommit" editable="NO" selectsInsertedObjects="NO" avoidsEmptySelection="NO" id="39" userLabel="CommitsController">
+            <declaredKeys>
+                <string>self</string>
+                <string>OID</string>
+                <string>details</string>
+                <string>subject</string>
+                <string>@count</string>
+                <string>self.@count</string>
+                <string>author</string>
+                <string>children</string>
+                <string>tree</string>
+                <string>tree.children</string>
+                <string>selection.tree.children</string>
+                <string>treeCon</string>
+                <string>treeContents</string>
+                <string>treeChildren</string>
+                <string>tree.s</string>
+                <mutableString>commits.@max.tree.children</mutableString>
+                <string>authorDate</string>
+                <string>date</string>
+                <string>dateString</string>
+                <string>arran</string>
+                <string>SHA</string>
+                <string>relativeDateString</string>
+                <string>shortName</string>
+            </declaredKeys>
+            <connections>
+                <binding destination="-2" name="contentArray" keyPath="repository.revisionList.commits" id="58"/>
+            </connections>
+        </arrayController>
+        <customObject id="40" customClass="PBWebHistoryController">
+            <connections>
+                <outlet property="contextMenuDelegate" destination="231" id="260"/>
+                <outlet property="historyController" destination="-2" id="62"/>
+                <outlet property="view" destination="21" id="44"/>
+            </connections>
+        </customObject>
+        <customObject id="452" customClass="GLFileView">
+            <connections>
+                <outlet property="accessoryView" destination="486" id="487"/>
+                <outlet property="fileListSplitView" destination="9" id="489"/>
+                <outlet property="historyController" destination="-2" id="454"/>
+                <outlet property="typeBar" destination="475" id="484"/>
+                <outlet property="view" destination="450" id="453"/>
+            </connections>
+        </customObject>
+        <customView focusRingType="none" id="46" userLabel="History">
+            <rect key="frame" x="0.0" y="0.0" width="1054" height="521"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <splitView focusRingType="none" autosaveName="History" dividerStyle="paneSplitter" vertical="YES" translatesAutoresizingMaskIntoConstraints="NO" id="2" userLabel="History Content View">
+                    <rect key="frame" x="0.0" y="0.0" width="1054" height="521"/>
+                    <subviews>
+                        <customView misplaced="YES" id="309" userLabel="Commits Split View">
+                            <rect key="frame" x="0.0" y="0.0" width="426" height="521"/>
+                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                            <subviews>
+                                <scrollView focusRingType="none" borderType="none" autohidesScrollers="YES" horizontalLineScroll="19" horizontalPageScroll="10" verticalLineScroll="19" verticalPageScroll="10" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" horizontalScrollElasticity="none" translatesAutoresizingMaskIntoConstraints="NO" id="3" userLabel="Commits Scroll View">
+                                    <rect key="frame" x="0.0" y="0.0" width="1043" height="521"/>
+                                    <clipView key="contentView" drawsBackground="NO" copiesOnScroll="NO" id="S8C-PP-4nT">
+                                        <rect key="frame" x="0.0" y="0.0" width="1043" height="521"/>
+                                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                        <subviews>
+                                            <tableView focusRingType="none" verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="firstColumnOnly" alternatingRowBackgroundColors="YES" columnReordering="NO" autosaveName="CommitView" id="27" userLabel="Commit List" customClass="PBCommitList">
+                                                <rect key="frame" x="0.0" y="0.0" width="1043" height="521"/>
+                                                <autoresizingMask key="autoresizingMask"/>
+                                                <size key="intercellSpacing" width="3" height="2"/>
+                                                <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                                <color key="gridColor" name="controlHighlightColor" catalog="System" colorSpace="catalog"/>
+                                                <tableColumns>
+                                                    <tableColumn identifier="ShortSHAColumn" editable="NO" width="62" minWidth="62" maxWidth="62" hidden="YES" id="418">
+                                                        <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="Short SHA">
+                                                            <font key="font" metaFont="smallSystem"/>
+                                                            <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
+                                                            <color key="backgroundColor" name="headerColor" catalog="System" colorSpace="catalog"/>
+                                                        </tableHeaderCell>
+                                                        <textFieldCell key="dataCell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" alignment="left" id="419" customClass="GitXTextFieldCell">
+                                                            <font key="font" size="12" name="Monaco"/>
+                                                            <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                                                            <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                                            <connections>
+                                                                <outlet property="contextMenuDelegate" destination="231" id="442"/>
+                                                            </connections>
+                                                        </textFieldCell>
+                                                        <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
+                                                        <connections>
+                                                            <binding destination="39" name="value" keyPath="arrangedObjects.shortName" id="422">
+                                                                <dictionary key="options">
+                                                                    <bool key="NSConditionallySetsEditable" value="YES"/>
+                                                                </dictionary>
+                                                            </binding>
+                                                        </connections>
+                                                    </tableColumn>
+                                                    <tableColumn identifier="SubjectColumn" editable="NO" width="852.84375" minWidth="40" maxWidth="1000" id="32">
+                                                        <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="Subject">
+                                                            <font key="font" metaFont="smallSystem"/>
+                                                            <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
+                                                            <color key="backgroundColor" white="0.33333298560000002" alpha="1" colorSpace="calibratedWhite"/>
+                                                        </tableHeaderCell>
+                                                        <textFieldCell key="dataCell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" alignment="left" title="Text Cell" id="35" customClass="PBGitRevisionCell">
+                                                            <font key="font" metaFont="cellTitle"/>
+                                                            <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                                                            <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                                            <connections>
+                                                                <outlet property="contextMenuDelegate" destination="231" id="259"/>
+                                                                <outlet property="controller" destination="-2" id="110"/>
+                                                            </connections>
+                                                        </textFieldCell>
+                                                        <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
+                                                        <connections>
+                                                            <binding destination="39" name="value" keyPath="arrangedObjects" id="61">
+                                                                <dictionary key="options">
+                                                                    <integer key="NSConditionallySetsEditable" value="1"/>
+                                                                </dictionary>
+                                                            </binding>
+                                                        </connections>
+                                                    </tableColumn>
+                                                    <tableColumn identifier="AuthorColumn" editable="NO" width="118" minWidth="40" maxWidth="1000" id="31">
+                                                        <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="Author">
+                                                            <font key="font" metaFont="smallSystem"/>
+                                                            <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
+                                                            <color key="backgroundColor" white="0.33333298560000002" alpha="1" colorSpace="calibratedWhite"/>
+                                                        </tableHeaderCell>
+                                                        <textFieldCell key="dataCell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" alignment="left" title="Text Cell" id="36" customClass="GitXTextFieldCell">
+                                                            <font key="font" metaFont="cellTitle"/>
+                                                            <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                                                            <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                                            <connections>
+                                                                <outlet property="contextMenuDelegate" destination="231" id="438"/>
+                                                            </connections>
+                                                        </textFieldCell>
+                                                        <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
+                                                        <connections>
+                                                            <binding destination="39" name="value" keyPath="arrangedObjects.author" id="55">
+                                                                <dictionary key="options">
+                                                                    <integer key="NSConditionallySetsEditable" value="1"/>
+                                                                </dictionary>
+                                                            </binding>
+                                                        </connections>
+                                                    </tableColumn>
+                                                    <tableColumn identifier="DateColumn" editable="NO" width="132" minWidth="10" maxWidth="1000" hidden="YES" id="33">
+                                                        <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="Date">
+                                                            <font key="font" metaFont="smallSystem"/>
+                                                            <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
+                                                            <color key="backgroundColor" name="headerColor" catalog="System" colorSpace="catalog"/>
+                                                        </tableHeaderCell>
+                                                        <textFieldCell key="dataCell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" alignment="left" title="Text Cell" id="34" customClass="GitXTextFieldCell">
+                                                            <dateFormatter key="formatter" dateStyle="long" timeStyle="short" id="414"/>
+                                                            <font key="font" metaFont="cellTitle"/>
+                                                            <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                                                            <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                                            <connections>
+                                                                <outlet property="contextMenuDelegate" destination="231" id="439"/>
+                                                            </connections>
+                                                        </textFieldCell>
+                                                        <sortDescriptor key="sortDescriptorPrototype" selector="compare:" sortKey="date"/>
+                                                        <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
+                                                        <connections>
+                                                            <binding destination="39" name="value" keyPath="arrangedObjects.date" id="404">
+                                                                <dictionary key="options">
+                                                                    <bool key="NSConditionallySetsEditable" value="YES"/>
+                                                                </dictionary>
+                                                            </binding>
+                                                        </connections>
+                                                    </tableColumn>
+                                                    <tableColumn identifier="RelativeDateColumn" editable="NO" width="63" minWidth="10" maxWidth="1000" id="409">
+                                                        <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="Relative Date">
+                                                            <font key="font" metaFont="smallSystem"/>
+                                                            <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
+                                                            <color key="backgroundColor" name="headerColor" catalog="System" colorSpace="catalog"/>
+                                                        </tableHeaderCell>
+                                                        <textFieldCell key="dataCell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" alignment="left" id="410" customClass="GitXTextFieldCell">
+                                                            <font key="font" metaFont="cellTitle"/>
+                                                            <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                                                            <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                                            <connections>
+                                                                <outlet property="contextMenuDelegate" destination="231" id="440"/>
+                                                                <outlet property="formatter" destination="407" id="416"/>
+                                                            </connections>
+                                                        </textFieldCell>
+                                                        <sortDescriptor key="sortDescriptorPrototype" selector="compare:" sortKey="date"/>
+                                                        <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
+                                                        <connections>
+                                                            <binding destination="39" name="value" keyPath="arrangedObjects.date" id="417">
+                                                                <dictionary key="options">
+                                                                    <bool key="NSConditionallySetsEditable" value="YES"/>
+                                                                </dictionary>
+                                                            </binding>
+                                                        </connections>
+                                                    </tableColumn>
+                                                    <tableColumn identifier="SHAColumn" editable="NO" width="30" minWidth="30" maxWidth="290" hidden="YES" id="287">
+                                                        <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="SHA">
+                                                            <font key="font" metaFont="smallSystem"/>
+                                                            <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
+                                                            <color key="backgroundColor" name="headerColor" catalog="System" colorSpace="catalog"/>
+                                                        </tableHeaderCell>
+                                                        <textFieldCell key="dataCell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" alignment="left" title="Text Cell" id="288" customClass="GitXTextFieldCell">
+                                                            <font key="font" size="12" name="Monaco"/>
+                                                            <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                                                            <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                                            <connections>
+                                                                <outlet property="contextMenuDelegate" destination="231" id="441"/>
+                                                            </connections>
+                                                        </textFieldCell>
+                                                        <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
+                                                        <connections>
+                                                            <binding destination="39" name="value" keyPath="arrangedObjects.SHA" id="1nX-jF-8FT">
+                                                                <dictionary key="options">
+                                                                    <bool key="NSConditionallySetsEditable" value="YES"/>
+                                                                </dictionary>
+                                                            </binding>
+                                                        </connections>
+                                                    </tableColumn>
+                                                    <tableColumn identifier="GitSVNRevision" width="96" minWidth="10" maxWidth="3.4028234663852886e+38" hidden="YES" id="491">
+                                                        <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="Git SVN Revision">
+                                                            <font key="font" metaFont="smallSystem"/>
+                                                            <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
+                                                            <color key="backgroundColor" name="headerColor" catalog="System" colorSpace="catalog"/>
+                                                        </tableHeaderCell>
+                                                        <textFieldCell key="dataCell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" alignment="left" title="Text Cell" id="493" customClass="GitXTextFieldCell">
+                                                            <font key="font" metaFont="cellTitle"/>
+                                                            <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                                                            <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                                            <connections>
+                                                                <outlet property="contextMenuDelegate" destination="231" id="495"/>
+                                                            </connections>
+                                                        </textFieldCell>
+                                                        <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
+                                                        <connections>
+                                                            <binding destination="39" name="value" keyPath="arrangedObjects.SVNRevision" id="498"/>
+                                                        </connections>
+                                                    </tableColumn>
+                                                </tableColumns>
+                                                <connections>
+                                                    <outlet property="controller" destination="-2" id="111"/>
+                                                    <outlet property="dataSource" destination="231" id="445"/>
+                                                    <outlet property="delegate" destination="-2" id="444"/>
+                                                    <outlet property="searchController" destination="423" id="436"/>
+                                                    <outlet property="webController" destination="40" id="95"/>
+                                                    <outlet property="webView" destination="21" id="37"/>
+                                                </connections>
+                                            </tableView>
+                                        </subviews>
+                                        <nil key="backgroundColor"/>
+                                    </clipView>
+                                    <scroller key="horizontalScroller" hidden="YES" wantsLayer="YES" verticalHuggingPriority="750" horizontal="YES" id="29">
+                                        <rect key="frame" x="-100" y="-100" width="491" height="16"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                    </scroller>
+                                    <scroller key="verticalScroller" hidden="YES" wantsLayer="YES" verticalHuggingPriority="750" horizontal="NO" id="28">
+                                        <rect key="frame" x="-16" y="0.0" width="16" height="0.0"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                    </scroller>
+                                </scrollView>
+                            </subviews>
+                            <constraints>
+                                <constraint firstItem="3" firstAttribute="leading" secondItem="309" secondAttribute="leading" id="3GY-jw-rcE"/>
+                                <constraint firstAttribute="bottom" secondItem="3" secondAttribute="bottom" id="JF2-nX-71h"/>
+                                <constraint firstItem="3" firstAttribute="top" secondItem="309" secondAttribute="top" id="nya-rv-9La"/>
+                                <constraint firstAttribute="trailing" secondItem="3" secondAttribute="trailing" id="r0u-hf-ROG"/>
+                            </constraints>
+                        </customView>
+                        <customView misplaced="YES" id="310" userLabel="Details Split View">
+                            <rect key="frame" x="436" y="0.0" width="618" height="521"/>
+                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                            <subviews>
+                                <tabView type="noTabsNoBorder" translatesAutoresizingMaskIntoConstraints="NO" id="4" userLabel="Detail / Tree Tab View">
+                                    <rect key="frame" x="0.0" y="0.0" width="1" height="521"/>
+                                    <font key="font" metaFont="system"/>
+                                    <tabViewItems>
+                                        <tabViewItem label="Details" identifier="1" id="6" userLabel="Details Tab">
+                                            <view key="view" focusRingType="none" id="20">
+                                                <rect key="frame" x="0.0" y="0.0" width="618" height="521"/>
+                                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                                <subviews>
+                                                    <webView focusRingType="none" translatesAutoresizingMaskIntoConstraints="NO" id="21">
+                                                        <rect key="frame" x="0.0" y="0.0" width="618" height="521"/>
+                                                        <webPreferences key="preferences" defaultFontSize="12" defaultFixedFontSize="12">
+                                                            <nil key="identifier"/>
+                                                        </webPreferences>
+                                                        <connections>
+                                                            <outlet property="UIDelegate" destination="40" id="85"/>
+                                                            <outlet property="frameLoadDelegate" destination="40" id="84"/>
+                                                            <outlet property="policyDelegate" destination="40" id="109"/>
+                                                        </connections>
+                                                    </webView>
+                                                </subviews>
+                                                <constraints>
+                                                    <constraint firstAttribute="bottom" secondItem="21" secondAttribute="bottom" id="1t5-s5-Hjl"/>
+                                                    <constraint firstItem="21" firstAttribute="top" secondItem="20" secondAttribute="top" id="UR4-9e-ZSf"/>
+                                                    <constraint firstAttribute="trailing" secondItem="21" secondAttribute="trailing" id="YSb-Iy-Msx"/>
+                                                    <constraint firstItem="21" firstAttribute="leading" secondItem="20" secondAttribute="leading" id="kyR-JL-CoG"/>
+                                                </constraints>
+                                            </view>
+                                        </tabViewItem>
+                                        <tabViewItem label="Tree" identifier="Item 2" id="7" userLabel="Tree Tab">
+                                            <view key="view" focusRingType="none" id="8">
+                                                <rect key="frame" x="0.0" y="0.0" width="1" height="521"/>
+                                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                                <subviews>
+                                                    <splitView focusRingType="none" autosaveName="TreeTab" dividerStyle="thin" vertical="YES" translatesAutoresizingMaskIntoConstraints="NO" id="9">
+                                                        <rect key="frame" x="0.0" y="0.0" width="1" height="521"/>
+                                                        <subviews>
+                                                            <scrollView focusRingType="none" fixedFrame="YES" borderType="none" horizontalLineScroll="19" horizontalPageScroll="10" verticalLineScroll="19" verticalPageScroll="10" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" id="10" userLabel="File List Scroll View">
+                                                                <rect key="frame" x="0.0" y="0.0" width="0.0" height="521"/>
+                                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" heightSizable="YES"/>
+                                                                <clipView key="contentView" id="TgF-cp-2Rq">
+                                                                    <rect key="frame" x="0.0" y="0.0" width="0.0" height="521"/>
+                                                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                                                    <subviews>
+                                                                        <outlineView focusRingType="none" verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" alternatingRowBackgroundColors="YES" autosaveColumns="NO" indentationPerLevel="16" autoresizesOutlineColumn="YES" outlineTableColumn="18" id="15" customClass="PBQLOutlineView">
+                                                                            <rect key="frame" x="0.0" y="0.0" width="19" height="521"/>
+                                                                            <autoresizingMask key="autoresizingMask" heightSizable="YES"/>
+                                                                            <size key="intercellSpacing" width="3" height="2"/>
+                                                                            <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                                                            <color key="gridColor" name="gridColor" catalog="System" colorSpace="catalog"/>
+                                                                            <tableColumns>
+                                                                                <tableColumn editable="NO" width="16" minWidth="16" maxWidth="1000" id="18">
+                                                                                    <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left">
+                                                                                        <font key="font" metaFont="smallSystem"/>
+                                                                                        <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
+                                                                                        <color key="backgroundColor" white="0.33333298560000002" alpha="1" colorSpace="calibratedWhite"/>
+                                                                                    </tableHeaderCell>
+                                                                                    <textFieldCell key="dataCell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" alignment="left" title="Text Cell" id="19">
+                                                                                        <font key="font" metaFont="system"/>
+                                                                                        <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                                                                                        <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                                                                    </textFieldCell>
+                                                                                    <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
+                                                                                    <connections>
+                                                                                        <binding destination="38" name="value" keyPath="arrangedObjects.path" id="92">
+                                                                                            <dictionary key="options">
+                                                                                                <integer key="NSConditionallySetsEditable" value="1"/>
+                                                                                            </dictionary>
+                                                                                        </binding>
+                                                                                    </connections>
+                                                                                </tableColumn>
+                                                                            </tableColumns>
+                                                                            <connections>
+                                                                                <outlet property="controller" destination="-2" id="86"/>
+                                                                            </connections>
+                                                                        </outlineView>
+                                                                    </subviews>
+                                                                </clipView>
+                                                                <scroller key="horizontalScroller" hidden="YES" wantsLayer="YES" verticalHuggingPriority="750" doubleValue="0.0045045050792396069" horizontal="YES" id="16">
+                                                                    <rect key="frame" x="-100" y="-100" width="502" height="15"/>
+                                                                    <autoresizingMask key="autoresizingMask"/>
+                                                                </scroller>
+                                                                <scroller key="verticalScroller" wantsLayer="YES" verticalHuggingPriority="750" horizontal="NO" id="17">
+                                                                    <rect key="frame" x="-16" y="0.0" width="16" height="521"/>
+                                                                    <autoresizingMask key="autoresizingMask"/>
+                                                                </scroller>
+                                                            </scrollView>
+                                                            <customView fixedFrame="YES" id="449" userLabel="Viewer">
+                                                                <rect key="frame" x="1" y="0.0" width="0.0" height="521"/>
+                                                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                                                <subviews>
+                                                                    <webView fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="450" userLabel="FileViewer">
+                                                                        <rect key="frame" x="0.0" y="0.0" width="0.0" height="496"/>
+                                                                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                                                        <webPreferences key="preferences" defaultFontSize="12" defaultFixedFontSize="12">
+                                                                            <nil key="identifier"/>
+                                                                        </webPreferences>
+                                                                    </webView>
+                                                                    <customView fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="475" userLabel="TypeBar" customClass="MGScopeBar">
+                                                                        <rect key="frame" x="0.0" y="497" width="0.0" height="24"/>
+                                                                        <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                                                                        <subviews>
+                                                                            <customView fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="486">
+                                                                                <rect key="frame" x="-84" y="0.0" width="84" height="24"/>
+                                                                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
+                                                                                <subviews>
+                                                                                    <button toolTip="Quick Look" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="49">
+                                                                                        <rect key="frame" x="41" y="2" width="29" height="19"/>
+                                                                                        <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
+                                                                                        <buttonCell key="cell" type="recessed" title="QuickLook" bezelStyle="recessed" image="NSQuickLookTemplate" imagePosition="only" alignment="center" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="50">
+                                                                                            <behavior key="behavior" lightByContents="YES"/>
+                                                                                            <font key="font" metaFont="systemBold" size="12"/>
+                                                                                            <string key="keyEquivalent" base64-UTF8="YES">
+IA
+</string>
+                                                                                        </buttonCell>
+                                                                                        <connections>
+                                                                                            <action selector="toggleQLPreviewPanel:" target="-2" id="395"/>
+                                                                                            <binding destination="-2" name="enabled" keyPath="selectedCommitDetailsIndex" id="398"/>
+                                                                                        </connections>
+                                                                                    </button>
+                                                                                </subviews>
+                                                                            </customView>
+                                                                        </subviews>
+                                                                        <connections>
+                                                                            <outlet property="delegate" destination="452" id="485"/>
+                                                                        </connections>
+                                                                    </customView>
+                                                                </subviews>
+                                                            </customView>
+                                                        </subviews>
+                                                        <holdingPriorities>
+                                                            <real value="251"/>
+                                                            <real value="250"/>
+                                                        </holdingPriorities>
+                                                        <connections>
+                                                            <outlet property="delegate" destination="452" id="490"/>
+                                                        </connections>
+                                                    </splitView>
+                                                </subviews>
+                                                <constraints>
+                                                    <constraint firstAttribute="bottom" secondItem="9" secondAttribute="bottom" id="4bR-A4-t7M"/>
+                                                    <constraint firstItem="9" firstAttribute="leading" secondItem="8" secondAttribute="leading" id="M85-K1-Sds"/>
+                                                    <constraint firstAttribute="trailing" secondItem="9" secondAttribute="trailing" id="YS0-SJ-UH1"/>
+                                                    <constraint firstItem="9" firstAttribute="top" secondItem="8" secondAttribute="top" id="yR5-Xo-0ew"/>
+                                                </constraints>
+                                            </view>
+                                        </tabViewItem>
+                                    </tabViewItems>
+                                    <connections>
+                                        <binding destination="-2" name="selectedIndex" keyPath="selectedCommitDetailsIndex" id="80"/>
+                                    </connections>
+                                </tabView>
+                            </subviews>
+                            <constraints>
+                                <constraint firstAttribute="bottom" secondItem="4" secondAttribute="bottom" id="GW5-rn-Br1"/>
+                                <constraint firstItem="4" firstAttribute="top" secondItem="310" secondAttribute="top" id="KGR-yF-zDn"/>
+                                <constraint firstItem="4" firstAttribute="leading" secondItem="310" secondAttribute="leading" id="e6h-3P-PuT"/>
+                                <constraint firstAttribute="trailing" secondItem="4" secondAttribute="trailing" id="pWV-fF-nn3"/>
+                            </constraints>
+                        </customView>
+                    </subviews>
+                    <holdingPriorities>
+                        <real value="251"/>
+                        <real value="250"/>
+                    </holdingPriorities>
+                    <connections>
+                        <outlet property="delegate" destination="-2" id="107"/>
+                    </connections>
+                </splitView>
+            </subviews>
+            <constraints>
+                <constraint firstAttribute="trailing" secondItem="2" secondAttribute="trailing" id="IQk-Io-l7v"/>
+                <constraint firstAttribute="bottom" secondItem="2" secondAttribute="bottom" id="Js3-Zc-2Im"/>
+                <constraint firstItem="2" firstAttribute="top" secondItem="46" secondAttribute="top" id="ogx-p9-jGo"/>
+                <constraint firstItem="2" firstAttribute="leading" secondItem="46" secondAttribute="leading" id="wKl-ht-Djh"/>
+            </constraints>
+            <point key="canvasLocation" x="561" y="63.5"/>
+        </customView>
+        <customObject id="231" customClass="PBRefController">
+            <connections>
+                <outlet property="commitController" destination="39" id="232"/>
+                <outlet property="commitList" destination="27" id="233"/>
+                <outlet property="historyController" destination="-2" id="234"/>
+            </connections>
+        </customObject>
+        <customObject id="407" customClass="GitXRelativeDateFormatter"/>
+        <customObject id="423" customClass="PBHistorySearchController">
+            <connections>
+                <outlet property="commitController" destination="39" id="424"/>
+                <outlet property="historyController" destination="-2" id="425"/>
+            </connections>
+        </customObject>
+    </objects>
+    <resources>
+        <image name="NSQuickLookTemplate" width="19" height="12"/>
+    </resources>
+</document>

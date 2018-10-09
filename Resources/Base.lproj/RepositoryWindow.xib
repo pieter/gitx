@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="14313.18" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+    <dependencies>
+        <deployment identifier="macosx"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="14313.18"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <customObject id="-2" userLabel="File's Owner" customClass="PBGitWindowController">
+            <connections>
+                <outlet property="contentSplitView" destination="352" id="356"/>
+                <outlet property="segmentedControl" destination="oG3-3P-XwS" id="3M2-wP-pER"/>
+                <outlet property="window" destination="3" id="292"/>
+            </connections>
+        </customObject>
+        <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
+        <customObject id="-3" userLabel="Application" customClass="NSObject"/>
+        <window title="GitX" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" frameAutosaveName="GitX" animationBehavior="default" titleVisibility="hidden" id="3" userLabel="Window">
+            <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
+            <windowCollectionBehavior key="collectionBehavior" fullScreenPrimary="YES"/>
+            <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
+            <rect key="contentRect" x="4" y="290" width="890" height="514"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="1440" height="900"/>
+            <value key="minSize" type="size" width="600" height="450"/>
+            <view key="contentView" id="5">
+                <rect key="frame" x="0.0" y="0.0" width="890" height="514"/>
+                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                <subviews>
+                    <customView translatesAutoresizingMaskIntoConstraints="NO" id="352" userLabel="Content SplitView">
+                        <rect key="frame" x="0.0" y="0.0" width="890" height="514"/>
+                    </customView>
+                </subviews>
+                <constraints>
+                    <constraint firstItem="352" firstAttribute="top" secondItem="5" secondAttribute="top" id="EoZ-TI-prR"/>
+                    <constraint firstAttribute="trailing" secondItem="352" secondAttribute="trailing" id="dt8-HV-m6Y"/>
+                    <constraint firstItem="352" firstAttribute="leading" secondItem="5" secondAttribute="leading" id="hxm-47-5tK"/>
+                    <constraint firstAttribute="bottom" secondItem="352" secondAttribute="bottom" id="kf5-9y-F6U"/>
+                </constraints>
+            </view>
+            <toolbar key="toolbar" implicitIdentifier="C6EE1771-2928-4347-A578-EB4D88918F3F" autosavesConfiguration="NO" allowsUserCustomization="NO" displayMode="iconOnly" sizeMode="regular" id="0fA-Gw-ZSG">
+                <allowedToolbarItems>
+                    <toolbarItem implicitItemIdentifier="NSToolbarFlexibleSpaceItem" id="Olc-qB-PpU"/>
+                    <toolbarItem implicitItemIdentifier="EEF79BFD-943E-4785-8365-7AEA54A39D30" label="" paletteLabel="" image="NSRefreshTemplate" sizingBehavior="auto" id="Xwy-wV-psM">
+                        <nil key="toolTip"/>
+                        <button key="view" verticalHuggingPriority="750" id="430">
+                            <rect key="frame" x="0.0" y="14" width="21" height="23"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                            <buttonCell key="cell" type="roundTextured" bezelStyle="texturedRounded" image="NSRefreshTemplate" imagePosition="only" alignment="center" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="431">
+                                <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                <font key="font" metaFont="system"/>
+                            </buttonCell>
+                            <connections>
+                                <action selector="refresh:" target="-2" id="432"/>
+                            </connections>
+                        </button>
+                    </toolbarItem>
+                    <toolbarItem implicitItemIdentifier="8215BD23-2C1E-43E4-A5B6-2E85ED76C119" label="" paletteLabel="" sizingBehavior="auto" id="9vj-8F-Fcf">
+                        <nil key="toolTip"/>
+                        <button key="view" verticalHuggingPriority="750" id="439">
+                            <rect key="frame" x="0.0" y="14" width="53" height="25"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                            <buttonCell key="cell" type="roundTextured" title="Finder" alternateTitle="Reveal" bezelStyle="texturedRounded" imagePosition="overlaps" alignment="center" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="440">
+                                <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                <font key="font" metaFont="system"/>
+                                <connections>
+                                    <action selector="revealInFinder:" target="-2" id="442"/>
+                                </connections>
+                            </buttonCell>
+                        </button>
+                    </toolbarItem>
+                    <toolbarItem implicitItemIdentifier="F88D81B8-F3A2-432E-B175-654011669257" label="" paletteLabel="" sizingBehavior="auto" id="dlV-Na-kUm">
+                        <nil key="toolTip"/>
+                        <button key="view" verticalHuggingPriority="750" id="435">
+                            <rect key="frame" x="0.0" y="14" width="66" height="25"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                            <buttonCell key="cell" type="roundTextured" title="Terminal" alternateTitle="Terminal" bezelStyle="texturedRounded" alignment="center" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="436">
+                                <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                <font key="font" metaFont="system"/>
+                            </buttonCell>
+                            <connections>
+                                <action selector="openInTerminal:" target="-2" id="438"/>
+                            </connections>
+                        </button>
+                    </toolbarItem>
+                    <toolbarItem implicitItemIdentifier="C56384BC-21C1-4998-9876-D6BD076E6857" label="Custom View" paletteLabel="Custom View" sizingBehavior="auto" id="PFA-aN-iNg">
+                        <nil key="toolTip"/>
+                        <segmentedControl key="view" verticalHuggingPriority="750" id="oG3-3P-XwS">
+                            <rect key="frame" x="0.0" y="14" width="118" height="24"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                            <segmentedCell key="cell" borderStyle="border" alignment="left" style="texturedSquare" trackingMode="selectOne" id="Dre-mS-aK2">
+                                <font key="font" metaFont="system"/>
+                                <segments>
+                                    <segment label="Tree" selected="YES"/>
+                                    <segment label="Stage" tag="1"/>
+                                </segments>
+                            </segmentedCell>
+                            <connections>
+                                <action selector="segmentedControlValueChanged:" target="-2" id="HyK-uH-WEe"/>
+                            </connections>
+                        </segmentedControl>
+                    </toolbarItem>
+                </allowedToolbarItems>
+                <defaultToolbarItems>
+                    <toolbarItem reference="Olc-qB-PpU"/>
+                    <toolbarItem reference="PFA-aN-iNg"/>
+                    <toolbarItem reference="Olc-qB-PpU"/>
+                    <toolbarItem reference="Xwy-wV-psM"/>
+                    <toolbarItem reference="dlV-Na-kUm"/>
+                    <toolbarItem reference="9vj-8F-Fcf"/>
+                </defaultToolbarItems>
+            </toolbar>
+            <connections>
+                <outlet property="delegate" destination="-2" id="N8Y-0Q-xZn"/>
+            </connections>
+        </window>
+    </objects>
+    <resources>
+        <image name="NSRefreshTemplate" width="11" height="15"/>
+    </resources>
+</document>
